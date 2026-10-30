@@ -20,6 +20,9 @@ target_link_libraries(whitehole_studio PRIVATE
     whitehole::project
     whitehole::runtime
     wh_warnings)
+# Qt definiert "slots", "signals" und "emit" als Makros; unser Code benutzt "slots" als Namen
+# (OutputPlan::slots). QT_NO_KEYWORDS schaltet die Makros ab, Qt-Code nutzt Q_SIGNALS/Q_EMIT.
+target_compile_definitions(whitehole_studio PRIVATE QT_NO_KEYWORDS)
 if(TARGET wh_gpu_webgpu)
     target_link_libraries(whitehole_studio PRIVATE wh_gpu_webgpu)
     target_compile_definitions(whitehole_studio PRIVATE WH_STUDIO_HAVE_GPU=1)

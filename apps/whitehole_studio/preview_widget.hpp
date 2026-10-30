@@ -22,7 +22,7 @@ public:
     [[nodiscard]] QSize sizeHint() const override { return {960, 540}; }
     [[nodiscard]] QSize minimumSizeHint() const override { return {160, 90}; }
 
-signals:
+Q_SIGNALS:
     void resized(QSize size);
 
 protected:

@@ -36,7 +36,7 @@ void PreviewWidget::paintEvent(QPaintEvent*) {
 
 void PreviewWidget::resizeEvent(QResizeEvent* event) {
     QWidget::resizeEvent(event);
-    emit resized(event->size());
+    Q_EMIT resized(event->size());
 }
 
 }  // namespace whitehole::studio
