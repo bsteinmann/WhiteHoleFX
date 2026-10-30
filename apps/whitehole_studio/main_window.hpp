@@ -20,6 +20,7 @@
 class QAction;
 class QDockWidget;
 class QLabel;
+class QMenu;
 
 namespace whitehole::studio {
 
@@ -62,6 +63,8 @@ protected:
 
 private:
     void buildActions();
+    /// Füllt das Menü "Beispiele" aus den Ordnern neben dem Programm; leer, wenn es keine gibt.
+    void fillExamplesMenu(QMenu* menu);
     void updateActions();
     void updateStatus();
     void reportError(const QString& title, const std::string& message, bool interactive);

@@ -2,6 +2,8 @@
 #include "main_window.hpp"
 
 #include <QAction>
+#include <QCoreApplication>
+#include <QDir>
 #include <QApplication>
 #include <QCheckBox>
 #include <QCloseEvent>
@@ -157,6 +159,7 @@ void MainWindow::buildActions() {
     file->addAction(openAction_);
     file->addAction(reloadAction_);
     file->addAction(saveAsAction_);
+    fillExamplesMenu(file->addMenu(tr("&Beispiele")));
     file->addSeparator();
     file->addAction(quitAction_);
 
@@ -178,6 +181,28 @@ void MainWindow::buildActions() {
     bar->addAction(openAction_);
     bar->addAction(runAction_);
     bar->addAction(sendAction_);
+}
+
+void MainWindow::fillExamplesMenu(QMenu* menu) {
+    // Installiert: <präfix>/share/whiteholefx/examples; Windows-Paket und Entwicklungsbaum:
+    // "examples" neben dem Programm.
+    const QString app = QCoreApplication::applicationDirPath();
+    const QStringList candidates{app + QStringLiteral("/../share/whiteholefx/examples"),
+                                 app + QStringLiteral("/examples")};
+    for (const QString& candidate : candidates) {
+        const QDir dir{candidate};
+        const QStringList files = dir.entryList({QStringLiteral("*.whfx")}, QDir::Files, QDir::Name);
+        if (files.isEmpty()) {
+            continue;
+        }
+        for (const QString& name : files) {
+            const QString path = dir.absoluteFilePath(name);
+            QAction* action = menu->addAction(QFileInfo{name}.completeBaseName());
+            connect(action, &QAction::triggered, this, [this, path]() { openPath(path); });
+        }
+        return;
+    }
+    menu->setEnabled(false);
 }
 
 void MainWindow::updateActions() {

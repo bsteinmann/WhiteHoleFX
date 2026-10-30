@@ -255,3 +255,76 @@ jobs:
         with:
           name: fenster-windows
           path: fenster-*.png
+
+  linux-package:
+    name: Linux-Paket (.deb für Ubuntu 24.04, Installationstest in sauberem Container)
+    runs-on: ubuntu-24.04
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v5
+      - name: Bauwerkzeuge, Qt und desktop-file-utils installieren
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y qt6-base-dev libgl1-mesa-dev libxkbcommon-dev dpkg-dev \
+            desktop-file-utils shared-mime-info unzip curl
+      - name: wgpu-native laden
+        run: scripts/fetch-wgpu-native.sh
+      - name: Konfigurieren (Release, Präfix /usr)
+        run: >
+          cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr
+          -DWHITEHOLEFX_BUILD_STUDIO=ON -DWHITEHOLEFX_WEBGPU=ON -DWHITEHOLEFX_BUILD_TESTS=OFF
+          -DWGPU_NATIVE_ROOT="$PWD/third_party/wgpu-native"
+      - name: Bauen
+        run: cmake --build build --parallel
+      - name: Starter und Dateityp prüfen
+        run: |
+          desktop-file-validate packaging/linux/whitehole-studio.desktop
+          xmllint --noout packaging/linux/whiteholefx-mime.xml packaging/linux/whiteholefx.svg
+      - name: Paket erzeugen
+        # Fehler zusätzlich als Annotation ausgeben, damit sie ohne Log-Download lesbar sind.
+        run: |
+          set +e
+          (cd build && cpack -G DEB) 2>&1 | tee cpack.log
+          code=${PIPESTATUS[0]}
+          if [ "$code" != "0" ]; then
+            msg=$(tail -40 cpack.log | sed 's/%/%25/g' | awk '{printf "%s%%0A", $0}')
+            echo "::error title=cpack fehlgeschlagen::${msg}"
+          fi
+          exit $code
+      - name: Paketinhalt und Abhängigkeiten anzeigen
+        run: |
+          mkdir -p dist
+          cp build/*.deb dist/
+          deb=$(ls dist/*.deb)
+          info="$(dpkg-deb --info "$deb" | grep -E 'Package|Version|Architecture|Depends|Recommends|Installed-Size')"
+          files="$(dpkg-deb --contents "$deb" | awk '{print $1, $3, $6}' | head -60)"
+          msg=$(printf '%s\n%s\n' "$info" "$files" | sed 's/%/%25/g' | awk '{printf "%s%%0A", $0}')
+          echo "::notice title=Paket::${msg}"
+          echo "$info"; echo "$files"
+      - name: Installationstest in sauberem Ubuntu 24.04 (Abhängigkeiten, Start, Rauchtest)
+        run: |
+          set +e
+          out=$(docker run --rm -v "$PWD/dist:/dist:ro" -e QT_QPA_PLATFORM=offscreen ubuntu:24.04 bash -c '
+            set -e
+            export DEBIAN_FRONTEND=noninteractive
+            apt-get update -qq
+            apt-get install -y -qq /dist/*.deb mesa-vulkan-drivers fonts-dejavu-core > /dev/null
+            echo "== installiert:"; dpkg -L whiteholefx | head -40
+            echo "== Version:"; whitehole_studio --version
+            echo "== Prüfung:"; whitehole_cli /usr/share/whiteholefx/examples/wand.whfx --check
+            echo "== Rendern:"; whitehole_cli /usr/share/whiteholefx/examples/wand.whfx --frames 20 --software
+            echo "== Fenster:"; whitehole_studio /usr/share/whiteholefx/examples/regler.whfx --run --software --frames 30 --exercise --grab /tmp/fenster.png
+            test -s /tmp/fenster.png
+            echo "== Entfernen:"; apt-get remove -y -qq whiteholefx > /dev/null; test ! -e /usr/bin/whitehole_studio
+            echo ALLES-OK
+          ' 2>&1)
+          code=$?
+          echo "$out"
+          msg=$(echo "$out" | tail -45 | sed 's/%/%25/g' | awk '{printf "%s%%0A", $0}')
+          if [ "$code" != "0" ]; then echo "::error title=Installationstest fehlgeschlagen::${msg}"; else echo "::notice title=Installationstest::${msg}"; fi
+          exit $code
+      - name: Paket bereitstellen
+        uses: actions/upload-artifact@v4
+        with:
+          name: WhiteHoleFX-Linux-deb
+          path: dist/*.deb

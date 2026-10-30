@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Application
+Name=WhiteHoleFX Studio
+GenericName=LED-Steuerung
+Comment=LED-Matrizen, Cubes und Pixelinstallationen mit Node-Editor steuern
+Comment[en]=Control LED matrices, cubes and pixel installations with a node editor
+Exec=whitehole_studio %f
+Icon=whiteholefx
+Terminal=false
+Categories=AudioVideo;Graphics;
+MimeType=application/x-whitehole-project;
+Keywords=LED;Art-Net;sACN;DDP;Pixel;Mapping;

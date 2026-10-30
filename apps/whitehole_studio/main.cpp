@@ -26,10 +26,13 @@ using namespace whitehole;
 int main(int argc, char** argv) {
     QApplication app{argc, argv};
     QApplication::setApplicationName(QStringLiteral("WhiteHoleFX"));
+    QApplication::setApplicationVersion(QStringLiteral(WH_VERSION));
+    QGuiApplication::setDesktopFileName(QStringLiteral("whitehole-studio"));  // passt zum Starter (.desktop)
 
     QCommandLineParser parser;
     parser.setApplicationDescription(QStringLiteral("WhiteHoleFX Studio"));
     parser.addHelpOption();
+    parser.addVersionOption();
     parser.addPositionalArgument(QStringLiteral("projekt"), QStringLiteral("Projektdatei (.whfx)"), QStringLiteral("[projekt]"));
     const QCommandLineOption runOption{QStringLiteral("run"), QStringLiteral("Wiedergabe sofort starten")};
     const QCommandLineOption softwareOption{QStringLiteral("software"), QStringLiteral("Software-Adapter für die GPU bevorzugen")};

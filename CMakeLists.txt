@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.25)
 
 project(WhiteHoleFX
-    VERSION 0.1.0
+    VERSION 0.2.0
     DESCRIPTION "Open-Source-Echtzeitsteuerung für LED-Matrizen, LED-Cubes und Pixelinstallationen"
     LANGUAGES CXX)
 
@@ -14,6 +14,11 @@ option(WHITEHOLEFX_BUILD_TESTS "Unit-Tests bauen" ON)
 option(WHITEHOLEFX_WEBGPU "WebGPU-Backend bauen (braucht wgpu-native, siehe docs/gpu-backend.md)" OFF)
 option(WHITEHOLEFX_BUILD_STUDIO "Qt-Oberfläche bauen (braucht Qt 6 Widgets)" OFF)
 option(WHITEHOLEFX_WARNINGS_AS_ERRORS "Compiler-Warnungen als Fehler behandeln" OFF)
+
+# Installierte Programme finden mitgelieferte Bibliotheken (wgpu-native) relativ zu sich selbst.
+if(UNIX AND NOT APPLE)
+    set(CMAKE_INSTALL_RPATH "$ORIGIN/../lib/whiteholefx")
+endif()
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 include(WhiteHoleFXSettings)
@@ -48,6 +53,11 @@ if(WHITEHOLEFX_BUILD_APPS)
 endif()
 if(WHITEHOLEFX_BUILD_STUDIO)
     add_subdirectory(apps/whitehole_studio)
+endif()
+
+# Installation und Linux-Paket (.deb): nur mit Oberfläche und GPU-Backend sinnvoll.
+if(WHITEHOLEFX_BUILD_STUDIO AND WHITEHOLEFX_WEBGPU AND NOT WIN32)
+    include(WhiteHoleFXPackaging)
 endif()
 
 if(WHITEHOLEFX_BUILD_TESTS)
