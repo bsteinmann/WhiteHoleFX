@@ -7,7 +7,7 @@ Effekte gelten für flache Matrizen und für LEDs im 3D-Raum.
 > **Status: früh, aber benutzbar.** Projekte lassen sich in einer Qt-Oberfläche bearbeiten
 > (Parameterregler, Node-Editor, Layout-Editor, Rückgängig/Wiederholen), live ansehen und als
 > Art-Net, sACN oder DDP senden; ohne Oberfläche geht es mit `whitehole_cli`. Läuft in der CI auf
-> Linux und Windows (GPU dort nur als Software-Adapter geprüft). Bauen: [BUILDING.md](BUILDING.md).
+> Linux und Windows (GPU dort nur als Software-Adapter geprüft). Bauen und Installieren (Linux-.deb, Windows-Paket): [BUILDING.md](BUILDING.md).
 > Siehe [Fahrplan](#fahrplan) und [Projektdatei](docs/project-format.md).
 
 ## Idee in drei Sätzen

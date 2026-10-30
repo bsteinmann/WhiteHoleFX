@@ -55,6 +55,32 @@ cmake --build --preset studio-release --parallel
 Hast du Qt an einem anderen Ort als dem Systempfad (z. B. aus dem Qt-Installer), gib ihn mit:
 `cmake --preset studio-release -DCMAKE_PREFIX_PATH=$HOME/Qt/6.8.3/gcc_64`.
 
+## Linux-Paket (.deb) installieren
+
+Für Ubuntu 24.04 / Debian 13 und neuer (64 Bit) gibt es ein fertiges Paket. Es steckt als Artefakt
+`WhiteHoleFX-Linux-deb` in jedem CI-Lauf (GitHub, Reiter „Actions“). Installieren:
+
+```bash
+sudo apt install ./whiteholefx_0.2.0-1_amd64.deb
+```
+
+`apt` holt Qt 6 und Vulkan automatisch. Danach gibt es `whitehole_studio` (auch im Anwendungsmenü,
+Dateityp `.whfx`) und `whitehole_cli`; Beispielprojekte liegen unter `/usr/share/whiteholefx/examples`
+und im Studio-Menü Datei → Beispiele. Ohne Grafikkarte hilft `mesa-vulkan-drivers` (Software-Vulkan).
+Entfernen: `sudo apt remove whiteholefx`.
+
+Selbst bauen:
+
+```bash
+scripts/fetch-wgpu-native.sh
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr \
+  -DWHITEHOLEFX_BUILD_STUDIO=ON -DWHITEHOLEFX_WEBGPU=ON -DWGPU_NATIVE_ROOT="$PWD/third_party/wgpu-native"
+cmake --build build --parallel
+(cd build && cpack -G DEB)
+```
+
+Die CI installiert das Paket in einem sauberen Ubuntu-24.04-Container und startet es dort.
+
 ## Windows 10/11
 
 1. **Visual Studio 2022** (Community reicht) mit der Workload „Desktopentwicklung mit C++“
