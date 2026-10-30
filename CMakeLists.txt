@@ -30,6 +30,7 @@ add_subdirectory(libs/wh_compiler)
 add_subdirectory(libs/wh_nodes)
 add_subdirectory(libs/wh_engine)
 add_subdirectory(libs/wh_mapping)
+add_subdirectory(libs/wh_output)
 add_subdirectory(libs/wh_executor)
 
 if(WHITEHOLEFX_BUILD_TESTS)

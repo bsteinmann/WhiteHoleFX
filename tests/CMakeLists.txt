@@ -38,7 +38,15 @@ add_executable(wh_tests
     executor/sampling_shader_test.cpp
     mapping/fixture_test.cpp
     mapping/layout_test.cpp
-    mapping/wiring_test.cpp)
+    mapping/wiring_test.cpp
+    output/artnet_test.cpp
+    output/color_encoder_test.cpp
+    output/ddp_test.cpp
+    output/output_pipeline_test.cpp
+    output/output_plan_test.cpp
+    output/output_worker_test.cpp
+    output/sacn_test.cpp
+    output/udp_sender_test.cpp)
 
 target_include_directories(wh_tests PRIVATE support)
 
@@ -51,6 +59,7 @@ target_link_libraries(wh_tests PRIVATE
     whitehole::engine
     whitehole::executor
     whitehole::mapping
+    whitehole::output
     wh_warnings
     Catch2::Catch2WithMain)
 

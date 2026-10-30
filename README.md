@@ -27,6 +27,7 @@ Raum sitzt, und tastet die Funktion genau dort ab.
 | `wh_engine` | Renderloop, Readback-Ring, Stages |
 | `wh_executor` | Graph pro Frame ausführen: Canvas-Textur und Abtastung an LED-Positionen |
 | `wh_mapping` | Fixtures (Matrix, Strip, 3D-Gitter, Punktwolke), Verkabelung, Normalisierung |
+| `wh_output` | Farbumrechnung, Patch auf Universen, Art-Net / sACN / DDP, Ausgabe-Thread, UDP |
 
 Abhängigkeiten zeigen nur nach unten. Kein Modul bis auf die spätere GUI kennt Qt.
 
@@ -49,6 +50,7 @@ Strenge Warnungen als Fehler: `-DWHITEHOLEFX_WARNINGS_AS_ERRORS=ON`.
 - [Werte-Graph (CPU-Nodes, Modulation)](docs/value-graph.md)
 - [Canvas-Stage](docs/canvas-stage.md)
 - [Mapping und Abtast-Pass](docs/mapping.md)
+- [Ausgabe (Art-Net, sACN, DDP)](docs/output.md)
 
 ## Konventionen
 
@@ -60,7 +62,7 @@ Strenge Warnungen als Fehler: `-DWHITEHOLEFX_WARNINGS_AS_ERRORS=ON`.
 
 - [x] 1–4: Architektur, Graph, Compiler, Werte-Graph, GPU-Ausführung
 - [x] 5: Mapping und Abtast-Pass
-- [ ] 6: Ausgabe (Art-Net, sACN, DDP, WLED, ...)
+- [x] 6: Ausgabe (Art-Net, sACN, DDP; WLED über DDP/Art-Net). Serial, MQTT, Hyperion, MIDI folgen später
 - [ ] 7: Plugins und Skripte
 - [ ] 8: Oberfläche (Qt 6)
 - [ ] Raster-Nodes (Blur, Feedback), Dawn-Backend, Layout-Dateiformat

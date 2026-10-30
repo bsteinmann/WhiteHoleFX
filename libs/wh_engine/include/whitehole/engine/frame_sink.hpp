@@ -8,8 +8,9 @@
 
 namespace whitehole::engine {
 
-/// Ein fertig berechneter Frame auf der CPU: die Ausgabebytes aller LEDs
-/// (bereits in Farbreihenfolge und Gamma des Ausgabe-Passes).
+/// Ein fertig berechneter Frame auf der CPU: der Inhalt des Ausgabepuffers der GPU.
+/// Bei der Abtast-Stage sind das 16 Byte je LED (lineares RGBA, vier f32), eventuell mit
+/// Reserve dahinter. Farbreihenfolge, Gamma und Paketformat wendet erst wh_output an.
 struct PixelFrame {
     FrameIndex frame{0};
     std::vector<std::byte> bytes;
