@@ -266,7 +266,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y qt6-base-dev libgl1-mesa-dev libxkbcommon-dev dpkg-dev \
-            desktop-file-utils shared-mime-info unzip curl
+            desktop-file-utils shared-mime-info libxml2-utils unzip curl
       - name: wgpu-native laden
         run: scripts/fetch-wgpu-native.sh
       - name: Konfigurieren (Release, Präfix /usr)
