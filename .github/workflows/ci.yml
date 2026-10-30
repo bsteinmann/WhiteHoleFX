@@ -170,7 +170,8 @@ jobs:
         run: |
           ./build/apps/whitehole_studio/whitehole_studio examples/wand.whfx --grab fenster-layout.png
           ./build/apps/whitehole_studio/whitehole_studio examples/wand.whfx --run --software --frames 40 --grab fenster-lauf.png
-          test -s fenster-layout.png && test -s fenster-lauf.png
+          ./build/apps/whitehole_studio/whitehole_studio examples/regler.whfx --run --software --frames 40 --exercise --grab fenster-regler.png
+          test -s fenster-layout.png && test -s fenster-lauf.png && test -s fenster-regler.png
       - name: Fensterbilder bereitstellen
         uses: actions/upload-artifact@v4
         with:
@@ -178,3 +179,4 @@ jobs:
           path: |
             fenster-layout.png
             fenster-lauf.png
+            fenster-regler.png

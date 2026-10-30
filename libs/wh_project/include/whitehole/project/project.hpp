@@ -61,5 +61,7 @@ struct Project {
 
 /// Hilfen für den Runner.
 [[nodiscard]] Result<std::string> readTextFile(const std::string& path);
+/// Schreibt die Datei neu (ersetzt vorhandenen Inhalt). Fehler: IoError.
+[[nodiscard]] Result<void> writeTextFile(const std::string& path, std::string_view text);
 
 }  // namespace whitehole::project

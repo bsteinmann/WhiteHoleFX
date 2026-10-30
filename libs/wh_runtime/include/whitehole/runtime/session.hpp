@@ -80,6 +80,11 @@ public:
     Session(const Session&) = delete;
     Session& operator=(const Session&) = delete;
 
+    /// Übernimmt einen geänderten Graphen (z. B. neue Parameterwerte) im laufenden Betrieb.
+    /// Ändert sich nur ein Wert, entsteht keine neue Pipeline. Bei einem Fehler läuft der letzte
+    /// gute Zustand weiter; der Fehler steht in stageError().
+    Result<void> applyGraph(const graph::Graph& graph) { return stage_->setGraph(graph); }
+
     /// Ein Frame. Siehe RenderEngine::renderFrame.
     Result<void> renderFrame() { return engine_->renderFrame(); }
 

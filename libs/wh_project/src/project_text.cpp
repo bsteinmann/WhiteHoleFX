@@ -258,4 +258,17 @@ Result<std::string> readTextFile(const std::string& path) {
     return buffer.str();
 }
 
+Result<void> writeTextFile(const std::string& path, std::string_view text) {
+    std::ofstream out{path, std::ios::binary | std::ios::trunc};
+    if (!out) {
+        return Error{ErrorCode::IoError, "Datei kann nicht geschrieben werden: " + path};
+    }
+    out.write(text.data(), static_cast<std::streamsize>(text.size()));
+    out.close();
+    if (!out) {
+        return Error{ErrorCode::IoError, "Schreibfehler: " + path};
+    }
+    return {};
+}
+
 }  // namespace whitehole::project

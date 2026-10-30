@@ -21,6 +21,7 @@
 #include <optional>
 #include <string>
 #include <string_view>
+#include <vector>
 
 #include "whitehole/core/result.hpp"
 #include "whitehole/engine/frame_clocks.hpp"
@@ -44,6 +45,26 @@ struct PlayerStatus {
     double framesPerSecond{40.0};
     std::string path;                 // zuletzt geladene Datei (leer bei loadText)
     std::optional<Error> lastError;   // letzter Fehler von Ausgabe oder Effekt
+};
+
+/// Ein einstellbarer Parameter eines Nodes, wie ihn eine Oberfläche braucht.
+struct ParameterInfo {
+    std::string key;
+    std::string displayName;
+    graph::ParameterValue value;
+    graph::ParameterValue defaultValue;
+    std::optional<double> minValue;
+    std::optional<double> maxValue;
+    /// Ein Eingang mit demselben Schlüssel ist verbunden: Der Wert kommt aus dem Graphen, ein
+    /// Regler hätte keine Wirkung.
+    bool driven{false};
+};
+
+struct NodeInfo {
+    NodeId id;
+    std::string title;  // Anzeigename des Typs, bei mehreren gleichen mit Nummer ("Linear Gradient 2")
+    std::string typeId;
+    std::vector<ParameterInfo> parameters;
 };
 
 class Player {
@@ -72,6 +93,19 @@ public:
     /// Bildrate des Projekts (40, wenn keins geladen ist).
     [[nodiscard]] double framesPerSecond() const noexcept { return project_ ? project_->framesPerSecond : 40.0; }
 
+    /// Alle Nodes mit mindestens einem Parameter, in Graph-Reihenfolge. Leer ohne Projekt.
+    [[nodiscard]] std::vector<NodeInfo> nodes() const;
+
+    /// Ändert einen Parameter. Läuft das Projekt, wirkt es ab dem nächsten step(); mehrere
+    /// Änderungen zwischen zwei Frames werden zu einer Übernahme zusammengefasst. Liefert den
+    /// tatsächlich gespeicherten Wert (Zahlen werden auf den erlaubten Bereich begrenzt).
+    /// Fehler: InvalidArgument (kein Projekt, falscher Typ), NotFound (Node oder Parameter).
+    Result<graph::ParameterValue> setParameter(NodeId node, const std::string& key, graph::ParameterValue value);
+
+    /// Schreibt das Projekt (Layout, Graph, Ausgabe samt aktueller Parameter) als Datei und merkt
+    /// sich den Pfad. Kommentare einer von Hand geschriebenen Datei gehen dabei verloren.
+    Result<void> save(const std::string& path);
+
     /// Bild der LEDs: während des Laufs mit den Farben des letzten Frames (schwarz, solange noch
     /// keiner da ist), sonst das Layout. Fehler: InvalidArgument, wenn nichts geladen ist.
     [[nodiscard]] Result<preview::Image> image(const preview::PreviewOptions& options) const;
@@ -89,6 +123,7 @@ private:
     std::unique_ptr<engine::SteadyFrameClock> clock_;
     std::unique_ptr<Session> session_;
     std::optional<Error> stepError_;
+    bool graphDirty_{false};  // Parameter geändert, Session noch nicht informiert
 };
 
 }  // namespace whitehole::runtime

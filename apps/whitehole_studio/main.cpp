@@ -12,6 +12,7 @@
 #include <QThread>
 
 #include <chrono>
+#include <cstdio>
 #include <memory>
 
 #include "main_window.hpp"
@@ -34,7 +35,8 @@ int main(int argc, char** argv) {
     const QCommandLineOption softwareOption{QStringLiteral("software"), QStringLiteral("Software-Adapter für die GPU bevorzugen")};
     const QCommandLineOption grabOption{QStringLiteral("grab"), QStringLiteral("Fensterbild speichern und beenden"), QStringLiteral("datei.png")};
     const QCommandLineOption framesOption{QStringLiteral("frames"), QStringLiteral("Frames vor --grab (Standard 30 mit --run)"), QStringLiteral("n"), QStringLiteral("30")};
-    parser.addOptions({runOption, softwareOption, grabOption, framesOption});
+    const QCommandLineOption exerciseOption{QStringLiteral("exercise"), QStringLiteral("vor --grab alle Regler einmal verstellen (Rauchtest)")};
+    parser.addOptions({runOption, softwareOption, grabOption, framesOption, exerciseOption});
     parser.process(app);
 
     std::unique_ptr<gpu::IGpuDevice> device;
@@ -88,6 +90,20 @@ int main(int argc, char** argv) {
             window.tick();
             QApplication::processEvents();
             QThread::msleep(25);
+        }
+    }
+    if (parser.isSet(exerciseOption)) {
+        const int changed = window.exerciseParameters();
+        std::printf("Regler verstellt: %d\n", changed);
+        for (int i = 0; i < 10; ++i) {
+            window.tick();
+            QApplication::processEvents();
+            QThread::msleep(25);
+        }
+        const QString problem = window.problem();
+        if (changed == 0 || !problem.isEmpty()) {
+            std::fprintf(stderr, "Rauchtest fehlgeschlagen: %s\n", changed == 0 ? "kein Regler gefunden" : problem.toUtf8().constData());
+            return 1;
         }
     }
     window.refreshImage();

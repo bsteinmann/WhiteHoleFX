@@ -1,0 +1,44 @@
+whitehole-project 1
+# Beispiel zum Ausprobieren der Parameterregler in whitehole_studio:
+# Plasma, gespiegelt, skaliert und von einem LFO gedreht. Die Regler zeigen Zahlen mit und ohne
+# Bereich, Ganzzahlen (LFO-Form), Ja/Nein (Spiegeln) und Farben; der Drehwinkel ist an den LFO
+# angeschlossen und deshalb ausgegraut.
+#   whitehole_studio examples/regler.whfx --run
+
+settings fps 40
+
+destination 0 127.0.0.1
+
+fixture Wand
+  matrix 32 16 serpentine
+  patch artnet destination 0 universe 0
+end
+fixture Decke at 0 20 0
+  strip 90 from 0 0 0 to 32 0 0
+  patch artnet destination 0 universe 4 order GRB
+end
+
+node plasma wh.generator.plasma
+  set scale 4
+end
+node spiegel wh.transform.mirror
+  set mirrorX true
+  set mirrorY false
+end
+node groesse wh.transform.scale
+  set factor 1.5
+end
+node dreher wh.transform.rotate
+end
+node lfo wh.value.lfo
+  set shape 1
+  set frequency 0.1
+  set min -45
+  set max 45
+end
+
+connect plasma.out -> spiegel.source
+connect spiegel.out -> groesse.source
+connect groesse.out -> dreher.source
+connect lfo.out -> dreher.angle
+output dreher.out

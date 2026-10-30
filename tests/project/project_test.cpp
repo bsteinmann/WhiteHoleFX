@@ -1,6 +1,7 @@
 // Tests der Projektdatei: Lesen, Schreiben, Fehlermeldungen.
 #include <catch2/catch_test_macros.hpp>
 
+#include <filesystem>
 #include <memory>
 #include <string>
 
@@ -283,4 +284,17 @@ TEST_CASE("Projekt: readTextFile meldet fehlende Dateien", "[project]") {
     const auto result = project::readTextFile("/nicht/vorhanden.whfx");
     REQUIRE_FALSE(result.ok());
     CHECK(result.error().code == ErrorCode::IoError);
+}
+
+TEST_CASE("Projekt: writeTextFile schreibt und ersetzt", "[project]") {
+    const std::string path = (std::filesystem::temp_directory_path() / "whfx_write_text_test.txt").string();
+    REQUIRE(project::writeTextFile(path, "eins zwei drei\n").ok());
+    REQUIRE(project::writeTextFile(path, "neu").ok());
+    const auto back = project::readTextFile(path);
+    REQUIRE(back.ok());
+    CHECK(back.value() == "neu");
+    std::filesystem::remove(path);
+    const auto bad = project::writeTextFile("/nicht/vorhanden/x.txt", "x");
+    REQUIRE_FALSE(bad.ok());
+    CHECK(bad.error().code == ErrorCode::IoError);
 }

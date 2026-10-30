@@ -67,6 +67,11 @@ std::uint8_t toSrgb8(float linear) noexcept {
     return static_cast<std::uint8_t>(std::lround(std::clamp(s, 0.0F, 1.0F) * 255.0F));
 }
 
+float fromSrgb8(std::uint8_t value) noexcept {
+    const float s = static_cast<float>(value) / 255.0F;
+    return s <= 0.04045F ? s / 12.92F : std::pow((s + 0.055F) / 1.055F, 2.4F);
+}
+
 Result<Image> renderPreview(const mapping::LedMap& map, std::span<const ColorRgba> colors,
                             const PreviewOptions& options) {
     if (map.world.empty()) {

@@ -2,7 +2,12 @@
 #include "main_window.hpp"
 
 #include <QAction>
+#include <QCheckBox>
 #include <QCloseEvent>
+#include <QDoubleSpinBox>
+#include <QSlider>
+#include <QSpinBox>
+#include <QDockWidget>
 #include <QDragEnterEvent>
 #include <QDropEvent>
 #include <QFileDialog>
@@ -20,6 +25,7 @@
 #include <algorithm>
 #include <cmath>
 
+#include "parameter_panel.hpp"
 #include "preview_widget.hpp"
 
 namespace whitehole::studio {
@@ -54,6 +60,21 @@ MainWindow::MainWindow(gpu::IGpuDevice* device, const QString& deviceNote, QWidg
     setCentralWidget(preview_);
     connect(preview_, &PreviewWidget::resized, this, [this](QSize) { refreshImage(); });
 
+    parameters_ = new ParameterPanel{this};
+    parameters_->setChangeHandler(
+        [this](NodeId node, const std::string& key,
+               graph::ParameterValue value) -> std::optional<graph::ParameterValue> {
+            const auto stored = player_->setParameter(node, key, std::move(value));
+            if (!stored.ok()) {
+                statusBar()->showMessage(fromStd(stored.error().message), 8000);
+                return std::nullopt;
+            }
+            return stored.value();
+        });
+    dock_ = new QDockWidget{tr("Parameter"), this};
+    dock_->setWidget(parameters_);
+    addDockWidget(Qt::RightDockWidgetArea, dock_);
+
     statusLabel_ = new QLabel{this};
     statusBar()->addPermanentWidget(statusLabel_);
 
@@ -86,6 +107,10 @@ void MainWindow::buildActions() {
     reloadAction_->setShortcut(QKeySequence{Qt::Key_F5});
     connect(reloadAction_, &QAction::triggered, this, &MainWindow::onReload);
 
+    saveAsAction_ = new QAction{tr("Speichern &unter …"), this};
+    saveAsAction_->setShortcut(QKeySequence::SaveAs);
+    connect(saveAsAction_, &QAction::triggered, this, &MainWindow::onSaveAs);
+
     quitAction_ = new QAction{tr("&Beenden"), this};
     quitAction_->setShortcut(QKeySequence::Quit);
     connect(quitAction_, &QAction::triggered, this, &QWidget::close);
@@ -103,8 +128,12 @@ void MainWindow::buildActions() {
     QMenu* file = menuBar()->addMenu(tr("&Datei"));
     file->addAction(openAction_);
     file->addAction(reloadAction_);
+    file->addAction(saveAsAction_);
     file->addSeparator();
     file->addAction(quitAction_);
+
+    QMenu* view = menuBar()->addMenu(tr("&Ansicht"));
+    view->addAction(dock_->toggleViewAction());
 
     QMenu* run = menuBar()->addMenu(tr("&Wiedergabe"));
     run->addAction(runAction_);
@@ -120,6 +149,7 @@ void MainWindow::buildActions() {
 void MainWindow::updateActions() {
     const runtime::PlayerStatus s = player_->status();
     reloadAction_->setEnabled(!s.path.empty());
+    saveAsAction_->setEnabled(s.loaded);
     runAction_->setEnabled(s.loaded);
     runAction_->setChecked(s.running);
     runAction_->setText(s.running ? tr("&Stopp") : tr("&Start"));
@@ -165,6 +195,7 @@ bool MainWindow::openPath(const QString& path, bool interactive) {
         return false;
     }
     preview_->setMessage({});
+    parameters_->rebuild(player_->nodes());
     setWindowTitle(tr("WhiteHoleFX – %1").arg(QFileInfo{path}.fileName()));
     statusBar()->showMessage(tr("Geladen: %1").arg(path), 5000);
     updateActions();
@@ -220,6 +251,40 @@ void MainWindow::refreshImage() {
     preview_->setImage(view.copy());  // eigener Speicher: das Bild überlebt den Rückgabewert
 }
 
+int MainWindow::exerciseParameters() {
+    int changed = 0;
+    for (QSlider* slider : parameters_->findChildren<QSlider*>()) {
+        if (slider->isEnabled()) {
+            slider->setValue((slider->minimum() + slider->maximum()) / 3);
+            ++changed;
+        }
+    }
+    for (QDoubleSpinBox* spin : parameters_->findChildren<QDoubleSpinBox*>()) {
+        if (spin->isEnabled()) {
+            spin->setValue(spin->value() + spin->singleStep());
+            ++changed;
+        }
+    }
+    for (QSpinBox* spin : parameters_->findChildren<QSpinBox*>()) {
+        if (spin->isEnabled()) {
+            spin->setValue(spin->value() + 1);
+            ++changed;
+        }
+    }
+    for (QCheckBox* check : parameters_->findChildren<QCheckBox*>()) {
+        if (check->isEnabled()) {
+            check->toggle();
+            ++changed;
+        }
+    }
+    return changed;
+}
+
+QString MainWindow::problem() const {
+    const auto error = player_->status().lastError;
+    return error ? fromStd(error->message) : QString{};
+}
+
 void MainWindow::onOpen() {
     const QString start = player_->status().path.empty() ? QString{} : fromStd(player_->status().path);
     const QString path = QFileDialog::getOpenFileName(this, tr("Projekt öffnen"), start,
@@ -238,6 +303,26 @@ void MainWindow::onReload() {
     if (openPath(fromStd(path)) && wasRunning) {
         startPlayback();
     }
+}
+
+void MainWindow::onSaveAs() {
+    const QString start = player_->status().path.empty() ? QString{} : fromStd(player_->status().path);
+    QString path = QFileDialog::getSaveFileName(this, tr("Projekt speichern unter"), start,
+                                                tr("WhiteHoleFX-Projekte (*.whfx)"));
+    if (path.isEmpty()) {
+        return;
+    }
+    if (QFileInfo{path}.suffix().isEmpty()) {
+        path += QStringLiteral(".whfx");
+    }
+    const Result<void> r = player_->save(path.toUtf8().toStdString());
+    if (!r.ok()) {
+        reportError(tr("Speichern"), r.error().message, true);
+        return;
+    }
+    setWindowTitle(tr("WhiteHoleFX – %1").arg(QFileInfo{path}.fileName()));
+    statusBar()->showMessage(tr("Gespeichert: %1").arg(path), 5000);
+    updateActions();
 }
 
 void MainWindow::onTogglePlayback(bool run) {

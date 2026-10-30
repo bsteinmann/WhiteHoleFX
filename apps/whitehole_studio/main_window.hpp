@@ -18,10 +18,12 @@
 #include "whitehole/runtime/player.hpp"
 
 class QAction;
+class QDockWidget;
 class QLabel;
 
 namespace whitehole::studio {
 
+class ParameterPanel;
 class PreviewWidget;
 
 class MainWindow : public QMainWindow {
@@ -41,6 +43,12 @@ public:
     void tick();
     void refreshImage();
 
+    /// Rauchtest: stellt jeden aktiven Regler einmal um (wie ein Mensch es täte) und liefert die
+    /// Zahl der Änderungen. Für --exercise in der CI.
+    int exerciseParameters();
+    /// Letzter Fehler des Players als Text, leer wenn alles in Ordnung ist.
+    [[nodiscard]] QString problem() const;
+
 protected:
     void dragEnterEvent(QDragEnterEvent* event) override;
     void dropEvent(QDropEvent* event) override;
@@ -53,6 +61,7 @@ private:
     void reportError(const QString& title, const std::string& message, bool interactive);
     void onOpen();
     void onReload();
+    void onSaveAs();
     void onTogglePlayback(bool run);
     void onToggleSending(bool send);
 
@@ -63,12 +72,15 @@ private:
     QString deviceNote_;
 
     PreviewWidget* preview_{nullptr};
+    ParameterPanel* parameters_{nullptr};
+    QDockWidget* dock_{nullptr};
     QLabel* statusLabel_{nullptr};
     QTimer timer_;
     QTimer statusTimer_;
 
     QAction* openAction_{nullptr};
     QAction* reloadAction_{nullptr};
+    QAction* saveAsAction_{nullptr};
     QAction* runAction_{nullptr};
     QAction* sendAction_{nullptr};
     QAction* quitAction_{nullptr};

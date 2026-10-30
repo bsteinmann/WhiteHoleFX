@@ -10,6 +10,8 @@ add_executable(whitehole_studio
     main.cpp
     main_window.cpp
     main_window.hpp
+    parameter_panel.cpp
+    parameter_panel.hpp
     preview_widget.cpp
     preview_widget.hpp)
 target_link_libraries(whitehole_studio PRIVATE

@@ -138,3 +138,44 @@ TEST_CASE("Session auf dem Gerät: die Zeit bewegt das Bild", "[gpu_device][sess
     CHECK(packets[0].bytes != packets[1].bytes);
     CHECK(packets[1].bytes != packets[2].bytes);
 }
+
+TEST_CASE("Session auf dem Gerät: geänderte Parameter wirken ohne Neustart", "[gpu_device][session]") {
+    const auto device = makeDevice();
+    if (!device) {
+        SKIP("Kein WebGPU-Adapter verfügbar");
+    }
+    auto library = nodes::BuiltinLibrary::create().value();
+    auto parsed = project::parseProject(kProject, library->registry);
+    REQUIRE(parsed.ok());
+    project::Project p = std::move(parsed).value();
+
+    RecordingSink sink;
+    engine::ManualFrameClock clock{Seconds{1.0 / 40.0}};
+    runtime::SessionOptions sessionOptions;
+    sessionOptions.keepLatestColors = true;
+    auto session = runtime::Session::create(
+        p, runtime::SessionDeps{*device, library->snippets, library->kernels, sink, clock}, sessionOptions);
+    REQUIRE(session.ok());
+    REQUIRE(session.value()->renderFrame().ok());
+    REQUIRE(session.value()->flush(std::chrono::seconds{5}));
+    const std::vector<ColorRgba> before = session.value()->latestColors();
+    REQUIRE(before.size() == 16);
+    CHECK(before[7].g > 0.8F);  // letzte Spalte: fast weiß
+
+    // Farbe B auf reines Rot: Grün und Blau verschwinden, Rot bleibt.
+    const NodeId node = p.graph.nodes().front().id;
+    REQUIRE(p.graph.setParameter(node, "colorB", graph::ParameterValue{ColorRgba{1.0F, 0.0F, 0.0F, 1.0F}}).ok());
+    REQUIRE(session.value()->applyGraph(p.graph).ok());
+    REQUIRE(session.value()->renderFrame().ok());
+    REQUIRE(session.value()->flush(std::chrono::seconds{5}));
+    const std::vector<ColorRgba> after = session.value()->latestColors();
+    REQUIRE(after.size() == 16);
+    for (std::size_t led = 0; led < 16; ++led) {
+        const float t = (static_cast<float>(led % 8) + 0.5F) / 8.0F;
+        INFO("LED " << led);
+        CHECK(std::abs(after[led].r - t) < 1e-4F);
+        CHECK(after[led].g < 1e-4F);
+        CHECK(after[led].b < 1e-4F);
+    }
+    CHECK_FALSE(session.value()->stageError().has_value());
+}

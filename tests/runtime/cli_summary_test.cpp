@@ -86,6 +86,26 @@ TEST_CASE("Beispiel: examples/wand.whfx ist gültig und der Bericht stimmt", "[c
     CHECK(contains(report.value(), "gesetzt"));
 }
 
+TEST_CASE("Beispiele: alle Dateien in examples/ lassen sich lesen und prüfen", "[cli]") {
+    auto library = nodes::BuiltinLibrary::create().value();
+    const auto dir = std::filesystem::path{__FILE__}.parent_path().parent_path().parent_path() / "examples";
+    std::size_t found = 0;
+    for (const auto& entry : std::filesystem::directory_iterator{dir}) {
+        if (entry.path().extension() != ".whfx") {
+            continue;
+        }
+        ++found;
+        INFO(entry.path().string());
+        const auto text = project::readTextFile(entry.path().string());
+        REQUIRE(text.ok());
+        const auto parsed = project::parseProject(text.value(), library->registry);
+        REQUIRE(parsed.ok());
+        CHECK(parsed.value().target.has_value());
+        CHECK(runtime::summarize(parsed.value()).ok());
+    }
+    CHECK(found >= 2);
+}
+
 TEST_CASE("Bericht: Multicast, eigener Port und DDP werden benannt", "[cli]") {
     auto library = nodes::BuiltinLibrary::create().value();
     const auto parsed = project::parseProject(

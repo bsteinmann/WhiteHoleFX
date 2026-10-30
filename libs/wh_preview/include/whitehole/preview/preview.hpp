@@ -53,4 +53,7 @@ struct PreviewOptions {
 /// Linear -> sRGB (0..255), mit Begrenzung auf den gültigen Bereich.
 [[nodiscard]] std::uint8_t toSrgb8(float linear) noexcept;
 
+/// sRGB (0..255) -> linear (0..1); die Umkehrung von toSrgb8, z. B. für Farbwähler.
+[[nodiscard]] float fromSrgb8(std::uint8_t value) noexcept;
+
 }  // namespace whitehole::preview

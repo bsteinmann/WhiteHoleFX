@@ -1,6 +1,8 @@
 // player.cpp: Zustandsführung für Oberflächen.
 #include "whitehole/runtime/player.hpp"
 
+#include <unordered_map>
+
 #include "whitehole/output/packet_sink.hpp"
 
 namespace whitehole::runtime {
@@ -48,6 +50,7 @@ Result<void> Player::adopt(project::Project project, std::string path) {
     project_.emplace(std::move(project));
     path_ = std::move(path);
     stepError_.reset();
+    graphDirty_ = false;
     return {};
 }
 
@@ -73,6 +76,7 @@ Result<void> Player::start() {
     clock_ = std::move(clock);
     session_ = std::move(session).value();
     stepError_.reset();
+    graphDirty_ = false;
     return {};
 }
 
@@ -85,6 +89,12 @@ void Player::stop() {
 Result<void> Player::step() {
     if (!session_) {
         return {};
+    }
+    if (graphDirty_) {
+        graphDirty_ = false;
+        // Ein Fehler (z. B. Shader lässt sich nicht übersetzen) lässt den letzten guten Zustand
+        // laufen und steht in status().lastError.
+        (void)session_->applyGraph(project_->graph);
     }
     const Result<void> r = session_->renderFrame();
     if (!r.ok()) {
@@ -115,6 +125,74 @@ PlayerStatus Player::status() const {
         }
     }
     return s;
+}
+
+std::vector<NodeInfo> Player::nodes() const {
+    std::vector<NodeInfo> result;
+    if (!project_) {
+        return result;
+    }
+    const graph::Graph& g = project_->graph;
+    std::unordered_map<std::string, std::size_t> total;
+    for (const graph::NodeInstance& node : g.nodes()) {
+        ++total[node.typeId];
+    }
+    std::unordered_map<std::string, std::size_t> seen;
+    for (const graph::NodeInstance& node : g.nodes()) {
+        const std::size_t index = ++seen[node.typeId];
+        const graph::NodeDescriptor* descriptor = g.registry().find(node.typeId);
+        if (descriptor == nullptr || descriptor->parameters.empty()) {
+            continue;
+        }
+        NodeInfo info;
+        info.id = node.id;
+        info.typeId = node.typeId;
+        info.title = descriptor->displayName;
+        if (total[node.typeId] > 1) {
+            info.title += " " + std::to_string(index);
+        }
+        for (const graph::ParameterDescriptor& p : descriptor->parameters) {
+            ParameterInfo parameter;
+            parameter.key = p.key;
+            parameter.displayName = p.displayName;
+            parameter.defaultValue = p.defaultValue;
+            const auto it = node.parameters.find(p.key);
+            parameter.value = it != node.parameters.end() ? it->second : p.defaultValue;
+            parameter.minValue = p.minValue;
+            parameter.maxValue = p.maxValue;
+            parameter.driven = g.findInputConnection(node.id, p.key) != nullptr;
+            info.parameters.push_back(std::move(parameter));
+        }
+        result.push_back(std::move(info));
+    }
+    return result;
+}
+
+Result<graph::ParameterValue> Player::setParameter(NodeId node, const std::string& key,
+                                                   graph::ParameterValue value) {
+    if (!project_) {
+        return Error{ErrorCode::InvalidArgument, "Es ist kein Projekt geladen"};
+    }
+    if (const Result<void> r = project_->graph.setParameter(node, key, std::move(value)); !r.ok()) {
+        return r.error();
+    }
+    graphDirty_ = true;
+    return project_->graph.findNode(node)->parameters.at(key);
+}
+
+Result<void> Player::save(const std::string& path) {
+    if (!project_) {
+        return Error{ErrorCode::InvalidArgument, "Es ist kein Projekt geladen"};
+    }
+    const auto text = project::writeProject(*project_);
+    if (!text.ok()) {
+        return text.error();
+    }
+    if (const Result<void> r = project::writeTextFile(path, text.value()); !r.ok()) {
+        return r;
+    }
+    path_ = path;
+    return {};
 }
 
 Result<preview::Image> Player::image(const preview::PreviewOptions& options) const {

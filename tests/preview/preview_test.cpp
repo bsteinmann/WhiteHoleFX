@@ -65,6 +65,15 @@ TEST_CASE("sRGB: Umrechnung und Begrenzung", "[preview]") {
     CHECK(toSrgb8(std::nanf("")) == 0);
 }
 
+TEST_CASE("sRGB: Rückumrechnung ist die Umkehrung", "[preview]") {
+    CHECK(fromSrgb8(0) == 0.0F);
+    CHECK(fromSrgb8(255) == 1.0F);
+    for (int v = 0; v <= 255; ++v) {
+        INFO("Wert " << v);
+        CHECK(toSrgb8(fromSrgb8(static_cast<std::uint8_t>(v))) == v);
+    }
+}
+
 TEST_CASE("Vorschau: links und rechts, oben und unten stimmen", "[preview]") {
     // 4 Spalten, 2 Zeilen. Zeile 0 ist oben (Kabelreihenfolge: zeilenweise).
     const mapping::LedMap map = bake(mapping::MatrixShape{4, 2, {1, 1}, {}});
