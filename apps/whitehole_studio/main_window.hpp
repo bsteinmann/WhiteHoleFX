@@ -49,7 +49,8 @@ public:
     int exerciseParameters();
     /// Letzter Fehler des Players als Text, leer wenn alles in Ordnung ist.
     [[nodiscard]] QString problem() const;
-    /// Rauchtest des Node-Editors (siehe NodeEditor::exercise), danach ein paar Frames.
+    /// Rauchtest des Node-Editors (siehe NodeEditor::exercise) samt Rückgängig/Wiederholen über
+    /// alles, was bisher geändert wurde; danach ein paar Frames.
     /// Leer bei Erfolg, sonst die Meldung des gescheiterten Schritts.
     QString exerciseEditor();
 
@@ -67,6 +68,10 @@ private:
     void updateTitle();
     /// Fragt bei ungespeicherten Änderungen nach. Wahr, wenn weitergemacht werden darf.
     bool confirmDiscard();
+    void onUndo();
+    void onRedo();
+    void afterRestore();
+    void updateUndoActions();
     void onOpen();
     void onReload();
     void onSaveAs();
@@ -91,6 +96,8 @@ private:
     QAction* openAction_{nullptr};
     QAction* reloadAction_{nullptr};
     QAction* saveAsAction_{nullptr};
+    QAction* undoAction_{nullptr};
+    QAction* redoAction_{nullptr};
     QAction* runAction_{nullptr};
     QAction* sendAction_{nullptr};
     QAction* quitAction_{nullptr};

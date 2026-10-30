@@ -88,8 +88,16 @@ an. Die Anordnung ist erst gespeichert, wenn du „Speichern unter“ wählst.
 Die CI prüft mit `--exercise` auch den Editor: Zwei Nodes anlegen, ein Kabel auf dem Weg der Maus
 ziehen (Treffer auf Ports), verschieben, Kabel und Nodes wieder löschen.
 
+## Rückgängig und Wiederholen
+
+Menü Bearbeiten, Strg+Z und Strg+Umschalt+Z (Windows auch Strg+Y). Zurückgenommen werden
+Parameter, Nodes, Kabel, Ausgang und Lage; bis zu 200 Schritte. Viele Änderungen hintereinander am
+selben Regler oder am selben Node (Ziehen) zählen als ein Schritt. Laden leert die Listen,
+Speichern nicht. Der Stern im Titel bleibt nach einem Undo stehen, auch wenn der gespeicherte Stand
+erreicht ist.
+
 ## Noch nicht enthalten
 
-Ein Layout-Editor (Fixtures, Patches, Ziele) und Rückgängig/Wiederholen. Bis dahin entsteht der
+Ein Layout-Editor (Fixtures, Patches, Ziele). Bis dahin entsteht der
 Layout- und Ausgabeteil der Projektdatei von Hand (siehe [Projektdatei](project-format.md));
 „Neu laden“ übernimmt Änderungen sofort.

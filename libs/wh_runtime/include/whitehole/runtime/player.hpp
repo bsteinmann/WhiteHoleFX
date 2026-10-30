@@ -123,6 +123,16 @@ public:
     /// Fehler: NotFound (Node oder Port), IncompatiblePorts (kein Field-Ausgang).
     Result<void> setTarget(const graph::PortRef& port);
 
+    // --- Rückgängig / Wiederholen -----------------------------------------------------------------
+    // Jede Änderung am Projekt (Parameter, Graph, Lage) merkt sich vorher den alten Stand. Viele
+    // Änderungen desselben Reglers oder desselben Nodes hintereinander (Ziehen) zählen als eine.
+    // Laden löscht beide Listen, Speichern nicht.
+    [[nodiscard]] bool canUndo() const noexcept { return !undo_.empty(); }
+    [[nodiscard]] bool canRedo() const noexcept { return !redo_.empty(); }
+    /// Fehler: InvalidArgument, wenn nichts zurückzunehmen ist.
+    Result<void> undo();
+    Result<void> redo();
+
     /// Seit dem letzten Laden oder Speichern verändert (Parameter oder Graph).
     [[nodiscard]] bool modified() const noexcept { return modified_; }
 
@@ -137,6 +147,13 @@ public:
 private:
     Result<void> adopt(project::Project project, std::string path);
 
+    /// Vor jeder Änderung: liefert den Stand zum Merken (leer, wenn `key` die vorige Änderung
+    /// fortsetzt). Nach der Änderung: finishEdit mit dem Ergebnis.
+    [[nodiscard]] std::optional<project::Project> beginEdit(const std::string& key);
+    void finishEdit(std::optional<project::Project> before, const std::string& key, bool ok);
+    /// Nach undo/redo: Session und Ausgabe an den neuen Stand anpassen.
+    Result<void> restored(const std::optional<graph::PortRef>& previousTarget);
+
     gpu::IGpuDevice* device_;
     const nodes::BuiltinLibrary& library_;
     output::IPacketSink& sink_;
@@ -150,6 +167,9 @@ private:
     bool graphDirty_{false};   // Parameter oder Graph geändert, Session noch nicht informiert
     bool targetDirty_{false};  // output geändert: Session muss neu aufgebaut werden
     bool modified_{false};     // seit Laden/Speichern verändert
+    std::vector<project::Project> undo_;
+    std::vector<project::Project> redo_;
+    std::string lastEditKey_;  // zum Zusammenfassen gleichartiger Änderungen
 };
 
 }  // namespace whitehole::runtime

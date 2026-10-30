@@ -121,6 +121,13 @@ void MainWindow::buildActions() {
     saveAsAction_->setShortcut(QKeySequence::SaveAs);
     connect(saveAsAction_, &QAction::triggered, this, &MainWindow::onSaveAs);
 
+    undoAction_ = new QAction{tr("&Rückgängig"), this};
+    undoAction_->setShortcut(QKeySequence::Undo);
+    connect(undoAction_, &QAction::triggered, this, &MainWindow::onUndo);
+    redoAction_ = new QAction{tr("&Wiederholen"), this};
+    redoAction_->setShortcut(QKeySequence::Redo);
+    connect(redoAction_, &QAction::triggered, this, &MainWindow::onRedo);
+
     quitAction_ = new QAction{tr("&Beenden"), this};
     quitAction_->setShortcut(QKeySequence::Quit);
     connect(quitAction_, &QAction::triggered, this, &QWidget::close);
@@ -141,6 +148,10 @@ void MainWindow::buildActions() {
     file->addAction(saveAsAction_);
     file->addSeparator();
     file->addAction(quitAction_);
+
+    QMenu* edit = menuBar()->addMenu(tr("&Bearbeiten"));
+    edit->addAction(undoAction_);
+    edit->addAction(redoAction_);
 
     QMenu* view = menuBar()->addMenu(tr("&Ansicht"));
     view->addAction(editorDock_->toggleViewAction());
@@ -165,6 +176,7 @@ void MainWindow::updateActions() {
     runAction_->setChecked(s.running);
     runAction_->setText(s.running ? tr("&Stopp") : tr("&Start"));
     sendAction_->setChecked(gate_->enabled());
+    updateUndoActions();
 }
 
 void MainWindow::updateTitle() {
@@ -196,7 +208,23 @@ bool MainWindow::confirmDiscard() {
 }
 
 QString MainWindow::exerciseEditor() {
-    const QString ok = editor_->exercise();
+    QString ok = editor_->exercise();
+    if (ok.isEmpty()) {
+        // Alles zurücknehmen und wiederholen: dieselben Schritte wie Strg+Z und Strg+Umschalt+Z.
+        int undone = 0;
+        while (player_->canUndo() && undone < 10000) {
+            onUndo();
+            ++undone;
+        }
+        int redone = 0;
+        while (player_->canRedo() && redone < 10000) {
+            onRedo();
+            ++redone;
+        }
+        if (undone == 0 || undone != redone) {
+            ok = tr("Rückgängig/Wiederholen: %1 zurückgenommen, %2 wiederholt").arg(undone).arg(redone);
+        }
+    }
     for (int i = 0; i < 5; ++i) {
         tick();
         QApplication::processEvents();
@@ -204,8 +232,35 @@ QString MainWindow::exerciseEditor() {
     return ok;
 }
 
+void MainWindow::updateUndoActions() {
+    undoAction_->setEnabled(player_->canUndo());
+    redoAction_->setEnabled(player_->canRedo());
+}
+
+void MainWindow::afterRestore() {
+    editor_->rebuild();
+    parameters_->rebuild(player_->nodes());
+    updateTitle();
+    updateActions();
+}
+
+void MainWindow::onUndo() {
+    const Result<void> r = player_->undo();
+    if (r.ok()) {
+        afterRestore();
+    }
+}
+
+void MainWindow::onRedo() {
+    const Result<void> r = player_->redo();
+    if (r.ok()) {
+        afterRestore();
+    }
+}
+
 void MainWindow::updateStatus() {
     updateTitle();
+    updateUndoActions();
     const runtime::PlayerStatus s = player_->status();
     QString text;
     if (!s.loaded) {

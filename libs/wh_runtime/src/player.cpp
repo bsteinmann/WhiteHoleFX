@@ -55,6 +55,9 @@ Result<void> Player::adopt(project::Project project, std::string path) {
     graphDirty_ = false;
     targetDirty_ = false;
     modified_ = false;
+    undo_.clear();
+    redo_.clear();
+    lastEditKey_.clear();
     return {};
 }
 
@@ -188,8 +191,12 @@ Result<graph::ParameterValue> Player::setParameter(NodeId node, const std::strin
     if (!project_) {
         return Error{ErrorCode::InvalidArgument, "Es ist kein Projekt geladen"};
     }
-    if (const Result<void> r = project_->graph.setParameter(node, key, std::move(value)); !r.ok()) {
-        return r.error();
+    const std::string editKey = "param:" + std::to_string(node.value()) + ":" + key;
+    auto before = beginEdit(editKey);
+    const Result<void> set = project_->graph.setParameter(node, key, std::move(value));
+    finishEdit(std::move(before), editKey, set.ok());
+    if (!set.ok()) {
+        return set.error();
     }
     graphDirty_ = true;
     modified_ = true;

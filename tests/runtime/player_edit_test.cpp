@@ -226,3 +226,117 @@ TEST_CASE("Player: Bearbeiten ohne Projekt ist ein Fehler", "[player][edit]") {
     CHECK_FALSE(player.moveNode(NodeId{1}, Vec2{}).ok());
     CHECK_FALSE(player.setTarget({NodeId{1}, "out"}).ok());
 }
+
+TEST_CASE("Player: Rückgängig und Wiederholen für Graphänderungen", "[player][undo]") {
+    Rig rig;
+    CHECK_FALSE(rig.player.canUndo());
+    CHECK_FALSE(rig.player.canRedo());
+    CHECK_FALSE(rig.player.undo().ok());
+    CHECK_FALSE(rig.player.redo().ok());
+
+    const std::size_t nodes = rig.player.project()->graph.nodes().size();
+    const auto added = rig.player.addNode("wh.generator.noise", Vec2{});
+    REQUIRE(added.ok());
+    REQUIRE(rig.player.connect({added.value(), "out"}, {rig.id("wh.transform.mirror"), "source"}).ok());
+    CHECK(rig.player.canUndo());
+
+    REQUIRE(rig.player.undo().ok());  // Verbindung zurück: mirror.source hängt wieder an plasma
+    const auto* c = rig.player.project()->graph.findInputConnection(rig.id("wh.transform.mirror"), "source");
+    REQUIRE(c != nullptr);
+    CHECK(c->from.node == rig.id("wh.generator.plasma"));
+    CHECK(rig.player.canRedo());
+
+    REQUIRE(rig.player.undo().ok());  // Node weg
+    CHECK(rig.player.project()->graph.nodes().size() == nodes);
+    CHECK_FALSE(rig.player.canUndo());
+
+    REQUIRE(rig.player.redo().ok());
+    REQUIRE(rig.player.redo().ok());
+    CHECK(rig.player.project()->graph.nodes().size() == nodes + 1);
+    CHECK(rig.player.project()->graph.findInputConnection(rig.id("wh.transform.mirror"), "source")->from.node ==
+          rig.id("wh.generator.noise"));
+    CHECK_FALSE(rig.player.canRedo());
+}
+
+TEST_CASE("Player: eine neue Änderung löscht die Wiederholen-Liste", "[player][undo]") {
+    Rig rig;
+    REQUIRE(rig.player.addNode("wh.generator.noise", Vec2{}).ok());
+    REQUIRE(rig.player.undo().ok());
+    REQUIRE(rig.player.canRedo());
+    REQUIRE(rig.player.addNode("wh.generator.wave", Vec2{}).ok());
+    CHECK_FALSE(rig.player.canRedo());
+}
+
+TEST_CASE("Player: abgelehnte Änderungen landen nicht in der Liste", "[player][undo]") {
+    Rig rig;
+    CHECK_FALSE(rig.player.addNode("gibt.es.nicht", Vec2{}).ok());
+    CHECK_FALSE(rig.player.removeNode(rig.id("wh.transform.rotate")).ok());  // Ausgang
+    CHECK_FALSE(rig.player.connect({rig.id("wh.transform.rotate"), "out"}, {rig.id("wh.transform.mirror"), "source"}).ok());
+    CHECK_FALSE(rig.player.canUndo());
+}
+
+TEST_CASE("Player: Ziehen eines Reglers ist ein Schritt", "[player][undo]") {
+    Rig rig;
+    const NodeId lfo = rig.id("wh.value.lfo");
+    for (int i = 1; i <= 30; ++i) {
+        REQUIRE(rig.player.setParameter(lfo, "frequency", 0.1 * i).ok());
+    }
+    const double last = std::get<double>(rig.player.project()->graph.findNode(lfo)->parameters.at("frequency"));
+    REQUIRE(rig.player.undo().ok());
+    const double original = std::get<double>(rig.player.project()->graph.findNode(lfo)->parameters.at("frequency"));
+    CHECK(original != last);
+    CHECK_FALSE(rig.player.canUndo());  // alle 30 Änderungen waren ein Schritt
+
+    REQUIRE(rig.player.redo().ok());
+    CHECK(std::get<double>(rig.player.project()->graph.findNode(lfo)->parameters.at("frequency")) == last);
+
+    // ein anderer Regler, dann derselbe wieder: zwei Schritte
+    REQUIRE(rig.player.setParameter(lfo, "min", -10.0).ok());
+    REQUIRE(rig.player.setParameter(lfo, "frequency", 5.0).ok());
+    REQUIRE(rig.player.undo().ok());
+    REQUIRE(rig.player.undo().ok());
+    CHECK(std::get<double>(rig.player.project()->graph.findNode(lfo)->parameters.at("frequency")) == last);
+}
+
+TEST_CASE("Player: Verschieben ist ein Schritt je Node; Undo nach Undo setzt neu an", "[player][undo]") {
+    Rig rig;
+    const NodeId mirror = rig.id("wh.transform.mirror");
+    const Vec2 start = rig.player.project()->graph.findNode(mirror)->position;
+    for (int i = 1; i <= 10; ++i) {
+        REQUIRE(rig.player.moveNode(mirror, Vec2{static_cast<float>(i), 0.0F}).ok());
+    }
+    REQUIRE(rig.player.undo().ok());
+    CHECK(rig.player.project()->graph.findNode(mirror)->position == start);
+    // nach Undo darf eine neue Verschiebung nicht mit der alten verschmelzen
+    REQUIRE(rig.player.moveNode(mirror, Vec2{99.0F, 0.0F}).ok());
+    REQUIRE(rig.player.undo().ok());
+    CHECK(rig.player.project()->graph.findNode(mirror)->position == start);
+}
+
+TEST_CASE("Player: Undo im Lauf übernimmt den Graphen und den Ausgang", "[player][undo]") {
+    Rig rig;
+    REQUIRE(rig.player.start().ok());
+    REQUIRE(rig.player.step().ok());
+    const std::size_t pipelines = rig.device.pipelineDescs().size();
+    REQUIRE(rig.player.setTarget({rig.id("wh.transform.mirror"), "out"}).ok());
+    REQUIRE(rig.player.step().ok());
+    REQUIRE(rig.player.undo().ok());
+    CHECK(rig.player.project()->target->node == rig.id("wh.transform.rotate"));
+    REQUIRE(rig.player.step().ok());
+    CHECK(rig.player.status().running);
+    CHECK_FALSE(rig.player.status().lastError.has_value());
+    CHECK(rig.device.pipelineDescs().size() > pipelines);
+    CHECK(rig.player.modified());
+}
+
+TEST_CASE("Player: Laden leert die Listen, Speichern nicht", "[player][undo]") {
+    Rig rig;
+    REQUIRE(rig.player.addNode("wh.generator.noise", Vec2{}).ok());
+    const std::string path = (std::filesystem::temp_directory_path() / "whfx_player_undo_test.whfx").string();
+    REQUIRE(rig.player.save(path).ok());
+    CHECK(rig.player.canUndo());
+    REQUIRE(rig.player.loadText(kProject).ok());
+    CHECK_FALSE(rig.player.canUndo());
+    CHECK_FALSE(rig.player.canRedo());
+    std::filesystem::remove(path);
+}
