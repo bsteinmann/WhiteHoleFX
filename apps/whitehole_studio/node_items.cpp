@@ -93,6 +93,9 @@ QRectF NodeItem::boundingRect() const {
 
 QPainterPath NodeItem::shape() const {
     QPainterPath path;
+    // Winding statt Even-Odd: Die Port-Flächen überlappen den Körper, und bei Even-Odd wäre der
+    // Überlappungsbereich ein Loch, in dem man den Port nicht treffen würde.
+    path.setFillRule(Qt::WindingFill);
     path.addRoundedRect(QRectF{0.0, 0.0, kWidth, height_}, 6.0, 6.0);
     for (const PortSlot& port : ports_) {
         path.addRect(QRectF{port.anchor.x() - kPortHit, port.anchor.y() - kPortHit, 2 * kPortHit, 2 * kPortHit});
