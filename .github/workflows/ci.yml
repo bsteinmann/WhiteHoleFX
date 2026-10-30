@@ -147,6 +147,8 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          tag=$(gh release view --repo gfx-rs/wgpu-native --json tagName --jq .tagName)
+          echo "::notice title=wgpu-native-Version::$tag"
           gh release download --repo gfx-rs/wgpu-native --pattern 'wgpu-linux-x86_64-release.zip' --dir dl
           unzip -q dl/wgpu-linux-x86_64-release.zip -d wgpu
       - name: Konfigurieren
