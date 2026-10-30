@@ -131,3 +131,41 @@ jobs:
         run: |
           ./build/apps/whitehole_cli/Debug/whitehole_cli.exe examples/wand.whfx --check
           ./build/apps/whitehole_cli/Debug/whitehole_cli.exe examples/wand.whfx --frames 20
+
+  studio:
+    name: Oberfläche (Qt 6, offscreen, Software-Vulkan, experimentell)
+    runs-on: ubuntu-24.04
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v5
+      - name: Qt, Software-Vulkan und Schriften installieren
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y qt6-base-dev libgl1-mesa-dev libxkbcommon-dev fonts-dejavu-core \
+            mesa-vulkan-drivers libvulkan1 vulkan-tools unzip
+      - name: wgpu-native laden
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release download --repo gfx-rs/wgpu-native --pattern 'wgpu-linux-x86_64-release.zip' --dir dl
+          unzip -q dl/wgpu-linux-x86_64-release.zip -d wgpu
+      - name: Konfigurieren
+        run: >
+          cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
+          -DWHITEHOLEFX_BUILD_STUDIO=ON -DWHITEHOLEFX_WEBGPU=ON -DWGPU_NATIVE_ROOT="$PWD/wgpu"
+      - name: Bauen
+        run: cmake --build build --parallel --target whitehole_studio
+      - name: Fenster ohne Bildschirm öffnen und Bilder speichern
+        env:
+          QT_QPA_PLATFORM: offscreen
+        run: |
+          ./build/apps/whitehole_studio/whitehole_studio examples/wand.whfx --grab fenster-layout.png
+          ./build/apps/whitehole_studio/whitehole_studio examples/wand.whfx --run --software --frames 40 --grab fenster-lauf.png
+          test -s fenster-layout.png && test -s fenster-lauf.png
+      - name: Fensterbilder bereitstellen
+        uses: actions/upload-artifact@v4
+        with:
+          name: fenster
+          path: |
+            fenster-layout.png
+            fenster-lauf.png

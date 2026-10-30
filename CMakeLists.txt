@@ -12,6 +12,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 option(WHITEHOLEFX_BUILD_TESTS "Unit-Tests bauen" ON)
 option(WHITEHOLEFX_WEBGPU "WebGPU-Backend bauen (braucht wgpu-native, siehe docs/gpu-backend.md)" OFF)
+option(WHITEHOLEFX_BUILD_STUDIO "Qt-Oberfläche bauen (braucht Qt 6 Widgets)" OFF)
 option(WHITEHOLEFX_WARNINGS_AS_ERRORS "Compiler-Warnungen als Fehler behandeln" OFF)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
@@ -44,6 +45,9 @@ endif()
 option(WHITEHOLEFX_BUILD_APPS "Konsolen-Runner bauen" ON)
 if(WHITEHOLEFX_BUILD_APPS)
     add_subdirectory(apps/whitehole_cli)
+endif()
+if(WHITEHOLEFX_BUILD_STUDIO)
+    add_subdirectory(apps/whitehole_studio)
 endif()
 
 if(WHITEHOLEFX_BUILD_TESTS)

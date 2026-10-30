@@ -32,6 +32,7 @@ Raum sitzt, und tastet die Funktion genau dort ab.
 | `wh_project` | Projektdatei (Text): Layout, Effektgraph, Ausgabe lesen und schreiben |
 | `wh_preview` | LED-Vorschau als Bild (CPU) und PNG-Schreiber |
 | `wh_runtime` | Session: Projekt zu laufender Ausgabe zusammensetzen; Prüfbericht |
+| `apps/whitehole_studio` | Qt-6-Oberfläche: Vorschau, Start/Stopp, Ausgabe schalten (optional, siehe [Oberfläche](docs/studio.md)) |
 | `apps/whitehole_cli` | Konsolen-Runner: `--check`, rendern und senden |
 
 Abhängigkeiten zeigen nur nach unten. Kein Modul bis auf die spätere GUI kennt Qt.
@@ -57,6 +58,7 @@ Strenge Warnungen als Fehler: `-DWHITEHOLEFX_WARNINGS_AS_ERRORS=ON`.
 - [Mapping und Abtast-Pass](docs/mapping.md)
 - [Ausgabe (Art-Net, sACN, DDP)](docs/output.md)
 - [Projektdatei und Konsolen-Runner](docs/project-format.md)
+- [Oberfläche (Qt)](docs/studio.md)
 - [GPU-Backend (WebGPU)](docs/gpu-backend.md)
 
 ## Konventionen
@@ -71,7 +73,7 @@ Strenge Warnungen als Fehler: `-DWHITEHOLEFX_WARNINGS_AS_ERRORS=ON`.
 - [x] 5: Mapping und Abtast-Pass
 - [x] 6: Ausgabe (Art-Net, sACN, DDP; WLED über DDP/Art-Net). Serial, MQTT, Hyperion, MIDI folgen später
 - [ ] 7: Plugins und Skripte
-- [ ] 8: Oberfläche (Qt 6)
+- [ ] 8: Oberfläche (Qt 6): Fenster mit Live-Vorschau steht, Node-Editor und Layout-Editor folgen
 - [x] GPU-Backend läuft in der CI auf Software-Vulkan; Prüfung auf echter GPU und Windows-CI stehen aus
 - [x] Projektdatei und Konsolen-Runner (`whitehole_cli`)
 - [ ] Raster-Nodes (Blur, Feedback), Dawn-Backend

@@ -52,6 +52,7 @@ add_executable(wh_tests
     preview/preview_test.cpp
     project/project_test.cpp
     runtime/cli_summary_test.cpp
+    runtime/player_test.cpp
     runtime/session_test.cpp)
 
 target_include_directories(wh_tests PRIVATE support)
