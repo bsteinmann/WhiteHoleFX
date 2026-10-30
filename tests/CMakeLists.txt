@@ -31,6 +31,7 @@ add_executable(wh_tests
     engine/latest_frame_mailbox_test.cpp
     engine/readback_ring_test.cpp
     engine/render_engine_test.cpp
+    gpu/wgsl_bindings_test.cpp
     executor/canvas_render_stage_test.cpp
     executor/canvas_shader_test.cpp
     executor/canvas_stage_graph_test.cpp
@@ -52,6 +53,7 @@ target_include_directories(wh_tests PRIVATE support)
 
 target_link_libraries(wh_tests PRIVATE
     whitehole::core
+    whitehole::gpu
     whitehole::graph
     whitehole::values
     whitehole::compiler
@@ -64,3 +66,14 @@ target_link_libraries(wh_tests PRIVATE
     Catch2::Catch2WithMain)
 
 catch_discover_tests(wh_tests)
+
+# Tests auf einer echten GPU (oder einem Software-Adapter): nur mit WHITEHOLEFX_WEBGPU=ON.
+# Ohne Adapter werden sie übersprungen.
+if(TARGET wh_gpu_webgpu)
+    add_executable(wh_gpu_tests gpu_device/webgpu_device_test.cpp)
+    target_link_libraries(wh_gpu_tests PRIVATE
+        wh_gpu_webgpu
+        wh_warnings
+        Catch2::Catch2WithMain)
+    catch_discover_tests(wh_gpu_tests)
+endif()

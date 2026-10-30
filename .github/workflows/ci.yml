@@ -33,3 +33,30 @@ jobs:
         run: cmake --build build --parallel
       - name: Testen
         run: ctest --test-dir build --output-on-failure
+
+  gpu:
+    name: GPU-Backend (wgpu-native + Software-Vulkan, experimentell)
+    runs-on: ubuntu-24.04
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v5
+      - name: Software-Vulkan installieren (lavapipe)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y mesa-vulkan-drivers libvulkan1 vulkan-tools unzip
+          vulkaninfo --summary || true
+      - name: wgpu-native laden (Header und Bibliothek aus demselben Paket)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release download --repo gfx-rs/wgpu-native --pattern 'wgpu-linux-x86_64-release.zip' --dir dl
+          unzip -q dl/wgpu-linux-x86_64-release.zip -d wgpu
+          ls -R wgpu | head -30
+      - name: Konfigurieren
+        run: >
+          cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
+          -DWHITEHOLEFX_WEBGPU=ON -DWGPU_NATIVE_ROOT="$PWD/wgpu"
+      - name: Bauen
+        run: cmake --build build --parallel --target wh_gpu_tests
+      - name: Testen
+        run: ./build/tests/wh_gpu_tests

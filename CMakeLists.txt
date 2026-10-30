@@ -11,6 +11,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 option(WHITEHOLEFX_BUILD_TESTS "Unit-Tests bauen" ON)
+option(WHITEHOLEFX_WEBGPU "WebGPU-Backend bauen (braucht wgpu-native, siehe docs/gpu-backend.md)" OFF)
 option(WHITEHOLEFX_WARNINGS_AS_ERRORS "Compiler-Warnungen als Fehler behandeln" OFF)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
@@ -22,6 +23,7 @@ include(WhiteHoleFXSettings)
 #   core <- graph <- values   <- nodes
 #   engine, values, compiler, gpu <- executor
 #   core <- mapping
+#   gpu <- gpu_webgpu (optional, WHITEHOLEFX_WEBGPU)
 add_subdirectory(libs/wh_core)
 add_subdirectory(libs/wh_gpu)
 add_subdirectory(libs/wh_graph)
@@ -32,6 +34,9 @@ add_subdirectory(libs/wh_engine)
 add_subdirectory(libs/wh_mapping)
 add_subdirectory(libs/wh_output)
 add_subdirectory(libs/wh_executor)
+if(WHITEHOLEFX_WEBGPU)
+    add_subdirectory(libs/wh_gpu_webgpu)
+endif()
 
 if(WHITEHOLEFX_BUILD_TESTS)
     enable_testing()
