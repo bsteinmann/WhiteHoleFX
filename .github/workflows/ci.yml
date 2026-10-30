@@ -168,10 +168,23 @@ jobs:
         env:
           QT_QPA_PLATFORM: offscreen
         run: |
-          ./build/apps/whitehole_studio/whitehole_studio examples/wand.whfx --grab fenster-layout.png
-          ./build/apps/whitehole_studio/whitehole_studio examples/wand.whfx --run --software --frames 40 --grab fenster-lauf.png
-          ./build/apps/whitehole_studio/whitehole_studio examples/regler.whfx --run --software --frames 40 --exercise --grab fenster-regler.png
-          test -s fenster-layout.png && test -s fenster-lauf.png && test -s fenster-regler.png
+          # Ausgabe sammeln und bei Fehlern als Annotation zeigen (Logs sind von außen nicht lesbar).
+          studio=./build/apps/whitehole_studio/whitehole_studio
+          fail=0
+          run_studio() {
+            out=$("$studio" "$@" 2>&1); code=$?
+            echo "$out"
+            if [ "$code" != "0" ]; then
+              msg=$(echo "$out" | head -40 | sed 's/%/%25/g' | awk '{printf "%s%%0A", $0}')
+              echo "::error title=Fenster-Lauf fehlgeschlagen (Code $code): $*::${msg}"
+              fail=1
+            fi
+          }
+          run_studio examples/wand.whfx --grab fenster-layout.png
+          run_studio examples/wand.whfx --run --software --frames 40 --grab fenster-lauf.png
+          run_studio examples/regler.whfx --run --software --frames 40 --exercise --grab fenster-regler.png
+          test -s fenster-layout.png && test -s fenster-lauf.png && test -s fenster-regler.png || fail=1
+          exit $fail
       - name: Fensterbilder bereitstellen
         uses: actions/upload-artifact@v4
         with:
