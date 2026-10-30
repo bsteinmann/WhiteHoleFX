@@ -1,6 +1,7 @@
 // Tests der Layout-, Ausgabe- und Einstellungs-Bearbeitung im Player (Grundlage des Layout-Editors).
 #include <catch2/catch_test_macros.hpp>
 
+#include <cmath>
 #include <filesystem>
 
 #include "fake_gpu_device.hpp"
