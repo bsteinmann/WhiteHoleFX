@@ -89,5 +89,6 @@ if(TARGET wh_gpu_webgpu)
         whitehole::mapping
         wh_warnings
         Catch2::Catch2WithMain)
+    wh_copy_wgpu_dll(wh_gpu_tests)
     catch_discover_tests(wh_gpu_tests)
 endif()

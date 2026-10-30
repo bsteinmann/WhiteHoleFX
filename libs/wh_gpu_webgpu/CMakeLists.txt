@@ -8,8 +8,14 @@
 # include/webgpu/wgpu.h und lib/libwgpu_native.{so,a,dylib}.
 find_path(WGPU_NATIVE_INCLUDE_DIR webgpu/webgpu.h
     HINTS "${WGPU_NATIVE_ROOT}/include" ENV WGPU_NATIVE_ROOT)
-find_library(WGPU_NATIVE_LIBRARY wgpu_native
+# Windows: das Paket enthält wgpu_native.dll samt Importbibliothek wgpu_native.dll.lib.
+# Mit der Importbibliothek entfallen die Systembibliotheken der statischen Rust-Variante.
+find_library(WGPU_NATIVE_LIBRARY NAMES wgpu_native.dll wgpu_native
     HINTS "${WGPU_NATIVE_ROOT}/lib" ENV WGPU_NATIVE_ROOT)
+if(WIN32)
+    find_file(WGPU_NATIVE_DLL wgpu_native.dll
+        HINTS "${WGPU_NATIVE_ROOT}/lib" ENV WGPU_NATIVE_ROOT)
+endif()
 
 if(NOT WGPU_NATIVE_INCLUDE_DIR OR NOT WGPU_NATIVE_LIBRARY)
     message(FATAL_ERROR
@@ -33,3 +39,12 @@ wh_add_library(wh_gpu_webgpu
 target_include_directories(wh_gpu_webgpu PRIVATE "${WGPU_NATIVE_INCLUDE_DIR}" src)
 target_link_libraries(wh_gpu_webgpu PRIVATE "${WGPU_NATIVE_LIBRARY}" Threads::Threads ${CMAKE_DL_LIBS})
 target_compile_definitions(wh_gpu_webgpu PRIVATE WH_WEBGPU_WGPU_NATIVE=1)
+
+# Windows: Die DLL muss neben den ausführbaren Dateien liegen. Wer das Modul einbindet,
+# ruft wh_copy_wgpu_dll(<ziel>) auf.
+function(wh_copy_wgpu_dll target)
+    if(WIN32 AND WGPU_NATIVE_DLL)
+        add_custom_command(TARGET ${target} POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different "${WGPU_NATIVE_DLL}" "$<TARGET_FILE_DIR:${target}>")
+    endif()
+endfunction()

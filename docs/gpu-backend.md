@@ -12,6 +12,11 @@ vom Compiler erzeugten Shader der Canvas- und der Abtast-Stage laufen und vergle
 der CPU-Rechnung. Auf einer echten GPU (nicht Software) wurde es noch nicht geprüft; das
 geht nur auf Ihrem Rechner.
 
+Unter Windows gibt es einen eigenen, experimentellen CI-Job: Er lädt das MSVC-Paket von
+wgpu-native, linkt gegen die Importbibliothek `wgpu_native.dll.lib` und legt die DLL neben
+die Tests. Ob dort ein Adapter (z. B. der Software-Adapter WARP) gefunden wird, zeigt der Lauf;
+sonst werden die Tests übersprungen.
+
 ## Warum wgpu-native zuerst
 
 Dawn und wgpu-native implementieren dieselbe C-Schnittstelle. wgpu-native gibt es als
