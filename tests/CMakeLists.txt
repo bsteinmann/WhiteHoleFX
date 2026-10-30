@@ -65,14 +65,28 @@ target_link_libraries(wh_tests PRIVATE
     wh_warnings
     Catch2::Catch2WithMain)
 
+if(WIN32)
+    target_link_libraries(wh_tests PRIVATE ws2_32)
+endif()
+
 catch_discover_tests(wh_tests)
 
 # Tests auf einer echten GPU (oder einem Software-Adapter): nur mit WHITEHOLEFX_WEBGPU=ON.
 # Ohne Adapter werden sie übersprungen.
 if(TARGET wh_gpu_webgpu)
-    add_executable(wh_gpu_tests gpu_device/webgpu_device_test.cpp)
+    add_executable(wh_gpu_tests
+        gpu_device/stage_on_device_test.cpp
+        gpu_device/webgpu_device_test.cpp)
+    target_include_directories(wh_gpu_tests PRIVATE support)
     target_link_libraries(wh_gpu_tests PRIVATE
         wh_gpu_webgpu
+        whitehole::core
+        whitehole::graph
+        whitehole::values
+        whitehole::compiler
+        whitehole::nodes
+        whitehole::executor
+        whitehole::mapping
         wh_warnings
         Catch2::Catch2WithMain)
     catch_discover_tests(wh_gpu_tests)

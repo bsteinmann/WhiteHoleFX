@@ -1,14 +1,24 @@
-// UdpSender: echter Versand über die Loopback-Schnittstelle (nur auf POSIX-Systemen).
+// UdpSender: echter Versand über die Loopback-Schnittstelle (POSIX und Winsock).
 #include <catch2/catch_test_macros.hpp>
 
-#if !defined(_WIN32)
-
+#if defined(_WIN32)
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#endif
+#include <winsock2.h>
+#include <ws2tcpip.h>
+#else
 #include <arpa/inet.h>
 #include <netinet/in.h>
 #include <sys/socket.h>
 #include <sys/time.h>
 #include <unistd.h>
+#endif
 
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -22,24 +32,52 @@ using namespace whitehole::output;
 
 namespace {
 
+#if defined(_WIN32)
+using SocketHandle = SOCKET;
+constexpr SocketHandle kInvalidSocket = INVALID_SOCKET;
+#else
+using SocketHandle = int;
+constexpr SocketHandle kInvalidSocket = -1;
+#endif
+
 /// Empfänger auf 127.0.0.1 mit zufällig gewähltem Port und 2 s Timeout.
 class Receiver {
 public:
     Receiver() {
+#if defined(_WIN32)
+        WSADATA data{};
+        REQUIRE(::WSAStartup(MAKEWORD(2, 2), &data) == 0);
+#endif
         fd_ = ::socket(AF_INET, SOCK_DGRAM, 0);
-        REQUIRE(fd_ >= 0);
+        REQUIRE(fd_ != kInvalidSocket);
         sockaddr_in addr{};
         addr.sin_family = AF_INET;
         addr.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
         addr.sin_port = 0;
         REQUIRE(::bind(fd_, reinterpret_cast<sockaddr*>(&addr), sizeof(addr)) == 0);
+#if defined(_WIN32)
+        int length = sizeof(addr);
+#else
         socklen_t length = sizeof(addr);
+#endif
         REQUIRE(::getsockname(fd_, reinterpret_cast<sockaddr*>(&addr), &length) == 0);
         port_ = ntohs(addr.sin_port);
+#if defined(_WIN32)
+        const DWORD timeoutMs = 2000;
+        ::setsockopt(fd_, SOL_SOCKET, SO_RCVTIMEO, reinterpret_cast<const char*>(&timeoutMs), sizeof(timeoutMs));
+#else
         timeval timeout{2, 0};
         ::setsockopt(fd_, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout));
+#endif
     }
-    ~Receiver() { ::close(fd_); }
+    ~Receiver() {
+#if defined(_WIN32)
+        ::closesocket(fd_);
+        ::WSACleanup();
+#else
+        ::close(fd_);
+#endif
+    }
     Receiver(const Receiver&) = delete;
     Receiver& operator=(const Receiver&) = delete;
 
@@ -47,13 +85,18 @@ public:
 
     [[nodiscard]] std::vector<std::uint8_t> receive() const {
         std::vector<std::uint8_t> buffer(2048);
+#if defined(_WIN32)
+        const int n = ::recv(fd_, reinterpret_cast<char*>(buffer.data()), static_cast<int>(buffer.size()), 0);
+        buffer.resize(n > 0 ? static_cast<std::size_t>(n) : 0);
+#else
         const ssize_t n = ::recv(fd_, buffer.data(), buffer.size(), 0);
         buffer.resize(n > 0 ? static_cast<std::size_t>(n) : 0);
+#endif
         return buffer;
     }
 
 private:
-    int fd_{-1};
+    SocketHandle fd_{kInvalidSocket};
     std::uint16_t port_{0};
 };
 
@@ -123,5 +166,3 @@ TEST_CASE("Pipeline und UdpSender: Art-Net kommt als echtes Paket an", "[output]
     CHECK(got == encodeArtDmx(params, channels).value());
     CHECK(pipeline.value()->stats().sendErrors == 0);
 }
-
-#endif

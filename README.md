@@ -67,7 +67,7 @@ Strenge Warnungen als Fehler: `-DWHITEHOLEFX_WARNINGS_AS_ERRORS=ON`.
 - [x] 6: Ausgabe (Art-Net, sACN, DDP; WLED über DDP/Art-Net). Serial, MQTT, Hyperion, MIDI folgen später
 - [ ] 7: Plugins und Skripte
 - [ ] 8: Oberfläche (Qt 6)
-- [ ] GPU-Backend ausführen und prüfen (Code vorhanden, ungetestet)
+- [x] GPU-Backend läuft in der CI auf Software-Vulkan; Prüfung auf echter GPU und Windows-CI stehen aus
 - [ ] Raster-Nodes (Blur, Feedback), Dawn-Backend, Layout-Dateiformat
 
 ## Hinweis zur Verifikation

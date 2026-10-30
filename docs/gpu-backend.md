@@ -5,9 +5,12 @@ laufen die erzeugten WGSL-Shader auf einer echten GPU oder, für Tests, auf eine
 Software-Rasterizer (lavapipe). Kein Header des Moduls enthält `webgpu.h`; der Rest der
 Engine kennt nur `IGpuDevice`.
 
-**Stand:** geschrieben und gegen die Header von wgpu-native auf Übersetzbarkeit geprüft
-(strenge Warnungen, Fehler). **Noch nie ausgeführt.** Die Tests in
-`tests/gpu_device/webgpu_device_test.cpp` sind dafür geschrieben; ob sie bestehen, ist offen.
+**Stand:** läuft in der CI (Job „GPU-Backend“) gegen wgpu-native auf lavapipe, einem
+Software-Vulkan. `tests/gpu_device/webgpu_device_test.cpp` prüft Puffer, Compute, Texturen
+und Fehlerfälle (8 Fälle bestanden). `tests/gpu_device/stage_on_device_test.cpp` lässt die
+vom Compiler erzeugten Shader der Canvas- und der Abtast-Stage laufen und vergleicht mit
+der CPU-Rechnung. Auf einer echten GPU (nicht Software) wurde es noch nicht geprüft; das
+geht nur auf Ihrem Rechner.
 
 ## Warum wgpu-native zuerst
 

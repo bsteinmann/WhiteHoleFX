@@ -60,3 +60,16 @@ jobs:
         run: cmake --build build --parallel --target wh_gpu_tests
       - name: Testen
         run: ./build/tests/wh_gpu_tests
+
+  windows:
+    name: Windows (MSVC, experimentell, Fehler brechen den Lauf nicht ab)
+    runs-on: windows-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v5
+      - name: Konfigurieren
+        run: cmake -S . -B build
+      - name: Bauen
+        run: cmake --build build --config Debug --parallel
+      - name: Testen
+        run: ctest --test-dir build -C Debug --output-on-failure

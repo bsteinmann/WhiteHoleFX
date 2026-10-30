@@ -20,3 +20,7 @@ wh_add_library(wh_output
         wh_engine
         wh_mapping
         Threads::Threads)
+
+if(WIN32)
+    target_link_libraries(wh_output PUBLIC ws2_32)
+endif()

@@ -12,8 +12,9 @@
 // Adressen werden nur als IPv4-Zahlen akzeptiert und je Ziel einmal umgewandelt und
 // gemerkt, damit pro Paket kein Lookup anfällt.
 //
-// Plattform: Linux und macOS (POSIX-Sockets). Unter Windows liefert create() Unsupported;
-// ein Winsock-Zweig folgt, wenn er sich testen lässt.
+// Plattform: POSIX-Sockets (Linux, macOS) und Winsock (Windows). Der Windows-Zweig ist
+// geschrieben, aber noch nicht auf Windows übersetzt oder getestet; das prüft der CI-Job
+// "Windows".
 // Threads: send() von einem Thread aus.
 #pragma once
 
@@ -29,7 +30,7 @@ namespace whitehole::output {
 
 class UdpSender final : public IPacketSink {
 public:
-    /// Fehler: Unsupported (Windows), IoError (Socket nicht erzeugbar).
+    /// Fehler: IoError (Socket oder Winsock nicht startbar).
     [[nodiscard]] static Result<std::unique_ptr<UdpSender>> create();
 
     ~UdpSender() override;
