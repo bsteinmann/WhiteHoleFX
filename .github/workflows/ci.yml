@@ -82,6 +82,17 @@ jobs:
           $msg = $msg -replace "`r?`n", "%0A"
           Write-Output "::error title=Testausgabe::$msg"
           exit $code
+      - name: ctest (Diagnose)
+        continue-on-error: true
+        run: |
+          $out = (& ctest --test-dir build -C Debug --output-on-failure 2>&1 | Out-String)
+          $code = $LASTEXITCODE
+          $head = $out.Substring(0, [Math]::Min(5000, $out.Length))
+          $tail = $out.Substring([Math]::Max(0, $out.Length - 5000))
+          $msg = "Exit-Code $code`n" + $head + "`n[...]`n" + $tail
+          $msg = $msg -replace "`r?`n", "%0A"
+          Write-Output "::error title=ctest::$msg"
+          exit $code
 
   windows-gpu:
     name: Windows GPU-Backend (wgpu-native, experimentell)
