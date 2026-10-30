@@ -72,7 +72,16 @@ jobs:
       - name: Bauen
         run: cmake --build build --config Debug --parallel
       - name: Testen
-        run: ctest --test-dir build -C Debug --output-on-failure
+        # Die Ausgabe wird zusätzlich als Meldung (Annotation) ausgegeben, damit sie ohne Log-Download lesbar ist.
+        run: |
+          $out = (& ./build/tests/Debug/wh_tests.exe --reporter compact 2>&1 | Out-String)
+          $code = $LASTEXITCODE
+          $tail = $out.Substring([Math]::Max(0, $out.Length - 6000))
+          Write-Output $out
+          $msg = "Exit-Code $code`n" + $tail
+          $msg = $msg -replace "`r?`n", "%0A"
+          Write-Output "::error title=Testausgabe::$msg"
+          exit $code
 
   windows-gpu:
     name: Windows GPU-Backend (wgpu-native, experimentell)
@@ -92,4 +101,12 @@ jobs:
       - name: Bauen
         run: cmake --build build --config Debug --parallel --target wh_gpu_tests
       - name: Testen
-        run: ./build/tests/Debug/wh_gpu_tests.exe
+        run: |
+          $out = (& ./build/tests/Debug/wh_gpu_tests.exe 2>&1 | Out-String)
+          $code = $LASTEXITCODE
+          $tail = $out.Substring([Math]::Max(0, $out.Length - 6000))
+          Write-Output $out
+          $msg = "Exit-Code $code`n" + $tail
+          $msg = $msg -replace "`r?`n", "%0A"
+          Write-Output "::notice title=GPU-Testausgabe::$msg"
+          exit $code
