@@ -64,6 +64,16 @@ Result<void> Layout::move(FixtureId id, const Vec3& origin) {
     return Error{ErrorCode::NotFound, "Fixture unbekannt"};
 }
 
+Result<void> Layout::rename(FixtureId id, std::string name) {
+    for (Fixture& fixture : fixtures_) {
+        if (fixture.id == id) {
+            fixture.name = std::move(name);
+            return {};
+        }
+    }
+    return Error{ErrorCode::NotFound, "Fixture unbekannt"};
+}
+
 Result<void> Layout::replaceShape(FixtureId id, FixtureShape shape) {
     for (Fixture& fixture : fixtures_) {
         if (fixture.id == id) {

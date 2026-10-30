@@ -23,6 +23,7 @@ class QLabel;
 
 namespace whitehole::studio {
 
+class LayoutPanel;
 class NodeEditor;
 class ParameterPanel;
 class PreviewWidget;
@@ -65,6 +66,7 @@ private:
     void updateStatus();
     void reportError(const QString& title, const std::string& message, bool interactive);
     void onGraphEdited(bool structural);
+    void onLayoutEdited();
     void updateTitle();
     /// Fragt bei ungespeicherten Änderungen nach. Wahr, wenn weitergemacht werden darf.
     bool confirmDiscard();
@@ -89,6 +91,8 @@ private:
     NodeEditor* editor_{nullptr};
     QDockWidget* dock_{nullptr};
     QDockWidget* editorDock_{nullptr};
+    LayoutPanel* layoutPanel_{nullptr};
+    QDockWidget* layoutDock_{nullptr};
     QLabel* statusLabel_{nullptr};
     QTimer timer_;
     QTimer statusTimer_;

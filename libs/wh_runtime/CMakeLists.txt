@@ -6,6 +6,8 @@ wh_add_library(wh_runtime
         src/graph_layout.cpp
         src/player.cpp
         src/player_edit.cpp
+        src/player_layout.cpp
+        src/player_undo.cpp
         src/session.cpp
         src/summary.cpp
     PUBLIC_DEPS

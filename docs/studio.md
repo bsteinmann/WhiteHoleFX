@@ -88,6 +88,33 @@ an. Die Anordnung ist erst gespeichert, wenn du „Speichern unter“ wählst.
 Die CI prüft mit `--exercise` auch den Editor: Zwei Nodes anlegen, ein Kabel auf dem Weg der Maus
 ziehen (Treffer auf Ports), verschieben, Kabel und Nodes wieder löschen.
 
+## Layout-Editor
+
+Das Dock „Layout“ (rechts, teilt sich den Platz mit „Parameter“) hat zwei Seiten.
+
+**Fixtures:** Liste mit „Matrix +“, „Strip +“ und „Entfernen“. Ein neues Fixture bekommt einen freien
+Platz im Layout und das erste freie Universe (Art-Net, Ziel 0, 170 LEDs je Universe). Für das
+gewählte Fixture gibt es ein Formular:
+
+- Name und Ursprung (x y z)
+- Matrix: Spalten, Zeilen, Abstand, Ecke des Kabelanfangs, Laufrichtung, Serpentine
+- Strip: LED-Zahl, Anfang, Ende
+- 3D-Gitter: Anzahl je Achse, Abstand, Achsenreihenfolge, Serpentine
+- Punktwolken lassen sich nur in der Datei ändern
+- Patch: Protokoll (Art-Net, sACN, DDP), Ziel, Universe, erster Kanal, DDP-Offset,
+  Farbreihenfolge, Gamma, Helligkeit; „an die Ausgabe schicken“ schaltet den Patch ein und aus
+
+**Ausgabe:** Tabelle der Ziele (Adresse, Port; leere Adresse = Multicast, Port 0 = Standard) mit
+„Ziel +“ und „Letztes Ziel −“, darunter Bildrate, Abbildung auf den Würfel (Stretch oder
+KeepAspect), sACN-Priorität und Quellname.
+
+Zahlenfelder übernehmen einen Wert bei Enter, Pfeiltasten oder Fokuswechsel. Jede Änderung wird
+samt Ausgabeplan geprüft. Passt etwas nicht (Universe schon belegt, Ziel gibt es nicht, ungültiges
+Maß, doppelter Name), zeigt die Statuszeile den Grund und das Feld springt auf den alten Wert
+zurück. Das letzte gepatchte Fixture lässt sich nicht entfernen, und ein Ziel, auf das ein Patch
+zeigt, nicht löschen. Laufende Ausgabe wird nach einer Änderung einmal neu aufgebaut (kurze
+Unterbrechung). Alle Schritte lassen sich zurücknehmen.
+
 ## Rückgängig und Wiederholen
 
 Menü Bearbeiten, Strg+Z und Strg+Umschalt+Z (Windows auch Strg+Y). Zurückgenommen werden
@@ -98,6 +125,6 @@ erreicht ist.
 
 ## Noch nicht enthalten
 
-Ein Layout-Editor (Fixtures, Patches, Ziele). Bis dahin entsteht der
-Layout- und Ausgabeteil der Projektdatei von Hand (siehe [Projektdatei](project-format.md));
-„Neu laden“ übernimmt Änderungen sofort.
+Punktwolken bearbeiten, Fixtures im Vorschaubild verschieben oder drehen, Kopieren/Einfügen von
+Nodes und Fixtures. Solches entsteht bis dahin in der Projektdatei (siehe
+[Projektdatei](project-format.md)); „Neu laden“ übernimmt Änderungen sofort.

@@ -73,7 +73,7 @@ Strenge Warnungen als Fehler: `-DWHITEHOLEFX_WARNINGS_AS_ERRORS=ON`.
 - [x] 5: Mapping und Abtast-Pass
 - [x] 6: Ausgabe (Art-Net, sACN, DDP; WLED über DDP/Art-Net). Serial, MQTT, Hyperion, MIDI folgen später
 - [ ] 7: Plugins und Skripte
-- [ ] 8: Oberfläche (Qt 6): Fenster mit Live-Vorschau, Parameterregler und Node-Editor stehen, Layout-Editor folgt
+- [x] 8: Oberfläche (Qt 6): Live-Vorschau, Parameterregler, Node-Editor, Layout-Editor, Rückgängig/Wiederholen
 - [x] GPU-Backend läuft in der CI auf Software-Vulkan; Prüfung auf echter GPU und Windows-CI stehen aus
 - [x] Projektdatei und Konsolen-Runner (`whitehole_cli`)
 - [ ] Raster-Nodes (Blur, Feedback), Dawn-Backend

@@ -53,6 +53,7 @@ add_executable(wh_tests
     project/project_test.cpp
     runtime/cli_summary_test.cpp
     runtime/graph_layout_test.cpp
+    runtime/player_layout_test.cpp
     runtime/player_edit_test.cpp
     runtime/player_test.cpp
     runtime/session_test.cpp)

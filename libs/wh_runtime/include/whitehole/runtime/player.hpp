@@ -17,6 +17,7 @@
 #pragma once
 
 #include <cstdint>
+#include <functional>
 #include <memory>
 #include <optional>
 #include <string>
@@ -133,6 +134,39 @@ public:
     Result<void> undo();
     Result<void> redo();
 
+    // --- Layout, Ausgabe, Einstellungen bearbeiten (Layout-Editor) ---------------------------------
+    // Jede Änderung wird samt Ausgabeplan geprüft (Universen, Kanäle, Ziele); scheitert die
+    // Prüfung, bleibt alles wie es war und der Fehler nennt den Grund. Eine laufende Ausgabe wird
+    // im nächsten step() neu aufgebaut (kurze Unterbrechung). Fehler (alle): InvalidArgument ohne
+    // Projekt; Fehler des Layouts (Form ungültig, Name doppelt oder leer) und des Ausgabeplans.
+
+    /// Legt ein Fixture an, optional mit Patch (der Eintrag `fixture` wird ersetzt).
+    Result<mapping::FixtureId> addFixture(std::string name, const Vec3& origin, mapping::FixtureShape shape,
+                                          std::optional<output::FixturePatch> patch = std::nullopt);
+    /// Entfernt das Fixture samt Patch. Das letzte gepatchte Fixture bleibt (sonst gäbe es keine Ausgabe).
+    Result<void> removeFixture(mapping::FixtureId id);
+    Result<void> renameFixture(mapping::FixtureId id, std::string name);
+    Result<void> moveFixture(mapping::FixtureId id, const Vec3& origin);
+    Result<void> setFixtureShape(mapping::FixtureId id, mapping::FixtureShape shape);
+    /// Setzt oder (mit nullopt) entfernt den Patch des Fixtures.
+    Result<void> setPatch(mapping::FixtureId id, std::optional<output::FixturePatch> patch);
+    /// Ersetzt die Zielliste. Ein Patch darf nur auf vorhandene Ziele zeigen.
+    Result<void> setDestinations(std::vector<output::Destination> destinations);
+
+    /// Ein Patch mit dem ersten freien Universe hinter allen Art-Net/sACN-Patches auf Ziel 0
+    /// (Art-Net, Reihenfolge RGB). `leds` ist die Zahl der LEDs des neuen Fixtures; der Vorschlag
+    /// geht davon aus, dass je Universe 170 LEDs passen. Ohne Projekt Universe 0.
+    [[nodiscard]] output::FixturePatch suggestPatch(std::uint64_t leds) const;
+
+    struct Settings {
+        double framesPerSecond{40.0};
+        mapping::NormalizeMode normalize{mapping::NormalizeMode::Stretch};
+        std::uint8_t sacnPriority{100};
+        std::string sourceName{"WhiteHoleFX"};
+    };
+    /// Fehler: InvalidArgument (fps nicht in (0, 1000], Priorität über 200, Name leer).
+    Result<void> setSettings(const Settings& settings);
+
     /// Seit dem letzten Laden oder Speichern verändert (Parameter oder Graph).
     [[nodiscard]] bool modified() const noexcept { return modified_; }
 
@@ -150,9 +184,12 @@ private:
     /// Vor jeder Änderung: liefert den Stand zum Merken (leer, wenn `key` die vorige Änderung
     /// fortsetzt). Nach der Änderung: finishEdit mit dem Ergebnis.
     [[nodiscard]] std::optional<project::Project> beginEdit(const std::string& key);
-    void finishEdit(std::optional<project::Project> before, const std::string& key, bool ok);
+    void finishEdit(std::optional<project::Project> before, const std::string& key, bool ok, bool rebuild = false);
     /// Nach undo/redo: Session und Ausgabe an den neuen Stand anpassen.
-    Result<void> restored(const std::optional<graph::PortRef>& previousTarget);
+    Result<void> restored(const std::optional<graph::PortRef>& previousTarget, bool rebuild);
+    /// Führt `edit` auf dem Projekt aus und prüft danach den Ausgabeplan; scheitert eines von
+    /// beiden, bleibt das Projekt unverändert. Erfolg: Undo-Schritt, Vorschau-Map neu, Session neu.
+    Result<void> editProject(const std::string& key, const std::function<Result<void>(project::Project&)>& edit);
 
     gpu::IGpuDevice* device_;
     const nodes::BuiltinLibrary& library_;
@@ -165,10 +202,14 @@ private:
     std::unique_ptr<Session> session_;
     std::optional<Error> stepError_;
     bool graphDirty_{false};   // Parameter oder Graph geändert, Session noch nicht informiert
-    bool targetDirty_{false};  // output geändert: Session muss neu aufgebaut werden
+    bool rebuildDirty_{false};  // Ausgang, Layout oder Ausgabe geändert: Session neu aufbauen
     bool modified_{false};     // seit Laden/Speichern verändert
-    std::vector<project::Project> undo_;
-    std::vector<project::Project> redo_;
+    struct Snapshot {
+        project::Project project;
+        bool rebuild{false};  // die Änderung zwischen diesem und dem nächsten Stand brauchte eine neue Session
+    };
+    std::vector<Snapshot> undo_;
+    std::vector<Snapshot> redo_;
     std::string lastEditKey_;  // zum Zusammenfassen gleichartiger Änderungen
 };
 

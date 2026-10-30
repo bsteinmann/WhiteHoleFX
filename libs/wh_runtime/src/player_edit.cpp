@@ -7,62 +7,7 @@ namespace {
 
 Error noProject() { return Error{ErrorCode::InvalidArgument, "Es ist kein Projekt geladen"}; }
 
-constexpr std::size_t kMaxUndo = 200;
-
 }  // namespace
-
-std::optional<project::Project> Player::beginEdit(const std::string& key) {
-    if (!key.empty() && key == lastEditKey_ && !undo_.empty()) {
-        return std::nullopt;  // setzt die vorige Änderung fort: der alte Stand ist schon gemerkt
-    }
-    return *project_;
-}
-
-void Player::finishEdit(std::optional<project::Project> before, const std::string& key, bool ok) {
-    if (!ok) {
-        return;
-    }
-    redo_.clear();
-    if (before) {
-        undo_.push_back(std::move(*before));
-        if (undo_.size() > kMaxUndo) {
-            undo_.erase(undo_.begin());
-        }
-    }
-    lastEditKey_ = key;
-}
-
-Result<void> Player::restored(const std::optional<graph::PortRef>& previousTarget) {
-    graphDirty_ = true;
-    modified_ = true;
-    lastEditKey_.clear();
-    if (previousTarget != project_->target) {
-        targetDirty_ = true;
-    }
-    return {};
-}
-
-Result<void> Player::undo() {
-    if (!project_ || undo_.empty()) {
-        return Error{ErrorCode::InvalidArgument, "Nichts zum Rückgängigmachen"};
-    }
-    const auto previousTarget = project_->target;
-    redo_.push_back(std::move(*project_));
-    project_.emplace(std::move(undo_.back()));
-    undo_.pop_back();
-    return restored(previousTarget);
-}
-
-Result<void> Player::redo() {
-    if (!project_ || redo_.empty()) {
-        return Error{ErrorCode::InvalidArgument, "Nichts zum Wiederholen"};
-    }
-    const auto previousTarget = project_->target;
-    undo_.push_back(std::move(*project_));
-    project_.emplace(std::move(redo_.back()));
-    redo_.pop_back();
-    return restored(previousTarget);
-}
 
 Result<NodeId> Player::addNode(std::string_view typeId, Vec2 position) {
     if (!project_) {
@@ -172,7 +117,7 @@ Result<void> Player::setTarget(const graph::PortRef& port) {
     auto before = beginEdit({});
     project_->target = port;
     finishEdit(std::move(before), {}, true);
-    targetDirty_ = true;
+    rebuildDirty_ = true;
     modified_ = true;
     return {};
 }

@@ -39,6 +39,8 @@ public:
     /// Fehler: NotFound.
     Result<void> remove(FixtureId id);
     Result<void> move(FixtureId id, const Vec3& origin);
+    /// Der Name wird nicht auf Eindeutigkeit geprüft (das tut die Projektebene). Fehler: NotFound.
+    Result<void> rename(FixtureId id, std::string name);
     /// Tauscht die Form; bei einem Fehler bleibt die alte erhalten.
     Result<void> replaceShape(FixtureId id, FixtureShape shape);
 

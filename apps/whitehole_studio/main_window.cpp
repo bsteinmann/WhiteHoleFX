@@ -26,6 +26,7 @@
 #include <algorithm>
 #include <cmath>
 
+#include "layout_panel.hpp"
 #include "node_editor.hpp"
 #include "parameter_panel.hpp"
 #include "preview_widget.hpp"
@@ -76,6 +77,16 @@ MainWindow::MainWindow(gpu::IGpuDevice* device, const QString& deviceNote, QWidg
     dock_ = new QDockWidget{tr("Parameter"), this};
     dock_->setWidget(parameters_);
     addDockWidget(Qt::RightDockWidgetArea, dock_);
+
+    layoutPanel_ = new LayoutPanel{*player_, this};
+    connect(layoutPanel_, &LayoutPanel::edited, this, &MainWindow::onLayoutEdited);
+    connect(layoutPanel_, &LayoutPanel::failed, this,
+            [this](const QString& message) { statusBar()->showMessage(message, 8000); });
+    layoutDock_ = new QDockWidget{tr("Layout"), this};
+    layoutDock_->setWidget(layoutPanel_);
+    addDockWidget(Qt::RightDockWidgetArea, layoutDock_);
+    tabifyDockWidget(layoutDock_, dock_);  // Layout und Parameter teilen sich den Platz rechts
+    dock_->raise();
 
     editor_ = new NodeEditor{*player_, this};
     connect(editor_, &NodeEditor::edited, this, &MainWindow::onGraphEdited);
@@ -156,6 +167,7 @@ void MainWindow::buildActions() {
     QMenu* view = menuBar()->addMenu(tr("&Ansicht"));
     view->addAction(editorDock_->toggleViewAction());
     view->addAction(dock_->toggleViewAction());
+    view->addAction(layoutDock_->toggleViewAction());
 
     QMenu* run = menuBar()->addMenu(tr("&Wiedergabe"));
     run->addAction(runAction_);
@@ -210,6 +222,9 @@ bool MainWindow::confirmDiscard() {
 QString MainWindow::exerciseEditor() {
     QString ok = editor_->exercise();
     if (ok.isEmpty()) {
+        ok = layoutPanel_->exercise();
+    }
+    if (ok.isEmpty()) {
         // Alles zurücknehmen und wiederholen: dieselben Schritte wie Strg+Z und Strg+Umschalt+Z.
         int undone = 0;
         while (player_->canUndo() && undone < 10000) {
@@ -237,7 +252,17 @@ void MainWindow::updateUndoActions() {
     redoAction_->setEnabled(player_->canRedo());
 }
 
+void MainWindow::onLayoutEdited() {
+    if (timer_.isActive()) {
+        timer_.setInterval(std::max(1, static_cast<int>(std::lround(1000.0 / player_->framesPerSecond()))));
+    }
+    updateTitle();
+    updateActions();
+    refreshImage();
+}
+
 void MainWindow::afterRestore() {
+    layoutPanel_->rebuild();
     editor_->rebuild();
     parameters_->rebuild(player_->nodes());
     updateTitle();
@@ -304,6 +329,7 @@ bool MainWindow::openPath(const QString& path, bool interactive) {
     preview_->setMessage({});
     parameters_->rebuild(player_->nodes());
     editor_->reset();
+    layoutPanel_->rebuild();
     updateTitle();
     statusBar()->showMessage(tr("Geladen: %1").arg(path), 5000);
     updateActions();

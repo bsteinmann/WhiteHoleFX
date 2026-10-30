@@ -53,7 +53,7 @@ Result<void> Player::adopt(project::Project project, std::string path) {
     path_ = std::move(path);
     stepError_.reset();
     graphDirty_ = false;
-    targetDirty_ = false;
+    rebuildDirty_ = false;
     modified_ = false;
     undo_.clear();
     redo_.clear();
@@ -84,7 +84,7 @@ Result<void> Player::start() {
     session_ = std::move(session).value();
     stepError_.reset();
     graphDirty_ = false;
-    targetDirty_ = false;
+    rebuildDirty_ = false;
     return {};
 }
 
@@ -98,9 +98,9 @@ Result<void> Player::step() {
     if (!session_) {
         return {};
     }
-    if (targetDirty_) {
+    if (rebuildDirty_) {
         // Das Ziel steckt in der Stage; ein neues braucht eine neue Session.
-        targetDirty_ = false;
+        rebuildDirty_ = false;
         graphDirty_ = false;
         stop();
         if (const Result<void> restarted = start(); !restarted.ok()) {

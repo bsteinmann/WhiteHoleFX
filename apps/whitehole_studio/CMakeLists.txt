@@ -7,6 +7,11 @@ find_package(Qt6 REQUIRED COMPONENTS Widgets)
 set(CMAKE_AUTOMOC ON)
 
 add_executable(whitehole_studio
+    fixture_form.cpp
+    fixture_form.hpp
+    form_helpers.hpp
+    layout_panel.cpp
+    layout_panel.hpp
     main.cpp
     main_window.cpp
     main_window.hpp
@@ -15,6 +20,8 @@ add_executable(whitehole_studio
     node_editor_menu.cpp
     node_items.cpp
     node_items.hpp
+    output_form.cpp
+    output_form.hpp
     parameter_panel.cpp
     parameter_panel.hpp
     preview_widget.cpp
