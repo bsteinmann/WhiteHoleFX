@@ -17,7 +17,8 @@ option(WHITEHOLEFX_WARNINGS_AS_ERRORS "Compiler-Warnungen als Fehler behandeln" 
 
 # Installierte Programme finden mitgelieferte Bibliotheken (wgpu-native) relativ zu sich selbst.
 if(UNIX AND NOT APPLE)
-    set(CMAKE_INSTALL_RPATH "$ORIGIN/../lib/whiteholefx")
+    include(GNUInstallDirs)  # CMAKE_INSTALL_LIBDIR: auf Debian lib/x86_64-linux-gnu
+    set(CMAKE_INSTALL_RPATH "$ORIGIN/../${CMAKE_INSTALL_LIBDIR}/whiteholefx")
 endif()
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
