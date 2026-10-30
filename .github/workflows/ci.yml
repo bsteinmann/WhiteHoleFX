@@ -176,7 +176,7 @@ jobs:
             echo "$out"
             if [ "$code" != "0" ]; then
               msg=$(echo "$out" | head -40 | sed 's/%/%25/g' | awk '{printf "%s%%0A", $0}')
-              echo "::error title=Fenster-Lauf fehlgeschlagen (Code $code): $*::${msg}"
+              echo "::error title=Fenster-Lauf fehlgeschlagen::Code $code, Argumente $*%0A${msg}"
               fail=1
             fi
           }
