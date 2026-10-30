@@ -172,7 +172,7 @@ jobs:
           studio=./build/apps/whitehole_studio/whitehole_studio
           fail=0
           run_studio() {
-            out=$("$studio" "$@" 2>&1); code=$?
+            code=0; out=$("$studio" "$@" 2>&1) || code=$?
             echo "$out"
             if [ "$code" != "0" ]; then
               msg=$(echo "$out" | head -40 | sed 's/%/%25/g' | awk '{printf "%s%%0A", $0}')
