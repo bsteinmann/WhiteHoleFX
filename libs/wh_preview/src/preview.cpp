@@ -1,0 +1,235 @@
+// preview.cpp: LED-Karte als Bild zeichnen.
+//
+// Ablauf: LEDs in die Bildebene projizieren -> Ausschnitt so wählen, dass alles mit Rand ins Bild
+// passt -> von hinten nach vorn als weich begrenzte Scheiben zeichnen.
+#include "whitehole/preview/preview.hpp"
+
+#include <algorithm>
+#include <array>
+#include <cmath>
+#include <numeric>
+
+namespace whitehole::preview {
+
+namespace {
+
+constexpr std::uint32_t kMaxSide = 16384;
+constexpr float kObliqueShift = 0.35F;  // wie weit z das Bild nach rechts oben schiebt
+constexpr std::array<std::uint8_t, 3> kBackground{14, 14, 18};
+constexpr std::array<std::uint8_t, 3> kOffLed{34, 34, 40};
+
+struct Projected {
+    float x{0.0F};  // Bildebene, y nach oben
+    float y{0.0F};
+    float depth{0.0F};
+};
+
+Projected project(const Vec3& p, bool oblique) {
+    if (!oblique) {
+        return {p.x, p.y, p.z};
+    }
+    return {p.x + kObliqueShift * p.z, p.y + kObliqueShift * p.z, p.z};
+}
+
+/// Median des Abstands aufeinanderfolgender LEDs in pts[first, first + count) (höchstens 4096
+/// Stichproben, gleichmäßig verteilt). Gibt `fallback` zurück, wenn alle Abstände 0 sind.
+float medianNeighbourDistance(const std::vector<Projected>& pts, std::size_t first, std::size_t count,
+                              float fallback) {
+    if (count < 2 || first + count > pts.size()) {
+        return fallback;
+    }
+    const std::size_t pairs = count - 1;
+    const std::size_t step = std::max<std::size_t>(1, pairs / 4096);
+    std::vector<float> distances;
+    for (std::size_t i = first; i < first + pairs; i += step) {
+        const float dx = pts[i + 1].x - pts[i].x;
+        const float dy = pts[i + 1].y - pts[i].y;
+        const float d = std::sqrt(dx * dx + dy * dy);
+        if (d > 1e-6F) {
+            distances.push_back(d);
+        }
+    }
+    if (distances.empty()) {
+        return fallback;
+    }
+    const auto middle = distances.begin() + static_cast<std::ptrdiff_t>(distances.size() / 2);
+    std::nth_element(distances.begin(), middle, distances.end());
+    return *middle;
+}
+
+float blend(float dst, float src, float coverage) { return dst + (src - dst) * coverage; }
+
+}  // namespace
+
+std::uint8_t toSrgb8(float linear) noexcept {
+    const float v = std::isfinite(linear) ? std::clamp(linear, 0.0F, 1.0F) : 0.0F;
+    const float s = v <= 0.0031308F ? v * 12.92F : 1.055F * std::pow(v, 1.0F / 2.4F) - 0.055F;
+    return static_cast<std::uint8_t>(std::lround(std::clamp(s, 0.0F, 1.0F) * 255.0F));
+}
+
+Result<Image> renderPreview(const mapping::LedMap& map, std::span<const ColorRgba> colors,
+                            const PreviewOptions& options) {
+    if (map.world.empty()) {
+        return Error{ErrorCode::InvalidArgument, "Die LED-Karte ist leer"};
+    }
+    if (colors.size() != map.world.size()) {
+        return Error{ErrorCode::InvalidArgument, "Die Zahl der Farben passt nicht zur LED-Karte"};
+    }
+    if (options.width == 0 || options.height == 0 || options.width > kMaxSide || options.height > kMaxSide ||
+        options.margin * 2 + 2 > std::min(options.width, options.height)) {
+        return Error{ErrorCode::InvalidArgument, "Ungültige Bildgröße oder zu großer Rand"};
+    }
+
+    // Tiefe vorhanden? Dann schräg projizieren.
+    float zMin = map.world.front().z;
+    float zMax = zMin;
+    for (const Vec3& p : map.world) {
+        zMin = std::min(zMin, p.z);
+        zMax = std::max(zMax, p.z);
+    }
+    const bool oblique = zMax - zMin > 1e-6F;
+
+    std::vector<Projected> pts;
+    pts.reserve(map.world.size());
+    float minX = 0.0F;
+    float maxX = 0.0F;
+    float minY = 0.0F;
+    float maxY = 0.0F;
+    for (const Vec3& p : map.world) {
+        const Projected q = project(p, oblique);
+        if (pts.empty()) {
+            minX = maxX = q.x;
+            minY = maxY = q.y;
+        }
+        pts.push_back(q);
+        minX = std::min(minX, q.x);
+        maxX = std::max(maxX, q.x);
+        minY = std::min(minY, q.y);
+        maxY = std::max(maxY, q.y);
+    }
+
+    // Typischer LED-Abstand in Weltmaßen: Fläche je LED (bei Linien Länge je LED) als Grundwert.
+    // Jedes Fixture verfeinert ihn mit dem Median des Abstands seiner Kabelnachbarn, damit ein
+    // dichter Strip neben einer weitläufigen Matrix kleinere Punkte bekommt.
+    const float spanX = maxX - minX;
+    const float spanY = maxY - minY;
+    const float count = static_cast<float>(pts.size());
+    float areaSpacing = 1.0F;
+    if (spanX > 1e-6F && spanY > 1e-6F) {
+        areaSpacing = std::sqrt(spanX * spanY / count);
+    } else if (std::max(spanX, spanY) > 1e-6F) {
+        areaSpacing = std::max(spanX, spanY) / count;
+    }
+    std::vector<float> ledSpacing(pts.size(), areaSpacing);
+    float widest = areaSpacing;
+    for (const mapping::FixtureRange& range : map.ranges) {
+        if (static_cast<std::size_t>(range.first) + range.count > pts.size()) {
+            continue;
+        }
+        const float spacing = std::min(areaSpacing, medianNeighbourDistance(pts, range.first, range.count, areaSpacing));
+        std::fill_n(ledSpacing.begin() + range.first, range.count, spacing);
+        widest = std::max(widest, spacing);
+    }
+    // Der Ausschnitt richtet sich nach dem größten Punkt, damit nichts über den Rand ragt.
+    const float spacing = widest;
+
+    // Maßstab: Der Rand bleibt frei; die LED-Mitten füllen den Rest, die Scheiben ragen
+    // ein Stück über. Darum wird der halbe Abstand zusätzlich abgezogen.
+    const float availW = static_cast<float>(options.width) - 2.0F * static_cast<float>(options.margin);
+    const float availH = static_cast<float>(options.height) - 2.0F * static_cast<float>(options.margin);
+    const float needW = spanX + spacing;
+    const float needH = spanY + spacing;
+    const float scale = std::min(availW / needW, availH / needH);
+    const float offsetX = (static_cast<float>(options.width) - (spanX * scale)) * 0.5F;
+    const float offsetY = (static_cast<float>(options.height) + (spanY * scale)) * 0.5F;
+
+    Image image;
+    image.width = options.width;
+    image.height = options.height;
+    image.rgba.resize(std::size_t{options.width} * options.height * 4);
+    for (std::size_t i = 0; i < image.rgba.size(); i += 4) {
+        image.rgba[i] = kBackground[0];
+        image.rgba[i + 1] = kBackground[1];
+        image.rgba[i + 2] = kBackground[2];
+        image.rgba[i + 3] = 255;
+    }
+
+    // Hinten zuerst.
+    std::vector<std::uint32_t> order(pts.size());
+    std::iota(order.begin(), order.end(), 0U);
+    if (oblique) {
+        std::stable_sort(order.begin(), order.end(),
+                         [&](std::uint32_t a, std::uint32_t b) { return pts[a].depth < pts[b].depth; });
+    }
+
+    for (const std::uint32_t index : order) {
+        const float cx = offsetX + (pts[index].x - minX) * scale;
+        const float cy = offsetY - (pts[index].y - minY) * scale;
+        const float radius = std::clamp(options.dotScale * ledSpacing[index] * scale, 1.0F, 24.0F);
+        const ColorRgba& c = colors[index];
+        const float alpha = std::isfinite(c.a) ? std::clamp(c.a, 0.0F, 1.0F) : 1.0F;
+        const std::array<float, 3> lit{static_cast<float>(toSrgb8(c.r * alpha)),
+                                       static_cast<float>(toSrgb8(c.g * alpha)),
+                                       static_cast<float>(toSrgb8(c.b * alpha))};
+
+        const int x0 = std::max(0, static_cast<int>(std::floor(cx - radius - 1.0F)));
+        const int x1 = std::min(static_cast<int>(options.width) - 1, static_cast<int>(std::ceil(cx + radius + 1.0F)));
+        const int y0 = std::max(0, static_cast<int>(std::floor(cy - radius - 1.0F)));
+        const int y1 = std::min(static_cast<int>(options.height) - 1, static_cast<int>(std::ceil(cy + radius + 1.0F)));
+        for (int y = y0; y <= y1; ++y) {
+            for (int x = x0; x <= x1; ++x) {
+                const float dx = static_cast<float>(x) + 0.5F - cx;
+                const float dy = static_cast<float>(y) + 0.5F - cy;
+                const float coverage = std::clamp(radius + 0.5F - std::sqrt(dx * dx + dy * dy), 0.0F, 1.0F);
+                if (coverage <= 0.0F) {
+                    continue;
+                }
+                std::uint8_t* px = &image.rgba[(static_cast<std::size_t>(y) * options.width + static_cast<std::size_t>(x)) * 4];
+                for (std::size_t ch = 0; ch < 3; ++ch) {
+                    // Eine ausgeschaltete LED bleibt als dunkler Punkt sichtbar: 0 wird zum Grauwert
+                    // der "aus"-LED, 255 bleibt 255.
+                    const float off = static_cast<float>(kOffLed[ch]);
+                    const float target = off + lit[ch] * (1.0F - off / 255.0F);
+                    px[ch] = static_cast<std::uint8_t>(std::lround(blend(static_cast<float>(px[ch]), target, coverage)));
+                }
+            }
+        }
+    }
+    return image;
+}
+
+std::vector<ColorRgba> layoutColors(const mapping::LedMap& map) {
+    std::vector<ColorRgba> colors(map.world.size(), ColorRgba{0.0F, 0.0F, 0.0F, 1.0F});
+    const float golden = 0.61803398875F;
+    float hue = 0.1F;
+    for (const mapping::FixtureRange& range : map.ranges) {
+        hue = std::fmod(hue + golden, 1.0F);
+        // HSV (S = 0.8) -> RGB; Helligkeit wächst entlang des Kabels von 0,25 auf 1.
+        const float h6 = hue * 6.0F;
+        const int sector = static_cast<int>(h6);
+        const float f = h6 - static_cast<float>(sector);
+        const float s = 0.8F;
+        const float p = 1.0F - s;
+        const float q = 1.0F - s * f;
+        const float t = 1.0F - s * (1.0F - f);
+        float r = 1.0F;
+        float g = t;
+        float b = p;
+        switch (sector % 6) {
+            case 1: r = q; g = 1.0F; b = p; break;
+            case 2: r = p; g = 1.0F; b = t; break;
+            case 3: r = p; g = q; b = 1.0F; break;
+            case 4: r = t; g = p; b = 1.0F; break;
+            case 5: r = 1.0F; g = p; b = q; break;
+            default: break;
+        }
+        for (std::uint32_t i = 0; i < range.count && range.first + i < colors.size(); ++i) {
+            const float along = range.count > 1 ? static_cast<float>(i) / static_cast<float>(range.count - 1) : 1.0F;
+            const float v = 0.25F + 0.75F * along;
+            colors[range.first + i] = ColorRgba{r * v, g * v, b * v, 1.0F};
+        }
+    }
+    return colors;
+}
+
+}  // namespace whitehole::preview

@@ -12,6 +12,9 @@ const char* usageText() {
            "  --frames <n>     nach n Frames beenden (sonst läuft das Programm bis Strg+C)\n"
            "  --fps <zahl>     Bildrate überschreiben (sonst die aus dem Projekt)\n"
            "  --software       Software-Adapter für die GPU bevorzugen (z. B. lavapipe)\n"
+           "  --snapshot <png> die LEDs des letzten Frames als Bild speichern (ohne --frames: 1 Frame);\n"
+           "                   mit --check das Layout, eingefärbt nach Fixture und Kabelrichtung\n"
+           "  --size <BxH>     Bildgröße der Vorschau, z. B. 1280x720 (Standard 960x540)\n"
            "  --help           diese Hilfe\n";
 }
 
@@ -52,6 +55,32 @@ Result<Options> parseOptions(const std::vector<std::string>& args) {
                 return bad("--fps braucht eine Zahl größer 0 und höchstens 1000, nicht \"" + *value + "\"");
             }
             options.fps = f;
+        } else if (a == "--snapshot") {
+            const std::string* value = next();
+            if (value == nullptr || value->empty()) {
+                return bad("--snapshot braucht einen Dateinamen");
+            }
+            options.snapshotPath = *value;
+        } else if (a == "--size") {
+            const std::string* value = next();
+            if (value == nullptr) {
+                return bad("--size braucht Breite und Höhe, z. B. 1280x720");
+            }
+            const std::size_t x = value->find('x');
+            std::uint32_t w = 0;
+            std::uint32_t h = 0;
+            bool ok = x != std::string::npos && x > 0 && x + 1 < value->size();
+            if (ok) {
+                const auto rw = std::from_chars(value->data(), value->data() + x, w);
+                const auto rh = std::from_chars(value->data() + x + 1, value->data() + value->size(), h);
+                ok = rw.ec == std::errc{} && rw.ptr == value->data() + x && rh.ec == std::errc{} &&
+                     rh.ptr == value->data() + value->size() && w >= 16 && h >= 16 && w <= 8192 && h <= 8192;
+            }
+            if (!ok) {
+                return bad("--size braucht Breite x Höhe von 16 bis 8192, nicht \"" + *value + "\"");
+            }
+            options.snapshotWidth = w;
+            options.snapshotHeight = h;
         } else if (!a.empty() && a[0] == '-') {
             return bad("Unbekannte Option " + a);
         } else if (options.projectPath.empty()) {
@@ -62,6 +91,9 @@ Result<Options> parseOptions(const std::vector<std::string>& args) {
     }
     if (!options.help && options.projectPath.empty()) {
         return bad("Es fehlt die Projektdatei");
+    }
+    if (options.snapshotPath.empty() && (options.snapshotWidth != 960 || options.snapshotHeight != 540)) {
+        return bad("--size gehört zu --snapshot");
     }
     return options;
 }

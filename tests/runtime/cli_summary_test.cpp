@@ -43,6 +43,12 @@ TEST_CASE("Kommandozeile: gültige Aufrufe", "[cli]") {
     CHECK(b.fps == 25.5);
 
     CHECK(options({"--help"}).help);
+
+    const cli::Options c = options({"p.whfx", "--snapshot", "bild.png", "--size", "1280x720"});
+    CHECK(c.snapshotPath == "bild.png");
+    CHECK(c.snapshotWidth == 1280);
+    CHECK(c.snapshotHeight == 720);
+    CHECK(options({"p.whfx", "--snapshot", "bild.png"}).snapshotWidth == 960);
 }
 
 TEST_CASE("Kommandozeile: Fehler nennen die Ursache", "[cli]") {
@@ -55,6 +61,13 @@ TEST_CASE("Kommandozeile: Fehler nennen die Ursache", "[cli]") {
     CHECK(contains(optionError({"a", "--fps", "0"}), "größer 0"));
     CHECK(contains(optionError({"a", "--fps", "nan"}), "größer 0"));
     CHECK(contains(optionError({"a", "--fps", "5000"}), "höchstens 1000"));
+    CHECK(contains(optionError({"a", "--snapshot"}), "Dateinamen"));
+    CHECK(contains(optionError({"a", "--snapshot", "x.png", "--size"}), "Breite und Höhe"));
+    CHECK(contains(optionError({"a", "--snapshot", "x.png", "--size", "100"}), "Breite x Höhe"));
+    CHECK(contains(optionError({"a", "--snapshot", "x.png", "--size", "10x500"}), "16 bis 8192"));
+    CHECK(contains(optionError({"a", "--snapshot", "x.png", "--size", "9000x500"}), "16 bis 8192"));
+    CHECK(contains(optionError({"a", "--snapshot", "x.png", "--size", "axb"}), "16 bis 8192"));
+    CHECK(contains(optionError({"a", "--size", "640x480"}), "gehört zu --snapshot"));
 }
 
 TEST_CASE("Beispiel: examples/wand.whfx ist gültig und der Bericht stimmt", "[cli]") {

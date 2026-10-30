@@ -48,6 +48,8 @@ add_executable(wh_tests
     output/output_worker_test.cpp
     output/sacn_test.cpp
     output/udp_sender_test.cpp
+    preview/png_test.cpp
+    preview/preview_test.cpp
     project/project_test.cpp
     runtime/cli_summary_test.cpp
     runtime/session_test.cpp)
@@ -65,6 +67,7 @@ target_link_libraries(wh_tests PRIVATE
     whitehole::executor
     whitehole::mapping
     whitehole::output
+    whitehole::preview
     whitehole::project
     whitehole::runtime
     wh_warnings

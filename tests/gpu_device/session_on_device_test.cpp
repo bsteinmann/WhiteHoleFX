@@ -57,8 +57,11 @@ TEST_CASE("Session auf dem Gerät: die Pakete tragen die erwarteten Farben", "[g
 
     RecordingSink sink;
     engine::ManualFrameClock clock{Seconds{1.0 / 40.0}};
+    runtime::SessionOptions sessionOptions;
+    sessionOptions.keepLatestColors = true;
     auto session = runtime::Session::create(
-        parsed.value(), runtime::SessionDeps{*device, library->snippets, library->kernels, sink, clock});
+        parsed.value(), runtime::SessionDeps{*device, library->snippets, library->kernels, sink, clock},
+        sessionOptions);
     REQUIRE(session.ok());
 
     for (int i = 0; i < 3; ++i) {
@@ -66,6 +69,16 @@ TEST_CASE("Session auf dem Gerät: die Pakete tragen die erwarteten Farben", "[g
         REQUIRE(session.value()->flush(std::chrono::seconds{5}));
     }
     CHECK_FALSE(session.value()->stageError().has_value());
+
+    // Die abgegriffenen Fließkommafarben sind der Verlauf selbst (vor Gamma und Rundung).
+    const std::vector<ColorRgba> latest = session.value()->latestColors();
+    REQUIRE(latest.size() == 16);
+    for (std::size_t led = 0; led < 16; ++led) {
+        const float t = (static_cast<float>(led % 8) + 0.5F) / 8.0F;
+        INFO("LED " << led);
+        CHECK(std::abs(latest[led].r - t) < 1e-4F);
+        CHECK(std::abs(latest[led].b - t) < 1e-4F);
+    }
     CHECK(session.value()->stats().output.framesProcessed == 3);
 
     const auto packets = sink.packets();

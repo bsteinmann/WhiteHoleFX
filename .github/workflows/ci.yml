@@ -64,6 +64,18 @@ jobs:
         run: |
           ./build/apps/whitehole_cli/whitehole_cli examples/wand.whfx --check
           ./build/apps/whitehole_cli/whitehole_cli examples/wand.whfx --frames 20 --software
+      - name: Vorschau-Bilder erzeugen (echter Effekt auf dem Software-Adapter)
+        run: |
+          ./build/apps/whitehole_cli/whitehole_cli examples/wand.whfx --frames 60 --software --snapshot vorschau.png
+          ./build/apps/whitehole_cli/whitehole_cli examples/wand.whfx --check --snapshot layout.png
+          test -s vorschau.png && test -s layout.png
+      - name: Vorschau-Bilder bereitstellen
+        uses: actions/upload-artifact@v4
+        with:
+          name: vorschau
+          path: |
+            vorschau.png
+            layout.png
 
   windows:
     name: Windows (MSVC, experimentell, Fehler brechen den Lauf nicht ab)

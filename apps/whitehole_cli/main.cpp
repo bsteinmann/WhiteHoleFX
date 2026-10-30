@@ -14,6 +14,7 @@
 #include "whitehole/engine/frame_clocks.hpp"
 #include "whitehole/nodes/builtin_library.hpp"
 #include "whitehole/output/udp_sender.hpp"
+#include "whitehole/preview/png.hpp"
 #include "whitehole/project/project.hpp"
 #include "whitehole/runtime/session.hpp"
 #include "whitehole/runtime/summary.hpp"
@@ -33,6 +34,17 @@ extern "C" void onSignal(int) { gStop.store(true); }
 int fail(const Error& error) {
     std::cerr << "Fehler: " << error.message << "\n";
     return 1;
+}
+
+Result<void> saveSnapshot(const mapping::LedMap& map, const std::vector<ColorRgba>& colors, const cli::Options& options) {
+    preview::PreviewOptions previewOptions;
+    previewOptions.width = options.snapshotWidth;
+    previewOptions.height = options.snapshotHeight;
+    const auto image = preview::renderPreview(map, colors, previewOptions);
+    if (!image.ok()) {
+        return image.error();
+    }
+    return preview::writePng(image.value(), options.snapshotPath);
 }
 
 #ifdef WH_CLI_HAVE_GPU
@@ -61,8 +73,11 @@ int run(const project::Project& project, const nodes::BuiltinLibrary& library, c
     }
 
     engine::SteadyFrameClock clock;
+    runtime::SessionOptions sessionOptions;
+    sessionOptions.keepLatestColors = !options.snapshotPath.empty();
     auto session = runtime::Session::create(
-        project, runtime::SessionDeps{*device.value(), library.snippets, library.kernels, *sender.value(), clock});
+        project, runtime::SessionDeps{*device.value(), library.snippets, library.kernels, *sender.value(), clock},
+        sessionOptions);
     if (!session.ok()) {
         return fail(session.error());
     }
@@ -72,9 +87,14 @@ int run(const project::Project& project, const nodes::BuiltinLibrary& library, c
         std::chrono::duration<double>{1.0 / fps});
     std::cerr << "Läuft mit " << fps << " fps, " << session.value()->ledCount() << " LEDs. Strg+C beendet.\n";
 
+    // Eine Vorschau ohne Frameanzahl macht genau einen Frame.
+    std::optional<std::uint64_t> frames = options.frames;
+    if (!frames && !options.snapshotPath.empty()) {
+        frames = 1;
+    }
     const auto start = std::chrono::steady_clock::now();
     auto lastReport = start;
-    for (std::uint64_t frame = 0; !gStop.load() && (!options.frames || frame < *options.frames); ++frame) {
+    for (std::uint64_t frame = 0; !gStop.load() && (!frames || frame < *frames); ++frame) {
         if (const Result<void> r = session.value()->renderFrame(); !r.ok()) {
             return fail(r.error());
         }
@@ -94,6 +114,17 @@ int run(const project::Project& project, const nodes::BuiltinLibrary& library, c
     if (const auto error = session.value()->stageError()) {
         std::cerr << "Effekt-Fehler: " << error->message << "\n";
         return 1;
+    }
+    if (!options.snapshotPath.empty()) {
+        const std::vector<ColorRgba> colors = session.value()->latestColors();
+        if (colors.empty()) {
+            std::cerr << "Fehler: Es ist kein Frame angekommen, die Vorschau bleibt leer.\n";
+            return 1;
+        }
+        if (const Result<void> saved = saveSnapshot(session.value()->map(), colors, options); !saved.ok()) {
+            return fail(saved.error());
+        }
+        std::cout << "Vorschau gespeichert: " << options.snapshotPath << "\n";
     }
     if (const auto error = session.value()->lastOutputError()) {
         std::cerr << "Letzter Ausgabefehler: " << error->message << "\n";
@@ -140,6 +171,18 @@ int main(int argc, char** argv) {
             return fail(report.error());
         }
         std::cout << report.value();
+        if (!options.value().snapshotPath.empty()) {
+            const auto map = parsed.value().layout.bake(parsed.value().normalize);
+            if (!map.ok()) {
+                return fail(map.error());
+            }
+            if (const Result<void> saved =
+                    saveSnapshot(map.value(), preview::layoutColors(map.value()), options.value());
+                !saved.ok()) {
+                return fail(saved.error());
+            }
+            std::cout << "Layout-Vorschau gespeichert: " << options.value().snapshotPath << "\n";
+        }
         return 0;
     }
 

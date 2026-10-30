@@ -53,6 +53,13 @@ struct SessionDeps {
     IFrameClock& clock;
 };
 
+struct SessionOptions {
+    std::size_t readbackSlots{3};
+    /// Merkt sich die Farben des letzten Frames (für die Vorschau). Kostet je Frame eine Kopie
+    /// von 16 Byte je LED; darum nur auf Wunsch.
+    bool keepLatestColors{false};
+};
+
 struct SessionStats {
     engine::EngineStats engine;
     output::OutputStats output;
@@ -67,7 +74,7 @@ public:
     /// Graphen, der sich nicht übersetzen lässt, und InvalidArgument, wenn `project.target` fehlt.
     [[nodiscard]] static Result<std::unique_ptr<Session>> create(const project::Project& project,
                                                                  SessionDeps deps,
-                                                                 std::size_t readbackSlots = 3);
+                                                                 SessionOptions options = {});
 
     ~Session();
     Session(const Session&) = delete;
@@ -81,19 +88,28 @@ public:
     bool flush(std::chrono::milliseconds timeout);
 
     [[nodiscard]] std::uint32_t ledCount() const noexcept { return stage_->ledCount(); }
+    /// Die LED-Karte, mit der die Session läuft.
+    [[nodiscard]] const mapping::LedMap& map() const noexcept { return map_; }
+    /// Farben des zuletzt gelieferten Frames (linear, eine je LED). Leer, solange noch kein Frame
+    /// angekommen ist oder `keepLatestColors` aus war. Thread-sicher.
+    [[nodiscard]] std::vector<ColorRgba> latestColors() const;
     [[nodiscard]] SessionStats stats() const;
     [[nodiscard]] std::optional<Error> lastOutputError() const;
     /// Fehler der Abtast-Stage (Graph nicht übersetzbar, Frame fehlgeschlagen).
     [[nodiscard]] std::optional<Error> stageError() const;
 
 private:
-    Session(gpu::IGpuDevice& device, std::unique_ptr<output::OutputWorker> worker,
-            std::shared_ptr<executor::SamplingRenderStage> stage,
+    class ColorTap;
+
+    Session(gpu::IGpuDevice& device, mapping::LedMap map, std::unique_ptr<output::OutputWorker> worker,
+            std::unique_ptr<ColorTap> tap, std::shared_ptr<executor::SamplingRenderStage> stage,
             std::unique_ptr<engine::ReadbackRing> ring, std::unique_ptr<engine::RenderEngine> engine,
             std::size_t slots);
 
     gpu::IGpuDevice& device_;
+    mapping::LedMap map_;
     std::unique_ptr<output::OutputWorker> worker_;           // zuerst anlegen, zuletzt entfernen
+    std::unique_ptr<ColorTap> tap_;                          // nach dem Worker, vor dem Ring
     std::shared_ptr<executor::SamplingRenderStage> stage_;
     std::unique_ptr<engine::ReadbackRing> ring_;
     std::unique_ptr<engine::RenderEngine> engine_;           // zuletzt angelegt, zuerst entfernt

@@ -4,6 +4,7 @@
 add_executable(whitehole_cli main.cpp cli_options.cpp)
 target_link_libraries(whitehole_cli PRIVATE
     whitehole::nodes
+    whitehole::preview
     whitehole::project
     whitehole::runtime
     wh_warnings)

@@ -2,6 +2,8 @@
 #include "whitehole/runtime/session.hpp"
 
 #include <algorithm>
+#include <cstring>
+#include <mutex>
 #include <thread>
 
 #include "whitehole/core/hash.hpp"
@@ -25,6 +27,33 @@ std::array<std::uint8_t, 16> senderId(const std::string& sourceName) {
 }
 
 }  // namespace
+
+/// Reicht Frames an den Ausgabe-Thread weiter und behält die Farben des letzten.
+class Session::ColorTap final : public engine::IFrameSink {
+public:
+    ColorTap(engine::IFrameSink& next, std::size_t ledCount) : next_{next}, ledCount_{ledCount} {}
+
+    void publish(engine::PixelFrame frame) override {
+        if (frame.bytes.size() >= ledCount_ * sizeof(ColorRgba)) {
+            std::vector<ColorRgba> colors(ledCount_);
+            std::memcpy(colors.data(), frame.bytes.data(), ledCount_ * sizeof(ColorRgba));
+            const std::lock_guard<std::mutex> lock{mutex_};
+            latest_ = std::move(colors);
+        }
+        next_.publish(std::move(frame));
+    }
+
+    std::vector<ColorRgba> latest() const {
+        const std::lock_guard<std::mutex> lock{mutex_};
+        return latest_;
+    }
+
+private:
+    engine::IFrameSink& next_;
+    std::size_t ledCount_;
+    mutable std::mutex mutex_;
+    std::vector<ColorRgba> latest_;
+};
 
 Result<OutputParts> buildOutput(const project::Project& project, output::IPacketSink& sink) {
     if (project.layout.fixtures().empty()) {
@@ -54,7 +83,7 @@ Result<OutputParts> buildOutput(const project::Project& project, output::IPacket
 }
 
 Result<std::unique_ptr<Session>> Session::create(const project::Project& project, SessionDeps deps,
-                                                 std::size_t readbackSlots) {
+                                                 SessionOptions options) {
     if (!project.target) {
         return Error{ErrorCode::InvalidArgument, "Das Projekt hat keine \"output\"-Zeile (welcher Ausgang soll leuchten?)"};
     }
@@ -82,7 +111,13 @@ Result<std::unique_ptr<Session>> Session::create(const project::Project& project
     }
 
     auto worker = std::make_unique<output::OutputWorker>(std::move(parts.value().pipeline));
-    auto ring = engine::ReadbackRing::create(deps.device, worker->sink(), readbackSlots, stage->outputSizeBytes());
+    std::unique_ptr<ColorTap> tap;
+    engine::IFrameSink* sink = &worker->sink();
+    if (options.keepLatestColors) {
+        tap = std::make_unique<ColorTap>(worker->sink(), map.world.size());
+        sink = tap.get();
+    }
+    auto ring = engine::ReadbackRing::create(deps.device, *sink, options.readbackSlots, stage->outputSizeBytes());
     if (!ring.ok()) {
         return ring.error();
     }
@@ -91,16 +126,18 @@ Result<std::unique_ptr<Session>> Session::create(const project::Project& project
         engine::RenderEngineConfig{stage->output(), stage->outputSizeBytes()});
     engine->setStages({stage});
 
-    return std::unique_ptr<Session>{new Session{deps.device, std::move(worker), std::move(stage),
-                                                std::move(ring).value(), std::move(engine), readbackSlots}};
+    return std::unique_ptr<Session>{new Session{deps.device, map, std::move(worker), std::move(tap), std::move(stage),
+                                                std::move(ring).value(), std::move(engine), options.readbackSlots}};
 }
 
-Session::Session(gpu::IGpuDevice& device, std::unique_ptr<output::OutputWorker> worker,
-                 std::shared_ptr<executor::SamplingRenderStage> stage,
+Session::Session(gpu::IGpuDevice& device, mapping::LedMap map, std::unique_ptr<output::OutputWorker> worker,
+                 std::unique_ptr<ColorTap> tap, std::shared_ptr<executor::SamplingRenderStage> stage,
                  std::unique_ptr<engine::ReadbackRing> ring, std::unique_ptr<engine::RenderEngine> engine,
                  std::size_t slots)
     : device_{device},
+      map_{std::move(map)},
       worker_{std::move(worker)},
+      tap_{std::move(tap)},
       stage_{std::move(stage)},
       ring_{std::move(ring)},
       engine_{std::move(engine)},
@@ -137,6 +174,8 @@ SessionStats Session::stats() const {
     s.failedReadbacks = ring_->failedReadbacks();
     return s;
 }
+
+std::vector<ColorRgba> Session::latestColors() const { return tap_ ? tap_->latest() : std::vector<ColorRgba>{}; }
 
 std::optional<Error> Session::lastOutputError() const {
     if (const auto frameError = worker_->lastFrameError()) {

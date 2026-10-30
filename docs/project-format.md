@@ -19,6 +19,27 @@ oder zu lange Strips fallen so vor dem ersten Paket auf.
 Ohne `--frames` läuft der Runner bis Strg+C. Er beendet geordnet: laufende Frames werden noch
 ausgeliefert, dann erscheint eine Zusammenfassung (Frames, verworfene Frames, Pakete, Fehler).
 
+## Vorschau als Bild
+
+```
+whitehole_cli wand.whfx --check --snapshot layout.png     # Layout, ohne GPU
+whitehole_cli wand.whfx --frames 60 --snapshot bild.png   # der 60. Frame, wie ihn die LEDs zeigen
+whitehole_cli wand.whfx --snapshot bild.png --size 1280x720
+```
+
+Jede LED erscheint als Punkt an ihrer Position (von vorn, y nach oben; hat das Layout Tiefe,
+schräg von vorn oben). Das Bild zeigt die Farben vor der Ausgabeumrechnung (Gamma, Helligkeit,
+Farbreihenfolge), also so, wie der Effekt sie meint. Ausgeschaltete LEDs bleiben als dunkle
+Punkte sichtbar.
+
+Die **Layout-Vorschau** (`--check --snapshot`) färbt jedes Fixture mit einem eigenen Farbton und
+macht es entlang des Kabels heller: Die erste LED am Kabel ist die dunkelste. So sieht man auf
+einen Blick, ob eine Matrix richtig herum liegt und wo die Serpentine umkehrt.
+
+Ohne `--frames` rendert `--snapshot` genau einen Frame. Die Dateien sind unkomprimierte PNGs
+(einige hundert KB bis wenige MB). In der CI liegt das Bild des Beispielprojekts als Artefakt
+„vorschau“ am Lauf.
+
 ## Aufbau der Datei
 
 Zeilenweise; Wörter durch Leerzeichen getrennt; `#` beginnt einen Kommentar; Wörter mit

@@ -17,6 +17,9 @@ struct Options {
     bool help{false};
     std::optional<std::uint64_t> frames;  // sonst bis Strg+C
     std::optional<double> fps;            // überschreibt das Projekt
+    std::string snapshotPath;             // PNG der LEDs (bei --check: des Layouts)
+    std::uint32_t snapshotWidth{960};
+    std::uint32_t snapshotHeight{540};
 };
 
 /// Fehler: InvalidArgument mit einer Meldung, die auf die Hilfe verweist.

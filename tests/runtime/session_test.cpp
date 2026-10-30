@@ -210,3 +210,29 @@ TEST_CASE("buildOutput: die sACN-Sender-ID hängt am Quellnamen und bleibt stabi
     CHECK(cidOf(s1) != cidOf(s3));
     CHECK(cidOf(s1).size() == 16);
 }
+
+TEST_CASE("Session: die Farben des letzten Frames lassen sich abgreifen", "[runtime]") {
+    Rig rig;
+    const project::Project p = rig.load(kProject);
+    {
+        auto plain = rig.open(p);
+        REQUIRE(plain.ok());
+        REQUIRE(plain.value()->renderFrame().ok());
+        REQUIRE(plain.value()->flush(std::chrono::seconds{5}));
+        CHECK(plain.value()->latestColors().empty());  // nicht angefordert
+    }
+    runtime::SessionOptions options;
+    options.keepLatestColors = true;
+    auto session = runtime::Session::create(
+        p, runtime::SessionDeps{rig.device, rig.library->snippets, rig.library->kernels, rig.sink, rig.clock}, options);
+    REQUIRE(session.ok());
+    CHECK(session.value()->latestColors().empty());  // noch kein Frame
+    CHECK(session.value()->map().world.size() == 108);
+    REQUIRE(session.value()->renderFrame().ok());
+    REQUIRE(session.value()->flush(std::chrono::seconds{5}));
+    const std::vector<ColorRgba> colors = session.value()->latestColors();
+    CHECK(colors.size() == 108);
+    // Das Fake-Gerät rechnet nicht: Nullen. Wichtig ist, dass der Frame hier ankommt und
+    // trotzdem auch zur Ausgabe geht.
+    CHECK(session.value()->stats().output.framesProcessed == 1);
+}

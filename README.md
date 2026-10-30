@@ -30,6 +30,7 @@ Raum sitzt, und tastet die Funktion genau dort ab.
 | `wh_mapping` | Fixtures (Matrix, Strip, 3D-Gitter, Punktwolke), Verkabelung, Normalisierung |
 | `wh_output` | Farbumrechnung, Patch auf Universen, Art-Net / sACN / DDP, Ausgabe-Thread, UDP |
 | `wh_project` | Projektdatei (Text): Layout, Effektgraph, Ausgabe lesen und schreiben |
+| `wh_preview` | LED-Vorschau als Bild (CPU) und PNG-Schreiber |
 | `wh_runtime` | Session: Projekt zu laufender Ausgabe zusammensetzen; Prüfbericht |
 | `apps/whitehole_cli` | Konsolen-Runner: `--check`, rendern und senden |
 
