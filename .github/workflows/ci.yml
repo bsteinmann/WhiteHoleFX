@@ -154,7 +154,16 @@ jobs:
           cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
           -DWHITEHOLEFX_BUILD_STUDIO=ON -DWHITEHOLEFX_WEBGPU=ON -DWGPU_NATIVE_ROOT="$PWD/wgpu"
       - name: Bauen
-        run: cmake --build build --parallel --target whitehole_studio
+        # Compilerfehler zusätzlich als Annotation ausgeben, damit sie ohne Log-Download lesbar sind.
+        run: |
+          set +e
+          cmake --build build --parallel --target whitehole_studio 2>&1 | tee build.log
+          code=${PIPESTATUS[0]}
+          if [ "$code" != "0" ]; then
+            msg=$(grep -E "error|Error|undefined reference|fatal" -A3 build.log | head -60 | sed 's/%/%25/g' | awk '{printf "%s%%0A", $0}')
+            echo "::error title=Buildfehler::${msg}"
+          fi
+          exit $code
       - name: Fenster ohne Bildschirm öffnen und Bilder speichern
         env:
           QT_QPA_PLATFORM: offscreen
