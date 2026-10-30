@@ -5,9 +5,15 @@ out/
 CMakeFiles/
 CMakeCache.txt
 compile_commands.json
+CMakeUserPresets.json
+
+# Heruntergeladene Abhängigkeiten (scripts/fetch-wgpu-native.*)
+third_party/
 
 # Editoren und Systeme
 .vscode/
 .idea/
+.vs/
 *.swp
+*.user
 .DS_Store

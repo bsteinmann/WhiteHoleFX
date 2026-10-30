@@ -45,17 +45,12 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y mesa-vulkan-drivers libvulkan1 vulkan-tools unzip
           vulkaninfo --summary || true
-      - name: wgpu-native laden (Header und Bibliothek aus demselben Paket)
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          gh release download --repo gfx-rs/wgpu-native --pattern 'wgpu-linux-x86_64-release.zip' --dir dl
-          unzip -q dl/wgpu-linux-x86_64-release.zip -d wgpu
-          ls -R wgpu | head -30
+      - name: wgpu-native laden (Header und Bibliothek aus demselben Paket, Version gepinnt)
+        run: scripts/fetch-wgpu-native.sh
       - name: Konfigurieren
         run: >
           cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
-          -DWHITEHOLEFX_WEBGPU=ON -DWGPU_NATIVE_ROOT="$PWD/wgpu"
+          -DWHITEHOLEFX_WEBGPU=ON -DWGPU_NATIVE_ROOT="$PWD/third_party/wgpu-native"
       - name: Bauen
         run: cmake --build build --parallel --target wh_gpu_tests whitehole_cli
       - name: Testen
@@ -106,15 +101,10 @@ jobs:
     continue-on-error: true
     steps:
       - uses: actions/checkout@v5
-      - name: wgpu-native laden (Header und Bibliothek aus demselben Paket)
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          gh release download --repo gfx-rs/wgpu-native --pattern 'wgpu-windows-x86_64-msvc-release.zip' --dir dl
-          Expand-Archive dl/wgpu-windows-x86_64-msvc-release.zip -DestinationPath wgpu
-          Get-ChildItem -Recurse wgpu | Select-Object -First 30 FullName
+      - name: wgpu-native laden (Header und Bibliothek aus demselben Paket, Version gepinnt)
+        run: ./scripts/fetch-wgpu-native.ps1
       - name: Konfigurieren
-        run: cmake -S . -B build -DWHITEHOLEFX_WEBGPU=ON "-DWGPU_NATIVE_ROOT=$PWD/wgpu"
+        run: cmake -S . -B build -DWHITEHOLEFX_WEBGPU=ON "-DWGPU_NATIVE_ROOT=$PWD/third_party/wgpu-native"
       - name: Bauen
         run: cmake --build build --config Debug --parallel --target wh_gpu_tests whitehole_cli
       - name: Testen
@@ -144,17 +134,11 @@ jobs:
           sudo apt-get install -y qt6-base-dev libgl1-mesa-dev libxkbcommon-dev fonts-dejavu-core \
             mesa-vulkan-drivers libvulkan1 vulkan-tools unzip
       - name: wgpu-native laden
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          tag=$(gh release view --repo gfx-rs/wgpu-native --json tagName --jq .tagName)
-          echo "::notice title=wgpu-native-Version::$tag"
-          gh release download --repo gfx-rs/wgpu-native --pattern 'wgpu-linux-x86_64-release.zip' --dir dl
-          unzip -q dl/wgpu-linux-x86_64-release.zip -d wgpu
+        run: scripts/fetch-wgpu-native.sh
       - name: Konfigurieren
         run: >
           cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
-          -DWHITEHOLEFX_BUILD_STUDIO=ON -DWHITEHOLEFX_WEBGPU=ON -DWGPU_NATIVE_ROOT="$PWD/wgpu"
+          -DWHITEHOLEFX_BUILD_STUDIO=ON -DWHITEHOLEFX_WEBGPU=ON -DWGPU_NATIVE_ROOT="$PWD/third_party/wgpu-native"
       - name: Bauen
         # Compilerfehler zusätzlich als Annotation ausgeben, damit sie ohne Log-Download lesbar sind.
         run: |
@@ -195,3 +179,79 @@ jobs:
             fenster-layout.png
             fenster-lauf.png
             fenster-regler.png
+
+  windows-studio:
+    name: Windows Oberfläche (Qt 6, MSVC, fertiges Paket als Artefakt, experimentell)
+    runs-on: windows-latest
+    continue-on-error: true
+    env:
+      QT_VERSION: "6.8.3"
+    steps:
+      - uses: actions/checkout@v5
+      - name: Qt installieren (aqtinstall)
+        run: |
+          python -m pip install aqtinstall
+          python -m aqt install-qt windows desktop $env:QT_VERSION win64_msvc2022_64 --outputdir C:\Qt
+      - name: wgpu-native laden
+        run: ./scripts/fetch-wgpu-native.ps1
+      - name: Konfigurieren
+        run: >
+          cmake -S . -B build -DWHITEHOLEFX_BUILD_STUDIO=ON -DWHITEHOLEFX_WEBGPU=ON
+          "-DWGPU_NATIVE_ROOT=$PWD/third_party/wgpu-native"
+          "-DCMAKE_PREFIX_PATH=C:/Qt/$env:QT_VERSION/msvc2022_64"
+      - name: Bauen (Release)
+        # Fehler zusätzlich als Annotation ausgeben, damit sie ohne Log-Download lesbar sind.
+        run: |
+          $out = (cmake --build build --config Release --parallel 2>&1 | Out-String)
+          $code = $LASTEXITCODE
+          Write-Output $out
+          if ($code -ne 0) {
+            $errors = ($out -split "`r?`n" | Where-Object { $_ -match "error|fatal|LNK" } | Select-Object -First 25) -join "`n"
+            $msg = $errors -replace "`r?`n", "%0A"
+            Write-Output "::error title=Buildfehler::$msg"
+          }
+          exit $code
+      - name: Tests
+        run: |
+          $out = (& ./build/tests/Release/wh_tests.exe --reporter compact 2>&1 | Out-String)
+          $code = $LASTEXITCODE
+          Write-Output $out
+          $tail = $out.Substring([Math]::Max(0, $out.Length - 3000)) -replace "`r?`n", "%0A"
+          $level = if ($code -eq 0) { "notice" } else { "error" }
+          Write-Output "::$level title=Testausgabe::Exit-Code $code%0A$tail"
+          exit $code
+      - name: Fenster ohne Bildschirm öffnen (Rauchtest mit Reglern, Node-Editor, Layout, Rückgängig)
+        env:
+          QT_QPA_PLATFORM: offscreen
+          PATH_QT: C:\Qt\6.8.3\msvc2022_64\bin
+        run: |
+          $env:PATH = "$env:PATH_QT;$env:PATH"
+          $exe = "./build/apps/whitehole_studio/Release/whitehole_studio.exe"
+          # Ohne GPU-Lauf: Das Fenster, alle Formulare und der Editor werden bedient.
+          $p = Start-Process -FilePath $exe -ArgumentList "examples/regler.whfx","--exercise","--grab","fenster-regler.png" -Wait -PassThru
+          Write-Output "::notice title=Rauchtest ohne Lauf::Exit-Code $($p.ExitCode)"
+          if ($p.ExitCode -ne 0) { exit 1 }
+          # Mit Lauf auf dem Software-Adapter, falls einer da ist (kein Fehler, wenn nicht).
+          $p2 = Start-Process -FilePath $exe -ArgumentList "examples/regler.whfx","--run","--software","--frames","30","--exercise","--grab","fenster-lauf.png" -Wait -PassThru
+          Write-Output "::notice title=Rauchtest mit Lauf::Exit-Code $($p2.ExitCode)"
+          if (-not (Test-Path fenster-regler.png)) { exit 1 }
+      - name: Paket schnüren (windeployqt)
+        run: |
+          $env:PATH = "C:\Qt\$env:QT_VERSION\msvc2022_64\bin;$env:PATH"
+          New-Item -ItemType Directory -Force -Path paket/WhiteHoleFX | Out-Null
+          Copy-Item build/apps/whitehole_studio/Release/* paket/WhiteHoleFX/ -Recurse
+          Copy-Item build/apps/whitehole_cli/Release/whitehole_cli.exe paket/WhiteHoleFX/
+          Copy-Item examples paket/WhiteHoleFX/examples -Recurse
+          Copy-Item README.md, BUILDING.md paket/WhiteHoleFX/
+          windeployqt --release --no-translations paket/WhiteHoleFX/whitehole_studio.exe
+          Get-ChildItem paket/WhiteHoleFX | Select-Object -First 40 Name
+      - name: Paket bereitstellen
+        uses: actions/upload-artifact@v4
+        with:
+          name: WhiteHoleFX-Windows
+          path: paket
+      - name: Fensterbilder bereitstellen
+        uses: actions/upload-artifact@v4
+        with:
+          name: fenster-windows
+          path: fenster-*.png

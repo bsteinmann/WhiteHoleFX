@@ -1,0 +1,54 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired": { "major": 3, "minor": 25, "patch": 0 },
+  "configurePresets": [
+    {
+      "name": "base",
+      "hidden": true,
+      "binaryDir": "${sourceDir}/build/${presetName}"
+    },
+    {
+      "name": "dev",
+      "displayName": "Kern, Konsolen-Runner und Tests (Debug, Warnungen als Fehler)",
+      "inherits": "base",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "WHITEHOLEFX_WARNINGS_AS_ERRORS": "ON"
+      }
+    },
+    {
+      "name": "release",
+      "displayName": "Kern, Konsolen-Runner und Tests (Release)",
+      "inherits": "base",
+      "cacheVariables": { "CMAKE_BUILD_TYPE": "Release" }
+    },
+    {
+      "name": "studio-base",
+      "hidden": true,
+      "inherits": "base",
+      "cacheVariables": {
+        "WHITEHOLEFX_BUILD_STUDIO": "ON",
+        "WHITEHOLEFX_WEBGPU": "ON",
+        "WGPU_NATIVE_ROOT": "${sourceDir}/third_party/wgpu-native"
+      }
+    },
+    {
+      "name": "studio-debug",
+      "displayName": "Mit Oberfläche und GPU-Backend (Debug); Qt über CMAKE_PREFIX_PATH",
+      "inherits": "studio-base",
+      "cacheVariables": { "CMAKE_BUILD_TYPE": "Debug" }
+    },
+    {
+      "name": "studio-release",
+      "displayName": "Mit Oberfläche und GPU-Backend (Release); Qt über CMAKE_PREFIX_PATH",
+      "inherits": "studio-base",
+      "cacheVariables": { "CMAKE_BUILD_TYPE": "Release" }
+    }
+  ],
+  "buildPresets": [
+    { "name": "dev", "configurePreset": "dev", "configuration": "Debug" },
+    { "name": "release", "configurePreset": "release", "configuration": "Release" },
+    { "name": "studio-debug", "configurePreset": "studio-debug", "configuration": "Debug" },
+    { "name": "studio-release", "configurePreset": "studio-release", "configuration": "Release" }
+  ]
+}

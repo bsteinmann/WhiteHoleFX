@@ -4,9 +4,11 @@ Open-Source-Echtzeitsteuerung für LED-Matrizen, LED-Cubes, Strips und Pixelinst
 Effekte entstehen in einem Node-Graphen und laufen als Shader auf der GPU. Dieselben
 Effekte gelten für flache Matrizen und für LEDs im 3D-Raum.
 
-> **Status: früh, aber lauffähig.** Eine Projektdatei lässt sich lesen, prüfen und per
-> Konsole rendern und als Art-Net, sACN oder DDP senden (`whitehole_cli`). Es gibt noch keine
-> Oberfläche. Siehe [Fahrplan](#fahrplan) und [Projektdatei](docs/project-format.md).
+> **Status: früh, aber benutzbar.** Projekte lassen sich in einer Qt-Oberfläche bearbeiten
+> (Parameterregler, Node-Editor, Layout-Editor, Rückgängig/Wiederholen), live ansehen und als
+> Art-Net, sACN oder DDP senden; ohne Oberfläche geht es mit `whitehole_cli`. Läuft in der CI auf
+> Linux und Windows (GPU dort nur als Software-Adapter geprüft). Bauen: [BUILDING.md](BUILDING.md).
+> Siehe [Fahrplan](#fahrplan) und [Projektdatei](docs/project-format.md).
 
 ## Idee in drei Sätzen
 
@@ -31,24 +33,23 @@ Raum sitzt, und tastet die Funktion genau dort ab.
 | `wh_output` | Farbumrechnung, Patch auf Universen, Art-Net / sACN / DDP, Ausgabe-Thread, UDP |
 | `wh_project` | Projektdatei (Text): Layout, Effektgraph, Ausgabe lesen und schreiben |
 | `wh_preview` | LED-Vorschau als Bild (CPU) und PNG-Schreiber |
-| `wh_runtime` | Session: Projekt zu laufender Ausgabe zusammensetzen; Prüfbericht |
-| `apps/whitehole_studio` | Qt-6-Oberfläche: Vorschau, Start/Stopp, Ausgabe schalten (optional, siehe [Oberfläche](docs/studio.md)) |
+| `wh_runtime` | Session und Player: Projekt zu laufender Ausgabe zusammensetzen, Graph/Layout/Parameter bearbeiten, Rückgängig; Prüfbericht |
+| `apps/whitehole_studio` | Qt-6-Oberfläche: Vorschau, Parameter, Node-Editor, Layout-Editor, Rückgängig (optional, siehe [Oberfläche](docs/studio.md)) |
 | `apps/whitehole_cli` | Konsolen-Runner: `--check`, rendern und senden |
 
-Abhängigkeiten zeigen nur nach unten. Kein Modul bis auf die spätere GUI kennt Qt.
+Abhängigkeiten zeigen nur nach unten. Kein Modul außer `apps/whitehole_studio` kennt Qt.
 
 ## Bauen und testen
 
-Voraussetzungen: CMake ≥ 3.25, ein C++20-Compiler (GCC 13, Clang 16 oder neuer). Catch2
-wird beim Konfigurieren automatisch geladen.
+Kurzfassung (Kern ohne GPU und Oberfläche; CMake ≥ 3.25, GCC 13 / Clang 16 / MSVC 2022):
 
 ```bash
-cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
-cmake --build build --parallel
-ctest --test-dir build --output-on-failure
+cmake --preset dev
+cmake --build --preset dev --parallel
+ctest --test-dir build/dev --output-on-failure
 ```
 
-Strenge Warnungen als Fehler: `-DWHITEHOLEFX_WARNINGS_AS_ERRORS=ON`.
+Mit GPU und Oberfläche, Windows und alle Fallstricke: **[BUILDING.md](BUILDING.md)**.
 
 ## Dokumentation
 
@@ -58,6 +59,7 @@ Strenge Warnungen als Fehler: `-DWHITEHOLEFX_WARNINGS_AS_ERRORS=ON`.
 - [Mapping und Abtast-Pass](docs/mapping.md)
 - [Ausgabe (Art-Net, sACN, DDP)](docs/output.md)
 - [Projektdatei und Konsolen-Runner](docs/project-format.md)
+- [Bauen und Starten](BUILDING.md)
 - [Oberfläche (Qt)](docs/studio.md)
 - [GPU-Backend (WebGPU)](docs/gpu-backend.md)
 
@@ -74,15 +76,17 @@ Strenge Warnungen als Fehler: `-DWHITEHOLEFX_WARNINGS_AS_ERRORS=ON`.
 - [x] 6: Ausgabe (Art-Net, sACN, DDP; WLED über DDP/Art-Net). Serial, MQTT, Hyperion, MIDI folgen später
 - [ ] 7: Plugins und Skripte
 - [x] 8: Oberfläche (Qt 6): Live-Vorschau, Parameterregler, Node-Editor, Layout-Editor, Rückgängig/Wiederholen
-- [x] GPU-Backend läuft in der CI auf Software-Vulkan; Prüfung auf echter GPU und Windows-CI stehen aus
+- [x] GPU-Backend läuft in der CI auf Software-Vulkan (Linux) und Software-Adapter (Windows); Prüfung auf echter GPU steht aus
 - [x] Projektdatei und Konsolen-Runner (`whitehole_cli`)
 - [ ] Raster-Nodes (Blur, Feedback), Dawn-Backend
 
 ## Hinweis zur Verifikation
 
-Gebaut und getestet wurde bisher mit g++ direkt (inklusive ASan/UBSan). Die CMake-Dateien
-und die CI sind neu und noch nicht in einem echten Lauf bestätigt. Die erzeugten Shader sind
-mit einem WGSL-Parser auf Syntax geprüft, aber noch nicht auf einer GPU gelaufen.
+Die CI baut und testet auf Linux (GCC mit ASan/UBSan, Clang) und Windows (MSVC) und lässt die
+erzeugten Shader auf einem Software-Vulkan-/Software-Adapter laufen; die Oberfläche wird im
+unsichtbaren Fenster bedient (Regler, Node-Editor, Layout-Editor, Rückgängig). **Noch nicht geprüft**
+ist der Betrieb auf einer echten GPU, mit echten Controllern im Netz und die Bedienung mit Maus und
+Bildschirm. Rückmeldungen dazu sind willkommen.
 
 ## Lizenz
 
