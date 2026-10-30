@@ -400,16 +400,23 @@ QString NodeEditor::exercise() {
     }
     moveWire((start + end) / 2.0);
     moveWire(end);
+    const Hit probe = portAt(end);
+    const QString probeNote = QStringLiteral("Treffer am Eingang: Node %1, Port %2, erwartet Node %3, Items an der Stelle %4")
+                                  .arg(probe.node != nullptr ? static_cast<qulonglong>(probe.node->nodeId().value()) : 0ULL)
+                                  .arg(probe.port != nullptr ? QString::fromStdString(probe.port->key) : QStringLiteral("-"))
+                                  .arg(static_cast<qulonglong>(sink->value()))
+                                  .arg(scene_.items(end).size());
     const bool connected = endWire(end);
     if (!connected || player_.project()->graph.connections().size() != wiresBefore + 1 ||
         wires_.size() != wiresBefore + 1) {
-        return QStringLiteral("Kabel ziehen: endWire=%1, Verbindungen %2, Kabel %3, erwartet %4 (Eingang bei %5/%6)")
+        return QStringLiteral("Kabel ziehen: endWire=%1, Verbindungen %2, Kabel %3, erwartet %4 (Eingang bei %5/%6); %7")
             .arg(connected)
             .arg(player_.project()->graph.connections().size())
             .arg(wires_.size())
             .arg(wiresBefore + 1)
             .arg(end.x())
-            .arg(end.y());
+            .arg(end.y())
+            .arg(probeNote);
     }
 
     // Kabel auswählen und löschen
