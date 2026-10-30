@@ -69,7 +69,13 @@ if(WIN32)
     target_link_libraries(wh_tests PRIVATE ws2_32)
 endif()
 
-catch_discover_tests(wh_tests)
+if(WIN32)
+    # Die Testnamen enthalten Umlaute; catch_discover_tests reicht sie unter Windows über die
+    # Kommandozeile falsch kodiert weiter. Darum läuft das Programm dort als Ganzes.
+    add_test(NAME wh_tests COMMAND wh_tests)
+else()
+    catch_discover_tests(wh_tests)
+endif()
 
 # Tests auf einer echten GPU (oder einem Software-Adapter): nur mit WHITEHOLEFX_WEBGPU=ON.
 # Ohne Adapter werden sie übersprungen.
@@ -90,5 +96,9 @@ if(TARGET wh_gpu_webgpu)
         wh_warnings
         Catch2::Catch2WithMain)
     wh_copy_wgpu_dll(wh_gpu_tests)
-    catch_discover_tests(wh_gpu_tests)
+    if(WIN32)
+        add_test(NAME wh_gpu_tests COMMAND wh_gpu_tests)
+    else()
+        catch_discover_tests(wh_gpu_tests)
+    endif()
 endif()
