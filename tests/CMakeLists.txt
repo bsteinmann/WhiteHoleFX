@@ -47,7 +47,10 @@ add_executable(wh_tests
     output/output_plan_test.cpp
     output/output_worker_test.cpp
     output/sacn_test.cpp
-    output/udp_sender_test.cpp)
+    output/udp_sender_test.cpp
+    project/project_test.cpp
+    runtime/cli_summary_test.cpp
+    runtime/session_test.cpp)
 
 target_include_directories(wh_tests PRIVATE support)
 
@@ -62,8 +65,13 @@ target_link_libraries(wh_tests PRIVATE
     whitehole::executor
     whitehole::mapping
     whitehole::output
+    whitehole::project
+    whitehole::runtime
     wh_warnings
     Catch2::Catch2WithMain)
+
+target_include_directories(wh_tests PRIVATE "${PROJECT_SOURCE_DIR}/apps/whitehole_cli")
+target_sources(wh_tests PRIVATE "${PROJECT_SOURCE_DIR}/apps/whitehole_cli/cli_options.cpp")
 
 if(WIN32)
     target_link_libraries(wh_tests PRIVATE ws2_32)
@@ -81,6 +89,7 @@ endif()
 # Ohne Adapter werden sie übersprungen.
 if(TARGET wh_gpu_webgpu)
     add_executable(wh_gpu_tests
+        gpu_device/session_on_device_test.cpp
         gpu_device/stage_on_device_test.cpp
         gpu_device/webgpu_device_test.cpp)
     target_include_directories(wh_gpu_tests PRIVATE support)
@@ -93,6 +102,8 @@ if(TARGET wh_gpu_webgpu)
         whitehole::nodes
         whitehole::executor
         whitehole::mapping
+        whitehole::project
+        whitehole::runtime
         wh_warnings
         Catch2::Catch2WithMain)
     wh_copy_wgpu_dll(wh_gpu_tests)

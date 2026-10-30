@@ -1,0 +1,33 @@
+whitehole-project 1
+# Beispiel: eine 16x8-Matrix und ein Strip, beide über Art-Net.
+# Die IP-Adresse muss zu Ihrem Controller passen (oder zum Empfänger, z. B. einem Art-Net-Monitor).
+# Prüfen ohne GPU:    whitehole_cli examples/wand.whfx --check
+# Senden:             whitehole_cli examples/wand.whfx
+
+settings fps 40
+
+destination 0 127.0.0.1
+
+fixture Wand
+  matrix 16 8 pitch 1 1 start top-left first rows serpentine
+  patch artnet destination 0 universe 0 channel 1 order RGB gamma 2.2 brightness 1
+end
+
+fixture Decke at 0 10 0
+  strip 60 from 0 0 0 to 16 0 0
+  patch artnet destination 0 universe 1 channel 1 order GRB
+end
+
+# Ein Verlauf, der langsam dreht.
+node zeit wh.value.time
+  set speed 20
+end
+node verlauf wh.generator.gradient
+  set colorA 0 0.2 1 1
+  set colorB 1 0.3 0 1
+end
+node dreher wh.transform.rotate
+end
+connect verlauf.out -> dreher.source
+connect zeit.seconds -> dreher.angle
+output dreher.out

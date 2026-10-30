@@ -1,0 +1,102 @@
+// Tests des Prüfberichts, der Kommandozeile und der mitgelieferten Beispieldatei.
+#include <catch2/catch_test_macros.hpp>
+
+#include <filesystem>
+#include <string>
+
+#include "cli_options.hpp"
+#include "whitehole/nodes/builtin_library.hpp"
+#include "whitehole/project/project.hpp"
+#include "whitehole/runtime/session.hpp"
+#include "whitehole/runtime/summary.hpp"
+
+using namespace whitehole;
+
+namespace {
+
+bool contains(const std::string& text, const std::string& part) { return text.find(part) != std::string::npos; }
+
+cli::Options options(std::vector<std::string> args) {
+    auto r = cli::parseOptions(args);
+    REQUIRE(r.ok());
+    return r.value();
+}
+
+std::string optionError(std::vector<std::string> args) {
+    auto r = cli::parseOptions(args);
+    REQUIRE_FALSE(r.ok());
+    return r.error().message;
+}
+
+}  // namespace
+
+TEST_CASE("Kommandozeile: gültige Aufrufe", "[cli]") {
+    const cli::Options a = options({"p.whfx"});
+    CHECK(a.projectPath == "p.whfx");
+    CHECK_FALSE(a.check);
+    CHECK_FALSE(a.frames.has_value());
+
+    const cli::Options b = options({"--check", "p.whfx", "--frames", "120", "--fps", "25.5", "--software"});
+    CHECK(b.check);
+    CHECK(b.software);
+    CHECK(b.frames == 120U);
+    CHECK(b.fps == 25.5);
+
+    CHECK(options({"--help"}).help);
+}
+
+TEST_CASE("Kommandozeile: Fehler nennen die Ursache", "[cli]") {
+    CHECK(contains(optionError({}), "Projektdatei"));
+    CHECK(contains(optionError({"a", "b"}), "Zweite Projektdatei"));
+    CHECK(contains(optionError({"a", "--bunt"}), "Unbekannte Option --bunt"));
+    CHECK(contains(optionError({"a", "--frames"}), "--frames braucht"));
+    CHECK(contains(optionError({"a", "--frames", "0"}), "ab 1"));
+    CHECK(contains(optionError({"a", "--frames", "5x"}), "ab 1"));
+    CHECK(contains(optionError({"a", "--fps", "0"}), "größer 0"));
+    CHECK(contains(optionError({"a", "--fps", "nan"}), "größer 0"));
+    CHECK(contains(optionError({"a", "--fps", "5000"}), "höchstens 1000"));
+}
+
+TEST_CASE("Beispiel: examples/wand.whfx ist gültig und der Bericht stimmt", "[cli]") {
+    auto library = nodes::BuiltinLibrary::create().value();
+    const auto text = project::readTextFile((std::filesystem::path{__FILE__}.parent_path().parent_path().parent_path() / "examples" / "wand.whfx").string());
+    REQUIRE(text.ok());
+    const auto parsed = project::parseProject(text.value(), library->registry);
+    REQUIRE(parsed.ok());
+    const auto report = runtime::summarize(parsed.value());
+    REQUIRE(report.ok());
+    INFO(report.value());
+    CHECK(contains(report.value(), "Fixtures: 2, LEDs: 188"));
+    CHECK(contains(report.value(), "2 Pakete je Frame"));
+    CHECK(contains(report.value(), "Art-Net -> 127.0.0.1:6454, Universe 0, 384 Bytes"));
+    CHECK(contains(report.value(), "Universe 1, 180 Bytes"));
+    CHECK(contains(report.value(), "gesetzt"));
+}
+
+TEST_CASE("Bericht: Multicast, eigener Port und DDP werden benannt", "[cli]") {
+    auto library = nodes::BuiltinLibrary::create().value();
+    const auto parsed = project::parseProject(
+        "whitehole-project 1\n"
+        "destination 0 multicast\ndestination 1 10.0.0.9 7000\ndestination 2 10.0.0.10\n"
+        "fixture A\n  strip 200 from 0 0 0 to 1 0 0\n  patch sacn destination 0 universe 5\nend\n"
+        "fixture B\n  matrix 2 2\n  patch artnet destination 1 universe 2\nend\n"
+        "fixture C\n  matrix 2 2\n  patch ddp destination 2 offset 36\nend\n",
+        library->registry);
+    REQUIRE(parsed.ok());
+    const auto report = runtime::summarize(parsed.value());
+    REQUIRE(report.ok());
+    INFO(report.value());
+    CHECK(contains(report.value(), "sACN -> Multicast, Universe 5, 510 Bytes"));
+    CHECK(contains(report.value(), "sACN -> Multicast, Universe 6"));  // 200 LEDs laufen über
+    CHECK(contains(report.value(), "Art-Net -> 10.0.0.9:7000, Universe 2, 12 Bytes"));
+    CHECK(contains(report.value(), "DDP -> 10.0.0.10:4048, Offset 36, 12 Bytes"));
+    CHECK(contains(report.value(), "FEHLT"));
+}
+
+TEST_CASE("Bericht: Konfigurationsfehler kommen als Fehler an", "[cli]") {
+    auto library = nodes::BuiltinLibrary::create().value();
+    const auto parsed = project::parseProject(
+        "whitehole-project 1\nfixture A\n  matrix 2 2\nend\n", library->registry);
+    REQUIRE(parsed.ok());
+    CHECK_FALSE(runtime::summarize(parsed.value()).ok());
+}

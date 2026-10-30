@@ -4,9 +4,9 @@ Open-Source-Echtzeitsteuerung für LED-Matrizen, LED-Cubes, Strips und Pixelinst
 Effekte entstehen in einem Node-Graphen und laufen als Shader auf der GPU. Dieselben
 Effekte gelten für flache Matrizen und für LEDs im 3D-Raum.
 
-> **Status: früh.** Das Fundament steht (Graph, Compiler, Werte, GPU-Ausführung, Mapping),
-> aber es gibt noch keine Oberfläche, keine Ausgabe-Protokolle und kein GPU-Backend. Siehe
-> [Fahrplan](#fahrplan).
+> **Status: früh, aber lauffähig.** Eine Projektdatei lässt sich lesen, prüfen und per
+> Konsole rendern und als Art-Net, sACN oder DDP senden (`whitehole_cli`). Es gibt noch keine
+> Oberfläche. Siehe [Fahrplan](#fahrplan) und [Projektdatei](docs/project-format.md).
 
 ## Idee in drei Sätzen
 
@@ -20,7 +20,7 @@ Raum sitzt, und tastet die Funktion genau dort ab.
 |---|---|
 | `wh_core` | Grundtypen, Fehlerbehandlung ohne Ausnahmen, Dienste-Schnittstellen |
 | `wh_gpu` | abstrakte GPU-Schnittstelle, Leser für Shader-Bindungen |
-| `wh_gpu_webgpu` | optionales WebGPU-Backend (wgpu-native), noch nicht ausgeführt; siehe [GPU-Backend](docs/gpu-backend.md) |
+| `wh_gpu_webgpu` | optionales WebGPU-Backend (wgpu-native), läuft in der CI; siehe [GPU-Backend](docs/gpu-backend.md) |
 | `wh_graph` | Graph-Modell, Node-Verzeichnis, Parameter und Modulation |
 | `wh_values` | CPU-Nodes (Zeit, LFO, Zufall, ...) pro Frame auswerten |
 | `wh_compiler` | Field-Nodes zu WGSL übersetzen |
@@ -29,6 +29,9 @@ Raum sitzt, und tastet die Funktion genau dort ab.
 | `wh_executor` | Graph pro Frame ausführen: Canvas-Textur und Abtastung an LED-Positionen |
 | `wh_mapping` | Fixtures (Matrix, Strip, 3D-Gitter, Punktwolke), Verkabelung, Normalisierung |
 | `wh_output` | Farbumrechnung, Patch auf Universen, Art-Net / sACN / DDP, Ausgabe-Thread, UDP |
+| `wh_project` | Projektdatei (Text): Layout, Effektgraph, Ausgabe lesen und schreiben |
+| `wh_runtime` | Session: Projekt zu laufender Ausgabe zusammensetzen; Prüfbericht |
+| `apps/whitehole_cli` | Konsolen-Runner: `--check`, rendern und senden |
 
 Abhängigkeiten zeigen nur nach unten. Kein Modul bis auf die spätere GUI kennt Qt.
 
@@ -52,6 +55,7 @@ Strenge Warnungen als Fehler: `-DWHITEHOLEFX_WARNINGS_AS_ERRORS=ON`.
 - [Canvas-Stage](docs/canvas-stage.md)
 - [Mapping und Abtast-Pass](docs/mapping.md)
 - [Ausgabe (Art-Net, sACN, DDP)](docs/output.md)
+- [Projektdatei und Konsolen-Runner](docs/project-format.md)
 - [GPU-Backend (WebGPU)](docs/gpu-backend.md)
 
 ## Konventionen
@@ -68,7 +72,8 @@ Strenge Warnungen als Fehler: `-DWHITEHOLEFX_WARNINGS_AS_ERRORS=ON`.
 - [ ] 7: Plugins und Skripte
 - [ ] 8: Oberfläche (Qt 6)
 - [x] GPU-Backend läuft in der CI auf Software-Vulkan; Prüfung auf echter GPU und Windows-CI stehen aus
-- [ ] Raster-Nodes (Blur, Feedback), Dawn-Backend, Layout-Dateiformat
+- [x] Projektdatei und Konsolen-Runner (`whitehole_cli`)
+- [ ] Raster-Nodes (Blur, Feedback), Dawn-Backend
 
 ## Hinweis zur Verifikation
 

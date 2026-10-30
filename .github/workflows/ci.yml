@@ -57,9 +57,13 @@ jobs:
           cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
           -DWHITEHOLEFX_WEBGPU=ON -DWGPU_NATIVE_ROOT="$PWD/wgpu"
       - name: Bauen
-        run: cmake --build build --parallel --target wh_gpu_tests
+        run: cmake --build build --parallel --target wh_gpu_tests whitehole_cli
       - name: Testen
         run: ./build/tests/wh_gpu_tests
+      - name: Runner mit echtem Gerät (20 Frames, Software-Adapter)
+        run: |
+          ./build/apps/whitehole_cli/whitehole_cli examples/wand.whfx --check
+          ./build/apps/whitehole_cli/whitehole_cli examples/wand.whfx --frames 20 --software
 
   windows:
     name: Windows (MSVC, experimentell, Fehler brechen den Lauf nicht ab)
@@ -100,7 +104,7 @@ jobs:
       - name: Konfigurieren
         run: cmake -S . -B build -DWHITEHOLEFX_WEBGPU=ON "-DWGPU_NATIVE_ROOT=$PWD/wgpu"
       - name: Bauen
-        run: cmake --build build --config Debug --parallel --target wh_gpu_tests
+        run: cmake --build build --config Debug --parallel --target wh_gpu_tests whitehole_cli
       - name: Testen
         run: |
           $out = (& ./build/tests/Debug/wh_gpu_tests.exe 2>&1 | Out-String)
@@ -111,3 +115,7 @@ jobs:
           $msg = $msg -replace "`r?`n", "%0A"
           Write-Output "::notice title=GPU-Testausgabe::$msg"
           exit $code
+      - name: Runner mit echtem Gerät (20 Frames)
+        run: |
+          ./build/apps/whitehole_cli/Debug/whitehole_cli.exe examples/wand.whfx --check
+          ./build/apps/whitehole_cli/Debug/whitehole_cli.exe examples/wand.whfx --frames 20
