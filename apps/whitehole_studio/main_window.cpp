@@ -195,8 +195,8 @@ bool MainWindow::confirmDiscard() {
     return answer == QMessageBox::Discard;
 }
 
-bool MainWindow::exerciseEditor() {
-    const bool ok = editor_->exercise();
+QString MainWindow::exerciseEditor() {
+    const QString ok = editor_->exercise();
     for (int i = 0; i < 5; ++i) {
         tick();
         QApplication::processEvents();

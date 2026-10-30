@@ -367,9 +367,9 @@ void NodeEditor::resizeEvent(QResizeEvent* event) {
 
 // --- Rauchtest ----------------------------------------------------------------------------------
 
-bool NodeEditor::exercise() {
+QString NodeEditor::exercise() {
     if (player_.project() == nullptr) {
-        return false;
+        return QStringLiteral("kein Projekt");
     }
     const std::size_t nodesBefore = player_.project()->graph.nodes().size();
     const std::size_t wiresBefore = player_.project()->graph.connections().size();
@@ -380,29 +380,36 @@ bool NodeEditor::exercise() {
     };
     const std::optional<NodeId> source = addNodeAt("wh.generator.plasma", freeSpot());
     if (!source) {
-        return false;
+        return QStringLiteral("Plasma-Node anlegen");
     }
     const std::optional<NodeId> sink = addNodeAt("wh.transform.mirror", freeSpot());
     if (!sink) {
-        return false;
+        return QStringLiteral("Mirror-Node anlegen");
     }
     NodeItem* from = itemOf(*source);
     NodeItem* to = itemOf(*sink);
     if (from == nullptr || to == nullptr || from->findPort("out") == nullptr || to->findPort("source") == nullptr) {
-        return false;
+        return QStringLiteral("Ports der neuen Nodes nicht gefunden");
     }
 
     // Wie mit der Maus: am Ausgang anfassen, über den Eingang ziehen, loslassen.
     const QPointF start = from->anchorScene(*from->findPort("out"));
     const QPointF end = to->anchorScene(*to->findPort("source"));
     if (!beginWire(start)) {
-        return false;
+        return QStringLiteral("Ausgang bei %1/%2 nicht getroffen").arg(start.x()).arg(start.y());
     }
     moveWire((start + end) / 2.0);
     moveWire(end);
-    if (!endWire(end) || player_.project()->graph.connections().size() != wiresBefore + 1 ||
+    const bool connected = endWire(end);
+    if (!connected || player_.project()->graph.connections().size() != wiresBefore + 1 ||
         wires_.size() != wiresBefore + 1) {
-        return false;
+        return QStringLiteral("Kabel ziehen: endWire=%1, Verbindungen %2, Kabel %3, erwartet %4 (Eingang bei %5/%6)")
+            .arg(connected)
+            .arg(player_.project()->graph.connections().size())
+            .arg(wires_.size())
+            .arg(wiresBefore + 1)
+            .arg(end.x())
+            .arg(end.y());
     }
 
     // Kabel auswählen und löschen
@@ -414,7 +421,7 @@ bool NodeEditor::exercise() {
     }
     removeSelected();
     if (player_.project()->graph.connections().size() != wiresBefore) {
-        return false;
+        return QStringLiteral("Kabel löschen: %1 Verbindungen, erwartet %2").arg(player_.project()->graph.connections().size()).arg(wiresBefore);
     }
 
     // Verschieben wie mit der Maus: Position ändern, Änderung übernehmen
@@ -426,7 +433,13 @@ bool NodeEditor::exercise() {
     itemOf(*source)->setSelected(true);
     itemOf(*sink)->setSelected(true);
     removeSelected();
-    return player_.project()->graph.nodes().size() == nodesBefore && nodes_.size() == nodesBefore;
+    if (player_.project()->graph.nodes().size() != nodesBefore || nodes_.size() != nodesBefore) {
+        return QStringLiteral("Aufräumen: %1 Nodes im Graph, %2 in der Szene, erwartet %3")
+            .arg(player_.project()->graph.nodes().size())
+            .arg(nodes_.size())
+            .arg(nodesBefore);
+    }
+    return {};
 }
 
 }  // namespace whitehole::studio

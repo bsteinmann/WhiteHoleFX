@@ -17,6 +17,7 @@
 #include <QGraphicsScene>
 #include <QGraphicsView>
 #include <QPointF>
+#include <QString>
 
 #include <optional>
 #include <string>
@@ -53,8 +54,9 @@ public:
     bool setTarget(const graph::PortRef& port);
 
     /// Rauchtest für die CI: legt zwei Nodes an, zieht ein Kabel zwischen ihnen auf dem Weg der
-    /// Maus (Treffer auf Ports), löscht es und die Nodes wieder. Wahr, wenn alles wie erwartet war.
-    bool exercise();
+    /// Maus (Treffer auf Ports), löscht es und die Nodes wieder. Leer, wenn alles wie erwartet war,
+    /// sonst eine Meldung, welcher Schritt scheiterte.
+    QString exercise();
 
     [[nodiscard]] int nodeCount() const noexcept { return static_cast<int>(nodes_.size()); }
     [[nodiscard]] int wireCount() const noexcept { return static_cast<int>(wires_.size()); }

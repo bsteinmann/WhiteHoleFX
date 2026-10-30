@@ -50,7 +50,8 @@ public:
     /// Letzter Fehler des Players als Text, leer wenn alles in Ordnung ist.
     [[nodiscard]] QString problem() const;
     /// Rauchtest des Node-Editors (siehe NodeEditor::exercise), danach ein paar Frames.
-    bool exerciseEditor();
+    /// Leer bei Erfolg, sonst die Meldung des gescheiterten Schritts.
+    QString exerciseEditor();
 
 protected:
     void dragEnterEvent(QDragEnterEvent* event) override;

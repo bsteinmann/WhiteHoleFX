@@ -100,10 +100,10 @@ int main(int argc, char** argv) {
             QApplication::processEvents();
             QThread::msleep(25);
         }
-        const bool editorOk = window.exerciseEditor();
-        std::printf("Node-Editor: %s\n", editorOk ? "ok" : "FEHLER");
-        if (!editorOk) {
-            std::fprintf(stderr, "Rauchtest fehlgeschlagen: Node-Editor\n");
+        const QString editorProblem = window.exerciseEditor();
+        std::printf("Node-Editor: %s\n", editorProblem.isEmpty() ? "ok" : "FEHLER");
+        if (!editorProblem.isEmpty()) {
+            std::fprintf(stderr, "Rauchtest fehlgeschlagen: Node-Editor, %s\n", editorProblem.toUtf8().constData());
             return 1;
         }
         const QString problem = window.problem();
