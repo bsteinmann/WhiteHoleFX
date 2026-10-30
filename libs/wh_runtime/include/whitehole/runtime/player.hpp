@@ -102,6 +102,30 @@ public:
     /// Fehler: InvalidArgument (kein Projekt, falscher Typ), NotFound (Node oder Parameter).
     Result<graph::ParameterValue> setParameter(NodeId node, const std::string& key, graph::ParameterValue value);
 
+    // --- Graph bearbeiten (Node-Editor) ---------------------------------------------------------
+    // Alle Änderungen wirken im laufenden Betrieb ab dem nächsten step(). Ist der Graph
+    // zwischendurch unvollständig, läuft der letzte gute Zustand weiter und status().lastError
+    // nennt den Grund. Fehler (alle): InvalidArgument, wenn kein Projekt geladen ist.
+
+    /// Legt einen Node mit Standardwerten an. Fehler: NotFound (Typ unbekannt).
+    Result<NodeId> addNode(std::string_view typeId, Vec2 position);
+    /// Entfernt Node und Verbindungen. Der Node, an dem `output` hängt, lässt sich nicht
+    /// entfernen (InvalidArgument): Setze zuerst mit setTarget einen anderen Ausgang.
+    Result<void> removeNode(NodeId node);
+    /// Verbindet zwei Ports. Ist der Eingang belegt, wird die alte Verbindung ersetzt; scheitert
+    /// die neue, bleibt die alte erhalten. Fehler wie Graph::connect (ohne AlreadyExists).
+    Result<ConnectionId> connect(const graph::PortRef& from, const graph::PortRef& to);
+    Result<void> disconnect(ConnectionId connection);
+    /// Lage im Editor; ändert den Effekt nicht.
+    Result<void> moveNode(NodeId node, Vec2 position);
+    /// Wählt den Field-Ausgang, der auf die LEDs abgetastet wird. Läuft das Projekt, wird es im
+    /// nächsten step() neu aufgebaut (kurze Unterbrechung der Ausgabe).
+    /// Fehler: NotFound (Node oder Port), IncompatiblePorts (kein Field-Ausgang).
+    Result<void> setTarget(const graph::PortRef& port);
+
+    /// Seit dem letzten Laden oder Speichern verändert (Parameter oder Graph).
+    [[nodiscard]] bool modified() const noexcept { return modified_; }
+
     /// Schreibt das Projekt (Layout, Graph, Ausgabe samt aktueller Parameter) als Datei und merkt
     /// sich den Pfad. Kommentare einer von Hand geschriebenen Datei gehen dabei verloren.
     Result<void> save(const std::string& path);
@@ -123,7 +147,9 @@ private:
     std::unique_ptr<engine::SteadyFrameClock> clock_;
     std::unique_ptr<Session> session_;
     std::optional<Error> stepError_;
-    bool graphDirty_{false};  // Parameter geändert, Session noch nicht informiert
+    bool graphDirty_{false};   // Parameter oder Graph geändert, Session noch nicht informiert
+    bool targetDirty_{false};  // output geändert: Session muss neu aufgebaut werden
+    bool modified_{false};     // seit Laden/Speichern verändert
 };
 
 }  // namespace whitehole::runtime

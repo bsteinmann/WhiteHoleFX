@@ -10,6 +10,11 @@ add_executable(whitehole_studio
     main.cpp
     main_window.cpp
     main_window.hpp
+    node_editor.cpp
+    node_editor.hpp
+    node_editor_menu.cpp
+    node_items.cpp
+    node_items.hpp
     parameter_panel.cpp
     parameter_panel.hpp
     preview_widget.cpp

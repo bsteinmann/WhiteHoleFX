@@ -60,7 +60,36 @@ verloren. Ein Beispiel zum Ausprobieren: `examples/regler.whfx`.
 
 Die CI verstellt mit `--exercise` jeden Regler einmal und prüft, dass der Player keinen Fehler meldet.
 
+## Node-Editor
+
+Das Dock „Nodes“ (unten, Menü Ansicht) zeigt den Effektgraphen. Eingänge stehen links, Ausgänge
+rechts; die Farbe eines Ports zeigt den Typ (Blau Field, Grün Zahl, Rosa Farbe, …). Parameter
+stehen nicht im Node, sondern im Dock „Parameter“; beide benutzen dieselbe Nummerierung
+(„Linear Gradient 2“).
+
+| Aktion | Bedienung |
+|---|---|
+| Node hinzufügen | Rechtsklick auf freie Fläche, Menü nach Kategorien |
+| Node verschieben | ziehen; die Lage wird in der Projektdatei gespeichert (`at`) |
+| verbinden | von einem Port zu einem passenden anderen ziehen (in beide Richtungen); ein belegter Eingang wird ersetzt |
+| löschen | anklicken (Strg oder Rahmen für mehrere), Entf; oder Rechtsklick |
+| Ausgang wählen | Rechtsklick auf einen Field-Ausgang, „Als Ausgang setzen“; der Node ist dann orange umrandet |
+| Ansicht | Mausrad zoomt, mittlere Taste verschiebt, Taste F zeigt alles |
+
+Änderungen wirken sofort, auch während das Projekt läuft. Ist der Graph zwischendurch unvollständig
+oder ungültig (Typen passen nicht, Zyklus), meldet die Statuszeile den Grund und der letzte gute
+Effekt läuft weiter. Der Node, an dem der Ausgang hängt, lässt sich nicht löschen; setze zuerst
+einen anderen. Ein Wechsel des Ausgangs baut die Ausgabe einmal neu auf (kurze Unterbrechung).
+
+Ungespeicherte Änderungen zeigt ein Stern im Fenstertitel; beim Öffnen, Neuladen und Beenden wird
+nachgefragt. Dateien ohne Positionen (von Hand geschrieben) ordnet der Editor selbst in Spalten
+an. Die Anordnung ist erst gespeichert, wenn du „Speichern unter“ wählst.
+
+Die CI prüft mit `--exercise` auch den Editor: Zwei Nodes anlegen, ein Kabel auf dem Weg der Maus
+ziehen (Treffer auf Ports), verschieben, Kabel und Nodes wieder löschen.
+
 ## Noch nicht enthalten
 
-Ein Node-Editor und ein Layout-Editor. Bis dahin entsteht die Struktur der Projektdatei von Hand
-(siehe [Projektdatei](project-format.md)); „Neu laden“ übernimmt Änderungen sofort.
+Ein Layout-Editor (Fixtures, Patches, Ziele) und Rückgängig/Wiederholen. Bis dahin entsteht der
+Layout- und Ausgabeteil der Projektdatei von Hand (siehe [Projektdatei](project-format.md));
+„Neu laden“ übernimmt Änderungen sofort.

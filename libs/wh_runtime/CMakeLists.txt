@@ -3,7 +3,9 @@
 # GPU nur über IGpuDevice; welches Backend dahintersteht, entscheidet die Anwendung. Kein Qt.
 wh_add_library(wh_runtime
     SOURCES
+        src/graph_layout.cpp
         src/player.cpp
+        src/player_edit.cpp
         src/session.cpp
         src/summary.cpp
     PUBLIC_DEPS

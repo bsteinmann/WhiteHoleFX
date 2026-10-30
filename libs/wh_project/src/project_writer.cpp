@@ -123,6 +123,7 @@ Result<std::string> writeProject(const Project& project) {
         const std::string name = "n" + std::to_string(names.size() + 1);
         names.emplace(node.id.value(), name);
         out << "node " << name << " " << node.typeId << "\n";
+        out << "  at " << vec2(node.position) << "\n";
         const graph::NodeDescriptor* descriptor = project.graph.registry().find(node.typeId);
         if (descriptor != nullptr) {
             for (const graph::ParameterDescriptor& parameter : descriptor->parameters) {

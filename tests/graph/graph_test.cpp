@@ -209,3 +209,14 @@ TEST_CASE("Graph: eine Kopie ist ein unabhängiger Snapshot") {
     CHECK(snapshot.nodes().size() == 1U);
     CHECK(std::get<double>(snapshot.findNode(source)->parameters.at("gain")) == 0.5);
 }
+
+TEST_CASE("Graph: setPosition verschiebt den Node und prüft die Eingabe") {
+    Graph g{makeTestRegistry()};
+    const NodeId id = add(g, "test.source");
+    CHECK(g.setPosition(id, Vec2{12.0F, -3.5F}).ok());
+    CHECK(g.findNode(id)->position == Vec2{12.0F, -3.5F});
+    CHECK(g.setPosition(id, Vec2{std::numeric_limits<float>::quiet_NaN(), 0.0F}).error().code ==
+          ErrorCode::InvalidArgument);
+    CHECK(g.findNode(id)->position == Vec2{12.0F, -3.5F});
+    CHECK(g.setPosition(NodeId{999}, Vec2{}).error().code == ErrorCode::NotFound);
+}

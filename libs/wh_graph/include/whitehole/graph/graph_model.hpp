@@ -67,6 +67,10 @@ public:
     /// oder nicht endliche Zahl).
     Result<void> setParameter(NodeId id, std::string_view key, ParameterValue value);
 
+    /// Lage im Node-Editor. Hat keinen Einfluss auf das Ergebnis des Graphen.
+    /// Fehler: NotFound, InvalidArgument (NaN oder Unendlich).
+    Result<void> setPosition(NodeId id, Vec2 position);
+
     [[nodiscard]] const NodeInstance* findNode(NodeId id) const noexcept;
     [[nodiscard]] const Connection* findConnection(ConnectionId id) const noexcept;
 

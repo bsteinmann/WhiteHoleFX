@@ -4,6 +4,7 @@
 #include <unordered_map>
 
 #include "whitehole/output/packet_sink.hpp"
+#include "whitehole/runtime/graph_layout.hpp"
 
 namespace whitehole::runtime {
 
@@ -47,10 +48,13 @@ Result<void> Player::adopt(project::Project project, std::string path) {
     }
     stop();
     map_ = std::move(parts.value().map);
+    applyLayoutIfMissing(project.graph);
     project_.emplace(std::move(project));
     path_ = std::move(path);
     stepError_.reset();
     graphDirty_ = false;
+    targetDirty_ = false;
+    modified_ = false;
     return {};
 }
 
@@ -77,6 +81,7 @@ Result<void> Player::start() {
     session_ = std::move(session).value();
     stepError_.reset();
     graphDirty_ = false;
+    targetDirty_ = false;
     return {};
 }
 
@@ -89,6 +94,16 @@ void Player::stop() {
 Result<void> Player::step() {
     if (!session_) {
         return {};
+    }
+    if (targetDirty_) {
+        // Das Ziel steckt in der Stage; ein neues braucht eine neue Session.
+        targetDirty_ = false;
+        graphDirty_ = false;
+        stop();
+        if (const Result<void> restarted = start(); !restarted.ok()) {
+            stepError_ = restarted.error();
+            return restarted;
+        }
     }
     if (graphDirty_) {
         graphDirty_ = false;
@@ -177,6 +192,7 @@ Result<graph::ParameterValue> Player::setParameter(NodeId node, const std::strin
         return r.error();
     }
     graphDirty_ = true;
+    modified_ = true;
     return project_->graph.findNode(node)->parameters.at(key);
 }
 
@@ -192,6 +208,7 @@ Result<void> Player::save(const std::string& path) {
         return r;
     }
     path_ = path;
+    modified_ = false;
     return {};
 }
 

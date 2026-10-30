@@ -108,6 +108,12 @@ und Grenzen (170 LEDs je Universe): siehe [Ausgabe](output.md). `offset` gilt nu
 Parameters: Wahrheitswert (`true`/`false`), Ganzzahl, Zahl, 2 Zahlen, 3 Zahlen, Farbe (4 Zahlen
 r g b a, linear) oder Text. Nicht gesetzte Parameter behalten ihren Standardwert.
 
+`at <x> <y>` legt die Lage des Nodes im Node-Editor fest. Die Zeile ist optional und hat keinen
+Einfluss auf das Ergebnis. Fehlt sie bei allen Nodes, ordnet der Editor sie selbst in Spalten an
+(Quellen links, Ausgang rechts). Der Writer schreibt `at` immer. Ältere Programmversionen kennen
+die Zeile nicht und lehnen solche Dateien ab; die Formatversion bleibt 1, weil neuere Programme
+alte Dateien unverändert lesen.
+
 ### `connect <node>.<ausgang> -> <node>.<eingang>` und `output <node>.<ausgang>`
 
 Verbindungen werden beim Lesen geprüft (Typen, Zyklen, Eingang schon belegt). `output` ist

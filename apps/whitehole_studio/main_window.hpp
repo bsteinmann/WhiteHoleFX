@@ -23,6 +23,7 @@ class QLabel;
 
 namespace whitehole::studio {
 
+class NodeEditor;
 class ParameterPanel;
 class PreviewWidget;
 
@@ -48,6 +49,8 @@ public:
     int exerciseParameters();
     /// Letzter Fehler des Players als Text, leer wenn alles in Ordnung ist.
     [[nodiscard]] QString problem() const;
+    /// Rauchtest des Node-Editors (siehe NodeEditor::exercise), danach ein paar Frames.
+    bool exerciseEditor();
 
 protected:
     void dragEnterEvent(QDragEnterEvent* event) override;
@@ -59,6 +62,10 @@ private:
     void updateActions();
     void updateStatus();
     void reportError(const QString& title, const std::string& message, bool interactive);
+    void onGraphEdited(bool structural);
+    void updateTitle();
+    /// Fragt bei ungespeicherten Änderungen nach. Wahr, wenn weitergemacht werden darf.
+    bool confirmDiscard();
     void onOpen();
     void onReload();
     void onSaveAs();
@@ -73,7 +80,9 @@ private:
 
     PreviewWidget* preview_{nullptr};
     ParameterPanel* parameters_{nullptr};
+    NodeEditor* editor_{nullptr};
     QDockWidget* dock_{nullptr};
+    QDockWidget* editorDock_{nullptr};
     QLabel* statusLabel_{nullptr};
     QTimer timer_;
     QTimer statusTimer_;

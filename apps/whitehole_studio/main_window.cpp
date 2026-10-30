@@ -2,6 +2,7 @@
 #include "main_window.hpp"
 
 #include <QAction>
+#include <QApplication>
 #include <QCheckBox>
 #include <QCloseEvent>
 #include <QDoubleSpinBox>
@@ -25,6 +26,7 @@
 #include <algorithm>
 #include <cmath>
 
+#include "node_editor.hpp"
 #include "parameter_panel.hpp"
 #include "preview_widget.hpp"
 
@@ -74,6 +76,14 @@ MainWindow::MainWindow(gpu::IGpuDevice* device, const QString& deviceNote, QWidg
     dock_ = new QDockWidget{tr("Parameter"), this};
     dock_->setWidget(parameters_);
     addDockWidget(Qt::RightDockWidgetArea, dock_);
+
+    editor_ = new NodeEditor{*player_, this};
+    connect(editor_, &NodeEditor::edited, this, &MainWindow::onGraphEdited);
+    connect(editor_, &NodeEditor::failed, this, [this](const QString& message) { statusBar()->showMessage(message, 8000); });
+    editorDock_ = new QDockWidget{tr("Nodes"), this};
+    editorDock_->setWidget(editor_);
+    addDockWidget(Qt::BottomDockWidgetArea, editorDock_);
+    resizeDocks({editorDock_}, {300}, Qt::Vertical);
 
     statusLabel_ = new QLabel{this};
     statusBar()->addPermanentWidget(statusLabel_);
@@ -133,6 +143,7 @@ void MainWindow::buildActions() {
     file->addAction(quitAction_);
 
     QMenu* view = menuBar()->addMenu(tr("&Ansicht"));
+    view->addAction(editorDock_->toggleViewAction());
     view->addAction(dock_->toggleViewAction());
 
     QMenu* run = menuBar()->addMenu(tr("&Wiedergabe"));
@@ -156,7 +167,45 @@ void MainWindow::updateActions() {
     sendAction_->setChecked(gate_->enabled());
 }
 
+void MainWindow::updateTitle() {
+    const runtime::PlayerStatus s = player_->status();
+    if (!s.loaded) {
+        setWindowTitle(tr("WhiteHoleFX"));
+        return;
+    }
+    const QString name = s.path.empty() ? tr("unbenannt") : QFileInfo{fromStd(s.path)}.fileName();
+    setWindowTitle(tr("WhiteHoleFX – %1%2").arg(name, player_->modified() ? QStringLiteral(" *") : QString{}));
+}
+
+void MainWindow::onGraphEdited(bool structural) {
+    if (structural) {
+        parameters_->rebuild(player_->nodes());
+    }
+    updateTitle();
+    updateActions();
+}
+
+bool MainWindow::confirmDiscard() {
+    if (!player_->modified()) {
+        return true;
+    }
+    const auto answer = QMessageBox::question(this, tr("Ungespeicherte Änderungen"),
+                                              tr("Das Projekt wurde geändert. Änderungen verwerfen?"),
+                                              QMessageBox::Discard | QMessageBox::Cancel, QMessageBox::Cancel);
+    return answer == QMessageBox::Discard;
+}
+
+bool MainWindow::exerciseEditor() {
+    const bool ok = editor_->exercise();
+    for (int i = 0; i < 5; ++i) {
+        tick();
+        QApplication::processEvents();
+    }
+    return ok;
+}
+
 void MainWindow::updateStatus() {
+    updateTitle();
     const runtime::PlayerStatus s = player_->status();
     QString text;
     if (!s.loaded) {
@@ -187,6 +236,9 @@ void MainWindow::reportError(const QString& title, const std::string& message, b
 }
 
 bool MainWindow::openPath(const QString& path, bool interactive) {
+    if (interactive && !confirmDiscard()) {
+        return false;
+    }
     timer_.stop();
     const Result<void> r = player_->load(path.toUtf8().toStdString());
     if (!r.ok()) {
@@ -196,7 +248,8 @@ bool MainWindow::openPath(const QString& path, bool interactive) {
     }
     preview_->setMessage({});
     parameters_->rebuild(player_->nodes());
-    setWindowTitle(tr("WhiteHoleFX – %1").arg(QFileInfo{path}.fileName()));
+    editor_->reset();
+    updateTitle();
     statusBar()->showMessage(tr("Geladen: %1").arg(path), 5000);
     updateActions();
     refreshImage();
@@ -320,7 +373,7 @@ void MainWindow::onSaveAs() {
         reportError(tr("Speichern"), r.error().message, true);
         return;
     }
-    setWindowTitle(tr("WhiteHoleFX – %1").arg(QFileInfo{path}.fileName()));
+    updateTitle();
     statusBar()->showMessage(tr("Gespeichert: %1").arg(path), 5000);
     updateActions();
 }
@@ -353,6 +406,10 @@ void MainWindow::dropEvent(QDropEvent* event) {
 }
 
 void MainWindow::closeEvent(QCloseEvent* event) {
+    if (!confirmDiscard()) {
+        event->ignore();
+        return;
+    }
     stopPlayback();
     event->accept();
 }

@@ -201,6 +201,16 @@ std::optional<Error> Parser::handleNode(const Line& line) {
         state_ = State::Outside;
     } else if (key == "set") {
         error = setParameter(r);
+    } else if (key == "at") {
+        const Vec2 position = r.vec2("Position");
+        r.expectEnd();
+        if (!r.ok()) {
+            return r.error();
+        }
+        const auto result = project_.graph.setPosition(node_, position);
+        if (!result.ok()) {
+            return withLine(r.line(), result.error());
+        }
     } else {
         r.fail("Unbekannte Anweisung \"" + key + "\" im node-Block");
     }

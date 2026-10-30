@@ -166,6 +166,19 @@ Result<void> Graph::setParameter(NodeId id, std::string_view key, ParameterValue
     return {};
 }
 
+Result<void> Graph::setPosition(NodeId id, Vec2 position) {
+    if (!std::isfinite(position.x) || !std::isfinite(position.y)) {
+        return Error{ErrorCode::InvalidArgument, "Die Position muss endlich sein"};
+    }
+    const auto it = std::find_if(nodes_.begin(), nodes_.end(),
+                                 [id](const NodeInstance& node) { return node.id == id; });
+    if (it == nodes_.end()) {
+        return notFound("Node existiert nicht");
+    }
+    it->position = position;
+    return {};
+}
+
 const NodeInstance* Graph::findNode(NodeId id) const noexcept {
     const auto it = std::find_if(nodes_.begin(), nodes_.end(),
                                  [id](const NodeInstance& node) { return node.id == id; });

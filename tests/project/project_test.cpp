@@ -235,6 +235,8 @@ TEST_CASE("Projekt: Fehlermeldungen nennen die Zeile und den Grund", "[project]"
         {"whitehole-project 1\nnode a wh.generator.gradient\n  set colorA 1 0 0\nend\n", "Zeile 3: colorA fehlt"},
         {"whitehole-project 1\nnode a wh.transform.mirror\n  set mirrorX vielleicht\nend\n", "true oder false"},
         {"whitehole-project 1\nnode a wh.generator.gradient\n  tu 1\nend\n", "im node-Block"},
+        {"whitehole-project 1\nnode a wh.generator.gradient\n  at 5\nend\n", "Zeile 3: Position fehlt"},
+        {"whitehole-project 1\nnode a wh.generator.gradient\n  at 1 2 3\nend\n", "Zeile 3"},
         {"whitehole-project 1\nconnect a.out -> b.source\n", "Unbekannter Node \"a\""},
         {"whitehole-project 1\nnode a wh.generator.gradient\nend\nconnect a.out b.source\n", "Erwartet"},
         {"whitehole-project 1\nnode a wh.generator.gradient\nend\nconnect a.out ->\n", "Eingang fehlt"},
@@ -297,4 +299,18 @@ TEST_CASE("Projekt: writeTextFile schreibt und ersetzt", "[project]") {
     const auto bad = project::writeTextFile("/nicht/vorhanden/x.txt", "x");
     REQUIRE_FALSE(bad.ok());
     CHECK(bad.error().code == ErrorCode::IoError);
+}
+
+TEST_CASE("Projekt: Node-Positionen (at) werden gelesen und geschrieben", "[project]") {
+    const Library lib;
+    const auto parsed = parseProject("whitehole-project 1\nnode a wh.generator.gradient\n  at -12.5 40\nend\n", lib.registry);
+    REQUIRE(parsed.ok());
+    CHECK(parsed.value().graph.nodes().at(0).position == Vec2{-12.5F, 40.0F});
+    const auto text = writeProject(parsed.value());
+    REQUIRE(text.ok());
+    CHECK(text.value().find("  at -12.5 40\n") != std::string::npos);
+    // Dateien ohne at (Format wie bisher) bleiben lesbar
+    const auto old = parseProject("whitehole-project 1\nnode a wh.generator.gradient\nend\n", lib.registry);
+    REQUIRE(old.ok());
+    CHECK(old.value().graph.nodes().at(0).position == Vec2{});
 }

@@ -100,6 +100,12 @@ int main(int argc, char** argv) {
             QApplication::processEvents();
             QThread::msleep(25);
         }
+        const bool editorOk = window.exerciseEditor();
+        std::printf("Node-Editor: %s\n", editorOk ? "ok" : "FEHLER");
+        if (!editorOk) {
+            std::fprintf(stderr, "Rauchtest fehlgeschlagen: Node-Editor\n");
+            return 1;
+        }
         const QString problem = window.problem();
         if (changed == 0 || !problem.isEmpty()) {
             std::fprintf(stderr, "Rauchtest fehlgeschlagen: %s\n", changed == 0 ? "kein Regler gefunden" : problem.toUtf8().constData());
