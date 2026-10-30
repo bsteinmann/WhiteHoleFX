@@ -1,0 +1,13 @@
+# Build-Ausgaben
+build/
+cmake-build-*/
+out/
+CMakeFiles/
+CMakeCache.txt
+compile_commands.json
+
+# Editoren und Systeme
+.vscode/
+.idea/
+*.swp
+.DS_Store

@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  gcc:
+    name: GCC (ASan + UBSan, Warnungen als Fehler)
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Konfigurieren
+        run: >
+          cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
+          -DWHITEHOLEFX_WARNINGS_AS_ERRORS=ON
+          -DCMAKE_CXX_FLAGS="-fsanitize=address,undefined -fno-sanitize-recover=undefined"
+      - name: Bauen
+        run: cmake --build build --parallel
+      - name: Testen
+        run: ctest --test-dir build --output-on-failure
+
+  clang:
+    name: Clang (Fehler hier brechen den Lauf nicht ab)
+    runs-on: ubuntu-24.04
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - name: Konfigurieren
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER=clang++
+      - name: Bauen
+        run: cmake --build build --parallel
+      - name: Testen
+        run: ctest --test-dir build --output-on-failure
