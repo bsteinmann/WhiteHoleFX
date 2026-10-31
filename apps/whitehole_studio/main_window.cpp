@@ -31,6 +31,7 @@
 #include "layout_panel.hpp"
 #include "node_editor.hpp"
 #include "parameter_panel.hpp"
+#include "preview_controller.hpp"
 #include "preview_widget.hpp"
 
 namespace whitehole::studio {
@@ -83,6 +84,10 @@ MainWindow::MainWindow(gpu::IGpuDevice* device, const QString& deviceNote, QWidg
     layoutPanel_ = new LayoutPanel{*player_, this};
     connect(layoutPanel_, &LayoutPanel::edited, this, &MainWindow::onLayoutEdited);
     connect(layoutPanel_, &LayoutPanel::failed, this,
+            [this](const QString& message) { statusBar()->showMessage(message, 8000); });
+    previewController_ = new PreviewController{*player_, preview_, layoutPanel_, this};
+    connect(previewController_, &PreviewController::edited, this, &MainWindow::onLayoutEdited);
+    connect(previewController_, &PreviewController::failed, this,
             [this](const QString& message) { statusBar()->showMessage(message, 8000); });
     layoutDock_ = new QDockWidget{tr("Layout"), this};
     layoutDock_->setWidget(layoutPanel_);
@@ -283,6 +288,9 @@ void MainWindow::refreshImage() {
     preview::PreviewOptions options;
     options.width = static_cast<std::uint32_t>(std::clamp(preview_->width(), 64, 4096));
     options.height = static_cast<std::uint32_t>(std::clamp(preview_->height(), 64, 4096));
+    if (previewController_ != nullptr) {
+        options.frame = previewController_->frozenFrame();  // während des Ziehens bleibt die Ansicht stehen
+    }
     const auto image = player_->image(options);
     if (!image.ok()) {
         preview_->setMessage(fromStd(image.error().message));
@@ -292,6 +300,9 @@ void MainWindow::refreshImage() {
     const QImage view{img.rgba.data(), static_cast<int>(img.width), static_cast<int>(img.height),
                       static_cast<qsizetype>(img.width) * 4, QImage::Format_RGBA8888};
     preview_->setImage(view.copy());  // eigener Speicher: das Bild überlebt den Rückgabewert
+    if (previewController_ != nullptr) {
+        previewController_->imageRendered(img.frame);
+    }
 }
 
 QString MainWindow::problem() const {

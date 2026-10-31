@@ -27,6 +27,7 @@ namespace whitehole::studio {
 class LayoutPanel;
 class NodeEditor;
 class ParameterPanel;
+class PreviewController;
 class PreviewWidget;
 
 class MainWindow : public QMainWindow {
@@ -108,6 +109,7 @@ private:
     QString deviceNote_;
 
     PreviewWidget* preview_{nullptr};
+    PreviewController* previewController_{nullptr};
     ParameterPanel* parameters_{nullptr};
     NodeEditor* editor_{nullptr};
     QDockWidget* dock_{nullptr};

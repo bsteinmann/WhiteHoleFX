@@ -1,6 +1,7 @@
 // layout_panel.cpp: Fixture-Liste und Seitenaufbau.
 #include "layout_panel.hpp"
 
+#include <QGridLayout>
 #include <QHBoxLayout>
 #include <QPushButton>
 #include <QScrollArea>
@@ -8,6 +9,8 @@
 #include <QVBoxLayout>
 
 #include <algorithm>
+#include <cmath>
+#include <functional>
 
 namespace whitehole::studio {
 
@@ -25,6 +28,7 @@ LayoutPanel::LayoutPanel(runtime::Player& player, QWidget* parent) : QTabWidget{
 
     list_ = new QListWidget;
     list_->setMaximumHeight(140);
+    list_->setSelectionMode(QAbstractItemView::ExtendedSelection);
     pageLayout->addWidget(list_);
 
     auto* buttons = new QHBoxLayout;
@@ -39,12 +43,17 @@ LayoutPanel::LayoutPanel(runtime::Player& player, QWidget* parent) : QTabWidget{
     connect(addStripButton, &QPushButton::clicked, this, [this]() { addStrip(); });
     connect(removeButton, &QPushButton::clicked, this, [this]() { removeSelected(); });
 
+    pageLayout->addWidget(buildArrangeBar());
+
     fixture_ = new FixtureForm{player_};
     auto* scroll = new QScrollArea;
     scroll->setWidgetResizable(true);
     scroll->setWidget(fixture_);
     pageLayout->addWidget(scroll, 1);
     addTab(page, tr("Fixtures"));
+
+    region_ = new RegionForm{player_};
+    addTab(region_, tr("Bereich"));
 
     output_ = new OutputForm{player_};
     auto* outputScroll = new QScrollArea;
@@ -53,6 +62,9 @@ LayoutPanel::LayoutPanel(runtime::Player& player, QWidget* parent) : QTabWidget{
     addTab(outputScroll, tr("Ausgabe"));
 
     connect(list_, &QListWidget::currentRowChanged, this, [this](int) { fixture_->showFixture(selectedId()); });
+    connect(list_, &QListWidget::itemSelectionChanged, this, [this]() { Q_EMIT selectionChanged(); });
+    connect(region_, &RegionForm::edited, this, &LayoutPanel::edited);
+    connect(region_, &RegionForm::failed, this, &LayoutPanel::failed);
     connect(fixture_, &FixtureForm::edited, this, [this]() {
         refreshTexts();
         Q_EMIT edited();
@@ -70,6 +82,110 @@ mapping::FixtureId LayoutPanel::selectedId() const {
 void LayoutPanel::rebuild() {
     fillList(selectedId());
     output_->rebuild();
+    region_->rebuild();
+}
+
+std::vector<mapping::FixtureId> LayoutPanel::selectedIds() const {
+    std::vector<mapping::FixtureId> ids;
+    for (int i = 0; i < list_->count(); ++i) {
+        const QListWidgetItem* item = list_->item(i);
+        if (item->isSelected()) {
+            ids.push_back(mapping::FixtureId{item->data(kIdRole).toULongLong()});
+        }
+    }
+    return ids;
+}
+
+void LayoutPanel::setSelectedIds(const std::vector<mapping::FixtureId>& ids) {
+    {
+        const QSignalBlocker blocker{list_};
+        list_->clearSelection();
+        QListWidgetItem* first = nullptr;
+        for (int i = 0; i < list_->count(); ++i) {
+            QListWidgetItem* item = list_->item(i);
+            const mapping::FixtureId id{item->data(kIdRole).toULongLong()};
+            if (std::ranges::find(ids, id) != ids.end()) {
+                item->setSelected(true);
+                if (first == nullptr) {
+                    first = item;
+                }
+            }
+        }
+        if (first != nullptr) {
+            list_->setCurrentItem(first, QItemSelectionModel::NoUpdate);
+        }
+    }
+    fixture_->showFixture(selectedId());
+}
+
+void LayoutPanel::refreshValues() {
+    refreshTexts();
+    fixture_->showFixture(selectedId());
+    region_->rebuild();
+}
+
+QWidget* LayoutPanel::buildArrangeBar() {
+    auto* bar = new QWidget;
+    auto* grid = new QGridLayout{bar};
+    grid->setContentsMargins(0, 0, 0, 0);
+    struct Entry {
+        QString text;
+        QString tip;
+        std::function<void()> action;
+    };
+    const std::vector<Entry> entries{
+        {tr("⇤ Links"), tr("Linke Kanten ausrichten"), [this]() { align(runtime::Player::Align::Left); }},
+        {tr("↔ Mitte"), tr("Waagrecht mittig ausrichten"), [this]() { align(runtime::Player::Align::HCenter); }},
+        {tr("Rechts ⇥"), tr("Rechte Kanten ausrichten"), [this]() { align(runtime::Player::Align::Right); }},
+        {tr("⤒ Oben"), tr("Obere Kanten ausrichten"), [this]() { align(runtime::Player::Align::Top); }},
+        {tr("↕ Mitte"), tr("Senkrecht mittig ausrichten"), [this]() { align(runtime::Player::Align::VCenter); }},
+        {tr("Unten ⤓"), tr("Untere Kanten ausrichten"), [this]() { align(runtime::Player::Align::Bottom); }},
+        {tr("Verteilen ↔"), tr("Gleiche Lücken waagrecht (ab drei Fixtures)"),
+         [this]() { distribute(runtime::Player::Axis::X); }},
+        {tr("Verteilen ↕"), tr("Gleiche Lücken senkrecht (ab drei Fixtures)"),
+         [this]() { distribute(runtime::Player::Axis::Y); }},
+    };
+    int index = 0;
+    for (const Entry& entry : entries) {
+        auto* button = new QPushButton{entry.text};
+        button->setToolTip(entry.tip);
+        connect(button, &QPushButton::clicked, this, entry.action);
+        grid->addWidget(button, index / 3, index % 3);
+        ++index;
+    }
+    return bar;
+}
+
+void LayoutPanel::align(runtime::Player::Align mode) {
+    const std::vector<mapping::FixtureId> ids = selectedIds();
+    if (player_.project() == nullptr || ids.empty()) {
+        Q_EMIT failed(tr("Erst Fixtures wählen (Strg oder Umschalt halten für mehrere)"));
+        return;
+    }
+    player_.closeEditGroup();
+    const Result<void> r = player_.alignFixtures(ids, mode);
+    if (!r.ok()) {
+        Q_EMIT failed(fromStd(r.error().message));
+        return;
+    }
+    refreshValues();
+    Q_EMIT edited();
+}
+
+void LayoutPanel::distribute(runtime::Player::Axis axis) {
+    const std::vector<mapping::FixtureId> ids = selectedIds();
+    if (player_.project() == nullptr || ids.size() < 3) {
+        Q_EMIT failed(tr("Zum Verteilen mindestens drei Fixtures wählen"));
+        return;
+    }
+    player_.closeEditGroup();
+    const Result<void> r = player_.distributeFixtures(ids, axis);
+    if (!r.ok()) {
+        Q_EMIT failed(fromStd(r.error().message));
+        return;
+    }
+    refreshValues();
+    Q_EMIT edited();
 }
 
 void LayoutPanel::fillList(mapping::FixtureId select) {
@@ -200,9 +316,50 @@ QString LayoutPanel::exercise() {
     if (const QString note = output_->exercise(); !note.isEmpty()) {
         return note;
     }
+    if (const QString note = region_->exercise(); !note.isEmpty()) {
+        return note;
+    }
     removeSelected();
     if (player_.project()->layout.fixtures().size() != fixtures || list_->count() != static_cast<int>(fixtures)) {
         return QStringLiteral("Layout: Strip wurde nicht entfernt");
+    }
+    return exerciseArrange();
+}
+
+QString LayoutPanel::exerciseArrange() {
+    const std::size_t before = player_.project()->layout.fixtures().size();
+    addStrip();
+    addStrip();
+    std::vector<mapping::FixtureId> all;
+    for (const mapping::Fixture& fixture : player_.project()->layout.fixtures()) {
+        all.push_back(fixture.id);
+    }
+    if (all.size() != before + 2) {
+        return QStringLiteral("Anordnen: zwei Strips wurden nicht angelegt");
+    }
+    setSelectedIds(all);
+    if (selectedIds().size() != all.size()) {
+        return QStringLiteral("Anordnen: Mehrfachauswahl hat %1 statt %2 Fixtures").arg(selectedIds().size()).arg(all.size());
+    }
+    align(runtime::Player::Align::Bottom);
+    const auto& fixtures = player_.project()->layout.fixtures();
+    for (const mapping::Fixture& fixture : fixtures) {
+        const float bottom = fixture.origin.y + mapping::localBox(fixture.shape).min.y;
+        const mapping::Fixture& first = fixtures.front();
+        if (std::abs(bottom - (first.origin.y + mapping::localBox(first.shape).min.y)) > 1e-3F) {
+            return QStringLiteral("Anordnen: untere Kanten liegen nach \"Unten\" nicht gleich");
+        }
+    }
+    distribute(runtime::Player::Axis::X);
+    // Aufräumen: die zwei Strips wieder entfernen (je einzeln gewählt, das Formular folgt der Auswahl).
+    for (int i = 0; i < 2; ++i) {
+        setSelectedIds({player_.project()->layout.fixtures().back().id});
+        removeSelected();
+    }
+    if (player_.project()->layout.fixtures().size() != before) {
+        return QStringLiteral("Anordnen: Aufräumen hat %1 statt %2 Fixtures hinterlassen")
+            .arg(player_.project()->layout.fixtures().size())
+            .arg(before);
     }
     return {};
 }

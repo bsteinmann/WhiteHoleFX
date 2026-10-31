@@ -111,7 +111,7 @@ ziehen (Treffer auf Ports), verschieben, Kabel und Nodes wieder löschen.
 
 ## Layout-Editor
 
-Das Dock „Layout“ (rechts, teilt sich den Platz mit „Parameter“) hat zwei Seiten.
+Das Dock „Layout“ (rechts, teilt sich den Platz mit „Parameter“) hat drei Seiten.
 
 **Fixtures:** Liste mit „Matrix +“, „Strip +“ und „Entfernen“. Ein neues Fixture bekommt einen freien
 Platz im Layout und das erste freie Universe (Art-Net, Ziel 0, 170 LEDs je Universe). Für das
@@ -125,6 +125,17 @@ gewählte Fixture gibt es ein Formular:
 - Patch: Protokoll (Art-Net, sACN, DDP), Ziel, Universe, erster Kanal, DDP-Offset,
   Farbreihenfolge, Gamma, Helligkeit; „an die Ausgabe schicken“ schaltet den Patch ein und aus
 
+**Mehrere Fixtures:** Die Liste erlaubt mehrere Einträge (Strg oder Umschalt). Die Knöpfe unter der
+Liste richten die gewählten Fixtures aus (links, rechts, oben, unten, waagrecht oder senkrecht
+mittig; Bezug ist die Gesamtbox der Auswahl) und verteilen drei oder mehr mit gleichen Lücken.
+Jeder Knopf ist ein Schritt für Rückgängig.
+
+**Bereich:** Der Effekt füllt nur ein Rechteck der Wand (Bild-in-Bild); alle LEDs außerhalb bleiben
+aus. Kästchen „Effektbereich verwenden“, darunter Links, Oben, Breite und Höhe in Prozent der
+Wand (Oben und Links zählen von der linken oberen Ecke). Der Knopf „In der Vorschau zeichnen“
+schaltet den Bereichsmodus der Vorschau ein (siehe unten). Der Bereich steht in der Projektdatei
+(`settings … region`).
+
 **Ausgabe:** Tabelle der Ziele (Adresse, Port; leere Adresse = Multicast, Port 0 = Standard) mit
 „Ziel +“ und „Letztes Ziel −“, darunter Bildrate, Abbildung auf den Würfel (Stretch oder
 KeepAspect), sACN-Priorität und Quellname.
@@ -136,6 +147,23 @@ zurück. Das letzte gepatchte Fixture lässt sich nicht entfernen, und ein Ziel,
 zeigt, nicht löschen. Laufende Ausgabe wird nach einer Änderung einmal neu aufgebaut (kurze
 Unterbrechung). Alle Schritte lassen sich zurücknehmen.
 
+### Bedienung in der Vorschau
+
+Die Vorschau ist eine Arbeitsfläche für das Layout:
+
+| Aktion | Wirkung |
+|---|---|
+| Klick auf ein Fixture | wählt es (gestrichelter blauer Rahmen); die Liste im Layout-Dock folgt |
+| Strg oder Umschalt + Klick | Fixture zur Auswahl hinzufügen oder entfernen |
+| Ziehen auf einem Fixture | verschiebt alle gewählten Fixtures (Raster 0,1) |
+| Ziehen auf leerer Fläche | Auswahlrahmen („Gummiband“) |
+| Pfeiltasten | gewählte Fixtures um 1 schieben (Umschalt 10, Strg 0,1) |
+
+Im Bereichsmodus (Knopf „In der Vorschau zeichnen“) bedeutet Ziehen auf leerer Fläche: neuen
+Bereich aufspannen; Ziehen im orangen Rahmen verschiebt ihn, Ziehen an einer Ecke ändert die
+Größe, Pfeiltasten schieben um 1 % (Umschalt 10 %). Während des Ziehens bleibt der Bildausschnitt
+stehen, danach passt er sich wieder an. Jede Ziehbewegung ist ein Schritt für Rückgängig.
+
 ## Rückgängig und Wiederholen
 
 Menü Bearbeiten, Strg+Z und Strg+Umschalt+Z (Windows auch Strg+Y). Zurückgenommen werden
@@ -146,6 +174,5 @@ erreicht ist.
 
 ## Noch nicht enthalten
 
-Punktwolken bearbeiten, Fixtures im Vorschaubild verschieben oder drehen, Kopieren/Einfügen von
-Nodes und Fixtures. Solches entsteht bis dahin in der Projektdatei (siehe
+Punktwolken bearbeiten, Fixtures drehen, Kopieren/Einfügen von Fixtures. Solches entsteht bis dahin in der Projektdatei (siehe
 [Projektdatei](project-format.md)); „Neu laden“ übernimmt Änderungen sofort.

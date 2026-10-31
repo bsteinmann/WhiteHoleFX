@@ -10,6 +10,7 @@
 #include <QSpinBox>
 
 #include "layout_panel.hpp"
+#include "preview_controller.hpp"
 #include "main_window.hpp"
 #include "node_editor.hpp"
 #include "parameter_panel.hpp"
@@ -50,6 +51,9 @@ QString MainWindow::exerciseEditor() {
     QString ok = editor_->exercise();
     if (ok.isEmpty()) {
         ok = layoutPanel_->exercise();
+    }
+    if (ok.isEmpty()) {
+        ok = previewController_->exercise();
     }
     if (ok.isEmpty()) {
         // Alles zurücknehmen und wiederholen: dieselben Schritte wie Strg+Z und Strg+Umschalt+Z.

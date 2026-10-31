@@ -1,5 +1,17 @@
 # Änderungen
 
+## 0.5.0
+
+- **Effektbereich (Bild-in-Bild):** Ein Effekt kann nur ein Rechteck der Wand füllen, der Rest bleibt
+  aus. Einstellung `settings … region x y b h`, im Studio auf der Seite „Bereich“ des Layout-Docks
+  und als Rahmen in der Vorschau (aufziehen, verschieben, an den Ecken ändern)
+- Vorschau als Arbeitsfläche: Fixtures anklicken, mit Strg/Umschalt mehrere wählen, per Gummiband
+  wählen, ziehen und mit den Pfeiltasten schieben; jede Ziehbewegung ist ein Undo-Schritt
+- Layout-Dock: Mehrfachauswahl, Ausrichten (links, rechts, oben, unten, Mitte) und gleichmäßig
+  Verteilen
+- Kern: `Player::setRegion`, `moveFixtures`, `alignFixtures`, `distributeFixtures`; `wh_preview`
+  meldet den gezeichneten Ausschnitt (`ViewFrame`) und bietet Treffertests
+
 ## 0.4.0
 
 - Node-Editor: Der Node am Ausgang lässt sich löschen; der Ausgang rückt auf den Node davor

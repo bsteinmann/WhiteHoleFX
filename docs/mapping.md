@@ -64,6 +64,22 @@ sind. Die Ausgabe (Schritt 6) packt Pixel in genau dieser Reihenfolge in Univers
 Eine Achse ohne Ausdehnung (flache Matrix, gerader Strip) bleibt bei 0. Eine flache Anlage
 hat also immer `p.z = 0`.
 
+## Effektbereich (Bild-in-Bild)
+
+Soll ein Effekt nur einen Teil einer großen Wand füllen, gibt man ein Rechteck an
+(`Layout::bake(mode, region)`, in der Projektdatei `settings … region x y b h`). Das Rechteck steht
+in Anteilen der Wandbox, `x` und `y` zählen von links oben, die z-Achse bleibt unberührt.
+
+- Die Normalisierung gilt dann für das Rechteck statt für die ganze Wand: Ein Verlauf, der im
+  Einheitswürfel von 0 bis 1 läuft, läuft nur über das Rechteck.
+- LEDs außerhalb stehen in `LedMap::outside` (1 = außerhalb). Der Abtast-Pass trägt das als
+  `w`-Komponente in den Positionspuffer ein und multipliziert das Alpha mit `1 - w`; die LEDs
+  außerhalb sind also durchsichtig und bleiben aus, so wie jede andere transparente Stelle.
+- `LedMap::volume` bleibt die Box der ganzen Wand. `regionBox(volume, region)` liefert das
+  Rechteck in Weltkoordinaten, `dragRegion` und `regionFromCorners` (`region_edit.hpp`) rechnen das
+  Ziehen mit der Maus.
+- Prüfung (`validateRegion`): endliche Zahlen, Breite und Höhe größer 0, das Rechteck liegt in der Wand.
+
 ## Abtast-Pass
 
 `SamplingRenderStage` legt beim Erzeugen drei Puffer für `ledCapacity` LEDs an:
