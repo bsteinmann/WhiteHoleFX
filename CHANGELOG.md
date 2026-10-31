@@ -1,5 +1,17 @@
 # Änderungen
 
+## 0.16.0
+
+- **Neue Nodes (Generators):** `Lightning` (Blitze mit Verästelung, Nachschlag und Flash, bis zu drei gleichzeitig)
+  und `Particles` (Funken und Konfetti: Wurfparabeln mit Schwerkraft, Schweif, Fächer und Regenbogenpalette).
+  Beide sind zustandslos: Zufall kommt aus einem Hash von Takt und Platz, nicht aus einer Partikelliste, das Bild
+  ist bei jedem Abspielen gleich. Sie teilen ein Shader-Prelude (`builtin_sparks.cpp`).
+- **Beispiele:** `examples/gewitter.whfx` und `examples/funken.whfx`; ein Test lädt und kompiliert sie, damit sie
+  nicht still veralten.
+- **Tests:** Lightning und Particles auf einem echten Gerät (Blitz hängt oben und endet bei `reach`, Flash,
+  ruhendes Teilchen, Richtung, Schwerkraft, Regenbogen). Die Erwartungen sind vorab in einem WebGPU-Testaufbau
+  (Chromium mit Software-Renderer) gegengerechnet.
+
 ## 0.15.0
 
 - **Audio-Eingang:** Neues Modul `wh_audio` mit FFT, Pegel, 32-Band-Spektrum (40 Hz–16 kHz), Beat-Erkennung

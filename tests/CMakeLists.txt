@@ -33,6 +33,7 @@ add_executable(wh_tests
     input/dmx_packets_test.cpp
     input/dmx_receiver_test.cpp
     nodes/builtin_nodes_test.cpp
+    nodes/example_projects_test.cpp
     nodes/builtin_values_test.cpp
     nodes/color_values_test.cpp
     nodes/value_integration_test.cpp
@@ -121,6 +122,7 @@ if(TARGET wh_gpu_webgpu)
         gpu_device/node_catalog_on_device_test.cpp
         gpu_device/spectrum_on_device_test.cpp
         gpu_device/node_patterns_on_device_test.cpp
+        gpu_device/spark_nodes_on_device_test.cpp
         gpu_device/session_on_device_test.cpp
         gpu_device/sampling_on_device_test.cpp
         gpu_device/stage_on_device_test.cpp

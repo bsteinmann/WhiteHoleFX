@@ -1,0 +1,44 @@
+whitehole-project 1
+# Beispiel für Particles: Funkenfontäne am unteren Rand, dahinter ein Sternenhimmel.
+#
+# So ausprobieren:
+#   whitehole_cli examples/funken.whfx --snapshot funken.png --frames 60
+#
+# Aufbau: Starfield als Hintergrund (durchsichtig, daher mit Blend-Modus 7 = Over darübergelegt),
+# Particles schickt 24 Teilchen im Fächer von 90 Grad (nach oben) aus (0.5, 0.05). Schwerkraft zieht
+# sie zurück, der Schweif (`trail`) macht aus Punkten Streifen. Palette „Rainbow“ gäbe Konfetti.
+
+settings fps 40
+
+destination 0 127.0.0.1
+
+fixture Wand
+  matrix 32 16 serpentine
+  patch artnet destination 0 universe 0
+end
+
+node himmel wh.generator.starfield
+  set density 0.08
+end
+node schwarz wh.generator.solid
+  set color 0 0 0 1
+end
+node funken wh.generator.particles
+  set count 24
+  set ey 0.05
+  set speed 1.1
+  set spread 0.25
+  set trail 0.15
+end
+node ueber wh.blend.blend
+  set mode 7
+end
+node sterne wh.blend.blend
+  set mode 7
+end
+
+connect schwarz.out -> sterne.a
+connect himmel.out -> sterne.b
+connect sterne.out -> ueber.a
+connect funken.out -> ueber.b
+output ueber.out

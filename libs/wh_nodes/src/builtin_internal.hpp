@@ -135,6 +135,7 @@ values::KernelFactory kernelFactory() {
 
 std::vector<compiler::NodeDefinition> generatorNodes();
 std::vector<compiler::NodeDefinition> shapeNodes();  // Metaballs, Starfield, Fading Pixels, Expanding Shapes, Sine Lines
+std::vector<compiler::NodeDefinition> sparkNodes();  // Lightning, Particles
 std::vector<compiler::NodeDefinition> transformNodes();
 std::vector<compiler::NodeDefinition> blendNodes();
 std::vector<compiler::NodeDefinition> modifierNodes();  // Modifier und Ausgang

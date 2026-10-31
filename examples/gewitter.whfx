@@ -1,0 +1,39 @@
+whitehole-project 1
+# Beispiel für Lightning: Blitze über dunklen, ziehenden Wolken.
+#
+# So ausprobieren:
+#   whitehole_cli examples/gewitter.whfx --snapshot gewitter.png --frames 60
+#
+# Aufbau: Ein dunkles Plasma ist der Himmel, Lightning legt bis zu zwei Blitze darüber (Blend-Modus 7 =
+# Over). `rate` ist die Zahl der Schläge pro Sekunde, `duration` wie lange ein Blitz zu sehen ist.
+# Die Blitze sind zustandslos: Sie hängen nur von der Zeit ab, wie alle Field-Nodes.
+
+settings fps 40
+
+destination 0 127.0.0.1
+
+fixture Wand
+  matrix 32 16 serpentine
+  patch artnet destination 0 universe 0
+end
+
+node himmel wh.generator.plasma
+  set scale 2
+end
+node dunkel wh.modifier.coloradjust
+  set brightness 0.12
+end
+node blitz wh.generator.lightning
+  set rate 0.6
+  set bolts 2
+  set duration 0.4
+  set flash 0.2
+end
+node ueber wh.blend.blend
+  set mode 7
+end
+
+connect himmel.out -> dunkel.source
+connect dunkel.out -> ueber.a
+connect blitz.out -> ueber.b
+output ueber.out
