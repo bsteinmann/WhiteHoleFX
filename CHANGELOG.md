@@ -1,5 +1,16 @@
 # Änderungen
 
+## 0.12.0
+
+- **Master und Blackout:** Regler „Master“ (Gesamthelligkeit) und Schalter „Blackout“ (Strg+B) in der
+  Leiste „Betrieb“. Nicht im Projekt gespeichert; Blackout gewinnt gegen Master und Testbild, die Pakete
+  laufen weiter. Banner „BLACKOUT“ in der Vorschau
+- **LED-Info:** Tooltip beim Überfahren der Vorschau mit Fixture, Nummer am Kabel, Position, Universe und
+  Kanal und aktueller Farbe
+- **Zuletzt geöffnet** im Menü Datei (zehn Einträge, fehlende Dateien fallen heraus)
+- Neu in `wh_runtime`: `Session::setOutputLevel`, `Player::setMasterBrightness` / `setBlackout`,
+  `ledAtPixel` / `describeLed` / `formatLedInfo` / `Player::ledInfoAt`, `addRecentFile` / `removeRecentFile`
+
 ## 0.11.0
 
 - **Node-Presets:** ausgewählte Nodes samt Parametern und Kabeln als Datei merken („Als Preset speichern …“

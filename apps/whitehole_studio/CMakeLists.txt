@@ -15,6 +15,7 @@ add_executable(whitehole_studio
     main.cpp
     main_window.cpp
     main_window_actions.cpp
+    main_window_controls.cpp
     main_window_exercise.cpp
     main_window_file.cpp
     main_window.hpp

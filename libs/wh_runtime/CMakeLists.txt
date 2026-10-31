@@ -4,6 +4,7 @@
 wh_add_library(wh_runtime
     SOURCES
         src/graph_layout.cpp
+        src/led_info.cpp
         src/node_clipboard.cpp
         src/node_preset.cpp
         src/player.cpp
@@ -12,6 +13,7 @@ wh_add_library(wh_runtime
         src/player_arrange.cpp
         src/player_paste.cpp
         src/player_undo.cpp
+        src/recent_files.cpp
         src/session.cpp
         src/summary.cpp
         src/test_pattern.cpp

@@ -69,9 +69,13 @@ bool MainWindow::openPath(const QString& path, bool interactive) {
     const Result<void> r = player_->load(path.toUtf8().toStdString());
     if (!r.ok()) {
         reportError(tr("Projekt laden"), r.error().message, interactive);
+        if (!QFileInfo::exists(path)) {
+            forgetRecent(path);  // die Datei gibt es nicht mehr: nicht weiter anbieten
+        }
         updateActions();
         return false;
     }
+    rememberRecent(path);
     afterLoad(tr("Geladen: %1").arg(path));
     return true;
 }
@@ -148,6 +152,7 @@ void MainWindow::onSaveAs() {
         reportError(tr("Speichern"), r.error().message, true);
         return;
     }
+    rememberRecent(path);
     updateTitle();
     statusBar()->showMessage(tr("Gespeichert: %1").arg(path), 5000);
     updateActions();

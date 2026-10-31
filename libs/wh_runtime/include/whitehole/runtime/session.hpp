@@ -103,6 +103,10 @@ public:
     /// es ab). Wirkt auf Ausgabe und latestColors(); die Zeit des Testbilds beginnt mit dem Aufruf.
     /// Thread-sicher.
     void setTestPattern(TestPattern pattern);
+    /// Gesamthelligkeit (0..1, multipliziert RGB aller LEDs vor dem Gamma der Ausgabe) und Blackout (alles
+    /// aus, die Pakete laufen weiter). Wirkt ab dem nächsten Frame auf Ausgabe und latestColors(), auch auf
+    /// ein Testbild. Thread-sicher.
+    void setOutputLevel(float master, bool blackout);
     [[nodiscard]] SessionStats stats() const;
     [[nodiscard]] std::optional<Error> lastOutputError() const;
     /// Fehler der Abtast-Stage (Graph nicht übersetzbar, Frame fehlgeschlagen).

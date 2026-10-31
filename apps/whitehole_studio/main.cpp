@@ -117,7 +117,9 @@ int main(int argc, char** argv) {
         std::printf("Neues Projekt: %s\n", created.isEmpty() ? "ok" : "FEHLER");
         const QString transparency = created.isEmpty() ? window.exerciseTransparency() : QString{};
         std::printf("Transparent: %s\n", transparency.isEmpty() ? "ok" : "FEHLER");
-        for (const QString& failure : {selection, created, transparency}) {
+        const QString controls = transparency.isEmpty() ? window.exerciseControls() : QString{};
+        std::printf("Master/Blackout: %s\n", controls.isEmpty() ? "ok" : "FEHLER");
+        for (const QString& failure : {selection, created, transparency, controls}) {
             if (!failure.isEmpty()) {
                 std::fprintf(stderr, "Rauchtest fehlgeschlagen: %s\n", failure.toUtf8().constData());
                 return 1;

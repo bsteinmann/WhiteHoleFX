@@ -50,6 +50,10 @@ public:
     /// Setzt den Region-Node, dessen Rechteck die Vorschau zeigt und bearbeitbar macht (nullopt: keiner).
     void setRegionNode(std::optional<NodeId> node);
 
+    /// Text über die LED unter dem Bildpunkt (Fixture, Nummer am Kabel, Adresse, Farbe); leer, wenn dort
+    /// keine LED näher als `maxDistance` Pixel liegt. Der Tooltip beim Überfahren zeigt diesen Text.
+    [[nodiscard]] QString ledText(QPointF position, float maxDistance = 10.0F) const;
+
     /// Rauchtest für die CI: Fixture ziehen, Gummiband, Pfeiltaste, Rechteck eines Region-Nodes ziehen
     /// und verschieben. Leer bei Erfolg.
     QString exercise();
@@ -67,6 +71,7 @@ private:
     void onDragged(QPointF position);
     void onReleased(QPointF position);
     void onNudged(int dx, int dy, Qt::KeyboardModifiers modifiers);
+    void onHover(QPointF position);
     bool pressRegion(QPointF position);
     void applyDrag(QPointF position, bool force);
     void finish();
@@ -99,6 +104,7 @@ private:
     mapping::Region regionStart_;
     mapping::RegionHandle handle_{mapping::RegionHandle::Move};
     QElapsedTimer throttle_;
+    QElapsedTimer hoverThrottle_;
 };
 
 }  // namespace whitehole::studio

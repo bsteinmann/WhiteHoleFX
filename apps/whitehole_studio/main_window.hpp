@@ -22,6 +22,7 @@ class QAction;
 class QDockWidget;
 class QLabel;
 class QMenu;
+class QSlider;
 
 namespace whitehole::studio {
 
@@ -68,6 +69,8 @@ public:
     QString exerciseNewProject();
     /// Rauchtest: das Kästchen "Transparent" einer Farbe setzt Alpha auf 0 und wieder auf 1.
     QString exerciseTransparency();
+    /// Rauchtest: Master-Regler und Blackout-Schalter erreichen den Player; danach ist alles zurückgesetzt.
+    QString exerciseControls();
 
 protected:
     void dragEnterEvent(QDragEnterEvent* event) override;
@@ -101,6 +104,15 @@ private:
     void refreshParameters();
     /// Ein Node im Editor wurde angeklickt: Parameterfenster zeigt seine Parameter.
     void onNodeSelected();
+    /// Master-Regler, Blackout-Schalter und die Liste "Zuletzt geöffnet" (main_window_controls.cpp).
+    void buildControls();
+    void onMaster(int percent);
+    void onBlackout(bool on);
+    /// Banner oben rechts in der Vorschau: BLACKOUT und/oder TESTMODUS.
+    void updateBanner();
+    void fillRecentMenu();
+    void rememberRecent(const QString& path);
+    void forgetRecent(const QString& path);
     /// Ein Testbild wurde ein- oder ausgeschaltet: Banner in der Vorschau und Statuszeile anpassen.
     void onTestPatternChanged();
     void onTogglePlayback(bool run);
@@ -137,6 +149,10 @@ private:
     QAction* runAction_{nullptr};
     QAction* sendAction_{nullptr};
     QAction* quitAction_{nullptr};
+    QAction* blackoutAction_{nullptr};
+    QSlider* masterSlider_{nullptr};
+    QLabel* masterLabel_{nullptr};
+    QMenu* recentMenu_{nullptr};
 };
 
 }  // namespace whitehole::studio

@@ -193,8 +193,7 @@ void MainWindow::onNodeSelected() {
 }
 
 void MainWindow::onTestPatternChanged() {
-    const QString description = testPanel_->description();
-    preview_->setBanner(description.isEmpty() ? QString{} : tr("TESTMODUS: %1").arg(description));
+    updateBanner();
     updateStatus();
     refreshImage();
 }
@@ -272,6 +271,11 @@ void MainWindow::updateStatus() {
     }
     if (player_->testPattern() != nullptr) {
         text += tr("   |   TESTMODUS");
+    }
+    if (player_->blackout()) {
+        text += tr("   |   BLACKOUT");
+    } else if (player_->masterBrightness() < 1.0F) {
+        text += tr("   |   Master %1 %").arg(std::lround(player_->masterBrightness() * 100.0F));
     }
     text += gate_->enabled() ? tr("   |   AUSGABE AN") : tr("   |   Ausgabe aus (%1 Pakete nicht gesendet)").arg(gate_->suppressed());
     statusLabel_->setText(text);

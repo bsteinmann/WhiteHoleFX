@@ -29,6 +29,7 @@ void drawFrame(QPainter& painter, const QRectF& rect, const QColor& color, Qt::P
 PreviewWidget::PreviewWidget(QWidget* parent) : QWidget{parent} {
     setAutoFillBackground(false);
     setFocusPolicy(Qt::ClickFocus);
+    setMouseTracking(true);  // hovered() auch ohne gedrückte Taste
 }
 
 void PreviewWidget::setImage(const QImage& image) {
@@ -123,7 +124,14 @@ void PreviewWidget::mouseMoveEvent(QMouseEvent* event) {
         const QPointF p{std::clamp(event->position().x(), 0.0, static_cast<qreal>(width())),
                         std::clamp(event->position().y(), 0.0, static_cast<qreal>(height()))};
         Q_EMIT mouseDragged(p);
+        return;
     }
+    Q_EMIT hovered(event->position());
+}
+
+void PreviewWidget::leaveEvent(QEvent* event) {
+    QWidget::leaveEvent(event);
+    Q_EMIT hoverEnded();
 }
 
 void PreviewWidget::mouseReleaseEvent(QMouseEvent* event) {

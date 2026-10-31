@@ -177,6 +177,22 @@ gewählt ist. Die Regler Left, Top, Width und Height im Parameter-Panel ziehen m
 Ziehens bleibt der Bildausschnitt stehen, danach passt er sich wieder an. Jede Ziehbewegung ist ein
 Schritt für Rückgängig.
 
+## Master, Blackout, LED-Info, Zuletzt geöffnet
+
+- **Master:** Der Regler „Master“ in der Leiste „Betrieb“ ist die Gesamthelligkeit von 0 bis 100 %. Er
+  multipliziert die Farben aller LEDs vor dem Gamma der Ausgabe und wirkt auf Vorschau und Ausgabe,
+  auch auf Testbilder. Der Wert gehört zum Betrieb, nicht zum Projekt: nicht gespeichert, nicht im
+  Undo, er bleibt beim Laden eines anderen Projekts stehen. Für eine feste Helligkeit im Projekt gibt
+  es `brightness` am Ausgangs-Node und am Patch.
+- **Blackout** (Strg+B, auch Menü Wiedergabe): alle LEDs aus. Die Pakete laufen weiter, die Controller
+  bleiben also verbunden und der Effekt läuft unsichtbar weiter. Blackout gewinnt gegen Master und
+  Testbild. Ein rotes Banner „BLACKOUT“ in der Vorschau und die Statuszeile zeigen ihn an.
+- **LED-Info:** Fährt man mit der Maus über eine LED der Vorschau (ohne Taste), erscheint ein Tooltip:
+  Fixture, die wievielte LED am Kabel, Position, Ziel mit Universe und Kanal (bei DDP Byte-Bereich) und
+  die aktuelle Farbe. Nicht gepatchte Fixtures sind als solche markiert.
+- **Zuletzt geöffnet:** Menü Datei, die letzten zehn Projekte (auch nach „Speichern unter“). Eine Datei,
+  die es nicht mehr gibt, fliegt beim Versuch, sie zu öffnen, aus der Liste; „Liste leeren“ löscht alles.
+
 ## Node-Presets
 
 Eine Kombination von Nodes, die sich bewährt hat, lässt sich als Preset merken:

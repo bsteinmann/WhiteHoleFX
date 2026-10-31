@@ -32,6 +32,7 @@
 #include "whitehole/output/packet_sink.hpp"
 #include "whitehole/preview/preview.hpp"
 #include "whitehole/project/project.hpp"
+#include "whitehole/runtime/led_info.hpp"
 #include "whitehole/runtime/node_clipboard.hpp"
 #include "whitehole/runtime/session.hpp"
 
@@ -232,6 +233,23 @@ public:
         return testPattern_.active() ? &testPattern_ : nullptr;
     }
 
+    // --- Master und Blackout -------------------------------------------------------------------------
+    // Pulte für den Betrieb, nicht Teil des Projekts: nicht gespeichert, nicht im Undo, bleiben beim
+    // Laden eines anderen Projekts erhalten. Wirken in Vorschau und Ausgabe, auch auf Testbilder.
+
+    /// Gesamthelligkeit 0..1 (außerhalb oder nicht endlich wird begrenzt bzw. auf 1 gesetzt). Liefert den Wert.
+    float setMasterBrightness(float master);
+    [[nodiscard]] float masterBrightness() const noexcept { return master_; }
+    /// Blackout: alle LEDs aus, die Pakete laufen weiter (Controller bleiben verbunden).
+    void setBlackout(bool on);
+    [[nodiscard]] bool blackout() const noexcept { return blackout_; }
+
+    /// Die LED unter einem Bildpunkt der Vorschau (`frame` ist der Ausschnitt des gezeichneten Bildes)
+    /// samt Fixture, Nummer am Kabel, Adresse und Farbe. Leer, wenn keine LED näher als `maxDistance`
+    /// Pixel liegt oder nichts geladen ist.
+    [[nodiscard]] std::optional<LedInfo> ledInfoAt(const preview::ViewFrame& frame, float pixelX, float pixelY,
+                                                   float maxDistance = 10.0F) const;
+
     /// Bild der LEDs: während des Laufs mit den Farben des letzten Frames (schwarz, solange noch
     /// keiner da ist), sonst das Layout. Fehler: InvalidArgument, wenn nichts geladen ist.
     [[nodiscard]] Result<preview::Image> image(const preview::PreviewOptions& options) const;
@@ -270,6 +288,8 @@ private:
     std::vector<Snapshot> redo_;
     std::string lastEditKey_;  // zum Zusammenfassen gleichartiger Änderungen
     TestPattern testPattern_;  // Art Off = kein Testbild
+    float master_{1.0F};
+    bool blackout_{false};
 };
 
 }  // namespace whitehole::runtime

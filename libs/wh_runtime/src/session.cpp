@@ -2,6 +2,7 @@
 #include "whitehole/runtime/session.hpp"
 
 #include <algorithm>
+#include <atomic>
 #include <chrono>
 #include <cstring>
 #include <mutex>
@@ -45,14 +46,34 @@ public:
                 pattern = pattern_;
                 since = since_;
             }
+            const float level = blackout_.load() ? 0.0F : master_.load();
+            std::vector<ColorRgba> colors;
+            bool changed = false;
+            const auto load = [&]() {
+                if (colors.empty()) {
+                    colors.resize(ledCount_);
+                    std::memcpy(colors.data(), frame.bytes.data(), ledCount_ * sizeof(ColorRgba));
+                }
+            };
             if (pattern.active()) {
                 const double seconds = std::chrono::duration<double>(std::chrono::steady_clock::now() - since).count();
-                const std::vector<ColorRgba> colors = renderTestPattern(pattern, map_, seconds);
+                colors = renderTestPattern(pattern, map_, seconds);
+                changed = true;
+            }
+            if (level != 1.0F) {
+                load();
+                for (ColorRgba& c : colors) {
+                    c.r *= level;
+                    c.g *= level;
+                    c.b *= level;
+                }
+                changed = true;
+            }
+            if (changed) {
                 std::memcpy(frame.bytes.data(), colors.data(), ledCount_ * sizeof(ColorRgba));
             }
             if (keepLatest_) {
-                std::vector<ColorRgba> colors(ledCount_);
-                std::memcpy(colors.data(), frame.bytes.data(), ledCount_ * sizeof(ColorRgba));
+                load();
                 const std::lock_guard<std::mutex> lock{mutex_};
                 latest_ = std::move(colors);
             }
@@ -63,6 +84,11 @@ public:
     std::vector<ColorRgba> latest() const {
         const std::lock_guard<std::mutex> lock{mutex_};
         return latest_;
+    }
+
+    void setLevel(float master, bool blackout) {
+        master_.store(master);
+        blackout_.store(blackout);
     }
 
     void setPattern(TestPattern pattern) {
@@ -76,6 +102,8 @@ private:
     mapping::LedMap map_;
     std::size_t ledCount_;
     bool keepLatest_;
+    std::atomic<float> master_{1.0F};
+    std::atomic<bool> blackout_{false};
     mutable std::mutex mutex_;
     std::vector<ColorRgba> latest_;
     TestPattern pattern_;
@@ -200,6 +228,8 @@ SessionStats Session::stats() const {
 std::vector<ColorRgba> Session::latestColors() const { return tap_->latest(); }
 
 void Session::setTestPattern(TestPattern pattern) { tap_->setPattern(std::move(pattern)); }
+
+void Session::setOutputLevel(float master, bool blackout) { tap_->setLevel(master, blackout); }
 
 std::optional<Error> Session::lastOutputError() const {
     if (const auto frameError = worker_->lastFrameError()) {

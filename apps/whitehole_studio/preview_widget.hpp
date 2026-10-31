@@ -46,6 +46,9 @@ Q_SIGNALS:
     void mouseReleased(QPointF position);
     /// Pfeiltaste: `dx` nach rechts, `dy` nach oben (je -1, 0 oder 1).
     void nudged(int dx, int dy, Qt::KeyboardModifiers modifiers);
+    /// Die Maus bewegt sich über der Vorschau (ohne gedrückte Taste); `hoverEnded`, wenn sie sie verlässt.
+    void hovered(QPointF position);
+    void hoverEnded();
 
 protected:
     void paintEvent(QPaintEvent* event) override;
@@ -54,6 +57,7 @@ protected:
     void mouseMoveEvent(QMouseEvent* event) override;
     void mouseReleaseEvent(QMouseEvent* event) override;
     void keyPressEvent(QKeyEvent* event) override;
+    void leaveEvent(QEvent* event) override;
 
 private:
     QImage image_;

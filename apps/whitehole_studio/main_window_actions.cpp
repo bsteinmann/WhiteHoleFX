@@ -66,6 +66,8 @@ void MainWindow::buildActions() {
     file->addAction(saveAction_);
     file->addAction(saveAsAction_);
     fillExamplesMenu(file->addMenu(tr("&Beispiele")));
+    recentMenu_ = file->addMenu(tr("&Zuletzt geöffnet"));
+    connect(recentMenu_, &QMenu::aboutToShow, this, &MainWindow::fillRecentMenu);
     file->addSeparator();
     file->addAction(quitAction_);
 
@@ -90,6 +92,9 @@ void MainWindow::buildActions() {
     bar->addAction(saveAction_);
     bar->addAction(runAction_);
     bar->addAction(sendAction_);
+
+    buildControls();  // Master und Blackout in einer zweiten Leiste
+    run->addAction(blackoutAction_);
 }
 
 void MainWindow::fillExamplesMenu(QMenu* menu) {

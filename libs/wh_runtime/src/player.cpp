@@ -82,6 +82,21 @@ Result<void> Player::setTestPattern(TestPattern pattern) {
     return {};
 }
 
+float Player::setMasterBrightness(float master) {
+    master_ = std::isfinite(master) ? std::clamp(master, 0.0F, 1.0F) : 1.0F;
+    if (session_) {
+        session_->setOutputLevel(master_, blackout_);
+    }
+    return master_;
+}
+
+void Player::setBlackout(bool on) {
+    blackout_ = on;
+    if (session_) {
+        session_->setOutputLevel(master_, blackout_);
+    }
+}
+
 void Player::clearTestPattern() {
     testPattern_ = TestPattern{};
     if (session_) {
@@ -113,6 +128,7 @@ Result<void> Player::start() {
     if (testPattern_.active()) {
         session_->setTestPattern(testPattern_);
     }
+    session_->setOutputLevel(master_, blackout_);
     stepError_.reset();
     graphDirty_ = false;
     rebuildDirty_ = false;
@@ -249,6 +265,19 @@ Result<void> Player::save(const std::string& path) {
     path_ = path;
     modified_ = false;
     return {};
+}
+
+std::optional<LedInfo> Player::ledInfoAt(const preview::ViewFrame& frame, float pixelX, float pixelY,
+                                         float maxDistance) const {
+    if (!project_) {
+        return std::nullopt;
+    }
+    const std::optional<std::uint32_t> led = ledAtPixel(map_, frame, pixelX, pixelY, maxDistance);
+    if (!led) {
+        return std::nullopt;
+    }
+    const std::vector<ColorRgba> colors = session_ ? session_->latestColors() : std::vector<ColorRgba>{};
+    return describeLed(*project_, map_, *led, colors);
 }
 
 Result<preview::Image> Player::image(const preview::PreviewOptions& given) const {

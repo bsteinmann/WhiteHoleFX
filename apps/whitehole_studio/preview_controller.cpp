@@ -2,6 +2,7 @@
 #include "preview_controller.hpp"
 
 #include <QLineF>
+#include <QToolTip>
 
 #include <algorithm>
 #include <cmath>
@@ -16,6 +17,7 @@ namespace {
 
 constexpr qreal kMinDragPixels = 3.0;     // darunter gilt eine Bewegung als Wackeln beim Klicken
 constexpr qreal kHandlePixels = 10.0;     // Reichweite der Eckgriffe des Bereichs
+constexpr qint64 kHoverMs = 60;           // höchstens so oft wird beim Überfahren nach einer LED gesucht
 constexpr qint64 kThrottleMs = 30;        // höchstens so oft wird während des Ziehens geändert
 
 float snapTenth(qreal value) { return static_cast<float>(std::round(value * 10.0) / 10.0); }
@@ -35,7 +37,35 @@ PreviewController::PreviewController(runtime::Player& player, PreviewWidget* wid
     connect(widget_, &PreviewWidget::mouseDragged, this, &PreviewController::onDragged);
     connect(widget_, &PreviewWidget::mouseReleased, this, &PreviewController::onReleased);
     connect(widget_, &PreviewWidget::nudged, this, &PreviewController::onNudged);
+    connect(widget_, &PreviewWidget::hovered, this, &PreviewController::onHover);
+    connect(widget_, &PreviewWidget::hoverEnded, this, []() { QToolTip::hideText(); });
     connect(panel_, &LayoutPanel::selectionChanged, this, [this]() { refreshOverlay(); });
+}
+
+QString PreviewController::ledText(QPointF position, float maxDistance) const {
+    if (!haveFrame_) {
+        return {};
+    }
+    const std::optional<runtime::LedInfo> info =
+        player_.ledInfoAt(lastFrame_, static_cast<float>(position.x()), static_cast<float>(position.y()), maxDistance);
+    return info ? QString::fromUtf8(runtime::formatLedInfo(*info).c_str()) : QString{};
+}
+
+void PreviewController::onHover(QPointF position) {
+    if (mode_ != Mode::Idle) {
+        return;
+    }
+    // Die Suche geht über alle LEDs; bei schnellen Mausbewegungen nicht öfter als nötig.
+    if (hoverThrottle_.isValid() && hoverThrottle_.elapsed() < kHoverMs) {
+        return;
+    }
+    hoverThrottle_.start();
+    const QString text = ledText(position);
+    if (text.isEmpty()) {
+        QToolTip::hideText();
+        return;
+    }
+    QToolTip::showText(widget_->mapToGlobal(position.toPoint()), text, widget_);
 }
 
 void PreviewController::setRegionNode(std::optional<NodeId> node) {
@@ -114,6 +144,7 @@ void PreviewController::report(const Result<void>& result) {
 }
 
 void PreviewController::onPressed(QPointF position, Qt::KeyboardModifiers modifiers) {
+    QToolTip::hideText();
     if (!haveFrame_ || player_.project() == nullptr) {
         return;
     }

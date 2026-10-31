@@ -132,6 +132,19 @@ QString PreviewController::exercise() {
     }
     setRegionNode(std::nullopt);
     select({});
+
+    // 5. LED-Info beim Überfahren: mitten auf dem Fixture gibt es einen Treffer, weit daneben keinen.
+    if (const QString note = render(); !note.isEmpty()) {
+        return note;
+    }
+    const QPointF middle =
+        toQRect(preview::toPixels(lastFrame_, preview::worldBox(*player_.project()->layout.find(id)))).center();
+    if (!ledText(middle, 400.0F).contains(QStringLiteral("LED"))) {
+        return QStringLiteral("Vorschau: Überfahren des Fixtures liefert keine LED-Info");
+    }
+    if (!ledText(QPointF{-5000.0, -5000.0}, 5.0F).isEmpty()) {
+        return QStringLiteral("Vorschau: weit außerhalb darf es keine LED-Info geben");
+    }
     return {};
 }
 
