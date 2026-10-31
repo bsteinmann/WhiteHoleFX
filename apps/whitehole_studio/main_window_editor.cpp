@@ -69,9 +69,16 @@ QString MainWindow::exercisePalette() {
     QMimeData mime;
     mime.setData(QString::fromLatin1(kNodeTypeMime), QByteArray{"wh.generator.solid"});
     QDropEvent drop{QPointF{60.0, 60.0}, Qt::CopyAction, &mime, Qt::LeftButton, Qt::NoModifier};
+    drop.setAccepted(false);
     QApplication::sendEvent(editor_->viewport(), &drop);
     if (editor_->nodeCount() != before + 1) {
-        return tr("Palette: Ablegen hat keinen Node angelegt (%1 -> %2)").arg(before).arg(editor_->nodeCount());
+        return tr("Palette: Ablegen hat keinen Node angelegt (%1 -> %2, angenommen: %3, acceptDrops: %4/%5, Status: \"%6\")")
+            .arg(before)
+            .arg(editor_->nodeCount())
+            .arg(drop.isAccepted())
+            .arg(editor_->acceptDrops())
+            .arg(editor_->viewport()->acceptDrops())
+            .arg(statusBar()->currentMessage());
     }
     if (!editor_->addNodeAtCenter("wh.generator.solid").has_value() || editor_->nodeCount() != before + 2) {
         return tr("Palette: Doppelklick-Weg legt keinen Node an");
