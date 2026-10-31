@@ -35,7 +35,9 @@ add_executable(whitehole_studio
     preview_controller_exercise.cpp
     preview_controller.hpp
     preview_widget.cpp
-    preview_widget.hpp)
+    preview_widget.hpp
+    test_panel.cpp
+    test_panel.hpp)
 target_link_libraries(whitehole_studio PRIVATE
     Qt6::Widgets
     whitehole::nodes

@@ -32,6 +32,8 @@ public:
     void setImage(const QImage& image);
     void setMessage(const QString& message);
     void setOverlay(const PreviewOverlay& overlay);
+    /// Auffälliger Hinweis oben rechts (z. B. "TESTMODUS"); leer = keiner.
+    void setBanner(const QString& banner);
 
     [[nodiscard]] QSize sizeHint() const override { return {960, 540}; }
     [[nodiscard]] QSize minimumSizeHint() const override { return {160, 90}; }
@@ -56,6 +58,7 @@ protected:
 private:
     QImage image_;
     QString message_;
+    QString banner_;
     PreviewOverlay overlay_;
     bool dragging_{false};
 };

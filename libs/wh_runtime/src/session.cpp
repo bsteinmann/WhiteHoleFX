@@ -2,6 +2,7 @@
 #include "whitehole/runtime/session.hpp"
 
 #include <algorithm>
+#include <chrono>
 #include <cstring>
 #include <mutex>
 #include <thread>
@@ -28,17 +29,33 @@ std::array<std::uint8_t, 16> senderId(const std::string& sourceName) {
 
 }  // namespace
 
-/// Reicht Frames an den Ausgabe-Thread weiter und behält die Farben des letzten.
+/// Reicht Frames an den Ausgabe-Thread weiter. Zwei Aufgaben davor: ein aktives Testbild ersetzt
+/// die Farben des Effekts, und auf Wunsch merkt sich die Klasse die Farben des letzten Frames.
 class Session::ColorTap final : public engine::IFrameSink {
 public:
-    ColorTap(engine::IFrameSink& next, std::size_t ledCount) : next_{next}, ledCount_{ledCount} {}
+    ColorTap(engine::IFrameSink& next, mapping::LedMap map, bool keepLatest)
+        : next_{next}, map_{std::move(map)}, ledCount_{map_.size()}, keepLatest_{keepLatest} {}
 
     void publish(engine::PixelFrame frame) override {
         if (frame.bytes.size() >= ledCount_ * sizeof(ColorRgba)) {
-            std::vector<ColorRgba> colors(ledCount_);
-            std::memcpy(colors.data(), frame.bytes.data(), ledCount_ * sizeof(ColorRgba));
-            const std::lock_guard<std::mutex> lock{mutex_};
-            latest_ = std::move(colors);
+            TestPattern pattern;
+            std::chrono::steady_clock::time_point since;
+            {
+                const std::lock_guard<std::mutex> lock{mutex_};
+                pattern = pattern_;
+                since = since_;
+            }
+            if (pattern.active()) {
+                const double seconds = std::chrono::duration<double>(std::chrono::steady_clock::now() - since).count();
+                const std::vector<ColorRgba> colors = renderTestPattern(pattern, map_, seconds);
+                std::memcpy(frame.bytes.data(), colors.data(), ledCount_ * sizeof(ColorRgba));
+            }
+            if (keepLatest_) {
+                std::vector<ColorRgba> colors(ledCount_);
+                std::memcpy(colors.data(), frame.bytes.data(), ledCount_ * sizeof(ColorRgba));
+                const std::lock_guard<std::mutex> lock{mutex_};
+                latest_ = std::move(colors);
+            }
         }
         next_.publish(std::move(frame));
     }
@@ -48,11 +65,21 @@ public:
         return latest_;
     }
 
+    void setPattern(TestPattern pattern) {
+        const std::lock_guard<std::mutex> lock{mutex_};
+        pattern_ = std::move(pattern);
+        since_ = std::chrono::steady_clock::now();
+    }
+
 private:
     engine::IFrameSink& next_;
+    mapping::LedMap map_;
     std::size_t ledCount_;
+    bool keepLatest_;
     mutable std::mutex mutex_;
     std::vector<ColorRgba> latest_;
+    TestPattern pattern_;
+    std::chrono::steady_clock::time_point since_{std::chrono::steady_clock::now()};
 };
 
 Result<OutputParts> buildOutput(const project::Project& project, output::IPacketSink& sink) {
@@ -111,13 +138,8 @@ Result<std::unique_ptr<Session>> Session::create(const project::Project& project
     }
 
     auto worker = std::make_unique<output::OutputWorker>(std::move(parts.value().pipeline));
-    std::unique_ptr<ColorTap> tap;
-    engine::IFrameSink* sink = &worker->sink();
-    if (options.keepLatestColors) {
-        tap = std::make_unique<ColorTap>(worker->sink(), map.world.size());
-        sink = tap.get();
-    }
-    auto ring = engine::ReadbackRing::create(deps.device, *sink, options.readbackSlots, stage->outputSizeBytes());
+    auto tap = std::make_unique<ColorTap>(worker->sink(), map, options.keepLatestColors);
+    auto ring = engine::ReadbackRing::create(deps.device, *tap, options.readbackSlots, stage->outputSizeBytes());
     if (!ring.ok()) {
         return ring.error();
     }
@@ -175,7 +197,9 @@ SessionStats Session::stats() const {
     return s;
 }
 
-std::vector<ColorRgba> Session::latestColors() const { return tap_ ? tap_->latest() : std::vector<ColorRgba>{}; }
+std::vector<ColorRgba> Session::latestColors() const { return tap_->latest(); }
+
+void Session::setTestPattern(TestPattern pattern) { tap_->setPattern(std::move(pattern)); }
 
 std::optional<Error> Session::lastOutputError() const {
     if (const auto frameError = worker_->lastFrameError()) {

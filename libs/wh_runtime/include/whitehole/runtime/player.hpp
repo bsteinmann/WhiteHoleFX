@@ -215,6 +215,20 @@ public:
     /// sich den Pfad. Kommentare einer von Hand geschriebenen Datei gehen dabei verloren.
     Result<void> save(const std::string& path);
 
+    // --- Testbild ------------------------------------------------------------------------------------
+    // Ersetzt die Farben des Effekts durch ein Testbild (Farbe, Auswahl, Laufbalken ...). Gehört nicht
+    // zum Projekt: wird nicht gespeichert, nicht rückgängig gemacht und beim Laden eines anderen
+    // Projekts verworfen. Es wirkt in Vorschau und Ausgabe; Pakete gehen nur raus, solange der Sink
+    // sendet. Ohne laufende Session wird das Bild gemerkt und beim Start angewendet.
+
+    /// Fehler: InvalidArgument (kein Projekt, Farbe nicht endlich). Art Off entspricht clearTestPattern().
+    Result<void> setTestPattern(TestPattern pattern);
+    void clearTestPattern();
+    /// Das aktive Testbild oder nullptr.
+    [[nodiscard]] const TestPattern* testPattern() const noexcept {
+        return testPattern_.active() ? &testPattern_ : nullptr;
+    }
+
     /// Bild der LEDs: während des Laufs mit den Farben des letzten Frames (schwarz, solange noch
     /// keiner da ist), sonst das Layout. Fehler: InvalidArgument, wenn nichts geladen ist.
     [[nodiscard]] Result<preview::Image> image(const preview::PreviewOptions& options) const;
@@ -252,6 +266,7 @@ private:
     std::vector<Snapshot> undo_;
     std::vector<Snapshot> redo_;
     std::string lastEditKey_;  // zum Zusammenfassen gleichartiger Änderungen
+    TestPattern testPattern_;  // Art Off = kein Testbild
 };
 
 }  // namespace whitehole::runtime

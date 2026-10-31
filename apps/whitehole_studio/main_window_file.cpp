@@ -54,6 +54,7 @@ void MainWindow::afterLoad(const QString& message) {
     editor_->reset();  // zuerst: setzt die Auswahl zurück, die refreshParameters abfragt
     refreshParameters();
     layoutPanel_->rebuild();
+    testPanel_->reset();  // der Player hat das Testbild beim Laden schon verworfen
     updateTitle();
     statusBar()->showMessage(message, 5000);
     updateActions();

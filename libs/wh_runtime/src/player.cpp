@@ -1,6 +1,8 @@
 // player.cpp: Zustandsführung für Oberflächen.
 #include "whitehole/runtime/player.hpp"
 
+#include <algorithm>
+#include <cmath>
 #include <unordered_map>
 
 #include "whitehole/output/packet_sink.hpp"
@@ -58,7 +60,33 @@ Result<void> Player::adopt(project::Project project, std::string path) {
     undo_.clear();
     redo_.clear();
     lastEditKey_.clear();
+    testPattern_ = TestPattern{};
     return {};
+}
+
+Result<void> Player::setTestPattern(TestPattern pattern) {
+    if (!project_) {
+        return Error{ErrorCode::InvalidArgument, "Es ist kein Projekt geladen"};
+    }
+    if (!std::isfinite(pattern.color.r) || !std::isfinite(pattern.color.g) || !std::isfinite(pattern.color.b)) {
+        return Error{ErrorCode::InvalidArgument, "Die Testfarbe ist keine Zahl"};
+    }
+    pattern.color.r = std::clamp(pattern.color.r, 0.0F, 1.0F);
+    pattern.color.g = std::clamp(pattern.color.g, 0.0F, 1.0F);
+    pattern.color.b = std::clamp(pattern.color.b, 0.0F, 1.0F);
+    pattern.color.a = 1.0F;
+    testPattern_ = std::move(pattern);
+    if (session_) {
+        session_->setTestPattern(testPattern_);
+    }
+    return {};
+}
+
+void Player::clearTestPattern() {
+    testPattern_ = TestPattern{};
+    if (session_) {
+        session_->setTestPattern(TestPattern{});
+    }
 }
 
 Result<void> Player::start() {
@@ -82,6 +110,9 @@ Result<void> Player::start() {
     }
     clock_ = std::move(clock);
     session_ = std::move(session).value();
+    if (testPattern_.active()) {
+        session_->setTestPattern(testPattern_);
+    }
     stepError_.reset();
     graphDirty_ = false;
     rebuildDirty_ = false;

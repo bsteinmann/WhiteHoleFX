@@ -32,6 +32,7 @@
 #include "whitehole/output/output_pipeline.hpp"
 #include "whitehole/output/output_worker.hpp"
 #include "whitehole/project/project.hpp"
+#include "whitehole/runtime/test_pattern.hpp"
 #include "whitehole/values/cpu_kernel.hpp"
 
 namespace whitehole::runtime {
@@ -98,6 +99,10 @@ public:
     /// Farben des zuletzt gelieferten Frames (linear, eine je LED). Leer, solange noch kein Frame
     /// angekommen ist oder `keepLatestColors` aus war. Thread-sicher.
     [[nodiscard]] std::vector<ColorRgba> latestColors() const;
+    /// Ersetzt ab dem nächsten Frame die Farben des Effekts durch ein Testbild (Art Off schaltet
+    /// es ab). Wirkt auf Ausgabe und latestColors(); die Zeit des Testbilds beginnt mit dem Aufruf.
+    /// Thread-sicher.
+    void setTestPattern(TestPattern pattern);
     [[nodiscard]] SessionStats stats() const;
     [[nodiscard]] std::optional<Error> lastOutputError() const;
     /// Fehler der Abtast-Stage (Graph nicht übersetzbar, Frame fehlgeschlagen).

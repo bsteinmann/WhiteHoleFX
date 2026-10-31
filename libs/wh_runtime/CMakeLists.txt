@@ -13,6 +13,7 @@ wh_add_library(wh_runtime
         src/player_undo.cpp
         src/session.cpp
         src/summary.cpp
+        src/test_pattern.cpp
     PUBLIC_DEPS
         wh_core
         wh_engine

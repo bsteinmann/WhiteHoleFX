@@ -61,7 +61,8 @@ add_executable(wh_tests
     runtime/node_clipboard_test.cpp
     runtime/player_edit_test.cpp
     runtime/player_test.cpp
-    runtime/session_test.cpp)
+    runtime/session_test.cpp
+    runtime/test_pattern_test.cpp)
 
 target_include_directories(wh_tests PRIVATE support)
 

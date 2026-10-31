@@ -2,6 +2,8 @@
 
 #include <QKeyEvent>
 #include <QMouseEvent>
+#include <QFont>
+#include <QFontMetrics>
 #include <QPainter>
 #include <QResizeEvent>
 
@@ -44,6 +46,11 @@ void PreviewWidget::setOverlay(const PreviewOverlay& overlay) {
     update();
 }
 
+void PreviewWidget::setBanner(const QString& banner) {
+    banner_ = banner;
+    update();
+}
+
 void PreviewWidget::paintEvent(QPaintEvent*) {
     QPainter painter{this};
     painter.fillRect(rect(), QColor{14, 14, 18});
@@ -73,6 +80,20 @@ void PreviewWidget::paintEvent(QPaintEvent*) {
     if (!overlay_.rubberBand.isEmpty()) {
         painter.fillRect(overlay_.rubberBand, QColor{80, 200, 255, 40});
         drawFrame(painter, overlay_.rubberBand, QColor{80, 200, 255}, Qt::SolidLine, 1.0);
+    }
+    if (!banner_.isEmpty()) {
+        QFont font = painter.font();
+        font.setBold(true);
+        font.setPointSizeF(font.pointSizeF() * 1.3);
+        painter.setFont(font);
+        const QFontMetrics metrics{font};
+        const QRect text = metrics.boundingRect(banner_).adjusted(-12, -6, 12, 6);
+        const QRect box{width() - text.width() - 12, 12, text.width(), text.height()};
+        painter.setPen(Qt::NoPen);
+        painter.setBrush(QColor{200, 30, 30});
+        painter.drawRoundedRect(box, 6, 6);
+        painter.setPen(Qt::white);
+        painter.drawText(box, Qt::AlignCenter, banner_);
     }
     if (!message_.isEmpty()) {
         painter.setPen(QColor{200, 200, 205});

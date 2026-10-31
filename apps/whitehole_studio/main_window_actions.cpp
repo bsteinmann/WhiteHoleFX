@@ -77,6 +77,7 @@ void MainWindow::buildActions() {
     view->addAction(editorDock_->toggleViewAction());
     view->addAction(dock_->toggleViewAction());
     view->addAction(layoutDock_->toggleViewAction());
+    view->addAction(testDock_->toggleViewAction());
 
     QMenu* run = menuBar()->addMenu(tr("&Wiedergabe"));
     run->addAction(runAction_);

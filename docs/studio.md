@@ -177,6 +177,28 @@ gewählt ist. Die Regler Left, Top, Width und Height im Parameter-Panel ziehen m
 Ziehens bleibt der Bildausschnitt stehen, danach passt er sich wieder an. Jede Ziehbewegung ist ein
 Schritt für Rückgängig.
 
+## Testmodus
+
+Das Dock „Testmodus“ (rechts, teilt sich den Platz mit Layout und Parameter) ersetzt die Farben des
+Effekts durch ein Testbild, um eine Wand in Betrieb zu nehmen. Die Wiedergabe muss laufen. Das Bild
+erscheint in der Vorschau und, wenn „Ausgabe senden“ an ist, auf den LEDs; ohne „Ausgabe senden“
+bleibt es bei der Vorschau. Solange ein Testbild aktiv ist, steht oben rechts in der Vorschau ein rotes
+Banner „TESTMODUS“ und in der Statuszeile „TESTMODUS“. Das Testbild gehört nicht zum Projekt: Es wird
+nicht gespeichert, nicht rückgängig gemacht und beim Öffnen eines anderen Projekts abgeschaltet.
+
+| Testbild | Zeigt | Prüft |
+|---|---|---|
+| Farbe | alle LEDs in Weiß, Rot, Grün, Blau, Gelb, Cyan oder Magenta | Netzteile, Farbtreue |
+| Auswahl hervorheben | die in der Layout-Liste (oder per Klick in der Vorschau) gewählten Fixtures zu 100 % Weiß, der Rest aus | welches Fixture ist welches |
+| Laufbalken | ein Balken läuft entlang x, y oder z | Lage und Ausrichtung im Raum |
+| Farbreihenfolge | Rot, Grün, Blau, Weiß nacheinander | stimmt die Farbreihenfolge des Patches? Zeigt die Wand etwas anderes als die Vorschau, ist sie falsch eingestellt |
+| Lauflicht | ein Lichtpunkt mit Schweif läuft je Fixture in Kabelreihenfolge | Richtung des Kabels, defekte oder vertauschte Abschnitte |
+
+„Nur auf gewählten Fixtures“ beschränkt Farbe, Laufbalken, Farbreihenfolge und Lauflicht auf die
+Auswahl; ohne Auswahl leuchtet dann nichts. „Testmodus beenden“ (oder die Art „Aus“) stellt den
+Effekt wieder her. Achtung: Weiß und Farbe leuchten mit voller Helligkeit; vorher prüfen, ob die
+Netzteile die ganze Wand auf 100 % tragen.
+
 ## Rückgängig und Wiederholen
 
 Menü Bearbeiten, Strg+Z und Strg+Umschalt+Z (Windows auch Strg+Y). Zurückgenommen werden

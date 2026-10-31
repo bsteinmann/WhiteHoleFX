@@ -1,5 +1,15 @@
 # Änderungen
 
+## 0.9.0
+
+- **Testmodus** (Dock „Testmodus“): Testbilder ersetzen den Effekt zur Inbetriebnahme: Farbe,
+  Auswahl hervorheben (100 % Weiß), Laufbalken entlang x/y/z, Farbreihenfolge (R, G, B, W) und
+  Lauflicht in Kabelreihenfolge. Sie gehen nur raus, wenn „Ausgabe senden“ an ist; ein rotes Banner
+  „TESTMODUS“ in der Vorschau und die Statuszeile zeigen den Modus an. Das Testbild gehört nicht zum
+  Projekt (nicht gespeichert, nicht im Undo)
+- Neu in `wh_runtime`: `renderTestPattern` (reine Rechnung, ohne GPU getestet), `Session::setTestPattern`,
+  `Player::setTestPattern` / `clearTestPattern`
+
 ## 0.8.0
 
 - **Ausgangs-Node „Output“** (`wh.output.canvas`): der Ausgang als Node; bespielt die ganze Leinwand

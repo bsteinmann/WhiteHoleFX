@@ -29,6 +29,7 @@ class NodeEditor;
 class ParameterPanel;
 class PreviewController;
 class PreviewWidget;
+class TestPanel;
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
@@ -99,6 +100,8 @@ private:
     void refreshParameters();
     /// Ein Node im Editor wurde angeklickt: Parameterfenster zeigt seine Parameter.
     void onNodeSelected();
+    /// Ein Testbild wurde ein- oder ausgeschaltet: Banner in der Vorschau und Statuszeile anpassen.
+    void onTestPatternChanged();
     void onTogglePlayback(bool run);
     void onToggleSending(bool send);
 
@@ -116,6 +119,8 @@ private:
     QDockWidget* editorDock_{nullptr};
     LayoutPanel* layoutPanel_{nullptr};
     QDockWidget* layoutDock_{nullptr};
+    TestPanel* testPanel_{nullptr};
+    QDockWidget* testDock_{nullptr};
     QLabel* statusLabel_{nullptr};
     QTimer timer_;
     QTimer statusTimer_;

@@ -33,6 +33,7 @@
 #include "parameter_panel.hpp"
 #include "preview_controller.hpp"
 #include "preview_widget.hpp"
+#include "test_panel.hpp"
 
 namespace whitehole::studio {
 
@@ -94,7 +95,15 @@ MainWindow::MainWindow(gpu::IGpuDevice* device, const QString& deviceNote, QWidg
     layoutDock_ = new QDockWidget{tr("Layout"), this};
     layoutDock_->setWidget(layoutPanel_);
     addDockWidget(Qt::RightDockWidgetArea, layoutDock_);
-    tabifyDockWidget(layoutDock_, dock_);  // Layout und Parameter teilen sich den Platz rechts
+    testPanel_ = new TestPanel{*player_, *layoutPanel_, this};
+    connect(testPanel_, &TestPanel::patternChanged, this, &MainWindow::onTestPatternChanged);
+    connect(testPanel_, &TestPanel::failed, this,
+            [this](const QString& message) { statusBar()->showMessage(message, 8000); });
+    testDock_ = new QDockWidget{tr("Testmodus"), this};
+    testDock_->setWidget(testPanel_);
+    addDockWidget(Qt::RightDockWidgetArea, testDock_);
+    tabifyDockWidget(layoutDock_, dock_);  // Layout, Parameter und Testmodus teilen sich den Platz rechts
+    tabifyDockWidget(dock_, testDock_);
     dock_->raise();
 
     editor_ = new NodeEditor{*player_, this};
@@ -175,6 +184,13 @@ void MainWindow::onNodeSelected() {
     }
 }
 
+void MainWindow::onTestPatternChanged() {
+    const QString description = testPanel_->description();
+    preview_->setBanner(description.isEmpty() ? QString{} : tr("TESTMODUS: %1").arg(description));
+    updateStatus();
+    refreshImage();
+}
+
 void MainWindow::onGraphEdited(bool structural) {
     if (structural) {
         refreshParameters();
@@ -245,6 +261,9 @@ void MainWindow::updateStatus() {
                    .arg(s.framesDropped)
                    .arg(s.packets)
                    .arg(s.sendErrors);
+    }
+    if (player_->testPattern() != nullptr) {
+        text += tr("   |   TESTMODUS");
     }
     text += gate_->enabled() ? tr("   |   AUSGABE AN") : tr("   |   Ausgabe aus (%1 Pakete nicht gesendet)").arg(gate_->suppressed());
     statusLabel_->setText(text);
