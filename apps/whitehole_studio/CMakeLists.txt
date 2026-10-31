@@ -32,11 +32,10 @@ add_executable(whitehole_studio
     parameter_panel.cpp
     parameter_panel.hpp
     preview_controller.cpp
+    preview_controller_exercise.cpp
     preview_controller.hpp
     preview_widget.cpp
-    preview_widget.hpp
-    region_form.cpp
-    region_form.hpp)
+    preview_widget.hpp)
 target_link_libraries(whitehole_studio PRIVATE
     Qt6::Widgets
     whitehole::nodes

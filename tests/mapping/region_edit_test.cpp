@@ -1,4 +1,4 @@
-// Tests: Effektbereich mit der Maus ziehen (Rechnung ohne Oberfläche).
+// Tests: Rechteck des Region-Nodes mit der Maus ziehen (Rechnung ohne Oberfläche).
 #include <catch2/catch_approx.hpp>
 #include <catch2/catch_test_macros.hpp>
 
@@ -7,7 +7,7 @@
 using namespace whitehole::mapping;
 using Catch::Approx;
 
-TEST_CASE("Bereich: Verschieben bleibt in der Wand", "[mapping][region]") {
+TEST_CASE("Bereich: Verschieben bleibt in der Leinwand", "[mapping][region]") {
     const Region start{0.1F, 0.2F, 0.3F, 0.4F};
     const Region moved = dragRegion(start, RegionHandle::Move, 0.1F, 0.1F);
     CHECK(moved.x == Approx(0.2F));
@@ -18,7 +18,6 @@ TEST_CASE("Bereich: Verschieben bleibt in der Wand", "[mapping][region]") {
     const Region far = dragRegion(start, RegionHandle::Move, 5.0F, -5.0F);
     CHECK(far.x == Approx(0.7F));  // rechter Rand 1.0
     CHECK(far.y == Approx(0.0F));
-    CHECK(validateRegion(far).ok());
 }
 
 TEST_CASE("Bereich: Ecken ziehen, die Gegenecke bleibt", "[mapping][region]") {
@@ -53,7 +52,6 @@ TEST_CASE("Bereich: Ecke kann nicht über die Gegenecke hinaus", "[mapping][regi
     CHECK(r.w == Approx(kMinRegionSize));
     CHECK(r.h == Approx(kMinRegionSize));
     CHECK(r.x == Approx(0.2F));
-    CHECK(validateRegion(r).ok());
     const Region l = dragRegion(start, RegionHandle::TopLeft, 0.9F, 0.9F);
     CHECK(l.x + l.w == Approx(0.6F));
     CHECK(l.w == Approx(kMinRegionSize));
@@ -72,16 +70,4 @@ TEST_CASE("Bereich: aus zwei Punkten aufspannen", "[mapping][region]") {
     const Region point = regionFromCorners(1.0F, 1.0F, 1.0F, 1.0F);  // Klick ohne Ziehen
     CHECK(point.w == Approx(kMinRegionSize));
     CHECK(point.x + point.w == Approx(1.0F));
-    CHECK(validateRegion(point).ok());
-}
-
-TEST_CASE("Bereich: Weltbox", "[mapping][region]") {
-    const Box wall{{0.0F, 0.0F, 0.0F}, {10.0F, 4.0F, 2.0F}};
-    const Box b = regionBox(wall, Region{0.5F, 0.25F, 0.5F, 0.5F});
-    CHECK(b.min.x == Approx(5.0F));
-    CHECK(b.max.x == Approx(10.0F));
-    CHECK(b.max.y == Approx(3.0F));  // 25 % von oben
-    CHECK(b.min.y == Approx(1.0F));
-    CHECK(b.min.z == Approx(0.0F));
-    CHECK(b.max.z == Approx(2.0F));
 }

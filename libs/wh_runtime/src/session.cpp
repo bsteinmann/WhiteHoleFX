@@ -62,7 +62,7 @@ Result<OutputParts> buildOutput(const project::Project& project, output::IPacket
     if (project.patches.empty()) {
         return Error{ErrorCode::InvalidArgument, "Kein Fixture ist gepatcht; es gäbe keine Ausgabe"};
     }
-    auto map = project.layout.bake(project.normalize, project.region);
+    auto map = project.layout.bake(project.normalize);
     if (!map.ok()) {
         return map.error();
     }

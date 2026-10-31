@@ -76,7 +76,6 @@ output b.out                          # dieser Ausgang wird auf die LEDs abgetas
 |---|---|---|
 | `fps <zahl>` | Bildrate, größer 0, höchstens 1000 | 40 |
 | `normalize stretch\|keep-aspect` | wie das Layout auf den Einheitswürfel abgebildet wird | stretch |
-| `region <x> <y> <b> <h>` | Effektbereich (Bild-in-Bild): Rechteck der Wand in Anteilen 0..1, `x` und `y` von links oben; ohne Angabe füllt der Effekt die ganze Wand | – |
 | `sacn-priority <0..200>` | sACN-Priorität | 100 |
 | `source-name <text>` | Name der sACN-Quelle; aus ihm wird auch die stabile Sender-ID abgeleitet | WhiteHoleFX |
 

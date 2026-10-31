@@ -1,5 +1,17 @@
 # Änderungen
 
+## 0.6.0
+
+- **Region-Node:** Der Node „Region“ (`wh.transform.region`) legt den Effekt eines Generators auf ein
+  Rechteck der Leinwand (`left`, `top`, `width`, `height`); der Rest bleibt aus. Ist er im
+  Node-Editor gewählt, zeigt die Vorschau das Rechteck mit Griffen zum Ziehen (Ecken: Größe, Mitte:
+  Verschieben, Pfeiltasten); jede Ziehbewegung ist ein Undo-Schritt
+- Die globale Bereichs-Einstellung aus 0.5.0 (`settings … region`, Seite „Bereich“ im Layout-Dock)
+  ist wieder entfernt, der Region-Node ersetzt sie. **Hinweis:** Projekte mit `settings … region`
+  lassen sich nicht mehr laden; die Zeile löschen und einen Region-Node einfügen
+- Kern: `Player::setRegionRect` (Rechteck eines Region-Nodes, ein Undo-Schritt), `Player::setRegion`
+  entfällt
+
 ## 0.5.1
 
 Aus den GitHub-Issues:
@@ -19,14 +31,12 @@ Aus den GitHub-Issues:
 
 ## 0.5.0
 
-- **Effektbereich (Bild-in-Bild):** Ein Effekt kann nur ein Rechteck der Wand füllen, der Rest bleibt
-  aus. Einstellung `settings … region x y b h`, im Studio auf der Seite „Bereich“ des Layout-Docks
-  und als Rahmen in der Vorschau (aufziehen, verschieben, an den Ecken ändern)
+- Globaler Effektbereich (`settings … region`): in 0.6.0 durch den Region-Node ersetzt
 - Vorschau als Arbeitsfläche: Fixtures anklicken, mit Strg/Umschalt mehrere wählen, per Gummiband
   wählen, ziehen und mit den Pfeiltasten schieben; jede Ziehbewegung ist ein Undo-Schritt
 - Layout-Dock: Mehrfachauswahl, Ausrichten (links, rechts, oben, unten, Mitte) und gleichmäßig
   Verteilen
-- Kern: `Player::setRegion`, `moveFixtures`, `alignFixtures`, `distributeFixtures`; `wh_preview`
+- Kern: `moveFixtures`, `alignFixtures`, `distributeFixtures`; `wh_preview`
   meldet den gezeichneten Ausschnitt (`ViewFrame`) und bietet Treffertests
 
 ## 0.4.0

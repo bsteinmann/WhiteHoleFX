@@ -200,6 +200,53 @@ TEST_CASE("Canvas: Mirror faltet an der Mittellinie (untere oder obere Hälfte a
     }
 }
 
+TEST_CASE("Canvas: Region legt den Effekt auf ein Rechteck, außerhalb ist es durchsichtig", "[gpu_device][stage]") {
+    const std::unique_ptr<WebGpuDevice> device = makeDevice();
+    if (!device) {
+        SKIP("Kein WebGPU-Adapter verfügbar");
+    }
+    Lab lab;
+    const NodeId gradient = lab.add("wh.generator.gradient");
+    lab.set(gradient, "angle", 0.0);  // Verlauf in x von 0 nach 1
+    const NodeId region = lab.add("wh.transform.region");
+    lab.set(region, "left", 0.25);
+    lab.set(region, "top", 0.25);
+    lab.set(region, "width", 0.5);
+    lab.set(region, "height", 0.5);
+    lab.connect(gradient, "out", region, "source");
+
+    executor::CanvasStageConfig config;
+    config.extent = Extent3{16, 16, 1};
+    config.format = TextureFormat::Rgba32Float;
+    config.target = graph::PortRef{region, "out"};
+    auto created = executor::CanvasRenderStage::create(*device, lab.snippets, lab.kernels, config);
+    REQUIRE(created.ok());
+    REQUIRE(created.value()->setGraph(lab.graph).ok());
+
+    const std::vector<std::byte> bytes = renderCanvas(*device, *created.value(), config.extent, config.format, 0.0);
+    REQUIRE(bytes.size() == 16U * 16U * 16U);
+    int inside = 0;
+    for (std::uint32_t y = 0; y < 16; ++y) {
+        for (std::uint32_t x = 0; x < 16; ++x) {
+            float rgba[4];
+            std::memcpy(rgba, bytes.data() + (std::size_t{y} * 16 + x) * 16, sizeof rgba);
+            const float px = (static_cast<float>(x) + 0.5F) / 16.0F;
+            const float py = (static_cast<float>(y) + 0.5F) / 16.0F;  // von oben gezählt, wie "top"
+            const bool in = px >= 0.25F && px <= 0.75F && py >= 0.25F && py <= 0.75F;
+            INFO("x=" << x << " y=" << y);
+            if (in) {
+                ++inside;
+                REQUIRE(std::abs(rgba[3] - 1.0F) < 1e-4F);
+                REQUIRE(std::abs(rgba[0] - (px - 0.25F) / 0.5F) < 1e-3F);  // der Verlauf füllt das Rechteck
+            } else {
+                REQUIRE(rgba[3] == 0.0F);
+            }
+        }
+    }
+    CHECK(inside == 8 * 8);
+    CHECK(device->takeErrors().empty());
+}
+
 TEST_CASE("Canvas: Digital Rain fällt, hat Spuren und respektiert die Dichte", "[gpu_device][stage]") {
     const std::unique_ptr<WebGpuDevice> device = makeDevice();
     if (!device) {
@@ -364,37 +411,4 @@ TEST_CASE("Abtastung: die Zeit erreicht den Shader", "[gpu_device][stage]") {
     for (const ColorRgba& c : renderSampling(*device, *rig, 0.75)) {
         CHECK(c.r > 1.0F - 1e-3F);
     }
-}
-
-TEST_CASE("Abtastung: LEDs außerhalb des Effektbereichs werden durchsichtig", "[gpu_device][stage]") {
-    const std::unique_ptr<WebGpuDevice> device = makeDevice();
-    if (!device) {
-        SKIP("Kein WebGPU-Adapter verfügbar");
-    }
-    auto rig = samplingRig(*device, "wh.generator.gradient");
-    rig->lab.set(rig->node, "angle", 0.0);
-    rig->lab.set(rig->node, "colorA", ColorRgba{1.0F, 1.0F, 1.0F, 1.0F});
-    rig->lab.set(rig->node, "colorB", ColorRgba{1.0F, 1.0F, 1.0F, 1.0F});
-    REQUIRE(rig->stage->setGraph(rig->lab.graph).ok());
-
-    // Matrix 4x2, Bereich: die linke Hälfte (Spalten 0 und 1).
-    mapping::Layout layout;
-    mapping::MatrixShape matrix;
-    matrix.columns = 4;
-    matrix.rows = 2;
-    REQUIRE(layout.add("Panel", Vec3{}, matrix).ok());
-    rig->map = layout.bake(mapping::NormalizeMode::Stretch, mapping::Region{0.0F, 0.0F, 0.5F, 1.0F}).value();
-    REQUIRE(rig->stage->setMap(rig->map).ok());
-
-    const std::vector<ColorRgba> colors = renderSampling(*device, *rig, 0.0);
-    REQUIRE(colors.size() == 8);
-    int lit = 0;
-    for (std::size_t i = 0; i < colors.size(); ++i) {
-        const bool inside = rig->map.world[i].x < 2.0F;
-        INFO("LED " << i);
-        CHECK(std::abs(colors[i].a - (inside ? 1.0F : 0.0F)) < 1e-6F);
-        lit += inside ? 1 : 0;
-    }
-    CHECK(lit == 4);
-    CHECK(device->takeErrors().empty());
 }

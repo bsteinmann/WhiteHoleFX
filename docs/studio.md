@@ -145,12 +145,6 @@ Liste richten die gewählten Fixtures aus (links, rechts, oben, unten, waagrecht
 mittig; Bezug ist die Gesamtbox der Auswahl) und verteilen drei oder mehr mit gleichen Lücken.
 Jeder Knopf ist ein Schritt für Rückgängig.
 
-**Bereich:** Der Effekt füllt nur ein Rechteck der Wand (Bild-in-Bild); alle LEDs außerhalb bleiben
-aus. Kästchen „Effektbereich verwenden“, darunter Links, Oben, Breite und Höhe in Prozent der
-Wand (Oben und Links zählen von der linken oberen Ecke). Der Knopf „In der Vorschau zeichnen“
-schaltet den Bereichsmodus der Vorschau ein (siehe unten). Der Bereich steht in der Projektdatei
-(`settings … region`).
-
 **Ausgabe:** Tabelle der Ziele (Adresse, Port; leere Adresse = Multicast, Port 0 = Standard) mit
 „Ziel +“ und „Letztes Ziel −“, darunter Bildrate, Abbildung auf den Würfel (Stretch oder
 KeepAspect), sACN-Priorität und Quellname.
@@ -174,10 +168,12 @@ Die Vorschau ist eine Arbeitsfläche für das Layout:
 | Ziehen auf leerer Fläche | Auswahlrahmen („Gummiband“) |
 | Pfeiltasten | gewählte Fixtures um 1 schieben (Umschalt 10, Strg 0,1) |
 
-Im Bereichsmodus (Knopf „In der Vorschau zeichnen“) bedeutet Ziehen auf leerer Fläche: neuen
-Bereich aufspannen; Ziehen im orangen Rahmen verschiebt ihn, Ziehen an einer Ecke ändert die
-Größe, Pfeiltasten schieben um 1 % (Umschalt 10 %). Während des Ziehens bleibt der Bildausschnitt
-stehen, danach passt er sich wieder an. Jede Ziehbewegung ist ein Schritt für Rückgängig.
+**Region-Node:** Ist im Node-Editor ein Region-Node gewählt, zeigt die Vorschau sein Rechteck
+orange, die ganze Leinwand gepunktet. Ziehen an einer Ecke ändert die Größe, Ziehen am Kreis in der
+Mitte verschiebt das Rechteck, Pfeiltasten schieben es um 1 % (Umschalt 10 %), solange kein Fixture
+gewählt ist. Die Regler Left, Top, Width und Height im Parameter-Panel ziehen mit. Während des
+Ziehens bleibt der Bildausschnitt stehen, danach passt er sich wieder an. Jede Ziehbewegung ist ein
+Schritt für Rückgängig.
 
 ## Rückgängig und Wiederholen
 

@@ -152,34 +152,6 @@ TEST_CASE("Projekt: Schreiben und wieder Lesen ergibt denselben Text", "[project
     CHECK(second.value().framesPerSecond == 30.0);
 }
 
-TEST_CASE("Projekt: der Effektbereich wird gelesen, geschrieben und geprüft", "[project]") {
-    const Library lib;
-    const char* const text = "whitehole-project 1\nsettings fps 30 region 0.25 0 0.5 0.75\n";
-    const auto parsed = parseProject(text, lib.registry);
-    REQUIRE(parsed.ok());
-    REQUIRE(parsed.value().region.has_value());
-    CHECK(*parsed.value().region == mapping::Region{0.25F, 0.0F, 0.5F, 0.75F});
-
-    const auto written = writeProject(parsed.value());
-    REQUIRE(written.ok());
-    CHECK(written.value().find("region 0.25 0 0.5 0.75") != std::string::npos);
-    const auto again = parseProject(written.value(), lib.registry);
-    REQUIRE(again.ok());
-    CHECK(again.value().region == parsed.value().region);
-
-    // Ohne Bereich schreibt der Writer keine region-Angabe.
-    const auto plain = parseProject("whitehole-project 1\n", lib.registry);
-    REQUIRE(plain.ok());
-    CHECK_FALSE(plain.value().region.has_value());
-    CHECK(writeProject(plain.value()).value().find("region") == std::string::npos);
-
-    // Fehler nennen die Zeile.
-    const auto outside = parseProject("whitehole-project 1\nsettings region 0.5 0 0.8 1\n", lib.registry);
-    REQUIRE_FALSE(outside.ok());
-    CHECK(outside.error().message.find("Zeile 2") != std::string::npos);
-    CHECK_FALSE(parseProject("whitehole-project 1\nsettings region 0 0 1\n", lib.registry).ok());  // Höhe fehlt
-}
-
 TEST_CASE("Projekt: ein leeres Projekt ist gültig", "[project]") {
     const Library lib;
     const auto result = parseProject("whitehole-project 1\n", lib.registry);

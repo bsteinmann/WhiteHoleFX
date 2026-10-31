@@ -133,38 +133,37 @@ TEST_CASE("Anordnen: gleichmäßig verteilen", "[player][arrange]") {
     CHECK(rig.origin(0).y == Approx(-1.0F));  // Spanne 9, Höhen 2+2+1, Lücke 2: A liegt bei -1..1
 }
 
-TEST_CASE("Effektbereich: setzen, prüfen, rückgängig, speichern", "[player][region]") {
+TEST_CASE("Region-Node: Rechteck setzen ist ein Undo-Schritt", "[player][region]") {
     Rig rig;
-    CHECK_FALSE(rig.player.project()->region.has_value());
-    REQUIRE(rig.player.setRegion(mapping::Region{0.0F, 0.0F, 0.5F, 0.5F}).ok());
-    REQUIRE(rig.player.project()->region.has_value());
-    CHECK(rig.player.project()->region->w == Approx(0.5F));
-    CHECK(rig.player.modified());
+    const auto added = rig.player.addNode("wh.transform.region", Vec2{0.0F, 0.0F});
+    REQUIRE(added.ok());
+    const NodeId region = added.value();
+    const auto value = [&](const char* key) {
+        return std::get<double>(rig.player.project()->graph.findNode(region)->parameters.at(key));
+    };
+    rig.player.closeEditGroup();
+    REQUIRE(rig.player.setRegionRect(region, mapping::Region{0.25F, 0.5F, 0.5F, 0.25F}).ok());
+    REQUIRE(rig.player.setRegionRect(region, mapping::Region{0.3F, 0.5F, 0.5F, 0.25F}).ok());  // zusammengefasst
+    CHECK(value("left") == Approx(0.3));
+    CHECK(value("top") == Approx(0.5));
+    CHECK(value("width") == Approx(0.5));
+    CHECK(value("height") == Approx(0.25));
+    REQUIRE(rig.player.undo().ok());  // ein Schritt nimmt alle vier Werte zurück
+    CHECK(value("left") == Approx(0.0));
+    CHECK(value("width") == Approx(0.5));  // Standardwert
 
-    CHECK_FALSE(rig.player.setRegion(mapping::Region{0.6F, 0.0F, 0.6F, 1.0F}).ok());  // ragt hinaus
-    CHECK_FALSE(rig.player.setRegion(mapping::Region{0.0F, 0.0F, 0.0F, 1.0F}).ok());  // Breite 0
-    CHECK(rig.player.project()->region->w == Approx(0.5F));
-
-    REQUIRE(rig.player.setRegion(mapping::Region{0.25F, 0.25F, 0.5F, 0.5F}).ok());  // gleichartig: zusammengefasst
-    REQUIRE(rig.player.undo().ok());
-    CHECK_FALSE(rig.player.project()->region.has_value());
-
-    REQUIRE(rig.player.redo().ok());
-    const auto written = project::writeProject(*rig.player.project());
-    REQUIRE(written.ok());
-    const std::string& text = written.value();
-    CHECK(text.find("region 0.25 0.25 0.5 0.5") != std::string::npos);
-    REQUIRE(rig.player.setRegion(std::nullopt).ok());
-    CHECK_FALSE(rig.player.project()->region.has_value());
+    CHECK(rig.player.setRegionRect(NodeId{9999}, mapping::Region{}).error().code == ErrorCode::NotFound);
+    CHECK_FALSE(rig.player.setRegionRect(rig.player.project()->graph.nodes().front().id, mapping::Region{}).ok());
+    CHECK_FALSE(rig.player.setRegionRect(region, mapping::Region{std::numeric_limits<float>::quiet_NaN(), 0, 1, 1}).ok());
 }
 
-TEST_CASE("Effektbereich: ohne Projekt ein Fehler", "[player][region]") {
+TEST_CASE("Anordnen: ohne Projekt ein Fehler", "[player][arrange]") {
     auto library = nodes::BuiltinLibrary::create().value();
     RecordingSink recording;
     runtime::GatedPacketSink gate{recording};
     Player player{nullptr, *library, gate};
-    CHECK_FALSE(player.setRegion(mapping::Region{}).ok());
     CHECK_FALSE(player.alignFixtures({mapping::FixtureId{1}}, Player::Align::Left).ok());
+    CHECK_FALSE(player.setRegionRect(NodeId{1}, mapping::Region{}).ok());
 }
 
 TEST_CASE("Anordnen: eine Ziehbewegung ist ein Schritt, zwei sind zwei", "[player][arrange][undo]") {

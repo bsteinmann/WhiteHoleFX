@@ -52,9 +52,6 @@ LayoutPanel::LayoutPanel(runtime::Player& player, QWidget* parent) : QTabWidget{
     pageLayout->addWidget(scroll, 1);
     addTab(page, tr("Fixtures"));
 
-    region_ = new RegionForm{player_};
-    addTab(region_, tr("Bereich"));
-
     output_ = new OutputForm{player_};
     auto* outputScroll = new QScrollArea;
     outputScroll->setWidgetResizable(true);
@@ -63,8 +60,6 @@ LayoutPanel::LayoutPanel(runtime::Player& player, QWidget* parent) : QTabWidget{
 
     connect(list_, &QListWidget::currentRowChanged, this, [this](int) { fixture_->showFixture(selectedId()); });
     connect(list_, &QListWidget::itemSelectionChanged, this, [this]() { Q_EMIT selectionChanged(); });
-    connect(region_, &RegionForm::edited, this, &LayoutPanel::edited);
-    connect(region_, &RegionForm::failed, this, &LayoutPanel::failed);
     connect(fixture_, &FixtureForm::edited, this, [this]() {
         refreshTexts();
         Q_EMIT edited();
@@ -82,7 +77,6 @@ mapping::FixtureId LayoutPanel::selectedId() const {
 void LayoutPanel::rebuild() {
     fillList(selectedId());
     output_->rebuild();
-    region_->rebuild();
 }
 
 std::vector<mapping::FixtureId> LayoutPanel::selectedIds() const {
@@ -121,7 +115,6 @@ void LayoutPanel::setSelectedIds(const std::vector<mapping::FixtureId>& ids) {
 void LayoutPanel::refreshValues() {
     refreshTexts();
     fixture_->showFixture(selectedId());
-    region_->rebuild();
 }
 
 QWidget* LayoutPanel::buildArrangeBar() {
@@ -321,9 +314,6 @@ QString LayoutPanel::exercise() {
         return note;
     }
     if (const QString note = output_->exercise(); !note.isEmpty()) {
-        return note;
-    }
-    if (const QString note = region_->exercise(); !note.isEmpty()) {
         return note;
     }
     removeSelected();

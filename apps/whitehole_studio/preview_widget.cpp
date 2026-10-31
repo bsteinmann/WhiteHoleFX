@@ -66,6 +66,8 @@ void PreviewWidget::paintEvent(QPaintEvent*) {
                                           overlay_.region.bottomLeft(), overlay_.region.bottomRight()}) {
                 painter.drawRect(QRectF{corner.x() - kHandle, corner.y() - kHandle, 2 * kHandle, 2 * kHandle});
             }
+            const QPointF c = overlay_.region.center();  // Griff zum Verschieben
+            painter.drawEllipse(c, kHandle + 1.0, kHandle + 1.0);
         }
     }
     if (!overlay_.rubberBand.isEmpty()) {

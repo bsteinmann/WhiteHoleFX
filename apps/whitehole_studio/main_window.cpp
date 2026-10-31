@@ -87,6 +87,7 @@ MainWindow::MainWindow(gpu::IGpuDevice* device, const QString& deviceNote, QWidg
             [this](const QString& message) { statusBar()->showMessage(message, 8000); });
     previewController_ = new PreviewController{*player_, preview_, layoutPanel_, this};
     connect(previewController_, &PreviewController::edited, this, &MainWindow::onLayoutEdited);
+    connect(previewController_, &PreviewController::regionEdited, this, &MainWindow::refreshParameters);
     connect(previewController_, &PreviewController::failed, this,
             [this](const QString& message) { statusBar()->showMessage(message, 8000); });
     layoutDock_ = new QDockWidget{tr("Layout"), this};
@@ -157,6 +158,14 @@ void MainWindow::refreshParameters() {
 
 void MainWindow::onNodeSelected() {
     const std::optional<NodeId> node = editor_->selectedNode();
+    std::optional<NodeId> regionNode;  // ein gewählter Region-Node zeigt sein Rechteck in der Vorschau
+    if (node && player_->project() != nullptr) {
+        const graph::NodeInstance* instance = player_->project()->graph.findNode(*node);
+        if (instance != nullptr && instance->typeId == "wh.transform.region") {
+            regionNode = node;
+        }
+    }
+    previewController_->setRegionNode(regionNode);
     const bool shown = parameters_->showNode(node);
     if (shown && dock_->isVisible()) {
         dock_->raise();  // Layout und Parameter teilen sich den Platz: Parameter nach vorn

@@ -5,6 +5,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <variant>
 
 #include "form_helpers.hpp"
 #include "layout_panel.hpp"
@@ -35,10 +36,28 @@ PreviewController::PreviewController(runtime::Player& player, PreviewWidget* wid
     connect(widget_, &PreviewWidget::mouseReleased, this, &PreviewController::onReleased);
     connect(widget_, &PreviewWidget::nudged, this, &PreviewController::onNudged);
     connect(panel_, &LayoutPanel::selectionChanged, this, [this]() { refreshOverlay(); });
-    connect(panel_->regionForm(), &RegionForm::drawModeChanged, this, [this](bool on) {
-        regionMode_ = on;
-        refreshOverlay();
-    });
+}
+
+void PreviewController::setRegionNode(std::optional<NodeId> node) {
+    regionNode_ = node;
+    refreshOverlay();
+}
+
+std::optional<mapping::Region> PreviewController::nodeRegion() const {
+    const project::Project* project = player_.project();
+    if (!regionNode_ || project == nullptr) {
+        return std::nullopt;
+    }
+    const graph::NodeInstance* node = project->graph.findNode(*regionNode_);
+    if (node == nullptr || node->typeId != "wh.transform.region") {
+        return std::nullopt;
+    }
+    const auto read = [node](const char* key, float fallback) {
+        const auto found = node->parameters.find(key);
+        const double* value = found != node->parameters.end() ? std::get_if<double>(&found->second) : nullptr;
+        return value != nullptr ? static_cast<float>(*value) : fallback;
+    };
+    return mapping::Region{read("left", 0.0F), read("top", 0.0F), read("width", 0.5F), read("height", 0.5F)};
 }
 
 void PreviewController::imageRendered(const preview::ViewFrame& frame) {
@@ -73,11 +92,11 @@ void PreviewController::refreshOverlay() {
                 overlay.selected.push_back(toQRect(preview::toPixels(lastFrame_, preview::worldBox(*fixture))));
             }
         }
-        overlay.wall = wallRect();
-        if (project->region) {
-            overlay.region = regionRect(*project->region);
+        if (const auto region = nodeRegion()) {
+            overlay.wall = wallRect();
+            overlay.region = regionRect(*region);
+            overlay.editingRegion = true;
         }
-        overlay.editingRegion = regionMode_;
     }
     overlay.rubberBand = rubber_;
     widget_->setOverlay(overlay);
@@ -105,8 +124,7 @@ void PreviewController::onPressed(QPointF position, Qt::KeyboardModifiers modifi
     frozen_ = lastFrame_;
     throttle_.start();
     player_.closeEditGroup();  // jede Ziehbewegung ist ein eigener Undo-Schritt
-    if (regionMode_) {
-        pressRegion(position);
+    if (pressRegion(position)) {
         return;
     }
 
@@ -141,39 +159,34 @@ void PreviewController::onPressed(QPointF position, Qt::KeyboardModifiers modifi
     mode_ = Mode::RubberBand;
 }
 
-void PreviewController::pressRegion(QPointF position) {
+bool PreviewController::pressRegion(QPointF position) {
+    const auto region = nodeRegion();
+    if (!region) {
+        return false;
+    }
     const QRectF wall = wallRect();
     if (wall.width() < 2.0 || wall.height() < 2.0) {
-        Q_EMIT failed(tr("Die Wand hat keine Ausdehnung, ein Bereich lässt sich nicht zeichnen"));
-        finish();
-        return;
+        return false;
     }
-    mode_ = Mode::RegionDrag;
-    newRegion_ = true;
-    const auto& region = player_.project()->region;
-    if (!region) {
-        return;
-    }
-    regionStart_ = *region;
     const QRectF rect = regionRect(*region);
-    struct Corner {
+    struct Grip {
         QPointF point;
         mapping::RegionHandle handle;
+        qreal reach;
     };
-    for (const Corner& corner : {Corner{rect.topLeft(), mapping::RegionHandle::TopLeft},
-                                 Corner{rect.topRight(), mapping::RegionHandle::TopRight},
-                                 Corner{rect.bottomLeft(), mapping::RegionHandle::BottomLeft},
-                                 Corner{rect.bottomRight(), mapping::RegionHandle::BottomRight}}) {
-        if (QLineF{corner.point, position}.length() <= kHandlePixels) {
-            handle_ = corner.handle;
-            newRegion_ = false;
-            return;
+    for (const Grip& grip : {Grip{rect.topLeft(), mapping::RegionHandle::TopLeft, kHandlePixels},
+                             Grip{rect.topRight(), mapping::RegionHandle::TopRight, kHandlePixels},
+                             Grip{rect.bottomLeft(), mapping::RegionHandle::BottomLeft, kHandlePixels},
+                             Grip{rect.bottomRight(), mapping::RegionHandle::BottomRight, kHandlePixels},
+                             Grip{rect.center(), mapping::RegionHandle::Move, kHandlePixels}}) {
+        if (QLineF{grip.point, position}.length() <= grip.reach) {
+            handle_ = grip.handle;
+            regionStart_ = *region;
+            mode_ = Mode::RegionDrag;
+            return true;
         }
     }
-    if (rect.contains(position)) {
-        handle_ = mapping::RegionHandle::Move;
-        newRegion_ = false;
-    }
+    return false;  // sonst wie gewohnt: Fixture wählen oder Gummiband
 }
 
 void PreviewController::applyDrag(QPointF position, bool force) {
@@ -202,13 +215,12 @@ void PreviewController::applyDrag(QPointF position, bool force) {
         moved_ = true;
         const QPointF from = toFraction(press_);
         const QPointF to = toFraction(position);
-        const mapping::Region region =
-            newRegion_ ? mapping::regionFromCorners(static_cast<float>(from.x()), static_cast<float>(from.y()),
-                                                    static_cast<float>(to.x()), static_cast<float>(to.y()))
-                       : mapping::dragRegion(regionStart_, handle_, static_cast<float>(to.x() - from.x()),
-                                             static_cast<float>(to.y() - from.y()));
-        report(player_.setRegion(region));
-        panel_->regionForm()->rebuild();
+        const mapping::Region region = mapping::dragRegion(regionStart_, handle_, static_cast<float>(to.x() - from.x()),
+                                                           static_cast<float>(to.y() - from.y()));
+        if (regionNode_) {
+            report(player_.setRegionRect(*regionNode_, region));
+        }
+        refreshOverlay();
         Q_EMIT edited();
     } else if (mode_ == Mode::RubberBand) {
         moved_ = true;
@@ -244,11 +256,15 @@ void PreviewController::finish() {
         select({*clicked_});
     }
     const bool changed = moved_ && (mode_ == Mode::MoveFixtures || mode_ == Mode::RegionDrag);
+    const bool regionChanged = moved_ && mode_ == Mode::RegionDrag;
     mode_ = Mode::Idle;
     rubber_ = QRectF{};
     moved_ = false;
     frozen_.reset();
     player_.closeEditGroup();
+    if (regionChanged) {
+        Q_EMIT regionEdited();
+    }
     if (changed) {
         panel_->refreshValues();
         Q_EMIT edited();
@@ -263,13 +279,14 @@ void PreviewController::onNudged(int dx, int dy, Qt::KeyboardModifiers modifiers
     }
     player_.closeEditGroup();
     const bool coarse = modifiers.testFlag(Qt::ShiftModifier);
-    if (regionMode_ && player_.project()->region) {
+    if (const auto region = nodeRegion(); region && panel_->selectedIds().empty()) {
         const float step = coarse ? 0.1F : 0.01F;
-        const mapping::Region moved = mapping::dragRegion(*player_.project()->region, mapping::RegionHandle::Move,
+        const mapping::Region moved = mapping::dragRegion(*region, mapping::RegionHandle::Move,
                                                           static_cast<float>(dx) * step, static_cast<float>(-dy) * step);
-        report(player_.setRegion(moved));
-        panel_->regionForm()->rebuild();
+        report(player_.setRegionRect(*regionNode_, moved));
+        player_.closeEditGroup();
         refreshOverlay();
+        Q_EMIT regionEdited();
         Q_EMIT edited();
         return;
     }
@@ -282,114 +299,6 @@ void PreviewController::onNudged(int dx, int dy, Qt::KeyboardModifiers modifiers
     player_.closeEditGroup();
     panel_->refreshValues();
     Q_EMIT edited();
-}
-
-QString PreviewController::exercise() {
-    if (player_.project() == nullptr || player_.project()->layout.fixtures().empty()) {
-        return QStringLiteral("Vorschau: kein Projekt mit Fixtures");
-    }
-    const auto render = [this]() -> QString {
-        preview::PreviewOptions options;
-        options.width = 800;
-        options.height = 450;
-        const auto image = player_.image(options);
-        if (!image.ok()) {
-            return QStringLiteral("Vorschau: kein Bild: %1").arg(form::fromStd(image.error().message));
-        }
-        imageRendered(image.value().frame);
-        return {};
-    };
-    if (const QString note = render(); !note.isEmpty()) {
-        return note;
-    }
-    const mapping::FixtureId id = player_.project()->layout.fixtures().front().id;
-    const auto originOf = [this, id]() { return player_.project()->layout.find(id)->origin; };
-    const Vec3 original = originOf();
-    const std::size_t fixtureCount = player_.project()->layout.fixtures().size();
-
-    // 1. Fixture anklicken und 40 Bildpunkte nach rechts ziehen.
-    const QRectF box = toQRect(preview::toPixels(lastFrame_, preview::worldBox(*player_.project()->layout.find(id))));
-    const QPointF center = box.center();
-    const float dragScale = lastFrame_.scale;  // nach dem Loslassen passt sich der Ausschnitt neu an
-    onPressed(center, Qt::NoModifier);
-    if (panel_->selectedIds() != std::vector<mapping::FixtureId>{id}) {
-        return QStringLiteral("Vorschau: Klick hat das Fixture nicht gewählt");
-    }
-    onDragged(center + QPointF{20.0, 0.0});
-    onReleased(center + QPointF{40.0, 0.0});
-    const float expected = 40.0F / dragScale;
-    if (std::abs((originOf().x - original.x) - expected) > 0.11F || std::abs(originOf().y - original.y) > 0.11F) {
-        return QStringLiteral("Vorschau: Ziehen verschob um %1 statt %2")
-            .arg(static_cast<double>(originOf().x - original.x))
-            .arg(static_cast<double>(expected));
-    }
-    if (const QString note = render(); !note.isEmpty()) {
-        return note;
-    }
-
-    // 2. Gummiband über das ganze Bild wählt alle Fixtures.
-    onPressed(QPointF{1.0, 1.0}, Qt::NoModifier);
-    onDragged(QPointF{799.0, 449.0});
-    onReleased(QPointF{799.0, 449.0});
-    if (panel_->selectedIds().size() != fixtureCount) {
-        return QStringLiteral("Vorschau: Gummiband wählte %1 von %2 Fixtures")
-            .arg(panel_->selectedIds().size())
-            .arg(fixtureCount);
-    }
-
-    // 3. Pfeiltaste schiebt das gewählte Fixture um 1.
-    select({id});
-    const float before = originOf().x;
-    onNudged(1, 0, Qt::NoModifier);
-    if (std::abs(originOf().x - before - 1.0F) > 1e-4F) {
-        return QStringLiteral("Vorschau: Pfeiltaste schob um %1 statt 1").arg(static_cast<double>(originOf().x - before));
-    }
-
-    // 4. Bereich zeichnen und verschieben.
-    if (const QString note = render(); !note.isEmpty()) {
-        return note;
-    }
-    panel_->regionForm()->setDrawMode(true);
-    const QRectF wall = wallRect();
-    if (wall.width() < 20.0 || wall.height() < 20.0) {
-        return QStringLiteral("Vorschau: Wand zu klein für den Bereichstest");
-    }
-    const auto at = [&wall](double fx, double fy) {
-        return QPointF{wall.left() + fx * wall.width(), wall.top() + fy * wall.height()};
-    };
-    onPressed(at(0.1, 0.1), Qt::NoModifier);
-    onDragged(at(0.4, 0.4));
-    onReleased(at(0.6, 0.6));
-    const auto region = player_.project()->region;
-    if (!region || std::abs(region->x - 0.1F) > 0.02F || std::abs(region->w - 0.5F) > 0.02F) {
-        return QStringLiteral("Vorschau: Bereich wurde nicht wie gezeichnet angelegt");
-    }
-    onPressed(at(0.35, 0.35), Qt::NoModifier);  // Mitte des Bereichs: verschieben
-    onReleased(at(0.45, 0.35));
-    const auto moved = player_.project()->region;
-    if (!moved || std::abs(moved->x - 0.2F) > 0.02F || std::abs(moved->w - 0.5F) > 0.02F) {
-        return QStringLiteral("Vorschau: Bereich wurde nicht verschoben");
-    }
-    panel_->regionForm()->setDrawMode(false);
-
-    // 5. Alles zurücknehmen: Ziehen, Pfeiltaste, Bereich zeichnen, Bereich verschieben = 4 Schritte.
-    for (int i = 0; i < 4; ++i) {
-        if (!player_.undo().ok()) {
-            return QStringLiteral("Vorschau: Rückgängig scheiterte nach %1 Schritten").arg(i);
-        }
-    }
-    // Eine harmlose Änderung leert den Wiederholen-Stapel, sonst stünden die vier zurückgenommenen
-    // Schritte dort und das Hauptfenster zählte beim Wiederholen mehr Schritte als beim Zurücknehmen.
-    report(player_.setRegion(std::nullopt));
-    panel_->rebuild();
-    select({});
-    if (player_.canRedo()) {
-        return QStringLiteral("Vorschau: der Wiederholen-Stapel ist nicht leer");
-    }
-    if (originOf() != original || player_.project()->region.has_value()) {
-        return QStringLiteral("Vorschau: Rückgängig stellte den Ausgangszustand nicht her");
-    }
-    return {};
 }
 
 }  // namespace whitehole::studio

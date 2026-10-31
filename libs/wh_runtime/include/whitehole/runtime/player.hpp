@@ -27,6 +27,7 @@
 #include "whitehole/core/result.hpp"
 #include "whitehole/engine/frame_clocks.hpp"
 #include "whitehole/gpu/gpu_device.hpp"
+#include "whitehole/mapping/region_edit.hpp"
 #include "whitehole/nodes/builtin_library.hpp"
 #include "whitehole/output/packet_sink.hpp"
 #include "whitehole/preview/preview.hpp"
@@ -176,13 +177,14 @@ public:
     /// weniger als drei Fixtures, NotFound bei unbekannter Id.
     Result<void> distributeFixtures(const std::vector<mapping::FixtureId>& ids, Axis axis);
 
-    /// Die Box der ganzen Wand (alle Fixtures) in Weltkoordinaten, auf die sich der Effektbereich
-    /// bezieht. Ohne Projekt eine leere Box.
+    /// Die Box der ganzen Wand (alle Fixtures) in Weltkoordinaten. Ohne Projekt eine leere Box.
     [[nodiscard]] mapping::Box wallBox() const noexcept { return map_.volume; }
 
-    /// Effektbereich (Bild-in-Bild) setzen; nullopt = die ganze Wand. Fehler: InvalidArgument
-    /// (Rechteck ungültig, siehe mapping::validateRegion).
-    Result<void> setRegion(std::optional<mapping::Region> region);
+    /// Setzt das Rechteck eines Region-Nodes (wh.transform.region): left, top, width, height in
+    /// Anteilen der Leinwand, y von oben. Ein Undo-Schritt (aufeinanderfolgende Aufrufe für denselben
+    /// Node werden zusammengefasst, bis closeEditGroup() kommt). Fehler: NotFound (kein solcher
+    /// Node), InvalidArgument (Node ist keine Region, Rechteck nicht endlich).
+    Result<void> setRegionRect(NodeId node, const mapping::Region& rect);
 
     /// Setzt oder (mit nullopt) entfernt den Patch des Fixtures.
     Result<void> setPatch(mapping::FixtureId id, std::optional<output::FixturePatch> patch);

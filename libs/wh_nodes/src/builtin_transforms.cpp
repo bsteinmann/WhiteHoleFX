@@ -38,6 +38,19 @@ if (@param(mirrorZ) > 0.5) {
 }
 return @in(source, q);)wgsl";
 
+// "Region" (Bild-in-Bild): Der Eingang wird auf ein Rechteck der Leinwand abgebildet, als wäre dieses
+// Rechteck die ganze Leinwand; außerhalb ist das Ergebnis durchsichtig (Alpha 0, die LED bleibt aus).
+// left und top zählen von der linken oberen Ecke, alle vier Werte sind Anteile der Leinwand (0..1).
+// Breite und Höhe haben eine Untergrenze, damit nie durch null geteilt wird. Die z-Koordinate bleibt.
+constexpr const char* kRegionBody = R"wgsl(let w = max(@param(width), 0.0001);
+let h = max(@param(height), 0.0001);
+let u = (p.x - @param(left)) / w;
+let v = (p.y - (1.0 - @param(top) - h)) / h;
+if (u < -0.0001 || u > 1.0001 || v < -0.0001 || v > 1.0001) {
+    return vec4<f32>(0.0, 0.0, 0.0, 0.0);
+}
+return @in(source, vec3<f32>(u, v, p.z));)wgsl";
+
 // Zoom um die Mitte in x und y: factor 2 zeigt das Bild doppelt so groß.
 constexpr const char* kScaleBody = R"wgsl(let c = vec3<f32>(0.5, 0.5, p.z);
 return @in(source, (p - c) / @param(factor) + c);)wgsl";
@@ -73,6 +86,12 @@ std::vector<compiler::NodeDefinition> transformNodes() {
                                number("centerY", "Center Y", 0.5, 0.0, 1.0), number("centerZ", "Center Z", 0.5, 0.0, 1.0),
                                toggle("otherHalf", "Use other half", false)},
                               kMirrorBody));
+
+    nodes.push_back(fieldNode("wh.transform.region", "Region", "Transform",
+                              {fieldInput("source", "Source"), fieldOutput()},
+                              {number("left", "Left", 0.0, 0.0, 1.0), number("top", "Top", 0.0, 0.0, 1.0),
+                               number("width", "Width", 0.5, 0.0, 1.0), number("height", "Height", 0.5, 0.0, 1.0)},
+                              kRegionBody));
 
     nodes.push_back(fieldNode("wh.transform.scale", "Scale", "Transform",
                               {fieldInput("source", "Source"), fieldOutput()},

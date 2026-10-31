@@ -7,8 +7,7 @@
 // getrennt und ohne GPU testbar.
 //
 // Bindings (Gruppe 0 gehört der Feldbibliothek):
-//   @group(1) @binding(0)  Positionen  array<vec4<f32>>, xyz im Einheitswürfel, w = 0, oder w = 1
-//                                       für eine LED außerhalb des Effektbereichs (Alpha wird 0)
+//   @group(1) @binding(0)  Positionen  array<vec4<f32>>, xyz im Einheitswürfel, w = 0
 //   @group(1) @binding(1)  Farben      array<vec4<f32>>, linear RGBA, eine pro LED
 //   @group(1) @binding(2)  WhLeds      Anzahl der gültigen LEDs
 //

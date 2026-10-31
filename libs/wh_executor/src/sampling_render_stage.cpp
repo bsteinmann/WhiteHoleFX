@@ -9,18 +9,13 @@
 
 namespace whitehole::executor {
 
-std::vector<std::byte> packPositions(std::span<const Vec3> positions) { return packPositions(positions, {}); }
-
-std::vector<std::byte> packPositions(std::span<const Vec3> positions, std::span<const std::uint8_t> outside) {
+std::vector<std::byte> packPositions(std::span<const Vec3> positions) {
     std::vector<std::byte> bytes(positions.size() * kBytesPerLed);
     std::size_t offset = 0;
-    std::size_t index = 0;
     for (const Vec3& p : positions) {
-        const bool masked = index < outside.size() && outside[index] != 0U;
-        const std::array<float, 4> v{p.x, p.y, p.z, masked ? 1.0F : 0.0F};
+        const std::array<float, 4> v{p.x, p.y, p.z, 0.0F};
         std::memcpy(bytes.data() + offset, v.data(), sizeof v);
         offset += kBytesPerLed;
-        ++index;
     }
     return bytes;
 }
@@ -114,7 +109,7 @@ Result<void> SamplingRenderStage::setMap(const mapping::LedMap& map) {
                      "eine neue Stage mit größerer Kapazität anlegen"};
     }
 
-    if (const Result<void> written = device_.writeBuffer(positions_, 0, packPositions(map.unit, map.outside));
+    if (const Result<void> written = device_.writeBuffer(positions_, 0, packPositions(map.unit));
         !written.ok()) {
         return written;
     }

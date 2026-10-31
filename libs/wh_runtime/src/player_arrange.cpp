@@ -1,4 +1,4 @@
-// player_arrange.cpp: mehrere Fixtures zusammen bewegen, ausrichten, verteilen; Effektbereich setzen.
+// player_arrange.cpp: mehrere Fixtures zusammen bewegen, ausrichten, verteilen; Rechteck eines Region-Nodes setzen.
 //
 // Warum es diese Datei gibt: player_layout.cpp bearbeitet einzelne Fixtures. Das Anordnen im
 // Layout-Editor wirkt auf eine Auswahl und muss genau ein Undo-Schritt sein; die Rechnung
@@ -155,16 +155,35 @@ Result<void> Player::distributeFixtures(const std::vector<mapping::FixtureId>& i
     });
 }
 
-Result<void> Player::setRegion(std::optional<mapping::Region> region) {
-    if (region) {
-        if (const Result<void> ok = mapping::validateRegion(*region); !ok.ok()) {
-            return ok;
+Result<void> Player::setRegionRect(NodeId node, const mapping::Region& rect) {
+    if (!project_) {
+        return invalid("Es ist kein Projekt geladen");
+    }
+    const graph::NodeInstance* found = project_->graph.findNode(node);
+    if (found == nullptr) {
+        return Error{ErrorCode::NotFound, "Node unbekannt"};
+    }
+    if (found->typeId != "wh.transform.region") {
+        return invalid("Der Node ist keine Region");
+    }
+    for (const float v : {rect.x, rect.y, rect.w, rect.h}) {
+        if (!std::isfinite(v)) {
+            return invalid("Das Rechteck der Region muss aus endlichen Zahlen bestehen");
         }
     }
-    return editProject("region", [&](project::Project& p) -> Result<void> {
-        p.region = region;
+    const Result<void> r = editProject("region:" + std::to_string(node.value()), [&](project::Project& p) -> Result<void> {
+        const std::pair<const char*, float> values[] = {{"left", rect.x}, {"top", rect.y}, {"width", rect.w}, {"height", rect.h}};
+        for (const auto& [key, value] : values) {
+            if (const Result<void> set = p.graph.setParameter(node, key, static_cast<double>(value)); !set.ok()) {
+                return set;
+            }
+        }
         return {};
     });
+    if (r.ok()) {
+        graphDirty_ = true;
+    }
+    return r;
 }
 
 }  // namespace whitehole::runtime

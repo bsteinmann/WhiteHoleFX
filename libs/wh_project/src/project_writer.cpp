@@ -89,12 +89,7 @@ Result<std::string> writeProject(const Project& project) {
     std::ostringstream out;
     out << "whitehole-project " << kFormatVersion << "\n\n";
     out << "settings fps " << formatDouble(project.framesPerSecond) << " normalize "
-        << nameOf(detail::kNormalizeModes, project.normalize);
-    if (project.region) {
-        out << " region " << formatFloat(project.region->x) << " " << formatFloat(project.region->y) << " "
-            << formatFloat(project.region->w) << " " << formatFloat(project.region->h);
-    }
-    out << " sacn-priority "
+        << nameOf(detail::kNormalizeModes, project.normalize) << " sacn-priority "
         << static_cast<unsigned>(project.sacnPriority) << " source-name " << quoteWord(project.sourceName) << "\n\n";
 
     for (std::size_t i = 0; i < project.destinations.size(); ++i) {

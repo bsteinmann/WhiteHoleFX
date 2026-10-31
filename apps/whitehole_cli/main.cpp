@@ -172,7 +172,7 @@ int main(int argc, char** argv) {
         }
         std::cout << report.value();
         if (!options.value().snapshotPath.empty()) {
-            const auto map = parsed.value().layout.bake(parsed.value().normalize, parsed.value().region);
+            const auto map = parsed.value().layout.bake(parsed.value().normalize);
             if (!map.ok()) {
                 return fail(map.error());
             }

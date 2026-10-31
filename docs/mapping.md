@@ -64,21 +64,19 @@ sind. Die Ausgabe (Schritt 6) packt Pixel in genau dieser Reihenfolge in Univers
 Eine Achse ohne Ausdehnung (flache Matrix, gerader Strip) bleibt bei 0. Eine flache Anlage
 hat also immer `p.z = 0`.
 
-## Effektbereich (Bild-in-Bild)
+## Effekt auf einen Teil der Leinwand (Region-Node)
 
-Soll ein Effekt nur einen Teil einer großen Wand füllen, gibt man ein Rechteck an
-(`Layout::bake(mode, region)`, in der Projektdatei `settings … region x y b h`). Das Rechteck steht
-in Anteilen der Wandbox, `x` und `y` zählen von links oben, die z-Achse bleibt unberührt.
+Soll ein Effekt nur einen Teil der Leinwand füllen, legt man den Node **Region**
+(`wh.transform.region`, Kategorie Transform) hinter den Generator: Er bildet seinen Eingang auf ein
+Rechteck der Leinwand ab, als wäre dieses Rechteck die ganze Leinwand; außerhalb ist er durchsichtig
+(Alpha 0), diese LEDs bleiben aus. Das Rechteck steht in den Parametern `left`, `top`, `width` und
+`height` (Anteile 0..1, `top` zählt von oben); die Mapping-Schicht weiß davon nichts, die
+Normalisierung gilt immer für die ganze Wand. Mehrere Region-Nodes mit je einem Generator lassen
+sich mit einem Mix-Node zusammensetzen.
 
-- Die Normalisierung gilt dann für das Rechteck statt für die ganze Wand: Ein Verlauf, der im
-  Einheitswürfel von 0 bis 1 läuft, läuft nur über das Rechteck.
-- LEDs außerhalb stehen in `LedMap::outside` (1 = außerhalb). Der Abtast-Pass trägt das als
-  `w`-Komponente in den Positionspuffer ein und multipliziert das Alpha mit `1 - w`; die LEDs
-  außerhalb sind also durchsichtig und bleiben aus, so wie jede andere transparente Stelle.
-- `LedMap::volume` bleibt die Box der ganzen Wand. `regionBox(volume, region)` liefert das
-  Rechteck in Weltkoordinaten, `dragRegion` und `regionFromCorners` (`region_edit.hpp`) rechnen das
-  Ziehen mit der Maus.
-- Prüfung (`validateRegion`): endliche Zahlen, Breite und Höhe größer 0, das Rechteck liegt in der Wand.
+Für das Ziehen in der Vorschau liefert `region_edit.hpp` die Rechnung (`dragRegion`,
+`regionFromCorners`, `Region`); `Player::setRegionRect` schreibt die vier Parameter in einem
+Undo-Schritt.
 
 ## Abtast-Pass
 

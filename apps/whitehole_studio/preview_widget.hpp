@@ -18,9 +18,9 @@ namespace whitehole::studio {
 struct PreviewOverlay {
     QList<QRectF> selected;      // Rahmen der gewählten Fixtures
     QRectF rubberBand;           // Auswahlrahmen beim Aufziehen; leer = keiner
-    QRectF wall;                 // die ganze Wand (nur beim Bearbeiten des Bereichs gezeichnet)
-    QRectF region;               // Effektbereich; leer = keiner
-    bool editingRegion{false};   // Bereichsmodus: Griffe an den Ecken, Wand angedeutet
+    QRectF wall;                 // die ganze Leinwand (nur beim Bearbeiten des Bereichs gezeichnet)
+    QRectF region;               // Rechteck des gewählten Region-Nodes; leer = keiner
+    bool editingRegion{false};   // Region-Node gewählt: Griffe an Ecken und Mitte, Leinwand angedeutet
 };
 
 class PreviewWidget : public QWidget {
