@@ -107,6 +107,14 @@ Result<void> validateOutputs(const NodeInstance& node, const NodeDescriptor& des
                          describe(node) + ": Der Wert für '" + key + "' hat nicht den Typ des Ausgangs"};
         }
     }
+    for (const auto& [key, spectrum] : outputs.spectra()) {
+        const graph::PortDescriptor* port = descriptor.findPort(key);
+        if (port == nullptr || port->direction != PortDirection::Output || port->type != graph::PortType::AudioSpectrum) {
+            return Error{ErrorCode::InvalidArgument,
+                         describe(node) + ": Der Kernel liefert ein Spektrum für '" + key +
+                             "', das kein Spektrum-Ausgang ist"};
+        }
+    }
     return {};
 }
 
@@ -168,6 +176,9 @@ Result<void> ValueEvaluator::evaluate(const graph::Graph& graph, const FrameTime
         }
         for (const auto& [key, value] : outputs.values()) {
             store.set(id, key, value);
+        }
+        for (const auto& [key, spectrum] : outputs.spectra()) {
+            store.setSpectrum(id, key, spectrum);
         }
     }
     return {};

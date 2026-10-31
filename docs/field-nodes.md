@@ -44,6 +44,7 @@ beliebigen Koordinaten abtastet.
 | `wh.generator.fading` | Fading Pixels: einzelne Zellen leuchten auf und verlöschen, jede in eigenem Takt (Zellen, Rate, Dichte, `sharpness` = Abklingkurve, zwei Farben nach Zufall); der Rest ist durchsichtig | 2D |
 | `wh.generator.shapes` | Expanding Shapes: Kreise, Quadrate oder Rauten (Auswahlfeld), die von `cx`/`cy` nach außen laufen (Abstand, Tempo — negativ nach innen —, Dicke, Verblassen nach außen); durchsichtig zwischen den Ringen | 2D |
 | `wh.generator.sinelines` | Sine Lines: 1–8 Sinuswellen quer über die Leinwand, jede um `spread` Perioden gegen die vorige verschoben, Farbe von der ersten zur letzten Linie; überlappende Linien addieren sich | 2D |
+| `wh.generator.spectrum` | Spectrum Bars: Equalizer aus `bars` Balken, die von unten (oder von der Mitte aus) so hoch wachsen wie das Audio-Spektrum am Eingang `spectrum` (Porttyp AudioSpectrum, von „Audio Spectrum“); `gap`, `softness`, Farbverlauf `color` → `colorTop`. Ohne Verbindung durchsichtig, siehe [Audio](audio.md) | 2D |
 | `wh.transform.rotate` | Drehung in der xy-Ebene um die Mitte | 2D |
 | `wh.transform.rotate3d` | Drehung um alle drei Achsen um die Mitte (0,5; 0,5; 0,5) | 3D |
 | `wh.transform.symmetry` | Symmetrie: eine Hälfte des Eingangs wird an einer Linie gespiegelt. `axis` (X, Y, Z) und `half` (untere oder obere Hälfte als Vorlage) sind Auswahlfelder, `center` setzt die Linie. Einfacher zu bedienen als Mirror, der mehrere Achsen gleichzeitig kann | 2D, 3D |
@@ -102,12 +103,13 @@ in jeder z-Ebene gleich. Die z-Variante kommt, wo sie sich lohnt (Rotate 3D ist 
 ### Regeln für das Snippet
 
 `body` ist der Rumpf von `fn wh_f<ID>(p: vec3<f32>) -> vec4<f32>` und endet mit `return`.
-Es gibt drei Platzhalter:
+Es gibt vier Platzhalter:
 
 | Platzhalter | Wird ersetzt durch |
 |---|---|
 | `@in(port, koordinate)` | Aufruf der Funktion, die am Field-Eingang `port` hängt, an der Koordinate |
 | `@param(schluessel)` | Zugriff auf den Parameter im Uniform-Puffer |
+| `@spectrum(port, band)` | ein Band (0–31, `u32`-Ausdruck) des Spektrums am Eingang `port` vom Typ AudioSpectrum, als `f32` (0..1) |
 | `@time` | `wh_frame.time` |
 
 - Platzhalter dürfen verschachtelt werden: `@in(a, p + vec3<f32>(@param(shift), 0.0, 0.0))`.

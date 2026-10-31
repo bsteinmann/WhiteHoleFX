@@ -12,6 +12,7 @@
 
 #include <memory>
 
+#include "whitehole/audio/audio_input.hpp"
 #include "whitehole/input/dmx_receiver.hpp"
 #include "whitehole/nodes/builtin_library.hpp"
 #include "whitehole/output/udp_sender.hpp"
@@ -74,6 +75,8 @@ public:
     QString exerciseControls();
     /// Rauchtest: Eingang-Schalter startet den Empfang; ein Art-Net-Paket über Loopback kommt im Speicher an.
     QString exerciseDmx();
+    /// Rauchtest: eine WAV-Datei als Audioquelle wählen; Frames kommen im Speicher an; ausschalten.
+    QString exerciseAudio();
 
 protected:
     void dragEnterEvent(QDragEnterEvent* event) override;
@@ -123,6 +126,12 @@ private:
     void applyDmxInput();
     void syncDmxUniverses();
     [[nodiscard]] QString dmxStatusText() const;
+    /// Audio-Eingang (main_window_audio.cpp): Untermenü "Audio" im Menü "Eingang".
+    /// `choice`: "off", "default", "device:<Name>" oder "file:<Pfad>". Wahr, wenn eine Quelle läuft.
+    void buildAudioInput(QMenu* inputMenu);
+    void fillAudioMenu();
+    bool applyAudioChoice(const QString& choice);
+    [[nodiscard]] QString audioStatusText() const;
     void onTogglePlayback(bool run);
     void onToggleSending(bool send);
 
@@ -133,6 +142,9 @@ private:
     std::unique_ptr<runtime::PresetStore> presets_;  // Ordner mit Node-Presets im Datenordner des Nutzers
     std::unique_ptr<input::DmxReceiver> dmxReceiver_;  // nach library_: liest/schreibt dessen Speicher
     input::DmxReceiverConfig dmxConfig_;               // Ports; nur der Rauchtest ändert sie
+    std::unique_ptr<audio::AudioInput> audioInput_;    // nach library_: schreibt in dessen Audio-Speicher
+    QMenu* audioMenu_{nullptr};
+    QString audioChoice_{QStringLiteral("off")};       // gewählte Quelle, siehe applyAudioChoice
     QString deviceNote_;
 
     PreviewWidget* preview_{nullptr};

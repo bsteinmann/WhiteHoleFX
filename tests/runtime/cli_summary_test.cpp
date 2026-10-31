@@ -173,3 +173,36 @@ TEST_CASE("Bericht: DMX-Nodes nennen die gelesenen Universen", "[cli][dmx]") {
     CHECK(contains(report.value(), "Art-Net, Universe 1\n"));
     CHECK(contains(report.value(), "sACN, Universe 7\n"));
 }
+
+TEST_CASE("Kommandozeile: --audio-in und --audio-devices", "[cli][audio]") {
+    CHECK(options({"p"}).audioIn.empty());
+    CHECK(options({"p", "--audio-in", "default"}).audioIn == "default");
+    CHECK(options({"p", "--audio-in", "beat.wav"}).audioIn == "beat.wav");
+    CHECK(contains(optionError({"p", "--audio-in"}), "braucht"));
+
+    // Die Geräteliste braucht kein Projekt.
+    const cli::Options list = options({"--audio-devices"});
+    CHECK(list.audioDevices);
+    CHECK(list.projectPath.empty());
+    CHECK(contains(optionError({}), "Projektdatei"));
+}
+
+TEST_CASE("Bericht: Audio-Nodes werden erwähnt", "[cli][audio]") {
+    auto library = nodes::BuiltinLibrary::create().value();
+    const std::string base =
+        "whitehole-project 1\n"
+        "destination 0 127.0.0.1\n"
+        "fixture A\n  matrix 2 2\n  patch artnet destination 0 universe 0\nend\n"
+        "node g wh.generator.plasma\nend\n"
+        "output g.out\n";
+    const auto without = project::parseProject(base, library->registry);
+    REQUIRE(without.ok());
+    CHECK_FALSE(contains(runtime::summarize(without.value()).value(), "Audio-Eingang"));
+
+    const auto with = project::parseProject(
+        base + "node a wh.value.audiolevel\nend\nnode b wh.value.beat\nend\nnode t wh.value.tap\nend\n", library->registry);
+    REQUIRE(with.ok());
+    const auto report = runtime::summarize(with.value());
+    REQUIRE(report.ok());
+    CHECK(contains(report.value(), "Audio-Eingang: 2 Node(s)"));  // Tap Tempo braucht kein Audio
+}

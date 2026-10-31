@@ -8,6 +8,7 @@
 #include "whitehole/output/artnet.hpp"
 #include "whitehole/output/ddp.hpp"
 #include "whitehole/output/sacn.hpp"
+#include "whitehole/runtime/audio_usage.hpp"
 #include "whitehole/runtime/dmx_usage.hpp"
 #include "whitehole/runtime/session.hpp"
 
@@ -86,6 +87,11 @@ Result<std::string> summarize(const project::Project& project) {
         out << "DMX-Eingang: das Projekt liest (Empfang einschalten: --dmx-in bzw. Menü Eingang im Studio)\n";
         list("Art-Net", dmx.artnet);
         list("sACN", dmx.sacn);
+    }
+    const AudioUsage audioUsage = findAudioUsage(project.graph);
+    if (audioUsage.any()) {
+        out << "Audio-Eingang: " << audioUsage.nodes
+            << " Node(s) lesen Audio (einschalten: --audio-in bzw. Menü Eingang im Studio)\n";
     }
     return out.str();
 }

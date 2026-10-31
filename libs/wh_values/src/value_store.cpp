@@ -28,7 +28,24 @@ std::optional<graph::ParameterValue> ValueStore::value(NodeId node, std::string_
     return portIt->second;
 }
 
+void ValueStore::setSpectrum(NodeId node, std::string_view portKey, const Spectrum& spectrum) {
+    spectra_[node].insert_or_assign(std::string{portKey}, spectrum);
+}
+
+std::optional<Spectrum> ValueStore::spectrum(NodeId node, std::string_view portKey) const {
+    const auto nodeIt = spectra_.find(node);
+    if (nodeIt == spectra_.end()) {
+        return std::nullopt;
+    }
+    const auto portIt = nodeIt->second.find(portKey);
+    if (portIt == nodeIt->second.end()) {
+        return std::nullopt;
+    }
+    return portIt->second;
+}
+
 void ValueStore::clear() noexcept {
+    spectra_.clear();
     values_.clear();
     count_ = 0;
 }

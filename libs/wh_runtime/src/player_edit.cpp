@@ -158,4 +158,6 @@ Result<void> Player::setTarget(const graph::PortRef& port) {
 
 DmxUsage Player::dmxUsage() const { return project_ ? findDmxUsage(project_->graph) : DmxUsage{}; }
 
+AudioUsage Player::audioUsage() const { return project_ ? findAudioUsage(project_->graph) : AudioUsage{}; }
+
 }  // namespace whitehole::runtime

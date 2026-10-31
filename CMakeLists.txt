@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.25)
 
 project(WhiteHoleFX
-    VERSION 0.14.2
+    VERSION 0.15.0
     DESCRIPTION "Open-Source-Echtzeitsteuerung für LED-Matrizen, LED-Cubes und Pixelinstallationen"
     LANGUAGES CXX)
 
@@ -36,6 +36,7 @@ add_subdirectory(libs/wh_gpu)
 add_subdirectory(libs/wh_graph)
 add_subdirectory(libs/wh_values)
 add_subdirectory(libs/wh_input)
+add_subdirectory(libs/wh_audio)
 add_subdirectory(libs/wh_compiler)
 add_subdirectory(libs/wh_nodes)
 add_subdirectory(libs/wh_engine)

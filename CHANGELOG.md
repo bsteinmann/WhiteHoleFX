@@ -1,5 +1,19 @@
 # Änderungen
 
+## 0.15.0
+
+- **Audio-Eingang:** Neues Modul `wh_audio` mit FFT, Pegel, 32-Band-Spektrum (40 Hz–16 kHz), Beat-Erkennung
+  und Tempo-Schätzung. Quelle ist ein Aufnahmegerät (über miniaudio, wird beim Konfigurieren geladen; abschaltbar
+  mit `-DWHITEHOLEFX_AUDIO_CAPTURE=OFF`) oder eine WAV-Datei in Schleife. Studio: Menü *Eingang → Audio*
+  (standardmäßig aus, Wahl wird gemerkt, Statuszeile mit Pegel und BPM); Konsole: `--audio-in default|<Gerät>|<datei.wav>`
+  und `--audio-devices`; der Prüfbericht nennt Audio-Nodes. Siehe `docs/audio.md`.
+- **Neue Nodes (Kategorie „Audio“):** `Audio Level`, `Audio Band`, `Audio Spectrum`, `Beat`, `Tap Tempo` und der
+  Effekt `Spectrum Bars` (Equalizer). Beispiel: `examples/audio.whfx`.
+- **Spektrum auf der GPU:** Der Porttyp `AudioSpectrum` hat jetzt einen eigenen Weg vom CPU-Node bis in den
+  Parameterpuffer (`KernelOutputs::setSpectrum`, `IValueLookup::spectrum`, Slot-Typ `Spectrum` mit 128 Bytes,
+  Shader-Platzhalter `@spectrum(port, band)`).
+- **Dateipfade:** WAV-Dateien werden auch unter Windows mit Umlauten im Pfad gelesen (UTF-8).
+
 ## 0.14.2
 
 - **CI-Reparatur:** Der JSON-Leser kommt ohne `std::pair` mit unvollständigem Typ aus (Clang und

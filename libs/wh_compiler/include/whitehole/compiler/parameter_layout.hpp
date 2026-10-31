@@ -17,7 +17,15 @@ namespace whitehole::compiler {
 /// GPU-Typen, die ein Parameter annehmen kann. Bool, Ganz- und Gleitkommazahlen
 /// gehen als f32 auf die GPU, Farben als vec4<f32>. Texte haben keine
 /// GPU-Entsprechung und kommen nicht in den Puffer.
-enum class GpuType : std::uint8_t { Float, Vec2, Vec3, Vec4 };
+enum class GpuType : std::uint8_t {
+    Float,
+    Vec2,
+    Vec3,
+    Vec4,
+    /// 32 Spektrumbänder als array<vec4<f32>, 8> (128 Bytes). Kommt nie aus einem ParameterValue,
+    /// sondern über IValueLookup::spectrum (SlotOrigin::SpectrumInput).
+    Spectrum,
+};
 
 [[nodiscard]] std::optional<GpuType> gpuTypeOf(const graph::ParameterValue& value) noexcept;
 [[nodiscard]] std::string_view wgslTypeName(GpuType type) noexcept;
@@ -31,6 +39,9 @@ enum class SlotOrigin : std::uint8_t {
     /// konstantes Feld wirkt. `key` ist der Schlüssel des Eingangs. Ohne Verbindung
     /// oder Wert bleibt der Slot null.
     FieldConstant,
+    /// Ein Spektrum, das an einem Eingang vom Typ AudioSpectrum hängt. `key` ist der Schlüssel
+    /// des Eingangs. Ohne Verbindung oder Wert bleibt der Slot null (kein Ton).
+    SpectrumInput,
 };
 
 struct ParameterSlot {

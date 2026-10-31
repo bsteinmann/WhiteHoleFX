@@ -44,6 +44,8 @@ void MainWindow::buildDmxInput() {
     QMenu* menu = menuBar()->addMenu(tr("&Eingang"));
     menu->addAction(artnetInAction_);
     menu->addAction(sacnInAction_);
+    menu->addSeparator();
+    buildAudioInput(menu);
 
     const QSettings s = settings();
     {

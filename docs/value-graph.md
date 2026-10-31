@@ -161,6 +161,8 @@ laufen immer. Ein vergessener, unverbundener Node kostet nichts.
 | `wh.value.dmx` | `value`, `on` (Boolean), `present` (Boolean) | `source` (0 Art-Net, 1 sACN), `universe`, `channel`, `bits16`, `min`, `max`, `threshold`, `timeout`, `hold` | DMX-Eingang, siehe unten |
 | `wh.value.dmxcolor` | `out` (Color) | `source`, `universe`, `channel`, `mode` (0 RGB, 1 RGB + Dimmer), `timeout`, `hold` | Drei oder vier Kanäle als Farbe |
 
+| `wh.value.audiolevel`, `audioband`, `audiospectrum`, `beat`, `tap` | siehe [Audio](audio.md) | | Audio-Eingang (Kategorie „Audio“): Pegel, Frequenzband, Spektrum, Beat und Tap Tempo |
+
 ### DMX-Eingang
 
 Die beiden DMX-Nodes (Kategorie „Input“) lesen Kanalwerte, die per Art-Net oder sACN ins Studio kommen,
@@ -187,9 +189,10 @@ Tempo: `Random` → `Smooth` → `LFO.frequency`.
 
 ## Grenzen (Stand Schritt 4b, Teil A)
 
-- **Kernel liefern Einzelwerte.** Spektren (Audio-FFT), Punktwolken und Bilder bekommen
-  eigene Kanäle, wenn diese Nodes entstehen. `registerCpuDefinitions` lehnt solche
-  Ausgänge bis dahin ausdrücklich ab.
+- **Kernel liefern Einzelwerte und Spektren.** Ein Spektrum (Porttyp `AudioSpectrum`, 32 Bänder)
+  läuft auf einem eigenen Kanal: `KernelOutputs::setSpectrum`, `ValueStore::spectrum` und
+  `IValueLookup::spectrum`. Punktwolken und Bilder bekommen eigene Kanäle, wenn diese Nodes
+  entstehen; `registerCpuDefinitions` lehnt solche Ausgänge bis dahin ausdrücklich ab.
 - **`wh.value.lfo` ist zustandslos.** Ändert sich die Frequenz im Lauf, springt die
   Phase, weil sie aus der absoluten Zeit folgt. Für saubere Frequenzmodulation braucht es
   später einen akkumulierenden Oszillator als eigenen Node.

@@ -20,6 +20,11 @@ add_executable(wh_tests
     values/value_evaluator_test.cpp
     values/value_store_test.cpp
     compiler/field_compiler_test.cpp
+    audio/analyzer_test.cpp
+    audio/audio_input_test.cpp
+    audio/audio_nodes_test.cpp
+    audio/audio_store_test.cpp
+    audio/wav_test.cpp
     compiler/field_inputs_test.cpp
     compiler/node_definition_test.cpp
     compiler/parameter_layout_test.cpp
@@ -58,6 +63,7 @@ add_executable(wh_tests
     preview/preview_test.cpp
     preview/view_test.cpp
     project/project_test.cpp
+    runtime/audio_usage_test.cpp
     runtime/cli_summary_test.cpp
     runtime/graph_layout_test.cpp
     runtime/player_layout_test.cpp
@@ -80,6 +86,7 @@ target_link_libraries(wh_tests PRIVATE
     whitehole::graph
     whitehole::values
     whitehole::input
+    whitehole::audio
     whitehole::compiler
     whitehole::nodes
     whitehole::engine
@@ -112,6 +119,7 @@ endif()
 if(TARGET wh_gpu_webgpu)
     add_executable(wh_gpu_tests
         gpu_device/node_catalog_on_device_test.cpp
+        gpu_device/spectrum_on_device_test.cpp
         gpu_device/node_patterns_on_device_test.cpp
         gpu_device/session_on_device_test.cpp
         gpu_device/sampling_on_device_test.cpp

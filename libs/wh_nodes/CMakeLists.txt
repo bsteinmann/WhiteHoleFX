@@ -3,6 +3,8 @@
 # einen davon im Besonderen.
 wh_add_library(wh_nodes
     SOURCES
+        src/builtin_audio.cpp
+        src/builtin_audio_field.cpp
         src/builtin_blends.cpp
         src/builtin_generators.cpp
         src/builtin_library.cpp
@@ -14,6 +16,7 @@ wh_add_library(wh_nodes
         src/builtin_dmx.cpp
         src/builtin_values.cpp
     PUBLIC_DEPS
+        wh_audio
         wh_compiler
         wh_input
         wh_values)

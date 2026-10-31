@@ -17,6 +17,9 @@ const char* usageText() {
            "  --snapshot <png> die LEDs des letzten Frames als Bild speichern (ohne --frames: 1 Frame);\n"
            "                   mit --check das Layout, eingefärbt nach Fixture und Kabelrichtung\n"
            "  --dmx-in <quelle> DMX empfangen für die DMX-Nodes: artnet, sacn oder artnet,sacn (sonst aus)\n"
+           "  --audio-in <q>   Audio für die Audio-Nodes: default (Standardgerät), Geräte-Nummer oder -Name,\n"
+           "                   oder eine .wav-Datei, die in Schleife läuft (sonst aus)\n"
+           "  --audio-devices  die Aufnahmegeräte auflisten und beenden\n"
            "  --size <BxH>     Bildgröße der Vorschau, z. B. 1280x720 (Standard 960x540)\n"
            "  --help           diese Hilfe\n";
 }
@@ -82,6 +85,14 @@ Result<Options> parseOptions(const std::vector<std::string>& args) {
                 }
                 from = comma + 1;
             }
+        } else if (a == "--audio-in") {
+            const std::string* value = next();
+            if (value == nullptr || value->empty()) {
+                return bad("--audio-in braucht default, ein Gerät oder eine .wav-Datei");
+            }
+            options.audioIn = *value;
+        } else if (a == "--audio-devices") {
+            options.audioDevices = true;
         } else if (a == "--size") {
             const std::string* value = next();
             if (value == nullptr) {
@@ -110,7 +121,7 @@ Result<Options> parseOptions(const std::vector<std::string>& args) {
             return bad("Zweite Projektdatei \"" + a + "\" angegeben");
         }
     }
-    if (!options.help && options.projectPath.empty()) {
+    if (!options.help && !options.audioDevices && options.projectPath.empty()) {
         return bad("Es fehlt die Projektdatei");
     }
     if (options.snapshotPath.empty() && (options.snapshotWidth != 960 || options.snapshotHeight != 540)) {

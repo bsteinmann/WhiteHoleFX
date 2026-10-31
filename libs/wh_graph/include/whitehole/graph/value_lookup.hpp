@@ -12,6 +12,7 @@
 #include <string_view>
 
 #include "whitehole/core/ids.hpp"
+#include "whitehole/core/spectrum.hpp"
 #include "whitehole/graph/node_descriptor.hpp"
 
 namespace whitehole::graph {
@@ -24,6 +25,12 @@ public:
     /// oder nichts, wenn er (noch) keinen geliefert hat.
     [[nodiscard]] virtual std::optional<ParameterValue> value(NodeId node,
                                                               std::string_view portKey) const = 0;
+
+    /// Das Spektrum, das der Ausgang `portKey` (Typ AudioSpectrum) im aktuellen Frame liefert.
+    /// Spektren sind keine ParameterValues; sie laufen auf einem eigenen Kanal. Standard: keines.
+    [[nodiscard]] virtual std::optional<Spectrum> spectrum(NodeId /*node*/, std::string_view /*portKey*/) const {
+        return std::nullopt;
+    }
 };
 
 }  // namespace whitehole::graph

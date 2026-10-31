@@ -5,18 +5,21 @@
 // rendern, bis --frames erreicht ist oder Strg+C kommt. Beendet wird immer geordnet: die
 // laufenden Frames werden noch ausgeliefert, dann erscheint eine Zusammenfassung.
 #include <atomic>
+#include <cctype>
 #include <chrono>
 #include <csignal>
 #include <iostream>
 #include <thread>
 
 #include "cli_options.hpp"
+#include "whitehole/audio/audio_input.hpp"
 #include "whitehole/engine/frame_clocks.hpp"
 #include "whitehole/input/dmx_receiver.hpp"
 #include "whitehole/nodes/builtin_library.hpp"
 #include "whitehole/output/udp_sender.hpp"
 #include "whitehole/preview/png.hpp"
 #include "whitehole/project/project.hpp"
+#include "whitehole/runtime/audio_usage.hpp"
 #include "whitehole/runtime/dmx_usage.hpp"
 #include "whitehole/runtime/session.hpp"
 #include "whitehole/runtime/summary.hpp"
@@ -49,12 +52,55 @@ Result<void> saveSnapshot(const mapping::LedMap& map, const std::vector<ColorRgb
     return preview::writePng(image.value(), options.snapshotPath);
 }
 
+/// --audio-devices: die Aufnahmegeräte, eins pro Zeile ("Nummer  Name", Standard mit *).
+int listAudioDevices() {
+    const auto devices = audio::listCaptureDevices();
+    if (!devices.ok()) {
+        return fail(devices.error());
+    }
+    for (const audio::AudioDeviceInfo& device : devices.value()) {
+        std::cout << device.id << (device.isDefault ? " * " : "   ") << device.name << "\n";
+    }
+    if (devices.value().empty()) {
+        std::cout << "Keine Aufnahmegeräte gefunden.\n";
+    }
+    return 0;
+}
+
 #ifdef WH_CLI_HAVE_GPU
 void printStats(const runtime::Session& session, std::ostream& out) {
     const runtime::SessionStats s = session.stats();
     out << "Frames " << s.engine.framesRendered << " (verworfen " << s.engine.framesDropped
         << "), Pakete " << s.output.packetsSent << ", Sendefehler " << s.output.sendErrors
         << ", Ausgabe-Fehler " << s.frameErrors << "\n";
+}
+
+bool endsWithWav(const std::string& text) {
+    if (text.size() < 4) {
+        return false;
+    }
+    std::string tail = text.substr(text.size() - 4);
+    for (char& c : tail) {
+        c = static_cast<char>(std::tolower(static_cast<unsigned char>(c)));
+    }
+    return tail == ".wav";
+}
+
+/// Startet den Audio-Eingang, wenn --audio-in gegeben ist; sonst ein Hinweis, falls das Projekt Audio liest.
+Result<void> startAudio(audio::AudioInput& input, const project::Project& project, const cli::Options& options) {
+    if (options.audioIn.empty()) {
+        if (runtime::findAudioUsage(project.graph).any()) {
+            std::cerr << "Hinweis: Das Projekt liest Audio, der Eingang ist aus (--audio-in default oder <datei.wav>).\n";
+        }
+        return {};
+    }
+    const Result<void> started = endsWithWav(options.audioIn) ? input.startFile(options.audioIn)
+                                 : options.audioIn == "default" ? input.startDevice("")
+                                                                : input.startDevice(options.audioIn);
+    if (started.ok()) {
+        std::cerr << "Audio-Eingang läuft (" << input.store()->status().source << ").\n";
+    }
+    return started;
 }
 
 int run(const project::Project& project, const nodes::BuiltinLibrary& library, const cli::Options& options) {
@@ -88,6 +134,11 @@ int run(const project::Project& project, const nodes::BuiltinLibrary& library, c
         std::cerr << "DMX-Eingang läuft.\n";
     } else if (dmxUsage.any()) {
         std::cerr << "Hinweis: Das Projekt liest DMX, der Empfang ist aus (--dmx-in artnet,sacn).\n";
+    }
+
+    audio::AudioInput audioInput{library.audio};
+    if (const Result<void> audioStarted = startAudio(audioInput, project, options); !audioStarted.ok()) {
+        return fail(audioStarted.error());
     }
 
     engine::SteadyFrameClock clock;
@@ -168,6 +219,9 @@ int main(int argc, char** argv) {
     if (options.value().help) {
         std::cout << cli::usageText();
         return 0;
+    }
+    if (options.value().audioDevices) {
+        return listAudioDevices();
     }
 
     auto library = nodes::BuiltinLibrary::create();

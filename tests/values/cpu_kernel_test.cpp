@@ -146,8 +146,7 @@ TEST_CASE("registerCpuDefinitions: ungültige Definitionen werden gar nicht erst
     }
     SECTION("Ausgang, der keinen Einzelwert liefert") {
         for (const graph::PortType type : {graph::PortType::Image, graph::PortType::Field,
-                                           graph::PortType::AudioSpectrum, graph::PortType::PointCloud,
-                                           graph::PortType::Palette}) {
+                                           graph::PortType::PointCloud, graph::PortType::Palette}) {
             CpuNodeDefinition definition = valid("bad.output");
             definition.descriptor.ports = {outPort("out", type)};
             const std::vector<CpuNodeDefinition> definitions{definition};
@@ -157,11 +156,12 @@ TEST_CASE("registerCpuDefinitions: ungültige Definitionen werden gar nicht erst
             CHECK(registry.find("bad.output") == nullptr);
         }
     }
-    SECTION("alle Einzelwert-Typen sind als Ausgang erlaubt") {
+    SECTION("alle Einzelwert-Typen und das Spektrum sind als Ausgang erlaubt") {
         int index = 0;
         for (const graph::PortType type :
              {graph::PortType::Scalar, graph::PortType::Integer, graph::PortType::Boolean,
-              graph::PortType::Trigger, graph::PortType::Color, graph::PortType::Text}) {
+              graph::PortType::Trigger, graph::PortType::Color, graph::PortType::Text,
+              graph::PortType::AudioSpectrum}) {
             CpuNodeDefinition definition = valid("ok." + std::to_string(index++));
             definition.descriptor.ports = {outPort("out", type)};
             const std::vector<CpuNodeDefinition> definitions{definition};

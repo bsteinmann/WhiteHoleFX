@@ -3,6 +3,7 @@
 # (-DWHITEHOLEFX_WEBGPU=ON); ohne es läuft nur --check.
 add_executable(whitehole_cli main.cpp cli_options.cpp)
 target_link_libraries(whitehole_cli PRIVATE
+    whitehole::audio
     whitehole::input
     whitehole::nodes
     whitehole::preview

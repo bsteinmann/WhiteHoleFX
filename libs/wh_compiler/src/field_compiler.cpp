@@ -189,6 +189,23 @@ private:
             }
             const graph::Connection* connection = graph_.findInputConnection(node.id, port.key);
 
+            if (port.type == PortType::AudioSpectrum) {
+                // Ein Spektrum: eigener Slot (128 Bytes), den packParameters aus dem Werte-Kanal füllt.
+                // Unverbunden bleibt er null (der Shader sieht Stille).
+                if (connection != nullptr) {
+                    const NodeInstance* source = graph_.findNode(connection->from.node);
+                    const NodeDescriptor* sourceDescriptor =
+                        source == nullptr ? nullptr : graph_.registry().find(source->typeId);
+                    const PortDescriptor* sourcePort =
+                        sourceDescriptor == nullptr ? nullptr : sourceDescriptor->findPort(connection->from.portKey);
+                    if (sourcePort == nullptr || sourcePort->type != PortType::AudioSpectrum) {
+                        return Error{ErrorCode::NotFound, describe(node) + ": Die Quelle des Eingangs '" +
+                                                              port.key + "' ist kein Spektrum"};
+                    }
+                }
+                layout_.add(node.id, port.key, GpuType::Spectrum, SlotOrigin::SpectrumInput);
+                continue;
+            }
             if (port.type != PortType::Field) {
                 // Modulation: Der Eingang gehört zu einem Parameter gleichen Schlüssels,
                 // dessen Slot im Uniform-Puffer den verbundenen Wert erhält. Am Shader
@@ -260,6 +277,19 @@ private:
                     break;
             }
             return std::string{"vec4<f32>(0.0, 0.0, 0.0, 0.0)"};
+        };
+        bindings.spectrum = [&](std::string_view port, std::string_view index) -> Result<std::string> {
+            const graph::PortDescriptor* found = descriptor.findPort(port);
+            if (found == nullptr || found->type != PortType::AudioSpectrum ||
+                found->direction != PortDirection::Input) {
+                return Error{ErrorCode::InvalidArgument,
+                             describe(node) + ": @spectrum(" + std::string{port} +
+                                 ") verweist auf keinen Spektrum-Eingang"};
+            }
+            // array<vec4<f32>, 8>: Band i steht in Element i/4, Komponente i%4.
+            const std::string member = "wh_params." + memberName(node.id, port);
+            const std::string idx = "(" + std::string{index} + ")";
+            return member + "[" + idx + " / 4u][" + idx + " % 4u]";
         };
         bindings.parameter = [&](std::string_view key) -> Result<std::string> {
             const graph::ParameterDescriptor* parameter = descriptor.findParameter(key);

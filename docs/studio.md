@@ -248,6 +248,14 @@ Für sACN tritt das Studio den Multicast-Gruppen genau der Universen bei, die da
 Pakete kommen immer an. Ist der Port belegt, bleibt der Schalter aus und die Statuszeile nennt den Grund.
 Die Nodes selbst: `docs/value-graph.md`, Abschnitt „DMX-Eingang“.
 
+## Audio-Eingang
+
+Menü **Eingang → Audio**: *Aus*, *Standardgerät*, ein Gerät aus der Liste oder *WAV-Datei in Schleife …*.
+Nach der Installation ist der Eingang aus; das Mikrofon öffnet erst die ausdrückliche Wahl. Die Wahl wird
+gemerkt (scheitert das Öffnen beim nächsten Start, bleibt der Eingang aus). Die Statuszeile zeigt „Audio:
+Quelle, Pegel, BPM“; enthält das Projekt Audio-Nodes, der Eingang ist aber aus, steht dort ein Hinweis.
+Die Nodes und die Technik dahinter: [docs/audio.md](audio.md).
+
 Nicht enthalten: Art-Net-Erkennung (ArtPoll/ArtPollReply), das Studio meldet sich also nicht in der
 Geräteliste von Pulten an; Pulte müssen die IP-Adresse dieses Rechners direkt oder per Broadcast ansprechen.
 

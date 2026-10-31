@@ -1,0 +1,47 @@
+whitehole-project 1
+# Beispiel für den Audio-Eingang: ein Equalizer mit pulsierendem Hintergrund.
+#
+# So ausprobieren (ohne Mikrofon, mit einer WAV-Datei in Schleife):
+#   whitehole_cli examples/audio.whfx --audio-in musik.wav
+# oder mit dem Standardmikrofon / einem Gerät aus "whitehole_cli --audio-devices":
+#   whitehole_cli examples/audio.whfx --audio-in default
+# In whitehole_studio: Menü Eingang -> Audio.
+#
+# Aufbau: Audio Spectrum liefert 32 Frequenzbänder, Spectrum Bars zeichnet sie als Balken.
+# Darunter liegt ein dunkles Plasma, dessen Helligkeit mit jedem Schlag (Beat) aufblitzt.
+
+settings fps 40
+
+destination 0 127.0.0.1
+
+fixture Wand
+  matrix 32 16 serpentine
+  patch artnet destination 0 universe 0
+end
+
+node spektrum wh.value.audiospectrum
+  set release 0.25
+end
+node balken wh.generator.spectrum
+  set bars 16
+  set gap 0.2
+end
+node beat wh.value.beat
+  set decay 0.3
+end
+node plasma wh.generator.plasma
+  set scale 3
+end
+node hintergrund wh.modifier.coloradjust
+  set brightness 0.15
+end
+node ueber wh.blend.blend
+  set mode 7
+end
+
+connect plasma.out -> hintergrund.source
+connect beat.pulse -> hintergrund.brightness
+connect spektrum.spectrum -> balken.spectrum
+connect hintergrund.out -> ueber.a
+connect balken.out -> ueber.b
+output ueber.out

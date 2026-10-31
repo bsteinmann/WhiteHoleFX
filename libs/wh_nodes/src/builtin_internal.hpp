@@ -11,6 +11,7 @@
 
 #include "whitehole/compiler/node_definition.hpp"
 #include "whitehole/graph/parameter_resolve.hpp"
+#include "whitehole/audio/audio_store.hpp"
 #include "whitehole/input/dmx_store.hpp"
 #include "whitehole/values/cpu_kernel.hpp"
 
@@ -138,6 +139,8 @@ std::vector<compiler::NodeDefinition> transformNodes();
 std::vector<compiler::NodeDefinition> blendNodes();
 std::vector<compiler::NodeDefinition> modifierNodes();  // Modifier und Ausgang
 std::vector<values::CpuNodeDefinition> valueNodes();
+std::vector<values::CpuNodeDefinition> audioNodes(std::shared_ptr<audio::AudioStore> store);  // Pegel, Band, Spektrum, Beat, Tap
+std::vector<compiler::NodeDefinition> audioFieldNodes();  // Spectrum Bars
 /// DMX-Eingang (Art-Net/sACN): die Kernel lesen aus `store`; null = ein leerer Speicher (nie ein Signal).
 std::vector<values::CpuNodeDefinition> dmxNodes(std::shared_ptr<input::DmxStore> store);
 

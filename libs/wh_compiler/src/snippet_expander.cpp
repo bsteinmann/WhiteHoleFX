@@ -75,7 +75,7 @@ Result<std::string> expandSnippet(std::string_view body, const SnippetBindings& 
             i = nameEnd;
             continue;
         }
-        if (name != "in" && name != "param") {
+        if (name != "in" && name != "param" && name != "spectrum") {
             return invalid("unbekannter Platzhalter '@" + std::string{name} + "'");
         }
         if (nameEnd >= body.size() || body[nameEnd] != '(') {
@@ -97,6 +97,27 @@ Result<std::string> expandSnippet(std::string_view body, const SnippetBindings& 
                 return value;
             }
             result += value.value();
+        } else if (name == "spectrum") {
+            const std::size_t comma = findTopLevelComma(args);
+            if (comma == std::string_view::npos) {
+                return invalid("@spectrum braucht Port und Bandnummer, getrennt durch ein Komma");
+            }
+            const std::string_view port = trim(args.substr(0, comma));
+            if (port.empty()) {
+                return invalid("@spectrum ohne Port");
+            }
+            if (!bindings.spectrum) {
+                return invalid("@spectrum wird hier nicht unterstützt");
+            }
+            Result<std::string> index = expandSnippet(trim(args.substr(comma + 1)), bindings);
+            if (!index.ok()) {
+                return index;
+            }
+            Result<std::string> band = bindings.spectrum(port, index.value());
+            if (!band.ok()) {
+                return band;
+            }
+            result += band.value();
         } else {
             const std::size_t comma = findTopLevelComma(args);
             if (comma == std::string_view::npos) {

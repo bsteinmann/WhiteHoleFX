@@ -9,8 +9,9 @@ Result<std::unique_ptr<BuiltinLibrary>> BuiltinLibrary::create() {
     auto library = std::make_unique<BuiltinLibrary>();
     library->registry = std::make_shared<graph::NodeRegistry>();
     library->dmx = std::make_shared<input::DmxStore>();
+    library->audio = std::make_shared<audio::AudioStore>();
     const Result<void> registered =
-        registerBuiltinNodes(*library->registry, library->snippets, library->kernels, library->dmx);
+        registerBuiltinNodes(*library->registry, library->snippets, library->kernels, library->dmx, library->audio);
     if (!registered.ok()) {
         return registered.error();
     }

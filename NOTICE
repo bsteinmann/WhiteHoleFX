@@ -6,4 +6,5 @@ Dieses Produkt steht unter der Apache License 2.0 (siehe LICENSE).
 Bibliotheken von Dritten:
 - wgpu-native (gfx-rs), optional gebunden: MIT/Apache-2.0, siehe https://github.com/gfx-rs/wgpu-native
 - Qt 6 (nur Oberfläche), dynamisch gebunden: LGPL-3.0, siehe https://www.qt.io/licensing
+- miniaudio (Audio-Aufnahme): Public Domain / MIT-0, siehe https://github.com/mackron/miniaudio
 - Catch2 (nur Tests): Boost Software License 1.0

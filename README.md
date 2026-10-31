@@ -27,6 +27,7 @@ Raum sitzt, und tastet die Funktion genau dort ab.
 | `wh_graph` | Graph-Modell, Node-Verzeichnis, Parameter und Modulation |
 | `wh_values` | CPU-Nodes (Zeit, LFO, Zufall, ...) pro Frame auswerten |
 | `wh_input` | DMX-Eingang: Art-Net und sACN empfangen, letzter Stand je Universe (für die DMX-Nodes) |
+| `wh_audio` | Audio-Eingang: Aufnahme (miniaudio) oder WAV-Datei, FFT, 32-Band-Spektrum, Pegel, Beat und Tempo (für die Audio-Nodes) |
 | `wh_compiler` | Field-Nodes zu WGSL übersetzen |
 | `wh_nodes` | mitgelieferte Nodes |
 | `wh_engine` | Renderloop, Readback-Ring, Stages |
@@ -64,7 +65,17 @@ Mit GPU und Oberfläche, Windows und alle Fallstricke: **[BUILDING.md](BUILDING.
 - [Projektdatei und Konsolen-Runner](docs/project-format.md)
 - [Bauen und Starten](BUILDING.md)
 - [Oberfläche (Qt)](docs/studio.md)
+- [Audio-Eingang (Pegel, Beat, Spektrum)](docs/audio.md)
 - [GPU-Backend (WebGPU)](docs/gpu-backend.md)
+
+## Audio-Eingang
+
+Audio-Nodes reagieren auf Musik: Lautstärke, Frequenzbänder, Beat und Tempo, dazu ein Equalizer
+(„Spectrum Bars“) als Effekt. Quelle ist ein Mikrofon bzw. Eingang oder eine WAV-Datei in Schleife. Der
+Eingang ist standardmäßig **aus**; einschalten im Studio über *Eingang → Audio* oder mit
+`whitehole_cli projekt.whfx --audio-in default` (Gerät) bzw. `--audio-in musik.wav`. Das Beispiel
+`examples/audio.whfx` zeigt einen Equalizer mit pulsierendem Hintergrund. Alles Weitere:
+[docs/audio.md](docs/audio.md).
 
 ## Konventionen
 
@@ -84,7 +95,8 @@ Mit GPU und Oberfläche, Windows und alle Fallstricke: **[BUILDING.md](BUILDING.
 - [x] Projektdatei und Konsolen-Runner (`whitehole_cli`)
 - [x] Mapping-Import aus CSV und JSON (Punktwolke)
 - [ ] Mapping-Import aus SVG, DXF und PNG
-- [ ] Audio (FFT, Beat), Video-Quellen
+- [x] Audio-Eingang: Pegel, Frequenzband, Beat, Tap Tempo und Spektrum-Balken (Menü Eingang → Audio, `--audio-in`), siehe [Audio](docs/audio.md)
+- [ ] Video-Quellen
 - [ ] Home-Assistant-Integration
 - [ ] Raster-Nodes (Blur, Feedback), Dawn-Backend
 

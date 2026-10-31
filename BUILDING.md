@@ -17,8 +17,9 @@ starten. Der Rest dieser Anleitung ist für alle, die selbst bauen wollen.
 
 - **CMake 3.25 oder neuer**
 - **C++20-Compiler:** GCC 13+, Clang 16+ oder Visual Studio 2022 (MSVC 19.3x)
-- Internet beim ersten Konfigurieren (Catch2 für die Tests wird geladen) und für das Skript, das
-  wgpu-native holt
+- Internet beim ersten Konfigurieren (Catch2 für die Tests und miniaudio für den Audio-Eingang werden
+  geladen) und für das Skript, das wgpu-native holt. Ohne Netz oder ohne Audio-Aufnahme:
+  `-DWHITEHOLEFX_AUDIO_CAPTURE=OFF` (WAV-Dateien als Audioquelle gehen weiter)
 
 ## Linux (Ubuntu 24.04 / Debian 13 und ähnlich)
 
@@ -61,7 +62,7 @@ Für Ubuntu 24.04 / Debian 13 und neuer (64 Bit) gibt es ein fertiges Paket. Es 
 `WhiteHoleFX-Linux-deb` in jedem CI-Lauf (GitHub, Reiter „Actions“). Installieren:
 
 ```bash
-sudo apt install ./whiteholefx_0.14.2-1_amd64.deb
+sudo apt install ./whiteholefx_0.15.0-1_amd64.deb
 ```
 
 `apt` holt Qt 6 und Vulkan automatisch. Danach gibt es `whitehole_studio` (auch im Anwendungsmenü,

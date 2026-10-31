@@ -5,6 +5,7 @@
 
 #include <catch2/catch_test_macros.hpp>
 
+#include <chrono>
 #include <cstddef>
 #include <cstdint>
 #include <cstring>
@@ -32,8 +33,12 @@ struct Lab {
     values::ValueStore store;
     std::uint64_t frame{0};
     std::shared_ptr<input::DmxStore> dmx = std::make_shared<input::DmxStore>();  // Quelle der DMX-Nodes
+    /// Uhr des Audio-Speichers: Tests lassen sie von Hand laufen, um "Signal weg" nachzustellen.
+    std::chrono::steady_clock::time_point audioNow = std::chrono::steady_clock::time_point{} + std::chrono::seconds{100};
+    std::shared_ptr<audio::AudioStore> audio =
+        std::make_shared<audio::AudioStore>([this] { return audioNow; });  // Quelle der Audio-Nodes
 
-    Lab() { REQUIRE(nodes::registerBuiltinNodes(*registry, snippets, kernels, dmx).ok()); }
+    Lab() { REQUIRE(nodes::registerBuiltinNodes(*registry, snippets, kernels, dmx, audio).ok()); }
 
     NodeId add(std::string_view typeId) { return graph.addNode(typeId, Vec2{}).value(); }
 

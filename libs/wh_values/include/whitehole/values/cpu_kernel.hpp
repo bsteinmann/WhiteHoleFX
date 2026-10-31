@@ -12,9 +12,9 @@
 // Zähler). Wird der Node gelöscht oder wechselt sein Typ, verwirft der
 // Evaluator die Instanz.
 //
-// Grenze (Stand Schritt 4b-A): Kernel liefern Einzelwerte (Scalar, Integer,
-// Boolean, Trigger, Color, Text). Spektren, Punktwolken und Bilder bekommen
-// eigene Kanäle, wenn die Nodes dazu entstehen.
+// Grenze: Kernel liefern Einzelwerte (Scalar, Integer, Boolean, Trigger, Color, Text)
+// und Spektren (AudioSpectrum, eigener Kanal: KernelOutputs::setSpectrum). Punktwolken und
+// Bilder bekommen eigene Kanäle, wenn die Nodes dazu entstehen.
 #pragma once
 
 #include <cstdint>
@@ -28,6 +28,7 @@
 #include "whitehole/core/ids.hpp"
 #include "whitehole/core/result.hpp"
 #include "whitehole/core/services.hpp"
+#include "whitehole/core/spectrum.hpp"
 #include "whitehole/core/types.hpp"
 #include "whitehole/graph/node_descriptor.hpp"
 #include "whitehole/graph/node_registry.hpp"
@@ -64,8 +65,13 @@ public:
         return values_;
     }
 
+    /// Spektrum für einen Ausgang vom Typ AudioSpectrum (eigener Kanal, siehe IValueLookup::spectrum).
+    void setSpectrum(std::string_view portKey, const Spectrum& spectrum);
+    [[nodiscard]] const std::map<std::string, Spectrum, std::less<>>& spectra() const noexcept { return spectra_; }
+
 private:
     std::map<std::string, graph::ParameterValue, std::less<>> values_;
+    std::map<std::string, Spectrum, std::less<>> spectra_;
 };
 
 struct KernelContext {

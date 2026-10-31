@@ -28,6 +28,8 @@ SizeAlign sizeAlignOf(GpuType type) {
             return {12, 16};
         case GpuType::Vec4:
             return {16, 16};
+        case GpuType::Spectrum:
+            return {static_cast<std::uint32_t>(kSpectrumBands * sizeof(float)), 16};
     }
     return {4, 4};
 }
@@ -76,6 +78,8 @@ std::size_t floatCountOf(GpuType type) {
             return 3;
         case GpuType::Vec4:
             return 4;
+        case GpuType::Spectrum:
+            return kSpectrumBands;
     }
     return 1;
 }
@@ -109,6 +113,8 @@ std::string_view wgslTypeName(GpuType type) noexcept {
             return "vec3<f32>";
         case GpuType::Vec4:
             return "vec4<f32>";
+        case GpuType::Spectrum:
+            return "array<vec4<f32>, 8>";
     }
     return "f32";
 }
@@ -183,6 +189,16 @@ std::vector<std::byte> packParameters(const graph::Graph& graph, const Parameter
     for (const ParameterSlot& slot : layout.slots) {
         const graph::NodeInstance* node = graph.findNode(slot.node);
         if (node == nullptr) {
+            continue;
+        }
+        if (slot.origin == SlotOrigin::SpectrumInput) {
+            const graph::Connection* connection = graph.findInputConnection(node->id, slot.key);
+            if (connection != nullptr && values != nullptr) {
+                if (const auto spectrum = values->spectrum(connection->from.node, connection->from.portKey)) {
+                    std::memcpy(bytes.data() + slot.offsetBytes, spectrum->bands.data(),
+                                spectrum->bands.size() * sizeof(float));
+                }
+            }
             continue;
         }
         const std::optional<graph::ParameterValue> value = valueOfSlot(graph, *node, slot, values);

@@ -18,6 +18,7 @@
 #include <unordered_map>
 
 #include "whitehole/core/ids.hpp"
+#include "whitehole/core/spectrum.hpp"
 #include "whitehole/graph/value_lookup.hpp"
 
 namespace whitehole::values {
@@ -30,6 +31,10 @@ public:
     [[nodiscard]] std::optional<graph::ParameterValue> value(NodeId node,
                                                              std::string_view portKey) const override;
 
+    /// Spektren liegen auf einem eigenen Kanal (sie sind keine ParameterValues).
+    void setSpectrum(NodeId node, std::string_view portKey, const Spectrum& spectrum);
+    [[nodiscard]] std::optional<Spectrum> spectrum(NodeId node, std::string_view portKey) const override;
+
     /// Entfernt alle Werte (Anfang jedes Frames).
     void clear() noexcept;
 
@@ -38,6 +43,7 @@ public:
 
 private:
     std::unordered_map<NodeId, std::map<std::string, graph::ParameterValue, std::less<>>> values_;
+    std::unordered_map<NodeId, std::map<std::string, Spectrum, std::less<>>> spectra_;
     std::size_t count_{0};
 };
 

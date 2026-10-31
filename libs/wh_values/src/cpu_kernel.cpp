@@ -23,6 +23,7 @@ bool isValuePortType(graph::PortType type) {
         case graph::PortType::Trigger:
         case graph::PortType::Color:
         case graph::PortType::Text:
+        case graph::PortType::AudioSpectrum:
             return true;
         default:
             return false;
@@ -41,7 +42,7 @@ std::string validate(const CpuNodeDefinition& definition) {
     for (const graph::PortDescriptor& port : descriptor.ports) {
         if (port.direction == graph::PortDirection::Output && !isValuePortType(port.type)) {
             return "der Ausgang '" + port.key +
-                   "' liefert keinen Einzelwert; Spektren, Punktwolken und Bilder bekommen "
+                   "' liefert weder Einzelwert noch Spektrum; Punktwolken und Bilder bekommen "
                    "eigene Kanäle";
         }
     }
@@ -86,6 +87,10 @@ ColorRgba KernelInputs::color(std::string_view key, ColorRgba fallback) const {
 
 void KernelOutputs::set(std::string_view portKey, graph::ParameterValue value) {
     values_.insert_or_assign(std::string{portKey}, std::move(value));
+}
+
+void KernelOutputs::setSpectrum(std::string_view portKey, const Spectrum& spectrum) {
+    spectra_.insert_or_assign(std::string{portKey}, spectrum);
 }
 
 std::unique_ptr<ICpuKernel> CpuKernelLibrary::create(std::string_view typeId) const {

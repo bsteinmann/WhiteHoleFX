@@ -32,6 +32,7 @@
 #include "whitehole/output/packet_sink.hpp"
 #include "whitehole/preview/preview.hpp"
 #include "whitehole/project/project.hpp"
+#include "whitehole/runtime/audio_usage.hpp"
 #include "whitehole/runtime/dmx_usage.hpp"
 #include "whitehole/runtime/led_info.hpp"
 #include "whitehole/runtime/node_clipboard.hpp"
@@ -253,6 +254,8 @@ public:
 
     /// Welche DMX-Universen die DMX-Nodes des geladenen Projekts lesen (leer, wenn nichts geladen ist).
     [[nodiscard]] DmxUsage dmxUsage() const;
+    /// Wie viele Audio-Nodes das geladene Projekt hat (0, wenn nichts geladen ist).
+    [[nodiscard]] AudioUsage audioUsage() const;
 
     /// Bild der LEDs: während des Laufs mit den Farben des letzten Frames (schwarz, solange noch
     /// keiner da ist), sonst das Layout. Fehler: InvalidArgument, wenn nichts geladen ist.

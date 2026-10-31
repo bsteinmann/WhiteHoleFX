@@ -17,6 +17,8 @@ struct Options {
     bool help{false};
     bool dmxArtnet{false};           // --dmx-in: Art-Net empfangen
     bool dmxSacn{false};             // --dmx-in: sACN empfangen
+    std::string audioIn;             // --audio-in: "default", Geräte-Nummer oder -Name, oder eine .wav-Datei; leer = aus
+    bool audioDevices{false};        // --audio-devices: Aufnahmegeräte auflisten und beenden
     std::optional<std::uint64_t> frames;  // sonst bis Strg+C
     std::optional<double> fps;            // überschreibt das Projekt
     std::string snapshotPath;             // PNG der LEDs (bei --check: des Layouts)

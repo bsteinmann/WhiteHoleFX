@@ -279,6 +279,7 @@ void MainWindow::updateStatus() {
     }
     syncDmxUniverses();
     text += dmxStatusText();
+    text += audioStatusText();
     text += gate_->enabled() ? tr("   |   AUSGABE AN") : tr("   |   Ausgabe aus (%1 Pakete nicht gesendet)").arg(gate_->suppressed());
     statusLabel_->setText(text);
     if (s.lastError) {

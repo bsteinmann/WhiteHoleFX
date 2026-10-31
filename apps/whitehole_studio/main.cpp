@@ -121,7 +121,9 @@ int main(int argc, char** argv) {
         std::printf("Master/Blackout: %s\n", controls.isEmpty() ? "ok" : "FEHLER");
         const QString dmx = controls.isEmpty() ? window.exerciseDmx() : QString{};
         std::printf("DMX-Eingang: %s\n", dmx.isEmpty() ? "ok" : "FEHLER");
-        for (const QString& failure : {selection, created, transparency, controls, dmx}) {
+        const QString audio = dmx.isEmpty() ? window.exerciseAudio() : QString{};
+        std::printf("Audio-Eingang: %s\n", audio.isEmpty() ? "ok" : "FEHLER");
+        for (const QString& failure : {selection, created, transparency, controls, dmx, audio}) {
             if (!failure.isEmpty()) {
                 std::fprintf(stderr, "Rauchtest fehlgeschlagen: %s\n", failure.toUtf8().constData());
                 return 1;

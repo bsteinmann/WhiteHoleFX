@@ -16,11 +16,14 @@ struct SnippetBindings {
     std::function<Result<std::string>(std::string_view port, std::string_view coordinate)> input;
     /// @param(schluessel)
     std::function<Result<std::string>(std::string_view key)> parameter;
+    /// @spectrum(port, index): ein Band des Spektrums am Eingang `port`; `index` ist bereits
+    /// expandiert und ein u32-Ausdruck (0..31). Optional: ohne Funktion ist der Platzhalter ein Fehler.
+    std::function<Result<std::string>(std::string_view port, std::string_view index)> spectrum;
     /// @time
     std::string time;
 };
 
-/// Platzhalter: @in(port, koordinate), @param(schluessel), @time.
+/// Platzhalter: @in(port, koordinate), @param(schluessel), @spectrum(port, band), @time.
 /// - Klammern in `koordinate` dürfen verschachtelt sein, auch weitere Platzhalter.
 /// - Alles außerhalb von Platzhaltern bleibt unverändert.
 /// Fehler (InvalidArgument): unbekannter Platzhalter, fehlende oder unpassende
