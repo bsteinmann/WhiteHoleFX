@@ -47,6 +47,7 @@ beliebigen Koordinaten abtastet.
 | `wh.generator.lightning` | Lightning: bis zu drei Blitze (`bolts`) hängen oben an der Leinwand und laufen nach unten. `rate` Schläge pro Sekunde, `duration` Sekunden sichtbar (höchstens ein ganzer Takt), `decay` Abklingen, `width`, `jag` Zackigkeit, `glow` Leuchthof, `branches` Helligkeit eines Seitenastes (0 = keiner), `reach` wie tief der Blitz reicht, `flash` hellt die ganze Fläche mit auf; Farbe `color`. Die Stelle jedes Schlags wird aus der Taktnummer gewürfelt, ein Nachschlag bei etwa 30 % der Sichtbarkeit. Der Rest ist durchsichtig, siehe `examples/gewitter.whfx` | 2D |
 | `wh.generator.particles` | Particles: `count` (bis 48) Teilchen strömen aus (`ex`, `ey`), gestaffelt über `lifetime` Sekunden. `direction` in Grad (0 = rechts, 90 = oben), `spread` der Fächer in Umläufen (1 = rundum), `speed`, `gravity` (positiv = nach unten), `size`, `trail` Schweiflänge in Sekunden, `shrink` Schrumpfen über das Leben, Palette *Two colors* (zufällig zwischen `colorA` und `colorB`) oder *Rainbow* (Konfetti). Jedes Teilchen hat in jedem Durchlauf eine neue Richtung und ein neues Tempo (Hash), die Bahn ist eine Wurfparabel in geschlossener Form: kein Zustand, gleiches Bild bei jedem Abspielen. Durchsichtig außerhalb der Teilchen, siehe `examples/funken.whfx` | 2D |
 | `wh.generator.spectrum` | Spectrum Bars: Equalizer aus `bars` Balken, die von unten (oder von der Mitte aus) so hoch wachsen wie das Audio-Spektrum am Eingang `spectrum` (Porttyp AudioSpectrum, von „Audio Spectrum“); `gap`, `softness`, Farbverlauf `color` → `colorTop`. Ohne Verbindung durchsichtig, siehe [Audio](audio.md) | 2D |
+| `wh.generator.text` | Text / Laufschrift: der Text (UTF-8, `text`) in einer 5×7-Punktschrift mit ASCII und ä ö ü Ä Ö Ü ß; alles andere wird zum Fragezeichen. `mode` *Scroll* (Tempo `speed` in Schriftpunkten pro Sekunde, negativ nach rechts, `gap` Pause vor dem nächsten Durchlauf) oder *Static* mit `align` links, mittig, rechts. `height` ist die Höhe der acht Schriftzeilen als Anteil der Leinwand, `y` die Mitte, `spacing` der Abstand zwischen Buchstaben in Punkten, `aspect` das Seitenverhältnis der Leinwand (Breite / Höhe, 32×16 = 2), damit die Punkte quadratisch sind. `color`, `background` (standardmäßig durchsichtig). Siehe unten | 2D |
 | `wh.generator.scope` | Oscilloscope: die 32 Punkte der Wellenform am Eingang `wave` (Porttyp AudioWave, von „Audio Waveform“) als Linie über die Breite, `amplitude` halbe Höhe, `thickness`, `glow`, `fill` für die Fläche zur Mittellinie, `color`. Ohne Verbindung eine flache Linie in der Mitte, siehe [Audio](audio.md) | 2D |
 | `wh.transform.rotate` | Drehung in der xy-Ebene um die Mitte | 2D |
 | `wh.transform.rotate3d` | Drehung um alle drei Achsen um die Mitte (0,5; 0,5; 0,5) | 3D |
@@ -106,13 +107,15 @@ in jeder z-Ebene gleich. Die z-Variante kommt, wo sie sich lohnt (Rotate 3D ist 
 ### Regeln für das Snippet
 
 `body` ist der Rumpf von `fn wh_f<ID>(p: vec3<f32>) -> vec4<f32>` und endet mit `return`.
-Es gibt vier Platzhalter:
+Es gibt sieben Platzhalter:
 
 | Platzhalter | Wird ersetzt durch |
 |---|---|
 | `@in(port, koordinate)` | Aufruf der Funktion, die am Field-Eingang `port` hängt, an der Koordinate |
 | `@param(schluessel)` | Zugriff auf den Parameter im Uniform-Puffer |
 | `@spectrum(port, band)` | ein Wert (0–31, `u32`-Ausdruck) am Eingang `port` vom Typ AudioSpectrum (Band, 0..1) oder AudioWave (Punkt der Wellenform, −1..1), als `f32` |
+| `@text(schluessel)` | ein Textparameter als `array<u32, N>(...)` aus Unicode-Codepunkten (höchstens 256, N mindestens 1) |
+| `@textlen(schluessel)` | die Zeichenzahl des Textparameters als `u32`-Literal (`5u`, bei leerem Text `0u`) |
 | `@time` | `wh_frame.time` |
 
 - Platzhalter dürfen verschachtelt werden: `@in(a, p + vec3<f32>(@param(shift), 0.0, 0.0))`.
@@ -123,7 +126,9 @@ Es gibt vier Platzhalter:
   ignoriert.
 - Der Name `p` ist belegt. Lokale Variablen heißen anders.
 - `@param` funktioniert nur für Parameter mit GPU-Entsprechung (Bool, Zahl, Vec2, Vec3,
-  Farbe). Texte sind nicht GPU-fähig.
+  Farbe). Texte gehen über `@text` und `@textlen`: Der Compiler schreibt sie als Zahlenfeld in den Shader,
+  sie belegen also keinen Slot im Parameterpuffer, und ein neuer Text ändert die Struktur (die Pipeline
+  wird neu gebaut, anders als bei Zahlen und Farben).
 
 **Koordinaten-Nodes** (Rotate, Mirror, Scale, ...) ändern `p` und rufen ihren Eingang an
 der neuen Koordinate auf. Das ist der ganze Trick: Sie wirken auf alles dahinter.
@@ -171,11 +176,27 @@ bedeutet nur: Puffer neu packen und hochladen. Ändert sich der `structureHash` 
 bleibt auch die Pipeline gültig. Nur Struktur-Änderungen (Node einfügen, Verbindung ändern)
 erzeugen neuen Text und damit eine neue Pipeline.
 
+## Text und Laufschrift
+
+Der Text-Node zeichnet Buchstaben im Shader aus einer eingebauten Punktschrift (`builtin_text_font.hpp`,
+je Zeichen 5 Spalten à 8 Bit, zwei `u32`), ohne Textur und ohne Schriftdatei. Eine Zelle ist 8 Punkte hoch
+(7 Zeilen plus eine freie für Umlautpunkte und Unterlängen) und `5 + spacing` Punkte breit. Passt `height` zur
+Wand (bei 16 Zeilen: 0,5), ist ein Schriftpunkt genau eine LED und die Schrift scharf; die Lage wird auf ganze
+Schriftpunkte gerundet, sodass die Laufschrift nicht flimmert.
+
+Der Shader kennt die Größe der Leinwand nicht; `aspect` (Breite / Höhe der Leinwand) macht die Punkte
+quadratisch. Ein Durchlauf der Laufschrift ist Textbreite + Leinwandbreite + `gap` lang: Der Text läuft
+vollständig hinaus, bevor er von der anderen Seite wieder hereinkommt. Beispiel: `examples/laufschrift.whfx`.
+Im Projekt steht der Text in Anführungszeichen (`set text "Hallo Köln"`).
+
+Grenzen: höchstens 256 Zeichen; keine Proportionalschrift, keine Schriftarten, keine Zeilenumbrüche; Zeichen
+außerhalb von ASCII und den sieben deutschen Sonderzeichen erscheinen als `?`.
+
 ## Grenzen (Stand Schritt 4b, Teil A)
 
 Der Compiler meldet diese Fälle ausdrücklich als `Unsupported`, statt sie zu ignorieren:
 
-- Nodes der Raster-Domäne (Blur, Feedback, Video, Text, Script). CPU-Nodes übersetzt er
+- Nodes der Raster-Domäne (Blur, Feedback, Video, Script). CPU-Nodes übersetzt er
   nicht; ihre Werte liefert `wh_values` (siehe `value-graph.md`).
 - Verbundene Nicht-Field-Eingänge, die keinen gleichnamigen Parameter haben. Ein Skalar
   braucht ein Ziel, das er modulieren kann.

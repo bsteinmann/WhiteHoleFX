@@ -75,7 +75,7 @@ Result<std::string> expandSnippet(std::string_view body, const SnippetBindings& 
             i = nameEnd;
             continue;
         }
-        if (name != "in" && name != "param" && name != "spectrum") {
+        if (name != "in" && name != "param" && name != "spectrum" && name != "text" && name != "textlen") {
             return invalid("unbekannter Platzhalter '@" + std::string{name} + "'");
         }
         if (nameEnd >= body.size() || body[nameEnd] != '(') {
@@ -87,12 +87,16 @@ Result<std::string> expandSnippet(std::string_view body, const SnippetBindings& 
         }
         const std::string_view args = body.substr(nameEnd + 1, close - nameEnd - 1);
 
-        if (name == "param") {
+        if (name == "param" || name == "text" || name == "textlen") {
             const std::string_view key = trim(args);
             if (key.empty()) {
-                return invalid("@param ohne Schlüssel");
+                return invalid("@" + std::string{name} + " ohne Schlüssel");
             }
-            Result<std::string> value = bindings.parameter(key);
+            const auto& resolve = name == "param" ? bindings.parameter : name == "text" ? bindings.text : bindings.textLength;
+            if (!resolve) {
+                return invalid("@" + std::string{name} + " wird hier nicht unterstützt");
+            }
+            Result<std::string> value = resolve(key);
             if (!value.ok()) {
                 return value;
             }

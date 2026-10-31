@@ -17,6 +17,7 @@ std::vector<compiler::NodeDefinition> builtinNodeDefinitions() {
     append(detail::generatorNodes());
     append(detail::shapeNodes());
     append(detail::sparkNodes());
+    append(detail::textNodes());
     append(detail::transformNodes());
     append(detail::blendNodes());
     append(detail::modifierNodes());

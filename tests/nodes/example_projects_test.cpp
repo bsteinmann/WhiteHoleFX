@@ -40,6 +40,10 @@ TEST_CASE("Beispiel: examples/funken.whfx lädt und kompiliert", "[examples][nod
     checkExample("funken.whfx", "wh_seg_dist");
 }
 
+TEST_CASE("Beispiel: examples/laufschrift.whfx lädt und kompiliert", "[examples][nodes]") {
+    checkExample("laufschrift.whfx", "wh_text_glyph");
+}
+
 TEST_CASE("Beispiel: examples/oszilloskop.whfx lädt und kompiliert", "[examples][nodes]") {
     checkExample("oszilloskop.whfx", "wh_scope_dist");
 }

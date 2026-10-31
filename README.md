@@ -96,8 +96,8 @@ Eingang ist standardmäßig **aus**; einschalten im Studio über *Eingang → Au
 - [x] Mapping-Import aus CSV und JSON (Punktwolke)
 - [ ] Mapping-Import aus SVG, DXF und PNG
 - [x] Audio-Eingang: Pegel, Frequenzband, Beat, Tap Tempo und Spektrum-Balken (Menü Eingang → Audio, `--audio-in`), siehe [Audio](docs/audio.md)
+- [x] Effekte: Lightning, Particles, Oscilloscope und Text/Laufschrift (siehe [Field-Nodes](docs/field-nodes.md))
 - [ ] Video-Quellen
-- [ ] Home-Assistant-Integration
 - [ ] Raster-Nodes (Blur, Feedback), Dawn-Backend
 
 ## Hinweis zur Verifikation

@@ -7,9 +7,12 @@
 #include <string_view>
 #include <unordered_set>
 #include <utility>
+#include <variant>
+#include <vector>
 
 #include "whitehole/compiler/snippet_expander.hpp"
 #include "whitehole/core/hash.hpp"
+#include "whitehole/core/utf8.hpp"
 
 namespace whitehole::compiler {
 
@@ -20,6 +23,9 @@ using graph::NodeInstance;
 using graph::PortDescriptor;
 using graph::PortDirection;
 using graph::PortType;
+
+/// So viele Zeichen eines Textparameters kommen in den Shader (der Rest wird abgeschnitten).
+constexpr std::size_t kMaxTextCodePoints = 256;
 
 std::string describe(const NodeInstance& node) {
     return "Node #" + std::to_string(node.id.value()) + " (" + node.typeId + ")";
@@ -290,6 +296,43 @@ private:
             const std::string member = "wh_params." + memberName(node.id, port);
             const std::string idx = "(" + std::string{index} + ")";
             return member + "[" + idx + " / 4u][" + idx + " % 4u]";
+        };
+        // Text wird beim Kompilieren in den Shader geschrieben (kein Uniform-Slot): Ändert sich der Text,
+        // ändert sich die Struktur, und die Pipeline wird neu gebaut. Dafür braucht der Shader keinen
+        // Puffer für Zeichenketten.
+        const auto textOf = [&](std::string_view key) -> Result<std::vector<std::uint32_t>> {
+            const graph::ParameterDescriptor* parameter = descriptor.findParameter(key);
+            if (parameter == nullptr || !std::holds_alternative<std::string>(parameter->defaultValue)) {
+                return Error{ErrorCode::InvalidArgument,
+                             describe(node) + ": @text(" + std::string{key} + ") ist kein Textparameter"};
+            }
+            const auto stored = node.parameters.find(std::string{key});
+            const std::string& value = stored != node.parameters.end() && std::holds_alternative<std::string>(stored->second)
+                                           ? std::get<std::string>(stored->second)
+                                           : std::get<std::string>(parameter->defaultValue);
+            return Result<std::vector<std::uint32_t>>{decodeUtf8(value, kMaxTextCodePoints)};
+        };
+        bindings.text = [&](std::string_view key) -> Result<std::string> {
+            Result<std::vector<std::uint32_t>> points = textOf(key);
+            if (!points.ok()) {
+                return points.error();
+            }
+            std::vector<std::uint32_t> list = std::move(points.value());
+            if (list.empty()) {
+                list.push_back(0);  // WGSL kennt keine Felder der Länge 0
+            }
+            std::string text = "array<u32, " + std::to_string(list.size()) + ">(";
+            for (std::size_t i = 0; i < list.size(); ++i) {
+                text += (i == 0 ? "" : ", ") + std::to_string(list[i]) + "u";
+            }
+            return text + ")";
+        };
+        bindings.textLength = [&](std::string_view key) -> Result<std::string> {
+            Result<std::vector<std::uint32_t>> points = textOf(key);
+            if (!points.ok()) {
+                return points.error();
+            }
+            return std::to_string(points.value().size()) + "u";
         };
         bindings.parameter = [&](std::string_view key) -> Result<std::string> {
             const graph::ParameterDescriptor* parameter = descriptor.findParameter(key);

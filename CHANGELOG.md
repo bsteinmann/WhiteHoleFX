@@ -1,5 +1,16 @@
 # Änderungen
 
+## 0.18.0
+
+- **Text / Laufschrift:** Neuer Node `Text` (`wh.generator.text`). Eine eingebaute 5×7-Punktschrift mit ASCII und
+  ä ö ü Ä Ö Ü ß wird im Shader gezeichnet, ohne Textur. Modus *Scroll* (Tempo in Schriftpunkten pro Sekunde, beide
+  Richtungen, Pause vor dem nächsten Durchlauf) oder *Static* (links, mittig, rechts); Höhe, Mitte, Buchstabenabstand,
+  Farbe und Hintergrund einstellbar. Beispiel: `examples/laufschrift.whfx`.
+- **Textparameter im Shader:** Der Feldcompiler kennt die Platzhalter `@text(schluessel)` und `@textlen(schluessel)`; der
+  Text (UTF-8, höchstens 256 Zeichen) wird als Feld von Codepunkten in den Shader geschrieben. Dafür gibt es
+  `core/utf8.hpp` (`decodeUtf8`, fehlertolerant). Ein neuer Text baut die Pipeline neu, alle anderen Parameter nicht.
+- **Roadmap:** Die Home-Assistant-Integration ist aus der Liste gestrichen.
+
 ## 0.17.0
 
 - **Oszilloskop:** Neue Nodes `Audio Waveform` (Kategorie „Audio“) und `Oscilloscope` (Generators). Der Analyse-Frame

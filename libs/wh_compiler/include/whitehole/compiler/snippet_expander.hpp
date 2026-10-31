@@ -19,11 +19,17 @@ struct SnippetBindings {
     /// @spectrum(port, index): ein Band des Spektrums am Eingang `port`; `index` ist bereits
     /// expandiert und ein u32-Ausdruck (0..31). Optional: ohne Funktion ist der Platzhalter ein Fehler.
     std::function<Result<std::string>(std::string_view port, std::string_view index)> spectrum;
+    /// @text(schluessel): ein Textparameter als WGSL-Ausdruck `array<u32, N>(...)` mit den Unicode-Codepunkten
+    /// (N ist mindestens 1). Optional: ohne Funktion ist der Platzhalter ein Fehler.
+    std::function<Result<std::string>(std::string_view key)> text;
+    /// @textlen(schluessel): die Zahl der Zeichen des Textparameters als u32-Literal (`5u`).
+    std::function<Result<std::string>(std::string_view key)> textLength;
     /// @time
     std::string time;
 };
 
-/// Platzhalter: @in(port, koordinate), @param(schluessel), @spectrum(port, band), @time.
+/// Platzhalter: @in(port, koordinate), @param(schluessel), @spectrum(port, band), @text(schluessel),
+/// @textlen(schluessel), @time.
 /// - Klammern in `koordinate` dürfen verschachtelt sein, auch weitere Platzhalter.
 /// - Alles außerhalb von Platzhaltern bleibt unverändert.
 /// Fehler (InvalidArgument): unbekannter Platzhalter, fehlende oder unpassende

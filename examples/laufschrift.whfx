@@ -1,0 +1,42 @@
+whitehole-project 1
+# Beispiel für den Text-Node: eine Laufschrift über dunklem Plasma.
+#
+# So ausprobieren:
+#   whitehole_cli examples/laufschrift.whfx --snapshot laufschrift.png --frames 120
+#
+# Aufbau: Der Text-Node zeichnet in einer 5x7-Punktschrift. Die Wand hat 32 x 16 LEDs; `height` 0.5 füllt
+# 8 der 16 Zeilen, ein Schriftpunkt ist dann genau eine LED. `aspect` 2 ist das Seitenverhältnis der Wand
+# (32 / 16), damit die Punkte quadratisch bleiben. `speed` ist in Schriftpunkten pro Sekunde (negativ: nach
+# rechts). Text mit Umlauten (ä ö ü Ä Ö Ü ß) geht in Anführungszeichen. Ein neuer Text baut den Shader neu,
+# alles andere ändert nur Werte. Über Plasma liegt die Schrift per Blend (Modus 7 = Over).
+
+settings fps 40
+
+destination 0 127.0.0.1
+
+fixture Wand
+  matrix 32 16 serpentine
+  patch artnet destination 0 universe 0
+end
+
+node himmel wh.generator.plasma
+  set scale 2
+end
+node dunkel wh.modifier.coloradjust
+  set brightness 0.2
+end
+node schrift wh.generator.text
+  set text "Hallo Köln! WhiteHoleFX läuft."
+  set speed 14
+  set height 0.5
+  set aspect 2
+  set color 1 0.9 0.3 1
+end
+node ueber wh.blend.blend
+  set mode 7
+end
+
+connect himmel.out -> dunkel.source
+connect dunkel.out -> ueber.a
+connect schrift.out -> ueber.b
+output ueber.out
