@@ -1,5 +1,10 @@
 # Änderungen
 
+## 0.14.1
+
+- **Lizenz:** WhiteHoleFX steht jetzt unter der Apache License 2.0 (`LICENSE`, `NOTICE`); README und
+  Debian-Paket (`copyright`) nennen sie. Das Repository ist öffentlich
+
 ## 0.14.0
 
 - **Mapping-Import:** LED-Positionen aus CSV- oder JSON-Dateien als Punktwolke laden („Import …“ im

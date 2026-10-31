@@ -22,7 +22,7 @@ install(DIRECTORY "${PROJECT_SOURCE_DIR}/examples/"
 
 file(GLOB WH_DOC_FILES "${PROJECT_SOURCE_DIR}/docs/*.md")
 install(FILES "${PROJECT_SOURCE_DIR}/README.md" "${PROJECT_SOURCE_DIR}/BUILDING.md"
-              "${PROJECT_SOURCE_DIR}/CHANGELOG.md" ${WH_DOC_FILES}
+              "${PROJECT_SOURCE_DIR}/CHANGELOG.md" "${PROJECT_SOURCE_DIR}/LICENSE" "${PROJECT_SOURCE_DIR}/NOTICE" ${WH_DOC_FILES}
     DESTINATION share/doc/whiteholefx)
 install(FILES "${PROJECT_SOURCE_DIR}/packaging/linux/copyright" DESTINATION share/doc/whiteholefx)
 

@@ -98,4 +98,6 @@ Bildschirm. Rückmeldungen dazu sind willkommen.
 
 ## Lizenz
 
-Noch nicht festgelegt. Bis eine `LICENSE`-Datei existiert, gilt: alle Rechte vorbehalten.
+WhiteHoleFX steht unter der [Apache License 2.0](LICENSE). Hinweise zu Bibliotheken von Dritten
+(wgpu-native, Qt, Catch2) stehen in [NOTICE](NOTICE). Beiträge werden, sofern nicht anders vereinbart,
+unter derselben Lizenz angenommen.
