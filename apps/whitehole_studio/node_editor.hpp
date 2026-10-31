@@ -44,6 +44,11 @@ public:
     /// Zoomt so, dass alle Nodes zu sehen sind (höchstens im Maßstab 1:1).
     void showAll();
 
+    /// Der Node, der als einziges ausgewählt ist (leer bei keiner oder mehreren Auswahlen).
+    [[nodiscard]] std::optional<NodeId> selectedNode() const;
+    /// Wählt genau diesen Node aus (und sonst nichts); wahr, wenn es ihn gibt.
+    bool selectNode(NodeId id);
+
     /// Legt einen Node an; meldet Fehler über `failed`.
     std::optional<NodeId> addNodeAt(const std::string& typeId, const QPointF& scenePos);
     /// Verbindet Ausgang `from` mit Eingang `to`. Meldet Fehler über `failed`.
@@ -68,6 +73,8 @@ Q_SIGNALS:
     /// aufgebaut werden); sonst nur Positionen.
     void edited(bool structural);
     void failed(const QString& message);
+    /// Die Auswahl hat sich durch Anklicken oder selectNode geändert (nicht durch Neuaufbau).
+    void selectionChanged();
 
 protected:
     void mousePressEvent(QMouseEvent* event) override;
@@ -98,6 +105,8 @@ private:
     void cancelWire();
 
     void buildAddMenu(QMenu& menu, const QPointF& scenePos);
+    /// Baut die Szene aus dem Graphen auf (ohne Auswahl zu retten, siehe rebuild).
+    void buildScene();
 
     runtime::Player& player_;
     QGraphicsScene scene_;
@@ -108,6 +117,7 @@ private:
     PortSlot wireSlot_;
     QGraphicsPathItem* tempWire_{nullptr};
 
+    bool rebuilding_{false};  // während des Neuaufbaus kein selectionChanged melden
     bool panning_{false};
     QPoint panLast_;
     bool fitPending_{false};

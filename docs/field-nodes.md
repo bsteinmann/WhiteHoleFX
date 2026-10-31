@@ -13,7 +13,11 @@ fn wh_field(p: vec3<f32>) -> vec4<f32>
 ```
 
 - `p` liegt in [0,1]³. Bei einem 2D-Canvas ist `p.z = 0`.
-- Die Farbe ist linear RGBA. Gamma und Farbreihenfolge setzt erst der Ausgabe-Pass.
+- Die Farbe ist linear RGBA mit „geradem“ Alpha (RGB und Alpha getrennt). Gamma und Farbreihenfolge
+  setzt erst der Ausgabe-Pass, der die Farbe zuletzt mit Alpha multipliziert (transparent = LED aus).
+  Wer Farben überblendet oder addiert, nimmt `wh_mix_color` und `wh_add_color` (Prelude
+  `kColorPrelude` in `builtin_internal.hpp`); sie rechnen vormultipliziert, bei deckenden Farben
+  kommt dasselbe heraus wie bei `mix` und `clamp(a + b)`.
 - Die Zeit steht in `wh_frame.time` (Sekunden), nie in der Systemuhr.
 
 Der Compiler baut aus allen Nodes, die ein Ziel-Ausgang rückwärts erreicht, **eine**

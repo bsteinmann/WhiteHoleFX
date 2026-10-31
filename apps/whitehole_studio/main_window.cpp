@@ -92,6 +92,7 @@ MainWindow::MainWindow(gpu::IGpuDevice* device, const QString& deviceNote, QWidg
 
     editor_ = new NodeEditor{*player_, this};
     connect(editor_, &NodeEditor::edited, this, &MainWindow::onGraphEdited);
+    connect(editor_, &NodeEditor::selectionChanged, this, &MainWindow::onNodeSelected);
     connect(editor_, &NodeEditor::failed, this, [this](const QString& message) { statusBar()->showMessage(message, 8000); });
     editorDock_ = new QDockWidget{tr("Nodes"), this};
     editorDock_->setWidget(editor_);
@@ -121,93 +122,10 @@ MainWindow::~MainWindow() {
     player_->stop();
 }
 
-void MainWindow::buildActions() {
-    openAction_ = new QAction{tr("&Öffnen …"), this};
-    openAction_->setShortcut(QKeySequence::Open);
-    connect(openAction_, &QAction::triggered, this, &MainWindow::onOpen);
-
-    reloadAction_ = new QAction{tr("&Neu laden"), this};
-    reloadAction_->setShortcut(QKeySequence{Qt::Key_F5});
-    connect(reloadAction_, &QAction::triggered, this, &MainWindow::onReload);
-
-    saveAsAction_ = new QAction{tr("Speichern &unter …"), this};
-    saveAsAction_->setShortcut(QKeySequence::SaveAs);
-    connect(saveAsAction_, &QAction::triggered, this, &MainWindow::onSaveAs);
-
-    undoAction_ = new QAction{tr("&Rückgängig"), this};
-    undoAction_->setShortcut(QKeySequence::Undo);
-    connect(undoAction_, &QAction::triggered, this, &MainWindow::onUndo);
-    redoAction_ = new QAction{tr("&Wiederholen"), this};
-    redoAction_->setShortcut(QKeySequence::Redo);
-    connect(redoAction_, &QAction::triggered, this, &MainWindow::onRedo);
-
-    quitAction_ = new QAction{tr("&Beenden"), this};
-    quitAction_->setShortcut(QKeySequence::Quit);
-    connect(quitAction_, &QAction::triggered, this, &QWidget::close);
-
-    runAction_ = new QAction{tr("&Start"), this};
-    runAction_->setCheckable(true);
-    runAction_->setShortcut(QKeySequence{Qt::Key_Space});
-    connect(runAction_, &QAction::triggered, this, &MainWindow::onTogglePlayback);
-
-    sendAction_ = new QAction{tr("&Ausgabe senden"), this};
-    sendAction_->setCheckable(true);
-    sendAction_->setToolTip(tr("Pakete (Art-Net, sACN, DDP) wirklich ins Netz schicken"));
-    connect(sendAction_, &QAction::triggered, this, &MainWindow::onToggleSending);
-
-    QMenu* file = menuBar()->addMenu(tr("&Datei"));
-    file->addAction(openAction_);
-    file->addAction(reloadAction_);
-    file->addAction(saveAsAction_);
-    fillExamplesMenu(file->addMenu(tr("&Beispiele")));
-    file->addSeparator();
-    file->addAction(quitAction_);
-
-    QMenu* edit = menuBar()->addMenu(tr("&Bearbeiten"));
-    edit->addAction(undoAction_);
-    edit->addAction(redoAction_);
-
-    QMenu* view = menuBar()->addMenu(tr("&Ansicht"));
-    view->addAction(editorDock_->toggleViewAction());
-    view->addAction(dock_->toggleViewAction());
-    view->addAction(layoutDock_->toggleViewAction());
-
-    QMenu* run = menuBar()->addMenu(tr("&Wiedergabe"));
-    run->addAction(runAction_);
-    run->addAction(sendAction_);
-
-    QToolBar* bar = addToolBar(tr("Wiedergabe"));
-    bar->setMovable(false);
-    bar->addAction(openAction_);
-    bar->addAction(runAction_);
-    bar->addAction(sendAction_);
-}
-
-void MainWindow::fillExamplesMenu(QMenu* menu) {
-    // Installiert: <präfix>/share/whiteholefx/examples; Windows-Paket und Entwicklungsbaum:
-    // "examples" neben dem Programm.
-    const QString app = QCoreApplication::applicationDirPath();
-    const QStringList candidates{app + QStringLiteral("/../share/whiteholefx/examples"),
-                                 app + QStringLiteral("/examples")};
-    for (const QString& candidate : candidates) {
-        const QDir dir{candidate};
-        const QStringList files = dir.entryList({QStringLiteral("*.whfx")}, QDir::Files, QDir::Name);
-        if (files.isEmpty()) {
-            continue;
-        }
-        for (const QString& name : files) {
-            const QString path = dir.absoluteFilePath(name);
-            QAction* action = menu->addAction(QFileInfo{name}.completeBaseName());
-            connect(action, &QAction::triggered, this, [this, path]() { openPath(path); });
-        }
-        return;
-    }
-    menu->setEnabled(false);
-}
-
 void MainWindow::updateActions() {
     const runtime::PlayerStatus s = player_->status();
     reloadAction_->setEnabled(!s.path.empty());
+    saveAction_->setEnabled(s.loaded);
     saveAsAction_->setEnabled(s.loaded);
     runAction_->setEnabled(s.loaded);
     runAction_->setChecked(s.running);
@@ -226,9 +144,24 @@ void MainWindow::updateTitle() {
     setWindowTitle(tr("WhiteHoleFX – %1%2").arg(name, player_->modified() ? QStringLiteral(" *") : QString{}));
 }
 
+void MainWindow::refreshParameters() {
+    parameters_->rebuild(player_->nodes());
+    parameters_->showNode(editor_->selectedNode());
+}
+
+void MainWindow::onNodeSelected() {
+    const std::optional<NodeId> node = editor_->selectedNode();
+    const bool shown = parameters_->showNode(node);
+    if (shown && dock_->isVisible()) {
+        dock_->raise();  // Layout und Parameter teilen sich den Platz: Parameter nach vorn
+    } else if (node && !shown) {
+        statusBar()->showMessage(tr("Dieser Node hat keine einstellbaren Parameter."), 4000);
+    }
+}
+
 void MainWindow::onGraphEdited(bool structural) {
     if (structural) {
-        parameters_->rebuild(player_->nodes());
+        refreshParameters();
     }
     updateTitle();
     updateActions();
@@ -242,34 +175,6 @@ bool MainWindow::confirmDiscard() {
                                               tr("Das Projekt wurde geändert. Änderungen verwerfen?"),
                                               QMessageBox::Discard | QMessageBox::Cancel, QMessageBox::Cancel);
     return answer == QMessageBox::Discard;
-}
-
-QString MainWindow::exerciseEditor() {
-    QString ok = editor_->exercise();
-    if (ok.isEmpty()) {
-        ok = layoutPanel_->exercise();
-    }
-    if (ok.isEmpty()) {
-        // Alles zurücknehmen und wiederholen: dieselben Schritte wie Strg+Z und Strg+Umschalt+Z.
-        int undone = 0;
-        while (player_->canUndo() && undone < 10000) {
-            onUndo();
-            ++undone;
-        }
-        int redone = 0;
-        while (player_->canRedo() && redone < 10000) {
-            onRedo();
-            ++redone;
-        }
-        if (undone == 0 || undone != redone) {
-            ok = tr("Rückgängig/Wiederholen: %1 zurückgenommen, %2 wiederholt").arg(undone).arg(redone);
-        }
-    }
-    for (int i = 0; i < 5; ++i) {
-        tick();
-        QApplication::processEvents();
-    }
-    return ok;
 }
 
 void MainWindow::updateUndoActions() {
@@ -289,7 +194,7 @@ void MainWindow::onLayoutEdited() {
 void MainWindow::afterRestore() {
     layoutPanel_->rebuild();
     editor_->rebuild();
-    parameters_->rebuild(player_->nodes());
+    refreshParameters();
     updateTitle();
     updateActions();
 }
@@ -340,28 +245,6 @@ void MainWindow::reportError(const QString& title, const std::string& message, b
     }
 }
 
-bool MainWindow::openPath(const QString& path, bool interactive) {
-    if (interactive && !confirmDiscard()) {
-        return false;
-    }
-    timer_.stop();
-    const Result<void> r = player_->load(path.toUtf8().toStdString());
-    if (!r.ok()) {
-        reportError(tr("Projekt laden"), r.error().message, interactive);
-        updateActions();
-        return false;
-    }
-    preview_->setMessage({});
-    parameters_->rebuild(player_->nodes());
-    editor_->reset();
-    layoutPanel_->rebuild();
-    updateTitle();
-    statusBar()->showMessage(tr("Geladen: %1").arg(path), 5000);
-    updateActions();
-    refreshImage();
-    return true;
-}
-
 bool MainWindow::startPlayback(bool interactive) {
     const Result<void> r = player_->start();
     if (!r.ok()) {
@@ -410,78 +293,9 @@ void MainWindow::refreshImage() {
     preview_->setImage(view.copy());  // eigener Speicher: das Bild überlebt den Rückgabewert
 }
 
-int MainWindow::exerciseParameters() {
-    int changed = 0;
-    for (QSlider* slider : parameters_->findChildren<QSlider*>()) {
-        if (slider->isEnabled()) {
-            slider->setValue((slider->minimum() + slider->maximum()) / 3);
-            ++changed;
-        }
-    }
-    for (QDoubleSpinBox* spin : parameters_->findChildren<QDoubleSpinBox*>()) {
-        if (spin->isEnabled()) {
-            spin->setValue(spin->value() + spin->singleStep());
-            ++changed;
-        }
-    }
-    for (QSpinBox* spin : parameters_->findChildren<QSpinBox*>()) {
-        if (spin->isEnabled()) {
-            spin->setValue(spin->value() + 1);
-            ++changed;
-        }
-    }
-    for (QCheckBox* check : parameters_->findChildren<QCheckBox*>()) {
-        if (check->isEnabled()) {
-            check->toggle();
-            ++changed;
-        }
-    }
-    return changed;
-}
-
 QString MainWindow::problem() const {
     const auto error = player_->status().lastError;
     return error ? fromStd(error->message) : QString{};
-}
-
-void MainWindow::onOpen() {
-    const QString start = player_->status().path.empty() ? QString{} : fromStd(player_->status().path);
-    const QString path = QFileDialog::getOpenFileName(this, tr("Projekt öffnen"), start,
-                                                      tr("WhiteHoleFX-Projekte (*.whfx);;Alle Dateien (*)"));
-    if (!path.isEmpty()) {
-        openPath(path);
-    }
-}
-
-void MainWindow::onReload() {
-    const std::string path = player_->status().path;
-    if (path.empty()) {
-        return;
-    }
-    const bool wasRunning = player_->status().running;
-    if (openPath(fromStd(path)) && wasRunning) {
-        startPlayback();
-    }
-}
-
-void MainWindow::onSaveAs() {
-    const QString start = player_->status().path.empty() ? QString{} : fromStd(player_->status().path);
-    QString path = QFileDialog::getSaveFileName(this, tr("Projekt speichern unter"), start,
-                                                tr("WhiteHoleFX-Projekte (*.whfx)"));
-    if (path.isEmpty()) {
-        return;
-    }
-    if (QFileInfo{path}.suffix().isEmpty()) {
-        path += QStringLiteral(".whfx");
-    }
-    const Result<void> r = player_->save(path.toUtf8().toStdString());
-    if (!r.ok()) {
-        reportError(tr("Speichern"), r.error().message, true);
-        return;
-    }
-    updateTitle();
-    statusBar()->showMessage(tr("Gespeichert: %1").arg(path), 5000);
-    updateActions();
 }
 
 void MainWindow::onTogglePlayback(bool run) {

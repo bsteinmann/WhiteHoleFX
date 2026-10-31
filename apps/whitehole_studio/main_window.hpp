@@ -40,6 +40,9 @@ public:
 
     /// Lädt ein Projekt. Meldet Fehler in der Statuszeile und, wenn `interactive`, in einem Dialog.
     bool openPath(const QString& path, bool interactive = true);
+    /// Legt ein neues Projekt an (Vorlage: Matrix mit Farbverlauf). Fragt bei ungespeicherten
+    /// Änderungen nach, wenn `interactive`. Lief die Wiedergabe, läuft sie weiter.
+    bool newProject(bool interactive = true);
     bool startPlayback(bool interactive = true);
     void stopPlayback();
     /// Ein Frame samt Vorschau (der Timer ruft das auf; Tests und --grab auch).
@@ -55,6 +58,13 @@ public:
     /// alles, was bisher geändert wurde; danach ein paar Frames.
     /// Leer bei Erfolg, sonst die Meldung des gescheiterten Schritts.
     QString exerciseEditor();
+    /// Rauchtest: ein Klick auf einen Node muss dessen Gruppe im Parameterfenster hervorheben.
+    /// Leer bei Erfolg, sonst die Meldung des gescheiterten Schritts.
+    QString exerciseSelection();
+    /// Rauchtest: "Neu" legt ein lauffähiges Projekt an. Danach ist das neue Projekt geladen.
+    QString exerciseNewProject();
+    /// Rauchtest: das Kästchen "Transparent" einer Farbe setzt Alpha auf 0 und wieder auf 1.
+    QString exerciseTransparency();
 
 protected:
     void dragEnterEvent(QDragEnterEvent* event) override;
@@ -77,9 +87,17 @@ private:
     void onRedo();
     void afterRestore();
     void updateUndoActions();
+    void onNew();
     void onOpen();
     void onReload();
+    void onSave();
     void onSaveAs();
+    /// Gemeinsamer Rest nach dem Laden oder Anlegen eines Projekts: alle Ansichten neu aufbauen.
+    void afterLoad(const QString& message);
+    /// Baut das Parameterfenster neu auf und hebt den ausgewählten Node wieder hervor.
+    void refreshParameters();
+    /// Ein Node im Editor wurde angeklickt: Parameterfenster zeigt seine Parameter.
+    void onNodeSelected();
     void onTogglePlayback(bool run);
     void onToggleSending(bool send);
 
@@ -100,7 +118,9 @@ private:
     QTimer timer_;
     QTimer statusTimer_;
 
+    QAction* newAction_{nullptr};
     QAction* openAction_{nullptr};
+    QAction* saveAction_{nullptr};
     QAction* reloadAction_{nullptr};
     QAction* saveAsAction_{nullptr};
     QAction* undoAction_{nullptr};

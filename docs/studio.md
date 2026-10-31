@@ -15,7 +15,9 @@ Ohne `WHITEHOLEFX_WEBGPU` zeigt das Fenster nur das Layout, rendern geht dann ni
 
 | Aktion | Taste |
 |---|---|
+| Neues Projekt (Vorlage: 16×8-Matrix mit Farbverlauf, Ausgabe auf den eigenen Rechner) | Strg+N |
 | Projekt öffnen (auch per Drag & Drop einer `.whfx`-Datei) | Strg+O |
+| Speichern (ohne Dateinamen: fragt nach dem Namen) | Strg+S |
 | Neu laden (Datei hat sich geändert; läuft es, startet es danach wieder) | F5 |
 | Start / Stopp | Leertaste |
 | Ausgabe senden | Menü Wiedergabe |
@@ -49,16 +51,32 @@ Das Dock „Parameter“ (Menü Ansicht) listet jeden Node mit seinen Parametern
 
 - Zahlen mit Wertebereich: Regler plus Zahlenfeld, ohne Bereich nur Zahlenfeld
 - Ganzzahlen, Ja/Nein, Vektoren (2D/3D), Text
-- Farben: Farbfeld, öffnet den Farbdialog (Eingabe in sRGB, gespeichert wird linear)
+- Farben: Farbfeld (mit Schachbrett dahinter, damit man Durchsichtiges sieht), öffnet den Farbdialog
+  (Eingabe in sRGB, gespeichert wird linear, mit Alpha-Regler). Das Kästchen „Transparent“ setzt
+  Alpha auf 0, die Farbe bleibt gemerkt; abhaken stellt Alpha 1 her (siehe „Transparenz“)
 - ↺ setzt auf den Standardwert zurück
 - Parameter, die von einem anderen Node gesteuert werden (z. B. ein LFO), sind ausgegraut
 
 Änderungen wirken im nächsten Frame. Werte werden auf den erlaubten Bereich begrenzt.
-„Speichern unter“ (Strg+Umschalt+S) schreibt die Projektdatei neu. Achtung: Der Writer erzeugt die
+„Speichern“ (Strg+S) und „Speichern unter“ (Strg+Umschalt+S) schreiben die Projektdatei neu. Achtung: Der Writer erzeugt die
 Datei kanonisch, Kommentare und Formatierung einer von Hand geschriebenen Datei gehen dabei
 verloren. Ein Beispiel zum Ausprobieren: `examples/regler.whfx`.
 
 Die CI verstellt mit `--exercise` jeden Regler einmal und prüft, dass der Player keinen Fehler meldet.
+
+### Transparenz
+
+Jede Farbe hat einen Alpha-Wert (0 = durchsichtig, 1 = deckend). Verläufe, Kugel, Welle sowie die
+Nodes Mix und Add rechnen damit „vormultipliziert“: Ein Verlauf von Transparent nach Weiß blendet
+also Weiß ein, er wird nicht grau. Beim Senden und in der Vorschau gilt: Die Farbe wird mit Alpha
+multipliziert, **transparent heißt LED aus**. Ein Hintergrund, über dem etwas liegt, scheint durch
+Transparent hindurch, sobald die Ebene darunter mit Mix oder Add dazugerechnet wird.
+
+### Node anklicken
+
+Klickt man im Node-Editor einen Node an, springt das Dock „Parameter“ nach vorn, scrollt zu seinen
+Parametern und umrandet sie orange. Auch nach Änderungen im Graphen (Kabel, neue Nodes) bleibt die
+Auswahl erhalten. Ein Node ohne Parameter (z. B. Rotate ohne Regler) meldet das in der Statuszeile.
 
 ## Node-Editor
 
@@ -81,7 +99,7 @@ oder ungültig (Typen passen nicht, Zyklus), meldet die Statuszeile den Grund un
 Effekt läuft weiter. Der Node, an dem der Ausgang hängt, lässt sich nicht löschen; setze zuerst
 einen anderen. Ein Wechsel des Ausgangs baut die Ausgabe einmal neu auf (kurze Unterbrechung).
 
-Ungespeicherte Änderungen zeigt ein Stern im Fenstertitel; beim Öffnen, Neuladen und Beenden wird
+Ungespeicherte Änderungen zeigt ein Stern im Fenstertitel; beim Neu, Öffnen, Neuladen und Beenden wird
 nachgefragt. Dateien ohne Positionen (von Hand geschrieben) ordnet der Editor selbst in Spalten
 an. Die Anordnung ist erst gespeichert, wenn du „Speichern unter“ wählst.
 

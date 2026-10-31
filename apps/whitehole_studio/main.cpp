@@ -109,6 +109,18 @@ int main(int argc, char** argv) {
             std::fprintf(stderr, "Rauchtest fehlgeschlagen: Node-Editor, %s\n", editorProblem.toUtf8().constData());
             return 1;
         }
+        const QString selection = window.exerciseSelection();
+        std::printf("Node-Auswahl: %s\n", selection.isEmpty() ? "ok" : "FEHLER");
+        const QString created = selection.isEmpty() ? window.exerciseNewProject() : QString{};
+        std::printf("Neues Projekt: %s\n", created.isEmpty() ? "ok" : "FEHLER");
+        const QString transparency = created.isEmpty() ? window.exerciseTransparency() : QString{};
+        std::printf("Transparent: %s\n", transparency.isEmpty() ? "ok" : "FEHLER");
+        for (const QString& failure : {selection, created, transparency}) {
+            if (!failure.isEmpty()) {
+                std::fprintf(stderr, "Rauchtest fehlgeschlagen: %s\n", failure.toUtf8().constData());
+                return 1;
+            }
+        }
         const QString problem = window.problem();
         if (changed == 0 || !problem.isEmpty()) {
             std::fprintf(stderr, "Rauchtest fehlgeschlagen: %s\n", changed == 0 ? "kein Regler gefunden" : problem.toUtf8().constData());

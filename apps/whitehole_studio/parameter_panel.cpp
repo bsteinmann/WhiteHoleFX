@@ -9,7 +9,10 @@
 #include <QGroupBox>
 #include <QHBoxLayout>
 #include <QLabel>
+#include <QIcon>
 #include <QLineEdit>
+#include <QPainter>
+#include <QPixmap>
 #include <QPushButton>
 #include <QSignalBlocker>
 #include <QSlider>
@@ -61,12 +64,24 @@ ColorRgba fromQColor(const QColor& q) {
                      preview::fromSrgb8(static_cast<std::uint8_t>(q.blue())), static_cast<float>(q.alpha()) / 255.0F};
 }
 
+/// Farbfläche mit Schachbrett dahinter, damit man Transparenz sieht.
 void paintSwatch(QPushButton* button, const ColorRgba& c) {
-    const QColor q = toQColor(c);
-    button->setStyleSheet(QStringLiteral("background-color: rgb(%1,%2,%3); border: 1px solid #666; min-height: 22px;")
-                              .arg(q.red())
-                              .arg(q.green())
-                              .arg(q.blue()));
+    const QSize size{72, 22};
+    QPixmap pixmap{size};
+    QPainter painter{&pixmap};
+    constexpr int kCell = 6;
+    for (int y = 0; y < size.height(); y += kCell) {
+        for (int x = 0; x < size.width(); x += kCell) {
+            const bool dark = ((x / kCell) + (y / kCell)) % 2 == 0;
+            painter.fillRect(x, y, kCell, kCell, dark ? QColor{120, 120, 120} : QColor{190, 190, 190});
+        }
+    }
+    painter.fillRect(pixmap.rect(), toQColor(c));
+    painter.setPen(QColor{102, 102, 102});
+    painter.drawRect(pixmap.rect().adjusted(0, 0, -1, -1));
+    painter.end();
+    button->setIcon(QIcon{pixmap});
+    button->setIconSize(size);
     button->setToolTip(QStringLiteral("r %1  g %2  b %3  a %4 (linear)")
                            .arg(static_cast<double>(c.r), 0, 'f', 3)
                            .arg(static_cast<double>(c.g), 0, 'f', 3)
@@ -199,7 +214,16 @@ Editor vectorEditor(const runtime::ParameterInfo& info, const Commit& commit, QW
 }
 
 Editor colorEditor(const runtime::ParameterInfo& info, const Commit& commit, QWidget* parent) {
-    auto* button = new QPushButton{parent};
+    auto* box = new QWidget{parent};
+    auto* layout = new QHBoxLayout{box};
+    layout->setContentsMargins(0, 0, 0, 0);
+    auto* button = new QPushButton{box};
+    auto* transparent = new QCheckBox{QStringLiteral("Transparent"), box};
+    transparent->setToolTip(QStringLiteral("Alpha 0: an dieser Stelle bleibt die LED aus (die Farbe bleibt gemerkt)."));
+    layout->addWidget(button);
+    layout->addWidget(transparent);
+    layout->addStretch(1);
+
     auto current = std::make_shared<ColorRgba>(std::get<ColorRgba>(info.value));
     QObject::connect(button, &QPushButton::clicked, button, [=]() {
         const QColor picked = QColorDialog::getColor(toQColor(*current), button, QStringLiteral("Farbe"),
@@ -208,11 +232,18 @@ Editor colorEditor(const runtime::ParameterInfo& info, const Commit& commit, QWi
             commit(fromQColor(picked));
         }
     });
+    QObject::connect(transparent, &QCheckBox::toggled, transparent, [=](bool on) {
+        ColorRgba next = *current;
+        next.a = on ? 0.0F : 1.0F;  // Alpha dazwischen stellt man in der Farbwahl ein
+        commit(next);
+    });
     Editor editor;
-    editor.widget = button;
+    editor.widget = box;
     editor.show = [=](const graph::ParameterValue& value) {
         *current = std::get<ColorRgba>(value);
         paintSwatch(button, *current);
+        const QSignalBlocker block{transparent};
+        transparent->setChecked(current->a <= 0.0F);
     };
     editor.show(info.value);
     return editor;
@@ -254,6 +285,8 @@ ParameterPanel::ParameterPanel(QWidget* parent) : QScrollArea{parent} {
 }
 
 void ParameterPanel::rebuild(const std::vector<runtime::NodeInfo>& nodes) {
+    groups_.clear();
+    shown_.reset();
     auto* content = new QWidget;
     auto* column = new QVBoxLayout{content};
     if (nodes.empty()) {
@@ -297,9 +330,34 @@ void ParameterPanel::rebuild(const std::vector<runtime::NodeInfo>& nodes) {
         }
         grid->setColumnStretch(1, 1);
         column->addWidget(group);
+        groups_.emplace(node.id.value(), group);
     }
     column->addStretch(1);
     setWidget(content);  // übernimmt den Besitz und löscht den alten Inhalt
+}
+
+bool ParameterPanel::showNode(std::optional<NodeId> node) {
+    // Alte Hervorhebung weg (die Gruppe kann nach einem Neuaufbau schon nicht mehr existieren).
+    if (shown_) {
+        if (const auto old = groups_.find(shown_->value()); old != groups_.end() && old->second != nullptr) {
+            old->second->setStyleSheet({});
+        }
+    }
+    shown_.reset();
+    if (!node) {
+        return false;
+    }
+    const auto found = groups_.find(node->value());
+    if (found == groups_.end() || found->second == nullptr) {
+        return false;
+    }
+    QGroupBox* group = found->second;
+    group->setStyleSheet(QStringLiteral(
+        "QGroupBox { border: 2px solid #e8a33d; border-radius: 4px; margin-top: 1.4ex; font-weight: bold; }"
+        "QGroupBox::title { subcontrol-origin: margin; left: 8px; padding: 0 4px; color: #e8a33d; }"));
+    shown_ = node;
+    ensureWidgetVisible(group, 0, 24);
+    return true;
 }
 
 }  // namespace whitehole::studio

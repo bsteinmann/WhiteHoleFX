@@ -130,6 +130,40 @@ TEST_CASE("Canvas: Verlauf in Rgba32Float stimmt mit der CPU-Rechnung überein",
     CHECK(device->takeErrors().empty());
 }
 
+TEST_CASE("Canvas: Verlauf von Transparent nach Weiß behält das Weiß (kein dunkler Rand)", "[gpu_device][stage]") {
+    const std::unique_ptr<WebGpuDevice> device = makeDevice();
+    if (!device) {
+        SKIP("Kein WebGPU-Adapter verfügbar");
+    }
+    Lab lab;
+    const NodeId gradient = lab.add("wh.generator.gradient");
+    lab.set(gradient, "angle", 0.0);
+    lab.set(gradient, "colorA", ColorRgba{0.0F, 0.0F, 0.0F, 0.0F});  // transparent
+    lab.set(gradient, "colorB", ColorRgba{1.0F, 1.0F, 1.0F, 1.0F});
+
+    executor::CanvasStageConfig config;
+    config.extent = Extent3{16, 2, 1};
+    config.format = TextureFormat::Rgba32Float;
+    config.target = graph::PortRef{gradient, "out"};
+    auto created = executor::CanvasRenderStage::create(*device, lab.snippets, lab.kernels, config);
+    REQUIRE(created.ok());
+    REQUIRE(created.value()->setGraph(lab.graph).ok());
+
+    const std::vector<std::byte> bytes = renderCanvas(*device, *created.value(), config.extent, config.format, 0.0);
+    REQUIRE(bytes.size() == 16U * 2U * 16U);
+    for (std::uint32_t x = 0; x < 16; ++x) {
+        float rgba[4];
+        std::memcpy(rgba, bytes.data() + std::size_t{x} * 16, sizeof rgba);
+        const float t = (static_cast<float>(x) + 0.5F) / 16.0F;
+        INFO("x=" << x);
+        // Alpha läuft von 0 nach 1; die Farbe bleibt Weiß (ein einfaches mix() gäbe hier Grau).
+        REQUIRE(std::abs(rgba[3] - t) < 1e-4F);
+        REQUIRE(std::abs(rgba[0] - 1.0F) < 1e-3F);
+        REQUIRE(std::abs(rgba[2] - 1.0F) < 1e-3F);
+    }
+    CHECK(device->takeErrors().empty());
+}
+
 TEST_CASE("Canvas: eine geänderte Farbe kommt ohne neue Pipeline an", "[gpu_device][stage]") {
     const std::unique_ptr<WebGpuDevice> device = makeDevice();
     if (!device) {

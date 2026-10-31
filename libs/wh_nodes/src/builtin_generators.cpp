@@ -37,7 +37,7 @@ fn wh_value_noise(p: vec3<f32>) -> f32 {
 constexpr const char* kGradientBody = R"wgsl(let a = radians(@param(angle));
 let d = vec2<f32>(cos(a), sin(a));
 let t = clamp(dot(p.xy - vec2<f32>(0.5, 0.5), d) + 0.5, 0.0, 1.0);
-return mix(@param(colorA), @param(colorB), t);)wgsl";
+return wh_mix_color(@param(colorA), @param(colorB), t);)wgsl";
 
 constexpr const char* kNoiseBody =
     R"wgsl(let v = wh_value_noise(p * @param(scale) + vec3<f32>(0.0, 0.0, @time * @param(speed)));
@@ -60,7 +60,7 @@ constexpr const char* kSphereBody =
     R"wgsl(let center = vec3<f32>(@param(cx), @param(cy), @param(cz));
 let r = @param(radius);
 let t = smoothstep(r, r + max(@param(softness), 0.0001), length(p - center));
-return mix(@param(colorInside), @param(colorOutside), t);)wgsl";
+return wh_mix_color(@param(colorInside), @param(colorOutside), t);)wgsl";
 
 // Ebene Welle, die sich entlang einer Richtung bewegt. Die Richtung wird normiert;
 // ein Nullvektor fällt auf die x-Achse zurück. Ein Wellenberg wandert mit positivem
@@ -71,7 +71,7 @@ let len = length(dv);
 let n = select(vec3<f32>(1.0, 0.0, 0.0), dv / max(len, 0.000001), len > 0.000001);
 let phase = @param(frequency) * dot(p, n) - @param(speed) * @time;
 let w = 0.5 + 0.5 * sin(6.2831853 * phase);
-return mix(@param(colorA), @param(colorB), w);)wgsl";
+return wh_mix_color(@param(colorA), @param(colorB), w);)wgsl";
 
 }  // namespace
 
@@ -82,7 +82,7 @@ std::vector<compiler::NodeDefinition> generatorNodes() {
         "wh.generator.gradient", "Linear Gradient", "Generators", {fieldOutput()},
         {number("angle", "Angle (deg)", 0.0), color("colorA", "Color A", ColorRgba{0.0F, 0.0F, 0.0F, 1.0F}),
          color("colorB", "Color B", ColorRgba{1.0F, 1.0F, 1.0F, 1.0F})},
-        kGradientBody));
+        kGradientBody, kColorPrelude));
 
     nodes.push_back(fieldNode("wh.generator.noise", "Value Noise", "Generators", {fieldOutput()},
                               {number("scale", "Scale", 8.0, 0.01, 256.0),
@@ -101,7 +101,7 @@ std::vector<compiler::NodeDefinition> generatorNodes() {
          number("softness", "Softness", 0.1, 0.0, 1.0),
          color("colorInside", "Inside", ColorRgba{1.0F, 1.0F, 1.0F, 1.0F}),
          color("colorOutside", "Outside", ColorRgba{0.0F, 0.0F, 0.0F, 1.0F})},
-        kSphereBody));
+        kSphereBody, kColorPrelude));
 
     nodes.push_back(fieldNode(
         "wh.generator.wave", "Plane Wave", "Generators", {fieldOutput()},
@@ -110,7 +110,7 @@ std::vector<compiler::NodeDefinition> generatorNodes() {
          number("speed", "Speed", 0.5, -20.0, 20.0),
          color("colorA", "Color A", ColorRgba{0.0F, 0.0F, 0.0F, 1.0F}),
          color("colorB", "Color B", ColorRgba{1.0F, 1.0F, 1.0F, 1.0F})},
-        kWaveBody));
+        kWaveBody, kColorPrelude));
 
     return nodes;
 }

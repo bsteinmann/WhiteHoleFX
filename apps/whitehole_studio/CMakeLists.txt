@@ -14,8 +14,12 @@ add_executable(whitehole_studio
     layout_panel.hpp
     main.cpp
     main_window.cpp
+    main_window_actions.cpp
+    main_window_exercise.cpp
+    main_window_file.cpp
     main_window.hpp
     node_editor.cpp
+    node_editor_exercise.cpp
     node_editor.hpp
     node_editor_menu.cpp
     node_items.cpp

@@ -186,6 +186,35 @@ TEST_CASE("Built-ins: Kette Plasma -> Rotate -> Mirror, gemischt mit Noise") {
     CHECK(wgsl.find("123.456") == std::string::npos);
 }
 
+TEST_CASE("Built-ins: Farben mit Transparenz werden vormultipliziert gemischt und addiert") {
+    Builtins builtins;
+    graph::Graph graph{builtins.registry};
+
+    const NodeId gradient = add(graph, "wh.generator.gradient");
+    const NodeId sphere = add(graph, "wh.generator.sphere");
+    const NodeId mix = add(graph, "wh.blend.mix");
+    const NodeId sum = add(graph, "wh.blend.add");
+    REQUIRE(graph.connect(out(gradient), graph::PortRef{mix, "a"}).ok());
+    REQUIRE(graph.connect(out(sphere), graph::PortRef{mix, "b"}).ok());
+    REQUIRE(graph.connect(out(mix), graph::PortRef{sum, "a"}).ok());
+    REQUIRE(graph.connect(out(sphere), graph::PortRef{sum, "b"}).ok());
+    REQUIRE(graph.setParameter(gradient, "colorA", ColorRgba{0.0F, 0.0F, 0.0F, 0.0F}).ok());
+
+    const auto compiled = compiler::compileField(graph, builtins.library, out(sum));
+    REQUIRE(compiled.ok());
+    const std::string& wgsl = compiled.value().wgsl;
+
+    // Die Hilfsfunktionen stehen genau einmal im Shader, obwohl vier Nodes sie brauchen.
+    CHECK(wgsl.find("fn wh_mix_color(") != std::string::npos);
+    CHECK(wgsl.find("fn wh_mix_color(") == wgsl.rfind("fn wh_mix_color("));
+    CHECK(wgsl.find("fn wh_add_color(") != std::string::npos);
+    CHECK(wgsl.find("fn wh_add_color(") == wgsl.rfind("fn wh_add_color("));
+    // Verlauf, Kugel und Mix überblenden damit; ein rohes mix() auf der Farbe gäbe es nicht mehr.
+    CHECK(wgsl.find("return wh_mix_color(") != std::string::npos);
+    CHECK(wgsl.find("return mix(") == std::string::npos);
+    CHECK(wgsl.find("return wh_add_color(") != std::string::npos);
+}
+
 TEST_CASE("Built-ins: die 3D-Nodes nutzen alle drei Achsen und halten Werte im Puffer") {
     Builtins builtins;
     graph::Graph graph{builtins.registry};

@@ -1,5 +1,16 @@
 # Änderungen
 
+## 0.3.0
+
+- Oberfläche: **Datei → Neu** (Strg+N) legt ein Projekt aus einer Vorlage an; **Speichern**
+  (Strg+S) neben „Speichern unter“
+- Oberfläche: Ein Klick auf einen Node im Editor zeigt dessen Parameter (Dock „Parameter“ nach
+  vorn, Gruppe orange umrandet); die Auswahl überlebt Änderungen am Graphen
+- Farben können **transparent** sein: Kästchen „Transparent“ an jeder Farbe, Schachbrett im Farbfeld;
+  Mix, Add, Verlauf, Kugel und Welle verrechnen Alpha vormultipliziert (deckende Farben unverändert)
+- Pakete: Das Linux-.deb wird auf Ubuntu 22.04 gebaut und läuft damit auch auf Linux Mint 21 und
+  Ubuntu 24.04
+
 ## 0.2.0
 
 - Oberfläche (Qt 6): Parameterregler, Node-Editor, Layout-Editor (Fixtures, Patches, Ziele,
