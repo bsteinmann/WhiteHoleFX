@@ -61,7 +61,9 @@ QString NodeEditor::exercise() {
             .arg(probeNote);
     }
 
-    // Kabel auswählen und löschen
+    // Kabel auswählen und löschen. Die Auswahl überlebt Änderungen am Graphen; die Nodes
+    // sollen hier nicht mehr ausgewählt sein, sonst würden sie mit gelöscht.
+    scene_.clearSelection();
     for (WireItem* wire : wires_) {
         const auto* c = player_.project()->graph.findConnection(wire->connectionId());
         if (c != nullptr && c->from.node == *source) {
@@ -75,12 +77,20 @@ QString NodeEditor::exercise() {
 
     // Verschieben wie mit der Maus: Position ändern, Änderung übernehmen
     from = itemOf(*source);
+    if (from == nullptr) {
+        return QStringLiteral("Kabel löschen: Der Quell-Node ist nach dem Löschen des Kabels weg");
+    }
     from->setPos(from->pos() + QPointF{30.0, 10.0});
     commitMoves();
 
     // Beide Nodes auswählen und löschen
-    itemOf(*source)->setSelected(true);
-    itemOf(*sink)->setSelected(true);
+    NodeItem* sourceItem = itemOf(*source);
+    NodeItem* sinkItem = itemOf(*sink);
+    if (sourceItem == nullptr || sinkItem == nullptr) {
+        return QStringLiteral("Aufräumen: Nodes fehlen in der Szene");
+    }
+    sourceItem->setSelected(true);
+    sinkItem->setSelected(true);
     removeSelected();
     if (player_.project()->graph.nodes().size() != nodesBefore || nodes_.size() != nodesBefore) {
         return QStringLiteral("Aufräumen: %1 Nodes im Graph, %2 in der Szene, erwartet %3")
