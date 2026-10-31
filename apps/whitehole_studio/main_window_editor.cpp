@@ -71,6 +71,10 @@ QString MainWindow::exercisePalette() {
     QDropEvent drop{QPointF{60.0, 60.0}, Qt::CopyAction, &mime, Qt::LeftButton, Qt::NoModifier};
     drop.setAccepted(false);
     QApplication::sendEvent(editor_->viewport(), &drop);
+    if (!drop.isAccepted()) {
+        // Je nach Qt-Version und Plattform kommt ein von Hand gesendeter Drop nur am Editor selbst an
+        QApplication::sendEvent(editor_, &drop);
+    }
     if (editor_->nodeCount() != before + 1) {
         return tr("Palette: Ablegen hat keinen Node angelegt (%1 -> %2, angenommen: %3, acceptDrops: %4/%5, Status: \"%6\")")
             .arg(before)
