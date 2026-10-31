@@ -132,7 +132,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y qt6-base-dev libgl1-mesa-dev libxkbcommon-dev fonts-dejavu-core \
-            mesa-vulkan-drivers libvulkan1 vulkan-tools unzip
+            mesa-vulkan-drivers libvulkan1 vulkan-tools unzip gdb
       - name: wgpu-native laden
         run: scripts/fetch-wgpu-native.sh
       - name: Konfigurieren
@@ -161,7 +161,12 @@ jobs:
             code=0; out=$("$studio" "$@" 2>&1) || code=$?
             echo "$out"
             if [ "$code" != "0" ]; then
-              msg=$(echo "$out" | head -40 | sed 's/%/%25/g' | awk '{printf "%s%%0A", $0}')
+              if [ "$code" -gt 128 ]; then
+                # Absturz: noch einmal unter gdb laufen lassen und den Aufrufstapel zeigen.
+                trace=$(gdb -batch -ex run -ex "bt 18" --args "$studio" "$@" 2>&1 | tail -40)
+                out="$out"$'\n'"--- gdb ---"$'\n'"$trace"
+              fi
+              msg=$(echo "$out" | tail -60 | sed 's/%/%25/g' | awk '{printf "%s%%0A", $0}')
               echo "::error title=Fenster-Lauf fehlgeschlagen::Code $code, Argumente $*%0A${msg}"
               fail=1
             fi

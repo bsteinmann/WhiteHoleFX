@@ -24,6 +24,8 @@
 using namespace whitehole;
 
 int main(int argc, char** argv) {
+    // Ausgabe sofort schreiben: Stürzt ein Rauchtest ab, soll man sehen, wie weit er kam.
+    std::setvbuf(stdout, nullptr, _IONBF, 0);
     QApplication app{argc, argv};
     QApplication::setApplicationName(QStringLiteral("WhiteHoleFX"));
     QApplication::setApplicationVersion(QStringLiteral(WH_VERSION));
