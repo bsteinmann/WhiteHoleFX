@@ -1,0 +1,38 @@
+whitehole-project 1
+# Beispiel für Kaleidoscope und Color Map: wandernde Metaballs, in sechs Keile gefaltet und in Wärmebild-Farben.
+#
+# So ausprobieren:
+#   whitehole_cli examples/kaleidoskop.whfx --snapshot kaleidoskop.png --frames 60
+#
+# Aufbau: Die Metaballs liefern Helligkeit, Kaleidoscope faltet sie um die Mitte (`aspect` 2 für die 32x16-Wand,
+# damit die Keile gleich breit sind), Color Map macht aus der Helligkeit einen Verlauf Schwarz-Blau-Magenta-Gelb.
+# Mit einem LFO an `shift` der Color Map würde die Palette rotieren, mit Time an `angle` das Muster drehen.
+
+settings fps 40
+
+destination 0 127.0.0.1
+
+fixture Wand
+  matrix 32 16 serpentine
+  patch artnet destination 0 universe 0
+end
+
+node blobs wh.generator.metaballs
+  set count 4
+  set size 0.1
+  set colorB 1 1 1 1
+end
+node kal wh.transform.kaleidoscope
+  set segments 6
+  set aspect 2
+  set zoom 0.8
+end
+node palette wh.modifier.colormap
+  set color2 0.1 0.1 0.9 1
+  set color3 0.9 0.1 0.7 1
+  set color4 1 0.9 0.2 1
+end
+
+connect blobs.out -> kal.source
+connect kal.out -> palette.source
+output palette.out

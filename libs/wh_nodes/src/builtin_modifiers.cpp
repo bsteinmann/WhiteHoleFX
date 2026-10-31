@@ -82,6 +82,32 @@ let c = @in(source, q);
 let level = clamp(@param(brightness), 0.0, 1.0);
 return vec4<f32>(c.rgb * level, c.a);)wgsl";
 
+// Color Map: Die Helligkeit des Eingangs (Luma) wird durch einen Farbverlauf aus `count` Farben ersetzt, wie
+// eine Falschfarben- oder Wärmebild-Palette. `shift` verschiebt die Helligkeit vor dem Nachschlagen (mit Time
+// oder LFO an `shift` rotiert die Palette); mit `wrap` ist der Verlauf ein Ring (von der letzten zurück zur
+// ersten Farbe), sonst wird begrenzt. Die Durchsichtigkeit bleibt die des Eingangs.
+constexpr const char* kColorMapBody = R"wgsl(let src = @in(source, p);
+let n = clamp(floor(@param(count)), 2.0, 4.0);
+var cols = array<vec4<f32>, 4>(@param(color1), @param(color2), @param(color3), @param(color4));
+let t = dot(src.rgb, vec3<f32>(0.299, 0.587, 0.114)) + @param(shift);
+var i = 0.0;
+var f = 0.0;
+var j = 1.0;
+if (@param(wrap) > 0.5) {
+    let x = (t - floor(t)) * n;
+    i = min(floor(x), n - 1.0);
+    f = x - i;
+    j = select(i + 1.0, 0.0, i + 1.0 >= n);
+} else {
+    let x = clamp(t, 0.0, 1.0) * (n - 1.0);
+    i = min(floor(x), n - 2.0);
+    f = x - i;
+    j = i + 1.0;
+}
+let a = cols[i32(i)];
+let b = cols[i32(j)];
+return vec4<f32>(mix(a.rgb, b.rgb, f), mix(a.a, b.a, f) * src.a);)wgsl";
+
 }  // namespace
 
 std::vector<compiler::NodeDefinition> modifierNodes() {
@@ -93,6 +119,15 @@ std::vector<compiler::NodeDefinition> modifierNodes() {
                                number("brightness", "Brightness", 1.0, 0.0, 4.0), number("gamma", "Gamma", 1.0, 0.1, 5.0),
                                toggle("invert", "Invert", false)},
                               kColorAdjustBody, kHsvPrelude));
+
+    nodes.push_back(fieldNode("wh.modifier.colormap", "Color Map", "Modifier",
+                              {fieldInput("source", "Source"), fieldOutput()},
+                              {integer("count", "Colors", 4, 2, 4), number("shift", "Shift", 0.0, -4.0, 4.0), toggle("wrap", "Wrap (ring)", false),
+                               color("color1", "Color 1 (dark)", ColorRgba{0.0F, 0.0F, 0.0F, 1.0F}),
+                               color("color2", "Color 2", ColorRgba{0.8F, 0.0F, 0.1F, 1.0F}),
+                               color("color3", "Color 3", ColorRgba{1.0F, 0.8F, 0.0F, 1.0F}),
+                               color("color4", "Color 4 (bright)", ColorRgba{1.0F, 1.0F, 1.0F, 1.0F})},
+                              kColorMapBody));
 
     nodes.push_back(fieldNode("wh.modifier.strobe", "Strobe", "Modifier",
                               {fieldInput("source", "Source"), fieldOutput()},

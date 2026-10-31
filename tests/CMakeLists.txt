@@ -127,6 +127,7 @@ if(TARGET wh_gpu_webgpu)
         gpu_device/node_patterns_on_device_test.cpp
         gpu_device/spark_nodes_on_device_test.cpp
         gpu_device/text_on_device_test.cpp
+        gpu_device/warps_on_device_test.cpp
         gpu_device/session_on_device_test.cpp
         gpu_device/sampling_on_device_test.cpp
         gpu_device/stage_on_device_test.cpp

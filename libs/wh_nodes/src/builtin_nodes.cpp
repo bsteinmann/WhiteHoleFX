@@ -19,6 +19,7 @@ std::vector<compiler::NodeDefinition> builtinNodeDefinitions() {
     append(detail::sparkNodes());
     append(detail::textNodes());
     append(detail::transformNodes());
+    append(detail::warpNodes());
     append(detail::blendNodes());
     append(detail::modifierNodes());
     append(detail::audioFieldNodes());

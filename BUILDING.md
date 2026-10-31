@@ -62,7 +62,7 @@ Für Ubuntu 24.04 / Debian 13 und neuer (64 Bit) gibt es ein fertiges Paket. Es 
 `WhiteHoleFX-Linux-deb` in jedem CI-Lauf (GitHub, Reiter „Actions“). Installieren:
 
 ```bash
-sudo apt install ./whiteholefx_0.18.0-1_amd64.deb
+sudo apt install ./whiteholefx_0.19.0-1_amd64.deb
 ```
 
 `apt` holt Qt 6 und Vulkan automatisch. Danach gibt es `whitehole_studio` (auch im Anwendungsmenü,

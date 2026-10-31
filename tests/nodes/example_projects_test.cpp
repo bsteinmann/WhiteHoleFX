@@ -44,6 +44,10 @@ TEST_CASE("Beispiel: examples/laufschrift.whfx lädt und kompiliert", "[examples
     checkExample("laufschrift.whfx", "wh_text_glyph");
 }
 
+TEST_CASE("Beispiel: examples/kaleidoskop.whfx lädt und kompiliert", "[examples][nodes]") {
+    checkExample("kaleidoskop.whfx", "atan2");
+}
+
 TEST_CASE("Beispiel: examples/oszilloskop.whfx lädt und kompiliert", "[examples][nodes]") {
     checkExample("oszilloskop.whfx", "wh_scope_dist");
 }

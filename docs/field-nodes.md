@@ -54,6 +54,9 @@ beliebigen Koordinaten abtastet.
 | `wh.transform.symmetry` | Symmetrie: eine Hälfte des Eingangs wird an einer Linie gespiegelt. `axis` (X, Y, Z) und `half` (untere oder obere Hälfte als Vorlage) sind Auswahlfelder, `center` setzt die Linie. Einfacher zu bedienen als Mirror, der mehrere Achsen gleichzeitig kann | 2D, 3D |
 | `wh.transform.region` | Bildet den Eingang auf ein Rechteck der Leinwand ab (`left`, `top` von oben, `width`, `height`), außerhalb durchsichtig; der Effekt füllt so nur einen Teil der Wand | 2D |
 | `wh.transform.mirror`, `wh.transform.scale` | Spiegeln an einer Linie in x, y und/oder z (Lage `centerX/Y/Z`, mit `otherHalf` ist die obere Hälfte die Vorlage), Zoomen in x und y | 2D (Spiegeln auch 3D) |
+| `wh.transform.kaleidoscope` | Kaleidoskop: die Ebene wird um (`cx`, `cy`) in `segments` Keile geteilt, jeder zweite ist das Spiegelbild des Nachbarn. `angle` dreht den Ausschnitt, `zoom` vergrößert. `aspect` (Breite / Höhe der Leinwand, 32×16 = 2) hält die Winkel gleich, siehe unten | 2D |
+| `wh.transform.tunnel` | Tunnel: Winkel und Tiefe (1 / Abstand) werden zu den Koordinaten des Eingangs. `repeat` Wiederholungen um den Tunnel, `speed` Kacheln pro Sekunde in die Tiefe (negativ: heraus), `depth` Verkleinerung zur Mitte, `twist` dreht mit der Tiefe, `fade` blendet die Mitte aus (Alpha) | 2D |
+| `wh.transform.vortex` | Wirbel: dreht die Koordinate um (`cx`, `cy`) umso stärker, je näher sie der Mitte liegt: `turns` Umdrehungen im Mittelpunkt, keine bei `radius` und außerhalb | 2D |
 | `wh.transform.slide` | Verschiebt das Bild um `x`, `y` (Anteile der Leinwand), mit `wrap` kommt es auf der anderen Seite wieder herein, sonst bleibt der Rest durchsichtig. Mit Time oder LFO an `x` entsteht ein Scroll oder ein Übergang („Move left/right“) | 2D |
 | `wh.transform.tile` | Kachelt das Bild `countX` × `countY` mal, optional jede zweite Kachel gespiegelt | 2D |
 | `wh.transform.pixelate` | Mosaik: `cellsX` × `cellsY` Zellen, jede zeigt den Wert an ihrer Mitte | 2D |
@@ -63,6 +66,7 @@ beliebigen Koordinaten abtastet.
 | `wh.blend.mask` | Die Helligkeit der Maske bestimmt, wie viel vom Inhalt zu sehen ist: *Shape* als harte Form (Schwelle, Weichheit), *Intensity* behält Verläufe und weiche Ränder; `invert` kehrt um. So wird eine Form mit dem Inhalt eines anderen Effekts gefüllt | beliebig |
 | `wh.blend.key` | Schwarz wird durchsichtig (Alpha folgt der Helligkeit, Schwelle und Weichheit einstellbar); danach mit Blend (Over) oder Add über etwas legen | beliebig |
 | `wh.modifier.coloradjust` | Farbton (in Umläufen), Sättigung, Helligkeit, Gamma, Invertieren | beliebig |
+| `wh.modifier.colormap` | Color Map: ersetzt die Helligkeit (Luma) des Eingangs durch einen Verlauf aus `count` (2–4) Farben `color1`–`color4`, wie Wärmebild-Paletten. `shift` verschiebt die Helligkeit (mit Time oder LFO rotiert die Palette), `wrap` macht den Verlauf zum Ring; die Durchsichtigkeit bleibt die des Eingangs | beliebig |
 | `wh.modifier.strobe` | Blitzen: `rate` Hz, `duty` Anteil der Periode an, `fade` Ausklingen; in der Dunkelphase gehen die LEDs aus | beliebig |
 | `wh.modifier.outline` | Zeichnet in `width` Abstand um helle Stellen einen Rand in der Randfarbe (z. B. Text mit Umriss über Plasma) | 2D |
 | `wh.output.canvas` | **Ausgang:** bespielt die ganze Leinwand oder nur ein Rechteck (`left`, `top` von oben, `width`, `height`); *Scale into area* schiebt das Bild ins Rechteck, *Window* lässt es an seinem Platz und schneidet nur aus; `brightness` ist die Gesamthelligkeit (Master). Außerhalb sind die LEDs aus. Ein neu angelegter Ausgangs-Node wird automatisch zum Ausgang des Projekts und hängt sich hinter den bisherigen | beliebig |
@@ -175,6 +179,13 @@ Parameterwerte stehen nicht im Shadertext, sondern im Uniform-Puffer. Eine Ände
 bedeutet nur: Puffer neu packen und hochladen. Ändert sich der `structureHash` nicht,
 bleibt auch die Pipeline gültig. Nur Struktur-Änderungen (Node einfügen, Verbindung ändern)
 erzeugen neuen Text und damit eine neue Pipeline.
+
+## Polarkoordinaten und das Seitenverhältnis
+
+Kaleidoskop, Tunnel und Wirbel rechnen um einen Mittelpunkt in Winkel und Abstand. Der Shader kennt die
+Leinwandgröße nicht: Auf einer 32×16-Wand wären die Koordinaten 0..1 in x und y gleich lang, die Pixel aber
+nicht quadratisch, und Kreise würden zu Ellipsen. `aspect` (Breite / Höhe der Leinwand, Standard 1) streckt x
+vor der Umrechnung und staucht zurück, bevor der Eingang abgetastet wird. Für eine Wand mit 32×16 LEDs stellt man 2 ein.
 
 ## Text und Laufschrift
 

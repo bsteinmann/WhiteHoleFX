@@ -1,5 +1,15 @@
 # Änderungen
 
+## 0.19.0
+
+- **Neue Transformationen:** `Kaleidoscope` (Keile mit Spiegelung, Drehung, Zoom), `Tunnel` (Winkel und Tiefe als
+  Koordinaten, Tempo, Drehung mit der Tiefe, Fade in der Mitte) und `Vortex` (Wirbel um einen Mittelpunkt). Alle drei
+  haben `cx`, `cy` und `aspect` für Wände, die nicht quadratisch sind.
+- **Neuer Modifier `Color Map`:** Helligkeit wird zu einem Farbverlauf aus 2–4 Farben (Falschfarben, Wärmebild), mit
+  `shift` und Ringmodus; die Durchsichtigkeit bleibt erhalten.
+- **Tests:** alle vier auf einem echten Gerät, Erwartungen vorab im WebGPU-Testaufbau (Chromium) gegengerechnet
+  (Spiegelsymmetrie, Wirbelformel, Winkel als x-Koordinate, Palettenstufen).
+
 ## 0.18.0
 
 - **Text / Laufschrift:** Neuer Node `Text` (`wh.generator.text`). Eine eingebaute 5×7-Punktschrift mit ASCII und
