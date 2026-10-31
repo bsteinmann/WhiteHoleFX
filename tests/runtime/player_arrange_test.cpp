@@ -166,3 +166,27 @@ TEST_CASE("Effektbereich: ohne Projekt ein Fehler", "[player][region]") {
     CHECK_FALSE(player.setRegion(mapping::Region{}).ok());
     CHECK_FALSE(player.alignFixtures({mapping::FixtureId{1}}, Player::Align::Left).ok());
 }
+
+TEST_CASE("Anordnen: eine Ziehbewegung ist ein Schritt, zwei sind zwei", "[player][arrange][undo]") {
+    Rig rig;
+    for (int i = 0; i < 5; ++i) {
+        REQUIRE(rig.player.moveFixtures({rig.id(0)}, Vec3{1.0F, 0.0F, 0.0F}).ok());
+    }
+    rig.player.closeEditGroup();
+    for (int i = 0; i < 3; ++i) {
+        REQUIRE(rig.player.moveFixtures({rig.id(0)}, Vec3{0.0F, 1.0F, 0.0F}).ok());
+    }
+    CHECK(rig.origin(0) == Vec3{5.0F, 3.0F, 0.0F});
+    REQUIRE(rig.player.undo().ok());
+    CHECK(rig.origin(0) == Vec3{5.0F, 0.0F, 0.0F});
+    REQUIRE(rig.player.undo().ok());
+    CHECK(rig.origin(0) == Vec3{});
+    CHECK_FALSE(rig.player.canUndo());
+}
+
+TEST_CASE("Anordnen: Wandbox", "[player][arrange]") {
+    Rig rig;
+    const mapping::Box wall = rig.player.wallBox();
+    CHECK(wall.min.x == Approx(0.0F));
+    CHECK(wall.max.x > 11.0F);
+}

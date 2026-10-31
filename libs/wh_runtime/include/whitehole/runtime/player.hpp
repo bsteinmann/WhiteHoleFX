@@ -139,6 +139,10 @@ public:
     [[nodiscard]] bool canRedo() const noexcept { return !redo_.empty(); }
     /// Fehler: InvalidArgument, wenn nichts zurückzunehmen ist.
     Result<void> undo();
+    /// Beendet das Zusammenfassen gleichartiger Änderungen: die nächste Änderung bekommt einen
+    /// eigenen Undo-Schritt. Die Oberfläche ruft das beim Loslassen der Maus auf, damit zwei
+    /// getrennte Ziehbewegungen nicht zu einem Schritt verschmelzen.
+    void closeEditGroup() noexcept { lastEditKey_.clear(); }
     Result<void> redo();
 
     // --- Layout, Ausgabe, Einstellungen bearbeiten (Layout-Editor) ---------------------------------
@@ -171,6 +175,10 @@ public:
     /// das erste und das letzte (nach Lage sortiert) bleiben stehen. Fehler: InvalidArgument bei
     /// weniger als drei Fixtures, NotFound bei unbekannter Id.
     Result<void> distributeFixtures(const std::vector<mapping::FixtureId>& ids, Axis axis);
+
+    /// Die Box der ganzen Wand (alle Fixtures) in Weltkoordinaten, auf die sich der Effektbereich
+    /// bezieht. Ohne Projekt eine leere Box.
+    [[nodiscard]] mapping::Box wallBox() const noexcept { return map_.volume; }
 
     /// Effektbereich (Bild-in-Bild) setzen; nullopt = die ganze Wand. Fehler: InvalidArgument
     /// (Rechteck ungültig, siehe mapping::validateRegion).

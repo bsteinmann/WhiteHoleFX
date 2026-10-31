@@ -14,7 +14,6 @@ namespace whitehole::preview {
 namespace {
 
 constexpr std::uint32_t kMaxSide = 16384;
-constexpr float kObliqueShift = 0.35F;  // wie weit z das Bild nach rechts oben schiebt
 constexpr std::array<std::uint8_t, 3> kBackground{14, 14, 18};
 constexpr std::array<std::uint8_t, 3> kOffLed{34, 34, 40};
 
@@ -92,7 +91,7 @@ Result<Image> renderPreview(const mapping::LedMap& map, std::span<const ColorRgb
         zMin = std::min(zMin, p.z);
         zMax = std::max(zMax, p.z);
     }
-    const bool oblique = zMax - zMin > 1e-6F;
+    const bool oblique = options.frame ? options.frame->oblique : zMax - zMin > 1e-6F;
 
     std::vector<Projected> pts;
     pts.reserve(map.world.size());
@@ -144,13 +143,28 @@ Result<Image> renderPreview(const mapping::LedMap& map, std::span<const ColorRgb
     const float availH = static_cast<float>(options.height) - 2.0F * static_cast<float>(options.margin);
     const float needW = spanX + spacing;
     const float needH = spanY + spacing;
-    const float scale = std::min(availW / needW, availH / needH);
-    const float offsetX = (static_cast<float>(options.width) - (spanX * scale)) * 0.5F;
-    const float offsetY = (static_cast<float>(options.height) + (spanY * scale)) * 0.5F;
+    ViewFrame frame;
+    frame.oblique = oblique;
+    frame.minX = minX;
+    frame.minY = minY;
+    frame.scale = std::min(availW / needW, availH / needH);
+    frame.offsetX = (static_cast<float>(options.width) - (spanX * frame.scale)) * 0.5F;
+    frame.offsetY = (static_cast<float>(options.height) + (spanY * frame.scale)) * 0.5F;
+    if (options.frame && std::isfinite(options.frame->scale) && options.frame->scale > 0.0F &&
+        std::isfinite(options.frame->offsetX) && std::isfinite(options.frame->offsetY) &&
+        std::isfinite(options.frame->minX) && std::isfinite(options.frame->minY)) {
+        frame = *options.frame;
+    }
+    const float scale = frame.scale;
+    const float offsetX = frame.offsetX;
+    const float offsetY = frame.offsetY;
+    minX = frame.minX;
+    minY = frame.minY;
 
     Image image;
     image.width = options.width;
     image.height = options.height;
+    image.frame = frame;
     image.rgba.resize(std::size_t{options.width} * options.height * 4);
     for (std::size_t i = 0; i < image.rgba.size(); i += 4) {
         image.rgba[i] = kBackground[0];

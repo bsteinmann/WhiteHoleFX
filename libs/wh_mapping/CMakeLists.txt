@@ -6,6 +6,7 @@ wh_add_library(wh_mapping
     SOURCES
         src/fixture.cpp
         src/layout.cpp
+        src/region_edit.cpp
         src/wiring.cpp
     PUBLIC_DEPS
         wh_core)

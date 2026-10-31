@@ -50,6 +50,9 @@ struct Region {
 /// (x, y >= 0, x + w <= 1, y + h <= 1). Fehler: InvalidArgument.
 [[nodiscard]] Result<void> validateRegion(const Region& region);
 
+/// Das Rechteck des Bereichs in Weltkoordinaten (z wie die Wand). `wall` ist `LedMap::volume`.
+[[nodiscard]] Box regionBox(const Box& wall, const Region& region) noexcept;
+
 /// Obergrenze für alle LEDs eines Layouts (passt in 32 Bit, etwa 8 Mio.).
 inline constexpr std::uint64_t kMaxLedsPerLayout = 1U << 23;
 

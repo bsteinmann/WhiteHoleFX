@@ -5,6 +5,7 @@ wh_add_library(wh_preview
     SOURCES
         src/png.cpp
         src/preview.cpp
+        src/view.cpp
     PUBLIC_DEPS
         wh_core
         wh_mapping)

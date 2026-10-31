@@ -17,12 +17,14 @@
 #pragma once
 
 #include <cstdint>
+#include <optional>
 #include <span>
 #include <vector>
 
 #include "whitehole/core/result.hpp"
 #include "whitehole/core/types.hpp"
 #include "whitehole/mapping/led_map.hpp"
+#include "whitehole/preview/view.hpp"
 
 namespace whitehole::preview {
 
@@ -31,6 +33,7 @@ struct Image {
     std::uint32_t width{0};
     std::uint32_t height{0};
     std::vector<std::uint8_t> rgba;
+    ViewFrame frame;  // der gezeichnete Ausschnitt (siehe view.hpp)
 };
 
 struct PreviewOptions {
@@ -38,6 +41,9 @@ struct PreviewOptions {
     std::uint32_t height{540};
     std::uint32_t margin{24};   // Rand in Pixeln
     float dotScale{0.45F};      // Punktradius als Anteil des typischen LED-Abstands
+    /// Ist ein Rahmen gesetzt, wird genau dieser Ausschnitt gezeichnet statt eines passenden
+    /// (die Ansicht bleibt beim Ziehen von Fixtures stehen).
+    std::optional<ViewFrame> frame;
 };
 
 /// Zeichnet die LEDs mit den gegebenen Farben (linear, eine je LED).

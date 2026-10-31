@@ -39,6 +39,7 @@ add_executable(wh_tests
     executor/sampling_shader_test.cpp
     mapping/fixture_test.cpp
     mapping/layout_test.cpp
+    mapping/region_edit_test.cpp
     mapping/wiring_test.cpp
     output/artnet_test.cpp
     output/color_encoder_test.cpp
@@ -50,6 +51,7 @@ add_executable(wh_tests
     output/udp_sender_test.cpp
     preview/png_test.cpp
     preview/preview_test.cpp
+    preview/view_test.cpp
     project/project_test.cpp
     runtime/cli_summary_test.cpp
     runtime/graph_layout_test.cpp

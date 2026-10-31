@@ -34,6 +34,17 @@ bool insideRange(float value, float low, float high) noexcept {
 
 }  // namespace
 
+Box regionBox(const Box& wall, const Region& region) noexcept {
+    const float wallWidth = wall.max.x - wall.min.x;
+    const float wallHeight = wall.max.y - wall.min.y;
+    Box box = wall;
+    box.min.x = wall.min.x + region.x * wallWidth;
+    box.max.x = box.min.x + region.w * wallWidth;
+    box.max.y = wall.max.y - region.y * wallHeight;  // y zählt von oben
+    box.min.y = box.max.y - region.h * wallHeight;
+    return box;
+}
+
 Result<void> validateRegion(const Region& region) {
     const bool finite = std::isfinite(region.x) && std::isfinite(region.y) && std::isfinite(region.w) &&
                         std::isfinite(region.h);
@@ -161,15 +172,7 @@ Result<LedMap> Layout::bake(NormalizeMode mode, const std::optional<Region>& reg
     }
 
     // Die Box, auf die normalisiert wird: die ganze Wand oder der Effektbereich (z bleibt gleich).
-    Box box = map.volume;
-    if (region) {
-        const float wallWidth = map.volume.max.x - map.volume.min.x;
-        const float wallHeight = map.volume.max.y - map.volume.min.y;
-        box.min.x = map.volume.min.x + region->x * wallWidth;
-        box.max.x = box.min.x + region->w * wallWidth;
-        box.max.y = map.volume.max.y - region->y * wallHeight;  // y zählt von oben
-        box.min.y = box.max.y - region->h * wallHeight;
-    }
+    const Box box = region ? regionBox(map.volume, *region) : map.volume;
     const Vec3 extent{box.max.x - box.min.x, box.max.y - box.min.y, box.max.z - box.min.z};
     const float longest = std::max({extent.x, extent.y, extent.z});
 

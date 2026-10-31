@@ -64,7 +64,7 @@ Result<void> Player::moveFixtures(const std::vector<mapping::FixtureId>& ids, co
     if (!std::isfinite(delta.x) || !std::isfinite(delta.y) || !std::isfinite(delta.z)) {
         return invalid("Der Versatz muss eine endliche Zahl sein");
     }
-    return editProject({}, [&](project::Project& p) -> Result<void> {
+    return editProject("fmoves", [&](project::Project& p) -> Result<void> {
         const Result<std::vector<Placed>> placed = collect(p, ids);
         if (!placed.ok()) {
             return placed.error();
