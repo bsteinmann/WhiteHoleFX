@@ -22,8 +22,10 @@ struct Json {
     double number{0.0};
     bool boolean{false};
     std::string text;
-    std::vector<Json> items;                           // Array
-    std::vector<std::pair<std::string, Json>> fields;  // Object, in Dateireihenfolge
+    std::vector<Json> items;        // Array
+    std::vector<std::string> keys;  // Object: Feldnamen in Dateireihenfolge
+    std::vector<Json> values;       // Object: Werte, values[i] gehört zu keys[i]
+    // (kein vector<pair<string, Json>>: std::pair verlangt einen vollständigen Typ, Json ist hier noch unvollständig)
 
     /// Das Feld eines Objekts oder nullptr.
     [[nodiscard]] const Json* find(std::string_view key) const;

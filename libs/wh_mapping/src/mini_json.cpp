@@ -7,9 +7,9 @@
 namespace whitehole::mapping::detail {
 
 const Json* Json::find(std::string_view key) const {
-    for (const auto& field : fields) {
-        if (field.first == key) {
-            return &field.second;
+    for (std::size_t i = 0; i < keys.size(); ++i) {
+        if (keys[i] == key) {
+            return &values[i];
         }
     }
     return nullptr;
@@ -189,7 +189,8 @@ private:
             if (Result<void> r = parseValue(value, depth + 1); !r.ok()) {
                 return r;
             }
-            out.fields.emplace_back(std::move(key), std::move(value));
+            out.keys.push_back(std::move(key));
+            out.values.push_back(std::move(value));
             skipSpace();
             if (take(',')) {
                 continue;
