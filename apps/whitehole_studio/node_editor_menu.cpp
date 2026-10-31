@@ -81,9 +81,9 @@ void NodeEditor::contextMenuEvent(QContextMenuEvent* event) {
         connect(menu.addAction(tr("Node suchen …\tStrg+Leertaste")), &QAction::triggered, this,
                 [this, scenePos]() { showSearch(scenePos); });
         buildAddMenu(menu, scenePos);
-        QAction* paste = menu.addAction(tr("Einfügen\tStrg+V"));
-        paste->setEnabled(canPaste());
-        connect(paste, &QAction::triggered, this, [this, scenePos]() { paste(scenePos); });
+        QAction* pasteAction = menu.addAction(tr("Einfügen\tStrg+V"));
+        pasteAction->setEnabled(canPaste());
+        connect(pasteAction, &QAction::triggered, this, [this, scenePos]() { paste(scenePos); });
     }
     if (!menu.isEmpty()) {
         menu.exec(event->globalPos());
