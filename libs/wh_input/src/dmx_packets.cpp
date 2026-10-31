@@ -1,3 +1,4 @@
+// dmx_packets.cpp: Umsetzung zu dmx_packets.hpp. Liest Art-Net- (ArtDmx) und sACN-Pakete (E1.31) und liefert Universe und Kanalwerte.
 #include "whitehole/input/dmx_packets.hpp"
 
 #include <algorithm>

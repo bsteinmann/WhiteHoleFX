@@ -1,3 +1,4 @@
+// webgpu_resources.cpp: Puffer, Texturen und Shadermodule des WebGPU-Geräts anlegen, beschreiben und freigeben.
 #include <algorithm>
 #include <utility>
 

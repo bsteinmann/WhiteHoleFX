@@ -1,3 +1,4 @@
+// Tests von fnv1a64 gegen bekannte Referenzwerte.
 #include <catch2/catch_test_macros.hpp>
 
 #include "whitehole/core/hash.hpp"

@@ -1,3 +1,4 @@
+// dmx_store.cpp: Umsetzung zu dmx_store.hpp. Der zuletzt empfangene Zustand aller DMX-Universen.
 #include "whitehole/input/dmx_store.hpp"
 
 #include <algorithm>

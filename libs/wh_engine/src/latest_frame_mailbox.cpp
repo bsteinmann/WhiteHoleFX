@@ -1,3 +1,4 @@
+// latest_frame_mailbox.cpp: Umsetzung zu latest_frame_mailbox.hpp. Übergabe zwischen Engine-Thread und Output-Thread.
 #include "whitehole/engine/latest_frame_mailbox.hpp"
 
 #include <utility>

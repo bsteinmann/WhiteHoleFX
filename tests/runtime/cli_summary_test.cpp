@@ -133,3 +133,43 @@ TEST_CASE("Bericht: Konfigurationsfehler kommen als Fehler an", "[cli]") {
     REQUIRE(parsed.ok());
     CHECK_FALSE(runtime::summarize(parsed.value()).ok());
 }
+
+TEST_CASE("Kommandozeile: --dmx-in wählt die Protokolle", "[cli][dmx]") {
+    CHECK_FALSE(options({"p"}).dmxArtnet);
+    CHECK_FALSE(options({"p"}).dmxSacn);
+    const cli::Options art = options({"p", "--dmx-in", "artnet"});
+    CHECK(art.dmxArtnet);
+    CHECK_FALSE(art.dmxSacn);
+    const cli::Options sacn = options({"p", "--dmx-in", "sacn"});
+    CHECK_FALSE(sacn.dmxArtnet);
+    CHECK(sacn.dmxSacn);
+    const cli::Options both = options({"p", "--dmx-in", "sacn,artnet"});
+    CHECK(both.dmxArtnet);
+    CHECK(both.dmxSacn);
+    CHECK(contains(optionError({"p", "--dmx-in"}), "braucht"));
+    CHECK(contains(optionError({"p", "--dmx-in", "midi"}), "midi"));
+    CHECK(contains(optionError({"p", "--dmx-in", "artnet,"}), "nur artnet und sacn"));
+}
+
+TEST_CASE("Bericht: DMX-Nodes nennen die gelesenen Universen", "[cli][dmx]") {
+    auto library = nodes::BuiltinLibrary::create().value();
+    const std::string base =
+        "whitehole-project 1\n"
+        "destination 0 127.0.0.1\n"
+        "fixture A\n  matrix 2 2\n  patch artnet destination 0 universe 0\nend\n"
+        "node g wh.generator.plasma\nend\n"
+        "output g.out\n";
+    const auto without = project::parseProject(base, library->registry);
+    REQUIRE(without.ok());
+    CHECK_FALSE(contains(runtime::summarize(without.value()).value(), "DMX-Eingang"));
+
+    const auto with = project::parseProject(
+        base + "node d wh.value.dmx\n  set source 1\n  set universe 7\nend\nnode e wh.value.dmx\nend\n", library->registry);
+    REQUIRE(with.ok());
+    const auto report = runtime::summarize(with.value());
+    REQUIRE(report.ok());
+    INFO(report.value());
+    CHECK(contains(report.value(), "DMX-Eingang"));
+    CHECK(contains(report.value(), "Art-Net, Universe 1\n"));
+    CHECK(contains(report.value(), "sACN, Universe 7\n"));
+}

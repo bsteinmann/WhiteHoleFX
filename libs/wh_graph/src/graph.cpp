@@ -1,3 +1,4 @@
+// graph.cpp: Umsetzung zu graph_model.hpp. Der Effektgraph: Nodes anlegen, Parameter setzen, Kabel verbinden und prüfen.
 #include "whitehole/graph/graph_model.hpp"
 
 #include <algorithm>

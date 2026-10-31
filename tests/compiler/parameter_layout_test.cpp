@@ -1,3 +1,4 @@
+// Tests des LayoutBuilders: Lage der Parameter im Uniform-Puffer nach den WGSL-Ausrichtungsregeln.
 #include <catch2/catch_test_macros.hpp>
 
 #include <cstdint>

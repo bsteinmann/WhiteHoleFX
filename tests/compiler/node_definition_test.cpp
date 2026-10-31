@@ -1,3 +1,4 @@
+// Tests von SnippetLibrary und registerDefinitions: Node-Beschreibung und Shader-Snippet gemeinsam eintragen.
 #include <catch2/catch_test_macros.hpp>
 
 #include <vector>

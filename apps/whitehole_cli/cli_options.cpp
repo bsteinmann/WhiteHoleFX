@@ -1,5 +1,7 @@
+// cli_options.cpp: Umsetzung zu cli_options.hpp. Kommandozeile des Runners.
 #include "cli_options.hpp"
 
+#include <algorithm>
 #include <charconv>
 #include <cmath>
 
@@ -14,6 +16,7 @@ const char* usageText() {
            "  --software       Software-Adapter für die GPU bevorzugen (z. B. lavapipe)\n"
            "  --snapshot <png> die LEDs des letzten Frames als Bild speichern (ohne --frames: 1 Frame);\n"
            "                   mit --check das Layout, eingefärbt nach Fixture und Kabelrichtung\n"
+           "  --dmx-in <quelle> DMX empfangen für die DMX-Nodes: artnet, sacn oder artnet,sacn (sonst aus)\n"
            "  --size <BxH>     Bildgröße der Vorschau, z. B. 1280x720 (Standard 960x540)\n"
            "  --help           diese Hilfe\n";
 }
@@ -61,6 +64,24 @@ Result<Options> parseOptions(const std::vector<std::string>& args) {
                 return bad("--snapshot braucht einen Dateinamen");
             }
             options.snapshotPath = *value;
+        } else if (a == "--dmx-in") {
+            const std::string* value = next();
+            if (value == nullptr) {
+                return bad("--dmx-in braucht artnet, sacn oder artnet,sacn");
+            }
+            std::size_t from = 0;
+            while (from <= value->size()) {
+                const std::size_t comma = std::min(value->find(',', from), value->size());
+                const std::string name = value->substr(from, comma - from);
+                if (name == "artnet") {
+                    options.dmxArtnet = true;
+                } else if (name == "sacn") {
+                    options.dmxSacn = true;
+                } else {
+                    return bad("--dmx-in kennt nur artnet und sacn, nicht \"" + name + "\"");
+                }
+                from = comma + 1;
+            }
         } else if (a == "--size") {
             const std::string* value = next();
             if (value == nullptr) {

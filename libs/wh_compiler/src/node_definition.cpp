@@ -1,3 +1,4 @@
+// node_definition.cpp: Umsetzung zu node_definition.hpp. Node-Beschreibung plus Shader-Snippet.
 #include "whitehole/compiler/node_definition.hpp"
 
 #include <utility>

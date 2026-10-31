@@ -12,10 +12,12 @@
 
 #include "cli_options.hpp"
 #include "whitehole/engine/frame_clocks.hpp"
+#include "whitehole/input/dmx_receiver.hpp"
 #include "whitehole/nodes/builtin_library.hpp"
 #include "whitehole/output/udp_sender.hpp"
 #include "whitehole/preview/png.hpp"
 #include "whitehole/project/project.hpp"
+#include "whitehole/runtime/dmx_usage.hpp"
 #include "whitehole/runtime/session.hpp"
 #include "whitehole/runtime/summary.hpp"
 
@@ -70,6 +72,22 @@ int run(const project::Project& project, const nodes::BuiltinLibrary& library, c
     auto sender = output::UdpSender::create();
     if (!sender.ok()) {
         return fail(sender.error());
+    }
+
+    // DMX-Eingang: nur auf ausdrücklichen Wunsch (öffnet UDP-Ports).
+    input::DmxReceiver dmxReceiver{library.dmx};
+    const runtime::DmxUsage dmxUsage = runtime::findDmxUsage(project.graph);
+    if (options.dmxArtnet || options.dmxSacn) {
+        input::DmxReceiverConfig dmxConfig;
+        dmxConfig.artnet = options.dmxArtnet;
+        dmxConfig.sacn = options.dmxSacn;
+        if (const Result<void> started = dmxReceiver.start(dmxConfig); !started.ok()) {
+            return fail(started.error());
+        }
+        dmxReceiver.setSacnUniverses(dmxUsage.sacn);
+        std::cerr << "DMX-Eingang läuft.\n";
+    } else if (dmxUsage.any()) {
+        std::cerr << "Hinweis: Das Projekt liest DMX, der Empfang ist aus (--dmx-in artnet,sacn).\n";
     }
 
     engine::SteadyFrameClock clock;

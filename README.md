@@ -5,8 +5,9 @@ Effekte entstehen in einem Node-Graphen und laufen als Shader auf der GPU. Diese
 Effekte gelten für flache Matrizen und für LEDs im 3D-Raum.
 
 > **Status: früh, aber benutzbar.** Projekte lassen sich in einer Qt-Oberfläche bearbeiten
-> (Parameterregler, Node-Editor, Layout-Editor, Rückgängig/Wiederholen), live ansehen und als
-> Art-Net, sACN oder DDP senden; ohne Oberfläche geht es mit `whitehole_cli`. Läuft in der CI auf
+> (Parameterregler, Node-Editor mit Node-Presets, Layout-Editor, Testmodus, Master/Blackout,
+> Rückgängig/Wiederholen), live ansehen und als Art-Net, sACN oder DDP senden; DMX aus dem Netz
+> (Art-Net, sACN) lässt sich über Nodes einlesen; ohne Oberfläche geht es mit `whitehole_cli`. Läuft in der CI auf
 > Linux und Windows (GPU dort nur als Software-Adapter geprüft). Bauen und Installieren (Linux-.deb, Windows-Paket): [BUILDING.md](BUILDING.md).
 > Siehe [Fahrplan](#fahrplan) und [Projektdatei](docs/project-format.md).
 
@@ -25,6 +26,7 @@ Raum sitzt, und tastet die Funktion genau dort ab.
 | `wh_gpu_webgpu` | optionales WebGPU-Backend (wgpu-native), läuft in der CI; siehe [GPU-Backend](docs/gpu-backend.md) |
 | `wh_graph` | Graph-Modell, Node-Verzeichnis, Parameter und Modulation |
 | `wh_values` | CPU-Nodes (Zeit, LFO, Zufall, ...) pro Frame auswerten |
+| `wh_input` | DMX-Eingang: Art-Net und sACN empfangen, letzter Stand je Universe (für die DMX-Nodes) |
 | `wh_compiler` | Field-Nodes zu WGSL übersetzen |
 | `wh_nodes` | mitgelieferte Nodes |
 | `wh_engine` | Renderloop, Readback-Ring, Stages |
@@ -58,6 +60,7 @@ Mit GPU und Oberfläche, Windows und alle Fallstricke: **[BUILDING.md](BUILDING.
 - [Canvas-Stage](docs/canvas-stage.md)
 - [Mapping und Abtast-Pass](docs/mapping.md)
 - [Ausgabe (Art-Net, sACN, DDP)](docs/output.md)
+- [Änderungen](CHANGELOG.md)
 - [Projektdatei und Konsolen-Runner](docs/project-format.md)
 - [Bauen und Starten](BUILDING.md)
 - [Oberfläche (Qt)](docs/studio.md)
@@ -73,11 +76,15 @@ Mit GPU und Oberfläche, Windows und alle Fallstricke: **[BUILDING.md](BUILDING.
 
 - [x] 1–4: Architektur, Graph, Compiler, Werte-Graph, GPU-Ausführung
 - [x] 5: Mapping und Abtast-Pass
-- [x] 6: Ausgabe (Art-Net, sACN, DDP; WLED über DDP/Art-Net). Serial, MQTT, Hyperion, MIDI folgen später
+- [x] 6: Ausgabe (Art-Net, sACN, DDP; WLED über DDP/Art-Net). Serial, TPM2.net, MQTT, Hyperion folgen später; MIDI und OSC sind zurückgestellt
+- [x] DMX-Eingang über Art-Net und sACN (Nodes „DMX Channel“ und „DMX Color“)
 - [ ] 7: Plugins und Skripte
 - [x] 8: Oberfläche (Qt 6): Live-Vorschau, Parameterregler, Node-Editor, Layout-Editor, Rückgängig/Wiederholen
 - [x] GPU-Backend läuft in der CI auf Software-Vulkan (Linux) und Software-Adapter (Windows); Prüfung auf echter GPU steht aus
 - [x] Projektdatei und Konsolen-Runner (`whitehole_cli`)
+- [ ] Mapping-Import (CSV, JSON, später SVG, DXF, PNG)
+- [ ] Audio (FFT, Beat), Video-Quellen
+- [ ] Home-Assistant-Integration
 - [ ] Raster-Nodes (Blur, Feedback), Dawn-Backend
 
 ## Hinweis zur Verifikation

@@ -1,3 +1,4 @@
+// Tests des ValueStores: Werte je Node und Ausgang setzen, lesen und ersetzen.
 #include <catch2/catch_test_macros.hpp>
 
 #include <cstdint>

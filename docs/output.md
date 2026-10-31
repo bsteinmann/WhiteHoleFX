@@ -31,7 +31,7 @@ IPacketSink::send  (UdpSender im Betrieb, RecordingSink im Test)
 | `packet_sink` | Schnittstelle `IPacketSink` und `Endpoint` (Adresse + Port) |
 | `output_pipeline` | pro Frame: rendern, Pakete bauen, senden; Sequenznummern, Zähler |
 | `output_worker` | Thread, der Frames aus dem Briefkasten holt und die Pipeline ausführt |
-| `udp_sender` | nicht blockierender IPv4-UDP-Socket (POSIX) |
+| `udp_sender` | nicht blockierender IPv4-UDP-Socket (POSIX und Winsock) |
 
 ## Patchen
 
@@ -77,8 +77,10 @@ sie zeigt, was die LEDs ausgeben. Farbwähler speichern den Wert, den man sieht,
 ## Bekannte Grenzen
 
 - Nur RGB, kein Weißkanal (RGBW), kein Dithering, keine Kalibrierung je Kanal.
-- UDP-Senden gibt es nur für Linux und macOS; unter Windows meldet `UdpSender::create()`
-  `Unsupported`.
+- Der Windows-Zweig von `UdpSender` (Winsock) ist geschrieben und wird von der CI übersetzt und
+  mit Loopback getestet, aber nicht mit echten Controllern im Netz.
+- Die Gegenrichtung (DMX empfangen) steht in `wh_input` und ist in `docs/value-graph.md`
+  (Abschnitt „DMX-Eingang“) und `docs/studio.md` beschrieben.
 - Pro Paket entsteht eine kleine Allokation (der Paketpuffer); bei mehreren hundert
   Universen und 60 Bildern pro Sekunde ist das unkritisch, lässt sich aber später
   durch wiederverwendete Puffer ersetzen.
@@ -86,5 +88,5 @@ sie zeigt, was die LEDs ausgeben. Farbwähler speichern den Wert, den man sieht,
 - Die Paketformate sind aus der öffentlichen Spezifikation nachgebaut und per
   Byte-Vergleich getestet, aber noch nicht gegen echte Geräte oder Wireshark geprüft.
 - Nicht enthalten: Art-Net-Discovery (ArtPoll), sACN-Synchronisation, Serial, MQTT,
-  Hyperion, MIDI; WLED wird über DDP oder Art-Net angesprochen, eine eigene
+  Hyperion, TPM2.net, MIDI, OSC; WLED wird über DDP oder Art-Net angesprochen, eine eigene
   WLED-Erkennung gibt es nicht.

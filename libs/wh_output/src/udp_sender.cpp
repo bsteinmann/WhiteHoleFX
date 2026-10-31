@@ -1,3 +1,4 @@
+// udp_sender.cpp: Umsetzung zu udp_sender.hpp. Verschickt Pakete über einen UDP-Socket.
 #include "whitehole/output/udp_sender.hpp"
 
 #if defined(_WIN32)

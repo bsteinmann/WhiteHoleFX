@@ -1,3 +1,4 @@
+// Tests des Effektgraphen: Nodes anlegen, Parameter setzen, Verbindungen erlauben und ablehnen.
 #include <catch2/catch_test_macros.hpp>
 
 #include <cstdint>

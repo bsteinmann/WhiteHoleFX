@@ -1,3 +1,4 @@
+// output_worker.cpp: Umsetzung zu output_worker.hpp. Der Ausgabe-Thread, der Frames aus der Engine entgegennimmt.
 #include "whitehole/output/output_worker.hpp"
 
 #include <chrono>

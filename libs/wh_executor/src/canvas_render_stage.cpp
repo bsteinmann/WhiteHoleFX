@@ -1,3 +1,4 @@
+// canvas_render_stage.cpp: Umsetzung zu canvas_render_stage.hpp. Rastert eine Field-Kette pro Frame in eine Canvas-Textur.
 #include "whitehole/executor/canvas_render_stage.hpp"
 
 #include <array>

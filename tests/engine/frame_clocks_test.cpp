@@ -1,3 +1,4 @@
+// Tests der Frame-Uhren: ManualFrameClock (exakt, ohne Drift) und SteadyFrameClock (monoton).
 #include <catch2/catch_test_macros.hpp>
 
 #include "whitehole/engine/frame_clocks.hpp"

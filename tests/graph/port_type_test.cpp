@@ -1,3 +1,4 @@
+// Tests der Porttypen: welche Ausgänge mit welchen Eingängen verbunden werden dürfen.
 #include <catch2/catch_test_macros.hpp>
 
 #include "whitehole/graph/port_type.hpp"

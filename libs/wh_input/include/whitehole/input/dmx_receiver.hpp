@@ -21,13 +21,14 @@
 #include <memory>
 #include <set>
 
+#include "whitehole/core/dmx_constants.hpp"
 #include "whitehole/core/result.hpp"
 #include "whitehole/input/dmx_store.hpp"
 
 namespace whitehole::input {
 
-inline constexpr std::uint16_t kArtNetListenPort = 6454;
-inline constexpr std::uint16_t kSacnListenPort = 5568;
+inline constexpr std::uint16_t kArtNetListenPort = dmx::kArtNetPort;
+inline constexpr std::uint16_t kSacnListenPort = dmx::kSacnPort;
 
 struct DmxReceiverConfig {
     bool artnet{true};

@@ -1,3 +1,4 @@
+// Tests der eingebauten Nodes: Registrierung, Vollständigkeit und Standardwerte im erlaubten Bereich.
 #include <catch2/catch_test_macros.hpp>
 
 #include <algorithm>

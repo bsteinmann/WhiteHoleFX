@@ -1,7 +1,7 @@
 // Werte-Nodes: erzeugen und formen Zahlen und Farben, die Parameter anderer
 // Nodes steuern (Modulation). Sie laufen auf der CPU, einmal pro Frame.
 //
-// Alle Kernel sind frei von Systemuhr und globalem Zustand: Zeit kommt aus dem
+// Alle Kernel dieser Datei sind frei von Systemuhr und globalem Zustand: Zeit kommt aus dem
 // FrameTime, Zufall aus einer Hashfunktion. Derselbe Graph liefert damit bei
 // derselben Zeit immer dieselben Werte, auch beim Offline-Rendern und in Tests.
 #include <algorithm>

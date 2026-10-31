@@ -1,3 +1,4 @@
+// parameter_layout.cpp: Umsetzung zu parameter_layout.hpp. Lage der Node-Parameter im Uniform-Puffer des Feldshaders.
 #include "whitehole/compiler/parameter_layout.hpp"
 
 #include <array>

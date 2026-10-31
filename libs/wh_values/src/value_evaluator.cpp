@@ -1,3 +1,4 @@
+// value_evaluator.cpp: Umsetzung zu value_evaluator.hpp. Wertet die CPU-Nodes eines Graphen einmal pro Frame aus.
 #include "whitehole/values/value_evaluator.hpp"
 
 #include <algorithm>

@@ -1,3 +1,4 @@
+// parameter_resolve.cpp: Umsetzung zu parameter_resolve.hpp. Modulation von Parametern durch verbundene Werte.
 #include "whitehole/graph/parameter_resolve.hpp"
 
 #include <algorithm>

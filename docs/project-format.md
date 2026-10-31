@@ -12,6 +12,10 @@ whitehole_cli examples/wand.whfx                    # rendern und senden (brauch
 whitehole_cli examples/wand.whfx --frames 200 --fps 30 --software
 ```
 
+`--dmx-in artnet,sacn` schaltet den DMX-Eingang für die DMX-Nodes ein (UDP 6454 bzw. 5568); ohne die
+Option liefern sie dauerhaft „kein Signal“, und der Runner weist darauf hin. `--check` nennt die
+Universen, die das Projekt liest.
+
 `--check` baut denselben Ausgabeplan wie der Betrieb und beschreibt ihn: wie viele LEDs, welche
 Pakete an welche Adresse und in welches Universe gehen. Doppelt belegte Kanäle, fehlende Ziele
 oder zu lange Strips fallen so vor dem ersten Paket auf.

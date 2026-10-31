@@ -1,3 +1,4 @@
+// dmx_receiver.cpp: Umsetzung zu dmx_receiver.hpp. Empfängt Art-Net und sACN über UDP und schreibt die Kanalwerte in einen DmxStore.
 #include "whitehole/input/dmx_receiver.hpp"
 
 #include <atomic>

@@ -1,3 +1,4 @@
+// ddp.cpp: Umsetzung zu ddp.hpp. Baut DDP-Pakete (Distributed Display Protocol) für RGB-Pixeldaten.
 #include "whitehole/output/ddp.hpp"
 
 #include <algorithm>

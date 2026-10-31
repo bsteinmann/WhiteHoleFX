@@ -1,10 +1,14 @@
+// summary.cpp: Umsetzung zu summary.hpp. Prüfbericht eines Projekts, ohne GPU und ohne Netzwerk.
 #include "whitehole/runtime/summary.hpp"
 
+#include <cstdint>
+#include <set>
 #include <sstream>
 
 #include "whitehole/output/artnet.hpp"
 #include "whitehole/output/ddp.hpp"
 #include "whitehole/output/sacn.hpp"
+#include "whitehole/runtime/dmx_usage.hpp"
 #include "whitehole/runtime/session.hpp"
 
 namespace whitehole::runtime {
@@ -65,6 +69,24 @@ Result<std::string> summarize(const project::Project& project) {
         out << ", " << slot.length << " Bytes\n";
     }
     out << "Effekt: " << (project.target ? "gesetzt (output-Zeile)" : "FEHLT (keine output-Zeile)") << "\n";
+    const DmxUsage dmx = findDmxUsage(project.graph);
+    if (dmx.any()) {
+        const auto list = [&out](const char* name, const std::set<std::uint32_t>& universes) {
+            if (universes.empty()) {
+                return;
+            }
+            out << "  " << name << ", Universe";
+            const char* separator = " ";
+            for (const std::uint32_t universe : universes) {
+                out << separator << universe;
+                separator = ", ";
+            }
+            out << "\n";
+        };
+        out << "DMX-Eingang: das Projekt liest (Empfang einschalten: --dmx-in bzw. Menü Eingang im Studio)\n";
+        list("Art-Net", dmx.artnet);
+        list("sACN", dmx.sacn);
+    }
     return out.str();
 }
 

@@ -1,3 +1,4 @@
+// value_store.cpp: Umsetzung zu value_store.hpp. Die Werte, die CPU-Nodes im aktuellen Frame an ihren Ausgängen liefern.
 #include "whitehole/values/value_store.hpp"
 
 #include <utility>

@@ -1,3 +1,4 @@
+// sampling_render_stage.cpp: Umsetzung zu sampling_render_stage.hpp. Tastet eine Field-Kette an den Positionen der LEDs ab.
 #include "whitehole/executor/sampling_render_stage.hpp"
 
 #include <array>

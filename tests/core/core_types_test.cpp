@@ -1,3 +1,4 @@
+// Tests der Grundtypen: StrongId, IdGenerator und Result<T>.
 #include <catch2/catch_test_macros.hpp>
 
 #include <unordered_set>

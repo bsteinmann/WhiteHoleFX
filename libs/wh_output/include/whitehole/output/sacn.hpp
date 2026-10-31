@@ -43,12 +43,13 @@
 #include <string_view>
 #include <vector>
 
+#include "whitehole/core/dmx_constants.hpp"
 #include "whitehole/core/result.hpp"
 #include "whitehole/output/artnet.hpp"
 
 namespace whitehole::output {
 
-inline constexpr std::uint16_t kSacnPort = 5568;
+inline constexpr std::uint16_t kSacnPort = dmx::kSacnPort;
 inline constexpr std::size_t kSacnHeaderSize = 126;  // bis einschließlich Startcode
 inline constexpr std::uint16_t kSacnMaxUniverse = 63999;
 inline constexpr std::size_t kSacnSourceNameSize = 64;

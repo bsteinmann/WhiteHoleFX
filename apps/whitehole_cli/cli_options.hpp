@@ -15,6 +15,8 @@ struct Options {
     bool check{false};
     bool software{false};            // Software-Adapter bevorzugen
     bool help{false};
+    bool dmxArtnet{false};           // --dmx-in: Art-Net empfangen
+    bool dmxSacn{false};             // --dmx-in: sACN empfangen
     std::optional<std::uint64_t> frames;  // sonst bis Strg+C
     std::optional<double> fps;            // überschreibt das Projekt
     std::string snapshotPath;             // PNG der LEDs (bei --check: des Layouts)

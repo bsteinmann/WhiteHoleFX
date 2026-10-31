@@ -1,3 +1,4 @@
+// output_pipeline.cpp: Umsetzung zu output_pipeline.hpp. Vom Farbpuffer eines Frames bis zum letzten gesendeten Paket.
 #include "whitehole/output/output_pipeline.hpp"
 
 #include <algorithm>

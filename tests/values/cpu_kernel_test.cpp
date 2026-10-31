@@ -1,3 +1,4 @@
+// Tests der CPU-Kernel-Schnittstelle: KernelInputs (Rückfallwerte) und KernelOutputs.
 #include <catch2/catch_test_macros.hpp>
 
 #include <cstdint>

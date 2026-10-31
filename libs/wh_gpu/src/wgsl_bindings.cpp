@@ -1,3 +1,4 @@
+// wgsl_bindings.cpp: Umsetzung zu wgsl_bindings.hpp. Liest aus WGSL-Text, welche Ressourcen ein Shader deklariert.
 #include "whitehole/gpu/wgsl_bindings.hpp"
 
 #include <algorithm>

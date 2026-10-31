@@ -1,3 +1,4 @@
+// builtin_library.cpp: Umsetzung zu builtin_library.hpp. Alle eingebauten Nodes fertig verdrahtet.
 #include "whitehole/nodes/builtin_library.hpp"
 
 #include "whitehole/nodes/builtin_nodes.hpp"

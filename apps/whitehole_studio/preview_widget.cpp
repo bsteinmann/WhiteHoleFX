@@ -1,3 +1,4 @@
+// preview_widget.cpp: Umsetzung zu preview_widget.hpp. Zeichnet das Vorschaubild samt Auswahl- und Bereichsrahmen und meldet Mausereignisse.
 #include "preview_widget.hpp"
 
 #include <QKeyEvent>

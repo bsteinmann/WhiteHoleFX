@@ -1,3 +1,4 @@
+// field_compiler.cpp: Umsetzung zu field_compiler.hpp. Verschmilzt die Field-Nodes eines Graphen zu einer WGSL-Funktion.
 #include "whitehole/compiler/field_compiler.hpp"
 
 #include <cstddef>

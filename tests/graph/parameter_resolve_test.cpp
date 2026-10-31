@@ -1,3 +1,4 @@
+// Tests der Modulation: welcher Parameter über welchen Port gesteuert wird und welcher Wert zu welchem Porttyp passt.
 #include <catch2/catch_test_macros.hpp>
 
 #include <cstdint>

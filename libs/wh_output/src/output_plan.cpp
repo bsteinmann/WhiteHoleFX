@@ -1,3 +1,4 @@
+// output_plan.cpp: Umsetzung zu output_plan.hpp. Verteilt die LEDs eines Layouts auf Universen und Pixelströme.
 #include "whitehole/output/output_plan.hpp"
 
 #include <algorithm>

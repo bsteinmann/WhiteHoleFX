@@ -1,3 +1,4 @@
+// webgpu_device.cpp: Umsetzung zu webgpu_device.hpp. IGpuDevice auf einer echten GPU (oder einem Software-Rasterizer).
 #include "whitehole/gpu_webgpu/webgpu_device.hpp"
 
 #include <chrono>

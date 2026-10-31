@@ -1,3 +1,4 @@
+// canvas_shader.cpp: Umsetzung zu canvas_shader.hpp. Der Compute-Einstieg, der ein Feld in eine Textur rastert.
 #include "whitehole/executor/canvas_shader.hpp"
 
 #include <string>

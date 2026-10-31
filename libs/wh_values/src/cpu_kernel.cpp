@@ -1,3 +1,4 @@
+// cpu_kernel.cpp: Umsetzung zu cpu_kernel.hpp. Die Rechenvorschrift eines CPU-Nodes und ihre Registrierung.
 #include "whitehole/values/cpu_kernel.hpp"
 
 #include <utility>

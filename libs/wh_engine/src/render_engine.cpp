@@ -1,3 +1,4 @@
+// render_engine.cpp: Umsetzung zu render_engine.hpp. Setzt einen Frame von der Uhr bis zur Sink zusammen.
 #include "whitehole/engine/render_engine.hpp"
 
 #include <optional>

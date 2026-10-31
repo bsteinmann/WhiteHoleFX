@@ -1,3 +1,4 @@
+// sacn.cpp: Umsetzung zu sacn.hpp. Baut ein sACN-Paket (ANSI E1.31, "Streaming ACN") für ein DMX-Universe.
 #include "whitehole/output/sacn.hpp"
 
 #include <algorithm>

@@ -6,7 +6,9 @@
 
 #include <catch2/catch_test_macros.hpp>
 
+#include <algorithm>
 #include <chrono>
+#include <cmath>
 #include <cstring>
 #include <memory>
 #include <thread>
@@ -83,6 +85,13 @@ inline std::vector<std::byte> renderCanvas(WebGpuDevice& device, executor::Canva
         packed.insert(packed.end(), row, row + std::size_t{extent.width} * texel);
     }
     return packed;
+}
+
+/// Der erwartete Verlaufswert t an Position p (0..1) bei Drehung um `angleDegrees`, wie ihn der Shader rechnet.
+inline float gradientT(const Vec3& p, double angleDegrees) {
+    const double a = angleDegrees * 3.14159265358979323846 / 180.0;
+    const double t = (static_cast<double>(p.x) - 0.5) * std::cos(a) + (static_cast<double>(p.y) - 0.5) * std::sin(a) + 0.5;
+    return static_cast<float>(std::clamp(t, 0.0, 1.0));
 }
 
 }  // namespace whitehole::gputest

@@ -1,3 +1,4 @@
+// artnet.cpp: Umsetzung zu artnet.hpp. Baut ein Art-Net-Paket (ArtDmx) aus Universe und Kanalwerten.
 #include "whitehole/output/artnet.hpp"
 
 #include <algorithm>

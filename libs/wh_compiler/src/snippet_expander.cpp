@@ -1,3 +1,4 @@
+// snippet_expander.cpp: Umsetzung zu snippet_expander.hpp. Ersetzt die Platzhalter eines Snippet-Rumpfs durch WGSL-Ausdrücke.
 #include "whitehole/compiler/snippet_expander.hpp"
 
 #include <cctype>

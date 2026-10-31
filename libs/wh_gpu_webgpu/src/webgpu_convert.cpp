@@ -1,3 +1,4 @@
+// webgpu_convert.cpp: Umrechnung zwischen den Typen von wh_gpu und denen von wgpu-native (Formate, Nutzungsflags, Texelgrößen).
 #include "whitehole/gpu_webgpu/webgpu_device.hpp"
 #include "webgpu_impl.hpp"
 

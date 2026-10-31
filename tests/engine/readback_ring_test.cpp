@@ -1,3 +1,4 @@
+// Tests des Readback-Rings: Slots vergeben und freigeben, Frames erst nach dem GPU-Callback ausliefern.
 #include <catch2/catch_test_macros.hpp>
 
 #include <cstddef>

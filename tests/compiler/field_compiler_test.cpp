@@ -1,3 +1,4 @@
+// Tests von compileField: aus Field-Nodes entsteht eine WGSL-Funktion mit Bindings und Parameterlayout.
 #include <catch2/catch_test_macros.hpp>
 
 #include <cstddef>

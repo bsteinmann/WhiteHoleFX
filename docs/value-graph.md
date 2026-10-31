@@ -122,7 +122,7 @@ Frames hinweg lebt (siehe `wh.value.smooth`). Sie verschwindet, wenn der Node ge
 wird. Wer Zustand hält, verliert die Fähigkeit, direkt auf eine Zeit zu springen. Wo es
 geht, sind Kernel zustandslos und lesen die Zeit aus `context.time` (siehe `wh.value.lfo`).
 
-**Verboten** im Kernel: Systemuhr, globale Zufallsquellen, Blockieren. Das Ergebnis muss
+**Verboten** im Kernel (Ausnahme: die DMX-Nodes, deren Wert aus dem Netzwerk kommt): Systemuhr, globale Zufallsquellen, Blockieren. Das Ergebnis muss
 bei gleichem Graph und gleicher Zeit gleich sein, sonst sind Offline-Rendern und Tests
 nicht reproduzierbar.
 

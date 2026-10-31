@@ -1,3 +1,4 @@
+// Tests der RenderEngine: Stages, Uhr und Sink zusammen; Frames ohne freien Slot werden verworfen.
 #include <catch2/catch_test_macros.hpp>
 
 #include <cstddef>

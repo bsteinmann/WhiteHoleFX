@@ -24,13 +24,14 @@
 #include <span>
 #include <vector>
 
+#include "whitehole/core/dmx_constants.hpp"
 #include "whitehole/core/result.hpp"
 
 namespace whitehole::output {
 
-inline constexpr std::uint16_t kArtNetPort = 6454;
+inline constexpr std::uint16_t kArtNetPort = dmx::kArtNetPort;
 inline constexpr std::size_t kArtNetHeaderSize = 18;
-inline constexpr std::size_t kDmxMaxChannels = 512;
+inline constexpr std::size_t kDmxMaxChannels = dmx::kChannelsPerUniverse;
 inline constexpr std::uint16_t kArtNetMaxPortAddress = 0x7FFF;  // 15 Bit: Net(7) Sub(4) Uni(4)
 
 struct ArtDmxParams {

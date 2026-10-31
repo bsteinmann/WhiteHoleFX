@@ -18,11 +18,13 @@
 #include <optional>
 #include <span>
 
+#include "whitehole/core/dmx_constants.hpp"
+
 namespace whitehole::input {
 
 enum class DmxProtocol : std::uint8_t { ArtNet = 0, Sacn = 1 };
 
-inline constexpr std::size_t kDmxChannels = 512;
+inline constexpr std::size_t kDmxChannels = dmx::kChannelsPerUniverse;
 
 /// Ein gelesener Kanal (oder mehrere hintereinander).
 struct DmxSample {

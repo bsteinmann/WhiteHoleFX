@@ -22,6 +22,7 @@ add_executable(whitehole_studio
     main_window.hpp
     node_editor.cpp
     node_editor_clipboard.cpp
+    node_editor_edit.cpp
     node_editor_exercise.cpp
     node_editor.hpp
     node_editor_menu.cpp
@@ -32,6 +33,8 @@ add_executable(whitehole_studio
     node_items.hpp
     output_form.cpp
     output_form.hpp
+    parameter_editors.cpp
+    parameter_editors.hpp
     parameter_panel.cpp
     parameter_panel.hpp
     preview_controller.cpp

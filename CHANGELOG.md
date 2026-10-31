@@ -1,5 +1,15 @@
 # Änderungen
 
+## 0.13.1
+
+- **Kommandozeile:** `--dmx-in artnet,sacn` schaltet den DMX-Eingang für die DMX-Nodes ein; `--check` nennt die
+  Universen, die das Projekt liest, und der Runner weist darauf hin, wenn DMX gelesen, der Empfang aber aus ist
+- Art-Net-/sACN-Ports und die Kanalzahl je Universe stehen nur noch einmal (`whitehole/core/dmx_constants.hpp`)
+- Dateien wieder unter 400 Zeilen: `parameter_panel.cpp` (neu: `parameter_editors.cpp`), `node_editor.cpp`
+  (neu: `node_editor_edit.cpp`), `stage_on_device_test.cpp` (neu: `sampling_on_device_test.cpp`)
+- Alle Quelldateien haben wieder einen Kopfkommentar (63 ergänzt)
+- Doku: README, Ausgabe (Windows-Aussage war veraltet), Projektdatei, Werte-Graph
+
 ## 0.13.0
 
 - **DMX-Eingang über Art-Net und sACN:** neues Modul `wh_input` liest ArtDmx- und E1.31-Pakete, hält den

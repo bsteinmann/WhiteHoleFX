@@ -1,3 +1,4 @@
+// dmx_usage.cpp: Umsetzung zu dmx_usage.hpp. Welche DMX-Universen die DMX-Nodes eines Graphen lesen.
 #include "whitehole/runtime/dmx_usage.hpp"
 
 #include <algorithm>

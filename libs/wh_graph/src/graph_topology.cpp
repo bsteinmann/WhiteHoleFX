@@ -1,3 +1,4 @@
+// graph_topology.cpp: Umsetzung zu graph_topology.hpp. Reine Graphenalgorithmen über Node-IDs und Verbindungen.
 #include "whitehole/graph/graph_topology.hpp"
 
 #include <cstddef>

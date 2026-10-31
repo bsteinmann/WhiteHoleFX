@@ -1,3 +1,4 @@
+// Tests der Mailbox zwischen Engine- und Output-Thread: neuester Frame gewinnt, Warten mit Zeitlimit.
 #include <catch2/catch_test_macros.hpp>
 
 #include <chrono>

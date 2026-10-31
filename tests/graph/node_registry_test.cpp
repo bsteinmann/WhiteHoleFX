@@ -1,3 +1,4 @@
+// Tests des Node-Verzeichnisses: eintragen, finden, doppelte und leere Typ-IDs ablehnen.
 #include <catch2/catch_test_macros.hpp>
 
 #include <algorithm>

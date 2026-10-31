@@ -1,3 +1,4 @@
+// readback_ring.cpp: Umsetzung zu readback_ring.hpp. Ring aus CPU-lesbaren Puffern für das asynchrone Zurücklesen.
 #include "whitehole/engine/readback_ring.hpp"
 
 #include <span>

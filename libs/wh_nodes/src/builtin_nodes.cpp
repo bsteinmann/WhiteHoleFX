@@ -1,3 +1,4 @@
+// builtin_nodes.cpp: Umsetzung zu builtin_nodes.hpp. Die eingebauten Nodes (Field-Nodes und Werte-Nodes).
 #include "whitehole/nodes/builtin_nodes.hpp"
 
 #include <iterator>

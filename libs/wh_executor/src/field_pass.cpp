@@ -1,3 +1,4 @@
+// field_pass.cpp: Umsetzung zu field_pass.hpp. Der gemeinsame Ablauf aller Pässe, die ein Feld auswerten.
 #include "whitehole/executor/field_pass.hpp"
 
 #include <array>

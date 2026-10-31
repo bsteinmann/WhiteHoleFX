@@ -1,3 +1,4 @@
+// sampling_shader.cpp: Umsetzung zu sampling_shader.hpp. Der Compute-Einstieg, der ein Feld an LED-Positionen abtastet.
 #include "whitehole/executor/sampling_shader.hpp"
 
 #include <algorithm>

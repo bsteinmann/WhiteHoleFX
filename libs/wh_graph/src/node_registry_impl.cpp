@@ -1,3 +1,4 @@
+// node_registry_impl.cpp: Umsetzung zu node_registry_impl.hpp. Konkretes Verzeichnis aller Node-Typen.
 #include "whitehole/graph/node_registry_impl.hpp"
 
 #include <cctype>

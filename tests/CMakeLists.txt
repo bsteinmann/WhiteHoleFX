@@ -112,6 +112,7 @@ if(TARGET wh_gpu_webgpu)
         gpu_device/node_catalog_on_device_test.cpp
         gpu_device/node_patterns_on_device_test.cpp
         gpu_device/session_on_device_test.cpp
+        gpu_device/sampling_on_device_test.cpp
         gpu_device/stage_on_device_test.cpp
         gpu_device/webgpu_device_test.cpp)
     target_include_directories(wh_gpu_tests PRIVATE support)

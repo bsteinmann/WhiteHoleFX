@@ -1,3 +1,4 @@
+// color_encoder.cpp: Umsetzung zu color_encoder.hpp. Macht aus einer Float-Farbe die drei Bytes einer LED.
 #include "whitehole/output/color_encoder.hpp"
 
 #include <algorithm>
