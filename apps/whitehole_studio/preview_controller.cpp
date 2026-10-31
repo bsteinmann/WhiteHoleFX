@@ -310,13 +310,14 @@ QString PreviewController::exercise() {
     // 1. Fixture anklicken und 40 Bildpunkte nach rechts ziehen.
     const QRectF box = toQRect(preview::toPixels(lastFrame_, preview::worldBox(*player_.project()->layout.find(id))));
     const QPointF center = box.center();
+    const float dragScale = lastFrame_.scale;  // nach dem Loslassen passt sich der Ausschnitt neu an
     onPressed(center, Qt::NoModifier);
     if (panel_->selectedIds() != std::vector<mapping::FixtureId>{id}) {
         return QStringLiteral("Vorschau: Klick hat das Fixture nicht gewählt");
     }
     onDragged(center + QPointF{20.0, 0.0});
     onReleased(center + QPointF{40.0, 0.0});
-    const float expected = 40.0F / lastFrame_.scale;
+    const float expected = 40.0F / dragScale;
     if (std::abs((originOf().x - original.x) - expected) > 0.11F || std::abs(originOf().y - original.y) > 0.11F) {
         return QStringLiteral("Vorschau: Ziehen verschob um %1 statt %2")
             .arg(static_cast<double>(originOf().x - original.x))
