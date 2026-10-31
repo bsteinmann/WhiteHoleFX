@@ -136,6 +136,19 @@ std::optional<Error> Parser::settings(Reader& r) {
             project_.framesPerSecond = fps;
         } else if (key == "normalize") {
             project_.normalize = detail::readName(r, detail::kNormalizeModes, "Normalisierung");
+        } else if (key == "region") {
+            mapping::Region region;
+            region.x = static_cast<float>(r.numberD("Bereich x"));
+            region.y = static_cast<float>(r.numberD("Bereich y"));
+            region.w = static_cast<float>(r.numberD("Bereich Breite"));
+            region.h = static_cast<float>(r.numberD("Bereich Höhe"));
+            if (r.ok()) {
+                if (const Result<void> valid = mapping::validateRegion(region); !valid.ok()) {
+                    r.fail(valid.error().message);
+                } else {
+                    project_.region = region;
+                }
+            }
         } else if (key == "sacn-priority") {
             project_.sacnPriority = static_cast<std::uint8_t>(r.whole("Priorität", 200));
         } else if (key == "source-name") {

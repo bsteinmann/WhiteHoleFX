@@ -24,7 +24,10 @@ fn main(@builtin(global_invocation_id) id: vec3<u32>, @builtin(num_workgroups) g
     if (i >= wh_leds.count) {
         return;
     }
-    wh_colors[i] = wh_field(wh_positions[i].xyz);
+    let position = wh_positions[i];
+    var color = wh_field(position.xyz);
+    color.a = color.a * (1.0 - position.w);  // w = 1: LED liegt außerhalb des Effektbereichs
+    wh_colors[i] = color;
 }
 )wgsl";
     return text;

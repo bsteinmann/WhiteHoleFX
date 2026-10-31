@@ -46,6 +46,9 @@ struct SamplingStageConfig {
 
 /// Packt Positionen als vec4<f32> (x, y, z, 0), wie der Shader sie liest.
 [[nodiscard]] std::vector<std::byte> packPositions(std::span<const Vec3> positions);
+/// Wie oben; `outside` (leer oder je LED ein Wert) setzt w = 1 für LEDs außerhalb des Effektbereichs.
+[[nodiscard]] std::vector<std::byte> packPositions(std::span<const Vec3> positions,
+                                                   std::span<const std::uint8_t> outside);
 
 class SamplingRenderStage final : public engine::IRenderStage {
 public:

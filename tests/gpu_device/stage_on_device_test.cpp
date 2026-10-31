@@ -329,3 +329,36 @@ TEST_CASE("Abtastung: die Zeit erreicht den Shader", "[gpu_device][stage]") {
         CHECK(c.r > 1.0F - 1e-3F);
     }
 }
+
+TEST_CASE("Abtastung: LEDs außerhalb des Effektbereichs werden durchsichtig", "[gpu_device][stage]") {
+    const std::unique_ptr<WebGpuDevice> device = makeDevice();
+    if (!device) {
+        SKIP("Kein WebGPU-Adapter verfügbar");
+    }
+    auto rig = samplingRig(*device, "wh.generator.gradient");
+    rig->lab.set(rig->node, "angle", 0.0);
+    rig->lab.set(rig->node, "colorA", ColorRgba{1.0F, 1.0F, 1.0F, 1.0F});
+    rig->lab.set(rig->node, "colorB", ColorRgba{1.0F, 1.0F, 1.0F, 1.0F});
+    REQUIRE(rig->stage->setGraph(rig->lab.graph).ok());
+
+    // Matrix 4x2, Bereich: die linke Hälfte (Spalten 0 und 1).
+    mapping::Layout layout;
+    mapping::MatrixShape matrix;
+    matrix.columns = 4;
+    matrix.rows = 2;
+    REQUIRE(layout.add("Panel", Vec3{}, matrix).ok());
+    rig->map = layout.bake(mapping::NormalizeMode::Stretch, mapping::Region{0.0F, 0.0F, 0.5F, 1.0F}).value();
+    REQUIRE(rig->stage->setMap(rig->map).ok());
+
+    const std::vector<ColorRgba> colors = renderSampling(*device, *rig, 0.0);
+    REQUIRE(colors.size() == 8);
+    int lit = 0;
+    for (std::size_t i = 0; i < colors.size(); ++i) {
+        const bool inside = rig->map.world[i].x < 2.0F;
+        INFO("LED " << i);
+        CHECK(std::abs(colors[i].a - (inside ? 1.0F : 0.0F)) < 1e-6F);
+        lit += inside ? 1 : 0;
+    }
+    CHECK(lit == 4);
+    CHECK(device->takeErrors().empty());
+}

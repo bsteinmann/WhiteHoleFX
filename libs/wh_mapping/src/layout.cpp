@@ -27,7 +27,29 @@ float normalizeAxis(float value, float low, float extent, float scale) noexcept 
     return clamp01(0.5F + (value - center) / scale);
 }
 
+bool insideRange(float value, float low, float high) noexcept {
+    const float slack = 1e-4F * std::max(high - low, 1e-3F);  // Rundung an der Kante verzeihen
+    return value >= low - slack && value <= high + slack;
+}
+
 }  // namespace
+
+Result<void> validateRegion(const Region& region) {
+    const bool finite = std::isfinite(region.x) && std::isfinite(region.y) && std::isfinite(region.w) &&
+                        std::isfinite(region.h);
+    if (!finite) {
+        return Error{ErrorCode::InvalidArgument, "Der Effektbereich muss aus endlichen Zahlen bestehen"};
+    }
+    if (!(region.w > 0.0F) || !(region.h > 0.0F)) {
+        return Error{ErrorCode::InvalidArgument, "Der Effektbereich braucht Breite und Höhe größer 0"};
+    }
+    constexpr float kSlack = 1e-6F;
+    if (region.x < 0.0F || region.y < 0.0F || region.x + region.w > 1.0F + kSlack ||
+        region.y + region.h > 1.0F + kSlack) {
+        return Error{ErrorCode::InvalidArgument, "Der Effektbereich muss innerhalb der Wand liegen (0 bis 1)"};
+    }
+    return {};
+}
 
 Result<FixtureId> Layout::add(std::string name, const Vec3& origin, FixtureShape shape) {
     if (!finiteVec(origin)) {
@@ -96,7 +118,12 @@ const Fixture* Layout::find(FixtureId id) const noexcept {
     return nullptr;
 }
 
-Result<LedMap> Layout::bake(NormalizeMode mode) const {
+Result<LedMap> Layout::bake(NormalizeMode mode, const std::optional<Region>& region) const {
+    if (region) {
+        if (Result<void> valid = validateRegion(*region); !valid.ok()) {
+            return valid.error();
+        }
+    }
     if (fixtures_.empty()) {
         return Error{ErrorCode::InvalidArgument, "Das Layout enthält keine Fixtures"};
     }
@@ -133,8 +160,17 @@ Result<LedMap> Layout::bake(NormalizeMode mode) const {
             FixtureRange{fixture.id, start, static_cast<std::uint32_t>(map.world.size()) - start});
     }
 
-    const Vec3 extent{map.volume.max.x - map.volume.min.x, map.volume.max.y - map.volume.min.y,
-                      map.volume.max.z - map.volume.min.z};
+    // Die Box, auf die normalisiert wird: die ganze Wand oder der Effektbereich (z bleibt gleich).
+    Box box = map.volume;
+    if (region) {
+        const float wallWidth = map.volume.max.x - map.volume.min.x;
+        const float wallHeight = map.volume.max.y - map.volume.min.y;
+        box.min.x = map.volume.min.x + region->x * wallWidth;
+        box.max.x = box.min.x + region->w * wallWidth;
+        box.max.y = map.volume.max.y - region->y * wallHeight;  // y zählt von oben
+        box.min.y = box.max.y - region->h * wallHeight;
+    }
+    const Vec3 extent{box.max.x - box.min.x, box.max.y - box.min.y, box.max.z - box.min.z};
     const float longest = std::max({extent.x, extent.y, extent.z});
 
     map.unit.reserve(map.world.size());
@@ -142,9 +178,12 @@ Result<LedMap> Layout::bake(NormalizeMode mode) const {
         const float sx = mode == NormalizeMode::Stretch ? extent.x : longest;
         const float sy = mode == NormalizeMode::Stretch ? extent.y : longest;
         const float sz = mode == NormalizeMode::Stretch ? extent.z : longest;
-        map.unit.push_back(Vec3{normalizeAxis(p.x, map.volume.min.x, extent.x, sx),
-                                normalizeAxis(p.y, map.volume.min.y, extent.y, sy),
-                                normalizeAxis(p.z, map.volume.min.z, extent.z, sz)});
+        map.unit.push_back(Vec3{normalizeAxis(p.x, box.min.x, extent.x, sx), normalizeAxis(p.y, box.min.y, extent.y, sy),
+                                normalizeAxis(p.z, box.min.z, extent.z, sz)});
+        if (region) {
+            const bool inside = insideRange(p.x, box.min.x, box.max.x) && insideRange(p.y, box.min.y, box.max.y);
+            map.outside.push_back(inside ? 0U : 1U);
+        }
     }
     return map;
 }

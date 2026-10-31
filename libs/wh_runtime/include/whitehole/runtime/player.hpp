@@ -155,6 +155,27 @@ public:
     Result<void> renameFixture(mapping::FixtureId id, std::string name);
     Result<void> moveFixture(mapping::FixtureId id, const Vec3& origin);
     Result<void> setFixtureShape(mapping::FixtureId id, mapping::FixtureShape shape);
+    /// Verschiebt mehrere Fixtures um denselben Versatz (ein Undo-Schritt, wie ein Ziehen mit der Maus).
+    /// Fehler: NotFound bei unbekannter Id, InvalidArgument bei nicht endlichem Versatz.
+    Result<void> moveFixtures(const std::vector<mapping::FixtureId>& ids, const Vec3& delta);
+
+    /// Ausrichten an der Gesamtbox der gewählten Fixtures. Oben/unten und links/rechts sind die
+    /// Richtungen der Vorschau (y nach oben, x nach rechts).
+    enum class Align : std::uint8_t { Left, HCenter, Right, Top, VCenter, Bottom };
+    /// Achse für gleichmäßiges Verteilen.
+    enum class Axis : std::uint8_t { X, Y, Z };
+    /// Richtet die Fixtures aus (ein Undo-Schritt). Fehler: NotFound (unbekannte Id), InvalidArgument
+    /// (Liste leer).
+    Result<void> alignFixtures(const std::vector<mapping::FixtureId>& ids, Align mode);
+    /// Verteilt die Fixtures so, dass die Lücken zwischen ihren Boxen auf der Achse gleich groß sind;
+    /// das erste und das letzte (nach Lage sortiert) bleiben stehen. Fehler: InvalidArgument bei
+    /// weniger als drei Fixtures, NotFound bei unbekannter Id.
+    Result<void> distributeFixtures(const std::vector<mapping::FixtureId>& ids, Axis axis);
+
+    /// Effektbereich (Bild-in-Bild) setzen; nullopt = die ganze Wand. Fehler: InvalidArgument
+    /// (Rechteck ungültig, siehe mapping::validateRegion).
+    Result<void> setRegion(std::optional<mapping::Region> region);
+
     /// Setzt oder (mit nullopt) entfernt den Patch des Fixtures.
     Result<void> setPatch(mapping::FixtureId id, std::optional<output::FixturePatch> patch);
     /// Ersetzt die Zielliste. Ein Patch darf nur auf vorhandene Ziele zeigen.

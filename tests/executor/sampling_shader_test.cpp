@@ -25,7 +25,8 @@ TEST_CASE("samplingShader hängt den Einstieg hinter die Feldbibliothek") {
     CHECK(contains(text, "@group(1) @binding(1) var<storage, read_write> wh_colors: array<vec4<f32>>;"));
     CHECK(contains(text, "@group(1) @binding(2) var<uniform> wh_leds: WhLeds;"));
     CHECK(contains(text, "@compute @workgroup_size(64)"));
-    CHECK(contains(text, "wh_colors[i] = wh_field(wh_positions[i].xyz);"));
+    CHECK(contains(text, "var color = wh_field(position.xyz);"));
+    CHECK(contains(text, "color.a = color.a * (1.0 - position.w);"));
 }
 
 TEST_CASE("samplingShader prüft den Index gegen die Anzahl, nicht gegen die Puffergröße") {
@@ -90,4 +91,17 @@ TEST_CASE("packPositions: vec4 je Position mit w = 0") {
     CHECK(values[6] == 0.25F);
     CHECK(values[7] == 0.0F);
     CHECK(packPositions({}).empty());
+}
+
+TEST_CASE("packPositions: LEDs außerhalb des Effektbereichs bekommen w = 1") {
+    const std::vector<Vec3> positions{Vec3{0.1F, 0.2F, 0.0F}, Vec3{0.9F, 0.8F, 0.0F}, Vec3{0.5F, 0.5F, 0.0F}};
+    const std::vector<std::uint8_t> outside{0U, 1U};  // kürzer als die Positionen: der Rest gilt als innen
+    const std::vector<std::byte> bytes = packPositions(positions, outside);
+    REQUIRE(bytes.size() == 48U);
+    float values[12];
+    std::memcpy(values, bytes.data(), sizeof values);
+    CHECK(values[3] == 0.0F);
+    CHECK(values[7] == 1.0F);
+    CHECK(values[11] == 0.0F);
+    CHECK(values[4] == 0.9F);  // die Position selbst bleibt unverändert
 }

@@ -37,6 +37,8 @@ struct Project {
 
     mapping::Layout layout;
     mapping::NormalizeMode normalize{mapping::NormalizeMode::Stretch};
+    /// Effektbereich auf der Wand (Bild-in-Bild); ohne Wert füllt der Effekt die ganze Wand.
+    std::optional<mapping::Region> region;
     std::vector<output::FixturePatch> patches;
 
     graph::Graph graph;

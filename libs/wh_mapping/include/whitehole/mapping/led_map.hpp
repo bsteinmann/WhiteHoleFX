@@ -37,6 +37,10 @@ struct LedMap {
     /// Umschließende Box aller Fixtures (Zellen, nicht nur LED-Mitten).
     Box volume;
 
+    /// Pro LED 1, wenn sie außerhalb des Effektbereichs liegt (siehe Region in layout.hpp).
+    /// Leer, wenn kein Bereich gesetzt ist; sonst so lang wie `world`.
+    std::vector<std::uint8_t> outside;
+
     [[nodiscard]] std::size_t size() const noexcept { return world.size(); }
 };
 

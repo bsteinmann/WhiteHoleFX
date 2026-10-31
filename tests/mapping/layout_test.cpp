@@ -253,3 +253,78 @@ TEST_CASE("Rundungsfehler an den Rändern der Box schieben keine LED aus [0,1]")
         }
     }
 }
+
+TEST_CASE("Effektbereich: der Effekt füllt nur das Rechteck, LEDs außerhalb sind markiert") {
+    Layout layout;
+    put(layout, "Wand", Vec3{}, matrix(8, 4));
+
+    const LedMap whole = layout.bake(NormalizeMode::Stretch).value();
+    CHECK(whole.outside.empty());  // ohne Bereich keine Maske
+
+    // Linke obere Viertelfläche: 4 Spalten, 2 Zeilen.
+    const Region corner{0.0F, 0.0F, 0.5F, 0.5F};
+    const LedMap map = layout.bake(NormalizeMode::Stretch, corner).value();
+    REQUIRE(map.outside.size() == map.world.size());
+
+    float maxY = map.world.front().y;
+    for (const Vec3& p : map.world) {
+        maxY = std::max(maxY, p.y);
+    }
+    int inside = 0;
+    float lowX = 1.0F;
+    float highX = 0.0F;
+    for (std::size_t i = 0; i < map.world.size(); ++i) {
+        const bool expected = map.world[i].x < 4.0F && map.world[i].y > maxY - 2.0F;  // y wächst nach oben
+        INFO("LED " << i);
+        CHECK((map.outside[i] == 0U) == expected);
+        if (map.outside[i] == 0U) {
+            ++inside;
+            lowX = std::min(lowX, map.unit[i].x);
+            highX = std::max(highX, map.unit[i].x);
+        }
+    }
+    CHECK(inside == 8);
+    // Der Bereich wird auf [0,1] gestreckt: die Zellmitten liegen bei 1/8 und 7/8.
+    CHECK(lowX == Approx(0.125F).margin(1e-5));
+    CHECK(highX == Approx(0.875F).margin(1e-5));
+    CHECK(map.volume.max.x == whole.volume.max.x);  // die Wandbox für die Vorschau bleibt die ganze Wand
+}
+
+TEST_CASE("Effektbereich: unten rechts und genau die ganze Wand") {
+    Layout layout;
+    put(layout, "Wand", Vec3{}, matrix(4, 4));
+    const LedMap lowerRight = layout.bake(NormalizeMode::Stretch, Region{0.5F, 0.5F, 0.5F, 0.5F}).value();
+    int inside = 0;
+    for (std::size_t i = 0; i < lowerRight.world.size(); ++i) {
+        if (lowerRight.outside[i] == 0U) {
+            ++inside;
+            CHECK(lowerRight.world[i].x > 2.0F);
+            CHECK(lowerRight.world[i].y < 2.0F);
+        }
+    }
+    CHECK(inside == 4);
+
+    const LedMap full = layout.bake(NormalizeMode::Stretch, Region{}).value();
+    for (const std::uint8_t outside : full.outside) {
+        CHECK(outside == 0U);
+    }
+    const LedMap plain = layout.bake(NormalizeMode::Stretch).value();
+    for (std::size_t i = 0; i < plain.unit.size(); ++i) {
+        CHECK(full.unit[i].x == Approx(plain.unit[i].x).margin(1e-6));
+        CHECK(full.unit[i].y == Approx(plain.unit[i].y).margin(1e-6));
+    }
+}
+
+TEST_CASE("Effektbereich: ungültige Rechtecke werden abgelehnt") {
+    Layout layout;
+    put(layout, "Wand", Vec3{}, matrix(4, 4));
+    const float nan = std::numeric_limits<float>::quiet_NaN();
+    for (const Region& bad : {Region{0.0F, 0.0F, 0.0F, 1.0F}, Region{0.0F, 0.0F, 1.0F, -0.5F},
+                              Region{0.6F, 0.0F, 0.5F, 1.0F}, Region{0.0F, 0.7F, 1.0F, 0.5F},
+                              Region{-0.1F, 0.0F, 0.5F, 0.5F}, Region{nan, 0.0F, 0.5F, 0.5F}}) {
+        INFO("x=" << bad.x << " y=" << bad.y << " w=" << bad.w << " h=" << bad.h);
+        CHECK_FALSE(validateRegion(bad).ok());
+        CHECK(layout.bake(NormalizeMode::Stretch, bad).error().code == ErrorCode::InvalidArgument);
+    }
+    CHECK(validateRegion(Region{0.25F, 0.25F, 0.75F, 0.75F}).ok());
+}
