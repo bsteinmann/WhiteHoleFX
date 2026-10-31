@@ -277,6 +277,8 @@ void MainWindow::updateStatus() {
     } else if (player_->masterBrightness() < 1.0F) {
         text += tr("   |   Master %1 %").arg(std::lround(player_->masterBrightness() * 100.0F));
     }
+    syncDmxUniverses();
+    text += dmxStatusText();
     text += gate_->enabled() ? tr("   |   AUSGABE AN") : tr("   |   Ausgabe aus (%1 Pakete nicht gesendet)").arg(gate_->suppressed());
     statusLabel_->setText(text);
     if (s.lastError) {

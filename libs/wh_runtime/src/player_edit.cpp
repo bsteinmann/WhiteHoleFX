@@ -156,4 +156,6 @@ Result<void> Player::setTarget(const graph::PortRef& port) {
     return {};
 }
 
+DmxUsage Player::dmxUsage() const { return project_ ? findDmxUsage(project_->graph) : DmxUsage{}; }
+
 }  // namespace whitehole::runtime

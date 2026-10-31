@@ -11,7 +11,9 @@ wh_add_library(wh_nodes
         src/builtin_nodes.cpp
         src/builtin_transforms.cpp
         src/builtin_color_values.cpp
+        src/builtin_dmx.cpp
         src/builtin_values.cpp
     PUBLIC_DEPS
         wh_compiler
+        wh_input
         wh_values)

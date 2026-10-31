@@ -95,6 +95,7 @@ void MainWindow::buildActions() {
 
     buildControls();  // Master und Blackout in einer zweiten Leiste
     run->addAction(blackoutAction_);
+    buildDmxInput();  // Menü "Eingang"
 }
 
 void MainWindow::fillExamplesMenu(QMenu* menu) {

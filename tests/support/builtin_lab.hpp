@@ -31,8 +31,9 @@ struct Lab {
     values::ValueEvaluator evaluator{kernels};
     values::ValueStore store;
     std::uint64_t frame{0};
+    std::shared_ptr<input::DmxStore> dmx = std::make_shared<input::DmxStore>();  // Quelle der DMX-Nodes
 
-    Lab() { REQUIRE(nodes::registerBuiltinNodes(*registry, snippets, kernels).ok()); }
+    Lab() { REQUIRE(nodes::registerBuiltinNodes(*registry, snippets, kernels, dmx).ok()); }
 
     NodeId add(std::string_view typeId) { return graph.addNode(typeId, Vec2{}).value(); }
 

@@ -21,16 +21,21 @@ std::vector<compiler::NodeDefinition> builtinNodeDefinitions() {
     return all;
 }
 
-std::vector<values::CpuNodeDefinition> builtinCpuDefinitions() { return detail::valueNodes(); }
+std::vector<values::CpuNodeDefinition> builtinCpuDefinitions(std::shared_ptr<input::DmxStore> dmx) {
+    std::vector<values::CpuNodeDefinition> all = detail::valueNodes();
+    std::vector<values::CpuNodeDefinition> inputs = detail::dmxNodes(std::move(dmx));
+    all.insert(all.end(), std::make_move_iterator(inputs.begin()), std::make_move_iterator(inputs.end()));
+    return all;
+}
 
 Result<void> registerBuiltinNodes(graph::INodeRegistrar& registrar, compiler::SnippetLibrary& snippets,
-                                  values::CpuKernelLibrary& kernels) {
+                                  values::CpuKernelLibrary& kernels, std::shared_ptr<input::DmxStore> dmx) {
     const std::vector<compiler::NodeDefinition> fieldNodes = builtinNodeDefinitions();
     if (Result<void> registered = compiler::registerDefinitions(fieldNodes, registrar, snippets);
         !registered.ok()) {
         return registered;
     }
-    const std::vector<values::CpuNodeDefinition> cpuNodes = builtinCpuDefinitions();
+    const std::vector<values::CpuNodeDefinition> cpuNodes = builtinCpuDefinitions(std::move(dmx));
     return values::registerCpuDefinitions(cpuNodes, registrar, kernels);
 }
 

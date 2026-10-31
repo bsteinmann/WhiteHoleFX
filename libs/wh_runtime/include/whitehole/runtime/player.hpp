@@ -32,6 +32,7 @@
 #include "whitehole/output/packet_sink.hpp"
 #include "whitehole/preview/preview.hpp"
 #include "whitehole/project/project.hpp"
+#include "whitehole/runtime/dmx_usage.hpp"
 #include "whitehole/runtime/led_info.hpp"
 #include "whitehole/runtime/node_clipboard.hpp"
 #include "whitehole/runtime/session.hpp"
@@ -249,6 +250,9 @@ public:
     /// Pixel liegt oder nichts geladen ist.
     [[nodiscard]] std::optional<LedInfo> ledInfoAt(const preview::ViewFrame& frame, float pixelX, float pixelY,
                                                    float maxDistance = 10.0F) const;
+
+    /// Welche DMX-Universen die DMX-Nodes des geladenen Projekts lesen (leer, wenn nichts geladen ist).
+    [[nodiscard]] DmxUsage dmxUsage() const;
 
     /// Bild der LEDs: während des Laufs mit den Farben des letzten Frames (schwarz, solange noch
     /// keiner da ist), sonst das Layout. Fehler: InvalidArgument, wenn nichts geladen ist.

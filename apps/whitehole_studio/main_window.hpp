@@ -12,6 +12,7 @@
 
 #include <memory>
 
+#include "whitehole/input/dmx_receiver.hpp"
 #include "whitehole/nodes/builtin_library.hpp"
 #include "whitehole/output/udp_sender.hpp"
 #include "whitehole/runtime/gated_sink.hpp"
@@ -71,6 +72,8 @@ public:
     QString exerciseTransparency();
     /// Rauchtest: Master-Regler und Blackout-Schalter erreichen den Player; danach ist alles zurückgesetzt.
     QString exerciseControls();
+    /// Rauchtest: Eingang-Schalter startet den Empfang; ein Art-Net-Paket über Loopback kommt im Speicher an.
+    QString exerciseDmx();
 
 protected:
     void dragEnterEvent(QDragEnterEvent* event) override;
@@ -115,6 +118,11 @@ private:
     void forgetRecent(const QString& path);
     /// Ein Testbild wurde ein- oder ausgeschaltet: Banner in der Vorschau und Statuszeile anpassen.
     void onTestPatternChanged();
+    /// DMX-Eingang (main_window_dmx.cpp): Menü "Eingang", Empfänger starten/stoppen, Statustext.
+    void buildDmxInput();
+    void applyDmxInput();
+    void syncDmxUniverses();
+    [[nodiscard]] QString dmxStatusText() const;
     void onTogglePlayback(bool run);
     void onToggleSending(bool send);
 
@@ -123,6 +131,8 @@ private:
     std::unique_ptr<runtime::GatedPacketSink> gate_;
     std::unique_ptr<runtime::Player> player_;
     std::unique_ptr<runtime::PresetStore> presets_;  // Ordner mit Node-Presets im Datenordner des Nutzers
+    std::unique_ptr<input::DmxReceiver> dmxReceiver_;  // nach library_: liest/schreibt dessen Speicher
+    input::DmxReceiverConfig dmxConfig_;               // Ports; nur der Rauchtest ändert sie
     QString deviceNote_;
 
     PreviewWidget* preview_{nullptr};
@@ -153,6 +163,8 @@ private:
     QSlider* masterSlider_{nullptr};
     QLabel* masterLabel_{nullptr};
     QMenu* recentMenu_{nullptr};
+    QAction* artnetInAction_{nullptr};
+    QAction* sacnInAction_{nullptr};
 };
 
 }  // namespace whitehole::studio

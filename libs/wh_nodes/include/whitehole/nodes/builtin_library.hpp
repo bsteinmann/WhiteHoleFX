@@ -11,6 +11,7 @@
 #include "whitehole/compiler/field_compiler.hpp"
 #include "whitehole/core/result.hpp"
 #include "whitehole/graph/node_registry_impl.hpp"
+#include "whitehole/input/dmx_store.hpp"
 #include "whitehole/values/cpu_kernel.hpp"
 
 namespace whitehole::nodes {
@@ -19,6 +20,8 @@ struct BuiltinLibrary {
     std::shared_ptr<graph::NodeRegistry> registry;
     compiler::SnippetLibrary snippets;
     values::CpuKernelLibrary kernels;
+    /// Der Speicher, aus dem die DMX-Nodes lesen; ein DmxReceiver schreibt hinein.
+    std::shared_ptr<input::DmxStore> dmx;
 
     /// Fehler: die der Registrierung (z. B. doppelte Typ-ID, die es bei Built-ins nicht geben darf).
     [[nodiscard]] static Result<std::unique_ptr<BuiltinLibrary>> create();

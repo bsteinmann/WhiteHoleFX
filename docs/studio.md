@@ -233,6 +233,20 @@ Auswahl; ohne Auswahl leuchtet dann nichts. „Testmodus beenden“ (oder die Ar
 Effekt wieder her. Achtung: Weiß und Farbe leuchten mit voller Helligkeit; vorher prüfen, ob die
 Netzteile die ganze Wand auf 100 % tragen.
 
+## DMX-Eingang
+
+Menü **Eingang**: „Art-Net empfangen“ (UDP 6454) und „sACN empfangen“ (UDP 5568). Beide sind nach der
+Installation aus; erst der Schalter öffnet den Port (Windows fragt dann die Firewall). Die Wahl wird
+gemerkt. Die Statuszeile zeigt „DMX-Eingang Art-Net + sACN: N Pakete“; enthält das Projekt DMX-Nodes,
+der Empfang ist aber aus, steht dort ein Hinweis.
+
+Für sACN tritt das Studio den Multicast-Gruppen genau der Universen bei, die das Projekt liest; Unicast-
+Pakete kommen immer an. Ist der Port belegt, bleibt der Schalter aus und die Statuszeile nennt den Grund.
+Die Nodes selbst: `docs/value-graph.md`, Abschnitt „DMX-Eingang“.
+
+Nicht enthalten: Art-Net-Erkennung (ArtPoll/ArtPollReply), das Studio meldet sich also nicht in der
+Geräteliste von Pulten an; Pulte müssen die IP-Adresse dieses Rechners direkt oder per Broadcast ansprechen.
+
 ## Rückgängig und Wiederholen
 
 Menü Bearbeiten, Strg+Z und Strg+Umschalt+Z (Windows auch Strg+Y). Zurückgenommen werden

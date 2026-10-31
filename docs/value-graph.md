@@ -158,6 +158,29 @@ laufen immer. Ein vergessener, unverbundener Node kostet nichts.
 | `wh.value.random` | `out` | `rate`, `seed`, `smooth` | Hash-basiert, reproduzierbar; weich oder gehalten |
 | `wh.value.map` | `out` | `value`, `inMin`, `inMax`, `outMin`, `outMax`, `clamp` | Bereich umrechnen |
 | `wh.value.smooth` | `out` | `value`, `time` | Tiefpass erster Ordnung; hat Zustand |
+| `wh.value.dmx` | `value`, `on` (Boolean), `present` (Boolean) | `source` (0 Art-Net, 1 sACN), `universe`, `channel`, `bits16`, `min`, `max`, `threshold`, `timeout`, `hold` | DMX-Eingang, siehe unten |
+| `wh.value.dmxcolor` | `out` (Color) | `source`, `universe`, `channel`, `mode` (0 RGB, 1 RGB + Dimmer), `timeout`, `hold` | Drei oder vier Kanäle als Farbe |
+
+### DMX-Eingang
+
+Die beiden DMX-Nodes (Kategorie „Input“) lesen Kanalwerte, die per Art-Net oder sACN ins Studio kommen,
+zum Beispiel von einem Lichtpult. So steuern Fader und Farben des Pults Effekte, Geschwindigkeiten und
+Farbparameter.
+
+- **Universe und Kanal** wählen den Wert: `universe` (Art-Net: Port-Address 0–32767, sACN: 1–63999) und
+  `channel` 1–512. Art-Net und sACN sind getrennte Universen: Art-Net 1 ist nicht sACN 1.
+- **DMX Channel** rechnet 0–255 (mit `bits16` zwei Kanäle als 0–65535) auf `min`…`max` um. `on` ist wahr,
+  wenn der Wert (vor der Umrechnung, 0..1) mindestens `threshold` erreicht, nützlich für Schalter und Tasten.
+  `present` ist wahr, solange Pakete dieses Universe ankommen.
+- **Signalverlust:** Kommt länger als `timeout` Sekunden (0 = nie) kein Paket, wird `present` falsch. Mit
+  `hold` (Standard) bleibt der letzte Wert stehen, wie es DMX-Geräte gewöhnlich tun, sonst fällt er auf 0
+  bzw. Schwarz.
+- **DMX Color:** Kanal, Kanal+1, Kanal+2 sind Rot, Grün, Blau; im Modus „RGB + Dimmer“ skaliert Kanal+3 die
+  Helligkeit.
+- **Voraussetzung:** Der Empfang ist im Studio im Menü „Eingang“ einzuschalten (standardmäßig aus). Ohne
+  Empfang liefern die Nodes dauerhaft „kein Signal“.
+- **Nicht reproduzierbar:** Der Wert kommt aus dem Netzwerk, nicht aus der Zeit. Offline-Rendern mit
+  DMX-Nodes ergibt je nach Eingang verschiedene Ergebnisse.
 
 Jeder Parameter hat einen Modulations-Eingang. Beispiel für ein langsam wanderndes
 Tempo: `Random` → `Smooth` → `LFO.frequency`.

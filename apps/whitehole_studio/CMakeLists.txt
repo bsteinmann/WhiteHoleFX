@@ -16,6 +16,7 @@ add_executable(whitehole_studio
     main_window.cpp
     main_window_actions.cpp
     main_window_controls.cpp
+    main_window_dmx.cpp
     main_window_exercise.cpp
     main_window_file.cpp
     main_window.hpp
@@ -42,6 +43,7 @@ add_executable(whitehole_studio
     test_panel.hpp)
 target_link_libraries(whitehole_studio PRIVATE
     Qt6::Widgets
+    whitehole::input
     whitehole::nodes
     whitehole::output
     whitehole::preview

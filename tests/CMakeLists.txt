@@ -24,6 +24,9 @@ add_executable(wh_tests
     compiler/node_definition_test.cpp
     compiler/parameter_layout_test.cpp
     compiler/snippet_expander_test.cpp
+    input/dmx_nodes_test.cpp
+    input/dmx_packets_test.cpp
+    input/dmx_receiver_test.cpp
     nodes/builtin_nodes_test.cpp
     nodes/builtin_values_test.cpp
     nodes/color_values_test.cpp
@@ -58,6 +61,7 @@ add_executable(wh_tests
     runtime/graph_layout_test.cpp
     runtime/player_layout_test.cpp
     runtime/player_arrange_test.cpp
+    runtime/dmx_usage_test.cpp
     runtime/node_clipboard_test.cpp
     runtime/operator_controls_test.cpp
     runtime/node_preset_test.cpp
@@ -73,6 +77,7 @@ target_link_libraries(wh_tests PRIVATE
     whitehole::gpu
     whitehole::graph
     whitehole::values
+    whitehole::input
     whitehole::compiler
     whitehole::nodes
     whitehole::engine

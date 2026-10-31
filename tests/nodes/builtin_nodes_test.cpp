@@ -62,7 +62,8 @@ TEST_CASE("Built-ins: alle Nodes werden samt Snippet beziehungsweise Kernel regi
         "wh.generator.shapes", "wh.generator.sinelines"};
     const std::set<std::string> expectedCpu{"wh.value.time",   "wh.value.number", "wh.value.color",
                                             "wh.value.lfo",    "wh.value.random", "wh.value.map",
-                                            "wh.value.smooth", "wh.value.colorramp"};
+                                            "wh.value.smooth", "wh.value.colorramp", "wh.value.dmx",
+                                            "wh.value.dmxcolor"};
 
     std::set<std::string> field;
     std::set<std::string> cpu;

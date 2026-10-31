@@ -1,5 +1,15 @@
 # Änderungen
 
+## 0.13.0
+
+- **DMX-Eingang über Art-Net und sACN:** neues Modul `wh_input` liest ArtDmx- und E1.31-Pakete, hält den
+  letzten Stand jedes Universe und stellt den UDP-Empfänger (Linux und Windows). Menü „Eingang“ im
+  Studio, standardmäßig aus
+- **Neue Nodes** (Kategorie „Input“): „DMX Channel“ (Zahl, Schalter mit Schwelle, „Signal da“, optional
+  16 Bit) und „DMX Color“ (RGB oder RGB + Dimmer). Zeitlimit und „letzten Wert halten“ bei Signalverlust
+- sACN tritt nur den Multicast-Gruppen der Universen bei, die das Projekt liest
+- Neu in `wh_runtime`: `findDmxUsage` / `Player::dmxUsage`; `BuiltinLibrary::dmx` ist der gemeinsame Speicher
+
 ## 0.12.0
 
 - **Master und Blackout:** Regler „Master“ (Gesamthelligkeit) und Schalter „Blackout“ (Strg+B) in der

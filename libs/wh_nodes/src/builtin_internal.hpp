@@ -11,6 +11,7 @@
 
 #include "whitehole/compiler/node_definition.hpp"
 #include "whitehole/graph/parameter_resolve.hpp"
+#include "whitehole/input/dmx_store.hpp"
 #include "whitehole/values/cpu_kernel.hpp"
 
 namespace whitehole::nodes::detail {
@@ -137,6 +138,8 @@ std::vector<compiler::NodeDefinition> transformNodes();
 std::vector<compiler::NodeDefinition> blendNodes();
 std::vector<compiler::NodeDefinition> modifierNodes();  // Modifier und Ausgang
 std::vector<values::CpuNodeDefinition> valueNodes();
+/// DMX-Eingang (Art-Net/sACN): die Kernel lesen aus `store`; null = ein leerer Speicher (nie ein Signal).
+std::vector<values::CpuNodeDefinition> dmxNodes(std::shared_ptr<input::DmxStore> store);
 
 /// Farbton (in Umläufen, 0..1 wiederholt sich), Sättigung und Helligkeit einer Farbe ändern; bei
 /// 0 / 1 / 1 kommt die Farbe unverändert zurück. Alpha bleibt.

@@ -1,11 +1,13 @@
 // builtin_nodes.hpp: die eingebauten Nodes (Field-Nodes und Werte-Nodes).
 #pragma once
 
+#include <memory>
 #include <vector>
 
 #include "whitehole/compiler/node_definition.hpp"
 #include "whitehole/core/result.hpp"
 #include "whitehole/graph/node_registry.hpp"
+#include "whitehole/input/dmx_store.hpp"
 #include "whitehole/values/cpu_kernel.hpp"
 
 namespace whitehole::nodes {
@@ -20,11 +22,12 @@ namespace whitehole::nodes {
 /// Werte-Nodes (Kernel, laufen auf der CPU).
 ///   wh.value.time, wh.value.number, wh.value.color, wh.value.lfo,
 ///   wh.value.random, wh.value.map, wh.value.smooth
-[[nodiscard]] std::vector<values::CpuNodeDefinition> builtinCpuDefinitions();
+/// DMX-Eingang: wh.value.dmx, wh.value.dmxcolor; sie lesen aus `dmx` (null = leerer Speicher, kein Signal).
+[[nodiscard]] std::vector<values::CpuNodeDefinition> builtinCpuDefinitions(std::shared_ptr<input::DmxStore> dmx = nullptr);
 
 /// Trägt alle eingebauten Nodes samt Snippets und Kerneln ein.
 /// Fehler: AlreadyExists, wenn sie schon registriert sind.
 Result<void> registerBuiltinNodes(graph::INodeRegistrar& registrar, compiler::SnippetLibrary& snippets,
-                                  values::CpuKernelLibrary& kernels);
+                                  values::CpuKernelLibrary& kernels, std::shared_ptr<input::DmxStore> dmx = nullptr);
 
 }  // namespace whitehole::nodes
