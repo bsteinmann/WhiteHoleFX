@@ -35,13 +35,17 @@ LayoutPanel::LayoutPanel(runtime::Player& player, QWidget* parent) : QTabWidget{
     auto* buttons = new QHBoxLayout;
     auto* addMatrixButton = new QPushButton{tr("Matrix +")};
     auto* addStripButton = new QPushButton{tr("Strip +")};
+    auto* importButton = new QPushButton{tr("Import …")};
+    importButton->setToolTip(tr("LED-Positionen aus einer CSV- oder JSON-Datei als Punktwolke laden"));
     auto* removeButton = new QPushButton{tr("Entfernen")};
     buttons->addWidget(addMatrixButton);
     buttons->addWidget(addStripButton);
+    buttons->addWidget(importButton);
     buttons->addWidget(removeButton);
     pageLayout->addLayout(buttons);
     connect(addMatrixButton, &QPushButton::clicked, this, [this]() { addMatrix(); });
     connect(addStripButton, &QPushButton::clicked, this, [this]() { addStrip(); });
+    connect(importButton, &QPushButton::clicked, this, [this]() { importPoints(); });
     connect(removeButton, &QPushButton::clicked, this, [this]() { removeSelected(); });
 
     pageLayout->addWidget(buildArrangeBar());
@@ -248,57 +252,6 @@ Vec3 LayoutPanel::nextOrigin() const {
     return Vec3{any ? right + 4.0F : 0.0F, 0.0F, 0.0F};
 }
 
-void LayoutPanel::addFixture(const QString& baseName, mapping::FixtureShape shape) {
-    // Ohne Projekt (Studio frisch gestartet) legt das Hauptfenster ein neues an. Dessen Vorlagen-
-    // Matrix wird danach wieder entfernt, damit nur das Fixture übrig bleibt, das der Nutzer wollte.
-    std::optional<mapping::FixtureId> template_;
-    if (player_.project() == nullptr) {
-        Q_EMIT projectNeeded();
-        if (player_.project() == nullptr || player_.project()->layout.fixtures().empty()) {
-            Q_EMIT failed(tr("Es ist kein Projekt geladen. Mit Strg+N ein neues anlegen oder mit Strg+O eins öffnen."));
-            return;
-        }
-        template_ = player_.project()->layout.fixtures().front().id;
-    }
-    const std::uint64_t leds = mapping::ledCount(shape);
-    const auto id = player_.addFixture(uniqueName(baseName).toUtf8().toStdString(), nextOrigin(), std::move(shape),
-                                       player_.suggestPatch(leds));
-    if (!id.ok()) {
-        Q_EMIT failed(fromStd(id.error().message));
-        return;
-    }
-    if (template_) {
-        // Das neue Fixture rückt an die Stelle der Vorlage: Ursprung 0 und erstes freies Universe.
-        Result<void> r = player_.removeFixture(*template_);
-        if (r.ok()) {
-            r = player_.moveFixture(id.value(), Vec3{});
-        }
-        if (r.ok()) {
-            r = player_.setPatch(id.value(), player_.suggestPatch(leds));
-        }
-        if (!r.ok()) {
-            Q_EMIT failed(fromStd(r.error().message));
-        }
-    }
-    fillList(id.value());
-    Q_EMIT edited();
-}
-
-void LayoutPanel::addMatrix() {
-    mapping::MatrixShape m;
-    m.columns = 16;
-    m.rows = 8;
-    m.wiring.serpentine = true;
-    addFixture(tr("Matrix"), m);
-}
-
-void LayoutPanel::addStrip() {
-    mapping::StripShape s;
-    s.count = 60;
-    s.end = Vec3{60.0F, 0.0F, 0.0F};
-    addFixture(tr("Strip"), s);
-}
-
 void LayoutPanel::removeSelected() {
     std::vector<mapping::FixtureId> ids = selectedIds();
     if (ids.empty() && list_->currentItem() != nullptr) {
@@ -341,6 +294,9 @@ QString LayoutPanel::exercise() {
     removeSelected();
     if (player_.project()->layout.fixtures().size() != fixtures || list_->count() != static_cast<int>(fixtures)) {
         return QStringLiteral("Layout: Strip wurde nicht entfernt");
+    }
+    if (const QString note = exerciseImport(); !note.isEmpty()) {
+        return note;
     }
     return exerciseArrange();
 }

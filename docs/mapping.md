@@ -118,3 +118,26 @@ rechtshändig um die Achsen durch die Mitte des Würfels; Reihenfolge `Rz · Ry 
   gegen einen Referenzlauf geprüft.
 - Die Kapazität einer Stage ist fest; ein Layoutwechsel über die Kapazität hinaus
   braucht den Neuaufbau von Stage und Engine.
+
+## Import von Positionen
+
+LED-Positionen aus einem anderen Programm (CAD, Tabelle, Skript) werden als Punktwolke geladen
+(`mapping/point_import.hpp`, Datei lesen in `runtime/point_file.hpp`, im Studio „Import …“ im Layout-Fenster).
+Die Reihenfolge der Punkte ist die Reihenfolge am Datenkabel.
+
+**CSV** (auch `.txt`, `.tsv`): eine LED je Zeile, `x,y` oder `x,y,z`.
+- Trenner Komma, Semikolon, Tabulator oder Leerraum; er wird an der ersten Datenzeile erkannt. Bei
+  Semikolon und Tabulator ist ein Dezimalkomma erlaubt (deutsches Excel: `1,5;2,25`).
+- Eine Kopfzeile (erste Zeile mit Text) ordnet die Spalten über die Namen `x`, `y`, `z`; weitere Spalten
+  (z. B. `index`, `name`) werden ignoriert. Ohne Kopfzeile sind genau 2 oder 3 Spalten erlaubt.
+- Leere Zeilen und Zeilen mit `#` werden übersprungen; ein Byte-Order-Mark am Anfang schadet nicht.
+
+**JSON**: eine Liste von `[x,y]`, `[x,y,z]` oder `{"x":..,"y":..,"z":..}`, auch als Wert eines Feldes
+`points`, `leds`, `pixels` oder `positions` in einem Objekt.
+
+**Optionen:** Maßstab (Faktor auf alle Koordinaten, z. B. 0,1 für Millimeter in Zentimeter), y spiegeln (für
+Programme, in denen y nach unten zeigt) und „kleinste Koordinate auf 0“ (die Lage im Raum bestimmt dann der
+Ursprung des Fixtures). Reihenfolge: Maßstab, Spiegeln, Verschieben.
+
+**Fehler** nennen Datei, Zeile und Grund („wand.csv: Zeile 12: y ist keine Zahl: "abc""). Höchstens
+4 Millionen Punkte je Fixture. Nicht enthalten: SVG, DXF und Bilder (PNG) als Quelle.

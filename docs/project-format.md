@@ -98,7 +98,7 @@ Genau eine Form pro Fixture, beliebig viele Patches:
 | `matrix <spalten> <zeilen> [pitch px py] [start <ecke>] [first rows\|columns] [serpentine]` | Ecke: `top-left`, `top-right`, `bottom-left`, `bottom-right` |
 | `strip <anzahl> from x y z to x y z` | gerader Strip |
 | `grid <nx> <ny> <nz> [pitch x y z] [order XYZ\|XZY\|YXZ\|YZX\|ZXY\|ZYX] [serpentine]` | 3D-Gitter (Cube) |
-| `point x y z` | eine LED einer Punktwolke, in Kabelreihenfolge; beliebig oft |
+| `point x y z` | eine LED einer Punktwolke, in Kabelreihenfolge; beliebig oft (aus CSV/JSON importierbar, siehe `docs/mapping.md`) |
 | `patch <artnet\|sacn\|ddp> destination <n> [universe u] [channel c] [offset o] [order RGB…] [gamma g] [brightness b]` | wohin das Fixture geht |
 
 Koordinaten und Reihenfolge der LEDs: siehe [Mapping](mapping.md). Verteilung auf Universen

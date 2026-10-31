@@ -1,3 +1,4 @@
+// fixture.cpp: Umsetzung zu fixture.hpp. Ein physisches Leuchtobjekt (Matrix, Strip, 3D-Gitter, Punktwolke).
 #include "whitehole/mapping/fixture.hpp"
 
 #include <algorithm>

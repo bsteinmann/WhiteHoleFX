@@ -1,3 +1,4 @@
+// layout.cpp: Umsetzung zu layout.hpp. Alle Fixtures eines Projekts und ihre Abbildung auf den Einheitswürfel.
 #include "whitehole/mapping/layout.hpp"
 
 #include <algorithm>

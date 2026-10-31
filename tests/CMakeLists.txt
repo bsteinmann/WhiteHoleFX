@@ -43,6 +43,7 @@ add_executable(wh_tests
     executor/sampling_shader_test.cpp
     mapping/fixture_test.cpp
     mapping/layout_test.cpp
+    mapping/point_import_test.cpp
     mapping/region_edit_test.cpp
     mapping/wiring_test.cpp
     output/artnet_test.cpp
@@ -63,6 +64,7 @@ add_executable(wh_tests
     runtime/player_arrange_test.cpp
     runtime/dmx_usage_test.cpp
     runtime/node_clipboard_test.cpp
+    runtime/point_file_test.cpp
     runtime/operator_controls_test.cpp
     runtime/node_preset_test.cpp
     runtime/player_edit_test.cpp

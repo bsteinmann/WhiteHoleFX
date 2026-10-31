@@ -11,6 +11,7 @@ add_executable(whitehole_studio
     fixture_form.hpp
     form_helpers.hpp
     layout_panel.cpp
+    layout_panel_add.cpp
     layout_panel.hpp
     main.cpp
     main_window.cpp

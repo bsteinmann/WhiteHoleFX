@@ -82,7 +82,8 @@ Mit GPU und Oberfläche, Windows und alle Fallstricke: **[BUILDING.md](BUILDING.
 - [x] 8: Oberfläche (Qt 6): Live-Vorschau, Parameterregler, Node-Editor, Layout-Editor, Rückgängig/Wiederholen
 - [x] GPU-Backend läuft in der CI auf Software-Vulkan (Linux) und Software-Adapter (Windows); Prüfung auf echter GPU steht aus
 - [x] Projektdatei und Konsolen-Runner (`whitehole_cli`)
-- [ ] Mapping-Import (CSV, JSON, später SVG, DXF, PNG)
+- [x] Mapping-Import aus CSV und JSON (Punktwolke)
+- [ ] Mapping-Import aus SVG, DXF und PNG
 - [ ] Audio (FFT, Beat), Video-Quellen
 - [ ] Home-Assistant-Integration
 - [ ] Raster-Nodes (Blur, Feedback), Dawn-Backend

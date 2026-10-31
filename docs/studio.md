@@ -142,6 +142,10 @@ gewählte Fixture gibt es ein Formular:
 - Patch: Protokoll (Art-Net, sACN, DDP), Ziel, Universe, erster Kanal, DDP-Offset,
   Farbreihenfolge, Gamma, Helligkeit; „an die Ausgabe schicken“ schaltet den Patch ein und aus
 
+**Import von Positionen:** „Import …“ lädt LED-Positionen aus einer CSV- oder JSON-Datei als Punktwolke
+(Format und Optionen: `docs/mapping.md`, Abschnitt „Import von Positionen“). Die Reihenfolge in der Datei
+ist die Reihenfolge am Kabel. Beispiel: `examples/bogen.csv`.
+
 **Mehrere Fixtures:** Die Liste erlaubt mehrere Einträge (Strg oder Umschalt). Die Knöpfe unter der
 Liste richten die gewählten Fixtures aus (links, rechts, oben, unten, waagrecht oder senkrecht
 mittig; Bezug ist die Gesamtbox der Auswahl) und verteilen drei oder mehr mit gleichen Lücken.
@@ -257,5 +261,5 @@ erreicht ist.
 
 ## Noch nicht enthalten
 
-Punktwolken bearbeiten, Fixtures drehen, Kopieren/Einfügen von Fixtures. Solches entsteht bis dahin in der Projektdatei (siehe
+Punktwolken bearbeiten (importieren geht), Fixtures drehen, Kopieren/Einfügen von Fixtures. Solches entsteht bis dahin in der Projektdatei (siehe
 [Projektdatei](project-format.md)); „Neu laden“ übernimmt Änderungen sofort.

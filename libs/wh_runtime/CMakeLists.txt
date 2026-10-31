@@ -5,6 +5,7 @@ wh_add_library(wh_runtime
     SOURCES
         src/graph_layout.cpp
         src/dmx_usage.cpp
+        src/point_file.cpp
         src/led_info.cpp
         src/node_clipboard.cpp
         src/node_preset.cpp

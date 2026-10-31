@@ -1,3 +1,4 @@
+// wiring.cpp: Umsetzung zu wiring.hpp. In welcher Reihenfolge hängen die LEDs am Datenkabel?
 #include "whitehole/mapping/wiring.hpp"
 
 #include <array>

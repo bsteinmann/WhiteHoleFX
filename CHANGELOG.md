@@ -1,5 +1,15 @@
 # Änderungen
 
+## 0.14.0
+
+- **Mapping-Import:** LED-Positionen aus CSV- oder JSON-Dateien als Punktwolke laden („Import …“ im
+  Layout-Fenster). CSV mit Komma, Semikolon, Tabulator oder Leerraum, Dezimalkomma, Kopfzeile mit
+  Spaltennamen; JSON als Liste von Punkten oder Objekten. Optionen: Maßstab, y spiegeln, auf den Ursprung
+  schieben. Fehler nennen Datei und Zeile. Beispiel: `examples/bogen.csv`
+- Neu: `wh_mapping/point_import.hpp` (`parsePointsCsv`, `parsePointsJson`, `parsePoints`), kleiner JSON-Leser
+  (intern), `wh_runtime/point_file.hpp` (`loadPointsFile`, `pointsFixtureName`)
+- Studio: `layout_panel_add.cpp` (Fixtures anlegen und importieren), Rauchtest für den Import
+
 ## 0.13.1
 
 - **Kommandozeile:** `--dmx-in artnet,sacn` schaltet den DMX-Eingang für die DMX-Nodes ein; `--check` nennt die

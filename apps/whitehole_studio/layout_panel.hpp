@@ -14,6 +14,7 @@
 
 #include "fixture_form.hpp"
 #include "output_form.hpp"
+#include "whitehole/mapping/point_import.hpp"
 #include "whitehole/runtime/player.hpp"
 
 namespace whitehole::studio {
@@ -30,6 +31,10 @@ public:
 
     void addMatrix();
     void addStrip();
+    /// Fragt nach einer CSV-/JSON-Datei mit LED-Positionen und legt daraus ein Punktwolken-Fixture an.
+    void importPoints();
+    /// Wie importPoints, aber mit gegebener Datei und ohne Dialog. Wahr, wenn ein Fixture entstanden ist.
+    bool importPointsFile(const QString& path, const mapping::ImportOptions& options);
     void removeSelected();
 
     /// Alle in der Liste gewählten Fixtures (in Listenreihenfolge).
@@ -59,6 +64,7 @@ Q_SIGNALS:
 private:
     QWidget* buildArrangeBar();
     QString exerciseArrange();
+    QString exerciseImport();
     void fillList(mapping::FixtureId select);
     void refreshTexts();
     void addFixture(const QString& baseName, mapping::FixtureShape shape);
