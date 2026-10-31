@@ -7,6 +7,22 @@ namespace {
 
 Error noProject() { return Error{ErrorCode::InvalidArgument, "Es ist kein Projekt geladen"}; }
 
+/// Der Field-Ausgang, der in `node` hineinläuft (erste Verbindung in Reihenfolge des Graphen).
+std::optional<graph::PortRef> upstreamFieldOutput(const graph::Graph& graph, NodeId node) {
+    for (const graph::Connection& c : graph.connections()) {
+        if (c.to.node != node || c.from.node == node) {
+            continue;
+        }
+        const graph::NodeInstance* source = graph.findNode(c.from.node);
+        const graph::NodeDescriptor* descriptor = source ? graph.registry().find(source->typeId) : nullptr;
+        const graph::PortDescriptor* port = descriptor ? descriptor->findPort(c.from.portKey) : nullptr;
+        if (port != nullptr && port->type == graph::PortType::Field) {
+            return c.from;
+        }
+    }
+    return std::nullopt;
+}
+
 }  // namespace
 
 Result<NodeId> Player::addNode(std::string_view typeId, Vec2 position) {
@@ -27,16 +43,25 @@ Result<void> Player::removeNode(NodeId node) {
     if (!project_) {
         return noProject();
     }
-    if (project_->target && project_->target->node == node) {
-        return Error{ErrorCode::InvalidArgument,
-                     "Dieser Node liefert den Ausgang (output); setze zuerst einen anderen Ausgang"};
+    // Liefert der Node den Ausgang, rückt der Ausgang auf den Node davor (den ersten Field-Eingang,
+    // der belegt ist). Gibt es keinen, bleibt das Projekt ohne Ausgang; das Starten meldet es dann.
+    const bool wasTarget = project_->target && project_->target->node == node;
+    std::optional<graph::PortRef> upstream;
+    if (wasTarget) {
+        upstream = upstreamFieldOutput(project_->graph, node);
     }
     auto before = beginEdit({});
     const Result<void> r = project_->graph.removeNode(node);
+    if (r.ok() && wasTarget) {
+        project_->target = upstream;
+    }
     finishEdit(std::move(before), {}, r.ok());
     if (r.ok()) {
         modified_ = true;
         graphDirty_ = true;
+        if (wasTarget) {
+            rebuildDirty_ = true;  // das Ziel steckt in der Stage
+        }
     }
     return r;
 }

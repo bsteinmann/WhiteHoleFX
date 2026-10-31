@@ -93,6 +93,7 @@ MainWindow::MainWindow(gpu::IGpuDevice* device, const QString& deviceNote, QWidg
     editor_ = new NodeEditor{*player_, this};
     connect(editor_, &NodeEditor::edited, this, &MainWindow::onGraphEdited);
     connect(editor_, &NodeEditor::selectionChanged, this, &MainWindow::onNodeSelected);
+    connect(editor_, &NodeEditor::notice, this, [this](const QString& message) { statusBar()->showMessage(message, 8000); });
     connect(editor_, &NodeEditor::failed, this, [this](const QString& message) { statusBar()->showMessage(message, 8000); });
     editorDock_ = new QDockWidget{tr("Nodes"), this};
     editorDock_->setWidget(editor_);

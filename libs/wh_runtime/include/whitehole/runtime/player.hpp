@@ -31,6 +31,7 @@
 #include "whitehole/output/packet_sink.hpp"
 #include "whitehole/preview/preview.hpp"
 #include "whitehole/project/project.hpp"
+#include "whitehole/runtime/node_clipboard.hpp"
 #include "whitehole/runtime/session.hpp"
 
 namespace whitehole::runtime {
@@ -110,9 +111,15 @@ public:
 
     /// Legt einen Node mit Standardwerten an. Fehler: NotFound (Typ unbekannt).
     Result<NodeId> addNode(std::string_view typeId, Vec2 position);
-    /// Entfernt Node und Verbindungen. Der Node, an dem `output` hängt, lässt sich nicht
-    /// entfernen (InvalidArgument): Setze zuerst mit setTarget einen anderen Ausgang.
+    /// Entfernt Node und Verbindungen. Liefert der Node den Ausgang (`output`), rückt der Ausgang
+    /// auf den Node davor (erster belegter Field-Eingang). Gibt es keinen, hat das Projekt danach
+    /// keinen Ausgang und start() meldet InvalidArgument, bis man mit setTarget einen setzt.
     Result<void> removeNode(NodeId node);
+    /// Fügt kopierte Nodes samt Parametern und Kabeln ein, `offset` wird auf ihre Positionen
+    /// addiert. Ein Schritt für Rückgängig; scheitert etwas, ändert sich nichts. Liefert die neuen
+    /// Ids in der Reihenfolge der Zwischenablage. Fehler: InvalidArgument (leer, kein Projekt) und
+    /// die von Graph::addNode, setParameter und connect.
+    Result<std::vector<NodeId>> pasteNodes(const NodeClipboard& clipboard, Vec2 offset);
     /// Verbindet zwei Ports. Ist der Eingang belegt, wird die alte Verbindung ersetzt; scheitert
     /// die neue, bleibt die alte erhalten. Fehler wie Graph::connect (ohne AlreadyExists).
     Result<ConnectionId> connect(const graph::PortRef& from, const graph::PortRef& to);

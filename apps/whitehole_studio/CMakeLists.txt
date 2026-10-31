@@ -19,10 +19,13 @@ add_executable(whitehole_studio
     main_window_file.cpp
     main_window.hpp
     node_editor.cpp
+    node_editor_clipboard.cpp
     node_editor_exercise.cpp
     node_editor.hpp
     node_editor_menu.cpp
+    node_editor_search.cpp
     node_items.cpp
+    node_search.hpp
     node_items.hpp
     output_form.cpp
     output_form.hpp

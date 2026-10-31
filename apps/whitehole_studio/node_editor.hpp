@@ -1,11 +1,14 @@
 // node_editor.hpp: Ansicht zum Bearbeiten des Effektgraphen.
 //
 // Was man tun kann:
-//   Node hinzufügen      Rechtsklick auf freie Fläche, Menü nach Kategorien
+//   Node hinzufügen      Rechtsklick auf freie Fläche, Menü nach Kategorien; oder Strg+Leertaste
+//                        und tippen (Suchfeld)
 //   verschieben          Node ziehen (die Lage wird in der Projektdatei gespeichert)
 //   verbinden            von einem Port zu einem passenden anderen ziehen; ein belegter Eingang
 //                        wird ersetzt
 //   löschen              Node oder Kabel anklicken, Entf (Mehrfachauswahl mit Strg oder Rahmen)
+//   kopieren             Strg+C, einfügen Strg+V (an der Maus), duplizieren Strg+D; mit den Kabeln
+//                        zwischen den ausgewählten Nodes, ein Schritt für Rückgängig
 //   Ausgang wählen       Rechtsklick auf einen Field-Ausgang, "Als Ausgang setzen" (orange)
 //   Ansicht              Mausrad zoomt, mittlere Taste verschiebt, Taste F zeigt alles
 //
@@ -45,6 +48,14 @@ public:
     /// Zoomt so, dass alle Nodes zu sehen sind (höchstens im Maßstab 1:1).
     void showAll();
 
+    /// Kopieren, Einfügen, Duplizieren (Strg+C, Strg+V, Strg+D). Eingefügt wird an `scenePos`
+    /// (linke obere Ecke der Kopie) oder, ohne Angabe, an der Maus (sonst leicht versetzt).
+    /// Die Kopie ist danach ausgewählt. Wahr, wenn etwas eingefügt wurde.
+    bool copySelection();
+    bool paste(const std::optional<QPointF>& scenePos = std::nullopt);
+    bool duplicateSelection();
+    [[nodiscard]] bool canPaste() const noexcept { return !clipboard_.empty(); }
+
     /// Der Node, der als einziges ausgewählt ist (leer bei keiner oder mehreren Auswahlen).
     [[nodiscard]] std::optional<NodeId> selectedNode() const;
     /// Wählt genau diesen Node aus (und sonst nichts); wahr, wenn es ihn gibt.
@@ -74,6 +85,8 @@ Q_SIGNALS:
     /// aufgebaut werden); sonst nur Positionen.
     void edited(bool structural);
     void failed(const QString& message);
+    /// Hinweis, der kein Fehler ist (z. B. der Ausgang ist umgezogen).
+    void notice(const QString& message);
     /// Die Auswahl hat sich durch Anklicken oder selectNode geändert (nicht durch Neuaufbau).
     void selectionChanged();
 
@@ -106,10 +119,16 @@ private:
     void cancelWire();
 
     void buildAddMenu(QMenu& menu, const QPointF& scenePos);
+    /// Suchfeld zum Hinzufügen eines Nodes an `scenePos`.
+    void showSearch(const QPointF& scenePos);
     /// Baut die Szene aus dem Graphen auf (ohne Auswahl zu retten, siehe rebuild).
     void buildScene();
 
+    [[nodiscard]] std::vector<NodeId> selectedNodes() const;
+    bool pasteWithOffset(const runtime::NodeClipboard& clip, const QPointF& offset);
+
     runtime::Player& player_;
+    runtime::NodeClipboard clipboard_;
     QGraphicsScene scene_;
     std::unordered_map<std::uint64_t, NodeItem*> nodes_;
     std::vector<WireItem*> wires_;

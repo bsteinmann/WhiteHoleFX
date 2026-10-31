@@ -1,5 +1,14 @@
 # Änderungen
 
+## 0.4.0
+
+- Node-Editor: Der Node am Ausgang lässt sich löschen; der Ausgang rückt auf den Node davor
+  (vorher war das gesperrt). Rückgängig stellt ihn wieder her
+- Node-Editor: Kopieren, Einfügen, Duplizieren (Strg+C, Strg+V, Strg+D) samt Parametern und den
+  Kabeln zwischen den Nodes; ein Schritt für Rückgängig
+- Node-Editor: Suchfeld zum Hinzufügen von Nodes (Strg+Leertaste)
+- Neuer Generator „Digital Rain“ (fallende Pixel, `wh.generator.rain`), auch im Cube
+
 ## 0.3.0
 
 - Oberfläche: **Datei → Neu** (Strg+N) legt ein Projekt aus einer Vorlage an; **Speichern**

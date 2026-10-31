@@ -1,11 +1,13 @@
 // node_editor_exercise.cpp: Rauchtest des Node-Editors für die CI (--exercise).
 //
-// Legt zwei Nodes an, zieht ein Kabel zwischen ihnen auf dem Weg der Maus, löscht Kabel und Nodes
-// wieder. Getrennt von node_editor.cpp, weil es mit dem normalen Betrieb nichts zu tun hat.
+// Legt zwei Nodes an, zieht ein Kabel zwischen ihnen auf dem Weg der Maus, prüft die Suche, kopiert,
+// fügt ein und dupliziert, löscht Kabel und Nodes wieder. Getrennt von node_editor.cpp, weil es mit
+// dem normalen Betrieb nichts zu tun hat.
 #include <QPointF>
 #include <QString>
 
 #include "node_editor.hpp"
+#include "node_search.hpp"
 
 namespace whitehole::studio {
 
@@ -82,6 +84,43 @@ QString NodeEditor::exercise() {
     }
     from->setPos(from->pos() + QPointF{30.0, 10.0});
     commitMoves();
+
+    // Suche: Groß-/Kleinschreibung egal, mehrere Wörter müssen alle passen.
+    const auto all = player_.project()->graph.registry().all();
+    const auto rain = filterNodeTypes(all, QStringLiteral("RAIN gener"));
+    if (rain.empty() || rain.front()->typeId != "wh.generator.rain") {
+        return QStringLiteral("Suche: \"RAIN gener\" findet den Digital-Rain-Node nicht");
+    }
+    if (!filterNodeTypes(all, QStringLiteral("gibtesnicht")).empty() ||
+        filterNodeTypes(all, QString{}).size() != all.size()) {
+        return QStringLiteral("Suche: leere Eingabe soll alles, Unsinn nichts finden");
+    }
+
+    // Kopieren, Einfügen und Duplizieren: jeweils ein Node mehr, danach wieder weg.
+    const std::size_t nodesNow = nodes_.size();
+    scene_.clearSelection();
+    if (NodeItem* original = itemOf(*source)) {
+        original->setSelected(true);
+    }
+    if (!copySelection() || !canPaste()) {
+        return QStringLiteral("Kopieren: nichts in der Zwischenablage");
+    }
+    if (!paste(QPointF{300.0, 300.0}) || nodes_.size() != nodesNow + 1) {
+        return QStringLiteral("Einfügen: %1 Nodes in der Szene, erwartet %2").arg(nodes_.size()).arg(nodesNow + 1);
+    }
+    removeSelected();  // die Kopie ist nach dem Einfügen ausgewählt
+    if (nodes_.size() != nodesNow) {
+        return QStringLiteral("Einfügen: die Kopie war nicht ausgewählt (%1 Nodes statt %2)").arg(nodes_.size()).arg(nodesNow);
+    }
+    scene_.clearSelection();
+    itemOf(*source)->setSelected(true);
+    if (!duplicateSelection() || nodes_.size() != nodesNow + 1) {
+        return QStringLiteral("Duplizieren: %1 Nodes in der Szene, erwartet %2").arg(nodes_.size()).arg(nodesNow + 1);
+    }
+    removeSelected();
+    if (nodes_.size() != nodesNow) {
+        return QStringLiteral("Duplizieren: die Kopie war nicht ausgewählt");
+    }
 
     // Beide Nodes auswählen und löschen
     NodeItem* sourceItem = itemOf(*source);

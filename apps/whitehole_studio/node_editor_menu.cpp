@@ -56,6 +56,14 @@ void NodeEditor::contextMenuEvent(QContextMenuEvent* event) {
         connect(action, &QAction::triggered, this, [this, port]() { setTarget(port); });
     }
     if (node != nullptr) {
+        if (!node->isSelected()) {
+            scene()->clearSelection();
+            node->setSelected(true);
+        }
+        connect(menu.addAction(tr("Kopieren\tStrg+C")), &QAction::triggered, this, [this]() { copySelection(); });
+        connect(menu.addAction(tr("Duplizieren\tStrg+D")), &QAction::triggered, this,
+                [this]() { duplicateSelection(); });
+        menu.addSeparator();
         QAction* action = menu.addAction(tr("Node löschen"));
         connect(action, &QAction::triggered, this, [this, node]() {
             scene()->clearSelection();
@@ -70,7 +78,12 @@ void NodeEditor::contextMenuEvent(QContextMenuEvent* event) {
             removeSelected();
         });
     } else {
+        connect(menu.addAction(tr("Node suchen …\tStrg+Leertaste")), &QAction::triggered, this,
+                [this, scenePos]() { showSearch(scenePos); });
         buildAddMenu(menu, scenePos);
+        QAction* paste = menu.addAction(tr("Einfügen\tStrg+V"));
+        paste->setEnabled(canPaste());
+        connect(paste, &QAction::triggered, this, [this, scenePos]() { paste(scenePos); });
     }
     if (!menu.isEmpty()) {
         menu.exec(event->globalPos());

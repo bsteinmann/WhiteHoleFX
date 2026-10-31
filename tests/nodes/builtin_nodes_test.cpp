@@ -52,7 +52,7 @@ TEST_CASE("Built-ins: alle Nodes werden samt Snippet beziehungsweise Kernel regi
 
     const std::set<std::string> expectedField{
         "wh.generator.gradient", "wh.generator.noise", "wh.generator.plasma",
-        "wh.generator.sphere",   "wh.generator.wave",
+        "wh.generator.sphere",   "wh.generator.wave",    "wh.generator.rain",
         "wh.transform.rotate",   "wh.transform.mirror", "wh.transform.scale",
         "wh.transform.rotate3d", "wh.blend.mix",        "wh.blend.add"};
     const std::set<std::string> expectedCpu{"wh.value.time",   "wh.value.number", "wh.value.color",

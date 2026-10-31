@@ -1,7 +1,9 @@
 // node_editor.cpp: Szene aufbauen, Maus und Tastatur.
 #include "node_editor.hpp"
 
+#include <QCursor>
 #include <QKeyEvent>
+#include <QKeySequence>
 #include <QMouseEvent>
 #include <QScrollBar>
 #include <QWheelEvent>
@@ -257,6 +259,7 @@ void NodeEditor::removeSelected() {
     }
     bool changed = false;
     std::string error;
+    const auto targetBefore = player_.project()->target;
     for (const ConnectionId id : connections) {
         changed = player_.disconnect(id).ok() || changed;
     }
@@ -271,6 +274,11 @@ void NodeEditor::removeSelected() {
     if (changed) {
         rebuild();
         Q_EMIT edited(true);
+        if (player_.project()->target != targetBefore) {
+            Q_EMIT notice(player_.project()->target
+                              ? QStringLiteral("Der gelöschte Node lieferte den Ausgang; der Ausgang sitzt jetzt am Node davor.")
+                              : QStringLiteral("Kein Ausgang mehr: Rechtsklick auf einen Field-Ausgang, \"Als Ausgang setzen\"."));
+        }
     }
     if (!error.empty()) {
         fail(error);
@@ -405,6 +413,27 @@ void NodeEditor::wheelEvent(QWheelEvent* event) {
 void NodeEditor::keyPressEvent(QKeyEvent* event) {
     if (event->key() == Qt::Key_Delete || event->key() == Qt::Key_Backspace) {
         removeSelected();
+        event->accept();
+        return;
+    }
+    if (event->matches(QKeySequence::Copy)) {
+        copySelection();
+        event->accept();
+        return;
+    }
+    if (event->matches(QKeySequence::Paste)) {
+        paste();
+        event->accept();
+        return;
+    }
+    if (event->key() == Qt::Key_Space && event->modifiers() == Qt::ControlModifier) {
+        const QPoint local = viewport()->mapFromGlobal(QCursor::pos());
+        showSearch(mapToScene(viewport()->rect().contains(local) ? local : viewport()->rect().center()));
+        event->accept();
+        return;
+    }
+    if (event->key() == Qt::Key_D && event->modifiers() == Qt::ControlModifier) {
+        duplicateSelection();
         event->accept();
         return;
     }

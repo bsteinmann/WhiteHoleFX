@@ -87,17 +87,20 @@ stehen nicht im Node, sondern im Dock „Parameter“; beide benutzen dieselbe N
 
 | Aktion | Bedienung |
 |---|---|
-| Node hinzufügen | Rechtsklick auf freie Fläche, Menü nach Kategorien |
+| Node hinzufügen | Rechtsklick auf freie Fläche, Menü nach Kategorien; schneller: Strg+Leertaste, tippen („rain“, „mix“, „blend add“), Pfeiltasten, Enter. Der Node entsteht an der Maus |
 | Node verschieben | ziehen; die Lage wird in der Projektdatei gespeichert (`at`) |
 | verbinden | von einem Port zu einem passenden anderen ziehen (in beide Richtungen); ein belegter Eingang wird ersetzt |
 | löschen | anklicken (Strg oder Rahmen für mehrere), Entf; oder Rechtsklick |
+| kopieren, einfügen, duplizieren | Strg+C, Strg+V (an der Mausposition), Strg+D; auch im Rechtsklick-Menü. Kabel zwischen den ausgewählten Nodes kommen mit, Kabel nach draußen nicht. Die Kopie ist danach ausgewählt, ein Schritt Rückgängig nimmt sie komplett zurück |
 | Ausgang wählen | Rechtsklick auf einen Field-Ausgang, „Als Ausgang setzen“; der Node ist dann orange umrandet |
 | Ansicht | Mausrad zoomt, mittlere Taste verschiebt, Taste F zeigt alles |
 
 Änderungen wirken sofort, auch während das Projekt läuft. Ist der Graph zwischendurch unvollständig
 oder ungültig (Typen passen nicht, Zyklus), meldet die Statuszeile den Grund und der letzte gute
-Effekt läuft weiter. Der Node, an dem der Ausgang hängt, lässt sich nicht löschen; setze zuerst
-einen anderen. Ein Wechsel des Ausgangs baut die Ausgabe einmal neu auf (kurze Unterbrechung).
+Effekt läuft weiter. Löschst du den Node, an dem der Ausgang hängt, rückt der Ausgang auf den Node
+davor (die Statuszeile sagt es). Gibt es keinen, bleibt das Projekt ohne Ausgang und „Start“ meldet
+das, bis du per Rechtsklick einen neuen setzt. Ein Wechsel des Ausgangs baut die Ausgabe einmal neu
+auf (kurze Unterbrechung).
 
 Ungespeicherte Änderungen zeigt ein Stern im Fenstertitel; beim Neu, Öffnen, Neuladen und Beenden wird
 nachgefragt. Dateien ohne Positionen (von Hand geschrieben) ordnet der Editor selbst in Spalten

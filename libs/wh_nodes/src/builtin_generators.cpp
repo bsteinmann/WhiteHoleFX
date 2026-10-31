@@ -73,6 +73,35 @@ let phase = @param(frequency) * dot(p, n) - @param(speed) * @time;
 let w = 0.5 + 0.5 * sin(6.2831853 * phase);
 return wh_mix_color(@param(colorA), @param(colorB), w);)wgsl";
 
+// "Digital Rain" (fallende Pixel wie im Film Matrix). Ohne Zustand: Jede Spalte (im Cube jede
+// x/z-Säule) bekommt aus ihrer Nummer einen Zufallswert für Tempo, Phase und ob sie überhaupt
+// einen Tropfen hat. Der Kopf wandert von oben (y = 1) nach unten, dahinter zieht sich die Spur
+// nach oben und wird dabei durchsichtig (Alpha), so lässt sich der Regen über andere Effekte legen.
+// Ein Durchlauf dauert (1 + Spurlänge) / Tempo; danach beginnt dieselbe Spalte von vorn.
+constexpr const char* kRainPrelude = R"wgsl(fn wh_hash21(p: vec2<f32>) -> f32 {
+    var q = fract(vec3<f32>(p.x, p.y, p.x) * 0.1031);
+    q = q + dot(q, q.yzx + 33.33);
+    return fract((q.x + q.y) * q.z);
+}
+)wgsl";
+
+constexpr const char* kRainBody = R"wgsl(let cols = max(floor(@param(columns)), 1.0);
+let cell = floor(vec2<f32>(p.x, p.z) * cols);
+let r1 = wh_hash21(cell);
+let r2 = wh_hash21(cell + vec2<f32>(17.0, 3.0));
+let r3 = wh_hash21(cell + vec2<f32>(5.0, 29.0));
+let trail = max(@param(trail), 0.01);
+let span = 1.0 + trail;
+let travel = fract(r3 + @time * @param(speed) * mix(0.6, 1.4, r2) / span);
+let headY = 1.0 - travel * span;
+let behind = p.y - headY;
+let strength = select(0.0, 1.0 - behind / trail, behind >= 0.0 && behind <= trail);
+let on = select(0.0, 1.0, r1 < @param(density));
+let heat = pow(strength, 4.0);
+let head = @param(colorHead);
+let tail = @param(colorTail);
+return vec4<f32>(mix(tail.rgb, head.rgb, heat), mix(tail.a, head.a, heat) * strength * on);)wgsl";
+
 }  // namespace
 
 std::vector<compiler::NodeDefinition> generatorNodes() {
@@ -111,6 +140,14 @@ std::vector<compiler::NodeDefinition> generatorNodes() {
          color("colorA", "Color A", ColorRgba{0.0F, 0.0F, 0.0F, 1.0F}),
          color("colorB", "Color B", ColorRgba{1.0F, 1.0F, 1.0F, 1.0F})},
         kWaveBody, kColorPrelude));
+
+    nodes.push_back(fieldNode(
+        "wh.generator.rain", "Digital Rain", "Generators", {fieldOutput()},
+        {number("columns", "Columns", 16.0, 1.0, 256.0), number("speed", "Speed", 0.6, 0.0, 10.0),
+         number("trail", "Trail length", 0.5, 0.05, 4.0), number("density", "Density", 0.7, 0.0, 1.0),
+         color("colorHead", "Head", ColorRgba{0.8F, 1.0F, 0.85F, 1.0F}),
+         color("colorTail", "Tail", ColorRgba{0.0F, 0.6F, 0.05F, 1.0F})},
+        kRainBody, kRainPrelude));
 
     return nodes;
 }

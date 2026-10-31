@@ -4,9 +4,11 @@
 wh_add_library(wh_runtime
     SOURCES
         src/graph_layout.cpp
+        src/node_clipboard.cpp
         src/player.cpp
         src/player_edit.cpp
         src/player_layout.cpp
+        src/player_paste.cpp
         src/player_undo.cpp
         src/session.cpp
         src/summary.cpp

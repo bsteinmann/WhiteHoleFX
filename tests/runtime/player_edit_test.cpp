@@ -81,12 +81,42 @@ TEST_CASE("Player: Node hinzufügen und entfernen", "[player][edit]") {
     CHECK(rig.player.removeNode(added.value()).error().code == ErrorCode::NotFound);
 }
 
-TEST_CASE("Player: der Ausgangs-Node lässt sich nicht entfernen", "[player][edit]") {
+TEST_CASE("Player: Löschen des Ausgangs-Nodes rückt den Ausgang auf den Vorgänger", "[player][edit]") {
     Rig rig;
-    const auto r = rig.player.removeNode(rig.id("wh.transform.rotate"));
-    REQUIRE_FALSE(r.ok());
-    CHECK(r.error().code == ErrorCode::InvalidArgument);
-    CHECK(rig.player.project()->graph.findNode(rig.id("wh.transform.rotate")) != nullptr);
+    const NodeId mirror = rig.id("wh.transform.mirror");
+    const NodeId plasma = rig.id("wh.generator.plasma");
+    const NodeId rotate = rig.id("wh.transform.rotate");
+
+    REQUIRE(rig.player.removeNode(rotate).ok());
+    REQUIRE(rig.player.project()->target.has_value());
+    CHECK(rig.player.project()->target->node == mirror);
+    CHECK(rig.player.project()->target->portKey == "out");
+
+    REQUIRE(rig.player.removeNode(mirror).ok());
+    REQUIRE(rig.player.project()->target.has_value());
+    CHECK(rig.player.project()->target->node == plasma);
+
+    // Ganz am Anfang der Kette gibt es keinen Vorgänger mehr: das Projekt hat dann keinen Ausgang.
+    REQUIRE(rig.player.removeNode(plasma).ok());
+    CHECK_FALSE(rig.player.project()->target.has_value());
+    CHECK(rig.player.start().error().code == ErrorCode::InvalidArgument);
+
+    // Alles lässt sich zurücknehmen, auch der Ausgang.
+    REQUIRE(rig.player.undo().ok());
+    CHECK(rig.player.project()->target->node == plasma);
+    REQUIRE(rig.player.undo().ok());
+    REQUIRE(rig.player.undo().ok());
+    CHECK(rig.player.project()->target->node == rotate);
+    CHECK(rig.player.project()->graph.findNode(rotate) != nullptr);
+}
+
+TEST_CASE("Player: Ausgang löschen im Lauf startet die Session mit dem neuen Ausgang", "[player][edit]") {
+    Rig rig;
+    REQUIRE(rig.player.start().ok());
+    REQUIRE(rig.player.step().ok());
+    REQUIRE(rig.player.removeNode(rig.id("wh.transform.rotate")).ok());
+    CHECK(rig.player.step().ok());
+    CHECK(rig.player.status().running);
 }
 
 TEST_CASE("Player: Node entfernen löst seine Verbindungen", "[player][edit]") {
@@ -270,7 +300,7 @@ TEST_CASE("Player: eine neue Änderung löscht die Wiederholen-Liste", "[player]
 TEST_CASE("Player: abgelehnte Änderungen landen nicht in der Liste", "[player][undo]") {
     Rig rig;
     CHECK_FALSE(rig.player.addNode("gibt.es.nicht", Vec2{}).ok());
-    CHECK_FALSE(rig.player.removeNode(rig.id("wh.transform.rotate")).ok());  // Ausgang
+    CHECK_FALSE(rig.player.removeNode(NodeId{999}).ok());  // gibt es nicht
     CHECK_FALSE(rig.player.connect({rig.id("wh.transform.rotate"), "out"}, {rig.id("wh.transform.mirror"), "source"}).ok());
     CHECK_FALSE(rig.player.canUndo());
 }

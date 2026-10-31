@@ -164,6 +164,52 @@ TEST_CASE("Canvas: Verlauf von Transparent nach Weiß behält das Weiß (kein du
     CHECK(device->takeErrors().empty());
 }
 
+TEST_CASE("Canvas: Digital Rain fällt, hat Spuren und respektiert die Dichte", "[gpu_device][stage]") {
+    const std::unique_ptr<WebGpuDevice> device = makeDevice();
+    if (!device) {
+        SKIP("Kein WebGPU-Adapter verfügbar");
+    }
+    Lab lab;
+    const NodeId rain = lab.add("wh.generator.rain");
+    lab.set(rain, "columns", 16.0);
+    lab.set(rain, "density", 1.0);  // jede Spalte hat einen Tropfen
+
+    executor::CanvasStageConfig config;
+    config.extent = Extent3{16, 32, 1};
+    config.format = TextureFormat::Rgba32Float;
+    config.target = graph::PortRef{rain, "out"};
+    auto created = executor::CanvasRenderStage::create(*device, lab.snippets, lab.kernels, config);
+    REQUIRE(created.ok());
+    executor::CanvasRenderStage& stage = *created.value();
+    REQUIRE(stage.setGraph(lab.graph).ok());
+
+    const auto alphas = [&](double seconds) {
+        const std::vector<std::byte> bytes = renderCanvas(*device, stage, config.extent, config.format, seconds);
+        std::vector<float> a;
+        for (std::size_t i = 0; i < std::size_t{16} * 32; ++i) {
+            float rgba[4];
+            std::memcpy(rgba, bytes.data() + i * 16, sizeof rgba);
+            REQUIRE(rgba[3] >= 0.0F);
+            REQUIRE(rgba[3] <= 1.0F + 1e-5F);
+            a.push_back(rgba[3]);
+        }
+        return a;
+    };
+    const std::vector<float> first = alphas(0.0);
+    const std::vector<float> later = alphas(0.5);
+    const auto lit = [](const std::vector<float>& v) {
+        return std::count_if(v.begin(), v.end(), [](float x) { return x > 0.01F; });
+    };
+    CHECK(lit(first) > 0);                      // es gibt Tropfen ...
+    CHECK(lit(first) < 16 * 32);                // ... aber das Bild ist nicht voll
+    CHECK(first != later);                      // und sie bewegen sich
+
+    lab.set(rain, "density", 0.0);
+    REQUIRE(stage.setGraph(lab.graph).ok());
+    CHECK(lit(alphas(0.0)) == 0);               // ohne Dichte bleibt alles durchsichtig
+    CHECK(device->takeErrors().empty());
+}
+
 TEST_CASE("Canvas: eine geänderte Farbe kommt ohne neue Pipeline an", "[gpu_device][stage]") {
     const std::unique_ptr<WebGpuDevice> device = makeDevice();
     if (!device) {

@@ -34,6 +34,7 @@ beliebigen Koordinaten abtastet.
 | `wh.generator.plasma` | klassisches Plasma | 2D |
 | `wh.generator.sphere` | Kugel mit weichem Rand, Mittelpunkt und Radius einstellbar | 3D |
 | `wh.generator.wave` | ebene Welle entlang einer 3D-Richtung | 3D |
+| `wh.generator.rain` | „Digital Rain“: fallende Pixel mit Spur (Spalten, Tempo, Spurlänge, Dichte, Kopf-/Spurfarbe); die Spur ist durchsichtig und lässt sich über andere Effekte legen. Im Cube fallen Säulen in x/z | 3D |
 | `wh.transform.rotate` | Drehung in der xy-Ebene um die Mitte | 2D |
 | `wh.transform.rotate3d` | Drehung um alle drei Achsen um die Mitte (0,5; 0,5; 0,5) | 3D |
 | `wh.transform.mirror`, `wh.transform.scale` | Spiegeln, Zoomen in x und y | 2D |
