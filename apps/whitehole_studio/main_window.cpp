@@ -159,10 +159,10 @@ void MainWindow::refreshParameters() {
 
 void MainWindow::onNodeSelected() {
     const std::optional<NodeId> node = editor_->selectedNode();
-    std::optional<NodeId> regionNode;  // ein gewählter Region-Node zeigt sein Rechteck in der Vorschau
+    std::optional<NodeId> regionNode;  // ein gewählter Region- oder Ausgangs-Node zeigt sein Rechteck in der Vorschau
     if (node && player_->project() != nullptr) {
         const graph::NodeInstance* instance = player_->project()->graph.findNode(*node);
-        if (instance != nullptr && instance->typeId == "wh.transform.region") {
+        if (instance != nullptr && (instance->typeId == "wh.transform.region" || instance->typeId == "wh.output.canvas")) {
             regionNode = node;
         }
     }

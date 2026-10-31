@@ -49,7 +49,7 @@ std::optional<mapping::Region> PreviewController::nodeRegion() const {
         return std::nullopt;
     }
     const graph::NodeInstance* node = project->graph.findNode(*regionNode_);
-    if (node == nullptr || node->typeId != "wh.transform.region") {
+    if (node == nullptr || (node->typeId != "wh.transform.region" && node->typeId != "wh.output.canvas")) {
         return std::nullopt;
     }
     const auto read = [node](const char* key, float fallback) {

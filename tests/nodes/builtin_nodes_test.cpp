@@ -55,6 +55,9 @@ TEST_CASE("Built-ins: alle Nodes werden samt Snippet beziehungsweise Kernel regi
         "wh.generator.sphere",   "wh.generator.wave",    "wh.generator.rain",
         "wh.transform.rotate",   "wh.transform.mirror", "wh.transform.scale",
         "wh.transform.rotate3d", "wh.transform.region", "wh.transform.symmetry", "wh.blend.mix",
+        "wh.blend.blend", "wh.blend.crossfade", "wh.blend.mask", "wh.blend.key", "wh.modifier.coloradjust",
+        "wh.modifier.strobe", "wh.modifier.outline", "wh.output.canvas", "wh.transform.slide", "wh.transform.tile",
+        "wh.transform.pixelate", "wh.generator.solid", "wh.generator.scan", "wh.generator.ripples", "wh.generator.fire",
         "wh.blend.add"};
     const std::set<std::string> expectedCpu{"wh.value.time",   "wh.value.number", "wh.value.color",
                                             "wh.value.lfo",    "wh.value.random", "wh.value.map",

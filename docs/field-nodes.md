@@ -35,12 +35,38 @@ beliebigen Koordinaten abtastet.
 | `wh.generator.sphere` | Kugel mit weichem Rand, Mittelpunkt und Radius einstellbar | 3D |
 | `wh.generator.wave` | ebene Welle entlang einer 3D-Richtung | 3D |
 | `wh.generator.rain` | „Digital Rain“: fallende Pixel mit Spur (Spalten, Tempo, Spurlänge, Dichte, Kopf-/Spurfarbe); die Spur ist durchsichtig und lässt sich über andere Effekte legen. Im Cube fallen Säulen in x/z | 3D |
+| `wh.generator.solid` | Fläche in einer Farbe (zum Einfärben mit Mask/Blend oder als Blitzfläche) | beliebig |
+| `wh.generator.scan` | Scan-Linie / Knight Rider: ein Streifen quer zur Richtung `angle` an der Stelle `position` (0..1), Breite und Weichheit einstellbar; die Position mit einem Dreieck-LFO steuern lässt ihn hin- und herlaufen. Der Rest ist durchsichtig | 2D |
+| `wh.generator.ripples` | Wellenringe wie Regentropfen im Wasser (Tropfen pro Sekunde, Ausbreitung, Ringbreite, Farbe), ohne Zustand, durchsichtig außerhalb der Ringe | 2D |
+| `wh.generator.fire` | Feuer: nach oben wanderndes Rauschen mit Hitzeverlauf von unten nach oben, Palette Schwarz–Rot–Gelb–Weiß | 2D |
 | `wh.transform.rotate` | Drehung in der xy-Ebene um die Mitte | 2D |
 | `wh.transform.rotate3d` | Drehung um alle drei Achsen um die Mitte (0,5; 0,5; 0,5) | 3D |
 | `wh.transform.symmetry` | Symmetrie: eine Hälfte des Eingangs wird an einer Linie gespiegelt. `axis` (X, Y, Z) und `half` (untere oder obere Hälfte als Vorlage) sind Auswahlfelder, `center` setzt die Linie. Einfacher zu bedienen als Mirror, der mehrere Achsen gleichzeitig kann | 2D, 3D |
 | `wh.transform.region` | Bildet den Eingang auf ein Rechteck der Leinwand ab (`left`, `top` von oben, `width`, `height`), außerhalb durchsichtig; der Effekt füllt so nur einen Teil der Wand | 2D |
 | `wh.transform.mirror`, `wh.transform.scale` | Spiegeln an einer Linie in x, y und/oder z (Lage `centerX/Y/Z`, mit `otherHalf` ist die obere Hälfte die Vorlage), Zoomen in x und y | 2D (Spiegeln auch 3D) |
+| `wh.transform.slide` | Verschiebt das Bild um `x`, `y` (Anteile der Leinwand), mit `wrap` kommt es auf der anderen Seite wieder herein, sonst bleibt der Rest durchsichtig. Mit Time oder LFO an `x` entsteht ein Scroll oder ein Übergang („Move left/right“) | 2D |
+| `wh.transform.tile` | Kachelt das Bild `countX` × `countY` mal, optional jede zweite Kachel gespiegelt | 2D |
+| `wh.transform.pixelate` | Mosaik: `cellsX` × `cellsY` Zellen, jede zeigt den Wert an ihrer Mitte | 2D |
 | `wh.blend.mix`, `wh.blend.add` | Überblenden, Addieren | beliebig |
+| `wh.blend.blend` | B über A mit Modus (Auswahlfeld): Add, Multiply, Screen, Subtract, Difference, Lighten, Darken, Over; `amount` überblendet zwischen A und dem Ergebnis | beliebig |
+| `wh.blend.crossfade` | Überblenden mit `amount` (Position): *Linear* blendet A aus, während B einblendet; *Progressive* lässt beide in der Mitte voll leuchten | beliebig |
+| `wh.blend.mask` | Die Helligkeit der Maske bestimmt, wie viel vom Inhalt zu sehen ist: *Shape* als harte Form (Schwelle, Weichheit), *Intensity* behält Verläufe und weiche Ränder; `invert` kehrt um. So wird eine Form mit dem Inhalt eines anderen Effekts gefüllt | beliebig |
+| `wh.blend.key` | Schwarz wird durchsichtig (Alpha folgt der Helligkeit, Schwelle und Weichheit einstellbar); danach mit Blend (Over) oder Add über etwas legen | beliebig |
+| `wh.modifier.coloradjust` | Farbton (in Umläufen), Sättigung, Helligkeit, Gamma, Invertieren | beliebig |
+| `wh.modifier.strobe` | Blitzen: `rate` Hz, `duty` Anteil der Periode an, `fade` Ausklingen; in der Dunkelphase gehen die LEDs aus | beliebig |
+| `wh.modifier.outline` | Zeichnet in `width` Abstand um helle Stellen einen Rand in der Randfarbe (z. B. Text mit Umriss über Plasma) | 2D |
+| `wh.output.canvas` | **Ausgang:** bespielt die ganze Leinwand oder nur ein Rechteck (`left`, `top` von oben, `width`, `height`); *Scale into area* schiebt das Bild ins Rechteck, *Window* lässt es an seinem Platz und schneidet nur aus; `brightness` ist die Gesamthelligkeit (Master). Außerhalb sind die LEDs aus. Ein neu angelegter Ausgangs-Node wird automatisch zum Ausgang des Projekts und hängt sich hinter den bisherigen | beliebig |
+
+### Rezepte
+
+- **Form mit anderem Effekt füllen:** Form-Generator (z. B. Ripples, Scan Line) in `mask` an *Mask*, Plasma
+  an *Content*.
+- **Text oder Form mit Rand über Plasma:** Form → Outline → Blend (Mode *Over*, B) über Plasma (A).
+- **Zwei Effekte im Wechsel:** Time/LFO (Sägezahn oder Dreieck) an `amount` von Crossfade.
+- **Bewegungsübergang:** Slide an A (`x` = −t), Slide an B (`x` = 1 − t), beide in Add; t von einem LFO.
+- **Jeder Effekt auf seinem Bereich:** jeweils ein Ausgangs-/Region-Node pro Effekt (Rechteck in der Vorschau
+  ziehen), dann mit Add oder Blend zusammensetzen, am Ende ein Ausgang.
+- **Master:** Ausgang `brightness` für die Gesamthelligkeit, Color Adjust `gamma`, Strobe für den Master-Blitz.
 
 2D-Nodes lassen `p.z` unverändert, sie laufen also auch in einem Cube, wirken dort aber
 in jeder z-Ebene gleich. Die z-Variante kommt, wo sie sich lohnt (Rotate 3D ist da).

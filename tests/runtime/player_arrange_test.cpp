@@ -157,6 +157,31 @@ TEST_CASE("Region-Node: Rechteck setzen ist ein Undo-Schritt", "[player][region]
     CHECK_FALSE(rig.player.setRegionRect(region, mapping::Region{std::numeric_limits<float>::quiet_NaN(), 0, 1, 1}).ok());
 }
 
+TEST_CASE("Ausgangs-Node: wird zum Ausgang, hängt sich hinter den bisherigen, Rückgängig stellt her", "[player][output]") {
+    Rig rig;
+    const graph::PortRef before = *rig.player.project()->target;
+    const auto added = rig.player.addNode("wh.output.canvas", Vec2{0.0F, 0.0F});
+    REQUIRE(added.ok());
+    const NodeId output = added.value();
+
+    REQUIRE(rig.player.project()->target.has_value());
+    CHECK(*rig.player.project()->target == graph::PortRef{output, "out"});
+    const auto* wire = rig.player.project()->graph.findInputConnection(output, "source");
+    REQUIRE(wire != nullptr);
+    CHECK(wire->from == before);
+
+    REQUIRE(rig.player.setRegionRect(output, mapping::Region{0.0F, 0.0F, 0.5F, 1.0F}).ok());
+    REQUIRE(rig.player.undo().ok());  // Rechteck
+    REQUIRE(rig.player.undo().ok());  // Node anlegen
+    CHECK(*rig.player.project()->target == before);
+    CHECK(rig.player.project()->graph.findNode(output) == nullptr);
+
+    // Entfernt man den Ausgangs-Node, geht der Ausgang zurück auf den Node davor.
+    const NodeId again = rig.player.addNode("wh.output.canvas", Vec2{0.0F, 0.0F}).value();
+    REQUIRE(rig.player.removeNode(again).ok());
+    CHECK(*rig.player.project()->target == before);
+}
+
 TEST_CASE("Anordnen: ohne Projekt ein Fehler", "[player][arrange]") {
     auto library = nodes::BuiltinLibrary::create().value();
     RecordingSink recording;

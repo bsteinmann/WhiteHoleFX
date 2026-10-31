@@ -182,10 +182,11 @@ public:
     /// Die Box der ganzen Wand (alle Fixtures) in Weltkoordinaten. Ohne Projekt eine leere Box.
     [[nodiscard]] mapping::Box wallBox() const noexcept { return map_.volume; }
 
-    /// Setzt das Rechteck eines Region-Nodes (wh.transform.region): left, top, width, height in
+    /// Setzt das Rechteck eines Region-Nodes (wh.transform.region) oder Ausgangs-Nodes
+    /// (wh.output.canvas): left, top, width, height in
     /// Anteilen der Leinwand, y von oben. Ein Undo-Schritt (aufeinanderfolgende Aufrufe für denselben
     /// Node werden zusammengefasst, bis closeEditGroup() kommt). Fehler: NotFound (kein solcher
-    /// Node), InvalidArgument (Node ist keine Region, Rechteck nicht endlich).
+    /// Node), InvalidArgument (falscher Node-Typ, Rechteck nicht endlich).
     Result<void> setRegionRect(NodeId node, const mapping::Region& rect);
 
     /// Setzt oder (mit nullopt) entfernt den Patch des Fixtures.

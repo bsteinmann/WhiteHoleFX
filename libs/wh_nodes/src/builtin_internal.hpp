@@ -134,6 +134,7 @@ values::KernelFactory kernelFactory() {
 std::vector<compiler::NodeDefinition> generatorNodes();
 std::vector<compiler::NodeDefinition> transformNodes();
 std::vector<compiler::NodeDefinition> blendNodes();
+std::vector<compiler::NodeDefinition> modifierNodes();  // Modifier und Ausgang
 std::vector<values::CpuNodeDefinition> valueNodes();
 
 /// Farbton (in Umläufen, 0..1 wiederholt sich), Sättigung und Helligkeit einer Farbe ändern; bei

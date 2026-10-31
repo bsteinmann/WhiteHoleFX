@@ -31,6 +31,15 @@ Result<NodeId> Player::addNode(std::string_view typeId, Vec2 position) {
     }
     auto before = beginEdit({});
     const Result<NodeId> id = project_->graph.addNode(typeId, position);
+    if (id.ok() && typeId == "wh.output.canvas") {
+        // Ein neuer Ausgangs-Node wird zum Ausgang des Projekts und hängt sich hinter den bisherigen
+        // (wenn der Eingang frei ist, was bei einem neuen Node immer gilt).
+        if (project_->target) {
+            (void)project_->graph.connect(*project_->target, graph::PortRef{id.value(), "source"});
+        }
+        project_->target = graph::PortRef{id.value(), "out"};
+        rebuildDirty_ = true;
+    }
     finishEdit(std::move(before), {}, id.ok());
     if (id.ok()) {
         modified_ = true;

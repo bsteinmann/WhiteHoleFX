@@ -5,7 +5,7 @@
 //  - Klick auf ein Fixture wählt es (Strg/Umschalt: dazu- oder abwählen), Ziehen verschiebt die
 //    gewählten Fixtures gemeinsam, Pfeiltasten schieben um 1 (Umschalt 10, Strg 0,1).
 //  - Ziehen auf leerer Fläche spannt einen Auswahlrahmen auf.
-//  - Ist im Node-Editor ein Region-Node gewählt, zeigt die Vorschau sein Rechteck (orange). Die
+//  - Ist im Node-Editor ein Region- oder Ausgangs-Node gewählt, zeigt die Vorschau sein Rechteck (orange). Die
 //    Eckgriffe ändern es, der Mittelgriff verschiebt es, Pfeiltasten schieben es, solange kein
 //    Fixture gewählt ist. Geschrieben werden die Parameter left/top/width/height des Nodes.
 // Die Rechnung (Pixel <-> Welt, Treffer, Bereichsgeometrie) steckt in wh_preview/wh_mapping und

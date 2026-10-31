@@ -102,6 +102,50 @@ let head = @param(colorHead);
 let tail = @param(colorTail);
 return vec4<f32>(mix(tail.rgb, head.rgb, heat), mix(tail.a, head.a, heat) * strength * on);)wgsl";
 
+// Fläche in einer Farbe, nützlich zum Einfärben (Mask, Blend) oder als Blitzfläche (Strobe).
+constexpr const char* kSolidBody = R"wgsl(return @param(color);)wgsl";
+
+// Scan-Linie (wie ein Radar oder Knight Rider): ein Streifen quer zur Richtung `angle`, an der Stelle
+// `position` (0..1). Position mit einem LFO (Dreieck) gesteuert ergibt das Hin- und Herlaufen.
+constexpr const char* kScanBody = R"wgsl(let a = radians(@param(angle));
+let d = vec2<f32>(cos(a), sin(a));
+let x = dot(p.xy - vec2<f32>(0.5, 0.5), d) + 0.5;
+let w = max(@param(width), 0.0001);
+let s = clamp(@param(softness), 0.01, 1.0);
+let v = 1.0 - smoothstep(w * (1.0 - s), w, abs(x - @param(position)));
+let col = @param(color);
+return vec4<f32>(col.rgb, col.a * v);)wgsl";
+
+// Wellenringe wie Regentropfen im Wasser. Ohne Zustand: Tropfen Nummer k entsteht zur Zeit k / rate an
+// einer Zufallsstelle, der Ring wächst mit `speed` und verblasst nach vier Perioden. Die letzten
+// vier Tropfen überlagern sich.
+constexpr const char* kRipplePrelude = R"wgsl(fn wh_hash11(x: f32) -> f32 {
+    return fract(sin(x * 127.1) * 43758.5453);
+}
+)wgsl";
+
+constexpr const char* kRippleBody = R"wgsl(let t = @time * max(@param(rate), 0.01);
+var v = 0.0;
+for (var i = 0; i < 4; i = i + 1) {
+    let k = floor(t) - f32(i);
+    let age = t - k;
+    let c = vec2<f32>(wh_hash11(k * 1.37 + 0.11), wh_hash11(k * 2.71 + 5.31));
+    let d = length(p.xy - c);
+    let ring = 1.0 - smoothstep(0.0, max(@param(width), 0.001), abs(d - age * @param(speed)));
+    v = v + ring * clamp(1.0 - age / 4.0, 0.0, 1.0);
+}
+let col = @param(color);
+return vec4<f32>(col.rgb, col.a * clamp(v, 0.0, 1.0));)wgsl";
+
+// Feuer: Rauschen, das nach oben wandert, dazu eine Hitze, die mit der Höhe abnimmt (unten y = 0 ist
+// am heißesten). Farbverlauf von Schwarz über Rot und Gelb zu Weiß.
+constexpr const char* kFireBody = R"wgsl(let t = @time * @param(speed);
+let s = @param(scale);
+let q = vec3<f32>(p.x * s, p.y * s * 0.6 - t, 0.0);
+let n = wh_value_noise(q) * 0.65 + wh_value_noise(q * 2.0 + vec3<f32>(0.0, 0.0, 3.7)) * 0.35;
+let heat = clamp(n * 1.4 + (1.0 - p.y / max(@param(height), 0.05)) - 0.5, 0.0, 1.0);
+return vec4<f32>(clamp(heat * 2.0, 0.0, 1.0), clamp(heat * 2.0 - 0.7, 0.0, 1.0), clamp(heat * 3.0 - 2.0, 0.0, 1.0), 1.0);)wgsl";
+
 }  // namespace
 
 std::vector<compiler::NodeDefinition> generatorNodes() {
@@ -148,6 +192,27 @@ std::vector<compiler::NodeDefinition> generatorNodes() {
          color("colorHead", "Head", ColorRgba{0.8F, 1.0F, 0.85F, 1.0F}),
          color("colorTail", "Tail", ColorRgba{0.0F, 0.6F, 0.05F, 1.0F})},
         kRainBody, kRainPrelude));
+
+    nodes.push_back(fieldNode("wh.generator.solid", "Solid Color", "Generators", {fieldOutput()},
+                              {color("color", "Color", ColorRgba{1.0F, 1.0F, 1.0F, 1.0F})}, kSolidBody));
+
+    nodes.push_back(fieldNode(
+        "wh.generator.scan", "Scan Line", "Generators", {fieldOutput()},
+        {number("position", "Position", 0.5, 0.0, 1.0), number("width", "Width", 0.08, 0.001, 1.0),
+         number("softness", "Softness", 0.5, 0.0, 1.0), number("angle", "Angle (deg)", 0.0),
+         color("color", "Color", ColorRgba{1.0F, 1.0F, 1.0F, 1.0F})},
+        kScanBody));
+
+    nodes.push_back(fieldNode(
+        "wh.generator.ripples", "Ripples", "Generators", {fieldOutput()},
+        {number("rate", "Drops per second", 0.7, 0.01, 20.0), number("speed", "Spread speed", 0.25, 0.0, 5.0),
+         number("width", "Ring width", 0.05, 0.001, 0.5), color("color", "Color", ColorRgba{0.3F, 0.7F, 1.0F, 1.0F})},
+        kRippleBody, kRipplePrelude));
+
+    nodes.push_back(fieldNode("wh.generator.fire", "Fire", "Generators", {fieldOutput()},
+                              {number("scale", "Scale", 4.0, 0.1, 64.0), number("speed", "Speed", 1.5, -20.0, 20.0),
+                               number("height", "Flame height", 0.8, 0.05, 2.0)},
+                              kFireBody, kNoisePrelude));
 
     return nodes;
 }

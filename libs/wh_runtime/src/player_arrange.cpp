@@ -1,4 +1,4 @@
-// player_arrange.cpp: mehrere Fixtures zusammen bewegen, ausrichten, verteilen; Rechteck eines Region-Nodes setzen.
+// player_arrange.cpp: mehrere Fixtures zusammen bewegen, ausrichten, verteilen; Rechteck eines Region- oder Ausgangs-Nodes setzen.
 //
 // Warum es diese Datei gibt: player_layout.cpp bearbeitet einzelne Fixtures. Das Anordnen im
 // Layout-Editor wirkt auf eine Auswahl und muss genau ein Undo-Schritt sein; die Rechnung
@@ -163,8 +163,8 @@ Result<void> Player::setRegionRect(NodeId node, const mapping::Region& rect) {
     if (found == nullptr) {
         return Error{ErrorCode::NotFound, "Node unbekannt"};
     }
-    if (found->typeId != "wh.transform.region") {
-        return invalid("Der Node ist keine Region");
+    if (found->typeId != "wh.transform.region" && found->typeId != "wh.output.canvas") {
+        return invalid("Der Node ist weder eine Region noch ein Ausgang");
     }
     for (const float v : {rect.x, rect.y, rect.w, rect.h}) {
         if (!std::isfinite(v)) {

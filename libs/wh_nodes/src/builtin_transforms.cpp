@@ -75,6 +75,34 @@ if (axis < 0.5) {
 }
 return @in(source, q);)wgsl";
 
+// Verschiebt das Bild um (x, y) Leinwandbreiten. Mit Wrap kommt es auf der anderen Seite wieder herein,
+// sonst bleibt der Rest durchsichtig. Mit einem LFO oder Time an x entsteht ein Übergang oder Scroll.
+constexpr const char* kSlideBody = R"wgsl(var q = vec3<f32>(p.x - @param(x), p.y - @param(y), p.z);
+if (@param(wrap) > 0.5) {
+    q = vec3<f32>(fract(q.x), fract(q.y), q.z);
+} else if (q.x < 0.0 || q.x > 1.0 || q.y < 0.0 || q.y > 1.0) {
+    return vec4<f32>(0.0, 0.0, 0.0, 0.0);
+}
+return @in(source, q);)wgsl";
+
+// Kachelt das Bild countX mal countY; mit Mirror wird jede zweite Kachel gespiegelt (nahtlos).
+constexpr const char* kTileBody = R"wgsl(let n = vec2<f32>(max(@param(countX), 1.0), max(@param(countY), 1.0));
+let u = p.xy * n;
+var f = fract(u);
+if (@param(mirror) > 0.5) {
+    let cell = floor(u);
+    let oddX = cell.x - 2.0 * floor(cell.x * 0.5);
+    let oddY = cell.y - 2.0 * floor(cell.y * 0.5);
+    f = vec2<f32>(select(f.x, 1.0 - f.x, oddX > 0.5), select(f.y, 1.0 - f.y, oddY > 0.5));
+}
+return @in(source, vec3<f32>(f.x, f.y, p.z));)wgsl";
+
+// Mosaik: jede Zelle zeigt den Wert an ihrer Mitte.
+constexpr const char* kPixelateBody = R"wgsl(let n = vec2<f32>(max(@param(cellsX), 1.0), max(@param(cellsY), 1.0));
+let cell = min(floor(p.xy * n), n - vec2<f32>(1.0, 1.0));
+let c = (cell + vec2<f32>(0.5, 0.5)) / n;
+return @in(source, vec3<f32>(c.x, c.y, p.z));)wgsl";
+
 // +y unter angleX nach +z, +z unter angleY nach +x. Die Reihenfolge ist R = Rz * Ry * Rx
 // (erst um x, dann um y, dann um z). Gesampelt wird mit der Umkehrung R^-1.
 constexpr const char* kRotate3dBody =
@@ -111,6 +139,23 @@ std::vector<compiler::NodeDefinition> transformNodes() {
                                choice("half", "Source half", {"Lower (left/bottom)", "Upper (right/top)"}),
                                number("center", "Center", 0.5, 0.0, 1.0)},
                               kSymmetryBody));
+
+    nodes.push_back(fieldNode("wh.transform.slide", "Slide", "Transform",
+                              {fieldInput("source", "Source"), fieldOutput()},
+                              {number("x", "Offset X", 0.0, -1.0, 1.0), number("y", "Offset Y", 0.0, -1.0, 1.0),
+                               toggle("wrap", "Wrap around", false)},
+                              kSlideBody));
+
+    nodes.push_back(fieldNode("wh.transform.tile", "Tile", "Transform",
+                              {fieldInput("source", "Source"), fieldOutput()},
+                              {number("countX", "Tiles X", 2.0, 1.0, 64.0), number("countY", "Tiles Y", 2.0, 1.0, 64.0),
+                               toggle("mirror", "Mirror every other tile", false)},
+                              kTileBody));
+
+    nodes.push_back(fieldNode("wh.transform.pixelate", "Pixelate", "Transform",
+                              {fieldInput("source", "Source"), fieldOutput()},
+                              {number("cellsX", "Cells X", 8.0, 1.0, 256.0), number("cellsY", "Cells Y", 8.0, 1.0, 256.0)},
+                              kPixelateBody));
 
     nodes.push_back(fieldNode("wh.transform.region", "Region", "Transform",
                               {fieldInput("source", "Source"), fieldOutput()},

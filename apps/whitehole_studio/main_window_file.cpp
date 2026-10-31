@@ -39,7 +39,12 @@ node verlauf wh.generator.gradient
   set colorB 1 0.3 0 1
   at 0 0
 end
-output verlauf.out
+
+node ausgang wh.output.canvas
+  at 300 0
+end
+connect verlauf.out -> ausgang.source
+output ausgang.out
 )";
 
 }  // namespace

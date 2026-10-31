@@ -1,5 +1,19 @@
 # Änderungen
 
+## 0.8.0
+
+- **Ausgangs-Node „Output“** (`wh.output.canvas`): der Ausgang als Node; bespielt die ganze Leinwand
+  oder nur ein Rechteck (Maßstab einpassen oder Fenster ausschneiden) und hat eine Gesamthelligkeit.
+  Ein neu angelegter Output-Node wird automatisch zum Ausgang und hängt sich hinter den bisherigen; die
+  Vorlage „Neues Projekt“ benutzt ihn. In der Vorschau lässt sich sein Rechteck wie beim Region-Node ziehen
+- **Mischer** (Anregung: die Mischmodi klassischer LED-Software): Blend (Add, Multiply, Screen, Subtract,
+  Difference, Lighten, Darken, Over), Crossfade (linear oder progressiv), Mask (Form/Intensität), Key
+  (Schwarz durchsichtig)
+- **Modifier:** Color Adjust (Farbton, Sättigung, Helligkeit, Gamma, Invertieren), Strobe, Outline
+- **Transform:** Slide (Scroll/Übergang), Tile, Pixelate
+- **Generatoren:** Solid Color, Scan Line, Ripples, Fire
+- Rezepte für Kombinationen in `docs/field-nodes.md`
+
 ## 0.7.0
 
 Aus den GitHub-Issues:
