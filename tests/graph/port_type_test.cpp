@@ -17,6 +17,15 @@ TEST_CASE("Gleiche Porttypen sind immer verbindbar") {
     CHECK(isConnectable(PortType::PointCloud, PortType::PointCloud));
 }
 
+TEST_CASE("Spektrum und Wellenform tragen beide 32 Werte, lassen sich aber nicht vertauschen") {
+    CHECK(whitehole::graph::carriesBands(PortType::AudioSpectrum));
+    CHECK(whitehole::graph::carriesBands(PortType::AudioWave));
+    CHECK_FALSE(whitehole::graph::carriesBands(PortType::Scalar));
+    CHECK(isConnectable(PortType::AudioWave, PortType::AudioWave));
+    CHECK_FALSE(isConnectable(PortType::AudioWave, PortType::AudioSpectrum));
+    CHECK_FALSE(isConnectable(PortType::AudioSpectrum, PortType::AudioWave));
+}
+
 TEST_CASE("Field und Image lassen sich ineinander überführen") {
     CHECK(isConnectable(PortType::Field, PortType::Image));
     CHECK(isConnectable(PortType::Image, PortType::Field));

@@ -189,8 +189,8 @@ private:
             }
             const graph::Connection* connection = graph_.findInputConnection(node.id, port.key);
 
-            if (port.type == PortType::AudioSpectrum) {
-                // Ein Spektrum: eigener Slot (128 Bytes), den packParameters aus dem Werte-Kanal füllt.
+            if (graph::carriesBands(port.type)) {
+                // Ein Spektrum oder eine Wellenform: eigener Slot (128 Bytes), den packParameters aus dem Werte-Kanal füllt.
                 // Unverbunden bleibt er null (der Shader sieht Stille).
                 if (connection != nullptr) {
                     const NodeInstance* source = graph_.findNode(connection->from.node);
@@ -198,9 +198,9 @@ private:
                         source == nullptr ? nullptr : graph_.registry().find(source->typeId);
                     const PortDescriptor* sourcePort =
                         sourceDescriptor == nullptr ? nullptr : sourceDescriptor->findPort(connection->from.portKey);
-                    if (sourcePort == nullptr || sourcePort->type != PortType::AudioSpectrum) {
+                    if (sourcePort == nullptr || sourcePort->type != port.type) {
                         return Error{ErrorCode::NotFound, describe(node) + ": Die Quelle des Eingangs '" +
-                                                              port.key + "' ist kein Spektrum"};
+                                                              port.key + "' hat nicht den passenden Typ (Spektrum oder Wellenform)"};
                     }
                 }
                 layout_.add(node.id, port.key, GpuType::Spectrum, SlotOrigin::SpectrumInput);
@@ -280,11 +280,11 @@ private:
         };
         bindings.spectrum = [&](std::string_view port, std::string_view index) -> Result<std::string> {
             const graph::PortDescriptor* found = descriptor.findPort(port);
-            if (found == nullptr || found->type != PortType::AudioSpectrum ||
+            if (found == nullptr || !graph::carriesBands(found->type) ||
                 found->direction != PortDirection::Input) {
                 return Error{ErrorCode::InvalidArgument,
                              describe(node) + ": @spectrum(" + std::string{port} +
-                                 ") verweist auf keinen Spektrum-Eingang"};
+                                 ") verweist auf keinen Spektrum- oder Wellenform-Eingang"};
             }
             // array<vec4<f32>, 8>: Band i steht in Element i/4, Komponente i%4.
             const std::string member = "wh_params." + memberName(node.id, port);

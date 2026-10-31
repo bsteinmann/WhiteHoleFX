@@ -28,6 +28,8 @@ namespace whitehole::audio {
 inline constexpr double kBandLowHz = 40.0;
 inline constexpr double kBandHighHz = 16000.0;
 inline constexpr double kFloorDb = -60.0;
+/// So viele der letzten Samples hängen an jedem Frame (für die Wellenform): 8192 sind bei 48 kHz 170 ms.
+inline constexpr std::size_t kRecentSamples = 8192;
 
 /// Die 33 Bandgrenzen in Hz (Band i reicht von edges[i] bis edges[i+1]).
 [[nodiscard]] const std::array<double, kSpectrumBands + 1>& bandEdgesHz();
@@ -38,6 +40,8 @@ struct AudioFrame {
     float peak{0.0F};
     Spectrum spectrum{};
     BeatInfo beat{};
+    std::vector<float> recent;   // die letzten kRecentSamples Mono-Samples, älteste zuerst (Wellenform)
+    double sampleRate{48000.0};  // zu `recent`
     double audioTime{0.0};       // Sekunden seit Start der Analyse (aus der Zahl der Samples)
     std::uint64_t frameCount{0}; // Zahl der bisher berechneten Schritte
 };
@@ -69,6 +73,8 @@ private:
     std::vector<float> window_;          // Hann-Fenster
     double windowGain_{1.0};             // Summe des Fensters / 2: Normierung auf Amplitude
     std::vector<float> ring_;            // die letzten fftSize Samples
+    std::vector<float> recentRing_;      // die letzten kRecentSamples Samples
+    std::size_t recentPos_{0};
     std::size_t writePos_{0};
     std::size_t filled_{0};
     std::size_t sinceStep_{0};

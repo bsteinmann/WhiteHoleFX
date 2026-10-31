@@ -5,6 +5,7 @@ wh_add_library(wh_nodes
     SOURCES
         src/builtin_audio.cpp
         src/builtin_audio_field.cpp
+        src/builtin_audio_wave.cpp
         src/builtin_blends.cpp
         src/builtin_generators.cpp
         src/builtin_library.cpp

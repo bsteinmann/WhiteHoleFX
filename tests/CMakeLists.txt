@@ -23,6 +23,7 @@ add_executable(wh_tests
     audio/analyzer_test.cpp
     audio/audio_input_test.cpp
     audio/audio_nodes_test.cpp
+    audio/audio_wave_test.cpp
     audio/audio_store_test.cpp
     audio/wav_test.cpp
     compiler/field_inputs_test.cpp

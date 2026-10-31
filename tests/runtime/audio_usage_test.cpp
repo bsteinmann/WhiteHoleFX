@@ -18,10 +18,11 @@ TEST_CASE("findAudioUsage: zählt nur Nodes, die Audio lesen", "[runtime][audio]
     (void)graph.addNode("wh.generator.spectrum", Vec2{});    // bekommt das Spektrum über eine Verbindung
     CHECK_FALSE(runtime::findAudioUsage(graph).any());
 
-    for (const char* type : {"wh.value.audiolevel", "wh.value.audioband", "wh.value.audiospectrum", "wh.value.beat"}) {
+    for (const char* type : {"wh.value.audiolevel", "wh.value.audioband", "wh.value.audiospectrum", "wh.value.beat",
+                              "wh.value.audiowave"}) {
         (void)graph.addNode(type, Vec2{});
     }
     const runtime::AudioUsage usage = runtime::findAudioUsage(graph);
     CHECK(usage.any());
-    CHECK(usage.nodes == 4);
+    CHECK(usage.nodes == 5);
 }

@@ -15,7 +15,8 @@ namespace whitehole {
 
 inline constexpr std::size_t kSpectrumBands = 32;
 
-/// Energie je Band, 0..1 (0 = still, 1 = Vollaussteuerung).
+/// Energie je Band, 0..1 (0 = still, 1 = Vollaussteuerung). Dieselbe Struktur trägt auch die 32 Punkte
+/// einer Wellenform (Porttyp AudioWave), dann mit Werten von -1 bis 1.
 struct Spectrum {
     std::array<float, kSpectrumBands> bands{};
 };

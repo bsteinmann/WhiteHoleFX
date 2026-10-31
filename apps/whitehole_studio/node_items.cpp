@@ -35,6 +35,7 @@ QColor portColor(graph::PortType type) {
         case graph::PortType::Trigger: return {255, 100, 100};
         case graph::PortType::AudioSpectrum: return {90, 220, 230};
         case graph::PortType::PointCloud: return {160, 160, 255};
+        case graph::PortType::AudioWave: return {130, 230, 150};
     }
     return {200, 200, 200};
 }

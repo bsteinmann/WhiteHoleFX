@@ -109,10 +109,10 @@ Result<void> validateOutputs(const NodeInstance& node, const NodeDescriptor& des
     }
     for (const auto& [key, spectrum] : outputs.spectra()) {
         const graph::PortDescriptor* port = descriptor.findPort(key);
-        if (port == nullptr || port->direction != PortDirection::Output || port->type != graph::PortType::AudioSpectrum) {
+        if (port == nullptr || port->direction != PortDirection::Output || !graph::carriesBands(port->type)) {
             return Error{ErrorCode::InvalidArgument,
                          describe(node) + ": Der Kernel liefert ein Spektrum für '" + key +
-                             "', das kein Spektrum-Ausgang ist"};
+                             "', das kein Spektrum- oder Wellenform-Ausgang ist"};
         }
     }
     return {};

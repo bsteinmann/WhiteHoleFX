@@ -24,6 +24,7 @@ bool isValuePortType(graph::PortType type) {
         case graph::PortType::Color:
         case graph::PortType::Text:
         case graph::PortType::AudioSpectrum:
+        case graph::PortType::AudioWave:
             return true;
         default:
             return false;

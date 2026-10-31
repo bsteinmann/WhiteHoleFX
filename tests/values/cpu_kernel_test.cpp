@@ -161,7 +161,7 @@ TEST_CASE("registerCpuDefinitions: ungültige Definitionen werden gar nicht erst
         for (const graph::PortType type :
              {graph::PortType::Scalar, graph::PortType::Integer, graph::PortType::Boolean,
               graph::PortType::Trigger, graph::PortType::Color, graph::PortType::Text,
-              graph::PortType::AudioSpectrum}) {
+              graph::PortType::AudioSpectrum, graph::PortType::AudioWave}) {
             CpuNodeDefinition definition = valid("ok." + std::to_string(index++));
             definition.descriptor.ports = {outPort("out", type)};
             const std::vector<CpuNodeDefinition> definitions{definition};

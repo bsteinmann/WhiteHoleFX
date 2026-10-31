@@ -47,6 +47,7 @@ beliebigen Koordinaten abtastet.
 | `wh.generator.lightning` | Lightning: bis zu drei Blitze (`bolts`) hängen oben an der Leinwand und laufen nach unten. `rate` Schläge pro Sekunde, `duration` Sekunden sichtbar (höchstens ein ganzer Takt), `decay` Abklingen, `width`, `jag` Zackigkeit, `glow` Leuchthof, `branches` Helligkeit eines Seitenastes (0 = keiner), `reach` wie tief der Blitz reicht, `flash` hellt die ganze Fläche mit auf; Farbe `color`. Die Stelle jedes Schlags wird aus der Taktnummer gewürfelt, ein Nachschlag bei etwa 30 % der Sichtbarkeit. Der Rest ist durchsichtig, siehe `examples/gewitter.whfx` | 2D |
 | `wh.generator.particles` | Particles: `count` (bis 48) Teilchen strömen aus (`ex`, `ey`), gestaffelt über `lifetime` Sekunden. `direction` in Grad (0 = rechts, 90 = oben), `spread` der Fächer in Umläufen (1 = rundum), `speed`, `gravity` (positiv = nach unten), `size`, `trail` Schweiflänge in Sekunden, `shrink` Schrumpfen über das Leben, Palette *Two colors* (zufällig zwischen `colorA` und `colorB`) oder *Rainbow* (Konfetti). Jedes Teilchen hat in jedem Durchlauf eine neue Richtung und ein neues Tempo (Hash), die Bahn ist eine Wurfparabel in geschlossener Form: kein Zustand, gleiches Bild bei jedem Abspielen. Durchsichtig außerhalb der Teilchen, siehe `examples/funken.whfx` | 2D |
 | `wh.generator.spectrum` | Spectrum Bars: Equalizer aus `bars` Balken, die von unten (oder von der Mitte aus) so hoch wachsen wie das Audio-Spektrum am Eingang `spectrum` (Porttyp AudioSpectrum, von „Audio Spectrum“); `gap`, `softness`, Farbverlauf `color` → `colorTop`. Ohne Verbindung durchsichtig, siehe [Audio](audio.md) | 2D |
+| `wh.generator.scope` | Oscilloscope: die 32 Punkte der Wellenform am Eingang `wave` (Porttyp AudioWave, von „Audio Waveform“) als Linie über die Breite, `amplitude` halbe Höhe, `thickness`, `glow`, `fill` für die Fläche zur Mittellinie, `color`. Ohne Verbindung eine flache Linie in der Mitte, siehe [Audio](audio.md) | 2D |
 | `wh.transform.rotate` | Drehung in der xy-Ebene um die Mitte | 2D |
 | `wh.transform.rotate3d` | Drehung um alle drei Achsen um die Mitte (0,5; 0,5; 0,5) | 3D |
 | `wh.transform.symmetry` | Symmetrie: eine Hälfte des Eingangs wird an einer Linie gespiegelt. `axis` (X, Y, Z) und `half` (untere oder obere Hälfte als Vorlage) sind Auswahlfelder, `center` setzt die Linie. Einfacher zu bedienen als Mirror, der mehrere Achsen gleichzeitig kann | 2D, 3D |
@@ -111,7 +112,7 @@ Es gibt vier Platzhalter:
 |---|---|
 | `@in(port, koordinate)` | Aufruf der Funktion, die am Field-Eingang `port` hängt, an der Koordinate |
 | `@param(schluessel)` | Zugriff auf den Parameter im Uniform-Puffer |
-| `@spectrum(port, band)` | ein Band (0–31, `u32`-Ausdruck) des Spektrums am Eingang `port` vom Typ AudioSpectrum, als `f32` (0..1) |
+| `@spectrum(port, band)` | ein Wert (0–31, `u32`-Ausdruck) am Eingang `port` vom Typ AudioSpectrum (Band, 0..1) oder AudioWave (Punkt der Wellenform, −1..1), als `f32` |
 | `@time` | `wh_frame.time` |
 
 - Platzhalter dürfen verschachtelt werden: `@in(a, p + vec3<f32>(@param(shift), 0.0, 0.0))`.

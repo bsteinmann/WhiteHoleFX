@@ -17,7 +17,14 @@ enum class PortType : std::uint8_t {
     Trigger,        // Einzelimpuls (z. B. Beat)
     AudioSpectrum,
     PointCloud,
+    AudioWave,      // 32 Werte der Wellenform, -1..1 (Transport wie AudioSpectrum)
 };
+
+/// Porttypen, die 32 Zahlen als eigenen Kanal tragen (Spektrum und Wellenform): KernelOutputs::setSpectrum,
+/// IValueLookup::spectrum und im Shader `@spectrum(port, i)`. Sie sind untereinander nicht verbindbar.
+[[nodiscard]] constexpr bool carriesBands(PortType type) noexcept {
+    return type == PortType::AudioSpectrum || type == PortType::AudioWave;
+}
 
 /// Darf ein Ausgang vom Typ `from` mit einem Eingang vom Typ `to` verbunden
 /// werden? Gleiche Typen immer; dazu wenige verlustfreie Überführungen:

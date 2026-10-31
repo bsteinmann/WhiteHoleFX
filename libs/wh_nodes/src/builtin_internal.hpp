@@ -27,6 +27,17 @@ inline graph::PortDescriptor fieldInput(std::string key, std::string displayName
                                  graph::PortDirection::Input, true};
 }
 
+/// Der aktuelle Audio-Frame, wenn Signal da ist (nichts geschrieben oder älter als eine halbe Sekunde
+/// zählt als "kein Signal"). Gemeinsam für alle Nodes, die aus dem AudioStore lesen.
+inline std::optional<audio::AudioFrame> freshAudioFrame(const audio::AudioStore& store) {
+    constexpr double kSignalTimeout = 0.5;  // Sekunden
+    const auto snapshot = store.read();
+    if (!snapshot || snapshot->ageSeconds > kSignalTimeout) {
+        return std::nullopt;
+    }
+    return snapshot->frame;
+}
+
 /// Hilfsfunktionen für Farben mit Transparenz (Alpha). Alle Farben im Field sind "gerade"
 /// RGBA (Alpha getrennt von RGB). Beim Überblenden und Addieren wird mit vormultiplizierten
 /// Werten gerechnet, sonst färbt ein transparenter Rand (RGB schwarz, Alpha 0) die Mischung dunkel.
@@ -141,6 +152,7 @@ std::vector<compiler::NodeDefinition> blendNodes();
 std::vector<compiler::NodeDefinition> modifierNodes();  // Modifier und Ausgang
 std::vector<values::CpuNodeDefinition> valueNodes();
 std::vector<values::CpuNodeDefinition> audioNodes(std::shared_ptr<audio::AudioStore> store);  // Pegel, Band, Spektrum, Beat, Tap
+std::vector<values::CpuNodeDefinition> audioWaveNodes(std::shared_ptr<audio::AudioStore> store);  // Audio Waveform
 std::vector<compiler::NodeDefinition> audioFieldNodes();  // Spectrum Bars
 /// DMX-Eingang (Art-Net/sACN): die Kernel lesen aus `store`; null = ein leerer Speicher (nie ein Signal).
 std::vector<values::CpuNodeDefinition> dmxNodes(std::shared_ptr<input::DmxStore> store);

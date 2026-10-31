@@ -39,3 +39,7 @@ TEST_CASE("Beispiel: examples/gewitter.whfx lädt und kompiliert", "[examples][n
 TEST_CASE("Beispiel: examples/funken.whfx lädt und kompiliert", "[examples][nodes]") {
     checkExample("funken.whfx", "wh_seg_dist");
 }
+
+TEST_CASE("Beispiel: examples/oszilloskop.whfx lädt und kompiliert", "[examples][nodes]") {
+    checkExample("oszilloskop.whfx", "wh_scope_dist");
+}

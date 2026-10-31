@@ -42,6 +42,7 @@ AudioAnalyzer::AudioAnalyzer(AnalyzerConfig config)
     }
     windowGain_ = sum / 2.0;
     ring_.assign(n, 0.0F);
+    recentRing_.assign(kRecentSamples, 0.0F);
     scratch_.resize(n);
 
     // Welche FFT-Bins gehören zu welchem Band? Schmale Bänder (tiefe Töne) bekommen mindestens den
@@ -65,6 +66,8 @@ AudioAnalyzer::AudioAnalyzer(AnalyzerConfig config)
 
 void AudioAnalyzer::reset() {
     std::fill(ring_.begin(), ring_.end(), 0.0F);
+    std::fill(recentRing_.begin(), recentRing_.end(), 0.0F);
+    recentPos_ = 0;
     writePos_ = 0;
     filled_ = 0;
     sinceStep_ = 0;
@@ -79,6 +82,8 @@ std::size_t AudioAnalyzer::push(std::span<const float> mono) {
     for (const float sample : mono) {
         ring_[writePos_] = sample;
         writePos_ = (writePos_ + 1) % ring_.size();
+        recentRing_[recentPos_] = sample;
+        recentPos_ = (recentPos_ + 1) % recentRing_.size();
         filled_ = std::min(filled_ + 1, ring_.size());
         ++totalSamples_;
         hopPeak_ = std::max(hopPeak_, std::fabs(sample));
@@ -118,6 +123,11 @@ void AudioAnalyzer::step() {
     frame_.rms = static_cast<float>(std::min(1.0, std::sqrt(energy / static_cast<double>(n))));
     frame_.peak = std::min(1.0F, hopPeak_);
     frame_.spectrum = spectrum;
+    frame_.sampleRate = config_.sampleRate;
+    frame_.recent.resize(recentRing_.size());
+    for (std::size_t i = 0; i < recentRing_.size(); ++i) {
+        frame_.recent[i] = recentRing_[(recentPos_ + i) % recentRing_.size()];  // älteste zuerst
+    }
     frame_.audioTime = static_cast<double>(totalSamples_) / config_.sampleRate;
     ++frame_.frameCount;
     beat_.push(spectrum, frame_.audioTime);

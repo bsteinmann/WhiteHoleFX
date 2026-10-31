@@ -14,7 +14,7 @@ struct AudioUsage {
     [[nodiscard]] bool any() const { return nodes > 0; }
 };
 
-/// Zählt die Nodes wh.value.audiolevel, audioband, audiospectrum und beat. (Tap Tempo braucht kein
+/// Zählt die Nodes wh.value.audiolevel, audioband, audiospectrum, audiowave und beat. (Tap Tempo braucht kein
 /// Audio, Spectrum Bars bekommt sein Spektrum über eine Verbindung.)
 [[nodiscard]] AudioUsage findAudioUsage(const graph::Graph& graph);
 

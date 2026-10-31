@@ -29,8 +29,10 @@ std::vector<values::CpuNodeDefinition> builtinCpuDefinitions(std::shared_ptr<inp
     std::vector<values::CpuNodeDefinition> all = detail::valueNodes();
     std::vector<values::CpuNodeDefinition> inputs = detail::dmxNodes(std::move(dmx));
     all.insert(all.end(), std::make_move_iterator(inputs.begin()), std::make_move_iterator(inputs.end()));
-    std::vector<values::CpuNodeDefinition> audioInputs = detail::audioNodes(std::move(audio));
+    std::vector<values::CpuNodeDefinition> audioInputs = detail::audioNodes(audio);
     all.insert(all.end(), std::make_move_iterator(audioInputs.begin()), std::make_move_iterator(audioInputs.end()));
+    std::vector<values::CpuNodeDefinition> audioWaves = detail::audioWaveNodes(audio);
+    all.insert(all.end(), std::make_move_iterator(audioWaves.begin()), std::make_move_iterator(audioWaves.end()));
     return all;
 }
 

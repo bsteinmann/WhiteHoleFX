@@ -7,7 +7,8 @@ AudioUsage findAudioUsage(const graph::Graph& graph) {
     AudioUsage usage;
     for (const graph::NodeInstance& node : graph.nodes()) {
         if (node.typeId == "wh.value.audiolevel" || node.typeId == "wh.value.audioband" ||
-            node.typeId == "wh.value.audiospectrum" || node.typeId == "wh.value.beat") {
+            node.typeId == "wh.value.audiospectrum" || node.typeId == "wh.value.beat" ||
+            node.typeId == "wh.value.audiowave") {
             ++usage.nodes;
         }
     }

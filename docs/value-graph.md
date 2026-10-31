@@ -161,7 +161,7 @@ laufen immer. Ein vergessener, unverbundener Node kostet nichts.
 | `wh.value.dmx` | `value`, `on` (Boolean), `present` (Boolean) | `source` (0 Art-Net, 1 sACN), `universe`, `channel`, `bits16`, `min`, `max`, `threshold`, `timeout`, `hold` | DMX-Eingang, siehe unten |
 | `wh.value.dmxcolor` | `out` (Color) | `source`, `universe`, `channel`, `mode` (0 RGB, 1 RGB + Dimmer), `timeout`, `hold` | Drei oder vier Kanäle als Farbe |
 
-| `wh.value.audiolevel`, `audioband`, `audiospectrum`, `beat`, `tap` | siehe [Audio](audio.md) | | Audio-Eingang (Kategorie „Audio“): Pegel, Frequenzband, Spektrum, Beat und Tap Tempo |
+| `wh.value.audiolevel`, `audioband`, `audiospectrum`, `audiowave`, `beat`, `tap` | siehe [Audio](audio.md) | | Audio-Eingang (Kategorie „Audio“): Pegel, Frequenzband, Spektrum, Wellenform, Beat und Tap Tempo |
 
 ### DMX-Eingang
 

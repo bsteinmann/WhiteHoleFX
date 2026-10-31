@@ -1,0 +1,47 @@
+whitehole-project 1
+# Beispiel für das Oszilloskop: die Wellenform des Audio-Eingangs als leuchtende Kurve.
+#
+# So ausprobieren (ohne Mikrofon, mit einer WAV-Datei in Schleife):
+#   whitehole_cli examples/oszilloskop.whfx --audio-in musik.wav
+# oder mit dem Standardmikrofon:
+#   whitehole_cli examples/oszilloskop.whfx --audio-in default
+# In whitehole_studio: Menü Eingang -> Audio.
+#
+# Aufbau: Audio Waveform schneidet aus den letzten Samples ein Fenster (`span` in Millisekunden) und
+# beginnt es an einem steigenden Nulldurchgang (`trigger`), damit die Kurve ruhig steht. Daraus
+# entstehen 32 Punkte, die Oscilloscope als Linie zeichnet. `fill` färbt die Fläche zur Mittellinie.
+# Darunter liegt ein schwach leuchtender Verlauf.
+
+settings fps 40
+
+destination 0 127.0.0.1
+
+fixture Wand
+  matrix 32 16 serpentine
+  patch artnet destination 0 universe 0
+end
+
+node welle wh.value.audiowave
+  set span 25
+  set gain 2
+  set smooth 0.3
+end
+node kurve wh.generator.scope
+  set amplitude 0.42
+  set fill 0.25
+end
+node grund wh.generator.gradient
+  set angle 90
+end
+node dunkel wh.modifier.coloradjust
+  set brightness 0.12
+end
+node ueber wh.blend.blend
+  set mode 7
+end
+
+connect welle.wave -> kurve.wave
+connect grund.out -> dunkel.source
+connect dunkel.out -> ueber.a
+connect kurve.out -> ueber.b
+output ueber.out

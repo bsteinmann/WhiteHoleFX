@@ -23,16 +23,8 @@ using values::KernelContext;
 using values::KernelInputs;
 using values::KernelOutputs;
 
-constexpr double kSignalTimeout = 0.5;  // Sekunden; ältere Frames zählen als "kein Signal"
-
-/// Der aktuelle Frame, wenn Signal da ist.
-std::optional<audio::AudioFrame> freshFrame(const AudioStore& store) {
-    const auto snapshot = store.read();
-    if (!snapshot || snapshot->ageSeconds > kSignalTimeout) {
-        return std::nullopt;
-    }
-    return snapshot->frame;
-}
+/// Der aktuelle Frame, wenn Signal da ist (älter als eine halbe Sekunde zählt als "kein Signal").
+std::optional<audio::AudioFrame> freshFrame(const AudioStore& store) { return freshAudioFrame(store); }
 
 /// Tiefpass mit getrennter Zeit für Anstieg (attack) und Abfall (release), in Sekunden.
 /// Zeit 0 heißt: sofort.

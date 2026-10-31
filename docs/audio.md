@@ -45,8 +45,10 @@ Beat-Node.
 | `wh.value.audiolevel` | `level`, `peak` (Scalar), `present` (Boolean) | `scale` (0 Linear, 1 dB), `gain`, `attack`, `release`, `auto` (Auto-Gain) |
 | `wh.value.audioband` | `value` (Scalar), `present` | `from`, `to` (Hz), `gain`, `floor` (Rauschgrenze), `attack`, `release` |
 | `wh.value.audiospectrum` | `spectrum` (AudioSpectrum), `present` | `gain`, `floor`, `attack`, `release` |
+| `wh.value.audiowave` | `wave` (AudioWave), `present` | `span` (Fenster in ms, 2–100), `gain`, `trigger` (steigender Nulldurchgang), `level` (Triggerschwelle), `smooth` |
 | `wh.value.beat` | `beat` (Trigger), `pulse`, `phase`, `bpm` (Scalar), `present` | `threshold` (Mindeststärke), `decay`, `manualBpm` (0 = erkennen) |
 | `wh.value.tap` | `beat` (Trigger), `pulse`, `phase`, `bpm` | `tap` (jedes Einschalten zählt), `manualBpm`, `decay` |
+| `wh.generator.scope` | Field | Eingang `wave`; `amplitude` (halbe Höhe), `thickness`, `glow`, `fill` (Fläche zur Mittellinie), `color` |
 | `wh.generator.spectrum` | Field | Eingang `spectrum`; `bars` (4–32), `gap`, `mode` (von unten / von der Mitte), `softness`, `color`, `colorTop` |
 
 - **Attack/Release** glätten den Wert: Anstieg und Abfall mit eigener Zeit in Sekunden (0 = sofort). Kurzes
@@ -69,6 +71,7 @@ Jeder Parameter hat wie üblich einen Modulations-Eingang. Rezepte:
 
 - **Equalizer:** `Audio Spectrum` → `Spectrum Bars` → Ausgang. Über Plasma legen: `Blend` (Mode *Over*) mit dem
   Plasma als A und den Balken als B.
+- **Oszilloskop:** `Audio Waveform` → `Oscilloscope` → Ausgang. Beispiel: `examples/oszilloskop.whfx`.
 - **Blitz im Takt:** `Beat.pulse` → `Color Adjust.brightness` eines Effekts.
 - **Bass lässt es wachsen:** `Audio Band` (40–150 Hz) → `Scale.factor`.
 - **Farbwechsel im Takt:** `Beat.phase` → `Color Ramp.position` (mit `loop`).
@@ -85,6 +88,28 @@ verbunden, sieht der Node Stille und bleibt durchsichtig.
 (bei 16 Balken zwei Bänder je Balken). Gezeichnet wird von unten (`p.y = 0`) oder, im Modus *From center*,
 symmetrisch von der Mitte aus; die Farbe läuft von `color` unten nach `colorTop` oben. `softness` macht die
 Oberkante weich, `gap` lässt Lücken zwischen den Balken.
+
+## Oscilloscope
+
+`Audio Waveform` zeigt die Kurve selbst statt einer Kennzahl. Der Analyse-Frame trägt dafür die letzten 8192
+Samples (bei 48 kHz 170 ms); der Node schneidet ein Fenster von `span` Millisekunden heraus (höchstens die
+Hälfte davon) und teilt es in 32 Stücke. Von jedem Stück bleibt der Sample mit dem größten Betrag samt
+Vorzeichen, damit auch schnelle Töne ihre Höhe behalten (ein Mittelwert würde sie wegglätten).
+
+Der **Trigger** wirkt wie am echten Oszilloskop: Das Fenster beginnt am letzten steigenden Durchgang durch
+`level`, sonst zittert die Kurve von Bild zu Bild. Findet sich kein Durchgang (Rauschen, Gleichspannung), läuft
+das Fenster frei. Mit `smooth` > 0 wird die Kurve zusätzlich zeitlich geglättet. Ohne Signal ist sie flach.
+
+Die 32 Punkte laufen auf demselben Kanal zur GPU wie das Spektrum, mit eigenem Porttyp *AudioWave* (Werte
+−1..1). Beide Typen lassen sich nicht vertauschen: Eine Wellenform an `Spectrum Bars` oder ein Spektrum an
+`Oscilloscope` anzuschließen wird abgelehnt. `Oscilloscope` verbindet die Punkte mit geraden Strecken; die Linie
+ist der Abstand zu den drei Strecken um die Spalte und hat deshalb auch bei steilen Flanken keine Lücken.
+`amplitude` ist die halbe Höhe der Kurve (0,5 = ganze Leinwand), `thickness` die Breite der Linie, `glow` ein
+weicher Hof, `fill` die Helligkeit der Fläche zwischen Mittellinie und Kurve (0 = nur Linie).
+
+Mit 32 Punkten ist die Kurve grob: Auf einer Wand mit 32 bis 64 Spalten reicht das, bei sehr breiten Wänden
+wird zwischen den Punkten gerade verbunden. Ein Ton mit mehr Perioden im Fenster als Punkten (zum Beispiel 1 kHz
+bei 30 ms) wird unterabgetastet; dann `span` verkürzen.
 
 ## Grenzen
 

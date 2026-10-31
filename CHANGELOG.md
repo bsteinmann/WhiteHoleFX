@@ -1,5 +1,17 @@
 # Änderungen
 
+## 0.17.0
+
+- **Oszilloskop:** Neue Nodes `Audio Waveform` (Kategorie „Audio“) und `Oscilloscope` (Generators). Der Analyse-Frame
+  trägt jetzt die letzten 8192 Samples (`AudioFrame::recent`, `sampleRate`); `Audio Waveform` schneidet ein Fenster
+  von `span` ms heraus, triggert wie ein Oszilloskop an einem steigenden Nulldurchgang und liefert 32 Punkte,
+  `Oscilloscope` zeichnet sie als Linie (mit Glühen und optionaler Füllung). Beispiel: `examples/oszilloskop.whfx`.
+- **Neuer Porttyp `AudioWave`:** Die 32 Punkte laufen auf demselben Kanal zur GPU wie das Spektrum (`KernelOutputs::setSpectrum`,
+  Slot `Spectrum`, `@spectrum(port, i)`), sind aber ein eigener Typ: Wellenform und Spektrum lassen sich nicht
+  vertauschen (`graph::carriesBands`).
+- **Tests:** Samples im Frame, Fenster, Trigger, Glättung und Kein-Signal des Waveform-Nodes; Oszilloskop-Linie und
+  Füllung auf einem echten Gerät (Erwartungen vorab im WebGPU-Testaufbau gegengerechnet).
+
 ## 0.16.0
 
 - **Neue Nodes (Generators):** `Lightning` (Blitze mit Verästelung, Nachschlag und Flash, bis zu drei gleichzeitig)
