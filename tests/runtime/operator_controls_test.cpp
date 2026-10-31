@@ -219,22 +219,22 @@ TEST_CASE("Zuletzt geöffnet: neuester Eintrag vorn, keine Doppelten, höchstens
     list = runtime::addRecentFile(list, "/tmp/b.whfx");
     list = runtime::addRecentFile(list, "/tmp/a.whfx");  // rutscht nach vorn
     REQUIRE(list.size() == 2);
-    CHECK(list[0] == "/tmp/a.whfx");
-    CHECK(list[1] == "/tmp/b.whfx");
+    CHECK(list[0] == runtime::normalizedPath("/tmp/a.whfx"));
+    CHECK(list[1] == runtime::normalizedPath("/tmp/b.whfx"));
 
     list = runtime::addRecentFile(list, "/tmp/x/../b.whfx");  // andere Schreibweise desselben Pfads
     REQUIRE(list.size() == 2);
-    CHECK(list[0] == "/tmp/b.whfx");
+    CHECK(list[0] == runtime::normalizedPath("/tmp/b.whfx"));
 
     CHECK(runtime::addRecentFile(list, "").size() == 2);  // leer: nichts
     for (int i = 0; i < 15; ++i) {
         list = runtime::addRecentFile(list, "/tmp/p" + std::to_string(i) + ".whfx");
     }
     CHECK(list.size() == runtime::kMaxRecentFiles);
-    CHECK(list.front() == "/tmp/p14.whfx");
+    CHECK(list.front() == runtime::normalizedPath("/tmp/p14.whfx"));
     CHECK(runtime::addRecentFile(list, "/tmp/neu.whfx", 3).size() == 3);
 
     list = runtime::removeRecentFile(list, "/tmp/./p14.whfx");
-    CHECK(list.front() == "/tmp/p13.whfx");
+    CHECK(list.front() == runtime::normalizedPath("/tmp/p13.whfx"));
     CHECK(runtime::removeRecentFile(list, "/tmp/gibtsnicht").size() == list.size());
 }

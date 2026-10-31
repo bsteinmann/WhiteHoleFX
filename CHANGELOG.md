@@ -1,5 +1,11 @@
 # Änderungen
 
+## 0.14.2
+
+- **CI-Reparatur:** Der JSON-Leser kommt ohne `std::pair` mit unvollständigem Typ aus (Clang und
+  GCC 11 lehnten ihn ab). Das Studio bindet `test_panel.hpp` in `main_window_file.cpp` ein. Der
+  Test „Zuletzt geöffnet“ vergleicht Pfade normalisiert und läuft damit auch unter Windows
+
 ## 0.14.1
 
 - **Lizenz:** WhiteHoleFX steht jetzt unter der Apache License 2.0 (`LICENSE`, `NOTICE`); README und

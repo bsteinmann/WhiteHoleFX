@@ -11,6 +11,7 @@
 #include "layout_panel.hpp"
 #include "parameter_panel.hpp"
 #include "preview_widget.hpp"
+#include "test_panel.hpp"
 
 namespace whitehole::studio {
 
