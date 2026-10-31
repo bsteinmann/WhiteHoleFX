@@ -33,8 +33,19 @@ NodeEditor::NodeEditor(runtime::Player& player, QWidget* parent) : QGraphicsView
     });
 }
 
+NodeEditor::~NodeEditor() {
+    // Die Szene löscht ihre Items beim Abbau und meldet dabei eine geänderte Auswahl. Dann darf
+    // niemand mehr nachfragen (die Zeiger in nodes_ hängen sonst im Leeren).
+    scene_.disconnect(this);
+    nodes_.clear();
+    wires_.clear();
+}
+
 void NodeEditor::reset() {
-    rebuild();
+    // Neues Projekt: nichts ist ausgewählt (gleiche Node-Nummern wären sonst ein Zufallstreffer).
+    rebuilding_ = true;
+    buildScene();
+    rebuilding_ = false;
     fitPending_ = true;
     showAll();
 }

@@ -36,6 +36,7 @@ class NodeEditor : public QGraphicsView {
 
 public:
     explicit NodeEditor(runtime::Player& player, QWidget* parent = nullptr);
+    ~NodeEditor() override;
 
     /// Baut die Szene neu auf und zeigt alle Nodes (nach dem Laden eines Projekts).
     void reset();

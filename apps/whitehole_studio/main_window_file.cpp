@@ -46,8 +46,8 @@ output verlauf.out
 
 void MainWindow::afterLoad(const QString& message) {
     preview_->setMessage({});
+    editor_->reset();  // zuerst: setzt die Auswahl zurück, die refreshParameters abfragt
     refreshParameters();
-    editor_->reset();
     layoutPanel_->rebuild();
     updateTitle();
     statusBar()->showMessage(message, 5000);
