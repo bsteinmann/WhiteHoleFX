@@ -58,6 +58,8 @@ struct ParameterInfo {
     graph::ParameterValue defaultValue;
     std::optional<double> minValue;
     std::optional<double> maxValue;
+    /// Namen der Auswahlmöglichkeiten (nur bei Ganzzahlen, Wert = Index); leer = gewöhnliche Zahl.
+    std::vector<std::string> choices;
     /// Ein Eingang mit demselben Schlüssel ist verbunden: Der Wert kommt aus dem Graphen, ein
     /// Regler hätte keine Wirkung.
     bool driven{false};

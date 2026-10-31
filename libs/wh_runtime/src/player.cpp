@@ -178,6 +178,7 @@ std::vector<NodeInfo> Player::nodes() const {
             parameter.value = it != node.parameters.end() ? it->second : p.defaultValue;
             parameter.minValue = p.minValue;
             parameter.maxValue = p.maxValue;
+            parameter.choices = p.choices;
             parameter.driven = g.findInputConnection(node.id, p.key) != nullptr;
             info.parameters.push_back(std::move(parameter));
         }

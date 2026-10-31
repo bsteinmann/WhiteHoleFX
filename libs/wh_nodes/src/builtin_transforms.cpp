@@ -57,6 +57,24 @@ return @in(source, (p - c) / @param(factor) + c);)wgsl";
 
 // Dreht das Bild im Raum um die Mitte (0.5, 0.5, 0.5). Positive Winkel drehen rechtshändig
 // um die jeweilige Achse (Daumen zeigt in Achsenrichtung): +x wandert unter angleZ nach +y,
+// Symmetrie: Eine Hälfte des Eingangs (je nach Wahl die untere oder die obere Seite der Linie) wird
+// an der Linie gespiegelt, so entsteht ein symmetrisches Muster. Achse und Seite sind Auswahlfelder.
+constexpr const char* kSymmetryBody = R"wgsl(var q = p;
+let c = @param(center);
+let axis = @param(axis);
+let upper = @param(half) > 0.5;
+if (axis < 0.5) {
+    let d = abs(q.x - c);
+    q.x = select(c - d, c + d, upper);
+} else if (axis < 1.5) {
+    let d = abs(q.y - c);
+    q.y = select(c - d, c + d, upper);
+} else {
+    let d = abs(q.z - c);
+    q.z = select(c - d, c + d, upper);
+}
+return @in(source, q);)wgsl";
+
 // +y unter angleX nach +z, +z unter angleY nach +x. Die Reihenfolge ist R = Rz * Ry * Rx
 // (erst um x, dann um y, dann um z). Gesampelt wird mit der Umkehrung R^-1.
 constexpr const char* kRotate3dBody =
@@ -86,6 +104,13 @@ std::vector<compiler::NodeDefinition> transformNodes() {
                                number("centerY", "Center Y", 0.5, 0.0, 1.0), number("centerZ", "Center Z", 0.5, 0.0, 1.0),
                                toggle("otherHalf", "Use other half", false)},
                               kMirrorBody));
+
+    nodes.push_back(fieldNode("wh.transform.symmetry", "Symmetry", "Transform",
+                              {fieldInput("source", "Source"), fieldOutput()},
+                              {choice("axis", "Axis", {"X (left/right)", "Y (top/bottom)", "Z (front/back)"}),
+                               choice("half", "Source half", {"Lower (left/bottom)", "Upper (right/top)"}),
+                               number("center", "Center", 0.5, 0.0, 1.0)},
+                              kSymmetryBody));
 
     nodes.push_back(fieldNode("wh.transform.region", "Region", "Transform",
                               {fieldInput("source", "Source"), fieldOutput()},

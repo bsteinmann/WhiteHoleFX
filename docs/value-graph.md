@@ -152,8 +152,9 @@ laufen immer. Ein vergessener, unverbundener Node kostet nichts.
 |---|---|---|---|
 | `wh.value.time` | `seconds` | `speed`, `offset`, `speedMin`, `speedMax` | Zeit × Tempo + Versatz; negatives Tempo läuft rückwärts. `speedMin`/`speedMax` stellen nur den Bereich des Reglers in der Oberfläche ein |
 | `wh.value.number` | `out` | `value` | Konstante, oder Relais für einen modulierten Wert |
-| `wh.value.color` | `out` (Color) | `color` | Farbquelle für Farbparameter und Field-Eingänge |
-| `wh.value.lfo` | `out` | `shape`, `frequency`, `phase`, `min`, `max`, `frequencyMin`, `frequencyMax` | Sinus, Dreieck, Sägezahn, Rechteck; zustandslos. `frequencyMin`/`frequencyMax`: Bereich des Reglers |
+| `wh.value.color` | `out` (Color) | `color`, `hue`, `saturation`, `brightness` | Farbquelle für Farbparameter und Field-Eingänge. `hue` verschiebt den Farbton in Umläufen (1 = einmal rum), `saturation` und `brightness` multiplizieren; mit Time, LFO, Random oder Number an diesen Eingängen entsteht Regenbogen, Pulsieren oder Blitzen. Standardwerte 0 / 1 / 1 lassen die Farbe unverändert |
+| `wh.value.colorramp` | `out` (Color) | `count` (2–4), `position`, `loop`, `color1`–`color4` | Überblendet mit `position` (0..1) zwischen den ersten `count` Farben; mit `loop` geht es von der letzten zurück zur ersten, `position` 0..1 ist dann ein voller Umlauf (Sägezahn-LFO = ewiger Farbwechsel). Die Farben können selbst von Color-Nodes kommen |
+| `wh.value.lfo` | `out` | `shape` (Auswahlfeld, in der Datei der Index 0–3), `frequency`, `phase`, `min`, `max`, `frequencyMin`, `frequencyMax` | Sinus, Dreieck, Sägezahn, Rechteck; zustandslos. `frequencyMin`/`frequencyMax`: Bereich des Reglers |
 | `wh.value.random` | `out` | `rate`, `seed`, `smooth` | Hash-basiert, reproduzierbar; weich oder gehalten |
 | `wh.value.map` | `out` | `value`, `inMin`, `inMax`, `outMin`, `outMax`, `clamp` | Bereich umrechnen |
 | `wh.value.smooth` | `out` | `value`, `time` | Tiefpass erster Ordnung; hat Zustand |

@@ -39,7 +39,9 @@ public:
 class ColorKernel final : public values::ICpuKernel {
 public:
     void evaluate(const KernelContext& context, KernelOutputs& outputs) override {
-        outputs.set("out", context.inputs.color("color", ColorRgba{1.0F, 1.0F, 1.0F, 1.0F}));
+        const auto& in = context.inputs;
+        outputs.set("out", adjustColor(in.color("color", ColorRgba{1.0F, 1.0F, 1.0F, 1.0F}), in.number("hue", 0.0),
+                                       in.number("saturation", 1.0), in.number("brightness", 1.0)));
     }
 };
 
@@ -166,12 +168,15 @@ std::vector<values::CpuNodeDefinition> valueNodes() {
 
     nodes.push_back(cpuNode("wh.value.color", "Color", "Value",
                             {valueOutput("out", "Out", PortType::Color)},
-                            {color("color", "Color", ColorRgba{1.0F, 1.0F, 1.0F, 1.0F})},
+                            {color("color", "Color", ColorRgba{1.0F, 1.0F, 1.0F, 1.0F}),
+                             number("hue", "Hue shift (turns)", 0.0), number("saturation", "Saturation", 1.0, 0.0, 1.0),
+                             number("brightness", "Brightness", 1.0, 0.0, 1.0)},
                             kernelFactory<ColorKernel>()));
+    nodes.push_back(colorRampNode());
 
     nodes.push_back(cpuNode(
         "wh.value.lfo", "LFO", "Value", {valueOutput("out", "Out", PortType::Scalar)},
-        {integer("shape", "Shape (0 sine, 1 triangle, 2 saw, 3 square)", 0, 0.0, 3.0),
+        {choice("shape", "Shape", {"Sine", "Triangle", "Saw", "Square"}),
          number("frequency", "Frequency (Hz)", 0.5, 0.0, 100.0), number("phase", "Phase", 0.0, 0.0, 1.0),
          number("min", "Min", 0.0), number("max", "Max", 1.0),
          number("frequencyMin", "Frequency slider min", 0.0), number("frequencyMax", "Frequency slider max", 5.0)},

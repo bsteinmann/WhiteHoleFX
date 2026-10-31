@@ -16,6 +16,7 @@ Ohne `WHITEHOLEFX_WEBGPU` zeigt das Fenster nur das Layout, rendern geht dann ni
 | Aktion | Taste |
 |---|---|
 | Neues Projekt (Vorlage: 16×8-Matrix mit Farbverlauf, Ausgabe auf den eigenen Rechner) | Strg+N |
+| „Matrix +“ oder „Strip +“ ohne geladenes Projekt | legt ein neues Projekt an, dessen erstes Fixture das gewünschte ist |
 | Projekt öffnen (auch per Drag & Drop einer `.whfx`-Datei) | Strg+O |
 | Speichern (ohne Dateinamen: fragt nach dem Namen) | Strg+S |
 | Neu laden (Datei hat sich geändert; läuft es, startet es danach wieder) | F5 |

@@ -26,6 +26,7 @@ add_executable(wh_tests
     compiler/snippet_expander_test.cpp
     nodes/builtin_nodes_test.cpp
     nodes/builtin_values_test.cpp
+    nodes/color_values_test.cpp
     nodes/value_integration_test.cpp
     engine/frame_clocks_test.cpp
     engine/latest_frame_mailbox_test.cpp

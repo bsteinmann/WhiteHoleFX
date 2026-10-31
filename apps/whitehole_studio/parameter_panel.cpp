@@ -4,6 +4,7 @@
 #include <QCheckBox>
 #include <QColor>
 #include <QColorDialog>
+#include <QComboBox>
 #include <QDoubleSpinBox>
 #include <QGridLayout>
 #include <QGroupBox>
@@ -183,7 +184,27 @@ Editor numberEditor(const runtime::ParameterInfo& info, const Commit& commit, QW
     return editor;
 }
 
+Editor choiceEditor(const runtime::ParameterInfo& info, const Commit& commit, QWidget* parent) {
+    auto* combo = new QComboBox{parent};
+    for (const std::string& label : info.choices) {
+        combo->addItem(QString::fromStdString(label));
+    }
+    QObject::connect(combo, &QComboBox::activated, combo,
+                     [=](int index) { commit(static_cast<std::int64_t>(index)); });
+    Editor editor;
+    editor.widget = combo;
+    editor.show = [=](const graph::ParameterValue& value) {
+        const QSignalBlocker block{combo};
+        combo->setCurrentIndex(static_cast<int>(std::get<std::int64_t>(value)));
+    };
+    editor.show(info.value);
+    return editor;
+}
+
 Editor integerEditor(const runtime::ParameterInfo& info, const Commit& commit, QWidget* parent) {
+    if (!info.choices.empty()) {
+        return choiceEditor(info, commit, parent);
+    }
     auto* spin = new QSpinBox{parent};
     const auto limit = [](std::optional<double> v, int fallback) {
         return v ? static_cast<int>(std::clamp(*v, -2e9, 2e9)) : fallback;

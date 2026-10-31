@@ -1,5 +1,21 @@
 # Änderungen
 
+## 0.7.0
+
+Aus den GitHub-Issues:
+
+- #7 Fixtures hinzufügen: Ohne geladenes Projekt (frisch gestartetes Studio) taten „Matrix +“ und
+  „Strip +“ stumm nichts. Jetzt legen sie ein neues Projekt an, dessen erstes Fixture das
+  gewünschte ist; der Startbildschirm nennt Strg+N
+- #8 LFO: Die Form ist ein Auswahlfeld (Sine, Triangle, Saw, Square). Allgemein gibt es jetzt
+  Ganzzahl-Parameter mit Namen (`ParameterDescriptor::choices`), die als Dropdown erscheinen; in der
+  Projektdatei bleibt es der Index
+- #9 Neuer Node „Symmetry“ (`wh.transform.symmetry`): Achse (X, Y, Z) und Seite als Auswahlfelder,
+  Lage der Linie einstellbar. Mirror kann das auch (mehrere Achsen, „Use other half“)
+- #10 Color: Der Node hat jetzt Eingänge für Farbton (`hue`), Sättigung und Helligkeit, die mit
+  LFO, Random, Time oder Number gesteuert werden können. Neuer Node „Color Ramp“
+  (`wh.value.colorramp`) überblendet zwischen 2 bis 4 Farben mit einer Zahl, auf Wunsch im Kreis
+
 ## 0.6.0
 
 - **Region-Node:** Der Node „Region“ (`wh.transform.region`) legt den Effekt eines Generators auf ein

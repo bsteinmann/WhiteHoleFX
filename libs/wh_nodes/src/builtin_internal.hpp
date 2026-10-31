@@ -62,6 +62,15 @@ inline graph::ParameterDescriptor integer(std::string key, std::string displayNa
                                       maxValue};
 }
 
+/// Auswahl aus benannten Möglichkeiten (Dropdown); gespeichert wird der Index als Ganzzahl.
+inline graph::ParameterDescriptor choice(std::string key, std::string displayName,
+                                         std::vector<std::string> labels, std::int64_t value = 0) {
+    graph::ParameterDescriptor descriptor{std::move(key), std::move(displayName), value, 0.0,
+                                          static_cast<double>(labels.empty() ? 0 : labels.size() - 1)};
+    descriptor.choices = std::move(labels);
+    return descriptor;
+}
+
 inline graph::ParameterDescriptor toggle(std::string key, std::string displayName, bool value) {
     return graph::ParameterDescriptor{std::move(key), std::move(displayName), value, std::nullopt,
                                       std::nullopt};
@@ -126,5 +135,11 @@ std::vector<compiler::NodeDefinition> generatorNodes();
 std::vector<compiler::NodeDefinition> transformNodes();
 std::vector<compiler::NodeDefinition> blendNodes();
 std::vector<values::CpuNodeDefinition> valueNodes();
+
+/// Farbton (in Umläufen, 0..1 wiederholt sich), Sättigung und Helligkeit einer Farbe ändern; bei
+/// 0 / 1 / 1 kommt die Farbe unverändert zurück. Alpha bleibt.
+ColorRgba adjustColor(const ColorRgba& color, double hueShift, double saturation, double brightness);
+/// Der Node "Color Ramp" (wh.value.colorramp): überblendet zwischen 2 bis 4 Farben.
+values::CpuNodeDefinition colorRampNode();
 
 }  // namespace whitehole::nodes::detail

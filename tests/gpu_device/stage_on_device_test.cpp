@@ -200,6 +200,58 @@ TEST_CASE("Canvas: Mirror faltet an der Mittellinie (untere oder obere Hälfte a
     }
 }
 
+TEST_CASE("Canvas: Symmetry spiegelt an der gewählten Achse, Seite und Achse sind Auswahlfelder", "[gpu_device][stage]") {
+    const std::unique_ptr<WebGpuDevice> device = makeDevice();
+    if (!device) {
+        SKIP("Kein WebGPU-Adapter verfügbar");
+    }
+    const auto render = [&](double angle, std::int64_t axis, std::int64_t half, Extent3 extent) {
+        Lab lab;
+        const NodeId gradient = lab.add("wh.generator.gradient");
+        lab.set(gradient, "angle", angle);
+        const NodeId symmetry = lab.add("wh.transform.symmetry");
+        lab.set(symmetry, "axis", axis);
+        lab.set(symmetry, "half", half);
+        lab.connect(gradient, "out", symmetry, "source");
+        executor::CanvasStageConfig config;
+        config.extent = extent;
+        config.format = TextureFormat::Rgba32Float;
+        config.target = graph::PortRef{symmetry, "out"};
+        auto created = executor::CanvasRenderStage::create(*device, lab.snippets, lab.kernels, config);
+        REQUIRE(created.ok());
+        REQUIRE(created.value()->setGraph(lab.graph).ok());
+        const std::vector<std::byte> bytes = renderCanvas(*device, *created.value(), config.extent, config.format, 0.0);
+        std::vector<float> red;
+        for (std::size_t i = 0; i < bytes.size() / 16; ++i) {
+            float rgba[4];
+            std::memcpy(rgba, bytes.data() + i * 16, sizeof rgba);
+            red.push_back(rgba[0]);
+        }
+        CHECK(device->takeErrors().empty());
+        return red;
+    };
+    // X-Achse: wie Mirror, untere oder obere Hälfte als Vorlage.
+    for (const std::int64_t half : {std::int64_t{0}, std::int64_t{1}}) {
+        const std::vector<float> row = render(0.0, 0, half, Extent3{16, 2, 1});
+        REQUIRE(row.size() == 32U);
+        for (std::uint32_t x = 0; x < 16; ++x) {
+            const float u = (static_cast<float>(x) + 0.5F) / 16.0F;
+            const float low = u < 0.5F ? u : 1.0F - u;
+            const float high = u < 0.5F ? 1.0F - u : u;
+            INFO("half=" << half << " x=" << x);
+            REQUIRE(std::abs(row[x] - (half == 1 ? high : low)) < 1e-3F);
+        }
+    }
+    // Y-Achse: ein Verlauf in y wird symmetrisch zur Mitte, ist aber nicht konstant.
+    const std::vector<float> column = render(90.0, 1, 0, Extent3{2, 16, 1});
+    REQUIRE(column.size() == 32U);
+    for (std::uint32_t y = 0; y < 16; ++y) {
+        INFO("y=" << y);
+        CHECK(std::abs(column[std::size_t{y} * 2] - column[std::size_t{15 - y} * 2]) < 1e-3F);
+    }
+    CHECK(std::abs(column[0] - column[16]) > 0.2F);
+}
+
 TEST_CASE("Canvas: Region legt den Effekt auf ein Rechteck, außerhalb ist es durchsichtig", "[gpu_device][stage]") {
     const std::unique_ptr<WebGpuDevice> device = makeDevice();
     if (!device) {

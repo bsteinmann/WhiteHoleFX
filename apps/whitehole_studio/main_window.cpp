@@ -83,6 +83,7 @@ MainWindow::MainWindow(gpu::IGpuDevice* device, const QString& deviceNote, QWidg
 
     layoutPanel_ = new LayoutPanel{*player_, this};
     connect(layoutPanel_, &LayoutPanel::edited, this, &MainWindow::onLayoutEdited);
+    connect(layoutPanel_, &LayoutPanel::projectNeeded, this, [this]() { newProject(false); });
     connect(layoutPanel_, &LayoutPanel::failed, this,
             [this](const QString& message) { statusBar()->showMessage(message, 8000); });
     previewController_ = new PreviewController{*player_, preview_, layoutPanel_, this};
@@ -119,7 +120,7 @@ MainWindow::MainWindow(gpu::IGpuDevice* device, const QString& deviceNote, QWidg
     connect(&statusTimer_, &QTimer::timeout, this, &MainWindow::updateStatus);
     statusTimer_.start();
 
-    preview_->setMessage(tr("Projekt öffnen (Strg+O) oder eine .whfx-Datei hierher ziehen.\n\n%1").arg(deviceNote_));
+    preview_->setMessage(tr("Neues Projekt (Strg+N), Projekt öffnen (Strg+O) oder eine .whfx-Datei hierher ziehen.\n\n%1").arg(deviceNote_));
     updateActions();
     updateStatus();
 }

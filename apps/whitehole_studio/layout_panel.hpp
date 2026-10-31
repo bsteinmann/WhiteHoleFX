@@ -50,6 +50,9 @@ public:
 Q_SIGNALS:
     void edited();
     void failed(const QString& message);
+    /// Es ist noch kein Projekt geladen, der Nutzer will aber ein Fixture anlegen: das Hauptfenster
+    /// soll ein neues Projekt anlegen (direkt verbundenes Signal, danach ist `player_.project()` gesetzt).
+    void projectNeeded();
     /// Der Nutzer hat in der Liste eine andere Auswahl getroffen.
     void selectionChanged();
 

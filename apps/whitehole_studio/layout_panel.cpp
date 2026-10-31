@@ -11,6 +11,7 @@
 #include <algorithm>
 #include <cmath>
 #include <functional>
+#include <optional>
 
 namespace whitehole::studio {
 
@@ -248,8 +249,16 @@ Vec3 LayoutPanel::nextOrigin() const {
 }
 
 void LayoutPanel::addFixture(const QString& baseName, mapping::FixtureShape shape) {
+    // Ohne Projekt (Studio frisch gestartet) legt das Hauptfenster ein neues an. Dessen Vorlagen-
+    // Matrix wird danach wieder entfernt, damit nur das Fixture übrig bleibt, das der Nutzer wollte.
+    std::optional<mapping::FixtureId> template_;
     if (player_.project() == nullptr) {
-        return;
+        Q_EMIT projectNeeded();
+        if (player_.project() == nullptr || player_.project()->layout.fixtures().empty()) {
+            Q_EMIT failed(tr("Es ist kein Projekt geladen. Mit Strg+N ein neues anlegen oder mit Strg+O eins öffnen."));
+            return;
+        }
+        template_ = player_.project()->layout.fixtures().front().id;
     }
     const std::uint64_t leds = mapping::ledCount(shape);
     const auto id = player_.addFixture(uniqueName(baseName).toUtf8().toStdString(), nextOrigin(), std::move(shape),
@@ -257,6 +266,19 @@ void LayoutPanel::addFixture(const QString& baseName, mapping::FixtureShape shap
     if (!id.ok()) {
         Q_EMIT failed(fromStd(id.error().message));
         return;
+    }
+    if (template_) {
+        // Das neue Fixture rückt an die Stelle der Vorlage: Ursprung 0 und erstes freies Universe.
+        Result<void> r = player_.removeFixture(*template_);
+        if (r.ok()) {
+            r = player_.moveFixture(id.value(), Vec3{});
+        }
+        if (r.ok()) {
+            r = player_.setPatch(id.value(), player_.suggestPatch(leds));
+        }
+        if (!r.ok()) {
+            Q_EMIT failed(fromStd(r.error().message));
+        }
     }
     fillList(id.value());
     Q_EMIT edited();

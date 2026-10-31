@@ -40,6 +40,9 @@ struct ParameterDescriptor {
     ParameterValue defaultValue;
     std::optional<double> minValue;
     std::optional<double> maxValue;
+    /// Bei einer Ganzzahl: Namen der Auswahlmöglichkeiten, der Wert ist der Index (0 = erster Name).
+    /// Die Oberfläche zeigt dann ein Auswahlfeld statt einer Zahl. Leer = gewöhnliche Zahl.
+    std::vector<std::string> choices{};
 };
 
 struct NodeDescriptor {

@@ -126,6 +126,28 @@ TEST_CASE("Player: Node entfernen löst seine Verbindungen", "[player][edit]") {
     CHECK(rig.connections() == 0);
 }
 
+TEST_CASE("Player: eine Auswahl-Ganzzahl meldet ihre Namen (LFO-Form als Dropdown)", "[player][edit]") {
+    Rig rig;
+    bool found = false;
+    for (const runtime::NodeInfo& node : rig.player.nodes()) {
+        if (node.typeId != "wh.value.lfo") {
+            continue;
+        }
+        for (const runtime::ParameterInfo& parameter : node.parameters) {
+            if (parameter.key == "shape") {
+                found = true;
+                REQUIRE(parameter.choices.size() == 4);
+                CHECK(parameter.choices.front() == "Sine");
+                CHECK(parameter.choices.back() == "Square");
+                CHECK(parameter.maxValue == 3.0);
+            } else {
+                CHECK(parameter.choices.empty());
+            }
+        }
+    }
+    CHECK(found);
+}
+
 TEST_CASE("Player: verbinden ersetzt einen belegten Eingang", "[player][edit]") {
     Rig rig;
     const NodeId lfo = rig.id("wh.value.lfo");
