@@ -257,22 +257,22 @@ jobs:
           path: fenster-*.png
 
   linux-package:
-    name: Linux-Paket (.deb für Ubuntu 24.04, Installationstest in sauberem Container)
-    runs-on: ubuntu-24.04
+    name: Linux-Paket (.deb, gebaut auf Ubuntu 22.04, Installationstest in 22.04 und 24.04)
+    runs-on: ubuntu-22.04
     continue-on-error: true
     steps:
       - uses: actions/checkout@v5
       - name: Bauwerkzeuge, Qt und desktop-file-utils installieren
         run: |
           sudo apt-get update
-          sudo apt-get install -y qt6-base-dev libgl1-mesa-dev libxkbcommon-dev dpkg-dev \
+          sudo apt-get install -y g++-12 qt6-base-dev libgl1-mesa-dev libxkbcommon-dev dpkg-dev \
             desktop-file-utils shared-mime-info libxml2-utils unzip curl
       - name: wgpu-native laden
         run: scripts/fetch-wgpu-native.sh
       - name: Konfigurieren (Release, Präfix /usr)
         run: >
           cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr
-          -DWHITEHOLEFX_BUILD_STUDIO=ON -DWHITEHOLEFX_WEBGPU=ON -DWHITEHOLEFX_BUILD_TESTS=OFF
+          -DCMAKE_CXX_COMPILER=g++-12 -DCMAKE_C_COMPILER=gcc-12 -DWHITEHOLEFX_BUILD_STUDIO=ON -DWHITEHOLEFX_WEBGPU=ON -DWHITEHOLEFX_BUILD_TESTS=OFF
           -DWGPU_NATIVE_ROOT="$PWD/third_party/wgpu-native"
       - name: Bauen
         run: cmake --build build --parallel
@@ -301,10 +301,12 @@ jobs:
           msg=$(printf '%s\n%s\n' "$info" "$files" | sed 's/%/%25/g' | awk '{printf "%s%%0A", $0}')
           echo "::notice title=Paket::${msg}"
           echo "$info"; echo "$files"
-      - name: Installationstest in sauberem Ubuntu 24.04 (Abhängigkeiten, Start, Rauchtest)
+      - name: Installationstest in sauberem Ubuntu 22.04 und 24.04 (Abhängigkeiten, Start, Rauchtest)
         run: |
           set +e
-          out=$(docker run --rm -v "$PWD/dist:/dist:ro" -e QT_QPA_PLATFORM=offscreen ubuntu:24.04 bash -c '
+          fail=0
+          for img in ubuntu:22.04 ubuntu:24.04; do
+          out=$(docker run --rm -v "$PWD/dist:/dist:ro" -e QT_QPA_PLATFORM=offscreen $img bash -c '
             set -e
             export DEBIAN_FRONTEND=noninteractive
             apt-get update -qq
@@ -321,8 +323,9 @@ jobs:
           code=$?
           echo "$out"
           msg=$(echo "$out" | tail -45 | sed 's/%/%25/g' | awk '{printf "%s%%0A", $0}')
-          if [ "$code" != "0" ]; then echo "::error title=Installationstest fehlgeschlagen::${msg}"; else echo "::notice title=Installationstest::${msg}"; fi
-          exit $code
+          if [ "$code" != "0" ]; then echo "::error title=Installationstest fehlgeschlagen in $img::${msg}"; fail=1; else echo "::notice title=Installationstest $img::${msg}"; fi
+          done
+          exit $fail
       - name: Paket bereitstellen
         uses: actions/upload-artifact@v4
         with:
