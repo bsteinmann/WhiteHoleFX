@@ -1,0 +1,53 @@
+whitehole-project 1
+# Beispiel für Clock, Sequencer und Envelope: ein Plasma, das im Takt aufleuchtet.
+#
+# So ausprobieren:
+#   whitehole_studio examples/takt.whfx --run
+#
+# Aufbau: Die Clock gibt 120 Schläge pro Minute als Tick. Der Sequencer schaltet bei jedem Tick einen
+# Schritt weiter; sein Ausgang `hit` feuert nur bei Schritten mit einem Wert über 0 (hier: 1, 0, 0.5, 0 -
+# also bei jedem zweiten Schlag). Die Envelope im Modus One-shot macht aus jedem Hit ein kurzes
+# Aufleuchten mit Ausklingen und steuert die Helligkeit. Tempo ändern: `bpm` an der Clock, oder dort
+# den Ausgang von Tap Tempo (`bpm`) anschließen.
+
+settings fps 40
+
+destination 0 127.0.0.1
+
+fixture Wand
+  matrix 32 16 serpentine
+  patch artnet destination 0 universe 0
+end
+
+node plasma wh.generator.plasma
+  set scale 3
+end
+node hell wh.modifier.coloradjust
+  set brightness 0.15
+end
+node takt wh.value.clock
+  set bpm 120
+end
+node muster wh.value.sequencer
+  set steps 4
+  set step1 1
+  set step2 0
+  set step3 0.5
+  set step4 0
+end
+node blitz wh.value.envelope
+  set mode 1
+  set attack 0.02
+  set release 0.35
+end
+node skala wh.value.map
+  set outMin 0.15
+  set outMax 1
+end
+
+connect plasma.out -> hell.source
+connect takt.tick -> muster.advance
+connect muster.hit -> blitz.gate
+connect blitz.out -> skala.value
+connect skala.out -> hell.brightness
+output hell.out

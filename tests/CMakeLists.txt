@@ -37,6 +37,7 @@ add_executable(wh_tests
     nodes/builtin_nodes_test.cpp
     nodes/example_projects_test.cpp
     nodes/text_node_test.cpp
+    nodes/sequence_nodes_test.cpp
     nodes/builtin_values_test.cpp
     nodes/color_values_test.cpp
     nodes/value_integration_test.cpp

@@ -76,18 +76,6 @@ public:
     }
 };
 
-// SplitMix64-artiger Hash auf [0,1): plattformunabhängig und ohne <random>.
-double hashToUnit(std::int64_t index, std::int64_t seed) {
-    std::uint64_t x = static_cast<std::uint64_t>(index) * 0x9E3779B97F4A7C15ULL +
-                      static_cast<std::uint64_t>(seed) * 0xBF58476D1CE4E5B9ULL + 0x94D049BB133111EBULL;
-    x ^= x >> 30U;
-    x *= 0xBF58476D1CE4E5B9ULL;
-    x ^= x >> 27U;
-    x *= 0x94D049BB133111EBULL;
-    x ^= x >> 31U;
-    return static_cast<double>(x >> 11U) * (1.0 / 9007199254740992.0);  // 2^53
-}
-
 // Neuer Zufallswert `rate`-mal pro Sekunde; dazwischen weich überblendet oder gehalten.
 class RandomKernel final : public values::ICpuKernel {
 public:

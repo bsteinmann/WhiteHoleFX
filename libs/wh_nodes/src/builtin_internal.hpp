@@ -27,6 +27,43 @@ inline graph::PortDescriptor fieldInput(std::string key, std::string displayName
                                  graph::PortDirection::Input, true};
 }
 
+// SplitMix64-artiger Hash auf [0,1): plattformunabhängig und ohne <random>.
+inline double hashToUnit(std::int64_t index, std::int64_t seed) {
+    std::uint64_t x = static_cast<std::uint64_t>(index) * 0x9E3779B97F4A7C15ULL +
+                      static_cast<std::uint64_t>(seed) * 0xBF58476D1CE4E5B9ULL + 0x94D049BB133111EBULL;
+    x ^= x >> 30U;
+    x *= 0xBF58476D1CE4E5B9ULL;
+    x ^= x >> 27U;
+    x *= 0x94D049BB133111EBULL;
+    x ^= x >> 31U;
+    return static_cast<double>(x >> 11U) * (1.0 / 9007199254740992.0);  // 2^53
+}
+
+/// Merkt sich den letzten Zustand eines Schalters (Boolean oder Trigger) und meldet Flanken.
+/// Der erste Aufruf zählt normalerweise nie als Flanke, nur als Ausgangszustand (ein beim Laden schon
+/// eingeschalteter Schalter soll nichts auslösen). Mit `startsLow` gilt dagegen "vorher war aus": ein
+/// schon anliegendes Signal ist dann eine steigende Flanke (so soll sich ein Gate verhalten).
+class EdgeDetector {
+public:
+    explicit EdgeDetector(bool startsLow = false) noexcept : initialized_(startsLow) {}
+
+    /// Neuer Zustand; danach sagen rose() und fell(), ob gerade eine Flanke passiert ist.
+    void update(bool now) noexcept {
+        rose_ = initialized_ && now && !previous_;
+        fell_ = initialized_ && !now && previous_;
+        previous_ = now;
+        initialized_ = true;
+    }
+    [[nodiscard]] bool rose() const noexcept { return rose_; }
+    [[nodiscard]] bool fell() const noexcept { return fell_; }
+
+private:
+    bool initialized_;
+    bool previous_{false};
+    bool rose_{false};
+    bool fell_{false};
+};
+
 /// Der aktuelle Audio-Frame, wenn Signal da ist (nichts geschrieben oder älter als eine halbe Sekunde
 /// zählt als "kein Signal"). Gemeinsam für alle Nodes, die aus dem AudioStore lesen.
 inline std::optional<audio::AudioFrame> freshAudioFrame(const audio::AudioStore& store) {
@@ -153,6 +190,8 @@ std::vector<compiler::NodeDefinition> warpNodes();  // Kaleidoscope, Tunnel, Vor
 std::vector<compiler::NodeDefinition> blendNodes();
 std::vector<compiler::NodeDefinition> modifierNodes();  // Modifier und Ausgang
 std::vector<values::CpuNodeDefinition> valueNodes();
+std::vector<values::CpuNodeDefinition> mathNodes();      // Math, Compare
+std::vector<values::CpuNodeDefinition> sequenceNodes();  // Envelope, Sequencer, Clock
 std::vector<values::CpuNodeDefinition> audioNodes(std::shared_ptr<audio::AudioStore> store);  // Pegel, Band, Spektrum, Beat, Tap
 std::vector<values::CpuNodeDefinition> audioWaveNodes(std::shared_ptr<audio::AudioStore> store);  // Audio Waveform
 std::vector<compiler::NodeDefinition> audioFieldNodes();  // Spectrum Bars

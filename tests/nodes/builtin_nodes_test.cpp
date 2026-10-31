@@ -68,7 +68,8 @@ TEST_CASE("Built-ins: alle Nodes werden samt Snippet beziehungsweise Kernel regi
                                             "wh.value.smooth", "wh.value.colorramp", "wh.value.dmx",
                                             "wh.value.dmxcolor", "wh.value.audiolevel", "wh.value.audioband",
                                             "wh.value.audiospectrum", "wh.value.beat", "wh.value.tap",
-                                            "wh.value.audiowave"};
+                                            "wh.value.audiowave", "wh.value.math", "wh.value.compare",
+                                            "wh.value.clock", "wh.value.envelope", "wh.value.sequencer"};
 
     std::set<std::string> field;
     std::set<std::string> cpu;

@@ -9,6 +9,8 @@ wh_add_library(wh_nodes
         src/builtin_blends.cpp
         src/builtin_generators.cpp
         src/builtin_library.cpp
+        src/builtin_math.cpp
+        src/builtin_sequence.cpp
         src/builtin_modifiers.cpp
         src/builtin_shapes.cpp
         src/builtin_sparks.cpp

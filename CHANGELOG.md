@@ -1,5 +1,16 @@
 # Änderungen
 
+## 0.20.0
+
+- **Neue Werte-Nodes** (Kategorie „Value“): `Math` (Add, Subtract, Multiply, Divide, Min, Max, Power, Modulo, Absolute,
+  Quantize, Sine; Fehlerfälle wie Teilen durch 0 liefern 0 statt NaN), `Compare` (Schwelle mit Hysterese, Modus
+  Above/Below, Ausgänge `out`, `rise`, `fall`), `Clock` (Tempo × Verhältnis 1/8 bis 8x, `tick`, `phase`, `count`,
+  Stopp und Reset; die Phase wird aufsummiert und springt bei Tempowechsel nicht), `Envelope` (ADSR mit linearen
+  Flanken, Retrigger vom aktuellen Pegel, Modus One-shot macht aus einem Trigger Anschlag und Ausklingen) und
+  `Sequencer` (bis 8 Schritte, Richtung vorwärts/rückwärts/hin und her/zufällig, `value`, `step`, `trigger`, `hit`).
+- **Zusammenspiel:** Clock.tick → Sequencer.advance → Envelope.gate → Helligkeit; Beispiel: `examples/takt.whfx`.
+- **Intern:** `EdgeDetector` für Flanken, `hashToUnit` jetzt für alle Nodes gemeinsam (builtin_internal.hpp).
+
 ## 0.19.0
 
 - **Neue Transformationen:** `Kaleidoscope` (Keile mit Spiegelung, Drehung, Zoom), `Tunnel` (Winkel und Tiefe als

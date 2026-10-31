@@ -163,6 +163,20 @@ laufen immer. Ein vergessener, unverbundener Node kostet nichts.
 
 | `wh.value.audiolevel`, `audioband`, `audiospectrum`, `audiowave`, `beat`, `tap` | siehe [Audio](audio.md) | | Audio-Eingang (Kategorie „Audio“): Pegel, Frequenzband, Spektrum, Wellenform, Beat und Tap Tempo |
 
+### Rechnen, Takt und Abläufe
+
+Diese fünf Nodes (Kategorie „Value“) machen aus einzelnen Werten ein spielbares Zusammenspiel. Schalter-Eingänge
+(`gate`, `advance`, `reset`) reagieren auf die **steigende Flanke**; ein Trigger ist einen Frame lang an und
+lässt sich deshalb direkt anschließen (Trigger → Boolean ist erlaubt).
+
+| Typ | Ausgang | Parameter | Hinweis |
+|---|---|---|---|
+| `wh.value.math` | `out` | `op`, `a`, `b` | 0 Add, 1 Subtract, 2 Multiply, 3 Divide, 4 Min, 5 Max, 6 Power, 7 Modulo (Vorzeichen von B), 8 Absolute von A, 9 Quantize (A auf Vielfache von B), 10 Sine (A in Umdrehungen mal B). Alles, was keine Zahl wäre, wird 0 |
+| `wh.value.compare` | `out` (Boolean), `rise`, `fall` (Trigger) | `value`, `threshold`, `hysteresis`, `mode` (0 Above, 1 Below) | An über Schwelle + Hysterese/2, aus unter Schwelle − Hysterese/2; im ersten Frame keine Flanke |
+| `wh.value.clock` | `tick` (Trigger), `phase` (0..1), `count` | `bpm`, `ratio` (0 = 1/8 … 3 = 1x … 6 = 8x), `running`, `reset` | `bpm` ist modulierbar (zum Beispiel von Tap Tempo). Pro Frame höchstens ein Tick |
+| `wh.value.envelope` | `out`, `active` (Boolean) | `gate`, `mode` (0 ADSR, 1 One-shot), `attack`, `decay`, `sustain`, `release` | Zeiten gelten für den vollen Hub 0 → 1; Zeit 0 springt sofort. Ein schon beim Start anliegendes Gate startet den Anschlag |
+| `wh.value.sequencer` | `value`, `step` (Integer), `trigger`, `hit` | `advance`, `reset`, `steps` (1–8), `direction` (0 vorwärts, 1 rückwärts, 2 hin und her, 3 zufällig), `seed`, `step1`–`step8` (0..1) | `trigger` bei jedem Weiterschalten, `hit` nur bei Schritten mit Wert über 0. Rückwärts beginnt am letzten Schritt. Mit `Map` auf einen anderen Bereich umrechnen |
+
 ### DMX-Eingang
 
 Die beiden DMX-Nodes (Kategorie „Input“) lesen Kanalwerte, die per Art-Net oder sACN ins Studio kommen,
