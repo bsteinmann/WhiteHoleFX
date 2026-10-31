@@ -1,5 +1,19 @@
 # Änderungen
 
+## 0.21.0
+
+- **Looks:** Ein fertiger Effekt (Generator, Modifier bis zum Ausgang) lässt sich als Look in einer Liste speichern, mit
+  Überblendzeit, und steht mit dem Projekt in der Datei (`look "Name" fade 3` ... `endlook`). Dock „Looks“: speichern,
+  überschreiben, in den Editor laden, umbenennen, ordnen, löschen.
+- **Live-Modus (F9):** große Look-Knöpfe, Tasten 1 bis 9, Überblendung zwischen zwei Decks, optional „Mit GO“ (vorladen,
+  dann Leertaste), eigene Überblendzeit, Fortschrittsbalken; Master und Blackout bleiben erreichbar.
+- **Node-Palette:** Fenster mit allen Node-Typen nach Kategorien mit Suche; Nodes per Drag & Drop hinzufügen, durch
+  Ziehen auf die Palette entfernen.
+- **Leistung:** Änderungen reiner Zahlenwerte (Regler, Überblendung, Value-Nodes) übersetzen den Shader nicht mehr neu
+  (`FieldPass::setParameters`); nur Struktur- und Textänderungen bauen die Pipeline neu.
+- **Tests:** Parser/Writer-Rundlauf mit Looks, Deck-Überblendung, Player im Live-Betrieb, Parameter-Schnellweg;
+  ASan/UBSan ohne Befund im eigenen Code. Neue Rauchtests für Palette und Live-Modus (nur in der CI mit Qt geprüft).
+
 ## 0.20.0
 
 - **Neue Werte-Nodes** (Kategorie „Value“): `Math` (Add, Subtract, Multiply, Divide, Min, Max, Power, Modulo, Absolute,

@@ -66,6 +66,8 @@ public:
 
     /// Siehe FieldPass::setGraph.
     Result<void> setGraph(const graph::Graph& graph) { return pass_->setGraph(graph); }
+    /// Siehe FieldPass::setParameters (nur Werte geändert, kein Neuübersetzen).
+    Result<void> setParameters(const graph::Graph& graph) { return pass_->setParameters(graph); }
 
     void record(const FrameTime& time, gpu::ICommandRecorder& recorder) override;
 

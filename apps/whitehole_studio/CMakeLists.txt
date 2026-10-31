@@ -19,11 +19,18 @@ add_executable(whitehole_studio
     main_window_audio.cpp
     main_window_controls.cpp
     main_window_dmx.cpp
+    main_window_editor.cpp
+    main_window_live.cpp
+    live_panel.cpp
+    live_panel.hpp
+    look_panel.cpp
+    look_panel.hpp
     main_window_exercise.cpp
     main_window_file.cpp
     main_window.hpp
     node_editor.cpp
     node_editor_clipboard.cpp
+    node_editor_drag.cpp
     node_editor_edit.cpp
     node_editor_exercise.cpp
     node_editor.hpp
@@ -31,6 +38,8 @@ add_executable(whitehole_studio
     node_editor_presets.cpp
     node_editor_search.cpp
     node_items.cpp
+    node_palette.cpp
+    node_palette.hpp
     node_search.hpp
     node_items.hpp
     output_form.cpp

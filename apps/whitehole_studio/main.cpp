@@ -123,7 +123,11 @@ int main(int argc, char** argv) {
         std::printf("DMX-Eingang: %s\n", dmx.isEmpty() ? "ok" : "FEHLER");
         const QString audio = dmx.isEmpty() ? window.exerciseAudio() : QString{};
         std::printf("Audio-Eingang: %s\n", audio.isEmpty() ? "ok" : "FEHLER");
-        for (const QString& failure : {selection, created, transparency, controls, dmx, audio}) {
+        const QString palette = audio.isEmpty() ? window.exercisePalette() : QString{};
+        std::printf("Node-Palette: %s\n", palette.isEmpty() ? "ok" : "FEHLER");
+        const QString live = palette.isEmpty() ? window.exerciseLive() : QString{};
+        std::printf("Looks/Live: %s\n", live.isEmpty() ? "ok" : "FEHLER");
+        for (const QString& failure : {selection, created, transparency, controls, dmx, audio, palette, live}) {
             if (!failure.isEmpty()) {
                 std::fprintf(stderr, "Rauchtest fehlgeschlagen: %s\n", failure.toUtf8().constData());
                 return 1;

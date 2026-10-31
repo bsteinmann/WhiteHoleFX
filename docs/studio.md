@@ -103,10 +103,10 @@ stehen nicht im Node, sondern im Dock „Parameter“; beide benutzen dieselbe N
 
 | Aktion | Bedienung |
 |---|---|
-| Node hinzufügen | Rechtsklick auf freie Fläche, Menü nach Kategorien; schneller: Strg+Leertaste, tippen („rain“, „mix“, „blend add“), Pfeiltasten, Enter. Der Node entsteht an der Maus |
+| Node hinzufügen | aus der **Palette** links im Dock ziehen oder doppelklicken (siehe unten); Rechtsklick auf freie Fläche, Menü nach Kategorien; schneller: Strg+Leertaste, tippen („rain“, „mix“, „blend add“), Pfeiltasten, Enter. Der Node entsteht an der Maus |
 | Node verschieben | ziehen; die Lage wird in der Projektdatei gespeichert (`at`) |
 | verbinden | von einem Port zu einem passenden anderen ziehen (in beide Richtungen); ein belegter Eingang wird ersetzt |
-| löschen | anklicken (Strg oder Rahmen für mehrere), Entf; oder Rechtsklick |
+| löschen | anklicken (Strg oder Rahmen für mehrere), Entf; oder Rechtsklick; oder den Node auf die Palette ziehen und loslassen (sie färbt sich rot) |
 | kopieren, einfügen, duplizieren | Strg+C, Strg+V (an der Mausposition), Strg+D; auch im Rechtsklick-Menü. Kabel zwischen den ausgewählten Nodes kommen mit, Kabel nach draußen nicht. Die Kopie ist danach ausgewählt, ein Schritt Rückgängig nimmt sie komplett zurück |
 | Ausgang wählen | Rechtsklick auf einen Field-Ausgang, „Als Ausgang setzen“; der Node ist dann orange umrandet |
 | Ausgangs-Node | Node „Output“ (Kategorie Output) einfügen: er wird automatisch zum Ausgang und hängt sich hinter den bisherigen. Mit Rechteck bespielt er nur einen Teil der Leinwand |
@@ -180,6 +180,46 @@ Mitte verschiebt das Rechteck, Pfeiltasten schieben es um 1 % (Umschalt 10 %), s
 gewählt ist. Die Regler Left, Top, Width und Height im Parameter-Panel ziehen mit. Während des
 Ziehens bleibt der Bildausschnitt stehen, danach passt er sich wieder an. Jede Ziehbewegung ist ein
 Schritt für Rückgängig.
+
+### Node-Palette
+
+Links im Dock „Nodes“ steht die Palette: alle verfügbaren Node-Typen nach Kategorien (Generator, Modifier,
+Value, Audio ...), oben ein Suchfeld. Getippt wird nach Name, Kategorie und Typ-ID, jedes Wort muss passen
+(„blend add“). Ein Typ lässt sich in den Editor **ziehen** (er entsteht unter der Maus) oder per Doppelklick
+oder Enter in die Mitte der Ansicht legen. Zum **Entfernen** ziehst du einen Node im Editor auf die
+Palette; sie wird rot, beim Loslassen ist der Node (samt Kabeln) weg. Alles ist ein Schritt Rückgängig.
+Neue Node-Typen erscheinen automatisch, die Palette liest die Registrierung.
+
+## Looks und Live-Betrieb
+
+Ein **Look** ist ein fertiger Effekt: alles, was am Ausgang hängt (vom Generator über die Modifier bis zum
+Ausgangs-Node). Looks stehen in der Projektdatei (`look ... endlook`, siehe [Projektdatei](project-format.md)).
+
+**Dock „Looks“ (zum Bearbeiten):**
+
+- *Aktuellen Effekt als Look speichern ...* legt einen Look an; ein gleichnamiger wird nach Rückfrage ersetzt.
+- Die Liste zeigt Nummer, Name und Überblendzeit. Darunter: Überblendzeit einstellen (0 = hart),
+  mit aktuellem Effekt überschreiben, **in den Editor laden** (auch Doppelklick; ein Schritt Rückgängig),
+  umbenennen, löschen, nach oben/unten.
+- Gespeichert wird mit dem Projekt (Strg+S).
+
+**Live-Modus (F9 oder Menü Live):** versteckt Editor, Parameter, Layout und Testmodus und zeigt für jeden Look
+einen großen Knopf. Master und Blackout (Strg+B) bleiben in der Leiste.
+
+| Bedienung | Wirkung |
+|---|---|
+| Klick auf einen Look oder Taste 1 bis 9 | blendet in der Zeit des Looks zu ihm über |
+| Kästchen „Eigene Überblendzeit“ | gilt für alle Klicks statt der Zeit des Looks (0 = hart) |
+| Kästchen „Mit GO“ | ein Klick lädt den Look nur vor (orange); GO oder Leertaste startet die Überblendung |
+| Esc oder „Zurück zum Editor“ | beendet den Live-Modus |
+
+Farben: grün läuft, orange vorgeladen, gelb blendet gerade ein. Ein Balken zeigt den Fortschritt.
+
+Technik: Zwei Decks und ein Crossfade. Beim **Vorladen** wird der Look ins verdeckte Deck kopiert; wenn
+sich dadurch die Struktur ändert, entsteht einmal eine neue Shader-Pipeline, das kann einen kurzen Ruckler
+geben. Der **Fade selbst** ändert nur einen Zahlenwert und läuft ohne Neuübersetzung. Wer es auf der Bühne
+ruckelfrei braucht, nutzt „Mit GO“ und lädt vorher. Der Editor-Graph ruht im Live-Betrieb; Rückgängig ist
+gesperrt. Ein Projekt zu laden beendet den Live-Modus.
 
 ## Master, Blackout, LED-Info, Zuletzt geöffnet
 

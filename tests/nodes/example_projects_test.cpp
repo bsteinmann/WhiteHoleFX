@@ -55,3 +55,27 @@ TEST_CASE("Beispiel: examples/kaleidoskop.whfx lädt und kompiliert", "[examples
 TEST_CASE("Beispiel: examples/oszilloskop.whfx lädt und kompiliert", "[examples][nodes]") {
     checkExample("oszilloskop.whfx", "wh_scope_dist");
 }
+
+TEST_CASE("Beispiel: examples/looks.whfx hat drei Looks, die alle kompilieren", "[examples][nodes][looks]") {
+    const auto path = std::filesystem::path{__FILE__}.parent_path().parent_path().parent_path() / "examples" / "looks.whfx";
+    const auto text = project::readTextFile(path.string());
+    REQUIRE(text.ok());
+    Lab lab;
+    auto parsed = project::parseProject(text.value(), lab.registry);
+    REQUIRE(parsed.ok());
+    const auto& looks = parsed.value().looks;
+    REQUIRE(looks.size() == 3);
+    CHECK(looks[0].name == "Plasma");
+    CHECK(looks[1].name == "Regen");
+    CHECK(looks[2].fadeSeconds == 1.5);
+    for (const project::Look& look : looks) {
+        const auto compiled = compiler::compileField(look.graph, lab.snippets, look.target);
+        CHECK(compiled.ok());
+    }
+    // Schreiben und wieder Lesen verliert nichts
+    const auto written = project::writeProject(parsed.value());
+    REQUIRE(written.ok());
+    auto again = project::parseProject(written.value(), lab.registry);
+    REQUIRE(again.ok());
+    CHECK(again.value().looks.size() == 3);
+}

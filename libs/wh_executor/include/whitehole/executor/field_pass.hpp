@@ -75,6 +75,12 @@ public:
     /// Bei einem Fehler bleibt der bisherige Zustand bestehen.
     Result<void> setGraph(const graph::Graph& graph);
 
+    /// Schnellweg für den Fall, dass sich nur Parameterwerte geändert haben (Regler, Überblendung): übernimmt
+    /// die Werte, ohne den Graphen neu zu übersetzen. Der Aufrufer muss sicher sein, dass sich weder Nodes
+    /// noch Kabel noch Textparameter geändert haben; im Zweifel setGraph() benutzen. Ohne bisherigen
+    /// erfolgreichen setGraph() fällt es auf diesen zurück.
+    Result<void> setParameters(const graph::Graph& graph);
+
     /// Wertet aus, lädt hoch und zeichnet den Dispatch auf. `consumerBindings` kommen
     /// zu den beiden Bindungen der Feldbibliothek (Gruppe 0) hinzu.
     /// Liefert true, wenn ein Dispatch aufgezeichnet wurde.

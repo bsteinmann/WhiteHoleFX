@@ -11,6 +11,7 @@
 #include <QTimer>
 
 #include <memory>
+#include <vector>
 
 #include "whitehole/audio/audio_input.hpp"
 #include "whitehole/input/dmx_receiver.hpp"
@@ -29,7 +30,10 @@ class QSlider;
 namespace whitehole::studio {
 
 class LayoutPanel;
+class LivePanel;
+class LookPanel;
 class NodeEditor;
+class NodePalette;
 class ParameterPanel;
 class PreviewController;
 class PreviewWidget;
@@ -77,6 +81,14 @@ public:
     QString exerciseDmx();
     /// Rauchtest: eine WAV-Datei als Audioquelle wählen; Frames kommen im Speicher an; ausschalten.
     QString exerciseAudio();
+    /// Rauchtest: Node-Palette (Filter, Ablegen, Doppelklick, Rückgängig).
+    QString exercisePalette();
+    /// Rauchtest: Looks speichern/ordnen/umbenennen, Live-Modus mit Überblendung, GO und Rückkehr.
+    QString exerciseLive();
+    /// Live-Modus ein- und ausschalten (F9). Eintritt scheitert ohne Looks.
+    bool enterLive(int first = 0);
+    void leaveLive();
+    [[nodiscard]] bool liveMode() const noexcept { return liveMode_; }
 
 protected:
     void dragEnterEvent(QDragEnterEvent* event) override;
@@ -85,6 +97,13 @@ protected:
 
 private:
     void buildActions();
+    /// Looks und Live-Betrieb (main_window_live.cpp).
+    void buildLive();
+    void resetLive();
+    void hideEditDocks();  // Live-Modus: Editor-Docks verstecken ...
+    void showEditDocks();  // ... und danach wieder zeigen
+    /// Dock "Nodes": Palette und Node-Editor (main_window_editor.cpp).
+    void buildEditorDock();
     /// Füllt das Menü "Beispiele" aus den Ordnern neben dem Programm; leer, wenn es keine gibt.
     void fillExamplesMenu(QMenu* menu);
     void updateActions();
@@ -151,12 +170,20 @@ private:
     PreviewController* previewController_{nullptr};
     ParameterPanel* parameters_{nullptr};
     NodeEditor* editor_{nullptr};
+    NodePalette* palette_{nullptr};
     QDockWidget* dock_{nullptr};
     QDockWidget* editorDock_{nullptr};
     LayoutPanel* layoutPanel_{nullptr};
     QDockWidget* layoutDock_{nullptr};
     TestPanel* testPanel_{nullptr};
     QDockWidget* testDock_{nullptr};
+    LookPanel* lookPanel_{nullptr};
+    QDockWidget* lookDock_{nullptr};
+    LivePanel* livePanel_{nullptr};
+    QDockWidget* liveDock_{nullptr};
+    QAction* liveAction_{nullptr};
+    std::vector<QDockWidget*> hiddenByLive_;  // Docks, die der Live-Modus versteckt hat (kommen danach zurück)
+    bool liveMode_{false};
     QLabel* statusLabel_{nullptr};
     QTimer timer_;
     QTimer statusTimer_;

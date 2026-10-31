@@ -86,6 +86,10 @@ public:
     /// gute Zustand weiter; der Fehler steht in stageError().
     Result<void> applyGraph(const graph::Graph& graph) { return stage_->setGraph(graph); }
 
+    /// Wie applyGraph, aber nur für geänderte Parameterwerte: übersetzt nicht neu und ist deshalb billig genug
+    /// für jeden Frame. Nur benutzen, wenn sich weder Nodes noch Kabel noch Textparameter geändert haben.
+    Result<void> applyParameters(const graph::Graph& graph) { return stage_->setParameters(graph); }
+
     /// Ein Frame. Siehe RenderEngine::renderFrame.
     Result<void> renderFrame() { return engine_->renderFrame(); }
 

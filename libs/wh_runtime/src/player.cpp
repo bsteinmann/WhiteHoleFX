@@ -2,6 +2,7 @@
 #include "whitehole/runtime/player.hpp"
 
 #include <algorithm>
+#include <chrono>
 #include <cmath>
 #include <unordered_map>
 
@@ -49,12 +50,15 @@ Result<void> Player::adopt(project::Project project, std::string path) {
         return parts.error();
     }
     stop();
+    live_.reset();
+    liveLast_.reset();
     map_ = std::move(parts.value().map);
     applyLayoutIfMissing(project.graph);
     project_.emplace(std::move(project));
     path_ = std::move(path);
     stepError_.reset();
     graphDirty_ = false;
+    valuesDirty_ = false;
     rebuildDirty_ = false;
     modified_ = false;
     undo_.clear();
@@ -118,8 +122,15 @@ Result<void> Player::start() {
     auto clock = std::make_unique<engine::SteadyFrameClock>();
     SessionOptions options;
     options.keepLatestColors = true;
+    // Im Live-Betrieb rechnet die Session den Graphen der Decks, nicht den des Editors.
+    std::optional<project::Project> liveProject;
+    if (live_) {
+        liveProject.emplace(*project_);
+        liveProject->graph = live_->graph();
+        liveProject->target = live_->target();
+    }
     auto session = Session::create(
-        *project_, SessionDeps{*device_, library_.snippets, library_.kernels, sink_, *clock}, options);
+        liveProject ? *liveProject : *project_, SessionDeps{*device_, library_.snippets, library_.kernels, sink_, *clock}, options);
     if (!session.ok()) {
         return session.error();
     }
@@ -131,6 +142,7 @@ Result<void> Player::start() {
     session_->setOutputLevel(master_, blackout_);
     stepError_.reset();
     graphDirty_ = false;
+    valuesDirty_ = false;
     rebuildDirty_ = false;
     return {};
 }
@@ -149,17 +161,39 @@ Result<void> Player::step() {
         // Das Ziel steckt in der Stage; ein neues braucht eine neue Session.
         rebuildDirty_ = false;
         graphDirty_ = false;
+        valuesDirty_ = false;
         stop();
         if (const Result<void> restarted = start(); !restarted.ok()) {
             stepError_ = restarted.error();
             return restarted;
         }
     }
+    bool structural = false;
+    if (live_) {
+        // Die Überblendung läuft mit der Uhrzeit, nicht mit der Zahl der Frames
+        const double now = liveNow();
+        const double elapsed = liveLast_ ? now - *liveLast_ : 0.0;
+        liveLast_ = now;
+        if (live_->advance(elapsed)) {
+            valuesDirty_ = true;
+        }
+        if (live_->takeStructureChanged()) {
+            graphDirty_ = true;
+            structural = true;
+        }
+    }
     if (graphDirty_) {
         graphDirty_ = false;
+        valuesDirty_ = false;
         // Ein Fehler (z. B. Shader lässt sich nicht übersetzen) lässt den letzten guten Zustand
         // laufen und steht in status().lastError.
-        (void)session_->applyGraph(project_->graph);
+        (void)session_->applyGraph(activeGraph());
+        if (structural) {
+            liveLast_ = liveNow();  // das Übersetzen des Shaders soll nicht von der Überblendzeit abgehen
+        }
+    } else if (valuesDirty_) {
+        valuesDirty_ = false;
+        (void)session_->applyParameters(activeGraph());
     }
     const Result<void> r = session_->renderFrame();
     if (!r.ok()) {
@@ -246,7 +280,12 @@ Result<graph::ParameterValue> Player::setParameter(NodeId node, const std::strin
     if (!set.ok()) {
         return set.error();
     }
-    graphDirty_ = true;
+    // Ein Text steckt im Shader (@text); nur reine Zahlen, Farben und Schalter gehen den billigen Weg
+    if (std::holds_alternative<std::string>(project_->graph.findNode(node)->parameters.at(key))) {
+        graphDirty_ = true;
+    } else {
+        valuesDirty_ = true;
+    }
     modified_ = true;
     return project_->graph.findNode(node)->parameters.at(key);
 }

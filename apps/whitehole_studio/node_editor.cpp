@@ -28,6 +28,7 @@ NodeEditor::NodeEditor(runtime::Player& player, QWidget* parent) : QGraphicsView
     setResizeAnchor(QGraphicsView::AnchorViewCenter);
     setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
     setFocusPolicy(Qt::StrongFocus);
+    setAcceptDrops(true);  // Node-Typen aus der Palette
     connect(&scene_, &QGraphicsScene::selectionChanged, this, [this]() {
         if (!rebuilding_) {
             Q_EMIT selectionChanged();
@@ -224,6 +225,7 @@ void NodeEditor::mousePressEvent(QMouseEvent* event) {
         event->accept();
         return;
     }
+    nodeDragging_ = event->button() == Qt::LeftButton && nodeAt(mapToScene(event->position().toPoint())) != nullptr;
     QGraphicsView::mousePressEvent(event);
 }
 
@@ -242,6 +244,13 @@ void NodeEditor::mouseMoveEvent(QMouseEvent* event) {
         return;
     }
     QGraphicsView::mouseMoveEvent(event);
+    if (nodeDragging_ && (event->buttons() & Qt::LeftButton) != 0) {
+        const bool over = overDeleteZone(event->globalPosition().toPoint());
+        if (over != overZone_) {
+            overZone_ = over;
+            Q_EMIT deleteZoneHover(over);
+        }
+    }
 }
 
 void NodeEditor::mouseReleaseEvent(QMouseEvent* event) {
@@ -256,7 +265,19 @@ void NodeEditor::mouseReleaseEvent(QMouseEvent* event) {
         event->accept();
         return;
     }
+    const bool dropOnZone = nodeDragging_ && event->button() == Qt::LeftButton && overDeleteZone(event->globalPosition().toPoint());
+    if (event->button() == Qt::LeftButton) {
+        nodeDragging_ = false;
+        if (overZone_) {
+            overZone_ = false;
+            Q_EMIT deleteZoneHover(false);
+        }
+    }
     QGraphicsView::mouseReleaseEvent(event);
+    if (dropOnZone && !scene_.selectedItems().isEmpty()) {
+        removeSelected();  // wie Entf; mit Strg+Z zurückzuholen
+        return;
+    }
     commitMoves();
 }
 

@@ -16,6 +16,7 @@
 // eigenem Thread, das ist von außen nicht sichtbar.
 #pragma once
 
+#include <chrono>
 #include <cstdint>
 #include <functional>
 #include <memory>
@@ -35,6 +36,7 @@
 #include "whitehole/runtime/audio_usage.hpp"
 #include "whitehole/runtime/dmx_usage.hpp"
 #include "whitehole/runtime/led_info.hpp"
+#include "whitehole/runtime/live_decks.hpp"
 #include "whitehole/runtime/node_clipboard.hpp"
 #include "whitehole/runtime/session.hpp"
 
@@ -246,6 +248,42 @@ public:
     void setBlackout(bool on);
     [[nodiscard]] bool blackout() const noexcept { return blackout_; }
 
+    // --- Looks und Live-Betrieb ------------------------------------------------------------------------
+    // Ein Look ist ein fertiger Effekt (vom Generator bis zum Ausgang). Die Liste gehört zum Projekt und
+    // steht in der Datei. Im Live-Betrieb laufen zwei Decks mit einer Überblendung (siehe live_decks.hpp);
+    // der Editor-Graph ruht dann, und die Ausgabe zeigt nur noch Looks. Fehler (alle): InvalidArgument ohne Projekt.
+
+    [[nodiscard]] const std::vector<project::Look>& looks() const;
+    /// Speichert den Effekt hinter dem Ausgang als Look. Ein gleichnamiger Look wird ersetzt (Position
+    /// und Überblendzeit bleiben, wenn `fadeSeconds` fehlt). Liefert den Index. Fehler: InvalidArgument
+    /// (Name, Zeit, kein Ausgang), sonst die der Graph-Operationen.
+    Result<int> saveLook(const std::string& name, std::optional<double> fadeSeconds = std::nullopt);
+    /// Fehler: NotFound (Index), InvalidArgument (Name ungültig oder schon vergeben, Zeit außerhalb 0..600).
+    Result<void> removeLook(int index);
+    Result<void> renameLook(int index, const std::string& name);
+    Result<void> setLookFade(int index, double seconds);
+    /// Verschiebt einen Look in der Liste an die Stelle `to`.
+    Result<void> moveLook(int from, int to);
+    /// Ersetzt den Editor-Graphen durch den Look (ein Undo-Schritt), um ihn zu bearbeiten. Nicht im
+    /// Live-Betrieb. Fehler: NotFound, InvalidArgument (Live aktiv).
+    Result<void> loadLookIntoEditor(int index);
+
+    /// Wechselt in den Live-Betrieb und zeigt den Look `first` sofort. Fehler: NotFound (Index),
+    /// InvalidArgument (keine Looks). Eine laufende Ausgabe wird dafür einmal neu aufgebaut.
+    Result<void> startLive(int first = 0);
+    /// Zurück zum Editor-Graphen (wieder ein Neuaufbau). Ohne Live-Betrieb ein No-op.
+    void stopLive();
+    [[nodiscard]] bool liveActive() const noexcept { return live_.has_value(); }
+    /// Lädt den Look ins verdeckte Deck (Vorschau-Look, "Next"). Fehler: NotFound, InvalidArgument (nicht live).
+    Result<void> liveArm(int index);
+    /// Startet die Überblendung zum vorgeladenen Look. Ohne Zeit gilt die Zeit des Looks.
+    Result<void> liveGo(std::optional<double> fadeSeconds = std::nullopt);
+    /// liveArm + liveGo in einem Schritt (ein Tastendruck für einen Look).
+    Result<void> liveTrigger(int index, std::optional<double> fadeSeconds = std::nullopt);
+    [[nodiscard]] LiveStatus liveStatus() const noexcept;
+    /// Uhr für die Überblendung in Sekunden (Standard: Systemuhr). Nur für Tests austauschbar.
+    void setLiveClock(std::function<double()> clock) { liveClock_ = std::move(clock); }
+
     /// Die LED unter einem Bildpunkt der Vorschau (`frame` ist der Ausschnitt des gezeichneten Bildes)
     /// samt Fixture, Nummer am Kabel, Adresse und Farbe. Leer, wenn keine LED näher als `maxDistance`
     /// Pixel liegt oder nichts geladen ist.
@@ -274,6 +312,14 @@ private:
     /// beiden, bleibt das Projekt unverändert. Erfolg: Undo-Schritt, Vorschau-Map neu, Session neu.
     Result<void> editProject(const std::string& key, const std::function<Result<void>(project::Project&)>& edit);
 
+    /// Der Graph, den die Session gerade rechnet: im Live-Betrieb der der Decks, sonst der des Projekts.
+    [[nodiscard]] const graph::Graph& activeGraph() const noexcept { return live_ ? live_->graph() : project_->graph; }
+    Result<void> startLiveLook(int index);
+    [[nodiscard]] double liveNow() const {
+        return liveClock_ ? liveClock_()
+                          : std::chrono::duration<double>(std::chrono::steady_clock::now().time_since_epoch()).count();
+    }
+
     gpu::IGpuDevice* device_;
     const nodes::BuiltinLibrary& library_;
     output::IPacketSink& sink_;
@@ -285,6 +331,10 @@ private:
     std::unique_ptr<Session> session_;
     std::optional<Error> stepError_;
     bool graphDirty_{false};   // Parameter oder Graph geändert, Session noch nicht informiert
+    bool valuesDirty_{false};  // nur Parameterwerte geändert: der billige Abgleich genügt
+    std::optional<LiveDecks> live_;
+    std::function<double()> liveClock_;
+    std::optional<double> liveLast_;  // Zeitpunkt des letzten Schritts, solange ein Fade läuft
     bool rebuildDirty_{false};  // Ausgang, Layout oder Ausgabe geändert: Session neu aufbauen
     bool modified_{false};     // seit Laden/Speichern verändert
     struct Snapshot {

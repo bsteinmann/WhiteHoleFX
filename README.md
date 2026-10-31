@@ -90,7 +90,7 @@ Eingang ist standardmäßig **aus**; einschalten im Studio über *Eingang → Au
 - [x] 6: Ausgabe (Art-Net, sACN, DDP; WLED über DDP/Art-Net). Serial, TPM2.net, MQTT, Hyperion folgen später; MIDI und OSC sind zurückgestellt
 - [x] DMX-Eingang über Art-Net und sACN (Nodes „DMX Channel“ und „DMX Color“)
 - [ ] 7: Plugins und Skripte
-- [x] 8: Oberfläche (Qt 6): Live-Vorschau, Parameterregler, Node-Editor, Layout-Editor, Rückgängig/Wiederholen
+- [x] 8: Oberfläche (Qt 6): Live-Vorschau, Parameterregler, Node-Editor, Layout-Editor, Rückgängig/Wiederholen; Looks und Live-Modus mit Überblendung; Node-Palette per Drag & Drop
 - [x] GPU-Backend läuft in der CI auf Software-Vulkan (Linux) und Software-Adapter (Windows); Prüfung auf echter GPU steht aus
 - [x] Projektdatei und Konsolen-Runner (`whitehole_cli`)
 - [x] Mapping-Import aus CSV und JSON (Punktwolke)

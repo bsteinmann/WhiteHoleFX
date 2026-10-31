@@ -27,7 +27,7 @@ Error withLine(std::size_t line, const Error& e) {
 class Parser {
 public:
     explicit Parser(std::shared_ptr<const graph::INodeRegistry> registry)
-        : project_{std::move(registry)} {}
+        : registry_{registry}, project_{std::move(registry)}, graph_{&project_.graph}, target_{&project_.target} {}
 
     std::optional<Error> handle(const Line& line);
     Result<Project> finish();
@@ -44,8 +44,17 @@ private:
     std::optional<Error> connect(Reader& r);
     std::optional<Error> output(Reader& r);
     std::optional<graph::PortRef> portRef(Reader& r, const char* what);
+    std::optional<Error> beginLook(Reader& r, std::size_t lineNumber);
+    std::optional<Error> endLook(Reader& r);
 
+    std::shared_ptr<const graph::INodeRegistry> registry_;
     Project project_;
+    // Wohin node/connect/output gerade schreiben: ins Projekt oder in den look-Block.
+    graph::Graph* graph_;
+    std::optional<graph::PortRef>* target_;
+    std::optional<Look> look_;
+    std::optional<graph::PortRef> lookTarget_;
+    std::unordered_map<std::string, NodeId> mainNodes_;  // Nodenamen des Projekts, solange ein look-Block läuft
     State state_{State::Outside};
     bool headerSeen_{false};
     std::size_t blockStart_{0};
@@ -99,7 +108,9 @@ std::optional<Error> Parser::handleOutside(const Line& line) {
     Reader r{line, 0};
     const std::string key = r.word("Schlüsselwort");
     std::optional<Error> error;
-    if (key == "settings") {
+    if (look_ && (key == "settings" || key == "destination" || key == "fixture")) {
+        r.fail("\"" + key + "\" gehört nicht in einen look-Block");
+    } else if (key == "settings") {
         error = settings(r);
     } else if (key == "destination") {
         destination(r);
@@ -116,6 +127,10 @@ std::optional<Error> Parser::handleOutside(const Line& line) {
         error = connect(r);
     } else if (key == "output") {
         error = output(r);
+    } else if (key == "look") {
+        error = beginLook(r, line.number);
+    } else if (key == "endlook") {
+        error = endLook(r);
     } else {
         r.fail("Unbekannte Anweisung \"" + key + "\"");
     }
@@ -183,7 +198,7 @@ std::optional<Error> Parser::beginNode(Reader& r) {
     if (nodes_.contains(name)) {
         return withLine(r.line(), Error{ErrorCode::AlreadyExists, "Nodename \"" + name + "\" ist schon vergeben"});
     }
-    const auto id = project_.graph.addNode(type, Vec2{});
+    const auto id = graph_->addNode(type, Vec2{});
     if (!id.ok()) {
         return withLine(r.line(), id.error());
     }
@@ -207,7 +222,7 @@ std::optional<Error> Parser::handleNode(const Line& line) {
         if (!r.ok()) {
             return r.error();
         }
-        const auto result = project_.graph.setPosition(node_, position);
+        const auto result = graph_->setPosition(node_, position);
         if (!result.ok()) {
             return withLine(r.line(), result.error());
         }
@@ -226,8 +241,8 @@ std::optional<Error> Parser::setParameter(Reader& r) {
     if (!r.ok()) {
         return r.error();
     }
-    const graph::NodeInstance* instance = project_.graph.findNode(node_);
-    const graph::NodeDescriptor* descriptor = project_.graph.registry().find(instance->typeId);
+    const graph::NodeInstance* instance = graph_->findNode(node_);
+    const graph::NodeDescriptor* descriptor = graph_->registry().find(instance->typeId);
     const graph::ParameterDescriptor* parameter = descriptor ? descriptor->findParameter(key) : nullptr;
     if (parameter == nullptr) {
         return withLine(r.line(), Error{ErrorCode::NotFound, "Node-Typ \"" + instance->typeId +
@@ -257,7 +272,7 @@ std::optional<Error> Parser::setParameter(Reader& r) {
     if (!r.ok()) {
         return r.error();
     }
-    const auto result = project_.graph.setParameter(node_, key, value);
+    const auto result = graph_->setParameter(node_, key, value);
     return result.ok() ? std::nullopt : std::optional<Error>{withLine(r.line(), result.error())};
 }
 
@@ -289,7 +304,7 @@ std::optional<Error> Parser::connect(Reader& r) {
     if (!r.ok()) {
         return r.error();
     }
-    const auto result = project_.graph.connect(*from, *to);
+    const auto result = graph_->connect(*from, *to);
     return result.ok() ? std::nullopt : std::optional<Error>{withLine(r.line(), result.error())};
 }
 
@@ -299,23 +314,91 @@ std::optional<Error> Parser::output(Reader& r) {
     if (!r.ok()) {
         return r.error();
     }
-    if (project_.target) {
+    if (*target_) {
         return withLine(r.line(), Error{ErrorCode::AlreadyExists, "output ist schon gesetzt"});
     }
-    const graph::NodeInstance* instance = project_.graph.findNode(port->node);
-    const graph::NodeDescriptor* descriptor = project_.graph.registry().find(instance->typeId);
+    const graph::NodeInstance* instance = graph_->findNode(port->node);
+    const graph::NodeDescriptor* descriptor = graph_->registry().find(instance->typeId);
     const graph::PortDescriptor* found = descriptor ? descriptor->findPort(port->portKey) : nullptr;
     if (found == nullptr || found->direction != graph::PortDirection::Output) {
         return withLine(r.line(), Error{ErrorCode::NotFound, "\"" + port->portKey + "\" ist kein Ausgang von " +
                                                                  instance->typeId});
     }
-    project_.target = *port;
+    *target_ = *port;
+    return std::nullopt;
+}
+
+std::optional<Error> Parser::beginLook(Reader& r, std::size_t lineNumber) {
+    if (look_) {
+        r.fail("look-Blöcke lassen sich nicht schachteln");
+        return std::nullopt;
+    }
+    const std::string name = r.word("Lookname");
+    double fade = 2.0;
+    while (r.ok() && !r.atEnd()) {
+        const std::string key = r.word("Einstellung");
+        if (key == "fade") {
+            fade = r.numberD("Überblendzeit");
+            if (r.ok() && !(fade >= 0.0 && fade <= kMaxFadeSeconds)) {
+                r.fail("fade muss zwischen 0 und " + std::to_string(static_cast<int>(kMaxFadeSeconds)) + " Sekunden liegen");
+            }
+        } else if (r.ok()) {
+            r.fail("Unbekannte Einstellung \"" + key + "\"");
+        }
+    }
+    if (!r.ok()) {
+        return r.error();
+    }
+    if (name.empty()) {
+        return withLine(lineNumber, Error{ErrorCode::InvalidArgument, "Der Look braucht einen Namen"});
+    }
+    for (const Look& existing : project_.looks) {
+        if (existing.name == name) {
+            return withLine(lineNumber, Error{ErrorCode::AlreadyExists, "Look \"" + name + "\" ist schon vergeben"});
+        }
+    }
+    look_.emplace(registry_);
+    look_->name = name;
+    look_->fadeSeconds = fade;
+    lookTarget_.reset();
+    mainNodes_ = std::move(nodes_);
+    nodes_.clear();
+    graph_ = &look_->graph;
+    target_ = &lookTarget_;
+    blockStart_ = lineNumber;
+    return std::nullopt;
+}
+
+std::optional<Error> Parser::endLook(Reader& r) {
+    r.expectEnd();
+    if (!r.ok()) {
+        return r.error();
+    }
+    if (!look_) {
+        r.fail("endlook ohne look");
+        return r.error();
+    }
+    if (!lookTarget_) {
+        return withLine(r.line(), Error{ErrorCode::InvalidArgument,
+                                        "Der Look \"" + look_->name + "\" hat keine output-Zeile"});
+    }
+    look_->target = *lookTarget_;
+    project_.looks.push_back(std::move(*look_));
+    look_.reset();
+    nodes_ = std::move(mainNodes_);
+    mainNodes_.clear();
+    graph_ = &project_.graph;
+    target_ = &project_.target;
     return std::nullopt;
 }
 
 Result<Project> Parser::finish() {
     if (!headerSeen_) {
         return Error{ErrorCode::InvalidArgument, "Die Datei ist leer"};
+    }
+    if (look_) {
+        return Error{ErrorCode::InvalidArgument,
+                     "Zeile " + std::to_string(blockStart_) + ": look-Block ist nicht mit \"endlook\" beendet"};
     }
     if (state_ != State::Outside) {
         return Error{ErrorCode::InvalidArgument,

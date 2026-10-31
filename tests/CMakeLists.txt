@@ -78,6 +78,8 @@ add_executable(wh_tests
     runtime/point_file_test.cpp
     runtime/operator_controls_test.cpp
     runtime/node_preset_test.cpp
+    runtime/live_decks_test.cpp
+    runtime/player_live_test.cpp
     runtime/player_edit_test.cpp
     runtime/player_test.cpp
     runtime/session_test.cpp

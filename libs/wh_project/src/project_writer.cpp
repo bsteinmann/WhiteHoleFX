@@ -83,6 +83,41 @@ std::string valueText(const graph::ParameterValue& value) {
         value);
 }
 
+/// Nodes, Kabel und Ziel eines Graphen (Hauptgraph oder Look). Nodes heißen n1, n2, ... je Graph.
+Result<void> writeGraph(std::ostream& out, const graph::Graph& graph, const std::optional<graph::PortRef>& target,
+                        const char* targetName) {
+    std::unordered_map<std::uint64_t, std::string> names;
+    for (const graph::NodeInstance& node : graph.nodes()) {
+        const std::string name = "n" + std::to_string(names.size() + 1);
+        names.emplace(node.id.value(), name);
+        out << "node " << name << " " << node.typeId << "\n";
+        out << "  at " << vec2(node.position) << "\n";
+        const graph::NodeDescriptor* descriptor = graph.registry().find(node.typeId);
+        if (descriptor != nullptr) {
+            for (const graph::ParameterDescriptor& parameter : descriptor->parameters) {
+                const auto it = node.parameters.find(parameter.key);
+                const graph::ParameterValue& value =
+                    it != node.parameters.end() ? it->second : parameter.defaultValue;
+                out << "  set " << parameter.key << " " << valueText(value) << "\n";
+            }
+        }
+        out << "end\n\n";
+    }
+
+    for (const graph::Connection& c : graph.connections()) {
+        out << "connect " << names.at(c.from.node.value()) << "." << c.from.portKey << " -> "
+            << names.at(c.to.node.value()) << "." << c.to.portKey << "\n";
+    }
+    if (target) {
+        const auto it = names.find(target->node.value());
+        if (it == names.end()) {
+            return Error{ErrorCode::InvalidArgument, std::string{targetName} + " verweist auf einen unbekannten Node"};
+        }
+        out << "output " << it->second << "." << target->portKey << "\n";
+    }
+    return {};
+}
+
 }  // namespace
 
 Result<std::string> writeProject(const Project& project) {
@@ -118,34 +153,15 @@ Result<std::string> writeProject(const Project& project) {
         return Error{ErrorCode::InvalidArgument, "Ein Patch verweist auf ein Fixture, das nicht im Layout steht"};
     }
 
-    std::unordered_map<std::uint64_t, std::string> names;
-    for (const graph::NodeInstance& node : project.graph.nodes()) {
-        const std::string name = "n" + std::to_string(names.size() + 1);
-        names.emplace(node.id.value(), name);
-        out << "node " << name << " " << node.typeId << "\n";
-        out << "  at " << vec2(node.position) << "\n";
-        const graph::NodeDescriptor* descriptor = project.graph.registry().find(node.typeId);
-        if (descriptor != nullptr) {
-            for (const graph::ParameterDescriptor& parameter : descriptor->parameters) {
-                const auto it = node.parameters.find(parameter.key);
-                const graph::ParameterValue& value =
-                    it != node.parameters.end() ? it->second : parameter.defaultValue;
-                out << "  set " << parameter.key << " " << valueText(value) << "\n";
-            }
-        }
-        out << "end\n\n";
+    if (const Result<void> graph = writeGraph(out, project.graph, project.target, "Das Ziel (output)"); !graph.ok()) {
+        return graph.error();
     }
-
-    for (const graph::Connection& c : project.graph.connections()) {
-        out << "connect " << names.at(c.from.node.value()) << "." << c.from.portKey << " -> "
-            << names.at(c.to.node.value()) << "." << c.to.portKey << "\n";
-    }
-    if (project.target) {
-        const auto it = names.find(project.target->node.value());
-        if (it == names.end()) {
-            return Error{ErrorCode::InvalidArgument, "Das Ziel (output) verweist auf einen unbekannten Node"};
+    for (const Look& look : project.looks) {
+        out << "\nlook " << quoteWord(look.name) << " fade " << formatDouble(look.fadeSeconds) << "\n";
+        if (const Result<void> graph = writeGraph(out, look.graph, look.target, "Das Ziel des Looks"); !graph.ok()) {
+            return graph.error();
         }
-        out << "output " << it->second << "." << project.target->portKey << "\n";
+        out << "endlook\n";
     }
     return out.str();
 }

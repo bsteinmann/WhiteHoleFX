@@ -277,3 +277,28 @@ TEST_CASE("Die Engine kopiert den Farbpuffer der Stage in den Readback-Ring") {
     CHECK(device.dispatches().size() == 1U);
     CHECK(stage->stats().framesRecorded == 1U);
 }
+
+TEST_CASE("setParameters übernimmt nur Werte: keine neue Pipeline, neue Zahlen im Puffer") {
+    SamplingFixture fx;
+    REQUIRE(fx.stage->setMap(bake(4, 4)).ok());
+    REQUIRE(fx.stage->setGraph(fx.lab.graph).ok());
+    fx.render(0.0);
+    const gpu::ComputePipelineHandle first = fx.last().pipeline;
+    REQUIRE(fx.stage->stats().pipelinesBuilt == 1U);
+
+    const auto before = fx.device.bufferBytes(bufferAt(fx.last(), 0, 1));
+    fx.lab.set(fx.gradient, "angle", 90.0);
+    REQUIRE(fx.stage->setParameters(fx.lab.graph).ok());
+    fx.render(1.0);
+    CHECK(fx.stage->stats().pipelinesBuilt == 1U);  // nichts neu übersetzt
+    CHECK(fx.last().pipeline == first);
+    CHECK(fx.device.bufferBytes(bufferAt(fx.last(), 0, 1)) != before);  // aber der neue Wert liegt im Parameterpuffer
+}
+
+TEST_CASE("setParameters ohne bisherigen Graphen verhält sich wie setGraph") {
+    SamplingFixture fx;
+    REQUIRE(fx.stage->setMap(bake(4, 4)).ok());
+    REQUIRE(fx.stage->setParameters(fx.lab.graph).ok());
+    fx.render(0.0);
+    CHECK(fx.stage->stats().pipelinesBuilt == 1U);
+}

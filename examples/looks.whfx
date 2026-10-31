@@ -1,0 +1,53 @@
+whitehole-project 1
+# Beispiel für Looks und den Live-Modus: drei fertige Effekte zum Umschalten.
+#
+# So ausprobieren:
+#   whitehole_studio examples/looks.whfx --run
+# Dann im Studio F9 drücken (Live-Modus) und mit den Tasten 1 bis 3 oder per Klick überblenden.
+# Der Hauptgraph (Plasma) ist der Effekt, der im Editor offen ist; die drei Looks stehen unten.
+# Jeder Look hat eigene Node-Namen und eine eigene Überblendzeit.
+
+settings fps 40
+
+destination 0 127.0.0.1
+
+fixture Wand
+  matrix 32 16 serpentine
+  patch artnet destination 0 universe 0
+end
+
+node plasma wh.generator.plasma
+  set scale 3
+end
+node ausgang wh.output.canvas
+end
+connect plasma.out -> ausgang.source
+output ausgang.out
+
+look "Plasma" fade 2
+  node plasma wh.generator.plasma
+    set scale 3
+  end
+  node ausgang wh.output.canvas
+  end
+  connect plasma.out -> ausgang.source
+  output ausgang.out
+endlook
+
+look "Regen" fade 3
+  node regen wh.generator.rain
+  end
+  node ausgang wh.output.canvas
+  end
+  connect regen.out -> ausgang.source
+  output ausgang.out
+endlook
+
+look "Feuer" fade 1.5
+  node feuer wh.generator.fire
+  end
+  node ausgang wh.output.canvas
+  end
+  connect feuer.out -> ausgang.source
+  output ausgang.out
+endlook

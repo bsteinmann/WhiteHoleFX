@@ -56,6 +56,7 @@ void MainWindow::afterLoad(const QString& message) {
     refreshParameters();
     layoutPanel_->rebuild();
     testPanel_->reset();  // der Player hat das Testbild beim Laden schon verworfen
+    resetLive();          // Look-Liste neu, Live-Modus (falls aktiv) beendet
     updateTitle();
     statusBar()->showMessage(message, 5000);
     updateActions();

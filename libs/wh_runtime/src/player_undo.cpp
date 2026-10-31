@@ -70,8 +70,10 @@ Result<void> Player::undo() {
     const auto previousTarget = project_->target;
     Snapshot top = std::move(undo_.back());
     undo_.pop_back();
+    auto looks = std::move(project_->looks);  // die Look-Liste gehört nicht zum Rückgängig-Verlauf
     redo_.push_back(Snapshot{std::move(*project_), top.rebuild});
     project_.emplace(std::move(top.project));
+    project_->looks = std::move(looks);
     return restored(previousTarget, top.rebuild);
 }
 
@@ -82,8 +84,10 @@ Result<void> Player::redo() {
     const auto previousTarget = project_->target;
     Snapshot top = std::move(redo_.back());
     redo_.pop_back();
+    auto looks = std::move(project_->looks);
     undo_.push_back(Snapshot{std::move(*project_), top.rebuild});
     project_.emplace(std::move(top.project));
+    project_->looks = std::move(looks);
     return restored(previousTarget, top.rebuild);
 }
 

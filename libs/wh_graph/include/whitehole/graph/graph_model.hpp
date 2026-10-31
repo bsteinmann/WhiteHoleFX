@@ -80,6 +80,8 @@ public:
 
     /// Das Verzeichnis, gegen das dieser Graph prüft (z. B. für den Compiler).
     [[nodiscard]] const INodeRegistry& registry() const noexcept { return *registry_; }
+    /// Dasselbe Verzeichnis als geteilter Zeiger (für Graphen, die dazu passen müssen, etwa die Looks).
+    [[nodiscard]] std::shared_ptr<const INodeRegistry> registryPtr() const noexcept { return registry_; }
 
     [[nodiscard]] const std::vector<NodeInstance>& nodes() const noexcept { return nodes_; }
     [[nodiscard]] const std::vector<Connection>& connections() const noexcept {

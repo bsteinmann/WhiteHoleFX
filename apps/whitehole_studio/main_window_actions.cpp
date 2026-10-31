@@ -80,6 +80,10 @@ void MainWindow::buildActions() {
     view->addAction(dock_->toggleViewAction());
     view->addAction(layoutDock_->toggleViewAction());
     view->addAction(testDock_->toggleViewAction());
+    view->addAction(lookDock_->toggleViewAction());
+
+    QMenu* live = menuBar()->addMenu(tr("&Live"));
+    live->addAction(liveAction_);
 
     QMenu* run = menuBar()->addMenu(tr("&Wiedergabe"));
     run->addAction(runAction_);
@@ -92,6 +96,8 @@ void MainWindow::buildActions() {
     bar->addAction(saveAction_);
     bar->addAction(runAction_);
     bar->addAction(sendAction_);
+    bar->addSeparator();
+    bar->addAction(liveAction_);
 
     buildControls();  // Master und Blackout in einer zweiten Leiste
     run->addAction(blackoutAction_);

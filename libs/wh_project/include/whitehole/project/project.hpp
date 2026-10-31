@@ -31,6 +31,20 @@ namespace whitehole::project {
 
 inline constexpr int kFormatVersion = 1;
 
+/// Ein gespeicherter Effekt ("Look"): die Nodes vom Generator bis zum Ausgang als eigener kleiner Graph,
+/// dazu der Field-Ausgang und die Zeit, in der er beim Live-Betrieb eingeblendet wird. Looks gehören zur
+/// Projektdatei (Abschnitt `look ... endlook`), damit eine Show in einer Datei bleibt.
+struct Look {
+    explicit Look(std::shared_ptr<const graph::INodeRegistry> registry) : graph{std::move(registry)} {}
+
+    std::string name;
+    double fadeSeconds{2.0};  // Überblendzeit beim Abrufen, 0 = hartes Umschalten
+    graph::Graph graph;
+    graph::PortRef target;    // Field-Ausgang des Looks
+};
+
+inline constexpr double kMaxFadeSeconds = 600.0;
+
 struct Project {
     explicit Project(std::shared_ptr<const graph::INodeRegistry> registry)
         : graph{std::move(registry)} {}
@@ -42,6 +56,9 @@ struct Project {
     graph::Graph graph;
     /// Field-Ausgang, der auf die LEDs abgetastet wird.
     std::optional<graph::PortRef> target;
+
+    /// Die Look-Liste für den Live-Betrieb, in der Reihenfolge der Datei. Namen sind eindeutig.
+    std::vector<Look> looks;
 
     std::vector<output::Destination> destinations;
     std::string sourceName{"WhiteHoleFX"};

@@ -31,6 +31,8 @@
 #include <filesystem>
 
 #include "layout_panel.hpp"
+#include "live_panel.hpp"
+#include "look_panel.hpp"
 #include "node_editor.hpp"
 #include "parameter_panel.hpp"
 #include "preview_controller.hpp"
@@ -108,21 +110,8 @@ MainWindow::MainWindow(gpu::IGpuDevice* device, const QString& deviceNote, QWidg
     tabifyDockWidget(dock_, testDock_);
     dock_->raise();
 
-    editor_ = new NodeEditor{*player_, this};
-    {
-        const QByteArray folder = (QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + QStringLiteral("/presets")).toUtf8();
-        presets_ = std::make_unique<runtime::PresetStore>(std::filesystem::path{
-            std::u8string{reinterpret_cast<const char8_t*>(folder.constData()), static_cast<std::size_t>(folder.size())}});
-        editor_->setPresetStore(presets_.get());
-    }
-    connect(editor_, &NodeEditor::edited, this, &MainWindow::onGraphEdited);
-    connect(editor_, &NodeEditor::selectionChanged, this, &MainWindow::onNodeSelected);
-    connect(editor_, &NodeEditor::notice, this, [this](const QString& message) { statusBar()->showMessage(message, 8000); });
-    connect(editor_, &NodeEditor::failed, this, [this](const QString& message) { statusBar()->showMessage(message, 8000); });
-    editorDock_ = new QDockWidget{tr("Nodes"), this};
-    editorDock_->setWidget(editor_);
-    addDockWidget(Qt::BottomDockWidgetArea, editorDock_);
-    resizeDocks({editorDock_}, {300}, Qt::Vertical);
+    buildEditorDock();
+    buildLive();
 
     statusLabel_ = new QLabel{this};
     statusBar()->addPermanentWidget(statusLabel_);
@@ -157,6 +146,10 @@ void MainWindow::updateActions() {
     runAction_->setText(s.running ? tr("&Stopp") : tr("&Start"));
     sendAction_->setChecked(gate_->enabled());
     updateUndoActions();
+    if (liveMode_) {
+        undoAction_->setEnabled(false);  // im Live-Betrieb ruht der Editor-Graph
+        redoAction_->setEnabled(false);
+    }
 }
 
 void MainWindow::updateTitle() {
@@ -321,6 +314,9 @@ void MainWindow::tick() {
         timer_.stop();
         reportError(tr("Frame"), r.error().message, false);
         updateActions();
+    }
+    if (liveMode_) {
+        livePanel_->refresh();
     }
     refreshImage();
 }

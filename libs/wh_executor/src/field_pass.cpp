@@ -128,6 +128,14 @@ Result<void> FieldPass::setGraph(const graph::Graph& graph) {
     return {};
 }
 
+Result<void> FieldPass::setParameters(const graph::Graph& graph) {
+    if (!ready()) {
+        return setGraph(graph);
+    }
+    graph_ = graph;
+    return {};
+}
+
 bool FieldPass::record(const FrameTime& time, gpu::ICommandRecorder& recorder,
                        std::span<const gpu::Binding> consumerBindings, const DispatchSize& size) {
     frameError_.reset();

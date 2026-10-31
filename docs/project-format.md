@@ -123,6 +123,25 @@ alte Dateien unverändert lesen.
 Verbindungen werden beim Lesen geprüft (Typen, Zyklen, Eingang schon belegt). `output` ist
 Pflicht zum Rendern, nicht zum Prüfen.
 
+### `look "<name>" fade <sekunden>` ... `endlook`
+
+Ein gespeicherter Effekt (siehe [Looks und Live-Betrieb](studio.md)). Zwischen `look` und `endlook` stehen
+`node`, `connect` und `output` wie im Hauptteil, aber nur die Nodes, die am Ausgang des Looks hängen. Looks
+stehen nach dem Hauptgraphen. Namen sind eindeutig (höchstens 64 Zeichen, keine Steuerzeichen), `fade` liegt
+zwischen 0 und 600 Sekunden. Node-Namen gelten je Look für sich. Ältere Programme lehnen Dateien mit Looks ab.
+
+```
+look "Regen blau" fade 3
+  node n1 wh.generator.solid
+    set color 0 0.2 1 1
+  end
+  node n2 wh.output.canvas
+  end
+  connect n1.out -> n2.source
+  output n2.out
+endlook
+```
+
 ## Fehlermeldungen
 
 Jede Meldung nennt die Zeile: `Zeile 7: Node-Typ "wh.x" hat keinen Parameter "tempo"`. Fehler in
@@ -134,7 +153,7 @@ auffällt (Shader lässt sich nicht übersetzen), meldet der Runner beim Start.
 `writeProject` (in `wh_project`) schreibt dasselbe Format. Die Ausgabe ist deterministisch:
 Nodes heißen `n1`, `n2`, … in Graph-Reihenfolge, alle Parameter werden ausgeschrieben, damit
 sich eine Datei nicht ändert, wenn ein späteres Release einen Standardwert ändert.
-Lesen–Schreiben–Lesen ergibt denselben Text; das prüft ein Test.
+Lesen–Schreiben–Lesen ergibt denselben Text (auch mit Looks); das prüft ein Test.
 
 ## Noch nicht in Version 1
 

@@ -2,7 +2,8 @@
 //
 // Was man tun kann:
 //   Node hinzufügen      Rechtsklick auf freie Fläche, Menü nach Kategorien; oder Strg+Leertaste
-//                        und tippen (Suchfeld)
+//                        und tippen (Suchfeld); oder aus der Node-Palette hereinziehen
+//   Node entfernen       Entf, oder den Node auf die Node-Palette ziehen und loslassen
 //   verschieben          Node ziehen (die Lage wird in der Projektdatei gespeichert)
 //   verbinden            von einem Port zu einem passenden anderen ziehen; ein belegter Eingang
 //                        wird ersetzt
@@ -31,6 +32,9 @@
 #include "whitehole/runtime/node_preset.hpp"
 #include "whitehole/runtime/player.hpp"
 
+class QDragEnterEvent;
+class QDragMoveEvent;
+class QDropEvent;
 class QMenu;
 
 namespace whitehole::studio {
@@ -76,6 +80,11 @@ public:
     /// Wählt genau diesen Node aus (und sonst nichts); wahr, wenn es ihn gibt.
     bool selectNode(NodeId id);
 
+    /// Legt einen Node in der Mitte der sichtbaren Fläche an (Doppelklick in der Palette).
+    std::optional<NodeId> addNodeAtCenter(const std::string& typeId);
+    /// Das Widget, auf dem losgelassene Nodes gelöscht werden (die Palette). Gehört dem Aufrufer.
+    void setDeleteZone(QWidget* zone);
+
     /// Legt einen Node an; meldet Fehler über `failed`.
     std::optional<NodeId> addNodeAt(const std::string& typeId, const QPointF& scenePos);
     /// Verbindet Ausgang `from` mit Eingang `to`. Meldet Fehler über `failed`.
@@ -104,8 +113,13 @@ Q_SIGNALS:
     void notice(const QString& message);
     /// Die Auswahl hat sich durch Anklicken oder selectNode geändert (nicht durch Neuaufbau).
     void selectionChanged();
+    /// Ein Node wird gerade über die Löschzone gezogen (true) oder wieder davon weg (false).
+    void deleteZoneHover(bool over);
 
 protected:
+    void dragEnterEvent(QDragEnterEvent* event) override;
+    void dragMoveEvent(QDragMoveEvent* event) override;
+    void dropEvent(QDropEvent* event) override;
     void mousePressEvent(QMouseEvent* event) override;
     void mouseMoveEvent(QMouseEvent* event) override;
     void mouseReleaseEvent(QMouseEvent* event) override;
@@ -126,6 +140,7 @@ private:
     [[nodiscard]] NodeItem* itemOf(NodeId id) const;
     void fail(const std::string& message);
     void commitMoves();
+    [[nodiscard]] bool overDeleteZone(const QPoint& globalPos) const;
 
     // Kabel ziehen (Maus und exercise() benutzen dieselben Schritte)
     bool beginWire(const QPointF& scenePos);
@@ -155,6 +170,9 @@ private:
     PortSlot wireSlot_;
     QGraphicsPathItem* tempWire_{nullptr};
 
+    QWidget* deleteZone_{nullptr};
+    bool nodeDragging_{false};  // die linke Maustaste ist auf einem Node gedrückt (Verschieben läuft)
+    bool overZone_{false};
     bool rebuilding_{false};  // während des Neuaufbaus kein selectionChanged melden
     bool panning_{false};
     QPoint panLast_;
