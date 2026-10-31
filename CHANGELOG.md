@@ -1,5 +1,14 @@
 # Änderungen
 
+## 0.10.0
+
+- **Neue Generatoren** (eigene Umsetzungen gängiger Lichteffekt-Ideen, alle zustandslos): Metaballs,
+  Starfield (mit Drift), Fading Pixels, Expanding Shapes (Kreis, Quadrat, Raute; nach außen oder innen) und
+  Sine Lines (1–8 Wellen mit Farbverlauf). Rezepte in `docs/field-nodes.md`
+- Der WGSL-Code der neuen Nodes wurde in einem echten WebGPU (Chromium) übersetzt und mit 37 Zahlenprüfungen
+  geprüft; die Tests auf dem Gerät (`node_patterns_on_device_test.cpp`) wiederholen die wichtigsten
+- Die Hilfen der Gerätetests für Nodes liegen jetzt in `tests/gpu_device/node_render_support.hpp`
+
 ## 0.9.0
 
 - **Testmodus** (Dock „Testmodus“): Testbilder ersetzen den Effekt zur Inbetriebnahme: Farbe,

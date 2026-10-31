@@ -39,6 +39,11 @@ beliebigen Koordinaten abtastet.
 | `wh.generator.scan` | Scan-Linie / Knight Rider: ein Streifen quer zur Richtung `angle` an der Stelle `position` (0..1), Breite und Weichheit einstellbar; die Position mit einem Dreieck-LFO steuern lässt ihn hin- und herlaufen. Der Rest ist durchsichtig | 2D |
 | `wh.generator.ripples` | Wellenringe wie Regentropfen im Wasser (Tropfen pro Sekunde, Ausbreitung, Ringbreite, Farbe), ohne Zustand, durchsichtig außerhalb der Ringe | 2D |
 | `wh.generator.fire` | Feuer: nach oben wanderndes Rauschen mit Hitzeverlauf von unten nach oben, Palette Schwarz–Rot–Gelb–Weiß | 2D |
+| `wh.generator.metaballs` | Metaballs: 1–6 weiche Kugeln wandern auf eigenen Bahnen und fließen ineinander, wenn sie sich nähern (Anzahl, Größe, Tempo, Randweichheit, Hintergrund- und Blobfarbe) | 2D |
+| `wh.generator.starfield` | Sternenhimmel: `cells` Zellen je Achse, in jeder mit Wahrscheinlichkeit `density` ein flimmernder Stern (Größe, Flimmertempo, `drift` nach unten, zwei Farben nach Zufall); der Himmel ist durchsichtig und lässt sich über andere Effekte legen | 2D |
+| `wh.generator.fading` | Fading Pixels: einzelne Zellen leuchten auf und verlöschen, jede in eigenem Takt (Zellen, Rate, Dichte, `sharpness` = Abklingkurve, zwei Farben nach Zufall); der Rest ist durchsichtig | 2D |
+| `wh.generator.shapes` | Expanding Shapes: Kreise, Quadrate oder Rauten (Auswahlfeld), die von `cx`/`cy` nach außen laufen (Abstand, Tempo — negativ nach innen —, Dicke, Verblassen nach außen); durchsichtig zwischen den Ringen | 2D |
+| `wh.generator.sinelines` | Sine Lines: 1–8 Sinuswellen quer über die Leinwand, jede um `spread` Perioden gegen die vorige verschoben, Farbe von der ersten zur letzten Linie; überlappende Linien addieren sich | 2D |
 | `wh.transform.rotate` | Drehung in der xy-Ebene um die Mitte | 2D |
 | `wh.transform.rotate3d` | Drehung um alle drei Achsen um die Mitte (0,5; 0,5; 0,5) | 3D |
 | `wh.transform.symmetry` | Symmetrie: eine Hälfte des Eingangs wird an einer Linie gespiegelt. `axis` (X, Y, Z) und `half` (untere oder obere Hälfte als Vorlage) sind Auswahlfelder, `center` setzt die Linie. Einfacher zu bedienen als Mirror, der mehrere Achsen gleichzeitig kann | 2D, 3D |
@@ -66,6 +71,10 @@ beliebigen Koordinaten abtastet.
 - **Bewegungsübergang:** Slide an A (`x` = −t), Slide an B (`x` = 1 − t), beide in Add; t von einem LFO.
 - **Jeder Effekt auf seinem Bereich:** jeweils ein Ausgangs-/Region-Node pro Effekt (Rechteck in der Vorschau
   ziehen), dann mit Add oder Blend zusammensetzen, am Ende ein Ausgang.
+- **Sternenhimmel über Farbverlauf:** Starfield (durchsichtig) mit Blend (Mode *Over*, B) über einen dunklen Linear
+  Gradient; `drift` lässt ihn fliegen.
+- **Lava-Lampe:** Metaballs, danach Color Adjust (Farbton mit einem langsamen LFO) für wechselnde Farben.
+- **Ringe mit Inhalt:** Expanding Shapes als `mask` einer Mask, Plasma als Content.
 - **Master:** Ausgang `brightness` für die Gesamthelligkeit, Color Adjust `gamma`, Strobe für den Master-Blitz.
 
 2D-Nodes lassen `p.z` unverändert, sie laufen also auch in einem Cube, wirken dort aber

@@ -7,6 +7,7 @@ wh_add_library(wh_nodes
         src/builtin_generators.cpp
         src/builtin_library.cpp
         src/builtin_modifiers.cpp
+        src/builtin_shapes.cpp
         src/builtin_nodes.cpp
         src/builtin_transforms.cpp
         src/builtin_color_values.cpp

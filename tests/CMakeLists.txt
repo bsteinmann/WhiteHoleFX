@@ -103,6 +103,7 @@ endif()
 if(TARGET wh_gpu_webgpu)
     add_executable(wh_gpu_tests
         gpu_device/node_catalog_on_device_test.cpp
+        gpu_device/node_patterns_on_device_test.cpp
         gpu_device/session_on_device_test.cpp
         gpu_device/stage_on_device_test.cpp
         gpu_device/webgpu_device_test.cpp)
