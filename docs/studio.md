@@ -177,6 +177,24 @@ gewählt ist. Die Regler Left, Top, Width und Height im Parameter-Panel ziehen m
 Ziehens bleibt der Bildausschnitt stehen, danach passt er sich wieder an. Jede Ziehbewegung ist ein
 Schritt für Rückgängig.
 
+## Node-Presets
+
+Eine Kombination von Nodes, die sich bewährt hat, lässt sich als Preset merken:
+
+- **Speichern:** Nodes im Node-Editor auswählen, Rechtsklick auf einen davon, „Als Preset speichern …“,
+  Namen eingeben. Ein gleichnamiges Preset wird nach Rückfrage ersetzt. Gemerkt werden die Nodes mit
+  ihren Parametern und die Kabel zwischen ihnen; Kabel nach draußen und der Ausgang gehören nicht dazu.
+- **Einfügen:** Rechtsklick auf freie Fläche, „Preset einfügen“, Namen wählen. Die Nodes erscheinen an
+  der Maus als ganz normale Nodes (ausgewählt, ein Schritt für Rückgängig) und sind danach nicht mehr
+  mit dem Preset verbunden. Presets gelten für alle Projekte.
+- **Löschen:** Rechtsklick auf freie Fläche, „Preset löschen“.
+
+Presets liegen als Textdateien (`<Name>.whfxnodes`) im Ordner `presets` des Datenordners des Programms
+(Linux `~/.local/share/WhiteHoleFX/presets`, Windows `%APPDATA%\WhiteHoleFX\presets`). Das Format ist das
+Projektformat nur mit `node`- und `connect`-Zeilen (siehe [Projektdatei](project-format.md)), man kann es
+also im Texteditor lesen, ändern und weitergeben: Datei in den Ordner legen, fertig. Namen dürfen keines
+von `\ / : * ? " < > |` enthalten und höchstens 64 Zeichen lang sein.
+
 ## Testmodus
 
 Das Dock „Testmodus“ (rechts, teilt sich den Platz mit Layout und Parameter) ersetzt die Farben des

@@ -5,6 +5,9 @@
 // dem normalen Betrieb nichts zu tun hat.
 #include <QPointF>
 #include <QString>
+#include <QTemporaryDir>
+
+#include <filesystem>
 
 #include "node_editor.hpp"
 #include "node_search.hpp"
@@ -120,6 +123,41 @@ QString NodeEditor::exercise() {
     removeSelected();
     if (nodes_.size() != nodesNow) {
         return QStringLiteral("Duplizieren: die Kopie war nicht ausgewählt");
+    }
+
+    // Presets: speichern, einfügen, löschen, in einem Wegwerf-Ordner statt im Ordner des Nutzers.
+    {
+        QTemporaryDir temp;
+        if (!temp.isValid()) {
+            return QStringLiteral("Preset: kein temporärer Ordner");
+        }
+        const QByteArray folder = temp.path().toUtf8();
+        const runtime::PresetStore store{
+            std::filesystem::path{std::u8string{reinterpret_cast<const char8_t*>(folder.constData()),
+                                                static_cast<std::size_t>(folder.size())}}};
+        const runtime::PresetStore* const userStore = presets_;
+        presets_ = &store;
+        QString problem;
+        scene_.clearSelection();
+        itemOf(*source)->setSelected(true);
+        itemOf(*sink)->setSelected(true);
+        const std::size_t before = nodes_.size();
+        if (!savePreset(QStringLiteral("Rauchtest")) || store.list().size() != 1) {
+            problem = QStringLiteral("Preset: Speichern");
+        } else if (!insertPreset(QStringLiteral("Rauchtest"), QPointF{500.0, 500.0}) || nodes_.size() != before + 2) {
+            problem = QStringLiteral("Preset: Einfügen (%1 Nodes statt %2)").arg(nodes_.size()).arg(before + 2);
+        } else {
+            removeSelected();  // die eingefügten Nodes sind ausgewählt
+            if (nodes_.size() != before) {
+                problem = QStringLiteral("Preset: die eingefügten Nodes waren nicht ausgewählt");
+            } else if (!deletePreset(QStringLiteral("Rauchtest")) || !store.list().empty()) {
+                problem = QStringLiteral("Preset: Löschen");
+            }
+        }
+        presets_ = userStore;
+        if (!problem.isEmpty()) {
+            return problem;
+        }
     }
 
     // Beide Nodes auswählen und löschen

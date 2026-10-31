@@ -15,6 +15,7 @@
 #include "whitehole/nodes/builtin_library.hpp"
 #include "whitehole/output/udp_sender.hpp"
 #include "whitehole/runtime/gated_sink.hpp"
+#include "whitehole/runtime/node_preset.hpp"
 #include "whitehole/runtime/player.hpp"
 
 class QAction;
@@ -109,6 +110,7 @@ private:
     std::unique_ptr<output::UdpSender> udp_;
     std::unique_ptr<runtime::GatedPacketSink> gate_;
     std::unique_ptr<runtime::Player> player_;
+    std::unique_ptr<runtime::PresetStore> presets_;  // Ordner mit Node-Presets im Datenordner des Nutzers
     QString deviceNote_;
 
     PreviewWidget* preview_{nullptr};

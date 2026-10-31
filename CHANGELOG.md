@@ -1,5 +1,13 @@
 # Änderungen
 
+## 0.11.0
+
+- **Node-Presets:** ausgewählte Nodes samt Parametern und Kabeln als Datei merken („Als Preset speichern …“
+  im Kontextmenü des Node-Editors) und über „Preset einfügen“ als normale Nodes wieder einfügen,
+  in jedem Projekt. Dateien: `<Name>.whfxnodes` im Datenordner, Projektformat mit `node`/`connect`
+- Neu in `wh_runtime`: `presetToText`, `presetFromText`, `PresetStore` (Ordner mit Presets),
+  `applyClipboard` (gemeinsamer Weg für Einfügen und Preset-Export), `Player::registry()`
+
 ## 0.10.0
 
 - **Neue Generatoren** (eigene Umsetzungen gängiger Lichteffekt-Ideen, alle zustandslos): Metaballs,

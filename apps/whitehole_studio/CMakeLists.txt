@@ -23,6 +23,7 @@ add_executable(whitehole_studio
     node_editor_exercise.cpp
     node_editor.hpp
     node_editor_menu.cpp
+    node_editor_presets.cpp
     node_editor_search.cpp
     node_items.cpp
     node_search.hpp

@@ -14,6 +14,7 @@
 #include <vector>
 
 #include "whitehole/core/ids.hpp"
+#include "whitehole/core/result.hpp"
 #include "whitehole/core/types.hpp"
 #include "whitehole/graph/graph_model.hpp"
 
@@ -44,5 +45,13 @@ struct NodeClipboard {
 /// Kopiert die Nodes aus `selection` (unbekannte Ids werden übersprungen) in der Reihenfolge des
 /// Graphen, dazu alle Kabel, deren beide Enden in der Auswahl liegen.
 [[nodiscard]] NodeClipboard copyNodes(const graph::Graph& graph, std::span<const NodeId> selection);
+
+/// Legt die Nodes der Zwischenablage im Graphen an (Parameter und Kabel inklusive); `offset` wird auf
+/// ihre Positionen addiert. Liefert die neuen Ids in der Reihenfolge der Zwischenablage. Scheitert
+/// ein Schritt, bleibt der Graph möglicherweise halb gefüllt: Der Aufrufer muss ihn zurücksetzen
+/// (der Player sichert dafür das Projekt, ein Preset-Export arbeitet auf einem Wegwerf-Graphen).
+/// Fehler: die von Graph::addNode, setParameter und connect, InvalidArgument bei beschädigten Indizes.
+[[nodiscard]] Result<std::vector<NodeId>> applyClipboard(graph::Graph& graph, const NodeClipboard& clipboard,
+                                                         Vec2 offset);
 
 }  // namespace whitehole::runtime

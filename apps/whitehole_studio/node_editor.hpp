@@ -28,6 +28,7 @@
 #include <vector>
 
 #include "node_items.hpp"
+#include "whitehole/runtime/node_preset.hpp"
 #include "whitehole/runtime/player.hpp"
 
 class QMenu;
@@ -55,6 +56,20 @@ public:
     bool paste(const std::optional<QPointF>& scenePos = std::nullopt);
     bool duplicateSelection();
     [[nodiscard]] bool canPaste() const noexcept { return !clipboard_.empty(); }
+
+    /// Presets: ausgewählte Nodes samt Kabeln als Datei merken und später als normale Nodes einfügen
+    /// (siehe runtime/node_preset.hpp). Der Ordner gehört dem Aufrufer und muss den Editor überleben;
+    /// ohne Ordner gibt es die Menüpunkte nicht.
+    void setPresetStore(const runtime::PresetStore* store) noexcept { presets_ = store; }
+    /// Speichert die ausgewählten Nodes unter `name` (ersetzt ein gleichnamiges Preset). Meldet Fehler
+    /// über `failed`, Erfolg über `notice`.
+    bool savePreset(const QString& name);
+    /// Fragt nach einem Namen (und beim Ersetzen nach Bestätigung), dann savePreset.
+    bool savePresetInteractive();
+    /// Fügt das Preset mit der linken oberen Ecke an `scenePos` ein; die Kopie ist danach ausgewählt.
+    bool insertPreset(const QString& name, const QPointF& scenePos);
+    /// Löscht ein Preset (ohne Rückfrage; die fragt das Menü).
+    bool deletePreset(const QString& name);
 
     /// Der Node, der als einziges ausgewählt ist (leer bei keiner oder mehreren Auswahlen).
     [[nodiscard]] std::optional<NodeId> selectedNode() const;
@@ -119,6 +134,8 @@ private:
     void cancelWire();
 
     void buildAddMenu(QMenu& menu, const QPointF& scenePos);
+    /// Untermenüs "Preset einfügen" und "Preset löschen" (nur mit Preset-Ordner).
+    void buildPresetMenus(QMenu& menu, const QPointF& scenePos);
     /// Suchfeld zum Hinzufügen eines Nodes an `scenePos`.
     void showSearch(const QPointF& scenePos);
     /// Baut die Szene aus dem Graphen auf (ohne Auswahl zu retten, siehe rebuild).
@@ -129,6 +146,7 @@ private:
 
     runtime::Player& player_;
     runtime::NodeClipboard clipboard_;
+    const runtime::PresetStore* presets_{nullptr};
     QGraphicsScene scene_;
     std::unordered_map<std::uint64_t, NodeItem*> nodes_;
     std::vector<WireItem*> wires_;

@@ -45,4 +45,32 @@ NodeClipboard copyNodes(const graph::Graph& graph, std::span<const NodeId> selec
     return clip;
 }
 
+Result<std::vector<NodeId>> applyClipboard(graph::Graph& graph, const NodeClipboard& clipboard, Vec2 offset) {
+    std::vector<NodeId> ids;
+    ids.reserve(clipboard.nodes.size());
+    for (const ClipboardNode& node : clipboard.nodes) {
+        const auto id = graph.addNode(node.typeId, Vec2{node.position.x + offset.x, node.position.y + offset.y});
+        if (!id.ok()) {
+            return id.error();
+        }
+        ids.push_back(id.value());
+        for (const auto& [key, value] : node.parameters) {
+            if (const auto set = graph.setParameter(id.value(), key, value); !set.ok()) {
+                return set.error();
+            }
+        }
+    }
+    for (const ClipboardWire& wire : clipboard.wires) {
+        if (wire.from >= ids.size() || wire.to >= ids.size()) {
+            return Error{ErrorCode::InvalidArgument, "Zwischenablage ist beschädigt"};
+        }
+        const auto connected = graph.connect(graph::PortRef{ids[wire.from], wire.fromPort},
+                                             graph::PortRef{ids[wire.to], wire.toPort});
+        if (!connected.ok()) {
+            return connected.error();
+        }
+    }
+    return ids;
+}
+
 }  // namespace whitehole::runtime

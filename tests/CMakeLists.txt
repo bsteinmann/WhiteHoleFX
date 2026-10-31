@@ -59,6 +59,7 @@ add_executable(wh_tests
     runtime/player_layout_test.cpp
     runtime/player_arrange_test.cpp
     runtime/node_clipboard_test.cpp
+    runtime/node_preset_test.cpp
     runtime/player_edit_test.cpp
     runtime/player_test.cpp
     runtime/session_test.cpp

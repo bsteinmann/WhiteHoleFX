@@ -21,12 +21,14 @@
 #include <QMenuBar>
 #include <QMessageBox>
 #include <QMimeData>
+#include <QStandardPaths>
 #include <QStatusBar>
 #include <QToolBar>
 #include <QUrl>
 
 #include <algorithm>
 #include <cmath>
+#include <filesystem>
 
 #include "layout_panel.hpp"
 #include "node_editor.hpp"
@@ -107,6 +109,12 @@ MainWindow::MainWindow(gpu::IGpuDevice* device, const QString& deviceNote, QWidg
     dock_->raise();
 
     editor_ = new NodeEditor{*player_, this};
+    {
+        const QByteArray folder = (QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + QStringLiteral("/presets")).toUtf8();
+        presets_ = std::make_unique<runtime::PresetStore>(std::filesystem::path{
+            std::u8string{reinterpret_cast<const char8_t*>(folder.constData()), static_cast<std::size_t>(folder.size())}});
+        editor_->setPresetStore(presets_.get());
+    }
     connect(editor_, &NodeEditor::edited, this, &MainWindow::onGraphEdited);
     connect(editor_, &NodeEditor::selectionChanged, this, &MainWindow::onNodeSelected);
     connect(editor_, &NodeEditor::notice, this, [this](const QString& message) { statusBar()->showMessage(message, 8000); });

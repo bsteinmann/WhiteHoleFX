@@ -98,6 +98,9 @@ public:
     /// Bildrate des Projekts (40, wenn keins geladen ist).
     [[nodiscard]] double framesPerSecond() const noexcept { return project_ ? project_->framesPerSecond : 40.0; }
 
+    /// Die Node-Typen, mit denen dieser Player arbeitet (für Presets).
+    [[nodiscard]] std::shared_ptr<const graph::INodeRegistry> registry() const { return library_.registry; }
+
     /// Alle Nodes mit mindestens einem Parameter, in Graph-Reihenfolge. Leer ohne Projekt.
     [[nodiscard]] std::vector<NodeInfo> nodes() const;
 

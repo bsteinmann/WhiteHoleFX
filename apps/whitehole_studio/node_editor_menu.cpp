@@ -63,6 +63,10 @@ void NodeEditor::contextMenuEvent(QContextMenuEvent* event) {
         connect(menu.addAction(tr("Kopieren\tStrg+C")), &QAction::triggered, this, [this]() { copySelection(); });
         connect(menu.addAction(tr("Duplizieren\tStrg+D")), &QAction::triggered, this,
                 [this]() { duplicateSelection(); });
+        if (presets_ != nullptr) {
+            connect(menu.addAction(tr("Als Preset speichern …")), &QAction::triggered, this,
+                    [this]() { savePresetInteractive(); });
+        }
         menu.addSeparator();
         QAction* action = menu.addAction(tr("Node löschen"));
         connect(action, &QAction::triggered, this, [this, node]() {
@@ -84,6 +88,7 @@ void NodeEditor::contextMenuEvent(QContextMenuEvent* event) {
         QAction* pasteAction = menu.addAction(tr("Einfügen\tStrg+V"));
         pasteAction->setEnabled(canPaste());
         connect(pasteAction, &QAction::triggered, this, [this, scenePos]() { paste(scenePos); });
+        buildPresetMenus(menu, scenePos);
     }
     if (!menu.isEmpty()) {
         menu.exec(event->globalPos());
