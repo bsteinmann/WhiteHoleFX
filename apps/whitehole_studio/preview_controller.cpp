@@ -378,8 +378,14 @@ QString PreviewController::exercise() {
             return QStringLiteral("Vorschau: Rückgängig scheiterte nach %1 Schritten").arg(i);
         }
     }
+    // Eine harmlose Änderung leert den Wiederholen-Stapel, sonst stünden die vier zurückgenommenen
+    // Schritte dort und das Hauptfenster zählte beim Wiederholen mehr Schritte als beim Zurücknehmen.
+    report(player_.setRegion(std::nullopt));
     panel_->rebuild();
     select({});
+    if (player_.canRedo()) {
+        return QStringLiteral("Vorschau: der Wiederholen-Stapel ist nicht leer");
+    }
     if (originOf() != original || player_.project()->region.has_value()) {
         return QStringLiteral("Vorschau: Rückgängig stellte den Ausgangszustand nicht her");
     }
