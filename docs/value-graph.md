@@ -150,10 +150,10 @@ laufen immer. Ein vergessener, unverbundener Node kostet nichts.
 
 | Typ | Ausgang | Parameter | Hinweis |
 |---|---|---|---|
-| `wh.value.time` | `seconds` | `speed`, `offset` | Zeit × Tempo + Versatz; negatives Tempo läuft rückwärts |
+| `wh.value.time` | `seconds` | `speed`, `offset`, `speedMin`, `speedMax` | Zeit × Tempo + Versatz; negatives Tempo läuft rückwärts. `speedMin`/`speedMax` stellen nur den Bereich des Reglers in der Oberfläche ein |
 | `wh.value.number` | `out` | `value` | Konstante, oder Relais für einen modulierten Wert |
 | `wh.value.color` | `out` (Color) | `color` | Farbquelle für Farbparameter und Field-Eingänge |
-| `wh.value.lfo` | `out` | `shape`, `frequency`, `phase`, `min`, `max` | Sinus, Dreieck, Sägezahn, Rechteck; zustandslos |
+| `wh.value.lfo` | `out` | `shape`, `frequency`, `phase`, `min`, `max`, `frequencyMin`, `frequencyMax` | Sinus, Dreieck, Sägezahn, Rechteck; zustandslos. `frequencyMin`/`frequencyMax`: Bereich des Reglers |
 | `wh.value.random` | `out` | `rate`, `seed`, `smooth` | Hash-basiert, reproduzierbar; weich oder gehalten |
 | `wh.value.map` | `out` | `value`, `inMin`, `inMax`, `outMin`, `outMax`, `clamp` | Bereich umrechnen |
 | `wh.value.smooth` | `out` | `value`, `time` | Tiefpass erster Ordnung; hat Zustand |

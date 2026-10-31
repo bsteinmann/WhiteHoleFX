@@ -2,6 +2,8 @@
 
 #include <algorithm>
 #include <cmath>
+#include <initializer_list>
+#include <limits>
 #include <string>
 
 namespace whitehole::mapping {
@@ -165,5 +167,70 @@ Result<void> validateShape(const FixtureShape& shape) { return std::visit(Valida
 std::uint64_t ledCount(const FixtureShape& shape) noexcept { return std::visit(Counter{}, shape); }
 Box localBox(const FixtureShape& shape) noexcept { return std::visit(BoxOf{}, shape); }
 std::vector<Vec3> localPositions(const FixtureShape& shape) { return std::visit(PositionsOf{}, shape); }
+
+namespace {
+
+float smallest(std::initializer_list<float> values) noexcept {
+    float best = 0.0F;
+    for (const float v : values) {
+        if (v > 0.0F && (best == 0.0F || v < best)) {
+            best = v;
+        }
+    }
+    return best;
+}
+
+struct SpacingOf {
+    float operator()(const MatrixShape& m) const noexcept {
+        const float found = smallest({m.columns > 1 ? m.pitch.x : 0.0F, m.rows > 1 ? m.pitch.y : 0.0F});
+        return found > 0.0F ? found : smallest({m.pitch.x, m.pitch.y});
+    }
+    float operator()(const StripShape& s) const noexcept {
+        if (s.count < 2) {
+            return 0.0F;
+        }
+        const float dx = s.end.x - s.start.x;
+        const float dy = s.end.y - s.start.y;
+        const float dz = s.end.z - s.start.z;
+        return std::sqrt(dx * dx + dy * dy + dz * dz) / static_cast<float>(s.count);
+    }
+    float operator()(const GridShape& g) const noexcept {
+        const float found = smallest({g.nx > 1 ? g.pitch.x : 0.0F, g.ny > 1 ? g.pitch.y : 0.0F,
+                                      g.nz > 1 ? g.pitch.z : 0.0F});
+        return found > 0.0F ? found : smallest({g.pitch.x, g.pitch.y, g.pitch.z});
+    }
+    float operator()(const PointsShape& p) const noexcept {
+        constexpr std::size_t kMaxPoints = 20000;
+        constexpr std::size_t kSamples = 256;
+        if (p.points.size() < 2 || p.points.size() > kMaxPoints) {
+            return 0.0F;
+        }
+        const std::size_t step = std::max<std::size_t>(1, p.points.size() / kSamples);
+        float best = 0.0F;
+        for (std::size_t i = 0; i < p.points.size(); i += step) {
+            float nearest = std::numeric_limits<float>::max();
+            for (std::size_t j = 0; j < p.points.size(); ++j) {
+                if (j == i) {
+                    continue;
+                }
+                const float dx = p.points[i].x - p.points[j].x;
+                const float dy = p.points[i].y - p.points[j].y;
+                const float dz = p.points[i].z - p.points[j].z;
+                const float d = std::sqrt(dx * dx + dy * dy + dz * dz);
+                if (d > 1e-6F) {
+                    nearest = std::min(nearest, d);
+                }
+            }
+            if (nearest < std::numeric_limits<float>::max()) {
+                best = best == 0.0F ? nearest : std::min(best, nearest);
+            }
+        }
+        return best;
+    }
+};
+
+}  // namespace
+
+float ledSpacing(const FixtureShape& shape) noexcept { return std::visit(SpacingOf{}, shape); }
 
 }  // namespace whitehole::mapping

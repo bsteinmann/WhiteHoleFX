@@ -285,14 +285,21 @@ void LayoutPanel::addStrip() {
 }
 
 void LayoutPanel::removeSelected() {
-    const mapping::FixtureId id = selectedId();
-    if (player_.project() == nullptr || list_->currentItem() == nullptr) {
+    std::vector<mapping::FixtureId> ids = selectedIds();
+    if (ids.empty() && list_->currentItem() != nullptr) {
+        ids.push_back(selectedId());
+    }
+    if (player_.project() == nullptr || ids.empty()) {
         return;
     }
-    const Result<void> r = player_.removeFixture(id);
-    if (!r.ok()) {
-        Q_EMIT failed(fromStd(r.error().message));
-        return;
+    // Jedes gewählte Fixture, nicht nur das zuletzt angelegte; beim ersten Fehler (z. B. das letzte
+    // gepatchte Fixture) wird abgebrochen und der Grund gemeldet.
+    for (const mapping::FixtureId id : ids) {
+        const Result<void> r = player_.removeFixture(id);
+        if (!r.ok()) {
+            Q_EMIT failed(fromStd(r.error().message));
+            break;
+        }
     }
     fillList(mapping::FixtureId{});
     Q_EMIT edited();
@@ -351,6 +358,19 @@ QString LayoutPanel::exerciseArrange() {
         }
     }
     distribute(runtime::Player::Axis::X);
+    // Ein Fixture vorn in der Liste entfernen (nicht nur das zuletzt angelegte), dann zurücknehmen.
+    const std::size_t withAdded = player_.project()->layout.fixtures().size();
+    setSelectedIds({player_.project()->layout.fixtures().front().id});
+    removeSelected();
+    if (player_.project()->layout.fixtures().size() != withAdded - 1) {
+        return QStringLiteral("Entfernen: das erste Fixture liess sich nicht entfernen (%1 statt %2 Fixtures)")
+            .arg(player_.project()->layout.fixtures().size())
+            .arg(withAdded - 1);
+    }
+    if (!player_.undo().ok()) {
+        return QStringLiteral("Entfernen: Rückgängig scheiterte");
+    }
+    rebuild();
     // Aufräumen: die zwei Strips wieder entfernen (je einzeln gewählt, das Formular folgt der Auswahl).
     for (int i = 0; i < 2; ++i) {
         setSelectedIds({player_.project()->layout.fixtures().back().id});

@@ -219,9 +219,22 @@ Result<void> Player::save(const std::string& path) {
     return {};
 }
 
-Result<preview::Image> Player::image(const preview::PreviewOptions& options) const {
+Result<preview::Image> Player::image(const preview::PreviewOptions& given) const {
     if (!project_) {
         return Error{ErrorCode::InvalidArgument, "Es ist kein Projekt geladen"};
+    }
+    // Die Vorschau zeigt, was die LEDs ausgeben: je Fixture das Gamma seines Patches.
+    preview::PreviewOptions options = given;
+    if (options.fixtureGamma.empty()) {
+        for (const mapping::FixtureRange& range : map_.ranges) {
+            float gamma = options.gamma;
+            for (const output::FixturePatch& patch : project_->patches) {
+                if (patch.fixture == range.fixture) {
+                    gamma = patch.color.gamma;
+                }
+            }
+            options.fixtureGamma.push_back(gamma);
+        }
     }
     if (session_) {
         std::vector<ColorRgba> colors = session_->latestColors();

@@ -21,13 +21,14 @@
 #include <QVBoxLayout>
 
 #include <algorithm>
+#include <array>
 #include <cmath>
 #include <limits>
 #include <memory>
+#include <optional>
 #include <type_traits>
 #include <variant>
 
-#include "whitehole/preview/preview.hpp"
 
 namespace whitehole::studio {
 
@@ -39,7 +40,22 @@ using Show = std::function<void(const graph::ParameterValue&)>;
 struct Editor {
     QWidget* widget{nullptr};
     Show show;  // zeigt einen (gespeicherten) Wert an, ohne Änderungssignale auszulösen
+    /// Zahlenregler: neuer Bereich des Schiebereglers (aus den Parametern "<name>Min"/"<name>Max").
+    std::function<void(double, double)> setSliderRange;
+    /// Wird mit dem gespeicherten Wert aufgerufen, nachdem der Parameter geändert wurde.
+    std::function<void(const graph::ParameterValue&)> onStored;
 };
+
+/// Schrittweite aus einer Spanne: 1, 2 oder 5 mal einer Zehnerpotenz, etwa ein Hundertstel der Spanne.
+double niceStep(double span) {
+    const double raw = span / 100.0;
+    if (!(raw > 0.0) || !std::isfinite(raw)) {
+        return 1.0;
+    }
+    const double magnitude = std::pow(10.0, std::floor(std::log10(raw)));
+    const double n = raw / magnitude;
+    return (n < 2.0 ? 1.0 : (n < 5.0 ? 2.0 : 5.0)) * magnitude;
+}
 
 QString fromStd(const std::string& text) { return QString::fromUtf8(text.data(), static_cast<qsizetype>(text.size())); }
 
@@ -51,17 +67,20 @@ QDoubleSpinBox* makeSpin(QWidget* parent, double min, double max, double step) {
     return spin;
 }
 
+// Farben werden so gespeichert, wie man sie auf dem Bildschirm sieht (siehe color_encoder.hpp):
+// der Wert 0,5 ist ein mittleres Grau. Die Ausgabe potenziert mit Gamma, die Vorschau ebenfalls.
+int byteOf(float v) { return static_cast<int>(std::lround(std::clamp(v, 0.0F, 1.0F) * 255.0F)); }
+
 QColor toQColor(const ColorRgba& c) {
     QColor q;
-    q.setRgb(preview::toSrgb8(c.r), preview::toSrgb8(c.g), preview::toSrgb8(c.b));
+    q.setRgb(byteOf(c.r), byteOf(c.g), byteOf(c.b));
     q.setAlpha(static_cast<int>(std::lround(std::clamp(c.a, 0.0F, 1.0F) * 255.0F)));
     return q;
 }
 
 ColorRgba fromQColor(const QColor& q) {
-    return ColorRgba{preview::fromSrgb8(static_cast<std::uint8_t>(q.red())),
-                     preview::fromSrgb8(static_cast<std::uint8_t>(q.green())),
-                     preview::fromSrgb8(static_cast<std::uint8_t>(q.blue())), static_cast<float>(q.alpha()) / 255.0F};
+    return ColorRgba{static_cast<float>(q.red()) / 255.0F, static_cast<float>(q.green()) / 255.0F,
+                     static_cast<float>(q.blue()) / 255.0F, static_cast<float>(q.alpha()) / 255.0F};
 }
 
 /// Farbfläche mit Schachbrett dahinter, damit man Transparenz sieht.
@@ -82,33 +101,49 @@ void paintSwatch(QPushButton* button, const ColorRgba& c) {
     painter.end();
     button->setIcon(QIcon{pixmap});
     button->setIconSize(size);
-    button->setToolTip(QStringLiteral("r %1  g %2  b %3  a %4 (linear)")
+    button->setToolTip(QStringLiteral("r %1  g %2  b %3  a %4")
                            .arg(static_cast<double>(c.r), 0, 'f', 3)
                            .arg(static_cast<double>(c.g), 0, 'f', 3)
                            .arg(static_cast<double>(c.b), 0, 'f', 3)
                            .arg(static_cast<double>(c.a), 0, 'f', 3));
 }
 
-Editor numberEditor(const runtime::ParameterInfo& info, const Commit& commit, QWidget* parent) {
+Editor numberEditor(const runtime::ParameterInfo& info, const Commit& commit, QWidget* parent,
+                    std::optional<std::array<double, 2>> sliderRange = std::nullopt) {
     auto* box = new QWidget{parent};
     auto* layout = new QHBoxLayout{box};
     layout->setContentsMargins(0, 0, 0, 0);
-    const bool ranged = info.minValue && info.maxValue && *info.maxValue > *info.minValue;
+    // Schieberegler-Bereich: aus den Geschwister-Parametern "<name>Min"/"<name>Max" (einstellbar im
+    // Node), sonst aus dem festen Bereich des Parameters, sonst gar kein Schieberegler.
+    auto range = std::make_shared<std::array<double, 2>>(std::array<double, 2>{0.0, 1.0});
+    bool sliding = false;
+    if (sliderRange && (*sliderRange)[1] > (*sliderRange)[0]) {
+        *range = *sliderRange;
+        sliding = true;
+    } else if (info.minValue && info.maxValue && *info.maxValue > *info.minValue) {
+        *range = {*info.minValue, *info.maxValue};
+        sliding = true;
+    }
     const double lo = info.minValue.value_or(-1e9);
     const double hi = info.maxValue.value_or(1e9);
-    auto* spin = makeSpin(box, lo, hi, ranged ? (hi - lo) / 100.0 : 0.1);
+    const bool degrees = info.displayName.find("(deg)") != std::string::npos;
+    auto* spin = makeSpin(box, lo, hi, sliding ? niceStep((*range)[1] - (*range)[0]) : (degrees ? 5.0 : 1.0));
+    spin->setAccelerated(true);  // gedrückt halten wird schneller
     QSlider* slider = nullptr;
-    if (ranged) {
+    if (sliding) {
         slider = new QSlider{Qt::Horizontal, box};
         slider->setRange(0, 1000);
         layout->addWidget(slider, 1);
     }
     layout->addWidget(spin);
 
-    const auto sliderOf = [lo, hi](double v) { return static_cast<int>(std::lround((v - lo) / (hi - lo) * 1000.0)); };
+    const auto sliderOf = [range](double v) {
+        const double t = ((v - (*range)[0]) / ((*range)[1] - (*range)[0])) * 1000.0;
+        return static_cast<int>(std::lround(std::clamp(t, 0.0, 1000.0)));
+    };
     if (slider != nullptr) {
         QObject::connect(slider, &QSlider::valueChanged, spin, [=](int v) {
-            const double value = lo + (hi - lo) * static_cast<double>(v) / 1000.0;
+            const double value = (*range)[0] + ((*range)[1] - (*range)[0]) * static_cast<double>(v) / 1000.0;
             {
                 const QSignalBlocker block{spin};
                 spin->setValue(value);
@@ -134,6 +169,15 @@ Editor numberEditor(const runtime::ParameterInfo& info, const Commit& commit, QW
             const QSignalBlocker blockSlider{slider};
             slider->setValue(sliderOf(v));
         }
+    };
+    editor.setSliderRange = [=](double a, double b) {
+        if (slider == nullptr || !(b > a)) {
+            return;
+        }
+        *range = {a, b};
+        spin->setSingleStep(niceStep(b - a));
+        const QSignalBlocker blockSlider{slider};
+        slider->setValue(sliderOf(spin->value()));
     };
     editor.show(info.value);
     return editor;
@@ -262,11 +306,12 @@ Editor textEditor(const runtime::ParameterInfo& info, const Commit& commit, QWid
     return editor;
 }
 
-Editor makeEditor(const runtime::ParameterInfo& info, const Commit& commit, QWidget* parent) {
+Editor makeEditor(const runtime::ParameterInfo& info, const Commit& commit, QWidget* parent,
+                  std::optional<std::array<double, 2>> sliderRange) {
     switch (info.value.index()) {
         case 0: return boolEditor(info, commit, parent);
         case 1: return integerEditor(info, commit, parent);
-        case 2: return numberEditor(info, commit, parent);
+        case 2: return numberEditor(info, commit, parent, sliderRange);
         case 3: return vectorEditor(info, commit, parent, 2);
         case 4: return vectorEditor(info, commit, parent, 3);
         case 5: return colorEditor(info, commit, parent);
@@ -296,8 +341,18 @@ void ParameterPanel::rebuild(const std::vector<runtime::NodeInfo>& nodes) {
         auto* group = new QGroupBox{fromStd(node.title), content};
         auto* grid = new QGridLayout{group};
         int row = 0;
+        std::unordered_map<std::string, std::shared_ptr<Editor>> holders;
+        const auto numberOf = [&node](const std::string& name) -> std::optional<double> {
+            for (const runtime::ParameterInfo& p : node.parameters) {
+                if (p.key == name && p.value.index() == 2) {
+                    return std::get<double>(p.value);
+                }
+            }
+            return std::nullopt;
+        };
         for (const runtime::ParameterInfo& info : node.parameters) {
             auto holder = std::make_shared<Editor>();
+            holders[info.key] = holder;
             const NodeId id = node.id;
             const std::string key = info.key;
             const Commit commit = [this, holder, id, key](graph::ParameterValue value) {
@@ -306,9 +361,20 @@ void ParameterPanel::rebuild(const std::vector<runtime::NodeInfo>& nodes) {
                 }
                 if (const auto stored = handler_(id, key, std::move(value))) {
                     holder->show(*stored);
+                    if (holder->onStored) {
+                        holder->onStored(*stored);
+                    }
                 }
             };
-            *holder = makeEditor(info, commit, group);
+            std::optional<std::array<double, 2>> sliderRange;
+            if (info.value.index() == 2) {
+                const auto low = numberOf(key + "Min");
+                const auto high = numberOf(key + "Max");
+                if (low && high) {
+                    sliderRange = std::array<double, 2>{*low, *high};
+                }
+            }
+            *holder = makeEditor(info, commit, group, sliderRange);
 
             auto* label = new QLabel{fromStd(info.displayName), group};
             auto* reset = new QToolButton{group};
@@ -327,6 +393,28 @@ void ParameterPanel::rebuild(const std::vector<runtime::NodeInfo>& nodes) {
             grid->addWidget(holder->widget, row, 1);
             grid->addWidget(reset, row, 2);
             ++row;
+        }
+        // "<name>Min" und "<name>Max" stellen den Bereich des Schiebereglers von "<name>" ein.
+        for (const runtime::ParameterInfo& info : node.parameters) {
+            const auto low = numberOf(info.key + "Min");
+            const auto high = numberOf(info.key + "Max");
+            if (info.value.index() != 2 || !low || !high) {
+                continue;
+            }
+            const auto target = holders[info.key];
+            const auto state = std::make_shared<std::array<double, 2>>(std::array<double, 2>{*low, *high});
+            holders[info.key + "Min"]->onStored = [target, state](const graph::ParameterValue& v) {
+                (*state)[0] = std::get<double>(v);
+                if (target->setSliderRange) {
+                    target->setSliderRange((*state)[0], (*state)[1]);
+                }
+            };
+            holders[info.key + "Max"]->onStored = [target, state](const graph::ParameterValue& v) {
+                (*state)[1] = std::get<double>(v);
+                if (target->setSliderRange) {
+                    target->setSliderRange((*state)[0], (*state)[1]);
+                }
+            };
         }
         grid->setColumnStretch(1, 1);
         column->addWidget(group);

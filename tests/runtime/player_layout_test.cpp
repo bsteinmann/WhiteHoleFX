@@ -271,3 +271,71 @@ TEST_CASE("Layout: Bearbeiten ohne Projekt ist ein Fehler", "[player][layout]") 
     CHECK_FALSE(player.setDestinations({}).ok());
     CHECK_FALSE(player.setSettings({}).ok());
 }
+
+TEST_CASE("Layout: jedes Fixture lässt sich entfernen, nicht nur das letzte", "[player][layout]") {
+    Rig rig;
+    const auto b = rig.player.addFixture("B", Vec3{10.0F, 0.0F, 0.0F}, strip(30), patchOn(2));
+    const auto c = rig.player.addFixture("C", Vec3{50.0F, 0.0F, 0.0F}, strip(30), patchOn(3));
+    REQUIRE(b.ok());
+    REQUIRE(c.ok());
+    REQUIRE(rig.fixtures() == 3);
+    REQUIRE(rig.player.start().ok());
+    REQUIRE(rig.player.step().ok());
+    // Das erste und das mittlere, im Lauf und gestoppt.
+    const auto removeFirst = rig.player.removeFixture(rig.panel());
+    if (!removeFirst.ok()) {
+        WARN(removeFirst.error().message);
+    }
+    CHECK(removeFirst.ok());
+    CHECK(rig.player.removeFixture(b.value()).ok());
+    CHECK(rig.fixtures() == 1);
+    CHECK(rig.player.step().ok());
+}
+
+TEST_CASE("Layout: wie die Oberfläche - Vorlage, Matrix und Strips anlegen, in beliebiger Reihenfolge entfernen",
+          "[player][layout]") {
+    const char* const kTemplate = R"(whitehole-project 1
+settings fps 40
+
+destination 0 127.0.0.1
+
+fixture Matrix
+  matrix 16 8 pitch 1 1 start top-left first rows serpentine
+  patch artnet destination 0 universe 0 channel 1 order RGB gamma 2.2 brightness 1
+end
+
+node verlauf wh.generator.gradient
+end
+output verlauf.out
+)";
+    for (int order = 0; order < 3; ++order) {
+        auto library = nodes::BuiltinLibrary::create().value();
+        FakeGpuDevice device;
+        RecordingSink recording;
+        runtime::GatedPacketSink gate{recording};
+        runtime::Player player{&device, *library, gate};
+        REQUIRE(player.loadText(kTemplate).ok());
+        std::vector<mapping::FixtureId> ids{player.project()->layout.fixtures().front().id};
+        for (int i = 0; i < 3; ++i) {
+            const auto patch = player.suggestPatch(60);
+            const auto id = player.addFixture("Strip " + std::to_string(i), Vec3{static_cast<float>(40 + 70 * i), 0.0F, 0.0F},
+                                              strip(60), patch);
+            REQUIRE(id.ok());
+            ids.push_back(id.value());
+        }
+        // Reihenfolge: 0 = von vorn, 1 = von hinten, 2 = aus der Mitte.
+        std::vector<mapping::FixtureId> order_ids = ids;
+        if (order == 1) {
+            std::reverse(order_ids.begin(), order_ids.end());
+        } else if (order == 2) {
+            order_ids = {ids[2], ids[0], ids[3], ids[1]};
+        }
+        for (std::size_t i = 0; i + 1 < order_ids.size(); ++i) {
+            const auto removed = player.removeFixture(order_ids[i]);
+            if (!removed.ok()) {
+                WARN("Reihenfolge " << order << ", Schritt " << i << ": " << removed.error().message);
+            }
+            CHECK(removed.ok());
+        }
+    }
+}

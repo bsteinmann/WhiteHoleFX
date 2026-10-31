@@ -16,13 +16,25 @@ let d = p.xy - vec2<f32>(0.5, 0.5);
 let r = vec2<f32>(c * d.x + s * d.y, -s * d.x + c * d.y) + vec2<f32>(0.5, 0.5);
 return @in(source, vec3<f32>(r.x, r.y, p.z));)wgsl";
 
-// Spiegelt an der Mittellinie: Die Koordinate wird auf die Hälfte <= 0.5 gefaltet.
+// Spiegelt an einer Linie (x, y oder z, jeweils an einer einstellbaren Stelle): Die Koordinate wird
+// auf die eine Seite gefaltet, die andere zeigt das Spiegelbild. Standard: die untere Hälfte (x < 0.5)
+// ist die Vorlage; "Other half" nimmt stattdessen die obere.
 constexpr const char* kMirrorBody = R"wgsl(var q = p;
+let high = @param(otherHalf) > 0.5;
 if (@param(mirrorX) > 0.5) {
-    q.x = 0.5 - abs(q.x - 0.5);
+    let c = @param(centerX);
+    let d = abs(q.x - c);
+    q.x = select(c - d, c + d, high);
 }
 if (@param(mirrorY) > 0.5) {
-    q.y = 0.5 - abs(q.y - 0.5);
+    let c = @param(centerY);
+    let d = abs(q.y - c);
+    q.y = select(c - d, c + d, high);
+}
+if (@param(mirrorZ) > 0.5) {
+    let c = @param(centerZ);
+    let d = abs(q.z - c);
+    q.z = select(c - d, c + d, high);
 }
 return @in(source, q);)wgsl";
 
@@ -56,7 +68,10 @@ std::vector<compiler::NodeDefinition> transformNodes() {
 
     nodes.push_back(fieldNode("wh.transform.mirror", "Mirror", "Transform",
                               {fieldInput("source", "Source"), fieldOutput()},
-                              {toggle("mirrorX", "Mirror X", true), toggle("mirrorY", "Mirror Y", false)},
+                              {toggle("mirrorX", "Mirror X", true), toggle("mirrorY", "Mirror Y", false),
+                               toggle("mirrorZ", "Mirror Z", false), number("centerX", "Center X", 0.5, 0.0, 1.0),
+                               number("centerY", "Center Y", 0.5, 0.0, 1.0), number("centerZ", "Center Z", 0.5, 0.0, 1.0),
+                               toggle("otherHalf", "Use other half", false)},
                               kMirrorBody));
 
     nodes.push_back(fieldNode("wh.transform.scale", "Scale", "Transform",

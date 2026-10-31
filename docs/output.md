@@ -71,6 +71,8 @@ Ist der Ausgang langsamer als die Engine, überspringt er alte Frames (`droppedF
 Effekt-Werte sind so gemeint, wie man sie auf einem Bildschirm sieht. Die LED strahlt
 linear, daher wird potenziert: `out = v^gamma`. Gamma 1 lässt alles unverändert, 2,2 ist
 ein üblicher Startwert. Das ist eine Konvention; wer lineares Licht will, nimmt Gamma 1.
+Die Vorschau im Studio rechnet genauso (`sRGB(v^gamma)` mit dem Gamma des Patches je Fixture), damit
+sie zeigt, was die LEDs ausgeben. Farbwähler speichern den Wert, den man sieht, ohne Umrechnung.
 
 ## Bekannte Grenzen
 

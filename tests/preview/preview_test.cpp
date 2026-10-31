@@ -234,3 +234,91 @@ TEST_CASE("Vorschau: ein dichter Strip bekommt kleinere Punkte als eine weite Ma
     CHECK(redMaxY - redMinY > 150);      // Matrix: vier Reihen großer Punkte
     CHECK(greenMaxY < redMinY);          // der Strip liegt oben (y = 6 über der Matrix)
 }
+
+namespace {
+
+/// Grauwert (rote Komponente) des Bildpunkts in der Mitte der ersten LED einer einzelnen Zeile.
+std::uint8_t centreRed(const Image& image) {
+    const std::size_t x = image.width / 2;
+    const std::size_t y = image.height / 2;
+    return image.rgba[(y * image.width + x) * 4];
+}
+
+}  // namespace
+
+TEST_CASE("Vorschau: ein Verlauf sieht gleichmäßig aus (Gamma der Ausgabe)", "[preview][gamma]") {
+    // Eine einzelne LED mit dem Wert 0,5: bei Gamma 2,2 zeigt der Bildschirm etwa 0,5 (Byte ~128),
+    // bei Gamma 1 das doppelte Licht (sRGB 188).
+    const mapping::LedMap map = bake(mapping::MatrixShape{1, 1, {1, 1}, {}});
+    const std::vector<ColorRgba> colors{ColorRgba{0.5F, 0.5F, 0.5F, 1.0F}};
+    PreviewOptions options;
+    options.gamma = 2.2F;
+    const auto defaulted = renderPreview(map, colors, options);
+    REQUIRE(defaulted.ok());
+    // Die Vorschau hebt Schwarz auf einen dunklen Grauwert an (kOffLed = 34): byte = 34 + wert * (1 - 34/255).
+    const auto shown = [](int value) { return 34 + static_cast<int>(std::lround(value * (1.0 - 34.0 / 255.0))); };
+    CHECK(std::abs(static_cast<int>(centreRed(defaulted.value())) - shown(128)) <= 3);
+
+    options.gamma = 1.0F;
+    const auto linear = renderPreview(map, colors, options);
+    REQUIRE(linear.ok());
+    CHECK(std::abs(static_cast<int>(centreRed(linear.value())) - shown(188)) <= 3);
+}
+
+TEST_CASE("Vorschau: Gamma je Fixture", "[preview][gamma]") {
+    mapping::Layout layout;
+    REQUIRE(layout.add("A", Vec3{}, mapping::MatrixShape{1, 1, {1, 1}, {}}).ok());
+    REQUIRE(layout.add("B", Vec3{4.0F, 0.0F, 0.0F}, mapping::MatrixShape{1, 1, {1, 1}, {}}).ok());
+    const mapping::LedMap map = layout.bake().value();
+    const std::vector<ColorRgba> colors(2, ColorRgba{0.5F, 0.5F, 0.5F, 1.0F});
+    PreviewOptions options;
+    options.fixtureGamma = {2.2F, 1.0F};
+    const auto image = renderPreview(map, colors, options);
+    REQUIRE(image.ok());
+    const Image& img = image.value();
+    // Die linke Hälfte (A) ist dunkler als die rechte (B).
+    const auto brightest = [&](bool left) {
+        int best = 0;
+        for (std::uint32_t y = 0; y < img.height; ++y) {
+            for (std::uint32_t x = left ? 0 : img.width / 2; x < (left ? img.width / 2 : img.width); ++x) {
+                best = std::max<int>(best, img.rgba[(std::size_t{y} * img.width + x) * 4]);
+            }
+        }
+        return best;
+    };
+    CHECK(brightest(true) + 30 < brightest(false));
+}
+
+TEST_CASE("Vorschau: Punkte überlappen nicht, wenn x und y verschieden dicht sind", "[preview][spacing]") {
+    // Spalten 4 Einheiten auseinander, Zeilen 1: Kabel läuft zeilenweise (Abstand 4), die nächste
+    // Nachbarin liegt aber nur 1 entfernt. Die Punkte müssen nach dem kleineren Abstand dimensioniert sein.
+    mapping::MatrixShape m{4, 4, {4.0F, 1.0F}, {}};
+    CHECK(mapping::ledSpacing(m) == 1.0F);
+    const mapping::LedMap map = bake(m);
+    REQUIRE(map.spacing.size() == 1);
+    CHECK(map.spacing[0] == 1.0F);
+    const std::vector<ColorRgba> colors(16, kWhite);
+    const auto image = renderPreview(map, colors);
+    REQUIRE(image.ok());
+    // Zwei übereinanderliegende Punkte lassen zwischen sich eine dunkle Zeile: die Mitte zwischen den
+    // Zeilen 0 und 1 ist nicht weiß.
+    const PixelPoint a = toPixel(image.value().frame, map.world[0]);
+    const PixelPoint b = toPixel(image.value().frame, map.world[4]);
+    const std::size_t x = static_cast<std::size_t>(a.x);
+    const std::size_t y = static_cast<std::size_t>((a.y + b.y) / 2.0F);
+    CHECK(image.value().rgba[(y * image.value().width + x) * 4] < 200);
+}
+
+TEST_CASE("Abstand: Formen", "[mapping][spacing]") {
+    CHECK(mapping::ledSpacing(mapping::MatrixShape{8, 4, {2.0F, 0.5F}, {}}) == 0.5F);
+    CHECK(mapping::ledSpacing(mapping::MatrixShape{8, 1, {2.0F, 0.5F}, {}}) == 2.0F);  // nur eine Zeile
+    mapping::StripShape strip;
+    strip.count = 10;
+    strip.end = Vec3{5.0F, 0.0F, 0.0F};
+    CHECK(mapping::ledSpacing(strip) == 0.5F);
+    strip.count = 1;
+    CHECK(mapping::ledSpacing(strip) == 0.0F);
+    mapping::PointsShape points;
+    points.points = {Vec3{0, 0, 0}, Vec3{3, 0, 0}, Vec3{3, 2, 0}};
+    CHECK(mapping::ledSpacing(points) == 2.0F);
+}

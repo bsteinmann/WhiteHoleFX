@@ -169,6 +169,7 @@ Result<LedMap> Layout::bake(NormalizeMode mode, const std::optional<Region>& reg
         }
         map.ranges.push_back(
             FixtureRange{fixture.id, start, static_cast<std::uint32_t>(map.world.size()) - start});
+        map.spacing.push_back(ledSpacing(fixture.shape));
     }
 
     // Die Box, auf die normalisiert wird: die ganze Wand oder der Effektbereich (z bleibt gleich).

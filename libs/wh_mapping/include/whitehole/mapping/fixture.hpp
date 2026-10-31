@@ -91,6 +91,12 @@ struct Box {
 /// Umschließende Box der Zellen in lokalen Koordinaten (Ursprung 0).
 [[nodiscard]] Box localBox(const FixtureShape& shape) noexcept;
 
+/// Abstand zwischen einer LED und ihrer nächsten Nachbarin, in Welteinheiten (kleinster Abstand
+/// der Form; bei Matrix und Gitter der kleinere Abstand der Achsen mit mehr als einer LED). Die
+/// Vorschau macht die Punkte so groß, dass sie sich nicht überlappen. 0 = unbekannt (eine einzelne
+/// LED). Punktwolken: aus einer Stichprobe, ab 20000 Punkten 0.
+[[nodiscard]] float ledSpacing(const FixtureShape& shape) noexcept;
+
 /// Lokale Position jeder LED in Kabelreihenfolge (Index 0 = erste LED am Kabel).
 [[nodiscard]] std::vector<Vec3> localPositions(const FixtureShape& shape);
 

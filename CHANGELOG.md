@@ -1,5 +1,22 @@
 # Änderungen
 
+## 0.5.1
+
+Aus den GitHub-Issues:
+
+- #1 Vorschau: Die Punktgröße richtet sich nach dem kleinsten Abstand der Form (Matrix mit
+  verschiedenem Abstand in x und y, Gitter, Punktwolken), die Punkte überlappen nicht mehr
+- #2 Layout: „Entfernen“ entfernt alle gewählten Fixtures; der Rauchtest prüft das Entfernen eines
+  Fixtures vorn in der Liste (im Kern ging es immer, ein Test deckt jede Reihenfolge ab)
+- #3 Verlauf „nicht linear“: Die Vorschau rechnet jetzt wie die Ausgabe (`sRGB(v^gamma)`, Gamma je
+  Fixture aus dem Patch) und zeigt Werte so, wie sie gemeint sind; Farbwähler speichern den
+  sichtbaren Wert ohne Umrechnung. **Hinweis:** In älteren Projekten gespeicherte Farben erscheinen
+  dadurch anders (sie waren als Licht abgelegt)
+- #4 Zahlenfelder: sinnvolle Schrittweiten (Winkel 5° statt 0,1°, ohne Bereich 1, mit Bereich ein
+  Hundertstel gerundet), gedrückt halten beschleunigt
+- #5 Mirror: auch an der z-Achse, Lage der Spiegellinie einstellbar, wahlweise die obere Hälfte als Vorlage
+- #6 Time und LFO: Bereich des Reglers einstellbar (`speedMin`/`speedMax`, `frequencyMin`/`frequencyMax`)
+
 ## 0.5.0
 
 - **Effektbereich (Bild-in-Bild):** Ein Effekt kann nur ein Rechteck der Wand füllen, der Rest bleibt

@@ -30,6 +30,12 @@ TEST_CASE("Time: Tempo und Versatz") {
 
     lab.set(time, "speed", 5000.0);  // wird auf 1000 begrenzt
     CHECK(lab.sample(time, 3.0, "seconds") == Approx(3000.0));
+
+    // Der Bereich des Schiebereglers (speedMin/speedMax) ist nur Bedienhilfe: er begrenzt das Tempo nicht.
+    lab.set(time, "speedMin", 0.0);
+    lab.set(time, "speedMax", 0.5);
+    lab.set(time, "speed", 10.0);
+    CHECK(lab.sample(time, 3.0, "seconds") == Approx(30.0));
 }
 
 TEST_CASE("Number und Color reichen ihren Parameter durch") {

@@ -58,6 +58,28 @@ float medianNeighbourDistance(const std::vector<Projected>& pts, std::size_t fir
 
 float blend(float dst, float src, float coverage) { return dst + (src - dst) * coverage; }
 
+/// Wert (0..1) -> Bildschirm-Byte für ein Gamma: sRGB(v^gamma). Eine Tabelle spart pow() je LED.
+class GammaTable {
+public:
+    explicit GammaTable(float gamma) : gamma_{gamma} {
+        for (std::size_t i = 0; i < bytes_.size(); ++i) {
+            const double v = static_cast<double>(i) / static_cast<double>(bytes_.size() - 1);
+            bytes_[i] = toSrgb8(static_cast<float>(std::pow(v, static_cast<double>(gamma))));
+        }
+    }
+    [[nodiscard]] float gamma() const noexcept { return gamma_; }
+    [[nodiscard]] std::uint8_t byte(float v) const noexcept {
+        const float c = std::isfinite(v) ? std::clamp(v, 0.0F, 1.0F) : 0.0F;
+        return bytes_[static_cast<std::size_t>(std::lround(c * static_cast<float>(bytes_.size() - 1)))];
+    }
+
+private:
+    float gamma_;
+    std::array<std::uint8_t, 4097> bytes_{};
+};
+
+float validGamma(float gamma) noexcept { return std::isfinite(gamma) && gamma >= 0.1F && gamma <= 10.0F ? gamma : 2.2F; }
+
 }  // namespace
 
 std::uint8_t toSrgb8(float linear) noexcept {
@@ -126,16 +148,40 @@ Result<Image> renderPreview(const mapping::LedMap& map, std::span<const ColorRgb
     }
     std::vector<float> ledSpacing(pts.size(), areaSpacing);
     float widest = areaSpacing;
-    for (const mapping::FixtureRange& range : map.ranges) {
+    for (std::size_t r = 0; r < map.ranges.size(); ++r) {
+        const mapping::FixtureRange& range = map.ranges[r];
         if (static_cast<std::size_t>(range.first) + range.count > pts.size()) {
             continue;
         }
-        const float spacing = std::min(areaSpacing, medianNeighbourDistance(pts, range.first, range.count, areaSpacing));
+        // Bekannter Abstand der Form (nächste Nachbarin) vor dem Kabelabstand: so überlappen sich
+        // die Punkte auch dann nicht, wenn die Matrix in x und y verschiedene Abstände hat.
+        const float known = r < map.spacing.size() ? map.spacing[r] : 0.0F;
+        const float spacing = known > 0.0F
+                                  ? known
+                                  : std::min(areaSpacing, medianNeighbourDistance(pts, range.first, range.count, areaSpacing));
         std::fill_n(ledSpacing.begin() + range.first, range.count, spacing);
         widest = std::max(widest, spacing);
     }
     // Der Ausschnitt richtet sich nach dem größten Punkt, damit nichts über den Rand ragt.
     const float spacing = widest;
+
+    // Gamma je LED (nach Fixture), jeder Wert nur einmal als Tabelle.
+    std::vector<GammaTable> tables;
+    tables.emplace_back(validGamma(options.gamma));
+    std::vector<std::uint16_t> ledTable(pts.size(), 0);
+    for (std::size_t r = 0; r < map.ranges.size() && r < options.fixtureGamma.size(); ++r) {
+        const mapping::FixtureRange& range = map.ranges[r];
+        if (static_cast<std::size_t>(range.first) + range.count > pts.size()) {
+            continue;
+        }
+        const float gamma = validGamma(options.fixtureGamma[r]);
+        auto found = std::find_if(tables.begin(), tables.end(), [gamma](const GammaTable& t) { return t.gamma() == gamma; });
+        if (found == tables.end()) {
+            tables.emplace_back(gamma);
+            found = tables.end() - 1;
+        }
+        std::fill_n(ledTable.begin() + range.first, range.count, static_cast<std::uint16_t>(found - tables.begin()));
+    }
 
     // Maßstab: Der Rand bleibt frei; die LED-Mitten füllen den Rest, die Scheiben ragen
     // ein Stück über. Darum wird der halbe Abstand zusätzlich abgezogen.
@@ -187,9 +233,10 @@ Result<Image> renderPreview(const mapping::LedMap& map, std::span<const ColorRgb
         const float radius = std::clamp(options.dotScale * ledSpacing[index] * scale, 1.0F, 24.0F);
         const ColorRgba& c = colors[index];
         const float alpha = std::isfinite(c.a) ? std::clamp(c.a, 0.0F, 1.0F) : 1.0F;
-        const std::array<float, 3> lit{static_cast<float>(toSrgb8(c.r * alpha)),
-                                       static_cast<float>(toSrgb8(c.g * alpha)),
-                                       static_cast<float>(toSrgb8(c.b * alpha))};
+        const GammaTable& table = tables[ledTable[index]];
+        const std::array<float, 3> lit{static_cast<float>(table.byte(c.r * alpha)),
+                                       static_cast<float>(table.byte(c.g * alpha)),
+                                       static_cast<float>(table.byte(c.b * alpha))};
 
         const int x0 = std::max(0, static_cast<int>(std::floor(cx - radius - 1.0F)));
         const int x1 = std::min(static_cast<int>(options.width) - 1, static_cast<int>(std::ceil(cx + radius + 1.0F)));

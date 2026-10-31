@@ -155,7 +155,9 @@ std::vector<values::CpuNodeDefinition> valueNodes() {
     nodes.push_back(cpuNode("wh.value.time", "Time", "Value",
                             {valueOutput("seconds", "Seconds", PortType::Scalar)},
                             {number("speed", "Speed", 1.0, -1000.0, 1000.0),
-                             number("offset", "Offset (s)", 0.0)},
+                             number("offset", "Offset (s)", 0.0),
+                             number("speedMin", "Speed slider min", -4.0),
+                             number("speedMax", "Speed slider max", 4.0)},
                             kernelFactory<TimeKernel>()));
 
     nodes.push_back(cpuNode("wh.value.number", "Number", "Value",
@@ -171,7 +173,8 @@ std::vector<values::CpuNodeDefinition> valueNodes() {
         "wh.value.lfo", "LFO", "Value", {valueOutput("out", "Out", PortType::Scalar)},
         {integer("shape", "Shape (0 sine, 1 triangle, 2 saw, 3 square)", 0, 0.0, 3.0),
          number("frequency", "Frequency (Hz)", 0.5, 0.0, 100.0), number("phase", "Phase", 0.0, 0.0, 1.0),
-         number("min", "Min", 0.0), number("max", "Max", 1.0)},
+         number("min", "Min", 0.0), number("max", "Max", 1.0),
+         number("frequencyMin", "Frequency slider min", 0.0), number("frequencyMax", "Frequency slider max", 5.0)},
         kernelFactory<LfoKernel>()));
 
     nodes.push_back(cpuNode("wh.value.random", "Random", "Value",

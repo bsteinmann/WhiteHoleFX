@@ -9,9 +9,12 @@
 // vorn oben projiziert, damit ein Cube nicht zu einem Quadrat zusammenfällt; weiter hinten
 // liegende LEDs werden zuerst gezeichnet und von näheren verdeckt.
 //
-// Farben: Die Eingabe ist linear (wie im Farbpuffer). Das Bild ist sRGB, wie ein Bildschirm es
-// erwartet. Eine ausgeschaltete LED erscheint als dunkler Punkt, damit man das Layout auch bei
-// schwarzem Bild sieht.
+// Farben: Effekt-Werte sind so gemeint, wie man sie sieht (Konvention des color_encoder): die
+// Ausgabe potenziert sie mit dem Gamma des Patches, die LED strahlt dann linear. Die Vorschau
+// macht genau das nach und gibt das Licht als sRGB-Bild wieder; mit Gamma 2,2 steht auf dem
+// Bildschirm also ungefähr der Wert selbst, und ein Verlauf von 0 bis 1 sieht gleichmäßig aus.
+// Eine ausgeschaltete LED erscheint als dunkler Punkt, damit man das Layout auch bei schwarzem
+// Bild sieht.
 //
 // Abhängigkeiten: wh_core, wh_mapping. Kein Betriebssystem, keine GPU.
 #pragma once
@@ -44,6 +47,10 @@ struct PreviewOptions {
     /// Ist ein Rahmen gesetzt, wird genau dieser Ausschnitt gezeichnet statt eines passenden
     /// (die Ansicht bleibt beim Ziehen von Fixtures stehen).
     std::optional<ViewFrame> frame;
+    /// Gamma der Ausgabe (`v^gamma`), wenn für ein Fixture keines bekannt ist.
+    float gamma{2.2F};
+    /// Gamma je Fixture, in der Reihenfolge von `LedMap::ranges` (kürzer oder leer: `gamma`).
+    std::vector<float> fixtureGamma;
 };
 
 /// Zeichnet die LEDs mit den gegebenen Farben (linear, eine je LED).
@@ -56,10 +63,10 @@ struct PreviewOptions {
 /// entlang des Kabels wird es heller. Die erste LED am Kabel ist also die dunkelste.
 [[nodiscard]] std::vector<ColorRgba> layoutColors(const mapping::LedMap& map);
 
-/// Linear -> sRGB (0..255), mit Begrenzung auf den gültigen Bereich.
+/// Lineares Licht -> sRGB (0..255), mit Begrenzung auf den gültigen Bereich.
 [[nodiscard]] std::uint8_t toSrgb8(float linear) noexcept;
 
-/// sRGB (0..255) -> linear (0..1); die Umkehrung von toSrgb8, z. B. für Farbwähler.
+/// sRGB (0..255) -> lineares Licht (0..1); die Umkehrung von toSrgb8.
 [[nodiscard]] float fromSrgb8(std::uint8_t value) noexcept;
 
 }  // namespace whitehole::preview

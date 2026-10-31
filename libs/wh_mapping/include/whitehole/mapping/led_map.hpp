@@ -33,6 +33,8 @@ struct LedMap {
     std::vector<Vec3> unit;
 
     std::vector<FixtureRange> ranges;
+    /// Abstand benachbarter LEDs je Eintrag von `ranges` (Welteinheiten, 0 = unbekannt), für die Vorschau.
+    std::vector<float> spacing;
 
     /// Umschließende Box aller Fixtures (Zellen, nicht nur LED-Mitten).
     Box volume;

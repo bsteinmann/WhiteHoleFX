@@ -164,6 +164,42 @@ TEST_CASE("Canvas: Verlauf von Transparent nach Weiß behält das Weiß (kein du
     CHECK(device->takeErrors().empty());
 }
 
+TEST_CASE("Canvas: Mirror faltet an der Mittellinie (untere oder obere Hälfte als Vorlage)", "[gpu_device][stage]") {
+    const std::unique_ptr<WebGpuDevice> device = makeDevice();
+    if (!device) {
+        SKIP("Kein WebGPU-Adapter verfügbar");
+    }
+    for (const bool otherHalf : {false, true}) {
+        Lab lab;
+        const NodeId gradient = lab.add("wh.generator.gradient");
+        lab.set(gradient, "angle", 0.0);
+        const NodeId mirror = lab.add("wh.transform.mirror");
+        lab.set(mirror, "otherHalf", otherHalf);
+        lab.connect(gradient, "out", mirror, "source");
+
+        executor::CanvasStageConfig config;
+        config.extent = Extent3{16, 2, 1};
+        config.format = TextureFormat::Rgba32Float;
+        config.target = graph::PortRef{mirror, "out"};
+        auto created = executor::CanvasRenderStage::create(*device, lab.snippets, lab.kernels, config);
+        REQUIRE(created.ok());
+        REQUIRE(created.value()->setGraph(lab.graph).ok());
+
+        const std::vector<std::byte> bytes = renderCanvas(*device, *created.value(), config.extent, config.format, 0.0);
+        REQUIRE(bytes.size() == 16U * 2U * 16U);
+        for (std::uint32_t x = 0; x < 16; ++x) {
+            float rgba[4];
+            std::memcpy(rgba, bytes.data() + std::size_t{x} * 16, sizeof rgba);
+            const float u = (static_cast<float>(x) + 0.5F) / 16.0F;
+            const float low = u < 0.5F ? u : 1.0F - u;    // untere Hälfte als Vorlage
+            const float high = u < 0.5F ? 1.0F - u : u;   // obere Hälfte als Vorlage
+            INFO("otherHalf=" << otherHalf << " x=" << x);
+            REQUIRE(std::abs(rgba[0] - (otherHalf ? high : low)) < 1e-3F);
+        }
+        CHECK(device->takeErrors().empty());
+    }
+}
+
 TEST_CASE("Canvas: Digital Rain fällt, hat Spuren und respektiert die Dichte", "[gpu_device][stage]") {
     const std::unique_ptr<WebGpuDevice> device = makeDevice();
     if (!device) {

@@ -49,10 +49,17 @@ sich. Die CI macht das und legt die Bilder als Artefakt „fenster“ ab.
 
 Das Dock „Parameter“ (Menü Ansicht) listet jeden Node mit seinen Parametern:
 
-- Zahlen mit Wertebereich: Regler plus Zahlenfeld, ohne Bereich nur Zahlenfeld
+- Zahlen mit Wertebereich: Regler plus Zahlenfeld, ohne Bereich nur Zahlenfeld. Die Pfeile des
+  Zahlenfelds gehen in sinnvollen Schritten (ein Hundertstel der Spanne gerundet auf 1, 2 oder 5;
+  ohne Bereich 1, bei Winkeln in Grad 5); gedrückt halten wird schneller
+- Bei „Time“ und „LFO“ stellen die Parameter „… slider min“ und „… slider max“ den Bereich des
+  Reglers ein (Geschwindigkeit −4 bis 4, Frequenz 0 bis 5 Hz sind die Voreinstellungen). Das ist
+  nur eine Bedienhilfe: im Zahlenfeld lassen sich auch Werte außerhalb eintippen. Allgemein gilt:
+  Hat ein Node die Zahlen `<name>`, `<name>Min` und `<name>Max`, benutzt der Regler von `<name>` die
+  beiden anderen als Bereich
 - Ganzzahlen, Ja/Nein, Vektoren (2D/3D), Text
 - Farben: Farbfeld (mit Schachbrett dahinter, damit man Durchsichtiges sieht), öffnet den Farbdialog
-  (Eingabe in sRGB, gespeichert wird linear, mit Alpha-Regler). Das Kästchen „Transparent“ setzt
+  (mit Alpha-Regler; gespeichert wird der Wert so, wie man ihn auf dem Bildschirm sieht, siehe „Helligkeit“). Das Kästchen „Transparent“ setzt
   Alpha auf 0, die Farbe bleibt gemerkt; abhaken stellt Alpha 1 her (siehe „Transparenz“)
 - ↺ setzt auf den Standardwert zurück
 - Parameter, die von einem anderen Node gesteuert werden (z. B. ein LFO), sind ausgegraut
@@ -63,6 +70,14 @@ Datei kanonisch, Kommentare und Formatierung einer von Hand geschriebenen Datei 
 verloren. Ein Beispiel zum Ausprobieren: `examples/regler.whfx`.
 
 Die CI verstellt mit `--exercise` jeden Regler einmal und prüft, dass der Player keinen Fehler meldet.
+
+### Helligkeit und Verläufe
+
+Effekt-Werte sind so gemeint, wie man sie sieht: 0,5 ist ein mittleres Grau, ein Verlauf von 0 bis 1
+sieht gleichmäßig aus. Die Ausgabe potenziert die Werte mit dem Gamma des Patches (Standard 2,2),
+weil eine LED linear strahlt (siehe `docs/output.md`); die Vorschau macht dasselbe nach und
+zeigt das Licht als sRGB-Bild. Früher behandelte die Vorschau die Werte als Licht und zeigte
+Verläufe viel zu hell und „nicht linear“.
 
 ### Transparenz
 
