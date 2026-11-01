@@ -1,5 +1,11 @@
 # Änderungen
 
+## 0.29.1
+
+- **Farbauswahl erschien nicht (#18):** Unter Linux öffnete sich der Farbdialog bei manchen Fenstermanagern hinter dem
+  Hauptfenster, unsichtbar, aber mit dem Fokus (sichtbar erst nach dem Verschieben des Fensters). Der Dialog hängt jetzt
+  am Hauptfenster, wird von Qt selbst gezeichnet (nicht der native Dialog) und ausdrücklich nach vorn geholt.
+
 ## 0.29.0
 
 - **3D-Nodes:** Die Nodes kennen jetzt die Tiefe. Alle neuen Regler stehen am Ende des Parameterfensters und sind so voreingestellt,

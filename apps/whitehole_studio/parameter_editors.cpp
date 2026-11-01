@@ -12,6 +12,7 @@
 #include <QLabel>
 #include <QIcon>
 #include <QLineEdit>
+#include <QMainWindow>
 #include <QPainter>
 #include <QPixmap>
 #include <QPushButton>
@@ -68,6 +69,33 @@ QColor toQColor(const ColorRgba& c) {
 ColorRgba fromQColor(const QColor& q) {
     return ColorRgba{static_cast<float>(q.red()) / 255.0F, static_cast<float>(q.green()) / 255.0F,
                      static_cast<float>(q.blue()) / 255.0F, static_cast<float>(q.alpha()) / 255.0F};
+}
+
+/// Farbwahl mit Alpha. Der Dialog hängt am Hauptfenster (nicht am Knopf: Der sitzt im Parameter-Dock, das
+/// frei schweben kann, und ein Dialog unter einem schwebenden Dock landete bei manchen Fenstermanagern
+/// hinter dem Hauptfenster, unsichtbar, mit dem Fokus darin). Der Dialog ist von Qt selbst gezeichnet,
+/// weil der native unter Linux (Portal) hinter dem Fenster erscheinen kann, und wird ausdrücklich nach vorn geholt.
+std::optional<QColor> pickColor(QWidget* anchor, const QColor& initial) {
+    QWidget* owner = anchor->window();
+    for (QWidget* w = anchor; w != nullptr; w = w->parentWidget()) {
+        if (qobject_cast<QMainWindow*>(w) != nullptr) {
+            owner = w;
+            break;
+        }
+    }
+    QColorDialog dialog{initial, owner};
+    dialog.setWindowTitle(QStringLiteral("Farbe"));
+    dialog.setOption(QColorDialog::ShowAlphaChannel);
+    dialog.setOption(QColorDialog::DontUseNativeDialog);
+    dialog.setWindowModality(Qt::ApplicationModal);
+    dialog.show();
+    dialog.raise();
+    dialog.activateWindow();
+    if (dialog.exec() != QDialog::Accepted) {
+        return std::nullopt;
+    }
+    const QColor picked = dialog.selectedColor();
+    return picked.isValid() ? std::optional<QColor>{picked} : std::nullopt;
 }
 
 /// Farbfläche mit Schachbrett dahinter, damit man Transparenz sieht.
@@ -277,10 +305,8 @@ Editor colorEditor(const runtime::ParameterInfo& info, const Commit& commit, QWi
 
     auto current = std::make_shared<ColorRgba>(std::get<ColorRgba>(info.value));
     QObject::connect(button, &QPushButton::clicked, button, [=]() {
-        const QColor picked = QColorDialog::getColor(toQColor(*current), button, QStringLiteral("Farbe"),
-                                                     QColorDialog::ShowAlphaChannel);
-        if (picked.isValid()) {
-            commit(fromQColor(picked));
+        if (const std::optional<QColor> picked = pickColor(button, toQColor(*current))) {
+            commit(fromQColor(*picked));
         }
     });
     QObject::connect(transparent, &QCheckBox::toggled, transparent, [=](bool on) {
