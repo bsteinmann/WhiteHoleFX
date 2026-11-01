@@ -13,6 +13,7 @@
 
 #include <array>
 #include <memory>
+#include <utility>
 #include <vector>
 
 #include "app_settings.hpp"
@@ -30,6 +31,7 @@ class QDockWidget;
 class QLabel;
 class QMenu;
 class QSlider;
+class QToolButton;
 class QToolBar;
 
 namespace whitehole::studio {
@@ -96,6 +98,8 @@ public:
     QString exerciseNodeDefaults();  // Teil von exerciseSettings (main_window_settings.cpp)
     /// Rauchtest: Stage Setup öffnet als eigenes Fenster, zeigt beide Seiten, schließt im Live-Modus und kommt zurück.
     QString exerciseStageSetup();
+    /// Rauchtest: Reihenfolge der Menüs, Hilfe-Menü, Kürzelliste, Tooltips, roter Senden-Knopf.
+    QString exerciseMenus();
     /// Rauchtest: Umschalter 2D/3D, Orbit mit der Maus, Zoom, feste Ansichten.
     QString exerciseView3d();
     /// Live-Modus ein- und ausschalten (F9). Eintritt scheitert ohne Looks.
@@ -172,6 +176,12 @@ private:
     /// DMX-Eingang und Audioquelle um und liefert die Fehlertexte (leer = alles angewendet); `persist` speichert
     /// die Wahl beim Nutzer (nicht beim Start: eine nicht mehr vorhandene Karte soll die Wahl nicht löschen).
     void buildSettings(QMenu* editMenu);
+    /// Hilfe-Menü und Kürzelliste (main_window_help.cpp).
+    void buildHelp(QMenu* help);
+    [[nodiscard]] std::vector<std::pair<QString, QString>> shortcutList() const;  // (Kürzel, Name), nach Name
+    void showShortcuts();
+    void showAbout();
+    void addShortcutHints();  // hängt das Kürzel an Tooltips, die keins nennen
     void openSettings();
     QString applySettings(const AppSettings& wanted, bool persist);
     [[nodiscard]] QString audioStatusText() const;
@@ -209,6 +219,7 @@ private:
     QAction* liveAction_{nullptr};
     QAction* saveLookAction_{nullptr};
     QToolBar* fileBar_{nullptr};
+    QToolButton* sendButton_{nullptr};  // "Ausgabe senden" in der Leiste: rot, solange wirklich gesendet wird
     QKeySequence runShortcut_;  // Leertaste: im Live-Modus gehört sie dem GO-Knopf
     std::vector<QDockWidget*> hiddenByLive_;  // Docks, die der Live-Modus versteckt hat (kommen danach zurück)
     bool liveMode_{false};

@@ -1,5 +1,15 @@
 # Änderungen
 
+## 0.27.0
+
+- **Menüleiste aufgeräumt:** Die Menüs stehen in Betriebsreihenfolge: Datei, Bearbeiten, Ansicht, Wiedergabe, Live, Hilfe
+  (Wiedergabe steht jetzt vor Live). Datei ist durch Trennlinien in Anlegen/Öffnen, Speichern, Neu laden und Beenden gegliedert;
+  Blackout steht in Wiedergabe abgesetzt von Start und Senden.
+- **Neues Menü Hilfe:** Dokumentation (F1), Fehler melden oder Idee vorschlagen (öffnet ein neues GitHub-Issue), Tastenkürzel
+  (Liste, die aus den Aktionen des Fensters gelesen wird und deshalb nie vom Menü abweicht) und Über WhiteHoleFX (Version, Lizenz).
+- **Ausgabe senden leuchtet rot**, solange wirklich Pakete ins Netz gehen.
+- Tooltips der Schaltflächen nennen jetzt ihr Tastenkürzel.
+
 ## 0.26.0
 
 - **Node-Standardwerte:** Neue Seite „Node-Standardwerte“ in den Einstellungen. Zu jedem Node-Typ lassen sich eigene Startwerte

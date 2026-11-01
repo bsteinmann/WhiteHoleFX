@@ -220,12 +220,25 @@ Neue Node-Typen erscheinen automatisch, die Palette liest die Registrierung.
 
 ## Aufbau des Fensters
 
-- **Oben:** Leiste „Datei“ (Neu, Öffnen, Speichern) und Leiste „Betrieb“: Start/Stopp (Leertaste), Ausgabe senden,
-  Look speichern (Strg+L), Live-Modus (F9); rechts außen Master und Blackout (Strg+B).
+- **Oben:** die Menüs Datei, Bearbeiten, Ansicht, Wiedergabe, Live und Hilfe (siehe unten), darunter die Leiste „Datei“
+  (Neu, Öffnen, Speichern) und die Leiste „Betrieb“: Start/Stopp (Leertaste), Ausgabe senden, Look speichern (Strg+L),
+  Live-Modus (F9); rechts außen Master und Blackout (Strg+B). Der Knopf „Ausgabe senden“ leuchtet rot, solange wirklich
+  Pakete ins Netz gehen. Die Tooltips der Schaltflächen nennen ihr Tastenkürzel.
 - **Links:** Dock „Looks“ (immer in Reichweite).
 - **Mitte:** die Vorschau; die Leiste „Ansicht“ schaltet zwischen 2D (bearbeiten) und den 3D-Ansichten um.
 - **Rechts:** das Dock Parameter. Layout und Testmodus öffnen sich im Fenster Stage Setup (F4).
 - **Unten:** Dock „Nodes“ mit Palette und Editor. Alle Docks lassen sich über das Menü Ansicht ein- und ausblenden.
+
+### Menüs
+
+| Menü | Inhalt |
+| --- | --- |
+| Datei | Neu, Öffnen, Zuletzt geöffnet, Beispiele; Speichern, Speichern unter; Neu laden (F5); Beenden |
+| Bearbeiten | Rückgängig, Wiederholen; Einstellungen … (Strg+Komma) |
+| Ansicht | Docks ein- und ausblenden; Stage Setup (F4); 2D/3D-Umschalter (Strg+1 bis 5) |
+| Wiedergabe | Start/Stopp, Ausgabe senden; Blackout |
+| Live | Live-Modus (F9), Look speichern |
+| Hilfe | Dokumentation (F1, öffnet die Anleitung im Browser), Fehler melden oder Idee vorschlagen (öffnet ein neues Issue auf GitHub), Tastenkürzel (Liste aller Kürzel, direkt aus den Aktionen gelesen), Über WhiteHoleFX (Version, Lizenz) |
 
 ## Looks und Live-Betrieb
 

@@ -1,4 +1,5 @@
 // main_window_actions.cpp: Menüs, Werkzeugleiste und Tastenkürzel des Hauptfensters.
+// Menüs von links nach rechts: Datei, Bearbeiten, Ansicht, Wiedergabe, Live, Hilfe.
 //
 // Nur das Anlegen der Bedienelemente; was sie tun, steht in main_window*.cpp.
 #include <QAction>
@@ -10,6 +11,7 @@
 #include <QMenu>
 #include <QMenuBar>
 #include <QToolBar>
+#include <QToolButton>
 
 #include "main_window.hpp"
 #include "node_editor.hpp"
@@ -60,14 +62,17 @@ void MainWindow::buildActions() {
     connect(sendAction_, &QAction::triggered, this, &MainWindow::onToggleSending);
 
     QMenu* file = menuBar()->addMenu(tr("&Datei"));
+    // Datei: Anlegen und Öffnen, dann Speichern, dann Neu laden, zuletzt Beenden.
     file->addAction(newAction_);
     file->addAction(openAction_);
-    file->addAction(reloadAction_);
-    file->addAction(saveAction_);
-    file->addAction(saveAsAction_);
-    fillExamplesMenu(file->addMenu(tr("&Beispiele")));
     recentMenu_ = file->addMenu(tr("&Zuletzt geöffnet"));
     connect(recentMenu_, &QMenu::aboutToShow, this, &MainWindow::fillRecentMenu);
+    fillExamplesMenu(file->addMenu(tr("&Beispiele")));
+    file->addSeparator();
+    file->addAction(saveAction_);
+    file->addAction(saveAsAction_);
+    file->addSeparator();
+    file->addAction(reloadAction_);
     file->addSeparator();
     file->addAction(quitAction_);
 
@@ -82,13 +87,16 @@ void MainWindow::buildActions() {
     view->addSeparator();
     buildStageSetup(view);  // eigenes Fenster statt Dock
 
+    // Reihenfolge wie im Betrieb: erst Wiedergabe und Ausgabe, dann der Live-Modus, ganz rechts die Hilfe.
+    QMenu* run = menuBar()->addMenu(tr("&Wiedergabe"));
+    run->addAction(runAction_);
+    run->addAction(sendAction_);
+
     QMenu* live = menuBar()->addMenu(tr("&Live"));
     live->addAction(liveAction_);
     live->addAction(saveLookAction_);
 
-    QMenu* run = menuBar()->addMenu(tr("&Wiedergabe"));
-    run->addAction(runAction_);
-    run->addAction(sendAction_);
+    buildHelp(menuBar()->addMenu(tr("&Hilfe")));
 
     // Eine Leiste für Dateien (im Live-Modus ausgeblendet, damit auf der Bühne nichts versehentlich geöffnet wird) ...
     fileBar_ = addToolBar(tr("Datei"));
@@ -104,14 +112,22 @@ void MainWindow::buildActions() {
     bar->setMovable(false);
     bar->addAction(runAction_);
     bar->addAction(sendAction_);
+    // Wer sendet, soll es sehen: der Knopf leuchtet rot, solange die Pakete wirklich ins Netz gehen.
+    sendButton_ = qobject_cast<QToolButton*>(bar->widgetForAction(sendAction_));
+    if (sendButton_ != nullptr) {
+        sendButton_->setStyleSheet(
+            QStringLiteral("QToolButton:checked { background-color: #b71c1c; color: white; font-weight: bold; }"));
+    }
     bar->addSeparator();
     bar->addAction(saveLookAction_);
     bar->addAction(liveAction_);
 
     buildControls(bar);  // Master und Blackout rechts in derselben Leiste
     buildView3d(view);   // Ansicht-Umschalter 2D/3D (Menü und Leiste)
+    run->addSeparator();
     run->addAction(blackoutAction_);
     buildSettings(edit);  // Bearbeiten > Einstellungen; setzt die gemerkte Wahl um
+    addShortcutHints();   // zuletzt: alle Aktionen existieren jetzt
 }
 
 void MainWindow::fillExamplesMenu(QMenu* menu) {
