@@ -143,13 +143,10 @@ void MainWindow::updateActions() {
     saveAsAction_->setEnabled(s.loaded);
     runAction_->setEnabled(s.loaded);
     runAction_->setChecked(s.running);
+    saveLookAction_->setEnabled(s.loaded && !liveMode_);
     runAction_->setText(s.running ? tr("&Stopp") : tr("&Start"));
     sendAction_->setChecked(gate_->enabled());
     updateUndoActions();
-    if (liveMode_) {
-        undoAction_->setEnabled(false);  // im Live-Betrieb ruht der Editor-Graph
-        redoAction_->setEnabled(false);
-    }
 }
 
 void MainWindow::updateTitle() {
@@ -210,8 +207,8 @@ bool MainWindow::confirmDiscard() {
 }
 
 void MainWindow::updateUndoActions() {
-    undoAction_->setEnabled(player_->canUndo());
-    redoAction_->setEnabled(player_->canRedo());
+    undoAction_->setEnabled(player_->canUndo() && !liveMode_);  // im Live-Betrieb ruht der Editor-Graph
+    redoAction_->setEnabled(player_->canRedo() && !liveMode_);
 }
 
 void MainWindow::onLayoutEdited() {
@@ -261,6 +258,9 @@ void MainWindow::updateStatus() {
                    .arg(s.framesDropped)
                    .arg(s.packets)
                    .arg(s.sendErrors);
+    }
+    if (liveMode_) {
+        text = tr("LIVE   |   ") + text;
     }
     if (player_->testPattern() != nullptr) {
         text += tr("   |   TESTMODUS");

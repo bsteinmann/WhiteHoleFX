@@ -12,6 +12,7 @@
 #include <QSlider>
 #include <QStatusBar>
 #include <QToolBar>
+#include <QWidget>
 
 #include <cmath>
 #include <string>
@@ -30,7 +31,7 @@ QSettings settings() { return QSettings{QStringLiteral("WhiteHoleFX"), QStringLi
 
 }  // namespace
 
-void MainWindow::buildControls() {
+void MainWindow::buildControls(QToolBar* bar) {
     blackoutAction_ = new QAction{tr("&Blackout"), this};
     blackoutAction_->setCheckable(true);
     blackoutAction_->setShortcut(QKeySequence{Qt::CTRL | Qt::Key_B});
@@ -46,8 +47,9 @@ void MainWindow::buildControls() {
     masterLabel_->setMinimumWidth(40);
     connect(masterSlider_, &QSlider::valueChanged, this, &MainWindow::onMaster);
 
-    QToolBar* bar = addToolBar(tr("Betrieb"));
-    bar->setMovable(false);
+    auto* spacer = new QWidget{this};
+    spacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+    bar->addWidget(spacer);  // schiebt Master und Blackout an den rechten Rand
     bar->addWidget(new QLabel{tr(" Master "), this});
     bar->addWidget(masterSlider_);
     bar->addWidget(masterLabel_);

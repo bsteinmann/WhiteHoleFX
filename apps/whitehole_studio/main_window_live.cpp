@@ -49,8 +49,8 @@ void MainWindow::buildLive() {
 
     lookDock_ = new QDockWidget{tr("Looks"), this};
     lookDock_->setWidget(lookPanel_);
-    addDockWidget(Qt::RightDockWidgetArea, lookDock_);
-    tabifyDockWidget(testDock_, lookDock_);
+    addDockWidget(Qt::LeftDockWidgetArea, lookDock_);  // links, immer in Reichweite
+    resizeDocks({lookDock_}, {250}, Qt::Horizontal);
 
     liveDock_ = new QDockWidget{tr("Live"), this};
     liveDock_->setWidget(livePanel_);
@@ -58,6 +58,11 @@ void MainWindow::buildLive() {
     liveDock_->setTitleBarWidget(new QWidget{liveDock_});  // keine Titelleiste: nichts zum Verschieben
     addDockWidget(Qt::BottomDockWidgetArea, liveDock_);
     liveDock_->hide();
+
+    saveLookAction_ = new QAction{tr("&Look speichern …"), this};
+    saveLookAction_->setShortcut(QKeySequence{Qt::CTRL | Qt::Key_L});
+    saveLookAction_->setToolTip(tr("Den aktuellen Effekt als Look in die Liste legen (Strg+L)"));
+    connect(saveLookAction_, &QAction::triggered, this, [this]() { lookPanel_->promptSave(); });
 
     liveAction_ = new QAction{tr("&Live-Modus"), this};
     liveAction_->setCheckable(true);
@@ -93,6 +98,7 @@ bool MainWindow::enterLive(int first) {
     }
     hideEditDocks();
     liveDock_->show();
+    resizeDocks({liveDock_}, {320}, Qt::Vertical);
     liveMode_ = true;
     setChecked(true);
     livePanel_->rebuild();
@@ -119,6 +125,9 @@ void MainWindow::leaveLive() {
 }
 
 void MainWindow::hideEditDocks() {
+    fileBar_->hide();
+    runShortcut_ = runAction_->shortcut();
+    runAction_->setShortcut(QKeySequence{});  // Leertaste ist im Live-Modus GO, nicht Start/Stopp
     hiddenByLive_.clear();
     for (QDockWidget* dock : {editorDock_, dock_, layoutDock_, testDock_, lookDock_}) {
         if (dock->isVisible()) {
@@ -129,6 +138,10 @@ void MainWindow::hideEditDocks() {
 }
 
 void MainWindow::showEditDocks() {
+    fileBar_->show();
+    if (!runShortcut_.isEmpty()) {
+        runAction_->setShortcut(runShortcut_);
+    }
     liveDock_->hide();
     for (QDockWidget* dock : hiddenByLive_) {
         dock->show();
@@ -171,6 +184,9 @@ QString MainWindow::exerciseLive() {
     if (!enterLive(0) || !player_->liveActive() || !liveDock_->isVisible() || editorDock_->isVisible()) {
         return tr("Live: Wechsel in den Live-Modus scheitert");
     }
+    if (fileBar_->isVisible() || !runAction_->shortcut().isEmpty() || undoAction_->isEnabled()) {
+        return tr("Live: Datei-Leiste, Leertaste oder Rückgängig sind im Live-Modus nicht gesperrt");
+    }
     for (int i = 0; i < 3; ++i) {
         tick();
         QApplication::processEvents();
@@ -206,6 +222,9 @@ QString MainWindow::exerciseLive() {
     leaveLive();
     if (player_->liveActive() || liveDock_->isVisible()) {
         return tr("Live: Zurück zum Editor scheitert");
+    }
+    if (!fileBar_->isVisible() || runAction_->shortcut().isEmpty() || !editorDock_->isVisible()) {
+        return tr("Live: Datei-Leiste, Leertaste oder Editor kommen nach dem Live-Modus nicht zurück");
     }
     if (!lookPanel_->removeLook(0) || lookPanel_->lookCount() != 1) {
         return tr("Live: Look löschen scheitert");

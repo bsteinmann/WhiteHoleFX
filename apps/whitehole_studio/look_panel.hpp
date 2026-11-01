@@ -41,6 +41,8 @@ public:
     bool renameLook(int index, const QString& name);
     bool removeLook(int index);
     bool moveSelected(int delta);
+    /// Fragt nach dem Namen und speichert den aktuellen Effekt (Strg+L).
+    void promptSave() { askSaveNew(); }
 
 Q_SIGNALS:
     /// Die Liste oder das Projekt hat sich geändert (Titel und Menüs auffrischen).

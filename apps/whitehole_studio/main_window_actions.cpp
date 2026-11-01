@@ -84,22 +84,31 @@ void MainWindow::buildActions() {
 
     QMenu* live = menuBar()->addMenu(tr("&Live"));
     live->addAction(liveAction_);
+    live->addAction(saveLookAction_);
 
     QMenu* run = menuBar()->addMenu(tr("&Wiedergabe"));
     run->addAction(runAction_);
     run->addAction(sendAction_);
 
-    QToolBar* bar = addToolBar(tr("Wiedergabe"));
+    // Eine Leiste für Dateien (im Live-Modus ausgeblendet, damit auf der Bühne nichts versehentlich geöffnet wird) ...
+    fileBar_ = addToolBar(tr("Datei"));
+    fileBar_->setObjectName(QStringLiteral("fileBar"));
+    fileBar_->setMovable(false);
+    fileBar_->addAction(newAction_);
+    fileBar_->addAction(openAction_);
+    fileBar_->addAction(saveAction_);
+
+    // ... und eine für den Betrieb: Start, Senden, Looks, Live; rechts Master und Blackout.
+    QToolBar* bar = addToolBar(tr("Betrieb"));
+    bar->setObjectName(QStringLiteral("runBar"));
     bar->setMovable(false);
-    bar->addAction(newAction_);
-    bar->addAction(openAction_);
-    bar->addAction(saveAction_);
     bar->addAction(runAction_);
     bar->addAction(sendAction_);
     bar->addSeparator();
+    bar->addAction(saveLookAction_);
     bar->addAction(liveAction_);
 
-    buildControls();  // Master und Blackout in einer zweiten Leiste
+    buildControls(bar);  // Master und Blackout rechts in derselben Leiste
     run->addAction(blackoutAction_);
     buildDmxInput();  // Menü "Eingang"
 }

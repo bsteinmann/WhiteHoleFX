@@ -2,6 +2,10 @@
 
 ## 0.22.0
 
+- **Oberfläche aufgeräumt:** Looks-Dock links, Parameter/Layout/Testmodus als Reiter rechts; zwei Leisten („Datei“ und
+  „Betrieb“) statt einer überladenen, Master und Blackout rechts außen; Look speichern per Strg+L. Im Live-Modus
+  verschwindet die Datei-Leiste, Rückgängig ist gesperrt und die Leertaste ist GO (vorher hätten Start/Stopp und GO
+  um die Taste gestritten).
 - **Node-Prüfung:** Neue Regeltests für alle eingebauten Nodes (eindeutige Typ-IDs und Namen, Schlüssel in lowerCamelCase,
   Bereiche, Auswahlfelder, Ports); ein neuer Node mit leerem oder doppeltem Namen fällt sofort auf.
 - **Messung (Release, ein Kern):** Einen Feldgraphen mit zehn Nodes zu übersetzen dauert rund 34 µs, ein Werte-Graph mit

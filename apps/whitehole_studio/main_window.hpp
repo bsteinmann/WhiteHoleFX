@@ -7,6 +7,7 @@
 // dass ein Paket das Haus verlässt; erst "Ausgabe senden" schaltet das ein.
 #pragma once
 
+#include <QKeySequence>
 #include <QMainWindow>
 #include <QTimer>
 
@@ -26,6 +27,7 @@ class QDockWidget;
 class QLabel;
 class QMenu;
 class QSlider;
+class QToolBar;
 
 namespace whitehole::studio {
 
@@ -130,7 +132,7 @@ private:
     /// Ein Node im Editor wurde angeklickt: Parameterfenster zeigt seine Parameter.
     void onNodeSelected();
     /// Master-Regler, Blackout-Schalter und die Liste "Zuletzt geöffnet" (main_window_controls.cpp).
-    void buildControls();
+    void buildControls(QToolBar* bar);
     void onMaster(int percent);
     void onBlackout(bool on);
     /// Banner oben rechts in der Vorschau: BLACKOUT und/oder TESTMODUS.
@@ -182,6 +184,9 @@ private:
     LivePanel* livePanel_{nullptr};
     QDockWidget* liveDock_{nullptr};
     QAction* liveAction_{nullptr};
+    QAction* saveLookAction_{nullptr};
+    QToolBar* fileBar_{nullptr};
+    QKeySequence runShortcut_;  // Leertaste: im Live-Modus gehört sie dem GO-Knopf
     std::vector<QDockWidget*> hiddenByLive_;  // Docks, die der Live-Modus versteckt hat (kommen danach zurück)
     bool liveMode_{false};
     QLabel* statusLabel_{nullptr};

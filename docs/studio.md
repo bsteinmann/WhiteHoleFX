@@ -190,6 +190,15 @@ oder Enter in die Mitte der Ansicht legen. Zum **Entfernen** ziehst du einen Nod
 Palette; sie wird rot, beim Loslassen ist der Node (samt Kabeln) weg. Alles ist ein Schritt Rückgängig.
 Neue Node-Typen erscheinen automatisch, die Palette liest die Registrierung.
 
+## Aufbau des Fensters
+
+- **Oben:** Leiste „Datei“ (Neu, Öffnen, Speichern) und Leiste „Betrieb“: Start/Stopp (Leertaste), Ausgabe senden,
+  Look speichern (Strg+L), Live-Modus (F9); rechts außen Master und Blackout (Strg+B).
+- **Links:** Dock „Looks“ (immer in Reichweite).
+- **Mitte:** die Vorschau.
+- **Rechts:** Parameter, Layout und Testmodus als Reiter.
+- **Unten:** Dock „Nodes“ mit Palette und Editor. Alle Docks lassen sich über das Menü Ansicht ein- und ausblenden.
+
 ## Looks und Live-Betrieb
 
 Ein **Look** ist ein fertiger Effekt: alles, was am Ausgang hängt (vom Generator über die Modifier bis zum
@@ -203,8 +212,10 @@ Ausgangs-Node). Looks stehen in der Projektdatei (`look ... endlook`, siehe [Pro
   umbenennen, löschen, nach oben/unten.
 - Gespeichert wird mit dem Projekt (Strg+S).
 
-**Live-Modus (F9 oder Menü Live):** versteckt Editor, Parameter, Layout und Testmodus und zeigt für jeden Look
-einen großen Knopf. Master und Blackout (Strg+B) bleiben in der Leiste.
+**Live-Modus (F9 oder Menü Live):** versteckt Editor, Parameter, Layout, Testmodus, Looks-Dock und die
+Datei-Leiste (Neu/Öffnen/Speichern) und zeigt für jeden Look einen großen Knopf. Master und Blackout (Strg+B)
+bleiben in der Leiste. Rückgängig ist gesperrt, und die Leertaste ist GO statt Start/Stopp, damit auf der Bühne
+nichts versehentlich angehalten oder geändert wird.
 
 | Bedienung | Wirkung |
 |---|---|
