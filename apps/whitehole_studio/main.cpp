@@ -127,9 +127,11 @@ int main(int argc, char** argv) {
         std::printf("Node-Palette: %s\n", palette.isEmpty() ? "ok" : "FEHLER");
         const QString live = palette.isEmpty() ? window.exerciseLive() : QString{};
         std::printf("Looks/Live: %s\n", live.isEmpty() ? "ok" : "FEHLER");
-        const QString view3d = live.isEmpty() ? window.exerciseView3d() : QString{};
+        const QString stage = live.isEmpty() ? window.exerciseStageSetup() : QString{};
+        std::printf("Stage Setup: %s\n", stage.isEmpty() ? "ok" : "FEHLER");
+        const QString view3d = stage.isEmpty() ? window.exerciseView3d() : QString{};
         std::printf("3D-Vorschau: %s\n", view3d.isEmpty() ? "ok" : "FEHLER");
-        for (const QString& failure : {selection, created, transparency, controls, dmx, audio, palette, live, view3d}) {
+        for (const QString& failure : {selection, created, transparency, controls, dmx, audio, palette, live, stage, view3d}) {
             if (!failure.isEmpty()) {
                 std::fprintf(stderr, "Rauchtest fehlgeschlagen: %s\n", failure.toUtf8().constData());
                 return 1;

@@ -24,6 +24,7 @@
 #include "live_panel.hpp"
 #include "look_panel.hpp"
 #include "main_window.hpp"
+#include "stage_setup_window.hpp"
 
 namespace whitehole::studio {
 
@@ -130,7 +131,9 @@ void MainWindow::hideEditDocks() {
     runShortcut_ = runAction_->shortcut();
     runAction_->setShortcut(QKeySequence{});  // Leertaste ist im Live-Modus GO, nicht Start/Stopp
     hiddenByLive_.clear();
-    for (QDockWidget* dock : {editorDock_, dock_, layoutDock_, testDock_, lookDock_}) {
+    stageWasOpen_ = stageSetup_->isVisible();  // auch das Fenster Stage Setup: auf der Bühne wird nichts umgebaut
+    stageSetup_->hide();
+    for (QDockWidget* dock : {editorDock_, dock_, lookDock_}) {
         if (dock->isVisible()) {
             hiddenByLive_.push_back(dock);
         }
@@ -148,7 +151,10 @@ void MainWindow::showEditDocks() {
         dock->show();
     }
     hiddenByLive_.clear();
-    dock_->raise();
+    if (stageWasOpen_) {
+        stageSetup_->open(stageSetup_->page());
+        stageWasOpen_ = false;
+    }
 }
 
 void MainWindow::resetLive() {

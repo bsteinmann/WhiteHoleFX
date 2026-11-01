@@ -78,9 +78,9 @@ void MainWindow::buildActions() {
     QMenu* view = menuBar()->addMenu(tr("&Ansicht"));
     view->addAction(editorDock_->toggleViewAction());
     view->addAction(dock_->toggleViewAction());
-    view->addAction(layoutDock_->toggleViewAction());
-    view->addAction(testDock_->toggleViewAction());
     view->addAction(lookDock_->toggleViewAction());
+    view->addSeparator();
+    buildStageSetup(view);  // eigenes Fenster statt Dock
 
     QMenu* live = menuBar()->addMenu(tr("&Live"));
     live->addAction(liveAction_);

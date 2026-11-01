@@ -128,7 +128,7 @@ ziehen (Treffer auf Ports), verschieben, Kabel und Nodes wieder löschen.
 
 ## Layout-Editor
 
-Das Dock „Layout“ (rechts, teilt sich den Platz mit „Parameter“) hat drei Seiten.
+Das Layout liegt im eigenen Fenster **Stage Setup** (Menü Ansicht oder F4; Seiten „Layout“ und „Testmodus“). Es ist kein Dock: es öffnet sich bei Bedarf, lässt sich auf einen zweiten Bildschirm ziehen und merkt sich Größe und Platz. Es ist nicht modal, die Vorschau im Hauptfenster bleibt bedienbar. Die Seite „Layout“ hat drei Teile.
 
 **Fixtures:** Liste mit „Matrix +“, „Strip +“ und „Entfernen“. Ein neues Fixture bekommt einen freien
 Platz im Layout und das erste freie Universe (Art-Net, Ziel 0, 170 LEDs je Universe). Für das
@@ -168,7 +168,7 @@ Die Vorschau ist eine Arbeitsfläche für das Layout:
 
 | Aktion | Wirkung |
 |---|---|
-| Klick auf ein Fixture | wählt es (gestrichelter blauer Rahmen); die Liste im Layout-Dock folgt |
+| Klick auf ein Fixture | wählt es (gestrichelter blauer Rahmen); die Liste im Stage Setup folgt |
 | Strg oder Umschalt + Klick | Fixture zur Auswahl hinzufügen oder entfernen |
 | Ziehen auf einem Fixture | verschiebt alle gewählten Fixtures (Raster 0,1) |
 | Ziehen auf leerer Fläche | Auswahlrahmen („Gummiband“) |
@@ -224,7 +224,7 @@ Neue Node-Typen erscheinen automatisch, die Palette liest die Registrierung.
   Look speichern (Strg+L), Live-Modus (F9); rechts außen Master und Blackout (Strg+B).
 - **Links:** Dock „Looks“ (immer in Reichweite).
 - **Mitte:** die Vorschau; die Leiste „Ansicht“ schaltet zwischen 2D (bearbeiten) und den 3D-Ansichten um.
-- **Rechts:** Parameter, Layout und Testmodus als Reiter.
+- **Rechts:** das Dock Parameter. Layout und Testmodus öffnen sich im Fenster Stage Setup (F4).
 - **Unten:** Dock „Nodes“ mit Palette und Editor. Alle Docks lassen sich über das Menü Ansicht ein- und ausblenden.
 
 ## Looks und Live-Betrieb
@@ -240,7 +240,7 @@ Ausgangs-Node). Looks stehen in der Projektdatei (`look ... endlook`, siehe [Pro
   umbenennen, löschen, nach oben/unten.
 - Gespeichert wird mit dem Projekt (Strg+S).
 
-**Live-Modus (F9 oder Menü Live):** versteckt Editor, Parameter, Layout, Testmodus, Looks-Dock und die
+**Live-Modus (F9 oder Menü Live):** versteckt Editor, Parameter, das Fenster Stage Setup, Looks-Dock und die
 Datei-Leiste (Neu/Öffnen/Speichern) und zeigt für jeden Look einen großen Knopf. Master und Blackout (Strg+B)
 bleiben in der Leiste. Rückgängig ist gesperrt, und die Leertaste ist GO statt Start/Stopp, damit auf der Bühne
 nichts versehentlich angehalten oder geändert wird.
@@ -296,7 +296,7 @@ von `\ / : * ? " < > |` enthalten und höchstens 64 Zeichen lang sein.
 
 ## Testmodus
 
-Das Dock „Testmodus“ (rechts, teilt sich den Platz mit Layout und Parameter) ersetzt die Farben des
+Die Seite „Testmodus“ im Fenster Stage Setup (F4) ersetzt die Farben des
 Effekts durch ein Testbild, um eine Wand in Betrieb zu nehmen. Die Wiedergabe muss laufen. Das Bild
 erscheint in der Vorschau und, wenn „Ausgabe senden“ an ist, auf den LEDs; ohne „Ausgabe senden“
 bleibt es bei der Vorschau. Solange ein Testbild aktiv ist, steht oben rechts in der Vorschau ein rotes

@@ -96,19 +96,11 @@ MainWindow::MainWindow(gpu::IGpuDevice* device, const QString& deviceNote, QWidg
     connect(previewController_, &PreviewController::regionEdited, this, &MainWindow::refreshParameters);
     connect(previewController_, &PreviewController::failed, this,
             [this](const QString& message) { statusBar()->showMessage(message, 8000); });
-    layoutDock_ = new QDockWidget{tr("Layout"), this};
-    layoutDock_->setWidget(layoutPanel_);
-    addDockWidget(Qt::RightDockWidgetArea, layoutDock_);
     testPanel_ = new TestPanel{*player_, *layoutPanel_, this};
     connect(testPanel_, &TestPanel::patternChanged, this, &MainWindow::onTestPatternChanged);
     connect(testPanel_, &TestPanel::failed, this,
             [this](const QString& message) { statusBar()->showMessage(message, 8000); });
-    testDock_ = new QDockWidget{tr("Testmodus"), this};
-    testDock_->setWidget(testPanel_);
-    addDockWidget(Qt::RightDockWidgetArea, testDock_);
-    tabifyDockWidget(layoutDock_, dock_);  // Layout, Parameter und Testmodus teilen sich den Platz rechts
-    tabifyDockWidget(dock_, testDock_);
-    dock_->raise();
+    // Layout und Testmodus liegen im eigenen Fenster "Stage Setup" (siehe main_window_stage.cpp).
 
     buildEditorDock();
     buildLive();
@@ -175,9 +167,7 @@ void MainWindow::onNodeSelected() {
     }
     previewController_->setRegionNode(regionNode);
     const bool shown = parameters_->showNode(node);
-    if (shown && dock_->isVisible()) {
-        dock_->raise();  // Layout und Parameter teilen sich den Platz: Parameter nach vorn
-    } else if (node && !shown) {
+    if (!shown && node) {
         statusBar()->showMessage(tr("Dieser Node hat keine einstellbaren Parameter."), 4000);
     }
 }

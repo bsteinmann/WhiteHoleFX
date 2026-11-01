@@ -1,5 +1,12 @@
 # Änderungen
 
+## 0.24.0
+
+- **Stage Setup als eigenes Fenster:** Layout (Fixtures, Patch, Ausgabe-Ziele) und Testmodus liegen nicht mehr als Docks
+  rechts, sondern in einem Fenster, das sich über Ansicht > Stage Setup oder F4 öffnet. Es ist nicht modal, lässt sich auf einen
+  zweiten Bildschirm ziehen und merkt sich Größe und Platz. Im Live-Modus wird es geschlossen und danach wieder geöffnet, wenn
+  es offen war. Rechts bleibt nur das Dock „Parameter“, die Vorschau bekommt mehr Platz.
+
 ## 0.23.1
 
 - **Value Noise überarbeitet (Issue #16):** Alle Regler gehen jetzt von 0 bis 1, damit ein LFO sie direkt fahren kann.

@@ -41,6 +41,7 @@ class NodePalette;
 class ParameterPanel;
 class PreviewController;
 class PreviewWidget;
+class StageSetupWindow;
 class TestPanel;
 
 class MainWindow : public QMainWindow {
@@ -89,6 +90,8 @@ public:
     QString exercisePalette();
     /// Rauchtest: Looks speichern/ordnen/umbenennen, Live-Modus mit Überblendung, GO und Rückkehr.
     QString exerciseLive();
+    /// Rauchtest: Stage Setup öffnet als eigenes Fenster, zeigt beide Seiten, schließt im Live-Modus und kommt zurück.
+    QString exerciseStageSetup();
     /// Rauchtest: Umschalter 2D/3D, Orbit mit der Maus, Zoom, feste Ansichten.
     QString exerciseView3d();
     /// Live-Modus ein- und ausschalten (F9). Eintritt scheitert ohne Looks.
@@ -105,6 +108,8 @@ private:
     void buildActions();
     /// Looks und Live-Betrieb (main_window_live.cpp).
     void buildLive();
+    /// Fenster "Stage Setup" (main_window_stage.cpp): Eintrag im Menü Ansicht, F4.
+    void buildStageSetup(QMenu* viewMenu);
     /// Vorschau-Ansicht (main_window_view3d.cpp): 2D zum Bearbeiten oder eine der 3D-Ansichten.
     enum class ViewMode { Edit2d, Free3d, Front, Side, Top };
     void buildView3d(QMenu* menu);
@@ -185,9 +190,10 @@ private:
     QDockWidget* dock_{nullptr};
     QDockWidget* editorDock_{nullptr};
     LayoutPanel* layoutPanel_{nullptr};
-    QDockWidget* layoutDock_{nullptr};
     TestPanel* testPanel_{nullptr};
-    QDockWidget* testDock_{nullptr};
+    StageSetupWindow* stageSetup_{nullptr};  // eigenes Fenster mit Layout und Testmodus
+    QAction* stageSetupAction_{nullptr};
+    bool stageWasOpen_{false};               // war es offen, als der Live-Modus begann?
     LookPanel* lookPanel_{nullptr};
     QDockWidget* lookDock_{nullptr};
     LivePanel* livePanel_{nullptr};

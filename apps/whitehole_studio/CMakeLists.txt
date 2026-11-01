@@ -21,6 +21,7 @@ add_executable(whitehole_studio
     main_window_dmx.cpp
     main_window_editor.cpp
     main_window_live.cpp
+    main_window_stage.cpp
     main_window_view3d.cpp
     live_panel.cpp
     live_panel.hpp
@@ -54,6 +55,8 @@ add_executable(whitehole_studio
     preview_controller.hpp
     preview_widget.cpp
     preview_widget.hpp
+    stage_setup_window.cpp
+    stage_setup_window.hpp
     test_panel.cpp
     test_panel.hpp)
 target_link_libraries(whitehole_studio PRIVATE
