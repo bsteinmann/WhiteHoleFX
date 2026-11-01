@@ -159,12 +159,65 @@ TEST_CASE("3D: renderPreview3d zeichnet Farben, die nahe LED verdeckt die ferne"
     options.height = 200;
     Camera3d camera = cameraFor(ViewPreset::Front);
     camera.showBox = false;
+    camera.glow = false;  // ohne Schein deckt die nahe LED die ferne ab
     const Image image = renderPreview3d(map, colors, camera, options).value();
     REQUIRE(image.width == 200);
     REQUIRE(image.height == 200);
     const auto px = pixelAt(image, 100, 100);
     CHECK(px[1] > 200);
     CHECK(px[0] < 100);
+}
+
+TEST_CASE("3D: additiv addieren sich Farben auf einer Blicklinie, nichts wird verdeckt", "[preview][view3d]") {
+    const mapping::LedMap map = pointsMap({Vec3{0.0F, 0.0F, 0.0F}, Vec3{0.0F, 0.0F, 5.0F}});
+    const std::vector<ColorRgba> colors{{1.0F, 0.0F, 0.0F, 1.0F}, {0.0F, 1.0F, 0.0F, 1.0F}};
+    PreviewOptions options;
+    options.width = 200;
+    options.height = 200;
+    Camera3d camera = cameraFor(ViewPreset::Front);
+    camera.showBox = false;
+    camera.depthCue = 0.0F;
+    camera.glow = true;
+    const auto px = pixelAt(renderPreview3d(map, colors, camera, options).value(), 100, 100);
+    CHECK(px[0] > 200);  // die ferne rote LED scheint durch
+    CHECK(px[1] > 200);  // die nahe grüne ebenfalls
+}
+
+TEST_CASE("3D: eine ausgeschaltete LED davor verdeckt eine leuchtende dahinter nur im Modus Grau", "[preview][view3d]") {
+    // Vorn aus, hinten weiß, auf einer Blicklinie.
+    const mapping::LedMap map = pointsMap({Vec3{0.0F, 0.0F, 0.0F}, Vec3{0.0F, 0.0F, 5.0F}});
+    const std::vector<ColorRgba> colors{{1.0F, 1.0F, 1.0F, 1.0F}, {0.0F, 0.0F, 0.0F, 1.0F}};
+    PreviewOptions options;
+    options.width = 200;
+    options.height = 200;
+    Camera3d camera = cameraFor(ViewPreset::Front);
+    camera.showBox = false;
+    camera.depthCue = 0.0F;
+    for (const bool glow : {false, true}) {
+        camera.glow = glow;
+        camera.offLeds = OffLeds::Hidden;
+        CHECK(pixelAt(renderPreview3d(map, colors, camera, options).value(), 100, 100)[0] > 200);
+        camera.offLeds = OffLeds::Dim;
+        CHECK(pixelAt(renderPreview3d(map, colors, camera, options).value(), 100, 100)[0] > (glow ? 200 : 0));
+    }
+    camera.glow = false;
+    camera.offLeds = OffLeds::Gray;
+    CHECK(pixelAt(renderPreview3d(map, colors, camera, options).value(), 100, 100)[0] < 100);  // graue Scheibe deckt ab
+}
+
+TEST_CASE("3D: ist alles aus und Hidden gewählt, bleibt nur der Hintergrund", "[preview][view3d]") {
+    const mapping::LedMap map = cubeMap();
+    const std::vector<ColorRgba> colors(map.world.size(), ColorRgba{0.0F, 0.0F, 0.0F, 1.0F});
+    Camera3d camera = cameraFor(ViewPreset::Perspective);
+    camera.showBox = false;
+    camera.offLeds = OffLeds::Hidden;
+    const Image hidden = renderPreview3d(map, colors, camera).value();
+    camera.offLeds = OffLeds::Gray;
+    const Image gray = renderPreview3d(map, colors, camera).value();
+    CHECK(hidden.rgba != gray.rgba);
+    for (std::size_t i = 4; i < hidden.rgba.size(); i += 4) {
+        REQUIRE(hidden.rgba[i] == hidden.rgba[0]);  // jedes Pixel hat die Farbe des Hintergrunds
+    }
 }
 
 TEST_CASE("3D: eine LED erscheint dort, wo der Projector sie hinlegt", "[preview][view3d]") {
@@ -238,4 +291,29 @@ TEST_CASE("3D: feste Ansichten füllen das Bild mit der Installation", "[preview
     const float width = p.project(strip.world.back())->x - p.project(strip.world.front())->x;
     CHECK(width > 300.0F);
     CHECK(width < 352.0F);  // innerhalb der Ränder
+}
+
+TEST_CASE("3D: das Achsenkreuz zeichnet Rot, Grün und Blau an der Ecke und lässt sich abschalten", "[preview][view3d]") {
+    const mapping::LedMap map = cubeMap();
+    const std::vector<ColorRgba> colors(map.world.size(), ColorRgba{0.0F, 0.0F, 0.0F, 1.0F});
+    Camera3d off = cameraFor(ViewPreset::Perspective);
+    off.showBox = false;
+    off.offLeds = OffLeds::Hidden;
+    Camera3d on = off;
+    on.showAxes = true;
+    const Image plain = renderPreview3d(map, colors, off).value();
+    const Image axes = renderPreview3d(map, colors, on).value();
+    CHECK(plain.rgba != axes.rgba);
+    // Es gibt rote, grüne und blaue Pixel, die dem Hintergrund fehlen.
+    bool red = false;
+    bool green = false;
+    bool blue = false;
+    for (std::size_t i = 0; i < axes.rgba.size(); i += 4) {
+        red = red || (axes.rgba[i] > 200 && axes.rgba[i + 1] < 120 && axes.rgba[i + 2] < 120);
+        green = green || (axes.rgba[i + 1] > 200 && axes.rgba[i] < 120 && axes.rgba[i + 2] < 120);
+        blue = blue || (axes.rgba[i + 2] > 200 && axes.rgba[i] < 140 && axes.rgba[i + 1] < 170);
+    }
+    CHECK(red);
+    CHECK(green);
+    CHECK(blue);
 }

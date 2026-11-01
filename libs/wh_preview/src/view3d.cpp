@@ -187,10 +187,12 @@ std::optional<ScreenPoint> Projector::project(const Vec3& world) const noexcept 
 
 namespace {
 
+/// Unter diesem Bildschirm-Byte (0..255, hellster Kanal) gilt eine LED im Modus "Hidden" als aus.
+constexpr float kHiddenBelow = 6.0F;
+
 /// Kante des Rahmens als feine Linie (Alpha-Mischung) ins Bild.
-void drawEdge(Image& image, const ScreenPoint& a, const ScreenPoint& b) {
-    constexpr std::array<float, 3> kLine{74.0F, 84.0F, 110.0F};
-    constexpr float kStrength = 0.55F;
+void drawEdge(Image& image, const ScreenPoint& a, const ScreenPoint& b, const std::array<float, 3>& line = {74.0F, 84.0F, 110.0F},
+              float strength = 0.55F) {
     const float dx = b.x - a.x;
     const float dy = b.y - a.y;
     const float len = std::max(std::abs(dx), std::abs(dy));
@@ -207,7 +209,7 @@ void drawEdge(Image& image, const ScreenPoint& a, const ScreenPoint& b) {
         }
         std::uint8_t* px = &image.rgba[(static_cast<std::size_t>(y) * image.width + static_cast<std::size_t>(x)) * 4];
         for (std::size_t ch = 0; ch < 3; ++ch) {
-            px[ch] = static_cast<std::uint8_t>(std::lround(detail::blend(static_cast<float>(px[ch]), kLine[ch], kStrength)));
+            px[ch] = static_cast<std::uint8_t>(std::lround(detail::blend(static_cast<float>(px[ch]), line[ch], strength)));
         }
     }
 }
@@ -224,6 +226,31 @@ void drawBox(Image& image, const Projector& projector, const Bounds3d& b) {
             if (j != i && corners[i] && corners[j]) {
                 drawEdge(image, *corners[i], *corners[j]);
             }
+        }
+    }
+}
+
+/// Achsenkreuz an der Ecke (min x, y, z): x rot, y grün, z blau, je ein Drittel der Kantenlänge.
+void drawAxes(Image& image, const Projector& projector, const Bounds3d& b) {
+    const Vec3 o = b.min;
+    const float lx = std::max((b.max.x - b.min.x) / 3.0F, 0.15F * b.radius);
+    const float ly = std::max((b.max.y - b.min.y) / 3.0F, 0.15F * b.radius);
+    const float lz = std::max((b.max.z - b.min.z) / 3.0F, 0.15F * b.radius);
+    const std::optional<ScreenPoint> origin = projector.project(o);
+    if (!origin) {
+        return;
+    }
+    const struct {
+        Vec3 end;
+        std::array<float, 3> color;
+    } axes[] = {{Vec3{o.x + lx, o.y, o.z}, {255.0F, 80.0F, 80.0F}},
+                {Vec3{o.x, o.y + ly, o.z}, {80.0F, 230.0F, 80.0F}},
+                {Vec3{o.x, o.y, o.z + lz}, {90.0F, 140.0F, 255.0F}}};
+    for (const auto& axis : axes) {
+        if (const std::optional<ScreenPoint> end = projector.project(axis.end)) {
+            drawEdge(image, *origin, *end, axis.color, 0.95F);
+            drawEdge(image, ScreenPoint{origin->x + 1.0F, origin->y, origin->depth, origin->pixelsPerUnit},
+                     ScreenPoint{end->x + 1.0F, end->y, end->depth, end->pixelsPerUnit}, axis.color, 0.95F);
         }
     }
 }
@@ -281,6 +308,9 @@ Result<Image> renderPreview3d(const mapping::LedMap& map, std::span<const ColorR
     if (camera.showBox) {
         drawBox(image, projector, bounds);
     }
+    if (camera.showAxes) {
+        drawAxes(image, projector, bounds);
+    }
 
     struct Placed {
         std::uint32_t index{0};
@@ -308,7 +338,26 @@ Result<Image> renderPreview3d(const mapping::LedMap& map, std::span<const ColorR
                                        static_cast<float>(table.byte(c.b * alpha))};
         const float far = std::clamp((item.point.depth - nearD) / span, 0.0F, 1.0F);
         const float radius = std::clamp(options.dotScale * ledSpacing[item.index] * item.point.pixelsPerUnit, 1.0F, 24.0F);
-        detail::drawDisc(image, item.point.x, item.point.y, radius, lit, 1.0F - cue * far);
+        const float fade = 1.0F - cue * far;
+        // Ausgeschaltete LEDs: unsichtbar, schwach oder grau wie in der 2D-Ansicht.
+        const bool hidden = camera.offLeds == OffLeds::Hidden;
+        if (hidden && std::max({lit[0], lit[1], lit[2]}) < kHiddenBelow) {
+            continue;
+        }
+        const float offScale = hidden ? 0.0F : (camera.offLeds == OffLeds::Dim ? 0.5F : 1.0F);
+        if (camera.glow) {
+            if (!hidden) {
+                std::array<float, 3> off{};
+                for (std::size_t ch = 0; ch < 3; ++ch) {
+                    off[ch] = detail::blend(static_cast<float>(detail::kBackground[ch]),
+                                            static_cast<float>(detail::kOffLed[ch]) * offScale, fade);
+                }
+                detail::drawDiscMax(image, item.point.x, item.point.y, radius, off);
+            }
+            detail::drawGlow(image, item.point.x, item.point.y, radius, lit, fade);
+        } else {
+            detail::drawDisc(image, item.point.x, item.point.y, radius, lit, fade, offScale);
+        }
     }
     return image;
 }

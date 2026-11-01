@@ -362,4 +362,16 @@ Result<preview::Image> Player::image3d(const preview::Camera3d& camera, const pr
     return preview::renderPreview3d(map_, colors, camera, options);
 }
 
+Result<preview::Image> Player::stageImage3d(const preview::Camera3d& camera, const preview::PreviewOptions& options,
+                                            std::span<const mapping::FixtureId> selected) const {
+    if (!project_) {
+        return Error{ErrorCode::InvalidArgument, "Es ist kein Projekt geladen"};
+    }
+    if (map_.world.empty()) {
+        return Error{ErrorCode::InvalidArgument, "Das Layout hat keine LEDs"};
+    }
+    const std::vector<ColorRgba> colors = preview::stageColors(map_, selected);
+    return preview::renderPreview3d(map_, colors, camera, options);
+}
+
 }  // namespace whitehole::runtime

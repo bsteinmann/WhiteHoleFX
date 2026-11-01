@@ -1,4 +1,4 @@
-// stage_setup_window.cpp: Umsetzung zu stage_setup_window.hpp. Das Fenster "Stage Config" mit den Seiten Layout und Testmodus.
+// stage_setup_window.cpp: Umsetzung zu stage_setup_window.hpp. Das Fenster "Stage Config" mit den Seiten Layout, Testmodus und Ansicht.
 #include "stage_setup_window.hpp"
 
 #include <QHideEvent>
@@ -7,6 +7,7 @@
 #include <QVBoxLayout>
 
 #include "layout_panel.hpp"
+#include "stage_view.hpp"
 #include "test_panel.hpp"
 
 namespace whitehole::studio {
@@ -17,7 +18,7 @@ QSettings settings() { return QSettings{QStringLiteral("WhiteHoleFX"), QStringLi
 
 }  // namespace
 
-StageSetupWindow::StageSetupWindow(LayoutPanel* layout, TestPanel* test, QWidget* parent)
+StageSetupWindow::StageSetupWindow(LayoutPanel* layout, TestPanel* test, StageView* view, QWidget* parent)
     : QWidget{parent, Qt::Window}, tabs_{new QTabWidget{this}} {
     setWindowTitle(tr("Stage Config"));
     auto* box = new QVBoxLayout{this};
@@ -25,6 +26,7 @@ StageSetupWindow::StageSetupWindow(LayoutPanel* layout, TestPanel* test, QWidget
     box->addWidget(tabs_);
     tabs_->addTab(layout, tr("Layout"));
     tabs_->addTab(test, tr("Testmodus"));
+    tabs_->addTab(view, tr("Ansicht"));
     resize(560, 760);
 }
 
@@ -33,14 +35,18 @@ void StageSetupWindow::open(Page which) {
         restored_ = true;
         restoreGeometry(settings().value(QStringLiteral("stageSetup/geometry")).toByteArray());
     }
-    tabs_->setCurrentIndex(which == Page::Test ? 1 : 0);
+    tabs_->setCurrentIndex(which == Page::View ? 2 : (which == Page::Test ? 1 : 0));
     show();
     raise();
     activateWindow();
 }
 
 StageSetupWindow::Page StageSetupWindow::page() const {
-    return tabs_->currentIndex() == 1 ? Page::Test : Page::Layout;
+    switch (tabs_->currentIndex()) {
+        case 1: return Page::Test;
+        case 2: return Page::View;
+        default: return Page::Layout;
+    }
 }
 
 int StageSetupWindow::pageCount() const { return tabs_->count(); }

@@ -109,6 +109,20 @@ TEST_CASE("Player: leer, dann geladen", "[player]") {
     CHECK(front.value().rgba != turned.value().rgba);
 }
 
+TEST_CASE("Player: stageImage3d zeigt das Layout, auch während etwas läuft, und hebt die Auswahl hervor", "[player]") {
+    Rig rig;
+    runtime::Player player{&rig.device, *rig.library, rig.gate};
+    CHECK_FALSE(player.stageImage3d({}, {}, {}).ok());
+    REQUIRE(player.loadText(kProject).ok());
+    const auto plain = player.stageImage3d(preview::cameraFor(preview::ViewPreset::Perspective), {}, {});
+    REQUIRE(plain.ok());
+    CHECK(plain.value().width > 0);
+    const std::vector<mapping::FixtureId> chosen{player.project()->layout.fixtures().front().id};
+    const auto marked = player.stageImage3d(preview::cameraFor(preview::ViewPreset::Perspective), {}, chosen);
+    REQUIRE(marked.ok());
+    CHECK(marked.value().width == plain.value().width);
+}
+
 TEST_CASE("Player: ein fehlerhaftes load lässt das bisherige Projekt stehen", "[player]") {
     Rig rig;
     runtime::Player player{&rig.device, *rig.library, rig.gate};

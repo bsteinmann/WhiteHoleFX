@@ -11,8 +11,10 @@
 #include <QApplication>
 #include <QMenu>
 #include <QMouseEvent>
+#include <QSettings>
 #include <QToolBar>
 
+#include <algorithm>
 #include <cmath>
 
 #include "main_window.hpp"
@@ -59,8 +61,68 @@ void MainWindow::buildView3d(QMenu* menu) {
         connect(action, &QAction::triggered, this, [this, mode]() { setViewMode(mode); });
     }
     viewActions_[slotOf(static_cast<int>(ViewMode::Edit2d))]->setChecked(true);
-    freeCamera_ = preview::cameraFor(preview::ViewPreset::Perspective);
+    buildView3dStyle(menu);
+    freeCamera_ = styled(preview::cameraFor(preview::ViewPreset::Perspective));
     connect(preview_, &PreviewWidget::cameraChanged, this, &MainWindow::onCameraChanged);
+}
+
+preview::Camera3d MainWindow::styled(preview::Camera3d camera) const {
+    camera.offLeds = offLeds3d_;
+    camera.glow = glow3d_;
+    return camera;
+}
+
+void MainWindow::applyView3dStyle() {
+    freeCamera_ = styled(freeCamera_);
+    preview_->setCamera(styled(preview_->camera()));
+    refreshImage();
+}
+
+void MainWindow::buildView3dStyle(QMenu* menu) {
+    // Aus-LEDs: In 2D sieht man das Layout gern an grauen Punkten, in einem Cube verdecken sie aber die
+    // leuchtenden LEDs dahinter. Darum ist die Vorgabe in 3D "unsichtbar"; die Wahl bleibt gespeichert.
+    QSettings stored{QStringLiteral("WhiteHoleFX"), QStringLiteral("WhiteHoleFX")};
+    offLeds3d_ = static_cast<preview::OffLeds>(std::clamp(stored.value(QStringLiteral("view3d/offLeds"), 0).toInt(), 0, 2));
+    glow3d_ = stored.value(QStringLiteral("view3d/glow"), true).toBool();
+
+    QMenu* style = menu->addMenu(tr("3D-&Darstellung"));
+    struct Entry {
+        preview::OffLeds mode;
+        const char* text;
+        const char* tip;
+    };
+    static const Entry entries[] = {
+        {preview::OffLeds::Hidden, QT_TR_NOOP("Aus-LEDs &unsichtbar"), QT_TR_NOOP("Nur leuchtende LEDs zeichnen: man sieht durch den Cube hindurch")},
+        {preview::OffLeds::Dim, QT_TR_NOOP("Aus-LEDs &schwach"), QT_TR_NOOP("Ausgeschaltete LEDs als sehr dunkle Punkte, nur als Orientierung")},
+        {preview::OffLeds::Gray, QT_TR_NOOP("Aus-LEDs &grau"), QT_TR_NOOP("Wie in der 2D-Ansicht; graue Punkte der vorderen Schicht verdecken LEDs dahinter")},
+    };
+    auto* group = new QActionGroup{this};
+    group->setExclusive(true);
+    for (const Entry& entry : entries) {
+        auto* action = new QAction{tr(entry.text), this};
+        action->setCheckable(true);
+        action->setToolTip(tr(entry.tip));
+        action->setChecked(entry.mode == offLeds3d_);
+        group->addAction(action);
+        style->addAction(action);
+        const preview::OffLeds mode = entry.mode;
+        connect(action, &QAction::triggered, this, [this, mode]() {
+            offLeds3d_ = mode;
+            QSettings{QStringLiteral("WhiteHoleFX"), QStringLiteral("WhiteHoleFX")}.setValue(QStringLiteral("view3d/offLeds"), static_cast<int>(mode));
+            applyView3dStyle();
+        });
+    }
+    style->addSeparator();
+    auto* glow = new QAction{tr("&Leuchten (additiv)"), this};
+    glow->setCheckable(true);
+    glow->setChecked(glow3d_);
+    glow->setToolTip(tr("Leuchtende LEDs mit weichem Schein, Farben addieren sich; nichts verdeckt etwas"));
+    style->addAction(glow);
+    connect(glow, &QAction::toggled, this, [this](bool on) {
+        glow3d_ = on;
+        QSettings{QStringLiteral("WhiteHoleFX"), QStringLiteral("WhiteHoleFX")}.setValue(QStringLiteral("view3d/glow"), on);
+        applyView3dStyle();
+    });
 }
 
 void MainWindow::setViewMode(ViewMode mode) {
@@ -68,9 +130,9 @@ void MainWindow::setViewMode(ViewMode mode) {
     switch (mode) {
         case ViewMode::Edit2d: break;
         case ViewMode::Free3d: preview_->setCamera(freeCamera_); break;
-        case ViewMode::Front: preview_->setCamera(preview::cameraFor(preview::ViewPreset::Front)); break;
-        case ViewMode::Side: preview_->setCamera(preview::cameraFor(preview::ViewPreset::Side)); break;
-        case ViewMode::Top: preview_->setCamera(preview::cameraFor(preview::ViewPreset::Top)); break;
+        case ViewMode::Front: preview_->setCamera(styled(preview::cameraFor(preview::ViewPreset::Front))); break;
+        case ViewMode::Side: preview_->setCamera(styled(preview::cameraFor(preview::ViewPreset::Side))); break;
+        case ViewMode::Top: preview_->setCamera(styled(preview::cameraFor(preview::ViewPreset::Top))); break;
     }
     preview_->setView3d(mode != ViewMode::Edit2d);
     viewActions_[slotOf(static_cast<int>(mode))]->setChecked(true);  // setChecked löst kein triggered aus
@@ -157,6 +219,26 @@ QString MainWindow::exerciseView3d() {
     if (viewMode_ != ViewMode::Free3d || !action(ViewMode::Free3d)->isChecked()) {
         return QStringLiteral("Drehen aus einer festen Ansicht schaltet nicht auf \"3D\"");
     }
+
+    // Darstellung: Aus-LEDs grau und ohne Schein ändert das Bild und bleibt bei festen Ansichten erhalten.
+    const auto defaultStyle = player_->image3d(preview_->camera(), options);
+    offLeds3d_ = preview::OffLeds::Gray;
+    glow3d_ = false;
+    applyView3dStyle();
+    if (preview_->camera().offLeds != preview::OffLeds::Gray || preview_->camera().glow) {
+        return QStringLiteral("die 3D-Darstellung kommt nicht in der Kamera an");
+    }
+    const auto grayStyle = player_->image3d(preview_->camera(), options);
+    if (!defaultStyle.ok() || !grayStyle.ok() || defaultStyle.value().rgba == grayStyle.value().rgba) {
+        return QStringLiteral("graue Aus-LEDs ohne Schein sehen aus wie die Vorgabe");
+    }
+    action(ViewMode::Top)->trigger();
+    if (preview_->camera().offLeds != preview::OffLeds::Gray || preview_->camera().glow) {
+        return QStringLiteral("die 3D-Darstellung geht beim Wechsel der Ansicht verloren");
+    }
+    offLeds3d_ = preview::OffLeds::Hidden;
+    glow3d_ = true;
+    applyView3dStyle();
 
     action(ViewMode::Edit2d)->trigger();
     if (preview_->view3d() || viewMode_ != ViewMode::Edit2d) {

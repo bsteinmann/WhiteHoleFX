@@ -6,6 +6,7 @@
 // zweiten Bildschirm gezogen werden und lässt dem Hauptfenster seinen Platz. Es bleibt bedienbar,
 // während die Vorschau im Hauptfenster sichtbar ist (kein modaler Dialog).
 //
+// Seiten: Layout, Testmodus und Ansicht (die Anlage im Raum, siehe stage_view.hpp).
 // Das Fenster besitzt die Panels nur als Tabs; Verbindungen, Rückgängig und Speichern laufen
 // unverändert über das Hauptfenster.
 #pragma once
@@ -18,14 +19,15 @@ namespace whitehole::studio {
 
 class LayoutPanel;
 class TestPanel;
+class StageView;
 
 class StageSetupWindow : public QWidget {
     Q_OBJECT
 
 public:
-    enum class Page { Layout, Test };
+    enum class Page { Layout, Test, View };
 
-    StageSetupWindow(LayoutPanel* layout, TestPanel* test, QWidget* parent);
+    StageSetupWindow(LayoutPanel* layout, TestPanel* test, StageView* view, QWidget* parent);
 
     /// Öffnet das Fenster (beim ersten Mal an der gemerkten Stelle) und holt es nach vorn.
     void open(Page which);

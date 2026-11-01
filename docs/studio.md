@@ -130,9 +130,18 @@ ziehen (Treffer auf Ports), verschieben, Kabel und Nodes wieder löschen.
 
 Die Bühne wird einmal am Anfang eingerichtet und danach selten angefasst. Deshalb hat sie ein eigenes Menü **Stage Config**
 (zwischen Bearbeiten und Ansicht) mit: Fixture hinzufügen …, Punktwolke importieren …, Layout und Patch … (F4) und Testmodus ….
-Layout und Testmodus liegen im eigenen Fenster **Stage Config**. Es ist kein Dock: es öffnet sich bei Bedarf, lässt sich auf
+Layout, Testmodus und Ansicht liegen im eigenen Fenster **Stage Config**. Es ist kein Dock: es öffnet sich bei Bedarf, lässt sich auf
 einen zweiten Bildschirm ziehen und merkt sich Größe und Platz. Es ist nicht modal, die Vorschau im Hauptfenster bleibt
-bedienbar. Im Live-Modus ist das Menü gesperrt. Die Seite „Layout“ hat drei Teile.
+bedienbar. Im Live-Modus ist das Menü gesperrt.
+
+**Bühnenansicht:** Die Seite „Ansicht“ zeigt die Anlage im Raum, drehbar wie die 3D-Vorschau (Ziehen = drehen, Rad = Zoom,
+Doppelklick = zurück) mit Knöpfen für Perspektive, Front, Seite und Oben. Jedes Fixture hat einen eigenen Farbton und wird
+entlang des Kabels heller; die **erste LED am Kabel ist weiß**, so erkennst du Anfang und Richtung des Strangs. Rahmen und
+Achsenkreuz (x rot, y grün, z blau, an der Ecke mit den kleinsten Werten) helfen beim Ausrichten. Gewählte Fixtures bleiben
+kräftig, die übrigen werden dunkel. Dieselbe Ansicht gibt es klein oben im Tab „Fixtures“, neben dem Formular: Wert ändern,
+sofort sehen. Beide zeigen nur die Anlage, nicht den laufenden Effekt, und aktualisieren sich bei jeder Änderung.
+
+Die Seite „Layout“ hat drei Teile.
 
 **Fixture hinzufügen:** Der Dialog (Menü Stage Config oder Knopf „Hinzufügen …“ in der Liste) fragt alles in einem Schritt:
 
@@ -220,9 +229,21 @@ In den 3D-Ansichten gehört die Maus der Kamera; bearbeitet wird nur in „2D“
 Die 3D-Ansicht kennt keine Fixture-Formen, sie zeichnet jede LED als Punkt an ihrer Position im Raum. Sie
 funktioniert deshalb für Matrizen, Strips, Punktwolken und Mischungen gleichermaßen, auch für eine hängende
 Installation aus vielen Strips. Ein feiner Rahmen um die Installation hilft bei der Orientierung; entferntere
-LEDs sind leicht abgedunkelt, nahe LEDs verdecken ferne. Achsen wie im Layout: x nach rechts, y nach oben, z zum
+LEDs sind leicht abgedunkelt. Achsen wie im Layout: x nach rechts, y nach oben, z zum
 Betrachter. Die Farben sind dieselben wie in der 2D-Vorschau (Gamma je Fixture, Master und Blackout wirken mit).
-Die gewählte Ansicht wird nicht im Projekt gespeichert. Der Kern (Kamera, Projektion, Zeichnen) liegt ohne Qt in
+Die gewählte Ansicht wird nicht im Projekt gespeichert.
+
+**3D-Darstellung (Menü Ansicht → 3D-Darstellung):** In einem Cube verdecken graue Scheiben ausgeschalteter LEDs sonst die
+leuchtenden dahinter. Darum gilt in 3D:
+
+| Einstellung | Wirkung |
+|---|---|
+| Aus-LEDs unsichtbar (Vorgabe) | nur leuchtende LEDs werden gezeichnet, man sieht durch den Cube hindurch |
+| Aus-LEDs schwach | ausgeschaltete LEDs als sehr dunkle Punkte, nur als Orientierung |
+| Aus-LEDs grau | wie in der 2D-Ansicht (graue Punkte der vorderen Schicht verdecken LEDs dahinter) |
+| Leuchten (additiv, Vorgabe) | leuchtende LEDs haben einen weichen Schein, Farben addieren sich, nichts verdeckt etwas; ohne Haken zeichnet die Ansicht Scheiben, nahe vor fernen |
+
+Die Wahl wird gespeichert und gilt für alle 3D-Ansichten. Die 2D-Ansicht bleibt wie sie war. Der Kern (Kamera, Projektion, Zeichnen) liegt ohne Qt in
 `libs/wh_preview/include/whitehole/preview/view3d.hpp` und ist unit-getestet; `Player::image3d` liefert das Bild.
 
 ### Node-Palette
@@ -251,8 +272,8 @@ Neue Node-Typen erscheinen automatisch, die Palette liest die Registrierung.
 | --- | --- |
 | Datei | Neu, Öffnen, Zuletzt geöffnet, Beispiele; Speichern, Speichern unter; Neu laden (F5); Beenden |
 | Bearbeiten | Rückgängig, Wiederholen; Einstellungen … (Strg+Komma) |
-| Stage Config | Fixture hinzufügen …; Punktwolke importieren …; Layout und Patch … (F4); Testmodus … |
-| Ansicht | Docks ein- und ausblenden; 2D/3D-Umschalter (Strg+1 bis 5) |
+| Stage Config | Fixture hinzufügen …; Punktwolke importieren …; Layout und Patch … (F4); Testmodus … (die Seite „Ansicht“ liegt im selben Fenster) |
+| Ansicht | Docks ein- und ausblenden; 2D/3D-Umschalter (Strg+1 bis 5); 3D-Darstellung (Aus-LEDs, Leuchten) |
 | Wiedergabe | Start/Stopp, Ausgabe senden; Blackout |
 | Live | Live-Modus (F9), Look speichern |
 | Hilfe | Dokumentation (F1, öffnet die Anleitung im Browser), Fehler melden oder Idee vorschlagen (öffnet ein neues Issue auf GitHub), Tastenkürzel (Liste aller Kürzel, direkt aus den Aktionen gelesen), Über WhiteHoleFX (Version, Lizenz) |

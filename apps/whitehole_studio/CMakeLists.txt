@@ -68,6 +68,8 @@ add_executable(whitehole_studio
     preview_widget.cpp
     preview_widget.hpp
     stage_setup_window.cpp
+    stage_view.cpp
+    stage_view.hpp
     stage_setup_window.hpp
     test_panel.cpp
     test_panel.hpp)

@@ -247,4 +247,24 @@ std::vector<ColorRgba> layoutColors(const mapping::LedMap& map) {
     return colors;
 }
 
+std::vector<ColorRgba> stageColors(const mapping::LedMap& map, std::span<const mapping::FixtureId> selected) {
+    std::vector<ColorRgba> colors = layoutColors(map);
+    for (const mapping::FixtureRange& range : map.ranges) {
+        if (range.count == 0 || static_cast<std::size_t>(range.first) + range.count > colors.size()) {
+            continue;
+        }
+        const bool keep = selected.empty() || std::find(selected.begin(), selected.end(), range.fixture) != selected.end();
+        for (std::uint32_t i = 0; i < range.count; ++i) {
+            ColorRgba& c = colors[range.first + i];
+            if (!keep) {
+                c = ColorRgba{c.r * 0.25F, c.g * 0.25F, c.b * 0.25F, 1.0F};
+            }
+        }
+        if (keep) {
+            colors[range.first] = ColorRgba{1.0F, 1.0F, 1.0F, 1.0F};  // Anfang des Strangs
+        }
+    }
+    return colors;
+}
+
 }  // namespace whitehole::preview

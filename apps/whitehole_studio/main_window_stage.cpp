@@ -11,12 +11,15 @@
 #include "look_panel.hpp"
 #include "main_window.hpp"
 #include "stage_setup_window.hpp"
+#include "stage_view.hpp"
 
 namespace whitehole::studio {
 
 void MainWindow::buildStageConfig(QMenu* menu) {
     stageMenu_ = menu;
-    stageSetup_ = new StageSetupWindow{layoutPanel_, testPanel_, this};
+    stageView_ = new StageView{*player_, false};
+    stageSetup_ = new StageSetupWindow{layoutPanel_, testPanel_, stageView_, this};
+    connect(layoutPanel_, &LayoutPanel::selectionChanged, this, &MainWindow::refreshStageViews);
 
     auto* addFixtureAction = new QAction{tr("Fixture &hinzufügen …"), this};
     addFixtureAction->setToolTip(tr("Matrix, Strip oder 3D-Gitter mit Größe x y z, Lage, Verkabelung und Patch anlegen"));
@@ -42,9 +45,21 @@ void MainWindow::buildStageConfig(QMenu* menu) {
     menu->addAction(testModeAction);
 }
 
+void MainWindow::refreshStageViews() {
+    if (stageView_ == nullptr) {
+        return;
+    }
+    stageView_->setSelection(layoutPanel_->selectedIds());
+    stageView_->refresh();
+    layoutPanel_->refreshView();
+}
+
 QString MainWindow::exerciseStageSetup() {
-    if (stageSetup_ == nullptr || stageSetup_->pageCount() != 2) {
-        return QStringLiteral("das Fenster Stage Config hat nicht die Seiten Layout und Testmodus");
+    if (stageSetup_ == nullptr || stageSetup_->pageCount() != 3) {
+        return QStringLiteral("das Fenster Stage Config hat nicht die Seiten Layout, Testmodus und Ansicht");
+    }
+    if (const QString note = stageView_->exercise(); !note.isEmpty()) {
+        return note;
     }
     if (stageSetup_->isVisible()) {
         return QStringLiteral("Stage Config ist schon offen");
@@ -56,6 +71,10 @@ QString MainWindow::exerciseStageSetup() {
     stageSetup_->open(StageSetupWindow::Page::Test);
     if (stageSetup_->page() != StageSetupWindow::Page::Test) {
         return QStringLiteral("Stage Config zeigt die Seite Testmodus nicht");
+    }
+    stageSetup_->open(StageSetupWindow::Page::View);
+    if (stageSetup_->page() != StageSetupWindow::Page::View) {
+        return QStringLiteral("Stage Config zeigt die Seite Ansicht nicht");
     }
     // Der Live-Modus schließt das Fenster und stellt es danach wieder her. Er braucht einen Look.
     const bool addedLook = lookPanel_->lookCount() == 0;

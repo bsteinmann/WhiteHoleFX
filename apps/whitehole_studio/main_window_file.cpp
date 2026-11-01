@@ -55,6 +55,7 @@ void MainWindow::afterLoad(const QString& message) {
     editor_->reset();  // zuerst: setzt die Auswahl zurück, die refreshParameters abfragt
     refreshParameters();
     layoutPanel_->rebuild();
+    refreshStageViews();
     testPanel_->reset();  // der Player hat das Testbild beim Laden schon verworfen
     resetLive();          // Look-Liste neu, Live-Modus (falls aktiv) beendet
     updateTitle();

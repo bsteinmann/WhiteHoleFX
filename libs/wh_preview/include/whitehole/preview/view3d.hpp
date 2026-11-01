@@ -27,6 +27,10 @@ namespace whitehole::preview {
 /// Feste Blickrichtungen für die Knöpfe der Oberfläche.
 enum class ViewPreset { Front, Side, Top, Perspective };
 
+/// Wie ausgeschaltete LEDs in der 3D-Ansicht aussehen. In einem Cube verdecken graue Scheiben der
+/// vorderen Schicht sonst die leuchtenden LEDs dahinter; "Hidden" zeigt nur, was leuchtet.
+enum class OffLeds { Hidden, Dim, Gray };
+
 struct Camera3d {
     float yawDegrees{35.0F};    // Drehung um die senkrechte Achse; 0 = von vorn, 90 = von rechts
     float pitchDegrees{22.0F};  // Neigung; 0 = waagerecht, 90 = von oben
@@ -36,6 +40,9 @@ struct Camera3d {
     bool perspective{true};     // false: Parallelprojektion (Front/Seite/Oben sind maßhaltig)
     bool showBox{true};         // Rahmen um die Installation zeichnen (Orientierung)
     float depthCue{0.35F};      // wie stark entfernte LEDs abdunkeln (0 = gar nicht, 1 = bis Hintergrund)
+    OffLeds offLeds{OffLeds::Hidden};  // Darstellung ausgeschalteter LEDs
+    bool glow{true};            // leuchtende LEDs addieren sich und haben einen weichen Schein (nichts verdeckt etwas)
+    bool showAxes{false};       // Achsenkreuz an der Ecke (min x, y, z): x rot, y grün, z blau (Stage Config)
 
     bool operator==(const Camera3d&) const = default;
 };

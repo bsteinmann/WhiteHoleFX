@@ -15,6 +15,7 @@
 #include "add_fixture_dialog.hpp"
 #include "fixture_form.hpp"
 #include "output_form.hpp"
+#include "stage_view.hpp"
 #include "whitehole/mapping/point_import.hpp"
 #include "whitehole/runtime/player.hpp"
 
@@ -48,6 +49,8 @@ public:
     void setSelectedIds(const std::vector<mapping::FixtureId>& ids);
     /// Liest das Fixture-Formular neu (nach Ziehen in der Vorschau), ohne die Auswahl zu ändern.
     void refreshValues();
+    /// Zeichnet die kleine Bühnenansicht neu (nach Änderungen am Layout) und gibt ihr die aktuelle Auswahl.
+    void refreshView();
     /// Richtet die gewählten Fixtures aus bzw. verteilt sie.
     void align(runtime::Player::Align mode);
     void distribute(runtime::Player::Axis axis);
@@ -82,6 +85,7 @@ private:
     QListWidget* list_{nullptr};
     FixtureForm* fixture_{nullptr};
     OutputForm* output_{nullptr};
+    StageView* miniView_{nullptr};  // kleine Bühnenansicht über der Liste
 };
 
 }  // namespace whitehole::studio

@@ -202,6 +202,7 @@ void MainWindow::updateUndoActions() {
 }
 
 void MainWindow::onLayoutEdited() {
+    refreshStageViews();
     if (timer_.isActive()) {
         timer_.setInterval(std::max(1, static_cast<int>(std::lround(1000.0 / player_->framesPerSecond()))));
     }
@@ -214,6 +215,7 @@ void MainWindow::afterRestore() {
     layoutPanel_->rebuild();
     editor_->rebuild();
     refreshParameters();
+    refreshStageViews();
     updateTitle();
     updateActions();
 }

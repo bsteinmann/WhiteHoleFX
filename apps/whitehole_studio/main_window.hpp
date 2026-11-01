@@ -45,6 +45,7 @@ class ParameterPanel;
 class PreviewController;
 class PreviewWidget;
 class StageSetupWindow;
+class StageView;
 class TestPanel;
 
 class MainWindow : public QMainWindow {
@@ -117,10 +118,14 @@ private:
     /// Looks und Live-Betrieb (main_window_live.cpp).
     void buildLive();
     /// Fenster "Stage Config" (main_window_stage.cpp): Menü Stage Config, Layout und Patch = F4.
-    void buildStageConfig(QMenu* menu);  // Menü "Stage Config": Fixture hinzufügen, Layout und Patch (F4), Testmodus
+    void buildStageConfig(QMenu* menu);
+    void refreshStageViews();  // beide Bühnenansichten (groß und klein) neu zeichnen, mit der aktuellen Auswahl  // Menü "Stage Config": Fixture hinzufügen, Layout und Patch (F4), Testmodus
     /// Vorschau-Ansicht (main_window_view3d.cpp): 2D zum Bearbeiten oder eine der 3D-Ansichten.
     enum class ViewMode { Edit2d, Free3d, Front, Side, Top };
     void buildView3d(QMenu* menu);
+    void buildView3dStyle(QMenu* menu);  // Untermenü "3D-Darstellung": Aus-LEDs und Schein
+    [[nodiscard]] preview::Camera3d styled(preview::Camera3d camera) const;  // Darstellungswahl in die Kamera schreiben
+    void applyView3dStyle();
     void setViewMode(ViewMode mode);
     void onCameraChanged(const preview::Camera3d& camera);
     void resetLive();
@@ -209,6 +214,7 @@ private:
     QDockWidget* editorDock_{nullptr};
     LayoutPanel* layoutPanel_{nullptr};
     TestPanel* testPanel_{nullptr};
+    StageView* stageView_{nullptr};  // Seite "Ansicht" im Stage Config (die kleine Ansicht gehört dem LayoutPanel)
     StageSetupWindow* stageSetup_{nullptr};  // eigenes Fenster mit Layout und Testmodus
     QAction* stageSetupAction_{nullptr};     // "Layout und Patch" (F4)
     QMenu* stageMenu_{nullptr};              // Menü "Stage Config"; im Live-Modus gesperrt
@@ -228,6 +234,8 @@ private:
     QActionGroup* viewGroup_{nullptr};
     std::array<QAction*, 5> viewActions_{};
     preview::Camera3d freeCamera_;  // zuletzt frei gedrehte Kamera: "3D" kehrt dorthin zurück
+    preview::OffLeds offLeds3d_{preview::OffLeds::Hidden};  // Darstellung ausgeschalteter LEDs in 3D
+    bool glow3d_{true};  // leuchtende LEDs in 3D additiv mit Schein
     QLabel* statusLabel_{nullptr};
     QTimer timer_;
     QTimer statusTimer_;

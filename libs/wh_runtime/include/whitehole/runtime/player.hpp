@@ -21,6 +21,7 @@
 #include <functional>
 #include <memory>
 #include <optional>
+#include <span>
 #include <string>
 #include <string_view>
 #include <vector>
@@ -309,6 +310,12 @@ public:
     /// Dasselbe durch eine frei drehbare Kamera (3D-Vorschau, nur zum Ansehen). Fehler wie `image`.
     [[nodiscard]] Result<preview::Image> image3d(const preview::Camera3d& camera,
                                                  const preview::PreviewOptions& options) const;
+
+    /// Bühnenansicht für das Stage Config: die LEDs in Layout-Farben (eigener Farbton je Fixture, heller entlang des
+    /// Kabels, erste LED weiß), unabhängig davon, ob gerade ein Effekt läuft. Mit `selected` bleiben nur diese
+    /// Fixtures kräftig. Fehler wie `image3d`.
+    [[nodiscard]] Result<preview::Image> stageImage3d(const preview::Camera3d& camera, const preview::PreviewOptions& options,
+                                                      std::span<const mapping::FixtureId> selected) const;
 
 private:
     /// Gamma je Fixture und aktuelle Farben für die Vorschau (2D und 3D).

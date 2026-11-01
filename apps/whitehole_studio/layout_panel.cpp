@@ -27,6 +27,9 @@ LayoutPanel::LayoutPanel(runtime::Player& player, QWidget* parent) : QTabWidget{
     auto* page = new QWidget;
     auto* pageLayout = new QVBoxLayout{page};
 
+    miniView_ = new StageView{player_, true};
+    pageLayout->addWidget(miniView_);
+
     list_ = new QListWidget;
     list_->setMaximumHeight(140);
     list_->setSelectionMode(QAbstractItemView::ExtendedSelection);
@@ -62,7 +65,10 @@ LayoutPanel::LayoutPanel(runtime::Player& player, QWidget* parent) : QTabWidget{
     addTab(outputScroll, tr("Ausgabe"));
 
     connect(list_, &QListWidget::currentRowChanged, this, [this](int) { fixture_->showFixture(selectedId()); });
-    connect(list_, &QListWidget::itemSelectionChanged, this, [this]() { Q_EMIT selectionChanged(); });
+    connect(list_, &QListWidget::itemSelectionChanged, this, [this]() {
+        miniView_->setSelection(selectedIds());
+        Q_EMIT selectionChanged();
+    });
     connect(fixture_, &FixtureForm::edited, this, [this]() {
         refreshTexts();
         Q_EMIT edited();
@@ -113,6 +119,11 @@ void LayoutPanel::setSelectedIds(const std::vector<mapping::FixtureId>& ids) {
         }
     }
     fixture_->showFixture(selectedId());
+}
+
+void LayoutPanel::refreshView() {
+    miniView_->setSelection(selectedIds());
+    miniView_->refresh();
 }
 
 void LayoutPanel::refreshValues() {

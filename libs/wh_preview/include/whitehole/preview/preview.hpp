@@ -63,6 +63,11 @@ struct PreviewOptions {
 /// entlang des Kabels wird es heller. Die erste LED am Kabel ist also die dunkelste.
 [[nodiscard]] std::vector<ColorRgba> layoutColors(const mapping::LedMap& map);
 
+/// Farben für die Bühnenansicht im Stage Config: wie `layoutColors`, dazu ist die erste LED am Kabel jedes
+/// Fixtures weiß (hier beginnt der Strang). Ist `selected` nicht leer, bleiben nur diese Fixtures kräftig,
+/// alle anderen werden abgedunkelt.
+[[nodiscard]] std::vector<ColorRgba> stageColors(const mapping::LedMap& map, std::span<const mapping::FixtureId> selected = {});
+
 /// Lineares Licht -> sRGB (0..255), mit Begrenzung auf den gültigen Bereich.
 [[nodiscard]] std::uint8_t toSrgb8(float linear) noexcept;
 

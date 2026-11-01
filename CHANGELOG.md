@@ -1,5 +1,15 @@
 # Änderungen
 
+## 0.30.0
+
+- **3D-Vorschau lesbar:** Ausgeschaltete LEDs erschienen als graue Scheiben und verdeckten im Cube die leuchtenden dahinter.
+  Neu im Menü Ansicht → 3D-Darstellung: *Aus-LEDs unsichtbar* (Vorgabe in 3D), *schwach* oder *grau* (wie 2D), dazu *Leuchten
+  (additiv)*: leuchtende LEDs mit weichem Schein, Farben addieren sich, nichts verdeckt etwas. Die Wahl wird gespeichert und bleibt
+  beim Wechsel zwischen den 3D-Ansichten. Die 2D-Ansicht ist unverändert.
+- **Bühnenansicht im Stage Config:** Neue Seite „Ansicht“ mit der Anlage im Raum (drehbar, Front/Seite/Oben): eigener Farbton je Fixture,
+  heller entlang des Kabels, **erste LED weiß**, Rahmen und Achsenkreuz (x rot, y grün, z blau), Auswahl hervorgehoben. Dazu eine kleine
+  Ansicht oben im Tab „Fixtures“, die sich bei jedem Wert sofort ändert.
+
 ## 0.29.1
 
 - **Farbauswahl erschien nicht (#18):** Unter Linux öffnete sich der Farbdialog bei manchen Fenstermanagern hinter dem

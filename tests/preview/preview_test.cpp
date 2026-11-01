@@ -322,3 +322,30 @@ TEST_CASE("Abstand: Formen", "[mapping][spacing]") {
     points.points = {Vec3{0, 0, 0}, Vec3{3, 0, 0}, Vec3{3, 2, 0}};
     CHECK(mapping::ledSpacing(points) == 2.0F);
 }
+
+TEST_CASE("stageColors: erste LED weiß, nicht gewählte Fixtures dunkler", "[preview][stage]") {
+    mapping::Layout layout;
+    mapping::MatrixShape matrix;
+    matrix.columns = 3;
+    matrix.rows = 2;
+    REQUIRE(layout.add("A", Vec3{}, matrix).ok());
+    REQUIRE(layout.add("B", Vec3{10.0F, 0.0F, 0.0F}, matrix).ok());
+    const mapping::LedMap map = layout.bake().value();
+    REQUIRE(map.ranges.size() == 2);
+
+    const std::vector<ColorRgba> all = stageColors(map);
+    REQUIRE(all.size() == 12);
+    for (const mapping::FixtureRange& range : map.ranges) {
+        CHECK(all[range.first] == ColorRgba{1.0F, 1.0F, 1.0F, 1.0F});
+        CHECK(all[range.first + 1] != ColorRgba{1.0F, 1.0F, 1.0F, 1.0F});
+    }
+
+    const std::vector<mapping::FixtureId> chosen{map.ranges[0].fixture};
+    const std::vector<ColorRgba> some = stageColors(map, chosen);
+    CHECK(some[map.ranges[0].first] == ColorRgba{1.0F, 1.0F, 1.0F, 1.0F});
+    const ColorRgba kept = all[map.ranges[1].first + 5];
+    const ColorRgba dimmed = some[map.ranges[1].first + 5];
+    CHECK(dimmed.r < kept.r * 0.5F + 1e-4F);
+    CHECK(some[map.ranges[1].first] != ColorRgba{1.0F, 1.0F, 1.0F, 1.0F});  // auch der Strangbeginn der anderen ist gedimmt
+    CHECK(some[map.ranges[0].first + 5] == all[map.ranges[0].first + 5]);
+}
