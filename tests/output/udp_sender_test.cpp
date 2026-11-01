@@ -166,3 +166,21 @@ TEST_CASE("Pipeline und UdpSender: Art-Net kommt als echtes Paket an", "[output]
     CHECK(got == encodeArtDmx(params, channels).value());
     CHECK(pipeline.value()->stats().sendErrors == 0);
 }
+
+TEST_CASE("UdpSender: Netzwerkkarte wählen (bindInterface)", "[output][udp]") {
+    auto sender = UdpSender::create();
+    REQUIRE(sender.ok());
+    // Eine Adresse, die dem Rechner nicht gehört, oder Unsinn: Fehler, die Wahl bleibt bestehen.
+    CHECK_FALSE(sender.value()->bindInterface("kein-ip").ok());
+    CHECK_FALSE(sender.value()->bindInterface("203.0.113.77").ok());  // TEST-NET-3, nie lokal
+    // Loopback ist auf jedem Rechner eine Karte; danach kommt das Paket weiter an.
+    REQUIRE(sender.value()->bindInterface("127.0.0.1").ok());
+    Receiver receiver;
+    const std::vector<std::uint8_t> payload{1, 2, 3, 4};
+    REQUIRE(sender.value()->send({"127.0.0.1", receiver.port()}, payload).ok());
+    CHECK(receiver.receive() == payload);
+    // Zurück auf "das System wählt".
+    REQUIRE(sender.value()->bindInterface("").ok());
+    REQUIRE(sender.value()->send({"127.0.0.1", receiver.port()}, payload).ok());
+    CHECK(receiver.receive() == payload);
+}

@@ -10,7 +10,7 @@
 //
 // sACN: Pakete gehen an die Multicast-Adresse des Universe; sie kommen nur an, wenn der Empfänger der
 // Gruppe beigetreten ist. setSacnUniverses() tritt bei den gewünschten Universen bei und verlässt
-// die übrigen (auf der Standard-Netzwerkschnittstelle des Systems). Unicast-Pakete kommen immer an.
+// die übrigen (auf der gewählten Netzwerkkarte, sonst der Standardschnittstelle des Systems). Unicast-Pakete kommen immer an.
 //
 // Plattform: POSIX-Sockets und Winsock. Der Windows-Zweig ist noch nicht auf Windows übersetzt; das
 // prüft der CI-Job "Windows".
@@ -20,6 +20,7 @@
 #include <cstdint>
 #include <memory>
 #include <set>
+#include <string>
 
 #include "whitehole/core/dmx_constants.hpp"
 #include "whitehole/core/result.hpp"
@@ -36,6 +37,10 @@ struct DmxReceiverConfig {
     /// 0 = das System sucht einen freien Port (für Tests). Standard sind die Protokoll-Ports.
     std::uint16_t artnetPort{kArtNetListenPort};
     std::uint16_t sacnPort{kSacnListenPort};
+    /// IPv4-Adresse der Netzwerkkarte, über die sACN-Multicast-Gruppen beigetreten wird (leer = Wahl des
+    /// Systems). Gehört zur Wahl "Netzwerkkarte" in den Einstellungen. Art-Net-Broadcast und Unicast kommen
+    /// weiterhin von jeder Karte an.
+    std::string interfaceAddress;
 };
 
 class DmxReceiver {

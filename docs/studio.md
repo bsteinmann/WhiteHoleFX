@@ -316,20 +316,34 @@ Auswahl; ohne Auswahl leuchtet dann nichts. „Testmodus beenden“ (oder die Ar
 Effekt wieder her. Achtung: Weiß und Farbe leuchten mit voller Helligkeit; vorher prüfen, ob die
 Netzteile die ganze Wand auf 100 % tragen.
 
+## Einstellungen
+
+**Bearbeiten → Einstellungen …** (Strg+Komma) öffnet das Fenster mit allem, was zum Rechner und zum Auftritt gehört, nicht
+zum Projekt. Die Wahl wird beim Nutzer gespeichert und beim nächsten Start wieder umgesetzt; „OK“ wendet sie sofort an.
+
+- **Netzwerk:** die Karte zum **Senden** (Art-Net, sACN, DDP gehen darüber hinaus; „Automatisch“ überlässt es der
+  Routingtabelle des Systems, was bei zwei Anschlüssen oft die falsche Karte ist) und die Karte zum **Empfangen**
+  (über sie tritt sACN den Multicast-Gruppen bei; Art-Net-Broadcast und Unicast kommen weiterhin von jeder Karte an).
+  Die Liste zeigt die aktiven Karten mit ihrer IPv4-Adresse. Eine gemerkte Karte, die es gerade nicht gibt (Kabel
+  gezogen, neue DHCP-Adresse), bleibt als „(nicht gefunden)“ stehen; das Senden läuft dann automatisch weiter und die
+  Statuszeile meldet es.
+- **DMX-Eingang:** Art-Net und sACN einzeln einschalten, dazu die Ports (Standard 6454 und 5568).
+- **Audio:** die Quelle für die Audio-Nodes (siehe unten).
+
 ## DMX-Eingang
 
-Menü **Eingang**: „Art-Net empfangen“ (UDP 6454) und „sACN empfangen“ (UDP 5568). Beide sind nach der
+Einstellungen, Seite **DMX-Eingang**: „Art-Net empfangen“ (UDP 6454) und „sACN empfangen“ (UDP 5568). Beide sind nach der
 Installation aus; erst der Schalter öffnet den Port (Windows fragt dann die Firewall). Die Wahl wird
 gemerkt. Die Statuszeile zeigt „DMX-Eingang Art-Net + sACN: N Pakete“; enthält das Projekt DMX-Nodes,
 der Empfang ist aber aus, steht dort ein Hinweis.
 
 Für sACN tritt das Studio den Multicast-Gruppen genau der Universen bei, die das Projekt liest; Unicast-
-Pakete kommen immer an. Ist der Port belegt, bleibt der Schalter aus und die Statuszeile nennt den Grund.
+Pakete kommen immer an. Ist der Port belegt, bleibt der Empfang aus und eine Meldung nennt den Grund.
 Die Nodes selbst: `docs/value-graph.md`, Abschnitt „DMX-Eingang“.
 
 ## Audio-Eingang
 
-Menü **Eingang → Audio**: *Aus*, *Standardgerät*, ein Gerät aus der Liste oder *WAV-Datei in Schleife …*.
+Einstellungen, Seite **Audio**: *Aus*, *Standardgerät*, ein Gerät aus der Liste oder *WAV-Datei in Schleife*.
 Nach der Installation ist der Eingang aus; das Mikrofon öffnet erst die ausdrückliche Wahl. Die Wahl wird
 gemerkt (scheitert das Öffnen beim nächsten Start, bleibt der Eingang aus). Die Statuszeile zeigt „Audio:
 Quelle, Pegel, BPM“; enthält das Projekt Audio-Nodes, der Eingang ist aber aus, steht dort ein Hinweis.

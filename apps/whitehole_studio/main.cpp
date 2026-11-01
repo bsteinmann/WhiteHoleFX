@@ -127,11 +127,13 @@ int main(int argc, char** argv) {
         std::printf("Node-Palette: %s\n", palette.isEmpty() ? "ok" : "FEHLER");
         const QString live = palette.isEmpty() ? window.exerciseLive() : QString{};
         std::printf("Looks/Live: %s\n", live.isEmpty() ? "ok" : "FEHLER");
-        const QString stage = live.isEmpty() ? window.exerciseStageSetup() : QString{};
+        const QString settingsResult = live.isEmpty() ? window.exerciseSettings() : QString{};
+        std::printf("Einstellungen: %s\n", settingsResult.isEmpty() ? "ok" : "FEHLER");
+        const QString stage = settingsResult.isEmpty() ? window.exerciseStageSetup() : QString{};
         std::printf("Stage Setup: %s\n", stage.isEmpty() ? "ok" : "FEHLER");
         const QString view3d = stage.isEmpty() ? window.exerciseView3d() : QString{};
         std::printf("3D-Vorschau: %s\n", view3d.isEmpty() ? "ok" : "FEHLER");
-        for (const QString& failure : {selection, created, transparency, controls, dmx, audio, palette, live, stage, view3d}) {
+        for (const QString& failure : {selection, created, transparency, controls, dmx, audio, palette, live, settingsResult, stage, view3d}) {
             if (!failure.isEmpty()) {
                 std::fprintf(stderr, "Rauchtest fehlgeschlagen: %s\n", failure.toUtf8().constData());
                 return 1;

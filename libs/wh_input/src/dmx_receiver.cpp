@@ -102,14 +102,14 @@ Result<void> DmxReceiver::start(const DmxReceiverConfig& config) {
     std::unique_ptr<Channel> artnet;
     std::unique_ptr<Channel> sacn;
     if (config.artnet) {
-        auto socket = UdpListener::open(config.artnetPort);
+        auto socket = UdpListener::open(config.artnetPort, config.interfaceAddress);
         if (!socket) {
             return Error{ErrorCode::IoError, "Art-Net-Empfang: " + socket.error().message};
         }
         artnet = std::make_unique<Channel>(std::move(socket.value()), &parseArtNet, *store_);
     }
     if (config.sacn) {
-        auto socket = UdpListener::open(config.sacnPort);
+        auto socket = UdpListener::open(config.sacnPort, config.interfaceAddress);
         if (!socket) {
             return Error{ErrorCode::IoError, "sACN-Empfang: " + socket.error().message};
         }

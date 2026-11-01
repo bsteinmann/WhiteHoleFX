@@ -15,6 +15,7 @@
 #include <memory>
 #include <vector>
 
+#include "app_settings.hpp"
 #include "whitehole/audio/audio_input.hpp"
 #include "whitehole/input/dmx_receiver.hpp"
 #include "whitehole/nodes/builtin_library.hpp"
@@ -90,6 +91,8 @@ public:
     QString exercisePalette();
     /// Rauchtest: Looks speichern/ordnen/umbenennen, Live-Modus mit Überblendung, GO und Rückkehr.
     QString exerciseLive();
+    /// Rauchtest: Einstellungsdialog (Rundlauf der Felder), Netzwerkkarte wählen, DMX/Audio anwenden.
+    QString exerciseSettings();
     /// Rauchtest: Stage Setup öffnet als eigenes Fenster, zeigt beide Seiten, schließt im Live-Modus und kommt zurück.
     QString exerciseStageSetup();
     /// Rauchtest: Umschalter 2D/3D, Orbit mit der Maus, Zoom, feste Ansichten.
@@ -156,16 +159,20 @@ private:
     void forgetRecent(const QString& path);
     /// Ein Testbild wurde ein- oder ausgeschaltet: Banner in der Vorschau und Statuszeile anpassen.
     void onTestPatternChanged();
-    /// DMX-Eingang (main_window_dmx.cpp): Menü "Eingang", Empfänger starten/stoppen, Statustext.
-    void buildDmxInput();
-    void applyDmxInput();
+    /// DMX-Eingang (main_window_dmx.cpp): Empfänger nach appSettings_ starten/stoppen. Liefert den Fehlertext
+    /// (leer = in Ordnung); bei einem Fehler sind beide Protokolle in appSettings_ aus.
+    QString applyDmxInput();
     void syncDmxUniverses();
     [[nodiscard]] QString dmxStatusText() const;
-    /// Audio-Eingang (main_window_audio.cpp): Untermenü "Audio" im Menü "Eingang".
-    /// `choice`: "off", "default", "device:<Name>" oder "file:<Pfad>". Wahr, wenn eine Quelle läuft.
-    void buildAudioInput(QMenu* inputMenu);
-    void fillAudioMenu();
-    bool applyAudioChoice(const QString& choice);
+    /// Audio-Eingang (main_window_audio.cpp). `choice`: "off", "default", "device:<Name>" oder "file:<Pfad>".
+    /// Liefert den Fehlertext (leer = in Ordnung; bei einem Fehler bleibt der Eingang aus).
+    QString applyAudioChoice(const QString& choice);
+    /// Einstellungen (main_window_settings.cpp): Menü, Dialog, Anwenden. `applySettings` setzt Netzwerkkarte,
+    /// DMX-Eingang und Audioquelle um und liefert die Fehlertexte (leer = alles angewendet); `persist` speichert
+    /// die Wahl beim Nutzer (nicht beim Start: eine nicht mehr vorhandene Karte soll die Wahl nicht löschen).
+    void buildSettings(QMenu* editMenu);
+    void openSettings();
+    QString applySettings(const AppSettings& wanted, bool persist);
     [[nodiscard]] QString audioStatusText() const;
     void onTogglePlayback(bool run);
     void onToggleSending(bool send);
@@ -176,9 +183,9 @@ private:
     std::unique_ptr<runtime::Player> player_;
     std::unique_ptr<runtime::PresetStore> presets_;  // Ordner mit Node-Presets im Datenordner des Nutzers
     std::unique_ptr<input::DmxReceiver> dmxReceiver_;  // nach library_: liest/schreibt dessen Speicher
-    input::DmxReceiverConfig dmxConfig_;               // Ports; nur der Rauchtest ändert sie
+    AppSettings appSettings_;                           // was gerade angewendet ist (Netzwerkkarten, DMX, Audio)
+    QAction* settingsAction_{nullptr};
     std::unique_ptr<audio::AudioInput> audioInput_;    // nach library_: schreibt in dessen Audio-Speicher
-    QMenu* audioMenu_{nullptr};
     QString audioChoice_{QStringLiteral("off")};       // gewählte Quelle, siehe applyAudioChoice
     QString deviceNote_;
 
@@ -226,8 +233,6 @@ private:
     QSlider* masterSlider_{nullptr};
     QLabel* masterLabel_{nullptr};
     QMenu* recentMenu_{nullptr};
-    QAction* artnetInAction_{nullptr};
-    QAction* sacnInAction_{nullptr};
 };
 
 }  // namespace whitehole::studio

@@ -111,7 +111,7 @@ void MainWindow::buildActions() {
     buildControls(bar);  // Master und Blackout rechts in derselben Leiste
     buildView3d(view);   // Ansicht-Umschalter 2D/3D (Menü und Leiste)
     run->addAction(blackoutAction_);
-    buildDmxInput();  // Menü "Eingang"
+    buildSettings(edit);  // Bearbeiten > Einstellungen; setzt die gemerkte Wahl um
 }
 
 void MainWindow::fillExamplesMenu(QMenu* menu) {

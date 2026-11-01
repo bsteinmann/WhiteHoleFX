@@ -38,6 +38,7 @@ using OptPtr = const void*;
 struct UdpListener::Impl {
     Handle fd{kInvalid};
     std::uint16_t port{0};
+    in_addr interfaceAddress{};  // Karte für Multicast-Beitritte; 0.0.0.0 = Wahl des Systems
 #if defined(_WIN32)
     bool wsaStarted{false};
 #endif
@@ -59,10 +60,10 @@ in_addr sacnGroup(std::uint32_t universe) {
     return address;
 }
 
-bool membership(Handle fd, std::uint32_t universe, bool join) {
+bool membership(Handle fd, const in_addr& interfaceAddress, std::uint32_t universe, bool join) {
     ip_mreq request{};
     request.imr_multiaddr = sacnGroup(universe);
-    request.imr_interface.s_addr = htonl(INADDR_ANY);
+    request.imr_interface = interfaceAddress;
     return ::setsockopt(fd, IPPROTO_IP, join ? IP_ADD_MEMBERSHIP : IP_DROP_MEMBERSHIP,
                         reinterpret_cast<OptPtr>(&request), sizeof(request)) == 0;
 }
@@ -89,8 +90,19 @@ UdpListener::~UdpListener() {
 #endif
 }
 
-Result<std::unique_ptr<UdpListener>> UdpListener::open(std::uint16_t port) {
+Result<std::unique_ptr<UdpListener>> UdpListener::open(std::uint16_t port, const std::string& interfaceAddress) {
     auto impl = std::make_unique<Impl>();
+    impl->interfaceAddress.s_addr = htonl(INADDR_ANY);
+    if (!interfaceAddress.empty()) {
+#if defined(_WIN32)
+        const int parsed = ::InetPtonA(AF_INET, interfaceAddress.c_str(), &impl->interfaceAddress);
+#else
+        const int parsed = ::inet_pton(AF_INET, interfaceAddress.c_str(), &impl->interfaceAddress);
+#endif
+        if (parsed != 1) {
+            return Error{ErrorCode::InvalidArgument, "Keine gültige IPv4-Adresse der Netzwerkkarte: " + interfaceAddress};
+        }
+    }
 #if defined(_WIN32)
     WSADATA data{};
     if (::WSAStartup(MAKEWORD(2, 2), &data) != 0) {
@@ -151,8 +163,12 @@ int UdpListener::receive(std::span<std::uint8_t> buffer, int timeoutMs) {
 
 std::uint16_t UdpListener::port() const { return impl_->port; }
 
-bool UdpListener::joinSacnGroup(std::uint32_t universe) { return membership(impl_->fd, universe, true); }
+bool UdpListener::joinSacnGroup(std::uint32_t universe) {
+    return membership(impl_->fd, impl_->interfaceAddress, universe, true);
+}
 
-bool UdpListener::leaveSacnGroup(std::uint32_t universe) { return membership(impl_->fd, universe, false); }
+bool UdpListener::leaveSacnGroup(std::uint32_t universe) {
+    return membership(impl_->fd, impl_->interfaceAddress, universe, false);
+}
 
 }  // namespace whitehole::input

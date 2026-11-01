@@ -193,7 +193,7 @@ Farbparameter.
   bzw. Schwarz.
 - **DMX Color:** Kanal, Kanal+1, Kanal+2 sind Rot, Grün, Blau; im Modus „RGB + Dimmer“ skaliert Kanal+3 die
   Helligkeit.
-- **Voraussetzung:** Der Empfang ist im Studio im Menü „Eingang“ einzuschalten (standardmäßig aus). Ohne
+- **Voraussetzung:** Der Empfang ist im Studio unter Bearbeiten → Einstellungen, Seite „DMX-Eingang“, einzuschalten (standardmäßig aus). Ohne
   Empfang liefern die Nodes dauerhaft „kein Signal“.
 - **Nicht reproduzierbar:** Der Wert kommt aus dem Netzwerk, nicht aus der Zeit. Offline-Rendern mit
   DMX-Nodes ergibt je nach Eingang verschiedene Ergebnisse.

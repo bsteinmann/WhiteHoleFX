@@ -1,17 +1,13 @@
-// main_window_dmx.cpp: DMX-Eingang im Hauptfenster (Menü "Eingang", Statusanzeige).
+// main_window_dmx.cpp: DMX-Eingang im Hauptfenster (Empfänger starten und stoppen, Statusanzeige).
 //
 // Warum eine eigene Datei: Der Empfang ist eine Betriebsentscheidung wie die Netzwerkausgabe, kein
 // Teil des Projekts. Die Fenster-Datei bleibt dadurch klein. Die Netzwerkarbeit selbst macht
 // input::DmxReceiver (wh_input); hier stehen nur Schalter, das Merken der Wahl und die Anzeige.
 //
-// Sicherheit: Nach der Installation ist der Empfang AUS. Ein Schalter im Menü öffnet den UDP-Port
-// (unter Windows fragt die Firewall dann nach). Die Wahl wird gemerkt, weil sie bewusst getroffen wurde.
-#include <QAction>
+// Sicherheit: Nach der Installation ist der Empfang AUS. Erst die Einstellung (Bearbeiten > Einstellungen,
+// Seite DMX-Eingang) öffnet den UDP-Port (unter Windows fragt die Firewall dann nach). Die Wahl wird
+// gemerkt, weil sie bewusst getroffen wurde.
 #include <QCoreApplication>
-#include <QMenu>
-#include <QMenuBar>
-#include <QSettings>
-#include <QSignalBlocker>
 #include <QStatusBar>
 #include <QThread>
 
@@ -25,61 +21,31 @@
 
 namespace whitehole::studio {
 
-namespace {
-
-QSettings settings() { return QSettings{QStringLiteral("WhiteHoleFX"), QStringLiteral("WhiteHoleFX")}; }
-
-}  // namespace
-
-void MainWindow::buildDmxInput() {
-    artnetInAction_ = new QAction{tr("&Art-Net empfangen (UDP %1)").arg(input::kArtNetListenPort), this};
-    sacnInAction_ = new QAction{tr("&sACN empfangen (UDP %1)").arg(input::kSacnListenPort), this};
-    for (QAction* action : {artnetInAction_, sacnInAction_}) {
-        action->setCheckable(true);
-        connect(action, &QAction::toggled, this, [this]() { applyDmxInput(); });
-    }
-    artnetInAction_->setToolTip(tr("DMX über Art-Net empfangen; die DMX-Nodes im Projekt lesen daraus"));
-    sacnInAction_->setToolTip(tr("DMX über sACN (E1.31) empfangen, Unicast und Multicast"));
-
-    QMenu* menu = menuBar()->addMenu(tr("&Eingang"));
-    menu->addAction(artnetInAction_);
-    menu->addAction(sacnInAction_);
-    menu->addSeparator();
-    buildAudioInput(menu);
-
-    const QSettings s = settings();
-    {
-        const QSignalBlocker blockArt{artnetInAction_};
-        const QSignalBlocker blockSacn{sacnInAction_};
-        artnetInAction_->setChecked(s.value(QStringLiteral("dmx/artnet"), false).toBool());
-        sacnInAction_->setChecked(s.value(QStringLiteral("dmx/sacn"), false).toBool());
-    }
-    applyDmxInput();
-}
-
-void MainWindow::applyDmxInput() {
+QString MainWindow::applyDmxInput() {
     if (!dmxReceiver_) {
         dmxReceiver_ = std::make_unique<input::DmxReceiver>(library_->dmx);
     }
     dmxReceiver_->stop();
-    if (artnetInAction_->isChecked() || sacnInAction_->isChecked()) {
-        input::DmxReceiverConfig config = dmxConfig_;
-        config.artnet = artnetInAction_->isChecked();
-        config.sacn = sacnInAction_->isChecked();
-        const Result<void> started = dmxReceiver_->start(config);
-        if (!started.ok()) {
-            // Port belegt oder verboten: beide Schalter zurück, damit die Anzeige nicht lügt.
-            const QSignalBlocker blockArt{artnetInAction_};
-            const QSignalBlocker blockSacn{sacnInAction_};
-            artnetInAction_->setChecked(false);
-            sacnInAction_->setChecked(false);
-            statusBar()->showMessage(tr("DMX-Eingang: %1").arg(QString::fromStdString(started.error().message)), 10000);
-        }
+    if (!appSettings_.artnetIn && !appSettings_.sacnIn) {
+        syncDmxUniverses();
+        return {};
     }
-    QSettings s = settings();
-    s.setValue(QStringLiteral("dmx/artnet"), artnetInAction_->isChecked());
-    s.setValue(QStringLiteral("dmx/sacn"), sacnInAction_->isChecked());
+    input::DmxReceiverConfig config;
+    config.artnet = appSettings_.artnetIn;
+    config.sacn = appSettings_.sacnIn;
+    config.artnetPort = static_cast<std::uint16_t>(appSettings_.artnetPort);
+    config.sacnPort = static_cast<std::uint16_t>(appSettings_.sacnPort);
+    config.interfaceAddress = appSettings_.inputInterface.toStdString();
+    const Result<void> started = dmxReceiver_->start(config);
+    QString problem;
+    if (!started.ok()) {
+        // Port belegt oder verboten: beide Protokolle aus, damit die Anzeige nicht lügt.
+        appSettings_.artnetIn = false;
+        appSettings_.sacnIn = false;
+        problem = tr("DMX-Eingang: %1").arg(QString::fromStdString(started.error().message));
+    }
     syncDmxUniverses();
+    return problem;
 }
 
 void MainWindow::syncDmxUniverses() {
@@ -92,7 +58,7 @@ QString MainWindow::dmxStatusText() const {
     const bool listening = dmxReceiver_ && dmxReceiver_->running();
     const runtime::DmxUsage usage = player_->dmxUsage();
     if (!listening) {
-        return usage.any() ? tr("   |   DMX-Nodes im Projekt, Eingang aus (Menü Eingang)") : QString{};
+        return usage.any() ? tr("   |   DMX-Nodes im Projekt, Eingang aus (Einstellungen)") : QString{};
     }
     const input::DmxStats stats = library_->dmx->stats();
     QString protocols;
@@ -106,12 +72,18 @@ QString MainWindow::dmxStatusText() const {
 }
 
 QString MainWindow::exerciseDmx() {
-    // Ende-zu-Ende über Loopback: Schalter an -> Paket an den gewählten Port -> Wert im Speicher.
-    dmxConfig_.artnetPort = 0;  // freie Ports, damit der Test weder 6454 noch 5568 braucht
-    dmxConfig_.sacnPort = 0;
-    artnetInAction_->setChecked(true);
+    // Ende-zu-Ende über Loopback: Einstellung an -> Paket an den gewählten Port -> Wert im Speicher.
+    const AppSettings before = appSettings_;
+    AppSettings on = before;
+    on.artnetIn = true;
+    on.artnetPort = 0;  // freie Ports, damit der Test weder 6454 noch 5568 braucht
+    on.sacnPort = 0;
+    on.inputInterface = QStringLiteral("127.0.0.1");  // die Wahl der Karte darf den Empfang nicht stören
+    if (const QString error = applySettings(on, false); !error.isEmpty()) {
+        return QStringLiteral("DMX-Eingang: ") + error;
+    }
     if (!dmxReceiver_ || !dmxReceiver_->running() || dmxReceiver_->artnetPort() == 0) {
-        return QStringLiteral("DMX-Eingang: der Schalter startet den Empfang nicht");
+        return QStringLiteral("DMX-Eingang: die Einstellung startet den Empfang nicht");
     }
     auto sender = output::UdpSender::create();
     if (!sender.ok()) {
@@ -131,10 +103,8 @@ QString MainWindow::exerciseDmx() {
             QCoreApplication::processEvents();
         }
     }
-    artnetInAction_->setChecked(false);
-    sacnInAction_->setChecked(false);
-    dmxConfig_ = input::DmxReceiverConfig{};
-    if (dmxReceiver_->running()) {
+    applySettings(before, false);
+    if (dmxReceiver_->running() != (before.artnetIn || before.sacnIn)) {
         return QStringLiteral("DMX-Eingang: Ausschalten gescheitert");
     }
     return arrived ? QString{} : QStringLiteral("DMX-Eingang: das Testpaket kam nicht an");

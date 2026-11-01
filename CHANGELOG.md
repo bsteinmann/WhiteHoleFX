@@ -1,5 +1,15 @@
 # Änderungen
 
+## 0.25.0
+
+- **Einstellungen:** Neuer Menüpunkt Bearbeiten → Einstellungen … (Strg+Komma). Das Menü „Eingang“ entfällt, seine Schalter
+  wandern in den Dialog: Seite **Netzwerk** (Karte zum Senden und zum Empfangen), Seite **DMX-Eingang** (Art-Net und sACN
+  einzeln, Ports) und Seite **Audio** (Aus, Standardgerät, Gerät, WAV-Datei). Die Wahl wird gespeichert; die bisherigen
+  Schlüssel (`dmx/artnet`, `dmx/sacn`, `audio/source`) bleiben gültig.
+- **Netzwerkkarte wählen:** `UdpSender::bindInterface` bindet das Senden an die Adresse einer Karte (Absender, Broadcast, Multicast),
+  `DmxReceiverConfig::interfaceAddress` bestimmt die Karte für sACN-Multicast. Eine Karte, die es nicht gibt, wird abgelehnt
+  und die bisherige Wahl bleibt bestehen.
+
 ## 0.24.0
 
 - **Stage Setup als eigenes Fenster:** Layout (Fixtures, Patch, Ausgabe-Ziele) und Testmodus liegen nicht mehr als Docks

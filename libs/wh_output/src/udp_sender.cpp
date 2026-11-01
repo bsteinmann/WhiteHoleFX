@@ -13,10 +13,12 @@
 #include <ws2tcpip.h>
 
 #include <cstring>
+#include <mutex>
 
 namespace whitehole::output {
 
 struct UdpSender::Impl {
+    std::mutex mutex;  // schützt fd: bindInterface tauscht ihn, während ein anderer Thread sendet
     SOCKET fd{INVALID_SOCKET};
     bool started{false};
     std::map<std::pair<std::string, std::uint16_t>, sockaddr_in> cache;
@@ -69,6 +71,7 @@ Result<void> UdpSender::send(const Endpoint& to, std::span<const std::uint8_t> p
         }
         it = impl_->cache.emplace(key, addr).first;
     }
+    const std::lock_guard<std::mutex> lock{impl_->mutex};
     const int sent = ::sendto(impl_->fd, reinterpret_cast<const char*>(packet.data()),
                               static_cast<int>(packet.size()), 0,
                               reinterpret_cast<const sockaddr*>(&it->second), sizeof(sockaddr_in));
@@ -79,6 +82,41 @@ Result<void> UdpSender::send(const Endpoint& to, std::span<const std::uint8_t> p
     if (static_cast<std::size_t>(sent) != packet.size()) {
         return Error{ErrorCode::IoError, "Das Paket wurde nur teilweise gesendet"};
     }
+    return {};
+}
+
+Result<void> UdpSender::bindInterface(const std::string& ipv4) {
+    in_addr local{};
+    local.s_addr = htonl(INADDR_ANY);
+    if (!ipv4.empty() && ::InetPtonA(AF_INET, ipv4.c_str(), &local) != 1) {
+        return Error{ErrorCode::InvalidArgument, "Keine gültige IPv4-Adresse der Netzwerkkarte: " + ipv4};
+    }
+    const SOCKET fd = ::socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+    if (fd == INVALID_SOCKET) {
+        return Error{ErrorCode::IoError, "Der UDP-Socket ließ sich nicht anlegen (Winsock-Fehler " +
+                                             std::to_string(::WSAGetLastError()) + ")"};
+    }
+    u_long nonBlocking = 1;
+    ::ioctlsocket(fd, FIONBIO, &nonBlocking);
+    const BOOL on = TRUE;
+    ::setsockopt(fd, SOL_SOCKET, SO_BROADCAST, reinterpret_cast<const char*>(&on), sizeof(on));
+    const int ttl = 1;
+    ::setsockopt(fd, IPPROTO_IP, IP_MULTICAST_TTL, reinterpret_cast<const char*>(&ttl), sizeof(ttl));
+    if (!ipv4.empty()) {
+        sockaddr_in address{};
+        address.sin_family = AF_INET;
+        address.sin_addr = local;
+        if (::bind(fd, reinterpret_cast<const sockaddr*>(&address), sizeof(address)) != 0) {
+            const int code = ::WSAGetLastError();
+            ::closesocket(fd);
+            return Error{ErrorCode::IoError, "Die Netzwerkkarte " + ipv4 + " ist nicht nutzbar (Winsock-Fehler " +
+                                                 std::to_string(code) + ")"};
+        }
+        ::setsockopt(fd, IPPROTO_IP, IP_MULTICAST_IF, reinterpret_cast<const char*>(&local), sizeof(local));
+    }
+    const std::lock_guard<std::mutex> lock{impl_->mutex};
+    ::closesocket(impl_->fd);
+    impl_->fd = fd;
     return {};
 }
 
@@ -93,10 +131,12 @@ Result<void> UdpSender::send(const Endpoint& to, std::span<const std::uint8_t> p
 
 #include <cerrno>
 #include <cstring>
+#include <mutex>
 
 namespace whitehole::output {
 
 struct UdpSender::Impl {
+    std::mutex mutex;  // schützt fd: bindInterface tauscht ihn, während ein anderer Thread sendet
     int fd{-1};
     std::map<std::pair<std::string, std::uint16_t>, sockaddr_in> cache;
 };
@@ -136,6 +176,7 @@ Result<void> UdpSender::send(const Endpoint& to, std::span<const std::uint8_t> p
         }
         it = impl_->cache.emplace(key, addr).first;
     }
+    const std::lock_guard<std::mutex> lock{impl_->mutex};
     const ssize_t sent = ::sendto(impl_->fd, packet.data(), packet.size(), MSG_DONTWAIT,
                                   reinterpret_cast<const sockaddr*>(&it->second), sizeof(sockaddr_in));
     if (sent < 0) {
@@ -144,6 +185,37 @@ Result<void> UdpSender::send(const Endpoint& to, std::span<const std::uint8_t> p
     if (static_cast<std::size_t>(sent) != packet.size()) {
         return Error{ErrorCode::IoError, "Das Paket wurde nur teilweise gesendet"};
     }
+    return {};
+}
+
+Result<void> UdpSender::bindInterface(const std::string& ipv4) {
+    in_addr local{};
+    local.s_addr = htonl(INADDR_ANY);
+    if (!ipv4.empty() && ::inet_pton(AF_INET, ipv4.c_str(), &local) != 1) {
+        return Error{ErrorCode::InvalidArgument, "Keine gültige IPv4-Adresse der Netzwerkkarte: " + ipv4};
+    }
+    const int fd = ::socket(AF_INET, SOCK_DGRAM, 0);
+    if (fd < 0) {
+        return Error{ErrorCode::IoError, std::string{"Der UDP-Socket ließ sich nicht anlegen: "} + std::strerror(errno)};
+    }
+    const int on = 1;
+    ::setsockopt(fd, SOL_SOCKET, SO_BROADCAST, &on, sizeof(on));
+    const unsigned char ttl = 1;
+    ::setsockopt(fd, IPPROTO_IP, IP_MULTICAST_TTL, &ttl, sizeof(ttl));
+    if (!ipv4.empty()) {
+        sockaddr_in address{};
+        address.sin_family = AF_INET;
+        address.sin_addr = local;
+        if (::bind(fd, reinterpret_cast<const sockaddr*>(&address), sizeof(address)) != 0) {
+            const std::string reason = std::strerror(errno);
+            ::close(fd);
+            return Error{ErrorCode::IoError, "Die Netzwerkkarte " + ipv4 + " ist nicht nutzbar: " + reason};
+        }
+        ::setsockopt(fd, IPPROTO_IP, IP_MULTICAST_IF, &local, sizeof(local));
+    }
+    const std::lock_guard<std::mutex> lock{impl_->mutex};
+    ::close(impl_->fd);
+    impl_->fd = fd;
     return {};
 }
 

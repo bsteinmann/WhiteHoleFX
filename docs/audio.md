@@ -9,8 +9,8 @@ verlässt den Rechner nicht.
 Der Audio-Eingang ist nach der Installation **aus**. Das Mikrofon wird erst auf ausdrückliche Wahl
 geöffnet (das Betriebssystem fragt dann ggf. nach der Erlaubnis).
 
-- **Studio:** Menü *Eingang → Audio*: *Aus*, *Standardgerät*, ein Gerät aus der Liste oder
-  *WAV-Datei in Schleife …*. Die Statuszeile zeigt „Audio: Quelle, Pegel, BPM“. Die Wahl wird gemerkt;
+- **Studio:** Einstellungen (Bearbeiten → Einstellungen), Seite *Audio*: *Aus*, *Standardgerät*, ein Gerät aus der
+  Liste oder *WAV-Datei in Schleife*. Die Statuszeile zeigt „Audio: Quelle, Pegel, BPM“. Die Wahl wird gemerkt;
   scheitert das Öffnen beim nächsten Start, bleibt der Eingang aus. Enthält das Projekt Audio-Nodes und der
   Eingang ist aus, weist die Statuszeile darauf hin.
 - **Kommandozeile:** `whitehole_cli projekt.whfx --audio-in default` (Standardgerät),

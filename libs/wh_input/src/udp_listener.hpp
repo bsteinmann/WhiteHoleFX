@@ -7,6 +7,7 @@
 #include <cstdint>
 #include <memory>
 #include <span>
+#include <string>
 
 #include "whitehole/core/result.hpp"
 
@@ -14,8 +15,12 @@ namespace whitehole::input {
 
 class UdpListener {
 public:
-    /// Bindet 0.0.0.0:port (0 = freier Port), mit Adress-Wiederverwendung. Fehler: IoError.
-    [[nodiscard]] static Result<std::unique_ptr<UdpListener>> open(std::uint16_t port);
+    /// Bindet 0.0.0.0:port (0 = freier Port), mit Adress-Wiederverwendung. Gebunden wird immer an alle
+    /// Adressen (Art-Net-Broadcast käme an eine einzelne Adresse nicht an). `interfaceAddress` (IPv4 einer
+    /// Netzwerkkarte, leer = Wahl des Systems) bestimmt nur, über welche Karte Multicast-Gruppen
+    /// beigetreten wird. Fehler: InvalidArgument (keine IPv4-Zahl), IoError.
+    [[nodiscard]] static Result<std::unique_ptr<UdpListener>> open(std::uint16_t port,
+                                                                    const std::string& interfaceAddress = {});
 
     ~UdpListener();
     UdpListener(const UdpListener&) = delete;

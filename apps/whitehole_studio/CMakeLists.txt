@@ -2,7 +2,7 @@
 # stoppt es und schaltet die Netzwerkausgabe ein. Alle Logik steckt in wh_runtime (Player); hier
 # liegen nur Fenster, Menüs und das Zeichnen. Nur mit -DWHITEHOLEFX_BUILD_STUDIO=ON gebaut, weil
 # Qt vorhanden sein muss.
-find_package(Qt6 REQUIRED COMPONENTS Widgets)
+find_package(Qt6 REQUIRED COMPONENTS Widgets Network)
 
 set(CMAKE_AUTOMOC ON)
 
@@ -21,6 +21,7 @@ add_executable(whitehole_studio
     main_window_dmx.cpp
     main_window_editor.cpp
     main_window_live.cpp
+    main_window_settings.cpp
     main_window_stage.cpp
     main_window_view3d.cpp
     live_panel.cpp
@@ -53,6 +54,12 @@ add_executable(whitehole_studio
     preview_controller.cpp
     preview_controller_exercise.cpp
     preview_controller.hpp
+    app_settings.cpp
+    app_settings.hpp
+    network_interfaces.cpp
+    network_interfaces.hpp
+    settings_dialog.cpp
+    settings_dialog.hpp
     preview_widget.cpp
     preview_widget.hpp
     stage_setup_window.cpp
@@ -61,6 +68,7 @@ add_executable(whitehole_studio
     test_panel.hpp)
 target_link_libraries(whitehole_studio PRIVATE
     Qt6::Widgets
+    Qt6::Network
     whitehole::audio
     whitehole::input
     whitehole::nodes

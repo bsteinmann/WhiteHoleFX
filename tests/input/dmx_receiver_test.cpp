@@ -132,3 +132,24 @@ TEST_CASE("DmxReceiver: sACN-Universen merken (Beitritt wird versucht, Ablehnung
     // der Aufruf darf nie abstürzen oder hängen.
     SUCCEED();
 }
+
+TEST_CASE("DmxReceiver: Netzwerkkarte für Multicast wählbar", "[input][receiver][udp]") {
+    auto store = std::make_shared<DmxStore>();
+    DmxReceiver receiver{store};
+    DmxReceiverConfig bad = testConfig();
+    bad.interfaceAddress = "kein-ip";
+    CHECK_FALSE(receiver.start(bad).ok());
+    CHECK_FALSE(receiver.running());
+
+    DmxReceiverConfig config = testConfig();
+    config.interfaceAddress = "127.0.0.1";
+    REQUIRE(receiver.start(config).ok());
+    auto sender = output::UdpSender::create();
+    REQUIRE(sender.ok());
+    const std::vector<std::uint8_t> data{9, 8, 7};
+    const auto art = output::encodeArtDmx(output::ArtDmxParams{3, 0, 0}, data);
+    REQUIRE(art.ok());
+    REQUIRE(sender.value()->send({"127.0.0.1", receiver.artnetPort()}, art.value()).ok());
+    REQUIRE(waitFor([&] { return store->read(DmxProtocol::ArtNet, 3, 1).has_value(); }));
+    CHECK(store->read(DmxProtocol::ArtNet, 3, 3)->values[0] == 7);
+}

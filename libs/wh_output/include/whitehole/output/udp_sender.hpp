@@ -40,6 +40,13 @@ public:
     /// Fehler: InvalidArgument (keine IPv4-Zahl), IoError (Senden fehlgeschlagen).
     [[nodiscard]] Result<void> send(const Endpoint& to, std::span<const std::uint8_t> packet) override;
 
+    /// Wählt die Netzwerkkarte zum Senden: `ipv4` ist die Adresse der Karte (leer = das System wählt nach
+    /// seiner Routingtabelle). Der Socket wird an die Adresse gebunden (Absenderadresse, Broadcast und
+    /// Unicast im Subnetz der Karte gehen darüber), und Multicast (sACN) verlässt den Rechner über diese
+    /// Karte. Darf während des Sendens aufgerufen werden; ein Fehler lässt die bisherige Wahl bestehen.
+    /// Fehler: InvalidArgument (keine IPv4-Zahl), IoError (die Adresse gehört keiner Karte des Rechners).
+    [[nodiscard]] Result<void> bindInterface(const std::string& ipv4);
+
 private:
     struct Impl;
     explicit UdpSender(std::unique_ptr<Impl> impl);
