@@ -11,6 +11,7 @@
 #include <QMainWindow>
 #include <QTimer>
 
+#include <array>
 #include <memory>
 #include <vector>
 
@@ -23,6 +24,7 @@
 #include "whitehole/runtime/player.hpp"
 
 class QAction;
+class QActionGroup;
 class QDockWidget;
 class QLabel;
 class QMenu;
@@ -87,6 +89,8 @@ public:
     QString exercisePalette();
     /// Rauchtest: Looks speichern/ordnen/umbenennen, Live-Modus mit Überblendung, GO und Rückkehr.
     QString exerciseLive();
+    /// Rauchtest: Umschalter 2D/3D, Orbit mit der Maus, Zoom, feste Ansichten.
+    QString exerciseView3d();
     /// Live-Modus ein- und ausschalten (F9). Eintritt scheitert ohne Looks.
     bool enterLive(int first = 0);
     void leaveLive();
@@ -101,6 +105,11 @@ private:
     void buildActions();
     /// Looks und Live-Betrieb (main_window_live.cpp).
     void buildLive();
+    /// Vorschau-Ansicht (main_window_view3d.cpp): 2D zum Bearbeiten oder eine der 3D-Ansichten.
+    enum class ViewMode { Edit2d, Free3d, Front, Side, Top };
+    void buildView3d(QMenu* menu);
+    void setViewMode(ViewMode mode);
+    void onCameraChanged(const preview::Camera3d& camera);
     void resetLive();
     void hideEditDocks();  // Live-Modus: Editor-Docks verstecken ...
     void showEditDocks();  // ... und danach wieder zeigen
@@ -189,6 +198,10 @@ private:
     QKeySequence runShortcut_;  // Leertaste: im Live-Modus gehört sie dem GO-Knopf
     std::vector<QDockWidget*> hiddenByLive_;  // Docks, die der Live-Modus versteckt hat (kommen danach zurück)
     bool liveMode_{false};
+    ViewMode viewMode_{ViewMode::Edit2d};
+    QActionGroup* viewGroup_{nullptr};
+    std::array<QAction*, 5> viewActions_{};
+    preview::Camera3d freeCamera_;  // zuletzt frei gedrehte Kamera: "3D" kehrt dorthin zurück
     QLabel* statusLabel_{nullptr};
     QTimer timer_;
     QTimer statusTimer_;

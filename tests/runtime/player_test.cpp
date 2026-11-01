@@ -77,6 +77,7 @@ TEST_CASE("Player: leer, dann geladen", "[player]") {
     CHECK(player.project() == nullptr);
     CHECK(player.framesPerSecond() == 40.0);
     CHECK_FALSE(player.image({}).ok());
+    CHECK_FALSE(player.image3d({}, {}).ok());
     CHECK_FALSE(player.start().ok());
     CHECK(player.step().ok());  // ohne Lauf ein No-op
 
@@ -98,6 +99,14 @@ TEST_CASE("Player: leer, dann geladen", "[player]") {
         }
     }
     CHECK(bright > 200);
+
+    // Dieselben Farben durch die 3D-Kamera: gleiche Größe, und Drehen ändert das Bild.
+    const auto front = player.image3d(preview::cameraFor(preview::ViewPreset::Front), {});
+    const auto turned = player.image3d(preview::cameraFor(preview::ViewPreset::Perspective), {});
+    REQUIRE(front.ok());
+    REQUIRE(turned.ok());
+    CHECK(front.value().width == image.value().width);
+    CHECK(front.value().rgba != turned.value().rgba);
 }
 
 TEST_CASE("Player: ein fehlerhaftes load lässt das bisherige Projekt stehen", "[player]") {

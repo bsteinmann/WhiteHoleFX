@@ -7,8 +7,10 @@
 #include <QFontMetrics>
 #include <QPainter>
 #include <QResizeEvent>
+#include <QWheelEvent>
 
 #include <algorithm>
+#include <cmath>
 
 namespace whitehole::studio {
 
@@ -61,13 +63,19 @@ void PreviewWidget::paintEvent(QPaintEvent*) {
         // Fensters füllt das Bild einfach den Platz, bis das neue eintrifft.
         painter.drawImage(rect(), image_);
     }
-    if (overlay_.editingRegion && !overlay_.wall.isEmpty()) {
+    if (view3d_) {
+        painter.setPen(QColor{150, 150, 160});
+        painter.drawText(rect().adjusted(12, 8, -12, -8), Qt::AlignBottom | Qt::AlignLeft,
+                         tr("3D: ziehen = drehen · Rechtsklick oder Umschalt+Ziehen = verschieben · Rad = Zoom · "
+                            "Doppelklick = Zoom zurücksetzen"));
+    }
+    if (!view3d_ && overlay_.editingRegion && !overlay_.wall.isEmpty()) {
         drawFrame(painter, overlay_.wall, QColor{140, 140, 150}, Qt::DotLine, 1.0);
     }
-    for (const QRectF& rect : overlay_.selected) {
+    for (const QRectF& rect : view3d_ ? QList<QRectF>{} : overlay_.selected) {
         drawFrame(painter, rect.adjusted(-3, -3, 3, 3), QColor{80, 200, 255}, Qt::DashLine, 1.5);
     }
-    if (!overlay_.region.isEmpty()) {
+    if (!view3d_ && !overlay_.region.isEmpty()) {
         drawFrame(painter, overlay_.region, QColor{255, 170, 40}, Qt::SolidLine, 2.0);
         if (overlay_.editingRegion) {
             painter.setBrush(QColor{255, 170, 40});
@@ -79,7 +87,7 @@ void PreviewWidget::paintEvent(QPaintEvent*) {
             painter.drawEllipse(c, kHandle + 1.0, kHandle + 1.0);
         }
     }
-    if (!overlay_.rubberBand.isEmpty()) {
+    if (!view3d_ && !overlay_.rubberBand.isEmpty()) {
         painter.fillRect(overlay_.rubberBand, QColor{80, 200, 255, 40});
         drawFrame(painter, overlay_.rubberBand, QColor{80, 200, 255}, Qt::SolidLine, 1.0);
     }
@@ -110,6 +118,13 @@ void PreviewWidget::resizeEvent(QResizeEvent* event) {
 }
 
 void PreviewWidget::mousePressEvent(QMouseEvent* event) {
+    if (view3d_) {
+        setFocus();
+        dragButton_ = event->button();
+        dragModifiers_ = event->modifiers();
+        lastPosition_ = event->position();
+        return;
+    }
     if (event->button() != Qt::LeftButton) {
         QWidget::mousePressEvent(event);
         return;
@@ -120,6 +135,18 @@ void PreviewWidget::mousePressEvent(QMouseEvent* event) {
 }
 
 void PreviewWidget::mouseMoveEvent(QMouseEvent* event) {
+    if (view3d_) {
+        if (dragButton_ != Qt::NoButton) {
+            const QPointF delta = event->position() - lastPosition_;
+            lastPosition_ = event->position();
+            if (dragButton_ == Qt::LeftButton && !dragModifiers_.testFlag(Qt::ShiftModifier)) {
+                orbitBy(delta.x(), delta.y());
+            } else {
+                panBy(delta.x(), delta.y());
+            }
+        }
+        return;
+    }
     if (dragging_) {
         // Auch außerhalb des Widgets weiterverfolgen, aber im Bild halten.
         const QPointF p{std::clamp(event->position().x(), 0.0, static_cast<qreal>(width())),
@@ -136,6 +163,10 @@ void PreviewWidget::leaveEvent(QEvent* event) {
 }
 
 void PreviewWidget::mouseReleaseEvent(QMouseEvent* event) {
+    if (view3d_) {
+        dragButton_ = Qt::NoButton;
+        return;
+    }
     if (event->button() == Qt::LeftButton && dragging_) {
         dragging_ = false;
         const QPointF p{std::clamp(event->position().x(), 0.0, static_cast<qreal>(width())),
@@ -147,6 +178,16 @@ void PreviewWidget::mouseReleaseEvent(QMouseEvent* event) {
 }
 
 void PreviewWidget::keyPressEvent(QKeyEvent* event) {
+    if (view3d_) {
+        constexpr double kStep = 5.0 / 0.4;  // 5 Grad, in Pixeln der Maus-Drehung ausgedrückt
+        switch (event->key()) {
+            case Qt::Key_Left: orbitBy(-kStep, 0.0); return;  // wie Ziehen nach links
+            case Qt::Key_Right: orbitBy(kStep, 0.0); return;
+            case Qt::Key_Up: orbitBy(0.0, -kStep); return;
+            case Qt::Key_Down: orbitBy(0.0, kStep); return;
+            default: QWidget::keyPressEvent(event); return;
+        }
+    }
     int dx = 0;
     int dy = 0;
     switch (event->key()) {
@@ -157,6 +198,70 @@ void PreviewWidget::keyPressEvent(QKeyEvent* event) {
         default: QWidget::keyPressEvent(event); return;
     }
     Q_EMIT nudged(dx, dy, event->modifiers());
+}
+
+}  // namespace whitehole::studio
+
+namespace whitehole::studio {
+
+namespace {
+constexpr double kDegreesPerPixel = 0.4;
+}
+
+void PreviewWidget::setView3d(bool on) {
+    view3d_ = on;
+    dragging_ = false;
+    dragButton_ = Qt::NoButton;
+    update();
+}
+
+void PreviewWidget::setCamera(const preview::Camera3d& camera) {
+    camera_ = camera;
+    update();
+}
+
+void PreviewWidget::orbitBy(double dxPixels, double dyPixels) {
+    // Nach rechts ziehen dreht die Installation nach rechts, die Kamera wandert also nach links;
+    // nach unten ziehen hebt die Kamera.
+    camera_ = preview::orbited(camera_, static_cast<float>(-dxPixels * kDegreesPerPixel),
+                               static_cast<float>(dyPixels * kDegreesPerPixel));
+    camera_.perspective = true;  // eine frei gedrehte Ansicht ist keine maßhaltige Seitenansicht mehr
+    Q_EMIT cameraChanged(camera_);
+}
+
+void PreviewWidget::panBy(double dxPixels, double dyPixels) {
+    const double side = std::max(1, std::min(width(), height()));
+    camera_ = preview::panned(camera_, static_cast<float>(dxPixels / side), static_cast<float>(-dyPixels / side));
+    Q_EMIT cameraChanged(camera_);
+}
+
+void PreviewWidget::zoomBy(double factor) {
+    camera_ = preview::zoomed(camera_, static_cast<float>(factor));
+    Q_EMIT cameraChanged(camera_);
+}
+
+void PreviewWidget::resetZoomAndPan() {
+    camera_.zoom = 1.0F;
+    camera_.panX = 0.0F;
+    camera_.panY = 0.0F;
+    Q_EMIT cameraChanged(camera_);
+}
+
+void PreviewWidget::wheelEvent(QWheelEvent* event) {
+    if (!view3d_) {
+        QWidget::wheelEvent(event);
+        return;
+    }
+    zoomBy(std::pow(1.15, static_cast<double>(event->angleDelta().y()) / 120.0));
+    event->accept();
+}
+
+void PreviewWidget::mouseDoubleClickEvent(QMouseEvent* event) {
+    if (view3d_) {
+        resetZoomAndPan();
+        return;
+    }
+    QWidget::mouseDoubleClickEvent(event);
 }
 
 }  // namespace whitehole::studio

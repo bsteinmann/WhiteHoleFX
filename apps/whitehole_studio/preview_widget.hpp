@@ -5,12 +5,19 @@
 // rechnet in Pixeln, ein skaliertes Bild wäre unscharf). Über das Bild legt es Rahmen
 // (`Overlay`), die der PreviewController vorgibt; Maus und Pfeiltasten gibt es als Signale in
 // Bildpunkten weiter, die Bedeutung (Fixture ziehen, Bereich aufspannen) liegt im Controller.
+//
+// 3D-Ansicht: Mit setView3d(true) gehört die Maus der Kamera statt dem Controller: Ziehen dreht
+// um die Installation, Rechtsklick/Mitteltaste/Umschalt+Ziehen verschiebt, das Rad zoomt, Doppelklick
+// setzt Zoom und Verschiebung zurück, die Pfeiltasten drehen in 5-Grad-Schritten. Das Widget hält
+// nur die Kamera; das Bild dazu liefert das Hauptfenster (wie in 2D) nach `cameraChanged`.
 #pragma once
 
 #include <QImage>
 #include <QList>
 #include <QRectF>
 #include <QWidget>
+
+#include "whitehole/preview/view3d.hpp"
 
 namespace whitehole::studio {
 
@@ -35,6 +42,18 @@ public:
     /// Auffälliger Hinweis oben rechts (z. B. "TESTMODUS"); leer = keiner.
     void setBanner(const QString& banner);
 
+    /// Schaltet zwischen der bearbeitbaren Ansicht von vorn (aus) und der drehbaren 3D-Ansicht (an) um.
+    void setView3d(bool on);
+    [[nodiscard]] bool view3d() const noexcept { return view3d_; }
+    void setCamera(const preview::Camera3d& camera);
+    [[nodiscard]] const preview::Camera3d& camera() const noexcept { return camera_; }
+    /// Was die Maus in der 3D-Ansicht tut, auch einzeln aufrufbar (Tests): drehen (Pixel), verschieben (Pixel),
+    /// zoomen (Faktor), Zoom und Verschiebung zurücksetzen. Alle melden `cameraChanged`.
+    void orbitBy(double dxPixels, double dyPixels);
+    void panBy(double dxPixels, double dyPixels);
+    void zoomBy(double factor);
+    void resetZoomAndPan();
+
     [[nodiscard]] QSize sizeHint() const override { return {960, 540}; }
     [[nodiscard]] QSize minimumSizeHint() const override { return {160, 90}; }
 
@@ -49,6 +68,8 @@ Q_SIGNALS:
     /// Die Maus bewegt sich über der Vorschau (ohne gedrückte Taste); `hoverEnded`, wenn sie sie verlässt.
     void hovered(QPointF position);
     void hoverEnded();
+    /// Die Kamera der 3D-Ansicht hat sich durch Maus oder Tasten geändert (nicht durch setCamera).
+    void cameraChanged(const whitehole::preview::Camera3d& camera);
 
 protected:
     void paintEvent(QPaintEvent* event) override;
@@ -57,6 +78,8 @@ protected:
     void mouseMoveEvent(QMouseEvent* event) override;
     void mouseReleaseEvent(QMouseEvent* event) override;
     void keyPressEvent(QKeyEvent* event) override;
+    void wheelEvent(QWheelEvent* event) override;
+    void mouseDoubleClickEvent(QMouseEvent* event) override;
     void leaveEvent(QEvent* event) override;
 
 private:
@@ -65,6 +88,11 @@ private:
     QString banner_;
     PreviewOverlay overlay_;
     bool dragging_{false};
+    bool view3d_{false};
+    preview::Camera3d camera_;
+    Qt::MouseButton dragButton_{Qt::NoButton};  // 3D: welche Taste gerade zieht
+    Qt::KeyboardModifiers dragModifiers_;
+    QPointF lastPosition_;
 };
 
 }  // namespace whitehole::studio

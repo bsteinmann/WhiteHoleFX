@@ -109,6 +109,7 @@ void MainWindow::buildActions() {
     bar->addAction(liveAction_);
 
     buildControls(bar);  // Master und Blackout rechts in derselben Leiste
+    buildView3d(view);   // Ansicht-Umschalter 2D/3D (Menü und Leiste)
     run->addAction(blackoutAction_);
     buildDmxInput();  // Menü "Eingang"
 }

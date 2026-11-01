@@ -1,5 +1,14 @@
 # Änderungen
 
+## 0.23.0
+
+- **3D-Vorschau:** Die Vorschau lässt sich auf eine frei drehbare 3D-Ansicht umschalten (Leiste „Ansicht“, Strg+1…5):
+  ziehen = drehen, Rechtsklick oder Umschalt+Ziehen = verschieben, Rad = zoomen, Doppelklick = zurücksetzen. Dazu feste
+  Ansichten Front, Seite und Oben (maßhaltig). Die Ansicht kennt keine Fixture-Formen, nur LED-Positionen, und ist darum für
+  Matrizen, Strips, Cubes und hängende Installationen aus vielen Strips gleichermaßen geeignet. Bearbeitet wird weiter in „2D“.
+- Kern: `preview::Camera3d`, `Projector` und `renderPreview3d` (Orbit-Kamera, Perspektive oder Parallelprojektion, Tiefensortierung,
+  Tiefenhinweis, Rahmen) in `wh_preview`, `Player::image3d`; 2D und 3D teilen sich das Zeichnen der LED-Scheiben.
+
 ## 0.22.2
 
 - **Color Ramp (Issue #14):** Neuer Parameter `speed` (Umläufe pro Sekunde, Standard 0,2): Der Node wechselt die Farben von selbst,

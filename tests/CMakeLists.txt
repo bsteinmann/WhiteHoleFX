@@ -69,6 +69,7 @@ add_executable(wh_tests
     preview/png_test.cpp
     preview/preview_test.cpp
     preview/view_test.cpp
+    preview/view3d_test.cpp
     project/project_test.cpp
     runtime/audio_usage_test.cpp
     runtime/cli_summary_test.cpp

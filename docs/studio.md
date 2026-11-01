@@ -181,6 +181,34 @@ gewählt ist. Die Regler Left, Top, Width und Height im Parameter-Panel ziehen m
 Ziehens bleibt der Bildausschnitt stehen, danach passt er sich wieder an. Jede Ziehbewegung ist ein
 Schritt für Rückgängig.
 
+### 3D-Vorschau
+
+Die Leiste „Ansicht“ (und das Menü Ansicht) schaltet die Vorschau um:
+
+| Knopf | Kürzel | Was du siehst |
+|---|---|---|
+| 2D (bearbeiten) | Strg+1 | die Ansicht von vorn, in der du Fixtures verschiebst und den Bereich aufziehst (wie bisher) |
+| 3D | Strg+2 | frei drehbare Perspektive um die Mitte der Installation |
+| 3D Front, Seite, Oben | Strg+3, 4, 5 | feste, maßhaltige Ansichten (Parallelprojektion) von vorn, von rechts und von oben |
+
+In den 3D-Ansichten gehört die Maus der Kamera; bearbeitet wird nur in „2D“.
+
+| Aktion | Wirkung |
+|---|---|
+| Ziehen mit links | um die Installation drehen (aus einer festen Ansicht heraus wird es die freie 3D-Ansicht) |
+| Rechtsklick, Mitteltaste oder Umschalt + Ziehen | Bild verschieben |
+| Mausrad | zoomen |
+| Doppelklick | Zoom und Verschiebung zurücksetzen |
+| Pfeiltasten | in 5-Grad-Schritten drehen |
+
+Die 3D-Ansicht kennt keine Fixture-Formen, sie zeichnet jede LED als Punkt an ihrer Position im Raum. Sie
+funktioniert deshalb für Matrizen, Strips, Punktwolken und Mischungen gleichermaßen, auch für eine hängende
+Installation aus vielen Strips. Ein feiner Rahmen um die Installation hilft bei der Orientierung; entferntere
+LEDs sind leicht abgedunkelt, nahe LEDs verdecken ferne. Achsen wie im Layout: x nach rechts, y nach oben, z zum
+Betrachter. Die Farben sind dieselben wie in der 2D-Vorschau (Gamma je Fixture, Master und Blackout wirken mit).
+Die gewählte Ansicht wird nicht im Projekt gespeichert. Der Kern (Kamera, Projektion, Zeichnen) liegt ohne Qt in
+`libs/wh_preview/include/whitehole/preview/view3d.hpp` und ist unit-getestet; `Player::image3d` liefert das Bild.
+
 ### Node-Palette
 
 Links im Dock „Nodes“ steht die Palette: alle verfügbaren Node-Typen nach Kategorien (Generator, Modifier,
@@ -195,7 +223,7 @@ Neue Node-Typen erscheinen automatisch, die Palette liest die Registrierung.
 - **Oben:** Leiste „Datei“ (Neu, Öffnen, Speichern) und Leiste „Betrieb“: Start/Stopp (Leertaste), Ausgabe senden,
   Look speichern (Strg+L), Live-Modus (F9); rechts außen Master und Blackout (Strg+B).
 - **Links:** Dock „Looks“ (immer in Reichweite).
-- **Mitte:** die Vorschau.
+- **Mitte:** die Vorschau; die Leiste „Ansicht“ schaltet zwischen 2D (bearbeiten) und den 3D-Ansichten um.
 - **Rechts:** Parameter, Layout und Testmodus als Reiter.
 - **Unten:** Dock „Nodes“ mit Palette und Editor. Alle Docks lassen sich über das Menü Ansicht ein- und ausblenden.
 
@@ -320,5 +348,5 @@ erreicht ist.
 
 ## Noch nicht enthalten
 
-Punktwolken bearbeiten (importieren geht), Fixtures drehen, Kopieren/Einfügen von Fixtures. Solches entsteht bis dahin in der Projektdatei (siehe
+Punktwolken bearbeiten (importieren geht), Fixtures drehen, Layout in der 3D-Ansicht bearbeiten (sie ist nur zum Ansehen), Kopieren/Einfügen von Fixtures. Solches entsteht bis dahin in der Projektdatei (siehe
 [Projektdatei](project-format.md)); „Neu laden“ übernimmt Änderungen sofort.

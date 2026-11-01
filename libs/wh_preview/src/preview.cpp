@@ -4,6 +4,8 @@
 // passt -> von hinten nach vorn als weich begrenzte Scheiben zeichnen.
 #include "whitehole/preview/preview.hpp"
 
+#include "raster.hpp"
+
 #include <algorithm>
 #include <array>
 #include <cmath>
@@ -13,9 +15,9 @@ namespace whitehole::preview {
 
 namespace {
 
-constexpr std::uint32_t kMaxSide = 16384;
-constexpr std::array<std::uint8_t, 3> kBackground{14, 14, 18};
-constexpr std::array<std::uint8_t, 3> kOffLed{34, 34, 40};
+using detail::GammaTable;
+using detail::kMaxSide;
+using detail::validGamma;
 
 struct Projected {
     float x{0.0F};  // Bildebene, y nach oben
@@ -55,30 +57,6 @@ float medianNeighbourDistance(const std::vector<Projected>& pts, std::size_t fir
     std::nth_element(distances.begin(), middle, distances.end());
     return *middle;
 }
-
-float blend(float dst, float src, float coverage) { return dst + (src - dst) * coverage; }
-
-/// Wert (0..1) -> Bildschirm-Byte für ein Gamma: sRGB(v^gamma). Eine Tabelle spart pow() je LED.
-class GammaTable {
-public:
-    explicit GammaTable(float gamma) : gamma_{gamma} {
-        for (std::size_t i = 0; i < bytes_.size(); ++i) {
-            const double v = static_cast<double>(i) / static_cast<double>(bytes_.size() - 1);
-            bytes_[i] = toSrgb8(static_cast<float>(std::pow(v, static_cast<double>(gamma))));
-        }
-    }
-    [[nodiscard]] float gamma() const noexcept { return gamma_; }
-    [[nodiscard]] std::uint8_t byte(float v) const noexcept {
-        const float c = std::isfinite(v) ? std::clamp(v, 0.0F, 1.0F) : 0.0F;
-        return bytes_[static_cast<std::size_t>(std::lround(c * static_cast<float>(bytes_.size() - 1)))];
-    }
-
-private:
-    float gamma_;
-    std::array<std::uint8_t, 4097> bytes_{};
-};
-
-float validGamma(float gamma) noexcept { return std::isfinite(gamma) && gamma >= 0.1F && gamma <= 10.0F ? gamma : 2.2F; }
 
 }  // namespace
 
@@ -208,16 +186,8 @@ Result<Image> renderPreview(const mapping::LedMap& map, std::span<const ColorRgb
     minY = frame.minY;
 
     Image image;
-    image.width = options.width;
-    image.height = options.height;
     image.frame = frame;
-    image.rgba.resize(std::size_t{options.width} * options.height * 4);
-    for (std::size_t i = 0; i < image.rgba.size(); i += 4) {
-        image.rgba[i] = kBackground[0];
-        image.rgba[i + 1] = kBackground[1];
-        image.rgba[i + 2] = kBackground[2];
-        image.rgba[i + 3] = 255;
-    }
+    detail::clearImage(image, options.width, options.height);
 
     // Hinten zuerst.
     std::vector<std::uint32_t> order(pts.size());
@@ -238,28 +208,7 @@ Result<Image> renderPreview(const mapping::LedMap& map, std::span<const ColorRgb
                                        static_cast<float>(table.byte(c.g * alpha)),
                                        static_cast<float>(table.byte(c.b * alpha))};
 
-        const int x0 = std::max(0, static_cast<int>(std::floor(cx - radius - 1.0F)));
-        const int x1 = std::min(static_cast<int>(options.width) - 1, static_cast<int>(std::ceil(cx + radius + 1.0F)));
-        const int y0 = std::max(0, static_cast<int>(std::floor(cy - radius - 1.0F)));
-        const int y1 = std::min(static_cast<int>(options.height) - 1, static_cast<int>(std::ceil(cy + radius + 1.0F)));
-        for (int y = y0; y <= y1; ++y) {
-            for (int x = x0; x <= x1; ++x) {
-                const float dx = static_cast<float>(x) + 0.5F - cx;
-                const float dy = static_cast<float>(y) + 0.5F - cy;
-                const float coverage = std::clamp(radius + 0.5F - std::sqrt(dx * dx + dy * dy), 0.0F, 1.0F);
-                if (coverage <= 0.0F) {
-                    continue;
-                }
-                std::uint8_t* px = &image.rgba[(static_cast<std::size_t>(y) * options.width + static_cast<std::size_t>(x)) * 4];
-                for (std::size_t ch = 0; ch < 3; ++ch) {
-                    // Eine ausgeschaltete LED bleibt als dunkler Punkt sichtbar: 0 wird zum Grauwert
-                    // der "aus"-LED, 255 bleibt 255.
-                    const float off = static_cast<float>(kOffLed[ch]);
-                    const float target = off + lit[ch] * (1.0F - off / 255.0F);
-                    px[ch] = static_cast<std::uint8_t>(std::lround(blend(static_cast<float>(px[ch]), target, coverage)));
-                }
-            }
-        }
+        detail::drawDisc(image, cx, cy, radius, lit);
     }
     return image;
 }

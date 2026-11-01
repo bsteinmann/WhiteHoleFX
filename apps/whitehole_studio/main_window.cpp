@@ -331,7 +331,7 @@ void MainWindow::refreshImage() {
     if (previewController_ != nullptr) {
         options.frame = previewController_->frozenFrame();  // während des Ziehens bleibt die Ansicht stehen
     }
-    const auto image = player_->image(options);
+    const auto image = preview_->view3d() ? player_->image3d(preview_->camera(), options) : player_->image(options);
     if (!image.ok()) {
         preview_->setMessage(fromStd(image.error().message));
         return;
@@ -340,7 +340,7 @@ void MainWindow::refreshImage() {
     const QImage view{img.rgba.data(), static_cast<int>(img.width), static_cast<int>(img.height),
                       static_cast<qsizetype>(img.width) * 4, QImage::Format_RGBA8888};
     preview_->setImage(view.copy());  // eigener Speicher: das Bild überlebt den Rückgabewert
-    if (previewController_ != nullptr) {
+    if (previewController_ != nullptr && !preview_->view3d()) {
         previewController_->imageRendered(img.frame);
     }
 }

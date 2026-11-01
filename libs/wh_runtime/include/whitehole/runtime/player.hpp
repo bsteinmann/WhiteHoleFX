@@ -32,6 +32,7 @@
 #include "whitehole/nodes/builtin_library.hpp"
 #include "whitehole/output/packet_sink.hpp"
 #include "whitehole/preview/preview.hpp"
+#include "whitehole/preview/view3d.hpp"
 #include "whitehole/project/project.hpp"
 #include "whitehole/runtime/audio_usage.hpp"
 #include "whitehole/runtime/dmx_usage.hpp"
@@ -299,7 +300,14 @@ public:
     /// keiner da ist), sonst das Layout. Fehler: InvalidArgument, wenn nichts geladen ist.
     [[nodiscard]] Result<preview::Image> image(const preview::PreviewOptions& options) const;
 
+    /// Dasselbe durch eine frei drehbare Kamera (3D-Vorschau, nur zum Ansehen). Fehler wie `image`.
+    [[nodiscard]] Result<preview::Image> image3d(const preview::Camera3d& camera,
+                                                 const preview::PreviewOptions& options) const;
+
 private:
+    /// Gamma je Fixture und aktuelle Farben für die Vorschau (2D und 3D).
+    void previewInputs(preview::PreviewOptions& options, std::vector<ColorRgba>& colors) const;
+
     Result<void> adopt(project::Project project, std::string path);
 
     /// Vor jeder Änderung: liefert den Stand zum Merken (leer, wenn `key` die vorige Änderung

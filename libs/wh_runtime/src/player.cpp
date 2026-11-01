@@ -319,12 +319,8 @@ std::optional<LedInfo> Player::ledInfoAt(const preview::ViewFrame& frame, float 
     return describeLed(*project_, map_, *led, colors);
 }
 
-Result<preview::Image> Player::image(const preview::PreviewOptions& given) const {
-    if (!project_) {
-        return Error{ErrorCode::InvalidArgument, "Es ist kein Projekt geladen"};
-    }
+void Player::previewInputs(preview::PreviewOptions& options, std::vector<ColorRgba>& colors) const {
     // Die Vorschau zeigt, was die LEDs ausgeben: je Fixture das Gamma seines Patches.
-    preview::PreviewOptions options = given;
     if (options.fixtureGamma.empty()) {
         for (const mapping::FixtureRange& range : map_.ranges) {
             float gamma = options.gamma;
@@ -337,13 +333,33 @@ Result<preview::Image> Player::image(const preview::PreviewOptions& given) const
         }
     }
     if (session_) {
-        std::vector<ColorRgba> colors = session_->latestColors();
+        colors = session_->latestColors();
         if (colors.empty()) {
             colors.assign(map_.world.size(), ColorRgba{0.0F, 0.0F, 0.0F, 1.0F});
         }
-        return preview::renderPreview(map_, colors, options);
+    } else {
+        colors = preview::layoutColors(map_);
     }
-    return preview::renderPreview(map_, preview::layoutColors(map_), options);
+}
+
+Result<preview::Image> Player::image(const preview::PreviewOptions& given) const {
+    if (!project_) {
+        return Error{ErrorCode::InvalidArgument, "Es ist kein Projekt geladen"};
+    }
+    preview::PreviewOptions options = given;
+    std::vector<ColorRgba> colors;
+    previewInputs(options, colors);
+    return preview::renderPreview(map_, colors, options);
+}
+
+Result<preview::Image> Player::image3d(const preview::Camera3d& camera, const preview::PreviewOptions& given) const {
+    if (!project_) {
+        return Error{ErrorCode::InvalidArgument, "Es ist kein Projekt geladen"};
+    }
+    preview::PreviewOptions options = given;
+    std::vector<ColorRgba> colors;
+    previewInputs(options, colors);
+    return preview::renderPreview3d(map_, colors, camera, options);
 }
 
 }  // namespace whitehole::runtime

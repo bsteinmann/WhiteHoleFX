@@ -21,6 +21,7 @@ add_executable(whitehole_studio
     main_window_dmx.cpp
     main_window_editor.cpp
     main_window_live.cpp
+    main_window_view3d.cpp
     live_panel.cpp
     live_panel.hpp
     look_panel.cpp
