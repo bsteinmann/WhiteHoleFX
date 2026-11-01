@@ -1,0 +1,55 @@
+name: Release (Windows)
+
+# Läuft, wenn ein Tag wie v0.22.0 gepusht wird: baut das Windows-Paket und legt auf GitHub ein Test-Release
+# ("Pre-release") mit der ZIP-Datei an. Die Version steht im Tag; sie sollte zu CMakeLists.txt passen.
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  windows:
+    name: Windows-Paket bauen und veröffentlichen
+    runs-on: windows-latest
+    env:
+      QT_VERSION: "6.8.3"
+    steps:
+      - uses: actions/checkout@v5
+      - name: Qt installieren (aqtinstall)
+        run: |
+          python -m pip install aqtinstall
+          python -m aqt install-qt windows desktop $env:QT_VERSION win64_msvc2022_64 --outputdir C:\Qt
+      - name: wgpu-native laden
+        run: ./scripts/fetch-wgpu-native.ps1
+      - name: Konfigurieren
+        run: >
+          cmake -S . -B build -DWHITEHOLEFX_BUILD_STUDIO=ON -DWHITEHOLEFX_WEBGPU=ON
+          "-DWGPU_NATIVE_ROOT=$PWD/third_party/wgpu-native"
+          "-DCMAKE_PREFIX_PATH=C:/Qt/$env:QT_VERSION/msvc2022_64"
+      - name: Bauen (Release)
+        run: cmake --build build --config Release --parallel
+      - name: Tests
+        run: ./build/tests/Release/wh_tests.exe --reporter compact
+      - name: Paket schnüren (windeployqt)
+        run: |
+          $env:PATH = "C:\Qt\$env:QT_VERSION\msvc2022_64\bin;$env:PATH"
+          $name = "WhiteHoleFX-${{ github.ref_name }}-windows-x64"
+          New-Item -ItemType Directory -Force -Path "paket/$name" | Out-Null
+          Copy-Item build/apps/whitehole_studio/Release/* "paket/$name/" -Recurse
+          Copy-Item build/apps/whitehole_cli/Release/whitehole_cli.exe "paket/$name/"
+          Copy-Item examples "paket/$name/examples" -Recurse
+          Copy-Item docs "paket/$name/docs" -Recurse
+          Copy-Item README.md, BUILDING.md, CHANGELOG.md, LICENSE, NOTICE "paket/$name/"
+          Copy-Item packaging/windows/LIESMICH.txt "paket/$name/"
+          windeployqt --release --no-translations "paket/$name/whitehole_studio.exe"
+          Compress-Archive -Path "paket/$name" -DestinationPath "$name.zip"
+          Get-Item "$name.zip" | Select-Object Name, Length
+      - name: Release anlegen
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $tag = "${{ github.ref_name }}"
+          $zip = "WhiteHoleFX-$tag-windows-x64.zip"
+          gh release create $tag $zip --prerelease --title "WhiteHoleFX $tag (Testversion für Windows)" --notes-file packaging/windows/RELEASE_NOTES.md

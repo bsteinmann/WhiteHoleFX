@@ -1,0 +1,23 @@
+WhiteHoleFX - Testversion für Windows
+=====================================
+
+Starten
+  1. ZIP-Datei in einen eigenen Ordner entpacken (nicht aus dem ZIP heraus starten).
+  2. whitehole_studio.exe doppelklicken.
+  3. Windows meldet evtl. "Der Computer wurde durch Windows geschützt", weil das Programm nicht signiert ist:
+     "Weitere Informationen" -> "Trotzdem ausführen".
+  4. Menü Datei -> Beispiele -> "looks" öffnen, dann "Start". Mit F9 in den Live-Modus wechseln.
+
+Sicherheit
+  Nach dem Start sendet das Programm NICHTS ins Netz. Erst der Schalter "Ausgabe senden" schickt Art-Net,
+  sACN oder DDP-Pakete an die im Projekt eingetragenen Adressen. Die Beispiele zeigen auf 127.0.0.1 (den
+  eigenen Rechner).
+
+Das ist eine Testversion
+  Auf echter Hardware (GPU-Treiber, Controller im Netz) ist sie noch wenig erprobt. Rückmeldungen sind willkommen:
+  https://github.com/bsteinmann/WhiteHoleFX/issues
+  Bitte nenne dabei Windows-Version, Grafikkarte und was du getan hast.
+
+Lizenz
+  PolyForm Shield License 1.0.0 (siehe LICENSE): kostenlos für jeden Zweck, auch auf bezahlten Veranstaltungen.
+  Nicht erlaubt ist, daraus ein konkurrierendes Produkt oder einen Dienst zu machen. Drittbibliotheken: NOTICE.
