@@ -2,6 +2,12 @@
 
 ## 0.22.0
 
+- **Node-Prüfung:** Neue Regeltests für alle eingebauten Nodes (eindeutige Typ-IDs und Namen, Schlüssel in lowerCamelCase,
+  Bereiche, Auswahlfelder, Ports); ein neuer Node mit leerem oder doppeltem Namen fällt sofort auf.
+- **Messung (Release, ein Kern):** Einen Feldgraphen mit zehn Nodes zu übersetzen dauert rund 34 µs, ein Werte-Graph mit
+  25 Nodes kostet rund 23 µs pro Frame. Beides ist gegenüber dem Frame-Budget (25 ms bei 40 fps) vernachlässigbar; Zeit
+  kostet allein die GPU und die Ausgabe. Die Messungen laufen mit `wh_tests "[bench]"`.
+
 - **Lizenz:** WhiteHoleFX steht ab dieser Version unter der PolyForm Shield License 1.0.0 (`LICENSE`, `NOTICE`, README,
   Debian-`copyright`). Jede Nutzung ist kostenlos erlaubt, auch auf bezahlten Veranstaltungen; ausgenommen ist, ein
   konkurrierendes Produkt oder einen Dienst daraus zu machen. Versionen bis 0.21.0 bleiben unter Apache-2.0.

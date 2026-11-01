@@ -35,6 +35,8 @@ add_executable(wh_tests
     input/dmx_packets_test.cpp
     input/dmx_receiver_test.cpp
     nodes/builtin_nodes_test.cpp
+    nodes/node_audit_test.cpp
+    nodes/perf_bench_test.cpp
     nodes/example_projects_test.cpp
     nodes/text_node_test.cpp
     nodes/sequence_nodes_test.cpp
