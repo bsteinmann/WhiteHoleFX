@@ -20,6 +20,14 @@ ColorRgba colorOf(Lab& lab, NodeId node, double seconds = 0.0) {
     return std::get<ColorRgba>(*stored);
 }
 
+/// Wie colorOf, aber mit Zeitschritt: Nodes mit Tempo (Color Ramp) summieren die Schritte auf.
+ColorRgba colorStep(Lab& lab, NodeId node, double seconds, double delta) {
+    lab.run(seconds, delta);
+    const auto stored = lab.store.value(node, "out");
+    REQUIRE(stored.has_value());
+    return std::get<ColorRgba>(*stored);
+}
+
 /// Hängt den Farbausgang an einen Verbraucher, damit der Node berechnet wird.
 void consume(Lab& lab, NodeId color) {
     const NodeId gradient = lab.add("wh.generator.gradient");
@@ -89,6 +97,7 @@ TEST_CASE("Color Ramp: zwischen zwei Farben überblenden") {
     lab.set(ramp, "color1", ColorRgba{0.0F, 0.0F, 0.0F, 1.0F});
     lab.set(ramp, "color2", ColorRgba{1.0F, 0.5F, 0.0F, 1.0F});
     lab.set(ramp, "loop", false);
+    lab.set(ramp, "speed", 0.0);
 
     lab.set(ramp, "position", 0.0);
     CHECK(colorOf(lab, ramp) == ColorRgba{0.0F, 0.0F, 0.0F, 1.0F});
@@ -107,6 +116,7 @@ TEST_CASE("Color Ramp: drei Farben im Kreis") {
     const NodeId ramp = lab.add("wh.value.colorramp");
     consume(lab, ramp);
     lab.set(ramp, "count", std::int64_t{3});
+    lab.set(ramp, "speed", 0.0);
     lab.set(ramp, "color1", ColorRgba{1.0F, 0.0F, 0.0F, 1.0F});
     lab.set(ramp, "color2", ColorRgba{0.0F, 1.0F, 0.0F, 1.0F});
     lab.set(ramp, "color3", ColorRgba{0.0F, 0.0F, 1.0F, 1.0F});
@@ -132,6 +142,7 @@ TEST_CASE("Color Ramp: ein LFO am Positionseingang wechselt die Farben") {
     lab.set(ramp, "color1", ColorRgba{0.0F, 0.0F, 1.0F, 1.0F});
     lab.set(ramp, "color2", ColorRgba{1.0F, 0.0F, 0.0F, 1.0F});
     lab.set(ramp, "loop", false);
+    lab.set(ramp, "speed", 0.0);
     const NodeId lfo = lab.add("wh.value.lfo");
     lab.set(lfo, "frequency", 0.25);  // Sinus über 4 s
     lab.connect(lfo, "out", ramp, "position");
@@ -142,4 +153,48 @@ TEST_CASE("Color Ramp: ein LFO am Positionseingang wechselt die Farben") {
     CHECK(peak.r == Approx(1.0F).margin(1e-3));
     const ColorRgba trough = colorOf(lab, ramp, 3.0);  // Tal: ganz Blau
     CHECK(trough.b == Approx(1.0F).margin(1e-3));
+}
+
+TEST_CASE("Color Ramp: mit Tempo wechselt er die Farben von selbst") {
+    Lab lab;
+    const NodeId ramp = lab.add("wh.value.colorramp");
+    consume(lab, ramp);
+    lab.set(ramp, "count", std::int64_t{3});
+    lab.set(ramp, "color1", ColorRgba{1.0F, 0.0F, 0.0F, 1.0F});
+    lab.set(ramp, "color2", ColorRgba{0.0F, 1.0F, 0.0F, 1.0F});
+    lab.set(ramp, "color3", ColorRgba{0.0F, 0.0F, 1.0F, 1.0F});
+    lab.set(ramp, "speed", 0.25);  // ein Umlauf in 4 s
+
+    // Die Phase summiert die Zeitschritte auf: Nach einer Sekunde (acht Schritte à 0,125 s) steht sie bei 0,25.
+    ColorRgba c{};
+    for (int i = 0; i < 8; ++i) {
+        c = colorStep(lab, ramp, 0.125 * (i + 1), 0.125);
+    }
+    const ColorRgba quarter = c;  // Phase 0,25 = 0,75 Segmente: Rot -> Grün zu 75 %
+    CHECK(quarter.r == Approx(0.25F).margin(1e-3));
+    CHECK(quarter.g == Approx(0.75F).margin(1e-3));
+    for (int i = 8; i < 32; ++i) {
+        c = colorStep(lab, ramp, 0.125 * (i + 1), 0.125);  // insgesamt 4 s = voller Umlauf
+    }
+    CHECK(c.r == Approx(1.0F).margin(1e-3));      // wieder die erste Farbe
+    CHECK(c.g == Approx(0.0F).margin(1e-3));
+}
+
+TEST_CASE("Color Ramp: Tempo 0 hält die Farbe, negatives Tempo läuft rückwärts, ohne Loop pendelt er", "[colors]") {
+    Lab lab;
+    const NodeId ramp = lab.add("wh.value.colorramp");
+    consume(lab, ramp);
+    lab.set(ramp, "color1", ColorRgba{0.0F, 0.0F, 0.0F, 1.0F});
+    lab.set(ramp, "color2", ColorRgba{1.0F, 1.0F, 1.0F, 1.0F});
+    lab.set(ramp, "loop", false);
+    lab.set(ramp, "speed", 0.5);  // ein Umlauf in 2 s: 1 s hin, 1 s zurück
+    ColorRgba c{};
+    for (int i = 0; i < 8; ++i) {
+        c = colorStep(lab, ramp, 0.125 * (i + 1), 0.125);
+    }
+    CHECK(c.r == Approx(0.5F).margin(1e-3));  // nach 1 s: Phase 0,5 = halbe Strecke
+    for (int i = 8; i < 16; ++i) {
+        c = colorStep(lab, ramp, 0.125 * (i + 1), 0.125);
+    }
+    CHECK(c.r == Approx(0.0F).margin(1e-3));  // nach 2 s wieder am Anfang (kein Sprung)
 }

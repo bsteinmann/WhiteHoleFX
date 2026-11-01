@@ -1,5 +1,13 @@
 # Änderungen
 
+## 0.22.2
+
+- **Color Ramp (Issue #14):** Neuer Parameter `speed` (Umläufe pro Sekunde, Standard 0,2): Der Node wechselt die Farben von selbst,
+  ohne dass ein LFO nötig ist. Die Phase wird aufsummiert und zu `position` addiert; ohne `loop` pendelt er zwischen erster
+  und letzter Farbe. `speed` 0 verhält sich wie vorher.
+- **Preset und Einfügen (Issue #15):** Ein eingefügter Output-Node (Preset, Kopie, Strg+V) wird jetzt wie ein neu angelegter zum
+  Ausgang des Projekts und legt sich über den bisherigen. Vorher blieb er unverbunden, und das Projekt meldete „kein Ausgang“.
+
 ## 0.22.1
 
 - **Fehlerbehebung (Issue #11):** Mit zwei Output-Nodes und getrennten Rechtecken gab nur einer Daten aus, weil der zweite

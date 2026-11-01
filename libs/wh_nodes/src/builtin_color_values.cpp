@@ -88,7 +88,9 @@ namespace {
 
 // Überblendet zwischen 2 bis 4 Farben. `position` 0..1 läuft von der ersten zur letzten Farbe; mit
 // `loop` geht es von der letzten wieder zur ersten (eine Periode von `position` ist ein voller Umlauf,
-// ein Sägezahn-LFO zyklisiert also ewig durch alle Farben).
+// ein Sägezahn-LFO zyklisiert also ewig durch alle Farben). Ohne LFO läuft der Node von selbst: `speed` sind
+// Umläufe pro Sekunde (die Phase wird aufsummiert und zu `position` addiert; negativ rückwärts, 0 = steht). Ohne
+// `loop` pendelt er dabei zwischen erster und letzter Farbe hin und her.
 class ColorRampKernel final : public values::ICpuKernel {
 public:
     void evaluate(const KernelContext& context, KernelOutputs& outputs) override {
@@ -99,10 +101,23 @@ public:
                                               in.color("color4", ColorRgba{1.0F, 1.0F, 1.0F, 1.0F})};
         const auto count = static_cast<std::size_t>(std::clamp<std::int64_t>(in.integer("count", 2), 2, 4));
         const bool loop = in.boolean("loop", true);
-        const double position = in.number("position", 0.0);
+        const double speed = in.number("speed", 0.0);
+        if (std::isfinite(speed)) {
+            phase_ += speed * context.time.delta.count();
+            phase_ -= std::floor(phase_);  // nur der Bruchteil zählt; so bleibt die Zahl klein und genau
+        }
+        const double position = in.number("position", 0.0) + phase_;
 
         const double segments = static_cast<double>(loop ? count : count - 1);
-        const double p = loop ? position - std::floor(position) : std::clamp(position, 0.0, 1.0);
+        double p = 0.0;
+        if (loop) {
+            p = position - std::floor(position);
+        } else if (speed != 0.0) {
+            const double t = position - 2.0 * std::floor(position / 2.0);  // Dreieck: 0 -> 1 -> 0
+            p = t <= 1.0 ? t : 2.0 - t;
+        } else {
+            p = std::clamp(position, 0.0, 1.0);
+        }
         const double t = p * segments;
         const auto index = std::min(static_cast<std::size_t>(t), static_cast<std::size_t>(segments) - 1);
         const auto f = static_cast<float>(t - static_cast<double>(index));
@@ -111,6 +126,9 @@ public:
         outputs.set("out", ColorRgba{a.r + (b.r - a.r) * f, a.g + (b.g - a.g) * f, a.b + (b.b - a.b) * f,
                                      a.a + (b.a - a.a) * f});
     }
+
+private:
+    double phase_{0.0};  // aufsummierter Umlauf durch `speed`, 0..1
 };
 
 }  // namespace
@@ -118,6 +136,7 @@ public:
 values::CpuNodeDefinition colorRampNode() {
     return cpuNode("wh.value.colorramp", "Color Ramp", "Value", {valueOutput("out", "Out", graph::PortType::Color)},
                    {integer("count", "Colors", 2, 2.0, 4.0), number("position", "Position", 0.0),
+                    number("speed", "Speed (cycles/s)", 0.2, -10.0, 10.0),
                     toggle("loop", "Loop back to first color", true),
                     color("color1", "Color 1", ColorRgba{0.0F, 0.2F, 1.0F, 1.0F}),
                     color("color2", "Color 2", ColorRgba{1.0F, 0.3F, 0.0F, 1.0F}),
