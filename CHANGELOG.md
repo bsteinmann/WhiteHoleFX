@@ -1,5 +1,19 @@
 # Änderungen
 
+## 0.31.0
+
+- **Port-Farben und -Formen:** Die zwölf Port-Typen haben neue, über den Farbkreis verteilte Farben. Dazu kommt eine Form
+  (Kreis, Raute, Quadrat, Dreieck je Typfamilie), und **Ausgänge sind gefüllt, Eingänge nur ein Ring**. So lassen sich auch ähnliche
+  Typen und Ein-/Ausgänge auf einen Blick auseinanderhalten.
+- **Node-Palette:** Kategorien sind beim Start zugeklappt. Rechtsklick auf einen Node-Typ → *Zu Favoriten hinzufügen*; Favoriten stehen
+  oben in der Gruppe „Favoriten“ (und mit Stern in ihrer Kategorie) und werden gespeichert. Beim Suchen sind die Treffer aufgeklappt.
+- **Löschen überbrückt:** Wird ein Node aus einer Kette gelöscht (A → X → B), verbindet der Player A direkt mit B, statt die Kette
+  zu zerreißen. Der Node gibt dafür seinen ersten belegten Eingang gleichen Typs an die Ziele seines Ausgangs weiter. Rückgängig stellt
+  alles in einem Schritt wieder her.
+- **Kein „Hold Last Look“ mehr bei fehlendem Eingang:** Fehlt auf dem Weg zum Ausgang ein Pflicht-Eingang (Kabel gelöscht oder
+  getrennt), gehen die LEDs aus, statt das letzte Bild weiter zu zeigen. Sobald der Graph wieder vollständig ist, läuft der Effekt weiter.
+  Bei anderen Fehlern (z. B. eine fehlerhafte Eingabe) bleibt das letzte gute Bild wie bisher.
+
 ## 0.30.0
 
 - **3D-Vorschau lesbar:** Ausgeschaltete LEDs erschienen als graue Scheiben und verdeckten im Cube die leuchtenden dahinter.

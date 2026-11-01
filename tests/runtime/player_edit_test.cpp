@@ -123,7 +123,54 @@ TEST_CASE("Player: Node entfernen löst seine Verbindungen", "[player][edit]") {
     Rig rig;
     REQUIRE(rig.connections() == 2);
     REQUIRE(rig.player.removeNode(rig.id("wh.transform.mirror")).ok());
-    CHECK(rig.connections() == 0);
+    // Die Nachbarn werden direkt verbunden (plasma -> rot), statt die Kette zu zerreißen.
+    CHECK(rig.connections() == 1);
+}
+
+TEST_CASE("Player: Löschen in der Mitte verbindet die Nachbarn neu", "[player][edit]") {
+    Rig rig;
+    const NodeId plasma = rig.id("wh.generator.plasma");
+    const NodeId rotate = rig.id("wh.transform.rotate");
+    REQUIRE(rig.player.removeNode(rig.id("wh.transform.mirror")).ok());
+    const auto& connections = rig.player.project()->graph.connections();
+    REQUIRE(connections.size() == 1);
+    CHECK(connections[0].from.node == plasma);
+    CHECK(connections[0].to.node == rotate);
+    CHECK(connections[0].to.portKey == "source");
+
+    // Eine einzige Rücknahme stellt die ganze Kette wieder her.
+    REQUIRE(rig.player.undo().ok());
+    CHECK(rig.connections() == 2);
+}
+
+TEST_CASE("Player: Löschen am Ende der Kette hinterlässt keine lose Verbindung", "[player][edit]") {
+    Rig rig;
+    REQUIRE(rig.player.removeNode(rig.id("wh.generator.plasma")).ok());
+    CHECK(rig.connections() == 1);  // spiegel -> rot bleibt
+}
+
+TEST_CASE("Player: fehlt dem Ausgang der Eingang, bleiben die LEDs nicht auf dem letzten Look", "[player][edit]") {
+    Rig rig;
+    REQUIRE(rig.player.start().ok());
+    REQUIRE(rig.player.step().ok());
+    CHECK_FALSE(rig.player.outputIncomplete());
+
+    // Die Verbindung in den Ausgangs-Node kappen: der Effekt ist unvollständig.
+    ConnectionId toRotate{};
+    for (const auto& c : rig.player.project()->graph.connections()) {
+        if (c.to.node == rig.id("wh.transform.rotate")) {
+            toRotate = c.id;
+        }
+    }
+    REQUIRE(rig.player.disconnect(toRotate).ok());
+    REQUIRE(rig.player.step().ok());
+    CHECK(rig.player.outputIncomplete());
+    CHECK(rig.player.status().running);
+
+    // Wieder verbunden: der Effekt läuft wieder.
+    REQUIRE(rig.player.connect({rig.id("wh.transform.mirror"), "out"}, {rig.id("wh.transform.rotate"), "source"}).ok());
+    REQUIRE(rig.player.step().ok());
+    CHECK_FALSE(rig.player.outputIncomplete());
 }
 
 TEST_CASE("Player: eine Auswahl-Ganzzahl meldet ihre Namen (LFO-Form als Dropdown)", "[player][edit]") {

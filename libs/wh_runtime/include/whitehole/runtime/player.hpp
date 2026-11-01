@@ -255,6 +255,9 @@ public:
     /// Blackout: alle LEDs aus, die Pakete laufen weiter (Controller bleiben verbunden).
     void setBlackout(bool on);
     [[nodiscard]] bool blackout() const noexcept { return blackout_; }
+    /// Wahr, wenn auf dem Weg zum Ausgang ein Pflicht-Eingang unverbunden ist (zum Beispiel hat der Output-Node seine
+    /// Quelle verloren). Dann sind die LEDs aus, statt den letzten Look zu halten; die Pakete laufen weiter.
+    [[nodiscard]] bool outputIncomplete() const noexcept { return incomplete_; }
 
     // --- Looks und Live-Betrieb ------------------------------------------------------------------------
     // Ein Look ist ein fertiger Effekt (vom Generator bis zum Ausgang). Die Liste gehört zum Projekt und
@@ -336,6 +339,10 @@ private:
     /// Der Graph, den die Session gerade rechnet: im Live-Betrieb der der Decks, sonst der des Projekts.
     [[nodiscard]] const graph::Graph& activeGraph() const noexcept { return live_ ? live_->graph() : project_->graph; }
     Result<void> startLiveLook(int index);
+    /// Prüft den Graphen des Ausgangs auf unverbundene Pflicht-Eingänge und gibt den Pegel an die Session weiter.
+    [[nodiscard]] bool targetIncomplete() const;
+    void refreshCompleteness();
+    void applyOutputLevel();
     [[nodiscard]] double liveNow() const {
         return liveClock_ ? liveClock_()
                           : std::chrono::duration<double>(std::chrono::steady_clock::now().time_since_epoch()).count();
@@ -369,6 +376,7 @@ private:
     TestPattern testPattern_;  // Art Off = kein Testbild
     float master_{1.0F};
     bool blackout_{false};
+    bool incomplete_{false};  // der Weg zum Ausgang hat eine Lücke: LEDs aus (siehe outputIncomplete)
 };
 
 }  // namespace whitehole::runtime

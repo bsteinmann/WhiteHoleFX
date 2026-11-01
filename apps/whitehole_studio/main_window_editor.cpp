@@ -15,6 +15,7 @@
 
 #include "main_window.hpp"
 #include "node_editor.hpp"
+#include "node_items.hpp"
 #include "node_palette.hpp"
 
 namespace whitehole::studio {
@@ -56,8 +57,29 @@ QString MainWindow::exercisePalette() {
     if (palette_ == nullptr || editor_ == nullptr) {
         return tr("Palette: nicht gebaut");
     }
+    if (const QString styles = checkPortStyles(); !styles.isEmpty()) {
+        return tr("Palette: %1").arg(styles);
+    }
     palette_->setFilter({});
+    // Beim Start sind alle Kategorien zugeklappt (nur die Favoriten dürfen offen sein).
+    const QStringList savedFavorites = palette_->favorites();
+    for (const QString& id : savedFavorites) {
+        palette_->setFavorite(id, false);
+    }
+    if (palette_->expandedCategoryCount() != 0) {
+        return tr("Palette: Kategorien sind nicht zugeklappt (%1 offen)").arg(palette_->expandedCategoryCount());
+    }
     const int all = palette_->visibleTypeCount();
+    palette_->setFavorite(QStringLiteral("wh.generator.solid"), true);
+    const bool favoriteWorks = palette_->isFavorite(QStringLiteral("wh.generator.solid")) &&
+                               palette_->visibleTypeCount() == all && palette_->expandedCategoryCount() == 1;
+    palette_->setFavorite(QStringLiteral("wh.generator.solid"), false);
+    for (const QString& id : savedFavorites) {
+        palette_->setFavorite(id, true);
+    }
+    if (!favoriteWorks) {
+        return tr("Palette: Favoriten-Gruppe verhält sich falsch");
+    }
     palette_->setFilter(QStringLiteral("gradient"));
     const int some = palette_->visibleTypeCount();
     palette_->setFilter({});

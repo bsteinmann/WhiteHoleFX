@@ -5,9 +5,12 @@
 #include <QPainter>
 #include <QPainterPath>
 #include <QPainterPathStroker>
+#include <QPolygonF>
 
 #include <algorithm>
 #include <cmath>
+#include <cstdlib>
+#include <iterator>
 
 namespace whitehole::studio {
 
@@ -24,20 +27,98 @@ constexpr double kMargin = 12.0;   // Platz um den Node für die halben Port-Kre
 
 QColor portColor(graph::PortType type) {
     switch (type) {
-        case graph::PortType::Field: return {100, 170, 255};
-        case graph::PortType::Image: return {180, 120, 255};
-        case graph::PortType::Scalar: return {120, 210, 120};
-        case graph::PortType::Integer: return {90, 200, 170};
-        case graph::PortType::Boolean: return {240, 200, 80};
-        case graph::PortType::Color: return {255, 130, 170};
-        case graph::PortType::Palette: return {255, 160, 90};
-        case graph::PortType::Text: return {200, 200, 200};
-        case graph::PortType::Trigger: return {255, 100, 100};
-        case graph::PortType::AudioSpectrum: return {90, 220, 230};
-        case graph::PortType::PointCloud: return {160, 160, 255};
-        case graph::PortType::AudioWave: return {130, 230, 150};
+        case graph::PortType::Field: return {64, 140, 255};         // Blau
+        case graph::PortType::Image: return {178, 92, 255};         // Violett
+        case graph::PortType::Scalar: return {92, 214, 70};         // Grün
+        case graph::PortType::Integer: return {0, 206, 168};        // Türkis
+        case graph::PortType::Boolean: return {255, 214, 40};       // Gelb
+        case graph::PortType::Color: return {255, 100, 190};        // Pink
+        case graph::PortType::Palette: return {255, 144, 40};       // Orange
+        case graph::PortType::Text: return {226, 226, 226};         // Weiß
+        case graph::PortType::Trigger: return {255, 70, 70};        // Rot
+        case graph::PortType::AudioSpectrum: return {0, 190, 255};  // Himmelblau
+        case graph::PortType::PointCloud: return {176, 140, 96};    // Sand
+        case graph::PortType::AudioWave: return {176, 255, 120};    // Hellgrün
     }
     return {200, 200, 200};
+}
+
+PortShape portShape(graph::PortType type) {
+    switch (type) {
+        case graph::PortType::Integer:
+        case graph::PortType::Boolean:
+        case graph::PortType::Trigger: return PortShape::Diamond;
+        case graph::PortType::Text:
+        case graph::PortType::PointCloud: return PortShape::Square;
+        case graph::PortType::AudioSpectrum:
+        case graph::PortType::AudioWave: return PortShape::Triangle;
+        case graph::PortType::Field:
+        case graph::PortType::Image:
+        case graph::PortType::Scalar:
+        case graph::PortType::Color:
+        case graph::PortType::Palette: return PortShape::Circle;
+    }
+    return PortShape::Circle;
+}
+
+void drawPortMarker(QPainter* painter, const QPointF& center, graph::PortType type, bool output, double radius) {
+    const QColor color = portColor(type);
+    QPainterPath path;
+    switch (portShape(type)) {
+        case PortShape::Circle: path.addEllipse(center, radius, radius); break;
+        case PortShape::Square:
+            path.addRect(QRectF{center.x() - radius * 0.9, center.y() - radius * 0.9, radius * 1.8, radius * 1.8});
+            break;
+        case PortShape::Diamond: {
+            const double d = radius * 1.3;
+            QPolygonF diamond;
+            diamond << center + QPointF{0.0, -d} << center + QPointF{d, 0.0} << center + QPointF{0.0, d}
+                    << center + QPointF{-d, 0.0};
+            path.addPolygon(diamond);
+            path.closeSubpath();
+            break;
+        }
+        case PortShape::Triangle: {
+            const double d = radius * 1.25;
+            QPolygonF triangle;
+            triangle << center + QPointF{-d, -d} << center + QPointF{d, 0.0} << center + QPointF{-d, d};
+            path.addPolygon(triangle);
+            path.closeSubpath();
+            break;
+        }
+    }
+    if (output) {
+        painter->setPen(QPen{QColor{20, 20, 24}, 1.0});
+        painter->setBrush(color);
+    } else {
+        painter->setPen(QPen{color, 2.2});
+        painter->setBrush(QColor{30, 31, 36});
+    }
+    painter->drawPath(path);
+}
+
+QString checkPortStyles() {
+    using graph::PortType;
+    const PortType all[] = {PortType::Field,   PortType::Image,         PortType::Scalar,      PortType::Integer,
+                            PortType::Boolean, PortType::Color,         PortType::Palette,     PortType::Text,
+                            PortType::Trigger, PortType::AudioSpectrum, PortType::PointCloud, PortType::AudioWave};
+    for (std::size_t i = 0; i < std::size(all); ++i) {
+        for (std::size_t j = i + 1; j < std::size(all); ++j) {
+            const QColor a = portColor(all[i]);
+            const QColor b = portColor(all[j]);
+            const int distance =
+                std::abs(a.red() - b.red()) + std::abs(a.green() - b.green()) + std::abs(a.blue() - b.blue());
+            // Gleiche Form verlangt deutlich verschiedene Farben; verschiedene Formen genügen schwächere Unterschiede.
+            const int needed = portShape(all[i]) == portShape(all[j]) ? 150 : 60;
+            if (distance < needed) {
+                return QStringLiteral("Port-Typen %1 und %2 sind zu ähnlich (Abstand %3)")
+                    .arg(static_cast<int>(all[i]))
+                    .arg(static_cast<int>(all[j]))
+                    .arg(distance);
+            }
+        }
+    }
+    return {};
 }
 
 NodeItem::NodeItem(NodeId id, const graph::NodeDescriptor& descriptor, const QString& title)
@@ -157,9 +238,7 @@ void NodeItem::paint(QPainter* painter, const QStyleOptionGraphicsItem*, QWidget
             painter->setBrush(Qt::NoBrush);
             painter->drawEllipse(port.anchor, kPortRadius + 3.5, kPortRadius + 3.5);
         }
-        painter->setPen(QPen{QColor{20, 20, 24}, 1.0});
-        painter->setBrush(portColor(port.type));
-        painter->drawEllipse(port.anchor, kPortRadius, kPortRadius);
+        drawPortMarker(painter, port.anchor, port.type, port.output, kPortRadius);
 
         painter->setPen(QColor{205, 207, 214});
         const QString text = painter->fontMetrics().elidedText(port.label, Qt::ElideRight, labelWidth);

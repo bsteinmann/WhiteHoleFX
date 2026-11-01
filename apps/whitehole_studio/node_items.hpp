@@ -11,6 +11,7 @@
 #include <QColor>
 #include <QGraphicsItem>
 #include <QGraphicsPathItem>
+#include <QPainter>
 #include <QString>
 
 #include <functional>
@@ -23,8 +24,22 @@
 
 namespace whitehole::studio {
 
-/// Farbe eines Porttyps; Kabel und Ports zeigen sie, damit man Verbindbares erkennt.
+/// Farbe eines Porttyps; Kabel und Ports zeigen sie, damit man Verbindbares erkennt. Die zwölf Farben sind
+/// über den Farbkreis verteilt und auf dunklem Grund gut zu unterscheiden.
 [[nodiscard]] QColor portColor(graph::PortType type);
+
+/// Form des Port-Zeichens: Zusätzlich zur Farbe, damit auch ähnliche Farben (oder Farbsehschwäche) nicht
+/// verwechselt werden. Kreis: Felder, Bilder, Zahlen, Farben; Raute: Ganzzahl, Schalter, Trigger;
+/// Quadrat: Text, Punktwolke; Dreieck: Audio.
+enum class PortShape { Circle, Diamond, Square, Triangle };
+[[nodiscard]] PortShape portShape(graph::PortType type);
+
+/// Zeichnet ein Port-Zeichen. Ausgänge sind gefüllt, Eingänge nur ein farbiger Ring mit dunkler Mitte
+/// ("Steckdose"), so unterscheiden sie sich auch bei gleicher Farbe.
+void drawPortMarker(QPainter* painter, const QPointF& center, graph::PortType type, bool output, double radius);
+
+/// Selbsttest für `--exercise`: leer, wenn alle Typen unterscheidbar sind (Farbe oder Form), sonst die Beschreibung.
+[[nodiscard]] QString checkPortStyles();
 
 struct PortSlot {
     std::string key;

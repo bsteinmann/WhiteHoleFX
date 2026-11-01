@@ -1,6 +1,9 @@
 // player_edit.cpp: Graph bearbeiten (Teil des Players, ausgelagert wegen der Dateigröße).
 #include "whitehole/runtime/player.hpp"
 
+#include <unordered_set>
+#include <vector>
+
 namespace whitehole::runtime {
 
 namespace {
@@ -23,7 +26,110 @@ std::optional<graph::PortRef> upstreamFieldOutput(const graph::Graph& graph, Nod
     return std::nullopt;
 }
 
+/// Eine Verbindung, die nach dem Löschen eines Nodes zwischen seinen Nachbarn neu entsteht.
+struct Bridge {
+    graph::PortRef from;
+    graph::PortRef to;
+};
+
+/// Was beim Löschen von `node` überbrückt wird: Für jeden Ausgang des Nodes mit Verbindungen sucht sich der Node
+/// den ersten Eingang gleichen Typs, der belegt ist (echte Eingänge vor Modulationseingängen von Parametern). Dessen
+/// Quelle wird mit allen Zielen des Ausgangs verbunden. So bleibt aus A -> X -> B nach dem Löschen von X ein A -> B.
+std::vector<Bridge> bridgesAround(const graph::Graph& graph, NodeId node) {
+    std::vector<Bridge> bridges;
+    const graph::NodeInstance* instance = graph.findNode(node);
+    const graph::NodeDescriptor* descriptor = instance != nullptr ? graph.registry().find(instance->typeId) : nullptr;
+    if (descriptor == nullptr) {
+        return bridges;
+    }
+    for (const graph::PortDescriptor& out : descriptor->ports) {
+        if (out.direction != graph::PortDirection::Output) {
+            continue;
+        }
+        std::vector<graph::PortRef> targets;
+        for (const graph::Connection& c : graph.connections()) {
+            if (c.from.node == node && c.from.portKey == out.key && c.to.node != node) {
+                targets.push_back(c.to);
+            }
+        }
+        if (targets.empty()) {
+            continue;
+        }
+        const graph::Connection* chosen = nullptr;
+        for (const bool modulation : {false, true}) {
+            for (const graph::PortDescriptor& in : descriptor->ports) {
+                if (chosen != nullptr || in.direction != graph::PortDirection::Input || in.type != out.type ||
+                    (descriptor->findParameter(in.key) != nullptr) != modulation) {
+                    continue;
+                }
+                const graph::Connection* incoming = graph.findInputConnection(node, in.key);
+                if (incoming != nullptr && incoming->from.node != node) {
+                    chosen = incoming;
+                }
+            }
+        }
+        if (chosen == nullptr) {
+            continue;
+        }
+        for (const graph::PortRef& target : targets) {
+            bridges.push_back(Bridge{chosen->from, target});
+        }
+    }
+    return bridges;
+}
+
 }  // namespace
+
+bool Player::targetIncomplete() const {
+    if (!project_) {
+        return false;
+    }
+    const graph::Graph& graph = activeGraph();
+    const std::optional<graph::PortRef> target = live_ ? std::optional<graph::PortRef>{live_->target()} : project_->target;
+    if (!target) {
+        return false;
+    }
+    // Rückwärts vom Ausgang: jeder erreichte Node muss alle Pflicht-Eingänge belegt haben.
+    std::vector<NodeId> open{target->node};
+    std::unordered_set<std::uint64_t> seen;
+    while (!open.empty()) {
+        const NodeId id = open.back();
+        open.pop_back();
+        if (!seen.insert(id.value()).second) {
+            continue;
+        }
+        const graph::NodeInstance* instance = graph.findNode(id);
+        const graph::NodeDescriptor* descriptor = instance != nullptr ? graph.registry().find(instance->typeId) : nullptr;
+        if (descriptor == nullptr) {
+            continue;
+        }
+        for (const graph::PortDescriptor& port : descriptor->ports) {
+            if (port.direction != graph::PortDirection::Input) {
+                continue;
+            }
+            const graph::Connection* connection = graph.findInputConnection(id, port.key);
+            if (connection == nullptr) {
+                if (port.required) {
+                    return true;
+                }
+                continue;
+            }
+            open.push_back(connection->from.node);
+        }
+    }
+    return false;
+}
+
+void Player::refreshCompleteness() {
+    incomplete_ = targetIncomplete();
+    applyOutputLevel();
+}
+
+void Player::applyOutputLevel() {
+    if (session_) {
+        session_->setOutputLevel(master_, blackout_ || incomplete_);
+    }
+}
 
 Result<NodeId> Player::addNode(std::string_view typeId, Vec2 position) {
     if (!project_) {
@@ -70,8 +176,15 @@ Result<void> Player::removeNode(NodeId node) {
     if (wasTarget) {
         upstream = upstreamFieldOutput(project_->graph, node);
     }
+    // Aus A -> X -> B wird beim Löschen von X ein A -> B (siehe bridgesAround). Fehlschläge (Typ, Zyklus) sind kein Fehler.
+    const std::vector<Bridge> bridges = bridgesAround(project_->graph, node);
     auto before = beginEdit({});
     const Result<void> r = project_->graph.removeNode(node);
+    if (r.ok()) {
+        for (const Bridge& bridge : bridges) {
+            (void)project_->graph.connect(bridge.from, bridge.to);
+        }
+    }
     if (r.ok() && wasTarget) {
         project_->target = upstream;
     }

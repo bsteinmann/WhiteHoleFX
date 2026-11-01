@@ -8,9 +8,11 @@
 #include <QFont>
 #include <QLabel>
 #include <QLineEdit>
+#include <QMenu>
 #include <QMimeData>
 #include <QPainter>
 #include <QPixmap>
+#include <QSettings>
 #include <QStringList>
 #include <QTreeWidget>
 #include <QTreeWidgetItem>
@@ -25,6 +27,13 @@ namespace {
 QString fromStd(const std::string& text) { return QString::fromUtf8(text.data(), static_cast<qsizetype>(text.size())); }
 
 constexpr int kTypeIdRole = Qt::UserRole;
+constexpr int kFavoritesRole = Qt::UserRole + 1;  // gesetzt auf der Gruppe "Favoriten"
+constexpr const char* kFavoritesKey = "palette/favorites";
+
+QStringList loadFavorites() {
+    QSettings settings{QStringLiteral("WhiteHoleFX"), QStringLiteral("WhiteHoleFX")};
+    return settings.value(QString::fromLatin1(kFavoritesKey)).toStringList();
+}
 
 /// Baum, dessen Einträge als Kopie auf den Editor gezogen werden. Ein eigenes startDrag verhindert, dass Qt
 /// nach einem Verschieben-Drop den Eintrag aus der Palette löscht.
@@ -111,6 +120,19 @@ NodePalette::NodePalette(std::shared_ptr<const graph::INodeRegistry> registry, Q
     layout->addWidget(hint_);
     setRemoveHighlight(false);
 
+    favorites_ = loadFavorites();
+    tree_->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(tree_, &QTreeWidget::customContextMenuRequested, this, &NodePalette::showContextMenu);
+    connect(tree_, &QTreeWidget::itemExpanded, this, [this](QTreeWidgetItem* item) {
+        if (!filling_) {
+            expanded_.insert(item->text(0));
+        }
+    });
+    connect(tree_, &QTreeWidget::itemCollapsed, this, [this](QTreeWidgetItem* item) {
+        if (!filling_) {
+            expanded_.remove(item->text(0));
+        }
+    });
     connect(search_, &QLineEdit::textChanged, this, [this](const QString& text) { fill(text); });
     connect(tree_, &QTreeWidget::itemActivated, this, [this](QTreeWidgetItem* item, int) {
         const QString typeId = item->data(0, kTypeIdRole).toString();
@@ -122,32 +144,96 @@ NodePalette::NodePalette(std::shared_ptr<const graph::INodeRegistry> registry, Q
 }
 
 void NodePalette::fill(const QString& filter) {
+    filling_ = true;
     tree_->clear();
     const std::vector<const graph::NodeDescriptor*> types = filterNodeTypes(registry_->all(), filter);
     const bool filtered = !filter.trimmed().isEmpty();
 
-    QTreeWidgetItem* category = nullptr;
-    std::string currentCategory;
     QFont bold = tree_->font();
     bold.setBold(true);
+    const auto addType = [&](QTreeWidgetItem* parent, const graph::NodeDescriptor& type, bool star) {
+        auto* item = new QTreeWidgetItem{parent};
+        item->setText(0, (star ? QStringLiteral("\u2605 ") : QString{}) + fromStd(type.displayName));
+        item->setData(0, kTypeIdRole, fromStd(type.typeId));
+        item->setToolTip(0, describe(type) + tr("\nRechtsklick: Favorit umschalten"));
+        item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsDragEnabled);
+    };
+    const auto addCategory = [&](const QString& name) {
+        auto* category = new QTreeWidgetItem{tree_};
+        category->setText(0, name);
+        category->setFont(0, bold);
+        category->setFlags(Qt::ItemIsEnabled);  // keine Auswahl, kein Ziehen
+        // Zugeklappt, außer der Nutzer hat sie geöffnet oder es wird gesucht (dann sollen Treffer sichtbar sein).
+        category->setExpanded(filtered || expanded_.contains(name));
+        return category;
+    };
+
+    // Favoriten oben (nur solche, die der Filter durchlässt).
+    QTreeWidgetItem* favoriteGroup = nullptr;
+    for (const graph::NodeDescriptor* type : types) {
+        if (!favorites_.contains(fromStd(type->typeId))) {
+            continue;
+        }
+        if (favoriteGroup == nullptr) {
+            favoriteGroup = addCategory(tr("Favoriten"));
+            favoriteGroup->setData(0, kFavoritesRole, true);
+            favoriteGroup->setExpanded(true);  // die Schnellzugriffsliste ist kurz und soll sofort da sein
+        }
+        addType(favoriteGroup, *type, false);
+    }
+
+    QTreeWidgetItem* category = nullptr;
+    std::string currentCategory;
     for (const graph::NodeDescriptor* type : types) {
         if (category == nullptr || type->category != currentCategory) {
             currentCategory = type->category;
-            category = new QTreeWidgetItem{tree_};
-            category->setText(0, currentCategory.empty() ? tr("Sonstige") : fromStd(currentCategory));
-            category->setFont(0, bold);
-            category->setFlags(Qt::ItemIsEnabled);  // keine Auswahl, kein Ziehen
-            category->setExpanded(true);
+            category = addCategory(currentCategory.empty() ? tr("Sonstige") : fromStd(currentCategory));
         }
-        auto* item = new QTreeWidgetItem{category};
-        item->setText(0, fromStd(type->displayName));
-        item->setData(0, kTypeIdRole, fromStd(type->typeId));
-        item->setToolTip(0, describe(*type));
-        item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsDragEnabled);
+        addType(category, *type, favorites_.contains(fromStd(type->typeId)));
     }
+    filling_ = false;
     if (filtered && tree_->topLevelItemCount() > 0 && tree_->topLevelItem(0)->childCount() > 0) {
         tree_->setCurrentItem(tree_->topLevelItem(0)->child(0));
     }
+}
+
+void NodePalette::setFavorite(const QString& typeId, bool on) {
+    if (on == favorites_.contains(typeId)) {
+        return;
+    }
+    if (on) {
+        favorites_.append(typeId);
+    } else {
+        favorites_.removeAll(typeId);
+    }
+    QSettings settings{QStringLiteral("WhiteHoleFX"), QStringLiteral("WhiteHoleFX")};
+    settings.setValue(QString::fromLatin1(kFavoritesKey), favorites_);
+    fill(search_->text());
+}
+
+void NodePalette::showContextMenu(const QPoint& position) {
+    const QTreeWidgetItem* item = tree_->itemAt(position);
+    if (item == nullptr) {
+        return;
+    }
+    const QString typeId = item->data(0, kTypeIdRole).toString();
+    if (typeId.isEmpty()) {
+        return;  // eine Kategorie
+    }
+    QMenu menu{this};
+    const bool favorite = isFavorite(typeId);
+    QAction* toggle = menu.addAction(favorite ? tr("Aus Favoriten entfernen") : tr("Zu Favoriten hinzufügen"));
+    if (menu.exec(tree_->viewport()->mapToGlobal(position)) == toggle) {
+        setFavorite(typeId, !favorite);
+    }
+}
+
+int NodePalette::expandedCategoryCount() const {
+    int count = 0;
+    for (int i = 0; i < tree_->topLevelItemCount(); ++i) {
+        count += tree_->topLevelItem(i)->isExpanded() ? 1 : 0;
+    }
+    return count;
 }
 
 void NodePalette::setFilter(const QString& text) { search_->setText(text); }
@@ -155,7 +241,10 @@ void NodePalette::setFilter(const QString& text) { search_->setText(text); }
 int NodePalette::visibleTypeCount() const {
     int count = 0;
     for (int i = 0; i < tree_->topLevelItemCount(); ++i) {
-        count += tree_->topLevelItem(i)->childCount();
+        const QTreeWidgetItem* group = tree_->topLevelItem(i);
+        if (!group->data(0, kFavoritesRole).toBool()) {  // die Favoriten sind nur eine zweite Ansicht
+            count += group->childCount();
+        }
     }
     return count;
 }

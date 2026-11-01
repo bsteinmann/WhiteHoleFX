@@ -97,7 +97,7 @@ Auswahl erhalten. Ein Node ohne Parameter (z. B. Rotate ohne Regler) meldet das 
 ## Node-Editor
 
 Das Dock „Nodes“ (unten, Menü Ansicht) zeigt den Effektgraphen. Eingänge stehen links, Ausgänge
-rechts; die Farbe eines Ports zeigt den Typ (Blau Field, Grün Zahl, Rosa Farbe, …). Parameter
+rechts; die Farbe und Form eines Ports zeigen den Typ (Blau Field, Grün Zahl, Pink Farbe, Raute für Ganzzahl/Schalter/Trigger, Dreieck für Audio, …); Ausgänge sind gefüllt, Eingänge nur ein Ring. Parameter
 stehen nicht im Node, sondern im Dock „Parameter“; beide benutzen dieselbe Nummerierung
 („Linear Gradient 2“).
 
@@ -106,7 +106,7 @@ stehen nicht im Node, sondern im Dock „Parameter“; beide benutzen dieselbe N
 | Node hinzufügen | aus der **Palette** links im Dock ziehen oder doppelklicken (siehe unten); Rechtsklick auf freie Fläche, Menü nach Kategorien; schneller: Strg+Leertaste, tippen („rain“, „mix“, „blend add“), Pfeiltasten, Enter. Der Node entsteht an der Maus |
 | Node verschieben | ziehen; die Lage wird in der Projektdatei gespeichert (`at`) |
 | verbinden | von einem Port zu einem passenden anderen ziehen (in beide Richtungen); ein belegter Eingang wird ersetzt |
-| löschen | anklicken (Strg oder Rahmen für mehrere), Entf; oder Rechtsklick; oder den Node auf die Palette ziehen und loslassen (sie färbt sich rot) |
+| löschen | anklicken (Strg oder Rahmen für mehrere), Entf; oder Rechtsklick; oder den Node auf die Palette ziehen und loslassen (sie färbt sich rot). Steckt der Node in einer Kette (A → X → B), werden A und B danach direkt verbunden |
 | kopieren, einfügen, duplizieren | Strg+C, Strg+V (an der Mausposition), Strg+D; auch im Rechtsklick-Menü. Kabel zwischen den ausgewählten Nodes kommen mit, Kabel nach draußen nicht. Die Kopie ist danach ausgewählt, ein Schritt Rückgängig nimmt sie komplett zurück |
 | Ausgang wählen | Rechtsklick auf einen Field-Ausgang, „Als Ausgang setzen“; der Node ist dann orange umrandet |
 | Ausgangs-Node | Node „Output“ (Kategorie Output) einfügen: er wird automatisch zum Ausgang und hängt sich hinter den bisherigen. Mit Rechteck bespielt er nur einen Teil der Leinwand |
@@ -254,6 +254,14 @@ Value, Audio ...), oben ein Suchfeld. Getippt wird nach Name, Kategorie und Typ-
 oder Enter in die Mitte der Ansicht legen. Zum **Entfernen** ziehst du einen Node im Editor auf die
 Palette; sie wird rot, beim Loslassen ist der Node (samt Kabeln) weg. Alles ist ein Schritt Rückgängig.
 Neue Node-Typen erscheinen automatisch, die Palette liest die Registrierung.
+
+Die Kategorien sind beim Start **zugeklappt**; beim Suchen sind die Treffer aufgeklappt. Mit Rechtsklick auf einen Node-Typ
+(„Zu Favoriten hinzufügen“) wird er zum **Favoriten**: Er steht oben in der Gruppe „Favoriten“ (immer offen) und in seiner Kategorie
+mit ★. Die Favoriten werden gespeichert.
+
+Steckt ein gelöschter Node in einer Kette (A → X → B), verbindet der Editor A direkt mit B. Fehlt dem Ausgang ein
+Pflicht-Eingang (Kabel gelöscht oder getrennt), gehen die LEDs aus und die Statuszeile meldet „EINGANG FEHLT“; sie halten **nicht** das
+letzte Bild. Sobald der Graph vollständig ist, läuft der Effekt weiter.
 
 ## Aufbau des Fensters
 

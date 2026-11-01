@@ -88,16 +88,14 @@ Result<void> Player::setTestPattern(TestPattern pattern) {
 
 float Player::setMasterBrightness(float master) {
     master_ = std::isfinite(master) ? std::clamp(master, 0.0F, 1.0F) : 1.0F;
-    if (session_) {
-        session_->setOutputLevel(master_, blackout_);
-    }
+    applyOutputLevel();
     return master_;
 }
 
 void Player::setBlackout(bool on) {
     blackout_ = on;
     if (session_) {
-        session_->setOutputLevel(master_, blackout_);
+        applyOutputLevel();
     }
 }
 
@@ -139,7 +137,7 @@ Result<void> Player::start() {
     if (testPattern_.active()) {
         session_->setTestPattern(testPattern_);
     }
-    session_->setOutputLevel(master_, blackout_);
+    refreshCompleteness();
     stepError_.reset();
     graphDirty_ = false;
     valuesDirty_ = false;
@@ -186,8 +184,10 @@ Result<void> Player::step() {
         graphDirty_ = false;
         valuesDirty_ = false;
         // Ein Fehler (z. B. Shader lässt sich nicht übersetzen) lässt den letzten guten Zustand
-        // laufen und steht in status().lastError.
+        // laufen und steht in status().lastError. Eine Lücke auf dem Weg zum Ausgang (Pflicht-Eingang ohne Kabel)
+        // hält dagegen nicht den letzten Look: refreshCompleteness schaltet die LEDs aus.
         (void)session_->applyGraph(activeGraph());
+        refreshCompleteness();
         if (structural) {
             liveLast_ = liveNow();  // das Übersetzen des Shaders soll nicht von der Überblendzeit abgehen
         }

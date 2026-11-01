@@ -262,6 +262,9 @@ void MainWindow::updateStatus() {
     } else if (player_->masterBrightness() < 1.0F) {
         text += tr("   |   Master %1 %").arg(std::lround(player_->masterBrightness() * 100.0F));
     }
+    if (s.running && player_->outputIncomplete()) {
+        text += tr("   |   EINGANG FEHLT – LEDs aus");
+    }
     syncDmxUniverses();
     text += dmxStatusText();
     text += audioStatusText();
