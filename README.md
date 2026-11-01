@@ -1,6 +1,6 @@
 # WhiteHoleFX
 
-Open-Source-Echtzeitsteuerung für LED-Matrizen, LED-Cubes, Strips und Pixelinstallationen.
+Quelloffene Echtzeitsteuerung für LED-Matrizen, LED-Cubes, Strips und Pixelinstallationen.
 Effekte entstehen in einem Node-Graphen und laufen als Shader auf der GPU. Dieselben
 Effekte gelten für flache Matrizen und für LEDs im 3D-Raum.
 
@@ -110,6 +110,17 @@ Bildschirm. Rückmeldungen dazu sind willkommen.
 
 ## Lizenz
 
-WhiteHoleFX steht unter der [Apache License 2.0](LICENSE). Hinweise zu Bibliotheken von Dritten
-(wgpu-native, Qt, Catch2) stehen in [NOTICE](NOTICE). Beiträge werden, sofern nicht anders vereinbart,
-unter derselben Lizenz angenommen.
+WhiteHoleFX steht ab Version 0.22.0 unter der [PolyForm Shield License 1.0.0](LICENSE). Die Quellen sind
+offen einsehbar, es ist aber keine Open-Source-Lizenz im Sinne der OSI.
+
+**Kurz gesagt (keine Rechtsberatung, maßgeblich ist der Lizenztext):**
+
+- Kostenlos nutzbar für **jeden Zweck**: privat, im Verein, als DJ oder Lichttechniker auf bezahlten Veranstaltungen,
+  in der Firma für die eigene Anlage.
+- Ändern und weitergeben ist erlaubt, wenn der Lizenztext und die Zeile `Required Notice:` aus [NOTICE](NOTICE) mitgehen.
+- **Nicht erlaubt:** ein Produkt oder einen Dienst anzubieten, der mit WhiteHoleFX konkurriert, zum Beispiel die Software
+  (auch verändert oder umbenannt) selbst zu verkaufen oder als Bezahlprodukt zu vermarkten.
+
+Versionen bis einschließlich 0.21.0 wurden unter der Apache License 2.0 veröffentlicht und bleiben es. Hinweise zu
+Bibliotheken von Dritten (wgpu-native, Qt, Catch2) stehen in [NOTICE](NOTICE). Beiträge werden, sofern nicht anders
+vereinbart, unter derselben Lizenz angenommen.

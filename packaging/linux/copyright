@@ -4,9 +4,11 @@ Source: https://github.com/bsteinmann/WhiteHoleFX
 
 Files: *
 Copyright: 2026 bsteinmann and the WhiteHoleFX contributors
-License: Apache-2.0
- Licensed under the Apache License, Version 2.0. Der Volltext steht in
- /usr/share/common-licenses/Apache-2.0 und im Quellcode in der Datei LICENSE.
+License: PolyForm-Shield-1.0.0
+ Licensed under the PolyForm Shield License 1.0.0 (https://polyformproject.org/licenses/shield/1.0.0).
+ Der Volltext liegt in /usr/share/doc/whiteholefx/LICENSE. Die Software ist quelloffen einsehbar, aber keine
+ Open-Source-Software im Sinne der OSI-Definition: Jede Nutzung ist erlaubt, außer ein Produkt anzubieten, das
+ mit WhiteHoleFX konkurriert.
 
 Files: usr/lib/whiteholefx/*
 Copyright: die wgpu-native-Entwickler (gfx-rs)

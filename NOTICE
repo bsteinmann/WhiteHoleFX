@@ -1,7 +1,11 @@
 WhiteHoleFX
 Copyright 2026 bsteinmann and the WhiteHoleFX contributors
 
-Dieses Produkt steht unter der Apache License 2.0 (siehe LICENSE).
+Required Notice: Copyright 2026 bsteinmann and the WhiteHoleFX contributors (https://github.com/bsteinmann/WhiteHoleFX)
+
+Dieses Produkt steht unter der PolyForm Shield License 1.0.0 (siehe LICENSE, https://polyformproject.org/licenses/shield/1.0.0).
+Wer die Software weitergibt, muss diese Datei (insbesondere die Zeile "Required Notice:") und den Lizenztext mitgeben.
+Versionen bis einschließlich 0.21.0 wurden unter der Apache License 2.0 veröffentlicht; für diese Versionen bleibt es dabei.
 
 Bibliotheken von Dritten:
 - wgpu-native (gfx-rs), optional gebunden: MIT/Apache-2.0, siehe https://github.com/gfx-rs/wgpu-native

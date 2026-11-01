@@ -1,5 +1,11 @@
 # Änderungen
 
+## 0.22.0
+
+- **Lizenz:** WhiteHoleFX steht ab dieser Version unter der PolyForm Shield License 1.0.0 (`LICENSE`, `NOTICE`, README,
+  Debian-`copyright`). Jede Nutzung ist kostenlos erlaubt, auch auf bezahlten Veranstaltungen; ausgenommen ist, ein
+  konkurrierendes Produkt oder einen Dienst daraus zu machen. Versionen bis 0.21.0 bleiben unter Apache-2.0.
+
 ## 0.21.0
 
 - **Looks:** Ein fertiger Effekt (Generator, Modifier bis zum Ausgang) lässt sich als Look in einer Liste speichern, mit
