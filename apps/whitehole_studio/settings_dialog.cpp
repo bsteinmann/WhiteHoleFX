@@ -1,4 +1,4 @@
-// settings_dialog.cpp: Umsetzung zu settings_dialog.hpp. Das Fenster "Einstellungen" mit den Seiten Netzwerk, DMX-Eingang und Audio.
+// settings_dialog.cpp: Umsetzung zu settings_dialog.hpp. Das Fenster "Einstellungen" mit den Seiten Netzwerk, DMX-Eingang, Audio und Node-Standardwerte.
 #include "settings_dialog.hpp"
 
 #include <QCheckBox>
@@ -18,6 +18,7 @@
 #include <string>
 
 #include "network_interfaces.hpp"
+#include "node_defaults_page.hpp"
 #include "whitehole/audio/audio_input.hpp"
 
 namespace whitehole::studio {
@@ -50,19 +51,22 @@ QString toQ(const std::string& text) { return QString::fromUtf8(text.data(), sta
 
 }  // namespace
 
-SettingsDialog::SettingsDialog(const AppSettings& current, QWidget* parent) : QDialog{parent} {
+SettingsDialog::SettingsDialog(const AppSettings& current, const graph::INodeRegistry& registry, QWidget* parent)
+    : QDialog{parent} {
     setWindowTitle(tr("Einstellungen"));
     auto* tabs = new QTabWidget{this};
     tabs->addTab(buildNetworkPage(current), tr("Netzwerk"));
     tabs->addTab(buildDmxPage(current), tr("DMX-Eingang"));
     tabs->addTab(buildAudioPage(current), tr("Audio"));
+    defaultsPage_ = new NodeDefaultsPage{registry, current.nodeDefaults, this};
+    tabs->addTab(defaultsPage_, tr("Node-Standardwerte"));
     auto* buttons = new QDialogButtonBox{QDialogButtonBox::Ok | QDialogButtonBox::Cancel, this};
     connect(buttons, &QDialogButtonBox::accepted, this, &QDialog::accept);
     connect(buttons, &QDialogButtonBox::rejected, this, &QDialog::reject);
     auto* box = new QVBoxLayout{this};
     box->addWidget(tabs);
     box->addWidget(buttons);
-    resize(520, 380);
+    resize(680, 460);
 }
 
 QWidget* SettingsDialog::buildNetworkPage(const AppSettings& current) {
@@ -196,6 +200,7 @@ AppSettings SettingsDialog::settings() const {
     } else {
         result.audioSource = QStringLiteral("off");
     }
+    result.nodeDefaults = defaultsPage_->defaults();
     return result;
 }
 

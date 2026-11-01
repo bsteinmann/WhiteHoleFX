@@ -352,6 +352,17 @@ Die Nodes und die Technik dahinter: [docs/audio.md](audio.md).
 Nicht enthalten: Art-Net-Erkennung (ArtPoll/ArtPollReply), das Studio meldet sich also nicht in der
 Geräteliste von Pulten an; Pulte müssen die IP-Adresse dieses Rechners direkt oder per Broadcast ansprechen.
 
+## Node-Standardwerte
+
+Einstellungen, Seite **Node-Standardwerte**: Wer Nodes immer wieder mit denselben Werten braucht, stellt sie hier einmal ein.
+Links stehen die Node-Typen nach Kategorie (Suchfeld darüber), rechts die Parameter des gewählten Typs mit denselben
+Bedienelementen wie im Parameterfenster. Typen mit eigenen Werten sind fett. Das „↺“ in einer Zeile stellt den Wert der
+Bibliothek wieder her; ein Wert, der ihm gleicht, zählt nicht als eigener. „Alle Standardwerte zurücksetzen“ leert die ganze Liste.
+
+Ein neu angelegter Node (Palette, Menü, Doppelklick) startet mit diesen Werten. Bestehende Nodes, geladene Projekte und
+Looks bleiben unverändert. Die Werte gehören zum Nutzer, nicht zum Projekt: sie werden mit den übrigen Einstellungen auf
+dem Rechner gespeichert (`nodeDefaults/<Typ>/<Parameter>`) und wandern nicht mit einer Projektdatei zu anderen.
+
 ## Rückgängig und Wiederholen
 
 Menü Bearbeiten, Strg+Z und Strg+Umschalt+Z (Windows auch Strg+Y). Zurückgenommen werden

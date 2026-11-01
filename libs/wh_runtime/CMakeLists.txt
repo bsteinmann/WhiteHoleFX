@@ -11,6 +11,7 @@ wh_add_library(wh_runtime
         src/live_decks.cpp
         src/live_look.cpp
         src/node_clipboard.cpp
+        src/node_defaults.cpp
         src/node_preset.cpp
         src/player.cpp
         src/player_edit.cpp

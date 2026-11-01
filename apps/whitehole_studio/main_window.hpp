@@ -93,6 +93,7 @@ public:
     QString exerciseLive();
     /// Rauchtest: Einstellungsdialog (Rundlauf der Felder), Netzwerkkarte wählen, DMX/Audio anwenden.
     QString exerciseSettings();
+    QString exerciseNodeDefaults();  // Teil von exerciseSettings (main_window_settings.cpp)
     /// Rauchtest: Stage Setup öffnet als eigenes Fenster, zeigt beide Seiten, schließt im Live-Modus und kommt zurück.
     QString exerciseStageSetup();
     /// Rauchtest: Umschalter 2D/3D, Orbit mit der Maus, Zoom, feste Ansichten.

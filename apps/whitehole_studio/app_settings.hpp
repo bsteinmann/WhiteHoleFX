@@ -6,10 +6,13 @@
 // Dialogfenster bearbeitet und das Hauptfenster anwendet.
 //
 // Schlüssel in QSettings (Organisation und Anwendung "WhiteHoleFX"): dmx/artnet, dmx/sacn, audio/source
-// wie bisher, neu dmx/artnetPort, dmx/sacnPort, network/outInterface, network/inInterface.
+// wie bisher, neu dmx/artnetPort, dmx/sacnPort, network/outInterface, network/inInterface,
+// nodeDefaults/<Typ-ID>/<Parameter> (Wert als Text, siehe encodeParameterValue).
 #pragma once
 
 #include <QString>
+
+#include "whitehole/runtime/node_defaults.hpp"
 
 namespace whitehole::studio {
 
@@ -23,6 +26,8 @@ struct AppSettings {
     QString inputInterface;
     /// "off", "default", "device:<Name>" oder "file:<Pfad>".
     QString audioSource{QStringLiteral("off")};
+    /// Eigene Standardwerte für neue Nodes (Seite "Node-Standardwerte").
+    runtime::NodeDefaults nodeDefaults;
 
     bool operator==(const AppSettings&) const = default;
 };

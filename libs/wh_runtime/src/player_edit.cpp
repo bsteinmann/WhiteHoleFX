@@ -31,6 +31,14 @@ Result<NodeId> Player::addNode(std::string_view typeId, Vec2 position) {
     }
     auto before = beginEdit({});
     const Result<NodeId> id = project_->graph.addNode(typeId, position);
+    if (id.ok()) {
+        // Eigene Standardwerte: Typ und Bereich prüft der Graph; Unpassendes bleibt beim Bibliothekswert.
+        if (const NodeDefaults::Values* own = nodeDefaults_.valuesOf(std::string{typeId})) {
+            for (const auto& [key, value] : *own) {
+                (void)project_->graph.setParameter(id.value(), key, value);
+            }
+        }
+    }
     if (id.ok() && typeId == "wh.output.canvas") {
         // Ein neuer Ausgangs-Node wird zum Ausgang des Projekts und legt sich über den bisherigen: Dessen Bild
         // kommt an `behind` (so bleibt er außerhalb des neuen Rechtecks sichtbar) und zunächst auch an `source`

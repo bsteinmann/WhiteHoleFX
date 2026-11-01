@@ -39,6 +39,7 @@
 #include "whitehole/runtime/led_info.hpp"
 #include "whitehole/runtime/live_decks.hpp"
 #include "whitehole/runtime/node_clipboard.hpp"
+#include "whitehole/runtime/node_defaults.hpp"
 #include "whitehole/runtime/session.hpp"
 
 namespace whitehole::runtime {
@@ -123,6 +124,11 @@ public:
 
     /// Legt einen Node mit Standardwerten an. Fehler: NotFound (Typ unbekannt).
     Result<NodeId> addNode(std::string_view typeId, Vec2 position);
+
+    /// Eigene Standardwerte für neue Nodes (Einstellungen). Sie gelten nur für künftig angelegte Nodes; ein
+    /// Wert, der nicht zum Parameter passt, wird beim Anlegen übersprungen. Gehören dem Nutzer, nicht dem Projekt.
+    void setNodeDefaults(NodeDefaults defaults) { nodeDefaults_ = std::move(defaults); }
+    [[nodiscard]] const NodeDefaults& nodeDefaults() const noexcept { return nodeDefaults_; }
     /// Entfernt Node und Verbindungen. Liefert der Node den Ausgang (`output`), rückt der Ausgang
     /// auf den Node davor (erster belegter Field-Eingang). Gibt es keinen, hat das Projekt danach
     /// keinen Ausgang und start() meldet InvalidArgument, bis man mit setTarget einen setzt.
@@ -328,6 +334,7 @@ private:
                           : std::chrono::duration<double>(std::chrono::steady_clock::now().time_since_epoch()).count();
     }
 
+    NodeDefaults nodeDefaults_;
     gpu::IGpuDevice* device_;
     const nodes::BuiltinLibrary& library_;
     output::IPacketSink& sink_;

@@ -78,6 +78,7 @@ add_executable(wh_tests
     runtime/player_arrange_test.cpp
     runtime/dmx_usage_test.cpp
     runtime/node_clipboard_test.cpp
+    runtime/node_defaults_test.cpp
     runtime/point_file_test.cpp
     runtime/operator_controls_test.cpp
     runtime/node_preset_test.cpp

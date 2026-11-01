@@ -57,6 +57,8 @@ add_executable(whitehole_studio
     app_settings.cpp
     app_settings.hpp
     network_interfaces.cpp
+    node_defaults_page.cpp
+    node_defaults_page.hpp
     network_interfaces.hpp
     settings_dialog.cpp
     settings_dialog.hpp

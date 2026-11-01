@@ -1,5 +1,15 @@
 # Änderungen
 
+## 0.26.0
+
+- **Node-Standardwerte:** Neue Seite „Node-Standardwerte“ in den Einstellungen. Zu jedem Node-Typ lassen sich eigene Startwerte
+  festlegen (z. B. Value Noise mit Dichte 0,3); neue Nodes starten damit statt mit dem Wert der Bibliothek. Links die Typen nach
+  Kategorie mit Suchfeld (Typen mit eigenen Werten fett), rechts die Parameter mit denselben Bedienelementen wie im
+  Parameterfenster; „↺“ stellt eine Zeile zurück, ein Wert gleich dem Bibliothekswert zählt nicht als eigener. Bestehende Nodes
+  und geladene Projekte ändern sich nicht; die Werte gehören dem Nutzer (nicht dem Projekt) und werden gespeichert.
+- Kern ohne Qt: `runtime::NodeDefaults` mit Text-Kodierung der Werte, `Player::setNodeDefaults`; unpassende Werte (falscher Typ,
+  unbekannter Parameter) werden beim Anlegen übersprungen, Bereiche begrenzt der Graph.
+
 ## 0.25.0
 
 - **Einstellungen:** Neuer Menüpunkt Bearbeiten → Einstellungen … (Strg+Komma). Das Menü „Eingang“ entfällt, seine Schalter
