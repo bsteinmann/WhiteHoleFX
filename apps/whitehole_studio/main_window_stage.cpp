@@ -7,6 +7,7 @@
 #include <QKeySequence>
 #include <QMenu>
 
+#include "layout_panel.hpp"
 #include "look_panel.hpp"
 #include "main_window.hpp"
 #include "stage_setup_window.hpp"
@@ -17,28 +18,28 @@ void MainWindow::buildStageConfig(QMenu* menu) {
     stageMenu_ = menu;
     stageSetup_ = new StageSetupWindow{layoutPanel_, testPanel_, this};
 
-    auto* addAction = new QAction{tr("Fixture &hinzufügen …"), this};
-    addAction->setToolTip(tr("Matrix, Strip oder 3D-Gitter mit Größe x y z, Lage, Verkabelung und Patch anlegen"));
-    connect(addAction, &QAction::triggered, this, [this]() { layoutPanel_->addFromDialog(); });
+    auto* addFixtureAction = new QAction{tr("Fixture &hinzufügen …"), this};
+    addFixtureAction->setToolTip(tr("Matrix, Strip oder 3D-Gitter mit Größe x y z, Lage, Verkabelung und Patch anlegen"));
+    connect(addFixtureAction, &QAction::triggered, this, [this]() { layoutPanel_->addFromDialog(); });
 
-    auto* pointsAction = new QAction{tr("Punktwolke &importieren …"), this};
-    pointsAction->setToolTip(tr("LED-Positionen aus einer CSV- oder JSON-Datei laden"));
-    connect(pointsAction, &QAction::triggered, this, [this]() { layoutPanel_->importPoints(); });
+    auto* importPointsAction = new QAction{tr("Punktwolke &importieren …"), this};
+    importPointsAction->setToolTip(tr("LED-Positionen aus einer CSV- oder JSON-Datei laden"));
+    connect(importPointsAction, &QAction::triggered, this, [this]() { layoutPanel_->importPoints(); });
 
     stageSetupAction_ = new QAction{tr("&Layout und Patch …"), this};
     stageSetupAction_->setShortcut(QKeySequence{Qt::Key_F4});
     stageSetupAction_->setToolTip(tr("Fixtures anordnen, Universen und Ziele einstellen (eigenes Fenster)"));
     connect(stageSetupAction_, &QAction::triggered, this, [this]() { stageSetup_->open(StageSetupWindow::Page::Layout); });
 
-    auto* testAction = new QAction{tr("&Testmodus …"), this};
-    testAction->setToolTip(tr("Testbilder auf die LEDs schicken, um Verkabelung und Patch zu prüfen"));
-    connect(testAction, &QAction::triggered, this, [this]() { stageSetup_->open(StageSetupWindow::Page::Test); });
+    auto* testModeAction = new QAction{tr("&Testmodus …"), this};
+    testModeAction->setToolTip(tr("Testbilder auf die LEDs schicken, um Verkabelung und Patch zu prüfen"));
+    connect(testModeAction, &QAction::triggered, this, [this]() { stageSetup_->open(StageSetupWindow::Page::Test); });
 
-    menu->addAction(addAction);
-    menu->addAction(pointsAction);
+    menu->addAction(addFixtureAction);
+    menu->addAction(importPointsAction);
     menu->addSeparator();
     menu->addAction(stageSetupAction_);
-    menu->addAction(testAction);
+    menu->addAction(testModeAction);
 }
 
 QString MainWindow::exerciseStageSetup() {
