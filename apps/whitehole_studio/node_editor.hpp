@@ -35,6 +35,7 @@
 class QDragEnterEvent;
 class QDragMoveEvent;
 class QDropEvent;
+class QEvent;
 class QMenu;
 
 namespace whitehole::studio {
@@ -120,6 +121,8 @@ protected:
     void dragEnterEvent(QDragEnterEvent* event) override;
     void dragMoveEvent(QDragMoveEvent* event) override;
     void dropEvent(QDropEvent* event) override;
+    /// Fängt Drags mit Node-Typ schon am Viewport ab (dorthin liefert Qt die Drops; QGraphicsView leitet sie sonst an die Szene).
+    bool viewportEvent(QEvent* event) override;
     void mousePressEvent(QMouseEvent* event) override;
     void mouseMoveEvent(QMouseEvent* event) override;
     void mouseReleaseEvent(QMouseEvent* event) override;

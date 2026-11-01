@@ -47,6 +47,32 @@ void NodeEditor::dropEvent(QDropEvent* event) {
     event->acceptProposedAction();
 }
 
+bool NodeEditor::viewportEvent(QEvent* event) {
+    switch (event->type()) {
+        case QEvent::DragEnter:
+            if (carriesNodeType(static_cast<QDragEnterEvent*>(event)->mimeData())) {
+                dragEnterEvent(static_cast<QDragEnterEvent*>(event));
+                return true;
+            }
+            break;
+        case QEvent::DragMove:
+            if (carriesNodeType(static_cast<QDragMoveEvent*>(event)->mimeData())) {
+                dragMoveEvent(static_cast<QDragMoveEvent*>(event));
+                return true;
+            }
+            break;
+        case QEvent::Drop:
+            if (carriesNodeType(static_cast<QDropEvent*>(event)->mimeData())) {
+                dropEvent(static_cast<QDropEvent*>(event));
+                return true;
+            }
+            break;
+        default:
+            break;
+    }
+    return QGraphicsView::viewportEvent(event);
+}
+
 std::optional<NodeId> NodeEditor::addNodeAtCenter(const std::string& typeId) {
     const QPointF center = mapToScene(viewport()->rect().center());
     return addNodeAt(typeId, center - QPointF{70.0, 20.0});
