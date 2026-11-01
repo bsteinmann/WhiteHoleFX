@@ -306,3 +306,34 @@ TEST_CASE("Ausgang: zwei Ausgänge mit getrennten Rechtecken legen sich nebenein
     CHECK(isColor(image.at(2, 1), 1.0F, 0.0F, 0.0F));   // linke Hälfte: rot vom ersten Ausgang
     CHECK(isColor(image.at(13, 1), 0.0F, 0.0F, 1.0F));  // rechte Hälfte: blau vom zweiten
 }
+
+TEST_CASE("Value Noise: Dichte ist der Anteil der leuchtenden Pixel", "[gpu_device][nodes]") {
+    REQUIRE_DEVICE();
+    // Harte Kante (softness 0) und feines Rauschen (scale 1): jedes Pixel ist rot (an) oder schwarz (aus).
+    const auto coverage = [&](double density) {
+        Lab lab;
+        const NodeId noise = lab.add("wh.generator.noise");
+        lab.set(noise, "scale", 1.0);
+        lab.set(noise, "softness", 0.0);
+        lab.set(noise, "density", density);
+        lab.set(noise, "colorB", ColorRgba{1.0F, 0.0F, 0.0F, 1.0F});
+        const Pixels image = render(*device, lab, noise, 128, 128);
+        std::size_t on = 0;
+        for (std::uint32_t y = 0; y < image.height; ++y) {
+            for (std::uint32_t x = 0; x < image.width; ++x) {
+                if (image.at(x, y)[0] > 0.5F) {
+                    ++on;
+                }
+            }
+        }
+        return static_cast<double>(on) / static_cast<double>(image.width * image.height);
+    };
+    CHECK(coverage(0.0) == 0.0);
+    CHECK(coverage(1.0) == 1.0);
+    CHECK(coverage(0.5) > 0.44);
+    CHECK(coverage(0.5) < 0.56);
+    CHECK(coverage(0.25) > 0.19);
+    CHECK(coverage(0.25) < 0.31);
+    CHECK(coverage(0.75) > 0.69);
+    CHECK(coverage(0.75) < 0.81);
+}

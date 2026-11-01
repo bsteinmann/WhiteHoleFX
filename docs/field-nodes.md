@@ -30,7 +30,7 @@ beliebigen Koordinaten abtastet.
 | Typ | Wirkung | Raum |
 |---|---|---|
 | `wh.generator.gradient` | Verlauf entlang einer Richtung in der xy-Ebene | 2D |
-| `wh.generator.noise` | Value-Noise, die Zeit läuft über die z-Achse | 3D |
+| `wh.generator.noise` | Value-Noise, die Zeit läuft über die z-Achse. Alle Regler gehen von 0 bis 1 (direkt mit einem LFO fahrbar): `scale` (1 bis 64 Zellen über die Leinwand), `speed` (0 bis 8 Zellen pro Sekunde), **`density`** (Anteil der Pixel, die an sind: 0 alles aus, 1 alles an, 0,5 die Hälfte), `softness` (0 harte Kante, 1 weich), `colorA` (aus) und `colorB` (an), beide auch von Color-Nodes speisbar | 3D |
 | `wh.generator.plasma` | klassisches Plasma | 2D |
 | `wh.generator.sphere` | Kugel mit weichem Rand, Mittelpunkt und Radius einstellbar | 3D |
 | `wh.generator.wave` | ebene Welle entlang einer 3D-Richtung | 3D |

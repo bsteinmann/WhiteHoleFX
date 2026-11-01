@@ -1,5 +1,14 @@
 # Änderungen
 
+## 0.23.1
+
+- **Value Noise überarbeitet (Issue #16):** Alle Regler gehen jetzt von 0 bis 1, damit ein LFO sie direkt fahren kann.
+  Neu: `density` (Anteil der leuchtenden Pixel: 0 alles aus, 1 alles an, 0,5 die Hälfte, 0,25 ein Viertel; der Rauschwert wird dafür
+  in seinen Rang umgerechnet, damit der Anteil wirklich stimmt), `softness` (harte Kante bis weich) sowie `colorA` (aus) und
+  `colorB` (an) als Farbeingänge. **Achtung:** `scale` (vorher 0,01–256) und `speed` (vorher −20…20) haben neue Bereiche; ältere
+  Projekte laden weiter, ihre Werte werden aber auf 0…1 begrenzt und sehen anders aus (Scale 8 war etwa 0,33, Speed 0,5 etwa 0,25).
+  Die Rückwärtsrichtung von `speed` entfällt.
+
 ## 0.23.0
 
 - **3D-Vorschau:** Die Vorschau lässt sich auf eine frei drehbare 3D-Ansicht umschalten (Leiste „Ansicht“, Strg+1…5):

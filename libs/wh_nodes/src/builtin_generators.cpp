@@ -39,9 +39,32 @@ let d = vec2<f32>(cos(a), sin(a));
 let t = clamp(dot(p.xy - vec2<f32>(0.5, 0.5), d) + 0.5, 0.0, 1.0);
 return wh_mix_color(@param(colorA), @param(colorB), t);)wgsl";
 
+// Value Noise mit Reglern von 0 bis 1 (damit ein LFO sie direkt fahren kann):
+//   scale    0..1 -> 1 bis 64 Zellen über die Leinwand (quadratisch, die untere Hälfte ist fein einstellbar)
+//   speed    0..1 -> 0 bis 8 Zellen pro Sekunde durch die Zeitachse (quadratisch)
+//   density  Anteil der Pixel, die an sind: 0 alles aus, 1 alles an, 0,5 die Hälfte, 0,25 ein Viertel ...
+//   softness 0 harte Kante (reines Aus/An), 1 weicher Übergang bis zum glatten Rauschen
+// Damit "Dichte" wirklich einen Anteil von Pixeln meint, wird der Rauschwert zuerst in seinen Rang
+// (0..1, gleichverteilt) umgerechnet: Value-Noise häuft sich um 0,5, und ein fester Schwellwert träfe
+// sonst nie den gewünschten Anteil. Die Tabelle ist die gemessene Verteilung von wh_value_noise
+// (Funktionswert bei k/16, k = 0..16), dazwischen wird linear gemischt. Die Farbmischung steht
+// absichtlich im Rumpf statt im gemeinsamen Farb-Prelude, damit der Node dasselbe Prelude wie
+// "Fire" nutzen kann (gleiche Preludes werden nur einmal eingebunden).
 constexpr const char* kNoiseBody =
-    R"wgsl(let v = wh_value_noise(p * @param(scale) + vec3<f32>(0.0, 0.0, @time * @param(speed)));
-return vec4<f32>(v, v, v, 1.0);)wgsl";
+    R"wgsl(let s = clamp(@param(scale), 0.0, 1.0);
+let sp = clamp(@param(speed), 0.0, 1.0);
+let v = wh_value_noise(p * (1.0 + 63.0 * s * s) + vec3<f32>(0.0, 0.0, @time * sp * sp * 8.0));
+var cdf = array<f32, 17>(0.0, 0.0026, 0.0161, 0.0464, 0.0957, 0.1688, 0.2637, 0.377, 0.5,
+                         0.623, 0.7363, 0.8312, 0.9043, 0.9536, 0.9839, 0.9974, 1.0);
+let x = clamp(v, 0.0, 1.0) * 16.0;
+let k = min(u32(floor(x)), 15u);
+let rank = mix(cdf[k], cdf[k + 1u], x - f32(k));
+let soft = max(clamp(@param(softness), 0.0, 1.0), 0.0001);
+let m = clamp((clamp(@param(density), 0.0, 1.0) * (1.0 + soft) - rank) / soft, 0.0, 1.0);
+let ca = @param(colorA);
+let cb = @param(colorB);
+let mixed = mix(vec4<f32>(ca.rgb * ca.a, ca.a), vec4<f32>(cb.rgb * cb.a, cb.a), m);
+return vec4<f32>(mixed.rgb / max(mixed.a, 0.000001), mixed.a);)wgsl";
 
 // Klassisches Plasma: Summe mehrerer Sinuswellen, in drei phasenverschobene Kanäle gelegt.
 constexpr const char* kPlasmaBody =
@@ -158,8 +181,10 @@ std::vector<compiler::NodeDefinition> generatorNodes() {
         kGradientBody, kColorPrelude));
 
     nodes.push_back(fieldNode("wh.generator.noise", "Value Noise", "Generators", {fieldOutput()},
-                              {number("scale", "Scale", 8.0, 0.01, 256.0),
-                               number("speed", "Speed", 0.5, -20.0, 20.0)},
+                              {number("scale", "Scale", 0.33, 0.0, 1.0), number("speed", "Speed", 0.25, 0.0, 1.0),
+                               number("density", "Density", 0.5, 0.0, 1.0), number("softness", "Softness", 0.5, 0.0, 1.0),
+                               color("colorA", "Color A (off)", ColorRgba{0.0F, 0.0F, 0.0F, 1.0F}),
+                               color("colorB", "Color B (on)", ColorRgba{1.0F, 1.0F, 1.0F, 1.0F})},
                               kNoiseBody, kNoisePrelude));
 
     nodes.push_back(fieldNode("wh.generator.plasma", "Plasma", "Generators", {fieldOutput()},

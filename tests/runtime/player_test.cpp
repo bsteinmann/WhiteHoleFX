@@ -369,3 +369,14 @@ TEST_CASE("Player: speichern ohne Projekt ist ein Fehler", "[player][parameters]
     runtime::Player player{&rig.device, *rig.library, rig.gate};
     CHECK_FALSE(player.save("/tmp/x.whfx").ok());
 }
+
+TEST_CASE("Player: ein altes Value-Noise-Projekt (Scale 8, Speed 0,5) lädt, die Regler werden begrenzt", "[player]") {
+    // Bis 0.22 reichte Scale bis 256; seit 0.23 sind Scale und Speed Regler von 0 bis 1.
+    Rig rig;
+    runtime::Player player{&rig.device, *rig.library, rig.gate};
+    const std::string text = std::string(kProject).replace(std::string(kProject).find("wh.generator.gradient"), 21,
+                                                           "wh.generator.noise\n  set scale 8\n  set speed 0.5");
+    const auto loaded = player.loadText(text);
+    REQUIRE(loaded.ok());
+    CHECK(player.image({}).ok());
+}
