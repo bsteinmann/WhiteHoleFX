@@ -7,7 +7,7 @@
   in seinen Rang umgerechnet, damit der Anteil wirklich stimmt), `softness` (harte Kante bis weich) sowie `colorA` (aus) und
   `colorB` (an) als Farbeingänge. **Achtung:** `scale` (vorher 0,01–256) und `speed` (vorher −20…20) haben neue Bereiche; ältere
   Projekte laden weiter, ihre Werte werden aber auf 0…1 begrenzt und sehen anders aus (Scale 8 war etwa 0,33, Speed 0,5 etwa 0,25).
-  Die Rückwärtsrichtung von `speed` entfällt.
+  Die Rückwärtsrichtung von `speed` entfällt. Der Anteil stimmt in jeder Zeitphase auf etwa 2 % genau.
 
 ## 0.23.0
 

@@ -46,18 +46,24 @@ return wh_mix_color(@param(colorA), @param(colorB), t);)wgsl";
 //   softness 0 harte Kante (reines Aus/An), 1 weicher Übergang bis zum glatten Rauschen
 // Damit "Dichte" wirklich einen Anteil von Pixeln meint, wird der Rauschwert zuerst in seinen Rang
 // (0..1, gleichverteilt) umgerechnet: Value-Noise häuft sich um 0,5, und ein fester Schwellwert träfe
-// sonst nie den gewünschten Anteil. Die Tabelle ist die gemessene Verteilung von wh_value_noise
-// (Funktionswert bei k/16, k = 0..16), dazwischen wird linear gemischt. Die Farbmischung steht
-// absichtlich im Rumpf statt im gemeinsamen Farb-Prelude, damit der Node dasselbe Prelude wie
-// "Fire" nutzen kann (gleiche Preludes werden nur einmal eingebunden).
+// sonst nie den gewünschten Anteil. Die Streuung hängt von der Zeitphase ab (zwischen zwei Zeitschichten
+// gemischt streut das Rauschen weniger, bei ganzzahliger Zeit am meisten); darum wird der Wert vor der
+// Umrechnung mit der Phase auf gleiche Streuung gebracht. Die Tabelle ist die gemessene Verteilung dieses
+// normierten Werts (Funktionswert bei -0,75 + k/16, k = 0..24), dazwischen wird linear gemischt; die
+// Anteile liegen damit in jeder Phase auf etwa 2 % genau. Die Farbmischung steht absichtlich im Rumpf
+// statt im gemeinsamen Farb-Prelude, damit der Node dasselbe Prelude wie "Fire" nutzen kann (gleiche
+// Preludes werden nur einmal eingebunden).
 constexpr const char* kNoiseBody =
     R"wgsl(let s = clamp(@param(scale), 0.0, 1.0);
 let sp = clamp(@param(speed), 0.0, 1.0);
-let v = wh_value_noise(p * (1.0 + 63.0 * s * s) + vec3<f32>(0.0, 0.0, @time * sp * sp * 8.0));
-var cdf = array<f32, 17>(0.0, 0.0026, 0.0161, 0.0464, 0.0957, 0.1688, 0.2637, 0.377, 0.5,
-                         0.623, 0.7363, 0.8312, 0.9043, 0.9536, 0.9839, 0.9974, 1.0);
-let x = clamp(v, 0.0, 1.0) * 16.0;
-let k = min(u32(floor(x)), 15u);
+let q = p * (1.0 + 63.0 * s * s) + vec3<f32>(0.0, 0.0, @time * sp * sp * 8.0);
+let fz = fract(q.z);
+let w = fz * fz * (3.0 - 2.0 * fz);
+let dev = (wh_value_noise(q) - 0.5) / sqrt((1.0 - w) * (1.0 - w) + w * w);
+var cdf = array<f32, 25>(0.0, 0.0, 0.0001, 0.0006, 0.0031, 0.013, 0.0373, 0.0781, 0.1361, 0.2101, 0.2978, 0.3964, 0.5,
+                         0.6036, 0.7022, 0.7898, 0.8639, 0.9219, 0.9627, 0.987, 0.9969, 0.9993, 0.9999, 1.0, 1.0);
+let x = (clamp(dev, -0.75, 0.75) + 0.75) * 16.0;
+let k = min(u32(floor(x)), 23u);
 let rank = mix(cdf[k], cdf[k + 1u], x - f32(k));
 let soft = max(clamp(@param(softness), 0.0, 1.0), 0.0001);
 let m = clamp((clamp(@param(density), 0.0, 1.0) * (1.0 + soft) - rank) / soft, 0.0, 1.0);
