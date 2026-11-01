@@ -1,8 +1,15 @@
 name: Release (Windows)
 
-# Läuft, wenn ein Tag wie v0.22.0 gepusht wird: baut das Windows-Paket und legt auf GitHub ein Test-Release
-# ("Pre-release") mit der ZIP-Datei an. Die Version steht im Tag; sie sollte zu CMakeLists.txt passen.
+# Baut das Windows-Paket und legt auf GitHub ein Test-Release ("Pre-release") mit der ZIP-Datei an.
+# Start: Actions -> "Release (Windows)" -> Run workflow, Tag eintragen (z. B. v0.22.0; er sollte zu CMakeLists.txt
+# passen). Der Tag wird dabei am aktuellen Stand des gewählten Zweigs angelegt. Ein von Hand gepushter Tag v*
+# löst denselben Ablauf aus.
 on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Tag des Releases, z. B. v0.22.0"
+        required: true
   push:
     tags: ["v*"]
 
@@ -35,7 +42,7 @@ jobs:
       - name: Paket schnüren (windeployqt)
         run: |
           $env:PATH = "C:\Qt\$env:QT_VERSION\msvc2022_64\bin;$env:PATH"
-          $name = "WhiteHoleFX-${{ github.ref_name }}-windows-x64"
+          $name = "WhiteHoleFX-${{ inputs.tag || github.ref_name }}-windows-x64"
           New-Item -ItemType Directory -Force -Path "paket/$name" | Out-Null
           Copy-Item build/apps/whitehole_studio/Release/* "paket/$name/" -Recurse
           Copy-Item build/apps/whitehole_cli/Release/whitehole_cli.exe "paket/$name/"
@@ -50,6 +57,6 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          $tag = "${{ github.ref_name }}"
+          $tag = "${{ inputs.tag || github.ref_name }}"
           $zip = "WhiteHoleFX-$tag-windows-x64.zip"
-          gh release create $tag $zip --prerelease --title "WhiteHoleFX $tag (Testversion für Windows)" --notes-file packaging/windows/RELEASE_NOTES.md
+          gh release create $tag $zip --target "${{ github.sha }}" --prerelease --title "WhiteHoleFX $tag (Testversion für Windows)" --notes-file packaging/windows/RELEASE_NOTES.md
