@@ -16,6 +16,7 @@
 #include <QMenuBar>
 #include <QSignalBlocker>
 #include <QStatusBar>
+#include <QToolBar>
 
 #include <algorithm>
 #include <string>
