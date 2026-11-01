@@ -131,8 +131,9 @@ void MainWindow::hideEditDocks() {
     runShortcut_ = runAction_->shortcut();
     runAction_->setShortcut(QKeySequence{});  // Leertaste ist im Live-Modus GO, nicht Start/Stopp
     hiddenByLive_.clear();
-    stageWasOpen_ = stageSetup_->isVisible();  // auch das Fenster Stage Setup: auf der Bühne wird nichts umgebaut
+    stageWasOpen_ = stageSetup_->isVisible();  // auch das Fenster Stage Config: auf der Bühne wird nichts umgebaut
     stageSetup_->hide();
+    stageMenu_->setEnabled(false);
     for (QDockWidget* dock : {editorDock_, dock_, lookDock_}) {
         if (dock->isVisible()) {
             hiddenByLive_.push_back(dock);
@@ -143,6 +144,7 @@ void MainWindow::hideEditDocks() {
 
 void MainWindow::showEditDocks() {
     fileBar_->show();
+    stageMenu_->setEnabled(true);
     if (!runShortcut_.isEmpty()) {
         runAction_->setShortcut(runShortcut_);
     }

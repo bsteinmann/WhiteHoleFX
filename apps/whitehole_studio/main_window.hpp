@@ -96,7 +96,7 @@ public:
     /// Rauchtest: Einstellungsdialog (Rundlauf der Felder), Netzwerkkarte wählen, DMX/Audio anwenden.
     QString exerciseSettings();
     QString exerciseNodeDefaults();  // Teil von exerciseSettings (main_window_settings.cpp)
-    /// Rauchtest: Stage Setup öffnet als eigenes Fenster, zeigt beide Seiten, schließt im Live-Modus und kommt zurück.
+    /// Rauchtest: Stage Config öffnet als eigenes Fenster, zeigt beide Seiten, schließt im Live-Modus und kommt zurück.
     QString exerciseStageSetup();
     /// Rauchtest: Reihenfolge der Menüs, Hilfe-Menü, Kürzelliste, Tooltips, roter Senden-Knopf.
     QString exerciseMenus();
@@ -116,8 +116,8 @@ private:
     void buildActions();
     /// Looks und Live-Betrieb (main_window_live.cpp).
     void buildLive();
-    /// Fenster "Stage Setup" (main_window_stage.cpp): Eintrag im Menü Ansicht, F4.
-    void buildStageSetup(QMenu* viewMenu);
+    /// Fenster "Stage Config" (main_window_stage.cpp): Menü Stage Config, Layout und Patch = F4.
+    void buildStageConfig(QMenu* menu);  // Menü "Stage Config": Fixture hinzufügen, Layout und Patch (F4), Testmodus
     /// Vorschau-Ansicht (main_window_view3d.cpp): 2D zum Bearbeiten oder eine der 3D-Ansichten.
     enum class ViewMode { Edit2d, Free3d, Front, Side, Top };
     void buildView3d(QMenu* menu);
@@ -210,7 +210,8 @@ private:
     LayoutPanel* layoutPanel_{nullptr};
     TestPanel* testPanel_{nullptr};
     StageSetupWindow* stageSetup_{nullptr};  // eigenes Fenster mit Layout und Testmodus
-    QAction* stageSetupAction_{nullptr};
+    QAction* stageSetupAction_{nullptr};     // "Layout und Patch" (F4)
+    QMenu* stageMenu_{nullptr};              // Menü "Stage Config"; im Live-Modus gesperrt
     bool stageWasOpen_{false};               // war es offen, als der Live-Modus begann?
     LookPanel* lookPanel_{nullptr};
     QDockWidget* lookDock_{nullptr};

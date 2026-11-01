@@ -150,3 +150,48 @@ TEST_CASE("Gitter: alle Varianten besuchen jede Zelle genau einmal, Serpentine h
         }
     }
 }
+
+TEST_CASE("Gitter: Startecke je Achse spiegeln (flip)") {
+    GridWiring wiring;
+    wiring.flipX = true;
+    CHECK(gridCell(0, 3, 4, 2, wiring) == Cell3{2, 0, 0});
+    CHECK(gridCell(1, 3, 4, 2, wiring) == Cell3{1, 0, 0});
+    wiring.flipY = true;
+    wiring.flipZ = true;
+    CHECK(gridCell(0, 3, 4, 2, wiring) == Cell3{2, 3, 1});
+    CHECK(gridCell(23, 3, 4, 2, wiring) == Cell3{0, 0, 0});
+}
+
+TEST_CASE("Gitter: mit jeder Startecke wird jede Zelle genau einmal besucht, Serpentine bleibt durchgehend") {
+    const std::tuple<std::uint32_t, std::uint32_t, std::uint32_t> sizes[] = {{3, 4, 2}, {2, 2, 2}, {4, 1, 3}, {1, 1, 1}};
+    for (const auto& [nx, ny, nz] : sizes) {
+        for (const AxisOrder order : kOrders) {
+            for (int corner = 0; corner < 8; ++corner) {
+                for (const bool serp : {false, true}) {
+                    CAPTURE(nx, ny, nz, static_cast<int>(order), corner, serp);
+                    GridWiring wiring{order, serp};
+                    wiring.flipX = (corner & 1) != 0;
+                    wiring.flipY = (corner & 2) != 0;
+                    wiring.flipZ = (corner & 4) != 0;
+                    std::set<std::tuple<std::uint32_t, std::uint32_t, std::uint32_t>> seen;
+                    std::vector<Cell3> cells;
+                    for (std::uint64_t i = 0; i < std::uint64_t{nx} * ny * nz; ++i) {
+                        const Cell3 c = gridCell(i, nx, ny, nz, wiring);
+                        REQUIRE(c.x < nx);
+                        REQUIRE(c.y < ny);
+                        REQUIRE(c.z < nz);
+                        seen.insert({c.x, c.y, c.z});
+                        cells.push_back(c);
+                    }
+                    CHECK(seen.size() == std::size_t{nx} * ny * nz);
+                    CHECK(cells.front() == Cell3{wiring.flipX ? nx - 1 : 0, wiring.flipY ? ny - 1 : 0, wiring.flipZ ? nz - 1 : 0});
+                    if (serp) {
+                        for (std::size_t i = 1; i < cells.size(); ++i) {
+                            CHECK(dist(cells[i - 1], cells[i]) == 1);
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

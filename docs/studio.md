@@ -128,16 +128,32 @@ ziehen (Treffer auf Ports), verschieben, Kabel und Nodes wieder löschen.
 
 ## Layout-Editor
 
-Das Layout liegt im eigenen Fenster **Stage Setup** (Menü Ansicht oder F4; Seiten „Layout“ und „Testmodus“). Es ist kein Dock: es öffnet sich bei Bedarf, lässt sich auf einen zweiten Bildschirm ziehen und merkt sich Größe und Platz. Es ist nicht modal, die Vorschau im Hauptfenster bleibt bedienbar. Die Seite „Layout“ hat drei Teile.
+Die Bühne wird einmal am Anfang eingerichtet und danach selten angefasst. Deshalb hat sie ein eigenes Menü **Stage Config**
+(zwischen Bearbeiten und Ansicht) mit: Fixture hinzufügen …, Punktwolke importieren …, Layout und Patch … (F4) und Testmodus ….
+Layout und Testmodus liegen im eigenen Fenster **Stage Config**. Es ist kein Dock: es öffnet sich bei Bedarf, lässt sich auf
+einen zweiten Bildschirm ziehen und merkt sich Größe und Platz. Es ist nicht modal, die Vorschau im Hauptfenster bleibt
+bedienbar. Im Live-Modus ist das Menü gesperrt. Die Seite „Layout“ hat drei Teile.
 
-**Fixtures:** Liste mit „Matrix +“, „Strip +“ und „Entfernen“. Ein neues Fixture bekommt einen freien
-Platz im Layout und das erste freie Universe (Art-Net, Ziel 0, 170 LEDs je Universe). Für das
+**Fixture hinzufügen:** Der Dialog (Menü Stage Config oder Knopf „Hinzufügen …“ in der Liste) fragt alles in einem Schritt:
+
+- **Form:** Matrix (Fläche), Strip (Linie) oder 3D-Gitter (Cube, Vorhang, Säule).
+- **Größe:** beim Gitter die Anzahl LEDs in x, y und z, dazu der Abstand je Achse. Eine Zeile darunter nennt LED-Zahl, Größe
+  in Welteinheiten, Kanäle und Universes. Ist die Form ungültig oder zu groß (mehr als 4 Mio. LEDs), sagt sie warum und
+  „Hinzufügen“ ist gesperrt.
+- **Position:** x y z im Raum (vorbelegt: rechts neben dem letzten Fixture).
+- **Verkabelung:** Matrix: Ecke des Kabelanfangs, Laufrichtung, Serpentine. Gitter: Zählrichtung (welche Achse am schnellsten
+  läuft, z. B. x → y → z), Serpentine und Startecke (rechts, oben, vorn statt links, unten, hinten).
+- **Patch:** automatisch (nächstes freies Universe), manuell (Protokoll, Ziel, Universe, erster Kanal, Farbreihenfolge) oder
+  nicht senden.
+
+**Fixtures:** Liste mit „Hinzufügen …“, „Import …“ und „Entfernen“. Ein Fixture aus dem Dialog landet dort, wo der Dialog es
+hinsetzt; ohne eigene Angabe bekommt es das erste freie Universe (Art-Net, Ziel 0, 170 LEDs je Universe). Für das
 gewählte Fixture gibt es ein Formular:
 
 - Name und Ursprung (x y z)
 - Matrix: Spalten, Zeilen, Abstand, Ecke des Kabelanfangs, Laufrichtung, Serpentine
 - Strip: LED-Zahl, Anfang, Ende
-- 3D-Gitter: Anzahl je Achse, Abstand, Achsenreihenfolge, Serpentine
+- 3D-Gitter: Anzahl je Achse, Abstand, Achsenreihenfolge, Serpentine, Startecke (rechts/oben/vorn)
 - Punktwolken lassen sich nur in der Datei ändern
 - Patch: Protokoll (Art-Net, sACN, DDP), Ziel, Universe, erster Kanal, DDP-Offset,
   Farbreihenfolge, Gamma, Helligkeit; „an die Ausgabe schicken“ schaltet den Patch ein und aus
@@ -168,7 +184,7 @@ Die Vorschau ist eine Arbeitsfläche für das Layout:
 
 | Aktion | Wirkung |
 |---|---|
-| Klick auf ein Fixture | wählt es (gestrichelter blauer Rahmen); die Liste im Stage Setup folgt |
+| Klick auf ein Fixture | wählt es (gestrichelter blauer Rahmen); die Liste im Fenster Stage Config folgt |
 | Strg oder Umschalt + Klick | Fixture zur Auswahl hinzufügen oder entfernen |
 | Ziehen auf einem Fixture | verschiebt alle gewählten Fixtures (Raster 0,1) |
 | Ziehen auf leerer Fläche | Auswahlrahmen („Gummiband“) |
@@ -220,13 +236,13 @@ Neue Node-Typen erscheinen automatisch, die Palette liest die Registrierung.
 
 ## Aufbau des Fensters
 
-- **Oben:** die Menüs Datei, Bearbeiten, Ansicht, Wiedergabe, Live und Hilfe (siehe unten), darunter die Leiste „Datei“
+- **Oben:** die Menüs Datei, Bearbeiten, Stage Config, Ansicht, Wiedergabe, Live und Hilfe (siehe unten), darunter die Leiste „Datei“
   (Neu, Öffnen, Speichern) und die Leiste „Betrieb“: Start/Stopp (Leertaste), Ausgabe senden, Look speichern (Strg+L),
   Live-Modus (F9); rechts außen Master und Blackout (Strg+B). Der Knopf „Ausgabe senden“ leuchtet rot, solange wirklich
   Pakete ins Netz gehen. Die Tooltips der Schaltflächen nennen ihr Tastenkürzel.
 - **Links:** Dock „Looks“ (immer in Reichweite).
 - **Mitte:** die Vorschau; die Leiste „Ansicht“ schaltet zwischen 2D (bearbeiten) und den 3D-Ansichten um.
-- **Rechts:** das Dock Parameter. Layout und Testmodus öffnen sich im Fenster Stage Setup (F4).
+- **Rechts:** das Dock Parameter. Layout und Testmodus öffnen sich im Fenster Stage Config (Menü Stage Config, F4).
 - **Unten:** Dock „Nodes“ mit Palette und Editor. Alle Docks lassen sich über das Menü Ansicht ein- und ausblenden.
 
 ### Menüs
@@ -235,7 +251,8 @@ Neue Node-Typen erscheinen automatisch, die Palette liest die Registrierung.
 | --- | --- |
 | Datei | Neu, Öffnen, Zuletzt geöffnet, Beispiele; Speichern, Speichern unter; Neu laden (F5); Beenden |
 | Bearbeiten | Rückgängig, Wiederholen; Einstellungen … (Strg+Komma) |
-| Ansicht | Docks ein- und ausblenden; Stage Setup (F4); 2D/3D-Umschalter (Strg+1 bis 5) |
+| Stage Config | Fixture hinzufügen …; Punktwolke importieren …; Layout und Patch … (F4); Testmodus … |
+| Ansicht | Docks ein- und ausblenden; 2D/3D-Umschalter (Strg+1 bis 5) |
 | Wiedergabe | Start/Stopp, Ausgabe senden; Blackout |
 | Live | Live-Modus (F9), Look speichern |
 | Hilfe | Dokumentation (F1, öffnet die Anleitung im Browser), Fehler melden oder Idee vorschlagen (öffnet ein neues Issue auf GitHub), Tastenkürzel (Liste aller Kürzel, direkt aus den Aktionen gelesen), Über WhiteHoleFX (Version, Lizenz) |
@@ -253,7 +270,7 @@ Ausgangs-Node). Looks stehen in der Projektdatei (`look ... endlook`, siehe [Pro
   umbenennen, löschen, nach oben/unten.
 - Gespeichert wird mit dem Projekt (Strg+S).
 
-**Live-Modus (F9 oder Menü Live):** versteckt Editor, Parameter, das Fenster Stage Setup, Looks-Dock und die
+**Live-Modus (F9 oder Menü Live):** versteckt Editor, Parameter, das Fenster Stage Config, Looks-Dock und die
 Datei-Leiste (Neu/Öffnen/Speichern) und zeigt für jeden Look einen großen Knopf. Master und Blackout (Strg+B)
 bleiben in der Leiste. Rückgängig ist gesperrt, und die Leertaste ist GO statt Start/Stopp, damit auf der Bühne
 nichts versehentlich angehalten oder geändert wird.
@@ -309,7 +326,7 @@ von `\ / : * ? " < > |` enthalten und höchstens 64 Zeichen lang sein.
 
 ## Testmodus
 
-Die Seite „Testmodus“ im Fenster Stage Setup (F4) ersetzt die Farben des
+Die Seite „Testmodus“ im Fenster Stage Config (Menü Stage Config) ersetzt die Farben des
 Effekts durch ein Testbild, um eine Wand in Betrieb zu nehmen. Die Wiedergabe muss laufen. Das Bild
 erscheint in der Vorschau und, wenn „Ausgabe senden“ an ist, auf den LEDs; ohne „Ausgabe senden“
 bleibt es bei der Vorschau. Solange ein Testbild aktiv ist, steht oben rechts in der Vorschau ein rotes

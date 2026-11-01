@@ -106,8 +106,9 @@ QString MainWindow::exerciseMenus() {
     for (const QAction* entry : menuBar()->actions()) {
         titles << entry->text().remove(QLatin1Char('&'));
     }
-    const QStringList expected{QStringLiteral("Datei"),      QStringLiteral("Bearbeiten"), QStringLiteral("Ansicht"),
-                               QStringLiteral("Wiedergabe"), QStringLiteral("Live"),       QStringLiteral("Hilfe")};
+    const QStringList expected{QStringLiteral("Datei"),   QStringLiteral("Bearbeiten"),  QStringLiteral("Stage Config"),
+                               QStringLiteral("Ansicht"), QStringLiteral("Wiedergabe"), QStringLiteral("Live"),
+                               QStringLiteral("Hilfe")};
     if (titles != expected) {
         return QStringLiteral("Menüleiste: falsche Reihenfolge (") + titles.join(QLatin1Char(',')) + QLatin1Char(')');
     }

@@ -33,18 +33,16 @@ LayoutPanel::LayoutPanel(runtime::Player& player, QWidget* parent) : QTabWidget{
     pageLayout->addWidget(list_);
 
     auto* buttons = new QHBoxLayout;
-    auto* addMatrixButton = new QPushButton{tr("Matrix +")};
-    auto* addStripButton = new QPushButton{tr("Strip +")};
+    auto* addButton = new QPushButton{tr("Hinzufügen …")};
+    addButton->setToolTip(tr("Matrix, Strip oder 3D-Gitter mit Größe, Lage, Verkabelung und Patch anlegen"));
     auto* importButton = new QPushButton{tr("Import …")};
     importButton->setToolTip(tr("LED-Positionen aus einer CSV- oder JSON-Datei als Punktwolke laden"));
     auto* removeButton = new QPushButton{tr("Entfernen")};
-    buttons->addWidget(addMatrixButton);
-    buttons->addWidget(addStripButton);
+    buttons->addWidget(addButton);
     buttons->addWidget(importButton);
     buttons->addWidget(removeButton);
     pageLayout->addLayout(buttons);
-    connect(addMatrixButton, &QPushButton::clicked, this, [this]() { addMatrix(); });
-    connect(addStripButton, &QPushButton::clicked, this, [this]() { addStrip(); });
+    connect(addButton, &QPushButton::clicked, this, [this]() { addFromDialog(); });
     connect(importButton, &QPushButton::clicked, this, [this]() { importPoints(); });
     connect(removeButton, &QPushButton::clicked, this, [this]() { removeSelected(); });
 
@@ -296,6 +294,9 @@ QString LayoutPanel::exercise() {
         return QStringLiteral("Layout: Strip wurde nicht entfernt");
     }
     if (const QString note = exerciseImport(); !note.isEmpty()) {
+        return note;
+    }
+    if (const QString note = exerciseAddDialog(); !note.isEmpty()) {
         return note;
     }
     return exerciseArrange();

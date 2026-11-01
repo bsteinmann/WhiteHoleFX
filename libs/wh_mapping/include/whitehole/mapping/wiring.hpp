@@ -46,6 +46,11 @@ enum class AxisOrder : std::uint8_t { XYZ, XZY, YXZ, YZX, ZXY, ZYX };
 struct GridWiring {
     AxisOrder order{AxisOrder::XYZ};
     bool serpentine{false};  // Umkehr an jedem Ende, in allen Ebenen (durchgehender Strang)
+    /// Spiegelt die Zählung je Achse: Der Strang beginnt dann am oberen statt am unteren Ende dieser Achse
+    /// (Startecke des Kabels; (0,0,0) ist unten links hinten, x nach rechts, y nach oben, z zum Betrachter).
+    bool flipX{false};
+    bool flipY{false};
+    bool flipZ{false};
 
     bool operator==(const GridWiring&) const = default;
 };

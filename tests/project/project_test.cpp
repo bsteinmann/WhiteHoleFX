@@ -43,7 +43,7 @@ fixture Decke at 0 12 0
 end
 
 fixture Wuerfel at 40 0 0
-  grid 4 4 4 pitch 2 2 2 order ZYX serpentine
+  grid 4 4 4 pitch 2 2 2 order ZYX serpentine flipx flipz
   patch ddp destination 2 offset 480 order BGR
 end
 
@@ -101,6 +101,11 @@ TEST_CASE("Projekt: das Beispiel wird vollständig gelesen", "[project]") {
     CHECK(matrix->wiring.first == mapping::FirstAxis::Columns);
     CHECK(matrix->wiring.serpentine);
     CHECK(p.layout.fixtures()[1].origin == Vec3{0.0F, 12.0F, 0.0F});
+    const auto* cube = std::get_if<mapping::GridShape>(&p.layout.fixtures()[2].shape);
+    REQUIRE(cube != nullptr);
+    CHECK(cube->wiring.flipX);
+    CHECK_FALSE(cube->wiring.flipY);
+    CHECK(cube->wiring.flipZ);
     const auto* points = std::get_if<mapping::PointsShape>(&p.layout.fixtures()[3].shape);
     REQUIRE(points != nullptr);
     CHECK(points->points.size() == 2);

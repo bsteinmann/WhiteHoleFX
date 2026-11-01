@@ -97,7 +97,7 @@ Genau eine Form pro Fixture, beliebig viele Patches:
 |---|---|
 | `matrix <spalten> <zeilen> [pitch px py] [start <ecke>] [first rows\|columns] [serpentine]` | Ecke: `top-left`, `top-right`, `bottom-left`, `bottom-right` |
 | `strip <anzahl> from x y z to x y z` | gerader Strip |
-| `grid <nx> <ny> <nz> [pitch x y z] [order XYZ\|XZY\|YXZ\|YZX\|ZXY\|ZYX] [serpentine]` | 3D-Gitter (Cube) |
+| `grid <nx> <ny> <nz> [pitch x y z] [order XYZ\|XZY\|YXZ\|YZX\|ZXY\|ZYX] [serpentine] [flipx] [flipy] [flipz]` | 3D-Gitter (Cube). `flipx/flipy/flipz`: Das Kabel beginnt am oberen Ende dieser Achse (Startecke); ohne sie bei x=0, y=0, z=0 (unten links hinten) |
 | `point x y z` | eine LED einer Punktwolke, in Kabelreihenfolge; beliebig oft (aus CSV/JSON importierbar, siehe `docs/mapping.md`) |
 | `patch <artnet\|sacn\|ddp> destination <n> [universe u] [channel c] [offset o] [order RGB…] [gamma g] [brightness b]` | wohin das Fixture geht |
 

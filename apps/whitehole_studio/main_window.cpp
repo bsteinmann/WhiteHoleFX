@@ -100,7 +100,7 @@ MainWindow::MainWindow(gpu::IGpuDevice* device, const QString& deviceNote, QWidg
     connect(testPanel_, &TestPanel::patternChanged, this, &MainWindow::onTestPatternChanged);
     connect(testPanel_, &TestPanel::failed, this,
             [this](const QString& message) { statusBar()->showMessage(message, 8000); });
-    // Layout und Testmodus liegen im eigenen Fenster "Stage Setup" (siehe main_window_stage.cpp).
+    // Layout und Testmodus liegen im eigenen Fenster "Stage Config" (siehe main_window_stage.cpp).
 
     buildEditorDock();
     buildLive();

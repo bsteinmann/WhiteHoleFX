@@ -1,4 +1,4 @@
-// stage_setup_window.hpp: das Fenster "Stage Setup" (Layout, Ausgabe-Ziele, Testmodus).
+// stage_setup_window.hpp: das Fenster "Stage Config" (Layout, Ausgabe-Ziele, Testmodus).
 //
 // Warum es das gibt: Fixtures anordnen, Universen vergeben und die Verkabelung prüfen macht man beim
 // Einrichten der Installation, nicht während man Effekte baut. Als Dock nahm das Layout den Platz neben

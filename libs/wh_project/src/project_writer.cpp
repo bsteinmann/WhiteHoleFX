@@ -41,6 +41,7 @@ void writeShape(std::ostream& out, const mapping::FixtureShape& shape) {
         if (g->wiring.serpentine) {
             out << " serpentine";
         }
+        out << (g->wiring.flipX ? " flipx" : "") << (g->wiring.flipY ? " flipy" : "") << (g->wiring.flipZ ? " flipz" : "");
         out << "\n";
     } else if (const auto* p = std::get_if<mapping::PointsShape>(&shape)) {
         for (const Vec3& point : p->points) {

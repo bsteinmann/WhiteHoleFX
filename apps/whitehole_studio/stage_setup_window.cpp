@@ -1,4 +1,4 @@
-// stage_setup_window.cpp: Umsetzung zu stage_setup_window.hpp. Das Fenster "Stage Setup" mit den Seiten Layout und Testmodus.
+// stage_setup_window.cpp: Umsetzung zu stage_setup_window.hpp. Das Fenster "Stage Config" mit den Seiten Layout und Testmodus.
 #include "stage_setup_window.hpp"
 
 #include <QHideEvent>
@@ -19,7 +19,7 @@ QSettings settings() { return QSettings{QStringLiteral("WhiteHoleFX"), QStringLi
 
 StageSetupWindow::StageSetupWindow(LayoutPanel* layout, TestPanel* test, QWidget* parent)
     : QWidget{parent, Qt::Window}, tabs_{new QTabWidget{this}} {
-    setWindowTitle(tr("Stage Setup"));
+    setWindowTitle(tr("Stage Config"));
     auto* box = new QVBoxLayout{this};
     box->setContentsMargins(0, 0, 0, 0);
     box->addWidget(tabs_);

@@ -1,5 +1,16 @@
 # Änderungen
 
+## 0.28.0
+
+- **Menü „Stage Config“:** Die Bühne wird einmal am Anfang eingerichtet und danach selten angefasst, darum hat sie ein eigenes
+  Menü (zwischen Bearbeiten und Ansicht): Fixture hinzufügen …, Punktwolke importieren …, Layout und Patch … (F4), Testmodus ….
+  Das Fenster heißt jetzt „Stage Config“ (vorher „Stage Setup“, in Ansicht). Im Live-Modus ist das Menü gesperrt.
+- **Dialog „Fixture hinzufügen“:** Statt „Matrix +“ und „Strip +“ auf Knopfdruck fragt ein Dialog alles in einem Schritt:
+  Form (Matrix, Strip, 3D-Gitter), Anzahl LEDs in x y z, Abstand, Position, Verkabelung (Zählrichtung, Serpentine, Startecke)
+  und Patch (automatisch, manuell, nicht senden). Eine Zeile zeigt LED-Zahl, Größe und Kanäle schon vor dem Anlegen.
+- **Startecke bei 3D-Gittern:** `grid` kennt `flipx`, `flipy`, `flipz` (das Kabel beginnt am oberen Ende der Achse). Bisher
+  begann der Strang immer links unten hinten. Alte Projekte laden unverändert. Das Formular des Fixtures hat dieselben Schalter.
+
 ## 0.27.0
 
 - **Menüleiste aufgeräumt:** Die Menüs stehen in Betriebsreihenfolge: Datei, Bearbeiten, Ansicht, Wiedergabe, Live, Hilfe

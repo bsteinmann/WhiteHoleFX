@@ -14,9 +14,11 @@
 #include <QFileDialog>
 #include <QFormLayout>
 
+#include <cmath>
 #include <filesystem>
 #include <fstream>
 #include <optional>
+#include <variant>
 
 #include "whitehole/runtime/point_file.hpp"
 
@@ -24,7 +26,40 @@ namespace whitehole::studio {
 
 using form::fromStd;
 
+namespace {
+
+/// Grundname für ein Fixture ohne eigenen Namen.
+QString baseNameOf(const mapping::FixtureShape& shape) {
+    if (std::holds_alternative<mapping::MatrixShape>(shape)) {
+        return QObject::tr("Matrix");
+    }
+    if (std::holds_alternative<mapping::StripShape>(shape)) {
+        return QObject::tr("Strip");
+    }
+    if (std::holds_alternative<mapping::GridShape>(shape)) {
+        return QObject::tr("Cube");
+    }
+    return QObject::tr("Punkte");
+}
+
+}  // namespace
+
 void LayoutPanel::addFixture(const QString& baseName, mapping::FixtureShape shape) {
+    NewFixture fixture;
+    fixture.name = uniqueName(baseName);
+    fixture.origin = nextOrigin();
+    fixture.shape = std::move(shape);
+    addFixture(fixture);
+}
+
+void LayoutPanel::addFromDialog() {
+    AddFixtureDialog dialog{player_, nextOrigin(), this};
+    if (dialog.exec() == QDialog::Accepted) {
+        addFixture(dialog.result());
+    }
+}
+
+void LayoutPanel::addFixture(const NewFixture& fixture) {
     // Ohne Projekt (Studio frisch gestartet) legt das Hauptfenster ein neues an. Dessen Vorlagen-
     // Matrix wird danach wieder entfernt, damit nur das Fixture übrig bleibt, das der Nutzer wollte.
     std::optional<mapping::FixtureId> template_;
@@ -36,21 +71,30 @@ void LayoutPanel::addFixture(const QString& baseName, mapping::FixtureShape shap
         }
         template_ = player_.project()->layout.fixtures().front().id;
     }
-    const std::uint64_t leds = mapping::ledCount(shape);
-    const auto id = player_.addFixture(uniqueName(baseName).toUtf8().toStdString(), nextOrigin(), std::move(shape),
-                                       player_.suggestPatch(leds));
+    const std::uint64_t leds = mapping::ledCount(fixture.shape);
+    const QString name = fixture.name.isEmpty() ? uniqueName(baseNameOf(fixture.shape)) : fixture.name;
+    // Neben der Vorlage gilt vorläufig das nächste freie Universe (sonst stieße ein manueller Patch an die Vorlage);
+    // den endgültigen Patch setzt der Abschnitt unten, nachdem die Vorlage weg ist.
+    std::optional<output::FixturePatch> first;
+    if (fixture.patchMode == PatchMode::Auto || template_) {
+        first = player_.suggestPatch(leds);
+    } else if (fixture.patchMode == PatchMode::Manual) {
+        first = fixture.patch;
+    }
+    const auto id = player_.addFixture(name.toUtf8().toStdString(), fixture.origin, fixture.shape, first);
     if (!id.ok()) {
         Q_EMIT failed(fromStd(id.error().message));
         return;
     }
     if (template_) {
-        // Das neue Fixture rückt an die Stelle der Vorlage: Ursprung 0 und erstes freies Universe.
+        // Das neue Fixture ist jetzt das einzige: Es bekommt das erste Universe, es sei denn, der Nutzer hat
+        // einen Patch vorgegeben. "Nicht senden" geht hier nicht, ein Projekt braucht mindestens ein gepatchtes Fixture.
         Result<void> r = player_.removeFixture(*template_);
         if (r.ok()) {
-            r = player_.moveFixture(id.value(), Vec3{});
+            r = player_.moveFixture(id.value(), fixture.origin);
         }
         if (r.ok()) {
-            r = player_.setPatch(id.value(), player_.suggestPatch(leds));
+            r = player_.setPatch(id.value(), fixture.patchMode == PatchMode::Manual ? fixture.patch : output::FixturePatch{});
         }
         if (!r.ok()) {
             Q_EMIT failed(fromStd(r.error().message));
@@ -148,6 +192,44 @@ QString LayoutPanel::exerciseImport() {
     removeSelected();
     if (player_.project()->layout.fixtures().size() != before) {
         return QStringLiteral("Layout: importiertes Fixture ließ sich nicht entfernen");
+    }
+    return {};
+}
+
+QString LayoutPanel::exerciseAddDialog() {
+    // Der Dialog füllt ein 4×3×2-Gitter aus (Startecke rechts und vorn); das Panel legt es an.
+    AddFixtureDialog dialog{player_, nextOrigin(), this};
+    if (const QString note = dialog.exercise(); !note.isEmpty()) {
+        return note;
+    }
+    const std::size_t before = player_.project()->layout.fixtures().size();
+    addFixture(dialog.result());
+    const auto& fixtures = player_.project()->layout.fixtures();
+    if (fixtures.size() != before + 1) {
+        return QStringLiteral("Hinzufügen-Dialog: das Gitter wurde nicht angelegt");
+    }
+    const mapping::Fixture& added = fixtures.back();
+    const auto* grid = std::get_if<mapping::GridShape>(&added.shape);
+    if (grid == nullptr || mapping::ledCount(added.shape) != 24 || !grid->wiring.flipX || !grid->wiring.flipZ ||
+        added.origin.x != 10.0F) {
+        return QStringLiteral("Hinzufügen-Dialog: das angelegte Gitter hat nicht die Werte aus dem Dialog");
+    }
+    // Die erste LED am Kabel sitzt in der Startecke: x max, y min, z max (Abstand 2, Zellmitte).
+    const Vec3 first = mapping::localPositions(added.shape).front();
+    if (std::abs(first.x - 7.0F) > 1e-4F || std::abs(first.y - 1.0F) > 1e-4F || std::abs(first.z - 3.0F) > 1e-4F) {
+        return QStringLiteral("Hinzufügen-Dialog: die erste LED sitzt nicht in der gewählten Startecke");
+    }
+    bool patched = false;
+    for (const output::FixturePatch& patch : player_.project()->patches) {
+        patched = patched || patch.fixture == added.id;
+    }
+    if (!patched) {
+        return QStringLiteral("Hinzufügen-Dialog: das Gitter hat keinen Patch bekommen");
+    }
+    setSelectedIds({added.id});
+    removeSelected();
+    if (player_.project()->layout.fixtures().size() != before) {
+        return QStringLiteral("Hinzufügen-Dialog: das Gitter lässt sich nicht wieder entfernen");
     }
     return {};
 }

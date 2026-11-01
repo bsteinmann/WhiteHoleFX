@@ -1,5 +1,5 @@
 // main_window_actions.cpp: Menüs, Werkzeugleiste und Tastenkürzel des Hauptfensters.
-// Menüs von links nach rechts: Datei, Bearbeiten, Ansicht, Wiedergabe, Live, Hilfe.
+// Menüs von links nach rechts: Datei, Bearbeiten, Stage Config, Ansicht, Wiedergabe, Live, Hilfe.
 //
 // Nur das Anlegen der Bedienelemente; was sie tun, steht in main_window*.cpp.
 #include <QAction>
@@ -80,12 +80,13 @@ void MainWindow::buildActions() {
     edit->addAction(undoAction_);
     edit->addAction(redoAction_);
 
+    // Stage Config: einmal am Anfang einrichten (Fixtures, Patch, Testbilder), danach selten gebraucht.
+    buildStageConfig(menuBar()->addMenu(tr("&Stage Config")));
+
     QMenu* view = menuBar()->addMenu(tr("&Ansicht"));
     view->addAction(editorDock_->toggleViewAction());
     view->addAction(dock_->toggleViewAction());
     view->addAction(lookDock_->toggleViewAction());
-    view->addSeparator();
-    buildStageSetup(view);  // eigenes Fenster statt Dock
 
     // Reihenfolge wie im Betrieb: erst Wiedergabe und Ausgabe, dann der Live-Modus, ganz rechts die Hilfe.
     QMenu* run = menuBar()->addMenu(tr("&Wiedergabe"));

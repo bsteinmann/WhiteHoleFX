@@ -71,6 +71,12 @@ void grid(Reader& r, FixtureDraft& d) {
             g.wiring.order = readName(r, kAxisOrders, "Achsenfolge");
         } else if (key == "serpentine") {
             g.wiring.serpentine = true;
+        } else if (key == "flipx") {
+            g.wiring.flipX = true;
+        } else if (key == "flipy") {
+            g.wiring.flipY = true;
+        } else if (key == "flipz") {
+            g.wiring.flipZ = true;
         } else if (r.ok()) {
             r.fail("Unbekannte Option \"" + key + "\" bei grid");
         }

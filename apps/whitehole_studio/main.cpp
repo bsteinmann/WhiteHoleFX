@@ -130,7 +130,7 @@ int main(int argc, char** argv) {
         const QString settingsResult = live.isEmpty() ? window.exerciseSettings() : QString{};
         std::printf("Einstellungen: %s\n", settingsResult.isEmpty() ? "ok" : "FEHLER");
         const QString stage = settingsResult.isEmpty() ? window.exerciseStageSetup() : QString{};
-        std::printf("Stage Setup: %s\n", stage.isEmpty() ? "ok" : "FEHLER");
+        std::printf("Stage Config: %s\n", stage.isEmpty() ? "ok" : "FEHLER");
         const QString view3d = stage.isEmpty() ? window.exerciseView3d() : QString{};
         std::printf("3D-Vorschau: %s\n", view3d.isEmpty() ? "ok" : "FEHLER");
         const QString menus = view3d.isEmpty() ? window.exerciseMenus() : QString{};

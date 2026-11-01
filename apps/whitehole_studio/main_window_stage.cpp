@@ -1,7 +1,7 @@
-// main_window_stage.cpp: das Fenster "Stage Setup" im Hauptfenster (Menü, Kürzel, Live-Modus, Rauchtest).
+// main_window_stage.cpp: das Menü und das Fenster "Stage Config" im Hauptfenster (Kürzel, Live-Modus, Rauchtest).
 //
 // Warum eine eigene Datei: main_window.cpp ist an der 400-Zeilen-Grenze. Hier steht, wie das Fenster
-// geöffnet wird (Ansicht > Stage Setup, F4; Testmodus ist die zweite Seite) und dass der Live-Modus es
+// geöffnet wird (Menü Stage Config, Layout und Patch = F4; Testmodus ist die zweite Seite) und dass der Live-Modus es
 // schließt und danach wieder öffnet, falls es offen war.
 #include <QAction>
 #include <QKeySequence>
@@ -13,29 +13,48 @@
 
 namespace whitehole::studio {
 
-void MainWindow::buildStageSetup(QMenu* viewMenu) {
+void MainWindow::buildStageConfig(QMenu* menu) {
+    stageMenu_ = menu;
     stageSetup_ = new StageSetupWindow{layoutPanel_, testPanel_, this};
-    stageSetupAction_ = new QAction{tr("&Stage Setup …"), this};
+
+    auto* addAction = new QAction{tr("Fixture &hinzufügen …"), this};
+    addAction->setToolTip(tr("Matrix, Strip oder 3D-Gitter mit Größe x y z, Lage, Verkabelung und Patch anlegen"));
+    connect(addAction, &QAction::triggered, this, [this]() { layoutPanel_->addFromDialog(); });
+
+    auto* pointsAction = new QAction{tr("Punktwolke &importieren …"), this};
+    pointsAction->setToolTip(tr("LED-Positionen aus einer CSV- oder JSON-Datei laden"));
+    connect(pointsAction, &QAction::triggered, this, [this]() { layoutPanel_->importPoints(); });
+
+    stageSetupAction_ = new QAction{tr("&Layout und Patch …"), this};
     stageSetupAction_->setShortcut(QKeySequence{Qt::Key_F4});
-    stageSetupAction_->setToolTip(tr("Fixtures anordnen, Universen und Ziele einstellen, Testbilder (eigenes Fenster)"));
+    stageSetupAction_->setToolTip(tr("Fixtures anordnen, Universen und Ziele einstellen (eigenes Fenster)"));
     connect(stageSetupAction_, &QAction::triggered, this, [this]() { stageSetup_->open(StageSetupWindow::Page::Layout); });
-    viewMenu->addAction(stageSetupAction_);
+
+    auto* testAction = new QAction{tr("&Testmodus …"), this};
+    testAction->setToolTip(tr("Testbilder auf die LEDs schicken, um Verkabelung und Patch zu prüfen"));
+    connect(testAction, &QAction::triggered, this, [this]() { stageSetup_->open(StageSetupWindow::Page::Test); });
+
+    menu->addAction(addAction);
+    menu->addAction(pointsAction);
+    menu->addSeparator();
+    menu->addAction(stageSetupAction_);
+    menu->addAction(testAction);
 }
 
 QString MainWindow::exerciseStageSetup() {
     if (stageSetup_ == nullptr || stageSetup_->pageCount() != 2) {
-        return QStringLiteral("das Fenster Stage Setup hat nicht die Seiten Layout und Testmodus");
+        return QStringLiteral("das Fenster Stage Config hat nicht die Seiten Layout und Testmodus");
     }
     if (stageSetup_->isVisible()) {
-        return QStringLiteral("Stage Setup ist schon offen");
+        return QStringLiteral("Stage Config ist schon offen");
     }
     stageSetupAction_->trigger();
     if (!stageSetup_->isVisible() || stageSetup_->page() != StageSetupWindow::Page::Layout || !stageSetup_->isWindow()) {
-        return QStringLiteral("Stage Setup öffnet sich nicht als eigenes Fenster");
+        return QStringLiteral("Stage Config öffnet sich nicht als eigenes Fenster");
     }
     stageSetup_->open(StageSetupWindow::Page::Test);
     if (stageSetup_->page() != StageSetupWindow::Page::Test) {
-        return QStringLiteral("Stage Setup zeigt die Seite Testmodus nicht");
+        return QStringLiteral("Stage Config zeigt die Seite Testmodus nicht");
     }
     // Der Live-Modus schließt das Fenster und stellt es danach wieder her. Er braucht einen Look.
     const bool addedLook = lookPanel_->lookCount() == 0;
@@ -46,17 +65,21 @@ QString MainWindow::exerciseStageSetup() {
         return QStringLiteral("der Live-Modus startet nicht (Stage-Test)");
     }
     const bool hiddenInLive = !stageSetup_->isVisible();
+    const bool menuLockedInLive = !stageMenu_->isEnabled();  // auf der Bühne wird nichts umgebaut
     leaveLive();
     const bool backAfterLive = stageSetup_->isVisible();
     stageSetup_->hide();
     if (addedLook) {
         lookPanel_->removeLook(0);
     }
+    if (!menuLockedInLive || !stageMenu_->isEnabled()) {
+        return QStringLiteral("das Menü Stage Config ist im Live-Modus nicht gesperrt oder danach nicht wieder frei");
+    }
     if (!hiddenInLive) {
-        return QStringLiteral("der Live-Modus lässt Stage Setup offen");
+        return QStringLiteral("der Live-Modus lässt Stage Config offen");
     }
     if (!backAfterLive) {
-        return QStringLiteral("Stage Setup kommt nach dem Live-Modus nicht zurück");
+        return QStringLiteral("Stage Config kommt nach dem Live-Modus nicht zurück");
     }
     return {};
 }

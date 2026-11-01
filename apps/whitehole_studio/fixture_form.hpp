@@ -59,6 +59,9 @@ private:
         form::Vec3Boxes gridPitch;
         QComboBox* axisOrder{nullptr};
         QCheckBox* gridSerpentine{nullptr};
+        QCheckBox* flipX{nullptr};  // Startecke des Kabels: am oberen Ende der Achse beginnen
+        QCheckBox* flipY{nullptr};
+        QCheckBox* flipZ{nullptr};
         // Patch
         QCheckBox* patched{nullptr};
         QComboBox* protocol{nullptr};

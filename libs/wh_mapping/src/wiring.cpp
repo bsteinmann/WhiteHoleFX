@@ -73,6 +73,13 @@ Cell3 gridCell(std::uint64_t index, std::uint32_t nx, std::uint32_t ny, std::uin
     cell[static_cast<std::size_t>(axes[0])] = static_cast<std::uint32_t>(c0);
     cell[static_cast<std::size_t>(axes[1])] = static_cast<std::uint32_t>(c1);
     cell[static_cast<std::size_t>(axes[2])] = static_cast<std::uint32_t>(c2);
+    // Startecke: die Zählung einer Achse von der anderen Seite her (Serpentine bleibt durchgehend, sie wird mitgespiegelt).
+    const std::array<bool, 3> flip{wiring.flipX, wiring.flipY, wiring.flipZ};
+    for (std::size_t axis = 0; axis < 3; ++axis) {
+        if (flip[axis]) {
+            cell[axis] = size[axis] - 1U - cell[axis];
+        }
+    }
     return Cell3{cell[0], cell[1], cell[2]};
 }
 

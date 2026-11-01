@@ -1,6 +1,6 @@
 // layout_panel.hpp: Dock zum Bearbeiten von Fixtures, Patches, Zielen und Einstellungen.
 //
-// Zwei Seiten: "Fixtures" (Liste, Hinzufügen/Entfernen, Ausrichten, Formular zum gewählten
+// Zwei Seiten: "Fixtures" (Liste, Hinzufügen per Dialog/Entfernen, Ausrichten, Formular zum gewählten
 // Fixture) und "Ausgabe" (Ziele und Einstellungen). Die Liste erlaubt mehrere Fixtures; dieselbe
 // Auswahl zeigt die Vorschau (PreviewController). Das Panel hält keinen eigenen Zustand; alles geht
 // über den Player, der jede Änderung samt Ausgabeplan prüft.
@@ -12,6 +12,7 @@
 
 #include <vector>
 
+#include "add_fixture_dialog.hpp"
 #include "fixture_form.hpp"
 #include "output_form.hpp"
 #include "whitehole/mapping/point_import.hpp"
@@ -31,6 +32,10 @@ public:
 
     void addMatrix();
     void addStrip();
+    /// Öffnet den Dialog "Fixture hinzufügen" (Form, Größe x y z, Lage, Verkabelung, Patch) und legt das Ergebnis an.
+    void addFromDialog();
+    /// Legt ein Fixture so an, wie der Dialog es beschreibt. Ohne Projekt entsteht zuerst ein neues.
+    void addFixture(const NewFixture& fixture);
     /// Fragt nach einer CSV-/JSON-Datei mit LED-Positionen und legt daraus ein Punktwolken-Fixture an.
     void importPoints();
     /// Wie importPoints, aber mit gegebener Datei und ohne Dialog. Wahr, wenn ein Fixture entstanden ist.
@@ -65,6 +70,7 @@ private:
     QWidget* buildArrangeBar();
     QString exerciseArrange();
     QString exerciseImport();
+    QString exerciseAddDialog();
     void fillList(mapping::FixtureId select);
     void refreshTexts();
     void addFixture(const QString& baseName, mapping::FixtureShape shape);

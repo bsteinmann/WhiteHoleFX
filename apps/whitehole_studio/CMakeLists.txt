@@ -55,6 +55,8 @@ add_executable(whitehole_studio
     preview_controller.cpp
     preview_controller_exercise.cpp
     preview_controller.hpp
+    add_fixture_dialog.cpp
+    add_fixture_dialog.hpp
     app_settings.cpp
     app_settings.hpp
     network_interfaces.cpp

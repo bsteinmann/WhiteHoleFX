@@ -148,6 +148,16 @@ void FixtureForm::buildShapeFields(QFormLayout& layout, const mapping::FixtureSh
                                      static_cast<int>(g.wiring.order));
                 c_.gridSerpentine = new QCheckBox{tr("Serpentine")};
                 c_.gridSerpentine->setChecked(g.wiring.serpentine);
+                c_.flipX = new QCheckBox{tr("rechts (x max)")};
+                c_.flipY = new QCheckBox{tr("oben (y max)")};
+                c_.flipZ = new QCheckBox{tr("vorn (z max)")};
+                c_.flipX->setChecked(g.wiring.flipX);
+                c_.flipY->setChecked(g.wiring.flipY);
+                c_.flipZ->setChecked(g.wiring.flipZ);
+                for (QCheckBox* box : {c_.flipX, c_.flipY, c_.flipZ}) {
+                    box->setToolTip(tr("Das Kabel beginnt an dieser Seite statt an der gegenüberliegenden"));
+                    onCheck(box);
+                }
                 onInt(c_.nx);
                 onInt(c_.ny);
                 onInt(c_.nz);
@@ -162,6 +172,7 @@ void FixtureForm::buildShapeFields(QFormLayout& layout, const mapping::FixtureSh
                 layout.addRow(tr("Abstand x y z"), c_.gridPitch.widget());
                 layout.addRow(tr("Reihenfolge (schnellste zuerst)"), c_.axisOrder);
                 layout.addRow(QString{}, c_.gridSerpentine);
+                layout.addRow(tr("Kabel beginnt"), form::rowOf({c_.flipX, c_.flipY, c_.flipZ}));
             },
             [&](const mapping::PointsShape& p) {
                 layout.addRow(new QLabel{tr("<b>Punktwolke</b>: %1 Punkte, nur in der Datei änderbar")
@@ -284,6 +295,9 @@ mapping::FixtureShape FixtureForm::readShape(const mapping::FixtureShape& curren
         g.pitch = c_.gridPitch.value();
         g.wiring.order = static_cast<mapping::AxisOrder>(c_.axisOrder->currentIndex());
         g.wiring.serpentine = c_.gridSerpentine->isChecked();
+        g.wiring.flipX = c_.flipX->isChecked();
+        g.wiring.flipY = c_.flipY->isChecked();
+        g.wiring.flipZ = c_.flipZ->isChecked();
         return g;
     }
     return current;
