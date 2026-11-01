@@ -9,6 +9,7 @@
 #include <QMenuBar>
 #include <QMessageBox>
 #include <QStringList>
+#include <QToolButton>
 #include <QUrl>
 
 #include <algorithm>
