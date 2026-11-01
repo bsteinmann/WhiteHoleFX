@@ -1,5 +1,13 @@
 # Änderungen
 
+## 0.22.1
+
+- **Fehlerbehebung (Issue #11):** Mit zwei Output-Nodes und getrennten Rechtecken gab nur einer Daten aus, weil der zweite
+  außerhalb seines Rechtecks durchsichtig war und den ersten damit löschte. Der Output-Node hat jetzt einen optionalen
+  Eingang „Behind (rest of canvas)“: Außerhalb des eigenen Rechtecks zeigt er das, was dort anliegt, und innerhalb legt er
+  sich über das Dahinterliegende. Ein neu angelegter Output hängt den bisherigen automatisch an `behind`. Bestehende
+  Projekte rendern unverändert (ohne Verbindung an `behind` ist es wie bisher durchsichtig).
+
 ## 0.22.0
 
 - **Oberfläche aufgeräumt:** Looks-Dock links, Parameter/Layout/Testmodus als Reiter rechts; zwei Leisten („Datei“ und

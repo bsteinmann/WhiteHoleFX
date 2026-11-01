@@ -65,14 +65,17 @@ return vec4<f32>(mix(c.rgb, line.rgb, k), max(c.a, k));)wgsl";
 
 // Ausgang: bespielt die ganze Leinwand oder nur ein Rechteck (Anteile 0..1, `top` zählt von oben).
 // "Scale into area" bildet das Eingangsbild auf das Rechteck ab, "Window" lässt das Bild an seinem Platz
-// und zeigt es nur im Rechteck. Außerhalb ist es durchsichtig, diese LEDs bleiben aus. `brightness`
-// ist die Gesamthelligkeit.
+// und zeigt es nur im Rechteck. Außerhalb zeigt es den optionalen Eingang `behind` (ohne Verbindung
+// durchsichtig, diese LEDs bleiben aus). Mit `behind` lassen sich mehrere Ausgänge mit getrennten
+// Rechtecken hintereinanderschalten: Jeder legt sich über den davor, statt ihn zu löschen. `brightness`
+// ist die Helligkeit des eigenen Bildes.
 constexpr const char* kOutputBody = R"wgsl(let w = max(@param(width), 0.0001);
 let h = max(@param(height), 0.0001);
 let u = (p.x - @param(left)) / w;
 let v = (p.y - (1.0 - @param(top) - h)) / h;
+let rest = @in(behind, p);
 if (u < -0.0001 || u > 1.0001 || v < -0.0001 || v > 1.0001) {
-    return vec4<f32>(0.0, 0.0, 0.0, 0.0);
+    return rest;
 }
 var q = p;
 if (@param(mode) < 0.5) {
@@ -80,7 +83,8 @@ if (@param(mode) < 0.5) {
 }
 let c = @in(source, q);
 let level = clamp(@param(brightness), 0.0, 1.0);
-return vec4<f32>(c.rgb * level, c.a);)wgsl";
+let own = vec4<f32>(c.rgb * level, c.a);
+return own + rest * (1.0 - own.a);)wgsl";
 
 // Color Map: Die Helligkeit des Eingangs (Luma) wird durch einen Farbverlauf aus `count` Farben ersetzt, wie
 // eine Falschfarben- oder Wärmebild-Palette. `shift` verschiebt die Helligkeit vor dem Nachschlagen (mit Time
@@ -141,7 +145,11 @@ std::vector<compiler::NodeDefinition> modifierNodes() {
                                color("color", "Outline color", ColorRgba{1.0F, 1.0F, 1.0F, 1.0F})},
                               kOutlineBody));
 
-    nodes.push_back(fieldNode("wh.output.canvas", "Output", "Output", {fieldInput("source", "Source"), fieldOutput()},
+    nodes.push_back(fieldNode("wh.output.canvas", "Output", "Output",
+                              {fieldInput("source", "Source"),
+                               graph::PortDescriptor{"behind", "Behind (rest of canvas)", graph::PortType::Field,
+                                                     graph::PortDirection::Input, false},
+                               fieldOutput()},
                               {choice("mode", "Mode", {"Scale into area", "Window (cut out)"}),
                                number("left", "Left", 0.0, 0.0, 1.0), number("top", "Top", 0.0, 0.0, 1.0),
                                number("width", "Width", 1.0, 0.0, 1.0), number("height", "Height", 1.0, 0.0, 1.0),

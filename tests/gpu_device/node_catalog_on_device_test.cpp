@@ -289,3 +289,20 @@ TEST_CASE("Scan Line, Outline, Ripples und Fire", "[gpu_device][nodes]") {
         CHECK(bottom > top);
     }
 }
+
+TEST_CASE("Ausgang: zwei Ausgänge mit getrennten Rechtecken legen sich nebeneinander (Eingang Behind)", "[gpu_device][nodes]") {
+    REQUIRE_DEVICE();
+    Lab lab;
+    // Links rot, rechts blau; der zweite Ausgang hängt mit `behind` am ersten und löscht ihn nicht.
+    const NodeId left = lab.add("wh.output.canvas");
+    lab.set(left, "width", 0.5);
+    lab.connect(solid(lab, 1.0F, 0.0F, 0.0F), "out", left, "source");
+    const NodeId right = lab.add("wh.output.canvas");
+    lab.set(right, "left", 0.5);
+    lab.set(right, "width", 0.5);
+    lab.connect(solid(lab, 0.0F, 0.0F, 1.0F), "out", right, "source");
+    lab.connect(left, "out", right, "behind");
+    const Pixels image = render(*device, lab, right, 16, 4);
+    CHECK(isColor(image.at(2, 1), 1.0F, 0.0F, 0.0F));   // linke Hälfte: rot vom ersten Ausgang
+    CHECK(isColor(image.at(13, 1), 0.0F, 0.0F, 1.0F));  // rechte Hälfte: blau vom zweiten
+}

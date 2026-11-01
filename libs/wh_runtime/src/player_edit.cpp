@@ -32,10 +32,13 @@ Result<NodeId> Player::addNode(std::string_view typeId, Vec2 position) {
     auto before = beginEdit({});
     const Result<NodeId> id = project_->graph.addNode(typeId, position);
     if (id.ok() && typeId == "wh.output.canvas") {
-        // Ein neuer Ausgangs-Node wird zum Ausgang des Projekts und hängt sich hinter den bisherigen
-        // (wenn der Eingang frei ist, was bei einem neuen Node immer gilt).
+        // Ein neuer Ausgangs-Node wird zum Ausgang des Projekts und legt sich über den bisherigen: Dessen Bild
+        // kommt an `behind` (so bleibt er außerhalb des neuen Rechtecks sichtbar) und zunächst auch an `source`
+        // (damit der Graph sofort gültig ist; man schließt dort den eigenen Effekt an). Die Eingänge eines neuen
+        // Nodes sind frei, die Verbindungen gelingen immer.
         if (project_->target) {
             (void)project_->graph.connect(*project_->target, graph::PortRef{id.value(), "source"});
+            (void)project_->graph.connect(*project_->target, graph::PortRef{id.value(), "behind"});
         }
         project_->target = graph::PortRef{id.value(), "out"};
         rebuildDirty_ = true;

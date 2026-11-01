@@ -169,6 +169,9 @@ TEST_CASE("Ausgangs-Node: wird zum Ausgang, hängt sich hinter den bisherigen, R
     const auto* wire = rig.player.project()->graph.findInputConnection(output, "source");
     REQUIRE(wire != nullptr);
     CHECK(wire->from == before);
+    const auto* behind = rig.player.project()->graph.findInputConnection(output, "behind");
+    REQUIRE(behind != nullptr);  // der bisherige Ausgang bleibt außerhalb des neuen Rechtecks sichtbar
+    CHECK(behind->from == before);
 
     REQUIRE(rig.player.setRegionRect(output, mapping::Region{0.0F, 0.0F, 0.5F, 1.0F}).ok());
     REQUIRE(rig.player.undo().ok());  // Rechteck
