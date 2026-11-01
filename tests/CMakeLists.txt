@@ -72,6 +72,8 @@ add_executable(wh_tests
     preview/view_test.cpp
     preview/view3d_test.cpp
     project/project_test.cpp
+    fuzz/parser_fuzz_test.cpp
+    fuzz/player_ops_fuzz_test.cpp
     i18n/po_catalog_test.cpp
     runtime/audio_usage_test.cpp
     runtime/cli_summary_test.cpp
@@ -79,6 +81,7 @@ add_executable(wh_tests
     runtime/player_layout_test.cpp
     runtime/player_arrange_test.cpp
     runtime/dmx_usage_test.cpp
+    runtime/node_catalog_test.cpp
     runtime/node_clipboard_test.cpp
     runtime/node_defaults_test.cpp
     runtime/point_file_test.cpp
@@ -163,4 +166,10 @@ if(TARGET wh_gpu_webgpu)
     else()
         catch_discover_tests(wh_gpu_tests)
     endif()
+endif()
+
+if(WHITEHOLEFX_BUILD_BENCH)
+    # Zeitmessung ohne Tests: cmake -DWHITEHOLEFX_BUILD_BENCH=ON -DCMAKE_BUILD_TYPE=Release, dann wh_bench starten.
+    add_executable(wh_bench bench/bench.cpp)
+    target_link_libraries(wh_bench PRIVATE whitehole::mapping whitehole::preview wh_warnings)
 endif()

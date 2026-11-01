@@ -62,7 +62,7 @@ Für Ubuntu 24.04 / Debian 13 und neuer (64 Bit) gibt es ein fertiges Paket. Es 
 `WhiteHoleFX-Linux-deb` in jedem CI-Lauf (GitHub, Reiter „Actions“). Installieren:
 
 ```bash
-sudo apt install ./whiteholefx_0.32.0-1_amd64.deb
+sudo apt install ./whiteholefx_0.33.0-1_amd64.deb
 ```
 
 `apt` holt Qt 6 und Vulkan automatisch. Danach gibt es `whitehole_studio` (auch im Anwendungsmenü,
@@ -148,3 +148,11 @@ einstellen, Effekte im Dock „Nodes“ bauen. Details: [Oberfläche](docs/studi
   der `.gitignore`.
 - Die CI (`.github/workflows/ci.yml`) baut GCC, Clang, Windows, das GPU-Backend auf Linux und
   Windows, die Oberfläche auf Linux (Rauchtest im unsichtbaren Fenster) und Windows (fertiges Paket).
+
+## Fuzz-Tests und Zeitmessung
+
+- `ctest -R fuzz` (oder `wh_tests "[fuzz]"`) verändert Beispielprojekte und Importdateien zufällig und führt zufällige
+  Editor-Aktionen samt Rückgängig aus; nichts darf abstürzen, und Rückgängig muss exakt zurückführen. Mehr Runden:
+  `WH_FUZZ_ROUNDS=20000 WH_FUZZ_SEED=7 wh_tests "[fuzz]"`. Am aussagekräftigsten mit Sanitizern
+  (`-DCMAKE_CXX_FLAGS="-fsanitize=address,undefined"`).
+- `-DWHITEHOLEFX_BUILD_BENCH=ON` baut `wh_bench` (am besten Release): misst Layout-Bake und Vorschau (2D, 3D mit/ohne Schein).

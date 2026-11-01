@@ -21,6 +21,7 @@
 #include "whitehole/project/project.hpp"
 #include "whitehole/runtime/audio_usage.hpp"
 #include "whitehole/runtime/dmx_usage.hpp"
+#include "whitehole/runtime/node_catalog.hpp"
 #include "whitehole/runtime/session.hpp"
 #include "whitehole/runtime/summary.hpp"
 
@@ -227,6 +228,18 @@ int main(int argc, char** argv) {
     auto library = nodes::BuiltinLibrary::create();
     if (!library.ok()) {
         return fail(library.error());
+    }
+    if (options.value().listNodes) {
+        std::cout << runtime::listNodes(*library.value()->registry);
+        return 0;
+    }
+    if (!options.value().describeNode.empty()) {
+        const auto text = runtime::describeNode(*library.value()->registry, options.value().describeNode);
+        if (!text.ok()) {
+            return fail(text.error());
+        }
+        std::cout << text.value();
+        return 0;
     }
     const auto text = project::readTextFile(options.value().projectPath);
     if (!text.ok()) {

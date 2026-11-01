@@ -91,26 +91,43 @@ inline void drawDisc(Image& image, float cx, float cy, float radius, const std::
 /// man sieht durch einen Cube hindurch. Der Kern ist die Scheibe selbst, darum herum fällt ein Hof
 /// bis etwa zum 2,5-fachen Radius auf null ab.
 inline void drawGlow(Image& image, float cx, float cy, float radius, const std::array<float, 3>& lit, float fade) {
+    // Eine LED, die nichts addiert (schwarz oder ganz ausgeblendet), ändert kein Pixel: sofort fertig.
+    const float brightest = std::max({lit[0], lit[1], lit[2]});
+    if (!(brightest * fade > 0.0F)) {
+        return;
+    }
     const float reach = radius * 2.5F + 1.0F;
+    const float reachSq = reach * reach;
+    const float falloff = std::max(reach - radius, 1e-3F);
     const int x0 = std::max(0, static_cast<int>(std::floor(cx - reach)));
     const int x1 = std::min(static_cast<int>(image.width) - 1, static_cast<int>(std::ceil(cx + reach)));
     const int y0 = std::max(0, static_cast<int>(std::floor(cy - reach)));
     const int y1 = std::min(static_cast<int>(image.height) - 1, static_cast<int>(std::ceil(cy + reach)));
     for (int y = y0; y <= y1; ++y) {
-        for (int x = x0; x <= x1; ++x) {
+        const float dy = static_cast<float>(y) + 0.5F - cy;
+        const float dySq = dy * dy;
+        if (dySq >= reachSq) {
+            continue;  // ganze Zeile außerhalb des Hofs
+        }
+        std::uint8_t* px = &image.rgba[(static_cast<std::size_t>(y) * image.width + static_cast<std::size_t>(x0)) * 4];
+        for (int x = x0; x <= x1; ++x, px += 4) {
             const float dx = static_cast<float>(x) + 0.5F - cx;
-            const float dy = static_cast<float>(y) + 0.5F - cy;
-            const float d = std::sqrt(dx * dx + dy * dy);
+            const float distSq = dx * dx + dySq;
+            if (distSq >= reachSq) {
+                continue;  // jenseits des Hofs ist das Gewicht null: keine Wurzel nötig
+            }
+            const float d = std::sqrt(distSq);
             const float core = std::clamp(radius + 0.5F - d, 0.0F, 1.0F);
-            const float t = std::clamp((d - radius) / std::max(reach - radius, 1e-3F), 0.0F, 1.0F);
+            const float t = std::clamp((d - radius) / falloff, 0.0F, 1.0F);
             const float halo = 0.3F * (1.0F - t) * (1.0F - t);
             const float weight = std::max(core, halo) * fade;
             if (weight <= 0.0F) {
                 continue;
             }
-            std::uint8_t* px = &image.rgba[(static_cast<std::size_t>(y) * image.width + static_cast<std::size_t>(x)) * 4];
             for (std::size_t ch = 0; ch < 3; ++ch) {
-                px[ch] = static_cast<std::uint8_t>(std::lround(std::min(255.0F, static_cast<float>(px[ch]) + lit[ch] * weight)));
+                // Summe ist nie negativ: Abschneiden von (Wert + 0,5) rundet wie lround, ist aber viel billiger.
+                const float sum = std::min(255.0F, static_cast<float>(px[ch]) + lit[ch] * weight);
+                px[ch] = static_cast<std::uint8_t>(static_cast<int>(sum + 0.5F));
             }
         }
     }

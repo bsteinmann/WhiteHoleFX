@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.25)
 
 project(WhiteHoleFX
-    VERSION 0.32.0
+    VERSION 0.33.0
     DESCRIPTION "Quelloffene Echtzeitsteuerung für LED-Matrizen, LED-Cubes und Pixelinstallationen"
     LANGUAGES CXX)
 
@@ -12,6 +12,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 option(WHITEHOLEFX_BUILD_TESTS "Unit-Tests bauen" ON)
 option(WHITEHOLEFX_WEBGPU "WebGPU-Backend bauen (braucht wgpu-native, siehe docs/gpu-backend.md)" OFF)
+option(WHITEHOLEFX_BUILD_BENCH "Zeitmessung der Vorschau (tests/bench) bauen" OFF)
 option(WHITEHOLEFX_BUILD_STUDIO "Qt-Oberfläche bauen (braucht Qt 6 Widgets)" OFF)
 option(WHITEHOLEFX_WARNINGS_AS_ERRORS "Compiler-Warnungen als Fehler behandeln" OFF)
 

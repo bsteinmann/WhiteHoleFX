@@ -22,6 +22,7 @@ wh_add_library(wh_runtime
         src/player_undo.cpp
         src/recent_files.cpp
         src/session.cpp
+        src/node_catalog.cpp
         src/summary.cpp
         src/test_pattern.cpp
     PUBLIC_DEPS

@@ -23,6 +23,16 @@ oder zu lange Strips fallen so vor dem ersten Paket auf.
 Ohne `--frames` läuft der Runner bis Strg+C. Er beendet geordnet: laufende Frames werden noch
 ausgeliefert, dann erscheint eine Zusammenfassung (Frames, verworfene Frames, Pakete, Fehler).
 
+## Nodes nachschlagen
+
+```
+whitehole_cli --list-nodes                  # alle Node-Typen, nach Kategorie
+whitehole_cli --describe-node wh.generator.noise     # Ports, Parameter (mit Bereich, Standard, Auswahl) eines Typs
+```
+
+So findest du beim Schreiben einer `.whfx`-Datei von Hand die Typnamen, Port- und Parameterschlüssel
+(Auswahl-Parameter stehen in der Datei als Zahl, die Ausgabe nennt die Bedeutung jeder Zahl).
+
 ## Vorschau als Bild
 
 ```

@@ -21,6 +21,8 @@ const char* usageText() {
            "                   oder eine .wav-Datei, die in Schleife läuft (sonst aus)\n"
            "  --audio-devices  die Aufnahmegeräte auflisten und beenden\n"
            "  --size <BxH>     Bildgröße der Vorschau, z. B. 1280x720 (Standard 960x540)\n"
+           "  --list-nodes     alle Node-Typen auflisten und beenden\n"
+           "  --describe-node <typ>  Ports, Parameter, Standardwerte und Auswahlfelder eines Node-Typs ausgeben\n"
            "  --help           diese Hilfe\n";
 }
 
@@ -93,6 +95,14 @@ Result<Options> parseOptions(const std::vector<std::string>& args) {
             options.audioIn = *value;
         } else if (a == "--audio-devices") {
             options.audioDevices = true;
+        } else if (a == "--list-nodes") {
+            options.listNodes = true;
+        } else if (a == "--describe-node") {
+            const std::string* value = next();
+            if (value == nullptr || value->empty()) {
+                return bad("--describe-node braucht eine Typ-ID, z. B. wh.generator.gradient");
+            }
+            options.describeNode = *value;
         } else if (a == "--size") {
             const std::string* value = next();
             if (value == nullptr) {
@@ -121,7 +131,8 @@ Result<Options> parseOptions(const std::vector<std::string>& args) {
             return bad("Zweite Projektdatei \"" + a + "\" angegeben");
         }
     }
-    if (!options.help && !options.audioDevices && options.projectPath.empty()) {
+    if (!options.help && !options.audioDevices && !options.listNodes && options.describeNode.empty() &&
+        options.projectPath.empty()) {
         return bad("Es fehlt die Projektdatei");
     }
     if (options.snapshotPath.empty() && (options.snapshotWidth != 960 || options.snapshotHeight != 540)) {

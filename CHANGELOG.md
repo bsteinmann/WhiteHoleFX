@@ -1,5 +1,14 @@
 # Änderungen
 
+## 0.33.0
+
+- **Schnellere 3D-Vorschau:** Der Schein (Glow) rechnet nur noch innerhalb seines Hofs (Vergleich der Abstandsquadrate statt Wurzel für
+  jeden Pixel), überspringt schwarze LEDs und rundet ohne `lround`. Gemessen: etwa 2,5- bis 3-mal schneller bei 512 bis 14 000 LEDs, Bild unverändert.
+- **Node-Verzeichnis im Terminal:** `whitehole_cli --list-nodes` und `--describe-node <typ>` zeigen Typen, Ports und Parameter
+  (mit Bereich, Standardwert und der Bedeutung von Auswahlzahlen). Siehe [Projektdatei](docs/project-format.md).
+- **Fehlersuche:** Neue Fuzz-Tests (zufällig veränderte Projektdateien, CSV-/JSON-Import, zufällige Editor-Aktionen mit
+  Rückgängig/Wiederholen) und ein Benchmark `wh_bench` (`-DWHITEHOLEFX_BUILD_BENCH=ON`). Siehe [BUILDING.md](BUILDING.md).
+
 ## 0.32.0
 
 - **Sprachen:** Die Oberfläche gibt es auf Deutsch, Englisch, Französisch und Spanisch. Umschalten unter *Hilfe → Sprache / Language*
