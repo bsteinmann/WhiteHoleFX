@@ -50,7 +50,7 @@ ctest --test-dir build/dev --output-on-failure
 scripts/fetch-wgpu-native.sh            # lädt wgpu-native nach third_party/
 cmake --preset studio-release
 cmake --build --preset studio-release --parallel
-./build/studio-release/apps/whitehole_studio/whitehole_studio examples/regler.whfx
+./build/studio-release/apps/whitehole_studio/whitehole_studio examples/einstieg/regler.whfx
 ```
 
 Hast du Qt an einem anderen Ort als dem Systempfad (z. B. aus dem Qt-Installer), gib ihn mit:
@@ -62,7 +62,7 @@ Für Ubuntu 24.04 / Debian 13 und neuer (64 Bit) gibt es ein fertiges Paket. Es 
 `WhiteHoleFX-Linux-deb` in jedem CI-Lauf (GitHub, Reiter „Actions“). Installieren:
 
 ```bash
-sudo apt install ./whiteholefx_0.31.0-1_amd64.deb
+sudo apt install ./whiteholefx_0.32.0-1_amd64.deb
 ```
 
 `apt` holt Qt 6 und Vulkan automatisch. Danach gibt es `whitehole_studio` (auch im Anwendungsmenü,
@@ -112,16 +112,16 @@ Tests unter Windows: `.\build\studio-release\tests\Release\wh_tests.exe` direkt 
 Ohne GPU, ohne Netzwerk, nur Prüfung und Bild des Layouts:
 
 ```bash
-whitehole_cli examples/wand.whfx --check --snapshot layout.png
+whitehole_cli examples/einstieg/wand.whfx --check --snapshot layout.png
 ```
 
 Mit GPU, 60 Frames rendern und das Ergebnis als Bild speichern:
 
 ```bash
-whitehole_cli examples/wand.whfx --frames 60 --snapshot vorschau.png
+whitehole_cli examples/einstieg/wand.whfx --frames 60 --snapshot vorschau.png
 ```
 
-Oberfläche: `whitehole_studio examples/regler.whfx`. **Start/Stopp** mit der Leertaste. Die
+Oberfläche: `whitehole_studio examples/einstieg/regler.whfx`. **Start/Stopp** mit der Leertaste. Die
 **Netzwerkausgabe ist nach dem Start aus**; erst „Ausgabe senden“ schickt Pakete an die Controller.
 Eigene Projekte: Ziele (Adressen deiner Controller), Fixtures und Patches im Dock „Layout“
 einstellen, Effekte im Dock „Nodes“ bauen. Details: [Oberfläche](docs/studio.md),

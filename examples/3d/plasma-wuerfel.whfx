@@ -1,0 +1,43 @@
+whitehole-project 1
+# 3D-Beispiel 2: Plasma im Würfel.
+# Ein Würfel aus 8 x 8 x 8 LEDs (512 Stück). Das Plasma läuft mit depth > 0 auch durch die Tiefe,
+# eine Color Map färbt die Helligkeit zu einem Feuer-Verlauf, und der Würfel dreht sich langsam
+# um zwei Achsen (Rotate 3D, die Winkel hängen an der Zeit).
+#
+#   whitehole_studio examples/3d/plasma-wuerfel.whfx --run
+
+settings fps 40
+
+destination 0 127.0.0.1
+
+fixture Wuerfel
+  grid 8 8 8 pitch 1 1 1 order XYZ serpentine
+  patch artnet destination 0 universe 0
+end
+
+node plasma wh.generator.plasma
+  set scale 3
+  set speed 0.6
+  set depth 1
+end
+node drehen wh.transform.rotate3d
+end
+node zeit wh.value.time
+  set speed 12
+end
+node zeit2 wh.value.time
+  set speed 7
+end
+node farbe wh.modifier.colormap
+  set count 4
+  set color1 0.02 0 0.2 1
+  set color2 0.8 0 0.5 1
+  set color3 1 0.6 0 1
+  set color4 1 1 0.8 1
+end
+
+connect plasma.out -> drehen.source
+connect zeit.seconds -> drehen.angleY
+connect zeit2.seconds -> drehen.angleX
+connect drehen.out -> farbe.source
+output farbe.out

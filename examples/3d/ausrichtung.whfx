@@ -1,0 +1,24 @@
+whitehole-project 1
+# 3D-Beispiel 1: Ausrichtung prüfen (Position Test).
+# Ein Quader aus 6 x 4 x 8 LEDs. Jede LED zeigt ihre Lage als Farbe:
+#   Rot = x (nach rechts heller), Grün = y (nach oben heller), Blau = z (nach hinten heller).
+# So sieht man sofort, ob Verkabelung, Startecke und Achsenrichtung zum Aufbau passen.
+# Stimmt etwas nicht, im Menü Stage Config -> Layout und Patch die Optionen flipx/flipy/flipz
+# oder die Reihenfolge (order) des Gitters ändern.
+#
+#   whitehole_cli examples/3d/ausrichtung.whfx --check --snapshot layout.png
+#   whitehole_studio examples/3d/ausrichtung.whfx --run
+
+settings fps 40
+
+destination 0 127.0.0.1
+
+fixture Quader
+  grid 6 4 8 pitch 1 1 1 order XYZ serpentine
+  patch artnet destination 0 universe 0
+end
+
+node lage wh.generator.position
+  set gain 1
+end
+output lage.out

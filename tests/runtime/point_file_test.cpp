@@ -52,8 +52,8 @@ TEST_CASE("loadPointsFile: Fehlermeldungen nennen die Datei", "[runtime][import]
     std::filesystem::remove(other);
 }
 
-TEST_CASE("Beispiel: examples/bogen.csv lässt sich importieren", "[runtime][import]") {
-    const auto file = std::filesystem::path{__FILE__}.parent_path().parent_path().parent_path() / "examples" / "bogen.csv";
+TEST_CASE("Beispiel: examples/daten/bogen.csv lässt sich importieren", "[runtime][import]") {
+    const auto file = std::filesystem::path{__FILE__}.parent_path().parent_path().parent_path() / "examples" / "daten" / "bogen.csv";
     const auto points = runtime::loadPointsFile(file.string());
     REQUIRE(points.ok());
     CHECK(points.value().size() == 40);

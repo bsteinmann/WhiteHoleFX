@@ -65,6 +65,9 @@ Mit GPU und Oberfläche, Windows und alle Fallstricke: **[BUILDING.md](BUILDING.
 - [Projektdatei und Konsolen-Runner](docs/project-format.md)
 - [Bauen und Starten](BUILDING.md)
 - [Oberfläche (Qt)](docs/studio.md)
+- [Tutorial](docs/tutorial/de.md) ([English](docs/tutorial/en.md), [Français](docs/tutorial/fr.md), [Español](docs/tutorial/es.md))
+- [Beispielprojekte](docs/examples.md)
+- [Sprachen und Übersetzen](docs/translating.md)
 - [Audio-Eingang (Pegel, Beat, Spektrum)](docs/audio.md)
 - [GPU-Backend (WebGPU)](docs/gpu-backend.md)
 
@@ -74,7 +77,7 @@ Audio-Nodes reagieren auf Musik: Lautstärke, Frequenzbänder, Beat und Tempo, d
 („Spectrum Bars“) als Effekt. Quelle ist ein Mikrofon bzw. Eingang oder eine WAV-Datei in Schleife. Der
 Eingang ist standardmäßig **aus**; einschalten im Studio über *Eingang → Audio* oder mit
 `whitehole_cli projekt.whfx --audio-in default` (Gerät) bzw. `--audio-in musik.wav`. Das Beispiel
-`examples/audio.whfx` zeigt einen Equalizer mit pulsierendem Hintergrund. Alles Weitere:
+`examples/audio/audio.whfx` zeigt einen Equalizer mit pulsierendem Hintergrund. Alles Weitere:
 [docs/audio.md](docs/audio.md).
 
 ## Konventionen

@@ -11,6 +11,8 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v5
+      - name: Übersetzungen vollständig? (Texte der Oberfläche gegen die Kataloge)
+        run: python3 scripts/i18n.py check
       - name: Konfigurieren
         run: >
           cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
@@ -57,12 +59,19 @@ jobs:
         run: ./build/tests/wh_gpu_tests
       - name: Runner mit echtem Gerät (20 Frames, Software-Adapter)
         run: |
-          ./build/apps/whitehole_cli/whitehole_cli examples/wand.whfx --check
-          ./build/apps/whitehole_cli/whitehole_cli examples/wand.whfx --frames 20 --software
+          ./build/apps/whitehole_cli/whitehole_cli examples/einstieg/wand.whfx --check
+          ./build/apps/whitehole_cli/whitehole_cli examples/einstieg/wand.whfx --frames 20 --software
+      - name: 3D-Beispiele rendern (Software-Adapter)
+        run: |
+          for f in examples/3d/*.whfx; do
+            echo "== $f"
+            ./build/apps/whitehole_cli/whitehole_cli "$f" --check
+            ./build/apps/whitehole_cli/whitehole_cli "$f" --frames 10 --software
+          done
       - name: Vorschau-Bilder erzeugen (echter Effekt auf dem Software-Adapter)
         run: |
-          ./build/apps/whitehole_cli/whitehole_cli examples/wand.whfx --frames 60 --software --snapshot vorschau.png
-          ./build/apps/whitehole_cli/whitehole_cli examples/wand.whfx --check --snapshot layout.png
+          ./build/apps/whitehole_cli/whitehole_cli examples/einstieg/wand.whfx --frames 60 --software --snapshot vorschau.png
+          ./build/apps/whitehole_cli/whitehole_cli examples/einstieg/wand.whfx --check --snapshot layout.png
           test -s vorschau.png && test -s layout.png
       - name: Vorschau-Bilder bereitstellen
         uses: actions/upload-artifact@v4
@@ -119,8 +128,8 @@ jobs:
           exit $code
       - name: Runner mit echtem Gerät (20 Frames)
         run: |
-          ./build/apps/whitehole_cli/Debug/whitehole_cli.exe examples/wand.whfx --check
-          ./build/apps/whitehole_cli/Debug/whitehole_cli.exe examples/wand.whfx --frames 20
+          ./build/apps/whitehole_cli/Debug/whitehole_cli.exe examples/einstieg/wand.whfx --check
+          ./build/apps/whitehole_cli/Debug/whitehole_cli.exe examples/einstieg/wand.whfx --frames 20
 
   studio:
     name: Oberfläche (Qt 6, offscreen, Software-Vulkan, experimentell)
@@ -171,9 +180,9 @@ jobs:
               fail=1
             fi
           }
-          run_studio examples/wand.whfx --grab fenster-layout.png
-          run_studio examples/wand.whfx --run --software --frames 40 --grab fenster-lauf.png
-          run_studio examples/regler.whfx --run --software --frames 40 --exercise --grab fenster-regler.png
+          run_studio examples/einstieg/wand.whfx --grab fenster-layout.png
+          run_studio examples/einstieg/wand.whfx --run --software --frames 40 --grab fenster-lauf.png
+          run_studio examples/einstieg/regler.whfx --run --software --frames 40 --exercise --grab fenster-regler.png
           test -s fenster-layout.png && test -s fenster-lauf.png && test -s fenster-regler.png || fail=1
           exit $fail
       - name: Fensterbilder bereitstellen
@@ -233,11 +242,11 @@ jobs:
           $env:PATH = "$env:PATH_QT;$env:PATH"
           $exe = "./build/apps/whitehole_studio/Release/whitehole_studio.exe"
           # Ohne GPU-Lauf: Das Fenster, alle Formulare und der Editor werden bedient.
-          $p = Start-Process -FilePath $exe -ArgumentList "examples/regler.whfx","--exercise","--grab","fenster-regler.png" -Wait -PassThru
+          $p = Start-Process -FilePath $exe -ArgumentList "examples/einstieg/regler.whfx","--exercise","--grab","fenster-regler.png" -Wait -PassThru
           Write-Output "::notice title=Rauchtest ohne Lauf::Exit-Code $($p.ExitCode)"
           if ($p.ExitCode -ne 0) { exit 1 }
           # Mit Lauf auf dem Software-Adapter, falls einer da ist (kein Fehler, wenn nicht).
-          $p2 = Start-Process -FilePath $exe -ArgumentList "examples/regler.whfx","--run","--software","--frames","30","--exercise","--grab","fenster-lauf.png" -Wait -PassThru
+          $p2 = Start-Process -FilePath $exe -ArgumentList "examples/einstieg/regler.whfx","--run","--software","--frames","30","--exercise","--grab","fenster-lauf.png" -Wait -PassThru
           Write-Output "::notice title=Rauchtest mit Lauf::Exit-Code $($p2.ExitCode)"
           if (-not (Test-Path fenster-regler.png)) { exit 1 }
       - name: Paket schnüren (windeployqt)
@@ -318,9 +327,9 @@ jobs:
             apt-get install -y -qq /dist/*.deb mesa-vulkan-drivers fonts-dejavu-core > /dev/null
             echo "== installiert:"; dpkg -L whiteholefx | head -40
             echo "== Version:"; whitehole_studio --version
-            echo "== Prüfung:"; whitehole_cli /usr/share/whiteholefx/examples/wand.whfx --check
-            echo "== Rendern:"; whitehole_cli /usr/share/whiteholefx/examples/wand.whfx --frames 20 --software
-            echo "== Fenster:"; whitehole_studio /usr/share/whiteholefx/examples/regler.whfx --run --software --frames 30 --exercise --grab /tmp/fenster.png
+            echo "== Prüfung:"; whitehole_cli /usr/share/whiteholefx/examples/einstieg/wand.whfx --check
+            echo "== Rendern:"; whitehole_cli /usr/share/whiteholefx/examples/einstieg/wand.whfx --frames 20 --software
+            echo "== Fenster:"; whitehole_studio /usr/share/whiteholefx/examples/einstieg/regler.whfx --run --software --frames 30 --exercise --grab /tmp/fenster.png
             test -s /tmp/fenster.png
             echo "== Entfernen:"; apt-get remove -y -qq whiteholefx > /dev/null; test ! -e /usr/bin/whitehole_studio
             echo ALLES-OK

@@ -6,7 +6,7 @@ Qt-6-Fenster mit Live-Vorschau. Gebaut wird es nur auf Wunsch, weil Qt vorhanden
 # Debian/Ubuntu: sudo apt install qt6-base-dev libgl1-mesa-dev
 cmake -S . -B build -DWHITEHOLEFX_BUILD_STUDIO=ON -DWHITEHOLEFX_WEBGPU=ON -DWGPU_NATIVE_ROOT=/pfad/zu/wgpu
 cmake --build build --target whitehole_studio
-./build/apps/whitehole_studio/whitehole_studio examples/wand.whfx
+./build/apps/whitehole_studio/whitehole_studio examples/einstieg/wand.whfx
 ```
 
 Ohne `WHITEHOLEFX_WEBGPU` zeigt das Fenster nur das Layout, rendern geht dann nicht.
@@ -68,7 +68,7 @@ Das Dock „Parameter“ (Menü Ansicht) listet jeden Node mit seinen Parametern
 Änderungen wirken im nächsten Frame. Werte werden auf den erlaubten Bereich begrenzt.
 „Speichern“ (Strg+S) und „Speichern unter“ (Strg+Umschalt+S) schreiben die Projektdatei neu. Achtung: Der Writer erzeugt die
 Datei kanonisch, Kommentare und Formatierung einer von Hand geschriebenen Datei gehen dabei
-verloren. Ein Beispiel zum Ausprobieren: `examples/regler.whfx`.
+verloren. Ein Beispiel zum Ausprobieren: `examples/einstieg/regler.whfx`.
 
 Die CI verstellt mit `--exercise` jeden Regler einmal und prüft, dass der Player keinen Fehler meldet.
 
@@ -169,7 +169,7 @@ gewählte Fixture gibt es ein Formular:
 
 **Import von Positionen:** „Import …“ lädt LED-Positionen aus einer CSV- oder JSON-Datei als Punktwolke
 (Format und Optionen: `docs/mapping.md`, Abschnitt „Import von Positionen“). Die Reihenfolge in der Datei
-ist die Reihenfolge am Kabel. Beispiel: `examples/bogen.csv`.
+ist die Reihenfolge am Kabel. Beispiel: `examples/daten/bogen.csv`.
 
 **Mehrere Fixtures:** Die Liste erlaubt mehrere Einträge (Strg oder Umschalt). Die Knöpfe unter der
 Liste richten die gewählten Fixtures aus (links, rechts, oben, unten, waagrecht oder senkrecht
@@ -278,13 +278,13 @@ letzte Bild. Sobald der Graph vollständig ist, läuft der Effekt weiter.
 
 | Menü | Inhalt |
 | --- | --- |
-| Datei | Neu, Öffnen, Zuletzt geöffnet, Beispiele; Speichern, Speichern unter; Neu laden (F5); Beenden |
+| Datei | Neu, Öffnen, Zuletzt geöffnet, Beispiele (in Untergruppen Einstieg, Effekte, Audio, 3D; siehe [Beispielprojekte](examples.md)); Speichern, Speichern unter; Neu laden (F5); Beenden |
 | Bearbeiten | Rückgängig, Wiederholen; Einstellungen … (Strg+Komma) |
 | Stage Config | Fixture hinzufügen …; Punktwolke importieren …; Layout und Patch … (F4); Testmodus … (die Seite „Ansicht“ liegt im selben Fenster) |
 | Ansicht | Docks ein- und ausblenden; 2D/3D-Umschalter (Strg+1 bis 5); 3D-Darstellung (Aus-LEDs, Leuchten) |
 | Wiedergabe | Start/Stopp, Ausgabe senden; Blackout |
 | Live | Live-Modus (F9), Look speichern |
-| Hilfe | Dokumentation (F1, öffnet die Anleitung im Browser), Fehler melden oder Idee vorschlagen (öffnet ein neues Issue auf GitHub), Tastenkürzel (Liste aller Kürzel, direkt aus den Aktionen gelesen), Über WhiteHoleFX (Version, Lizenz) |
+| Hilfe | Tutorial (eingebaut, in der gewählten Sprache), Dokumentation (F1, öffnet die Anleitung im Browser), Sprache / Language (Deutsch, English, Français, Español; gilt nach einem Neustart, den das Programm anbietet), Fehler melden oder Idee vorschlagen (öffnet ein neues Issue auf GitHub), Tastenkürzel (Liste aller Kürzel, direkt aus den Aktionen gelesen), Über WhiteHoleFX (Version, Lizenz) |
 
 ## Looks und Live-Betrieb
 

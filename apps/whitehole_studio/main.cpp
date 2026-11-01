@@ -15,6 +15,7 @@
 #include <cstdio>
 #include <memory>
 
+#include "app_language.hpp"
 #include "main_window.hpp"
 
 #ifdef WH_STUDIO_HAVE_GPU
@@ -41,8 +42,19 @@ int main(int argc, char** argv) {
     const QCommandLineOption grabOption{QStringLiteral("grab"), QStringLiteral("Fensterbild speichern und beenden"), QStringLiteral("datei.png")};
     const QCommandLineOption framesOption{QStringLiteral("frames"), QStringLiteral("Frames vor --grab (Standard 30 mit --run)"), QStringLiteral("n"), QStringLiteral("30")};
     const QCommandLineOption exerciseOption{QStringLiteral("exercise"), QStringLiteral("vor --grab alle Regler einmal verstellen (Rauchtest)")};
-    parser.addOptions({runOption, softwareOption, grabOption, framesOption, exerciseOption});
+    const QCommandLineOption langOption{QStringLiteral("lang"), QStringLiteral("Sprache der Oberfläche: de, en, fr oder es"), QStringLiteral("code")};
+    parser.addOptions({runOption, softwareOption, grabOption, framesOption, exerciseOption, langOption});
     parser.process(app);
+
+    // Sprache vor dem ersten Fenster setzen. Die Rauchtests (--grab) prüfen deutsche Texte und laufen deshalb
+    // deutsch, außer --lang sagt etwas anderes.
+    const bool grabbing = parser.isSet(grabOption);
+    const QString language = studio::initialLanguage(parser.isSet(langOption) ? parser.value(langOption)
+                                                     : grabbing                ? QStringLiteral("de")
+                                                                               : QString{});
+    if (!studio::installLanguage(language)) {
+        std::fprintf(stderr, "Sprache %s lässt sich nicht laden, es bleibt bei Deutsch.\n", language.toUtf8().constData());
+    }
 
     std::unique_ptr<gpu::IGpuDevice> device;
     QString note;
@@ -57,10 +69,10 @@ int main(int argc, char** argv) {
     if (created.ok()) {
         device = std::move(created).value();
     } else {
-        note = QStringLiteral("Kein GPU-Adapter: %1").arg(QString::fromUtf8(created.error().message.c_str()));
+        note = QObject::tr("Kein GPU-Adapter: %1").arg(QString::fromUtf8(created.error().message.c_str()));
     }
 #else
-    note = QStringLiteral("Dieses Programm wurde ohne GPU-Backend gebaut (-DWHITEHOLEFX_WEBGPU=ON); es zeigt nur das Layout.");
+    note = QObject::tr("Dieses Programm wurde ohne GPU-Backend gebaut (-DWHITEHOLEFX_WEBGPU=ON); es zeigt nur das Layout.");
 #endif
 
     studio::MainWindow window{device.get(), note};
@@ -135,7 +147,9 @@ int main(int argc, char** argv) {
         std::printf("3D-Vorschau: %s\n", view3d.isEmpty() ? "ok" : "FEHLER");
         const QString menus = view3d.isEmpty() ? window.exerciseMenus() : QString{};
         std::printf("Menüleiste: %s\n", menus.isEmpty() ? "ok" : "FEHLER");
-        for (const QString& failure : {selection, created, transparency, controls, dmx, audio, palette, live, settingsResult, stage, view3d, menus}) {
+        const QString languages = menus.isEmpty() ? window.exerciseLanguage() : QString{};
+        std::printf("Sprachen/Tutorial: %s\n", languages.isEmpty() ? "ok" : "FEHLER");
+        for (const QString& failure : {selection, created, transparency, controls, dmx, audio, palette, live, settingsResult, stage, view3d, menus, languages}) {
             if (!failure.isEmpty()) {
                 std::fprintf(stderr, "Rauchtest fehlgeschlagen: %s\n", failure.toUtf8().constData());
                 return 1;

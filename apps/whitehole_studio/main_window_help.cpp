@@ -33,6 +33,10 @@ void MainWindow::buildHelp(QMenu* help) {
     docs->setToolTip(tr("Die Anleitung im Browser öffnen"));
     connect(docs, &QAction::triggered, this, []() { QDesktopServices::openUrl(QUrl{QString::fromLatin1(kDocsUrl)}); });
 
+    auto* tutorial = new QAction{tr("&Tutorial …"), this};
+    tutorial->setToolTip(tr("Eine Einführung in die Bedienung, in der gewählten Sprache"));
+    connect(tutorial, &QAction::triggered, this, [this]() { showTutorial(); });
+
     auto* issue = new QAction{tr("&Fehler melden oder Idee vorschlagen …"), this};
     issue->setToolTip(tr("Öffnet GitHub: ein neues Issue anlegen"));
     connect(issue, &QAction::triggered, this, []() { QDesktopServices::openUrl(QUrl{QString::fromLatin1(kIssuesUrl)}); });
@@ -45,9 +49,11 @@ void MainWindow::buildHelp(QMenu* help) {
     about->setMenuRole(QAction::NoRole);
     connect(about, &QAction::triggered, this, [this]() { showAbout(); });
 
+    help->addAction(tutorial);
     help->addAction(docs);
     help->addAction(issue);
     help->addSeparator();
+    buildLanguageMenu(help);
     help->addAction(keys);
     help->addAction(about);
 }
@@ -106,9 +112,10 @@ QString MainWindow::exerciseMenus() {
     for (const QAction* entry : menuBar()->actions()) {
         titles << entry->text().remove(QLatin1Char('&'));
     }
-    const QStringList expected{QStringLiteral("Datei"),   QStringLiteral("Bearbeiten"),  QStringLiteral("Stage Config"),
-                               QStringLiteral("Ansicht"), QStringLiteral("Wiedergabe"), QStringLiteral("Live"),
-                               QStringLiteral("Hilfe")};
+    const auto plain = [](QString text) { return text.remove(QLatin1Char('&')); };
+    const QStringList expected{plain(tr("&Datei")),   plain(tr("&Bearbeiten")), plain(tr("&Stage Config")),
+                               plain(tr("&Ansicht")), plain(tr("&Wiedergabe")), plain(tr("&Live")),
+                               plain(tr("&Hilfe"))};
     if (titles != expected) {
         return QStringLiteral("Menüleiste: falsche Reihenfolge (") + titles.join(QLatin1Char(',')) + QLatin1Char(')');
     }
@@ -117,8 +124,8 @@ QString MainWindow::exerciseMenus() {
     for (const QAction* entry : help->actions()) {
         helpEntries += entry->isSeparator() ? 0 : 1;
     }
-    if (helpEntries != 4) {
-        return QStringLiteral("Menüleiste: das Hilfe-Menü hat nicht vier Einträge");
+    if (helpEntries != 6) {  // Tutorial, Dokumentation, Fehler melden, Sprache, Tastenkürzel, Über
+        return QStringLiteral("Menüleiste: das Hilfe-Menü hat nicht sechs Einträge");
     }
     // Die Kürzelliste kennt die wichtigsten Aktionen, und die Leistenschaltflächen nennen ihr Kürzel.
     const auto rows = shortcutList();

@@ -70,9 +70,9 @@ TEST_CASE("Kommandozeile: Fehler nennen die Ursache", "[cli]") {
     CHECK(contains(optionError({"a", "--size", "640x480"}), "gehört zu --snapshot"));
 }
 
-TEST_CASE("Beispiel: examples/wand.whfx ist gültig und der Bericht stimmt", "[cli]") {
+TEST_CASE("Beispiel: examples/einstieg/wand.whfx ist gültig und der Bericht stimmt", "[cli]") {
     auto library = nodes::BuiltinLibrary::create().value();
-    const auto text = project::readTextFile((std::filesystem::path{__FILE__}.parent_path().parent_path().parent_path() / "examples" / "wand.whfx").string());
+    const auto text = project::readTextFile((std::filesystem::path{__FILE__}.parent_path().parent_path().parent_path() / "examples" / "einstieg" / "wand.whfx").string());
     REQUIRE(text.ok());
     const auto parsed = project::parseProject(text.value(), library->registry);
     REQUIRE(parsed.ok());
@@ -90,7 +90,7 @@ TEST_CASE("Beispiele: alle Dateien in examples/ lassen sich lesen und prüfen", 
     auto library = nodes::BuiltinLibrary::create().value();
     const auto dir = std::filesystem::path{__FILE__}.parent_path().parent_path().parent_path() / "examples";
     std::size_t found = 0;
-    for (const auto& entry : std::filesystem::directory_iterator{dir}) {
+    for (const auto& entry : std::filesystem::recursive_directory_iterator{dir}) {
         if (entry.path().extension() != ".whfx") {
             continue;
         }
@@ -103,7 +103,7 @@ TEST_CASE("Beispiele: alle Dateien in examples/ lassen sich lesen und prüfen", 
         CHECK(parsed.value().target.has_value());
         CHECK(runtime::summarize(parsed.value()).ok());
     }
-    CHECK(found >= 2);
+    CHECK(found >= 15);  // 10 klassische + 5 in 3d/
 }
 
 TEST_CASE("Bericht: Multicast, eigener Port und DDP werden benannt", "[cli]") {

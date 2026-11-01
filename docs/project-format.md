@@ -2,14 +2,14 @@
 
 Ein Projekt (Layout, Effektgraph, Ausgabe) liegt in einer Textdatei, üblicherweise `*.whfx`.
 Sie ist von Hand les- und schreibbar und lässt sich gut in Git vergleichen. Die GUI wird
-dieselbe Datei schreiben. Beispiel: [`examples/wand.whfx`](../examples/wand.whfx).
+dieselbe Datei schreiben. Beispiel: [`examples/einstieg/wand.whfx`](../examples/einstieg/wand.whfx).
 
 ## Schnellstart
 
 ```
-whitehole_cli examples/wand.whfx --check            # prüfen, ohne GPU, ohne Netzwerk
-whitehole_cli examples/wand.whfx                    # rendern und senden (braucht das GPU-Backend)
-whitehole_cli examples/wand.whfx --frames 200 --fps 30 --software
+whitehole_cli examples/einstieg/wand.whfx --check            # prüfen, ohne GPU, ohne Netzwerk
+whitehole_cli examples/einstieg/wand.whfx                    # rendern und senden (braucht das GPU-Backend)
+whitehole_cli examples/einstieg/wand.whfx --frames 200 --fps 30 --software
 ```
 
 `--dmx-in artnet,sacn` schaltet den DMX-Eingang für die DMX-Nodes ein (UDP 6454 bzw. 5568); ohne die

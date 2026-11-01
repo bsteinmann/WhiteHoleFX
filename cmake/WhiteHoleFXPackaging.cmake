@@ -18,7 +18,7 @@ endif()
 
 install(DIRECTORY "${PROJECT_SOURCE_DIR}/examples/"
     DESTINATION ${CMAKE_INSTALL_DATADIR}/whiteholefx/examples
-    FILES_MATCHING PATTERN "*.whfx")
+    FILES_MATCHING PATTERN "*.whfx" PATTERN "*.csv")
 
 file(GLOB WH_DOC_FILES "${PROJECT_SOURCE_DIR}/docs/*.md")
 install(FILES "${PROJECT_SOURCE_DIR}/README.md" "${PROJECT_SOURCE_DIR}/BUILDING.md"

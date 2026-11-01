@@ -32,32 +32,32 @@ void checkExample(const char* name, const char* expectedNode) {
 
 }  // namespace
 
-TEST_CASE("Beispiel: examples/gewitter.whfx lädt und kompiliert", "[examples][nodes]") {
-    checkExample("gewitter.whfx", "wh_bolt_x");
+TEST_CASE("Beispiel: examples/effekte/gewitter.whfx lädt und kompiliert", "[examples][nodes]") {
+    checkExample("effekte/gewitter.whfx", "wh_bolt_x");
 }
 
-TEST_CASE("Beispiel: examples/funken.whfx lädt und kompiliert", "[examples][nodes]") {
-    checkExample("funken.whfx", "wh_seg_dist");
+TEST_CASE("Beispiel: examples/effekte/funken.whfx lädt und kompiliert", "[examples][nodes]") {
+    checkExample("effekte/funken.whfx", "wh_seg_dist");
 }
 
-TEST_CASE("Beispiel: examples/laufschrift.whfx lädt und kompiliert", "[examples][nodes]") {
-    checkExample("laufschrift.whfx", "wh_text_glyph");
+TEST_CASE("Beispiel: examples/effekte/laufschrift.whfx lädt und kompiliert", "[examples][nodes]") {
+    checkExample("effekte/laufschrift.whfx", "wh_text_glyph");
 }
 
-TEST_CASE("Beispiel: examples/takt.whfx lädt und kompiliert", "[examples][nodes]") {
-    checkExample("takt.whfx", "vec4<f32>");
+TEST_CASE("Beispiel: examples/audio/takt.whfx lädt und kompiliert", "[examples][nodes]") {
+    checkExample("audio/takt.whfx", "vec4<f32>");
 }
 
-TEST_CASE("Beispiel: examples/kaleidoskop.whfx lädt und kompiliert", "[examples][nodes]") {
-    checkExample("kaleidoskop.whfx", "atan2");
+TEST_CASE("Beispiel: examples/effekte/kaleidoskop.whfx lädt und kompiliert", "[examples][nodes]") {
+    checkExample("effekte/kaleidoskop.whfx", "atan2");
 }
 
-TEST_CASE("Beispiel: examples/oszilloskop.whfx lädt und kompiliert", "[examples][nodes]") {
-    checkExample("oszilloskop.whfx", "wh_scope_dist");
+TEST_CASE("Beispiel: examples/audio/oszilloskop.whfx lädt und kompiliert", "[examples][nodes]") {
+    checkExample("audio/oszilloskop.whfx", "wh_scope_dist");
 }
 
-TEST_CASE("Beispiel: examples/looks.whfx hat drei Looks, die alle kompilieren", "[examples][nodes][looks]") {
-    const auto path = std::filesystem::path{__FILE__}.parent_path().parent_path().parent_path() / "examples" / "looks.whfx";
+TEST_CASE("Beispiel: examples/einstieg/looks.whfx hat drei Looks, die alle kompilieren", "[examples][nodes][looks]") {
+    const auto path = std::filesystem::path{__FILE__}.parent_path().parent_path().parent_path() / "examples" / "einstieg" / "looks.whfx";
     const auto text = project::readTextFile(path.string());
     REQUIRE(text.ok());
     Lab lab;
@@ -78,4 +78,33 @@ TEST_CASE("Beispiel: examples/looks.whfx hat drei Looks, die alle kompilieren", 
     auto again = project::parseProject(written.value(), lab.registry);
     REQUIRE(again.ok());
     CHECK(again.value().looks.size() == 3);
+}
+
+TEST_CASE("Beispiele: jede Datei in examples/ (auch in Untergruppen) kompiliert", "[examples][nodes]") {
+    const auto dir = std::filesystem::path{__FILE__}.parent_path().parent_path().parent_path() / "examples";
+    Lab lab;
+    std::size_t found = 0;
+    std::size_t threeD = 0;
+    for (const auto& entry : std::filesystem::recursive_directory_iterator{dir}) {
+        if (entry.path().extension() != ".whfx") {
+            continue;
+        }
+        ++found;
+        if (entry.path().parent_path().filename() == "3d") {
+            ++threeD;
+        }
+        INFO(entry.path().string());
+        const auto text = project::readTextFile(entry.path().string());
+        REQUIRE(text.ok());
+        auto parsed = project::parseProject(text.value(), lab.registry);
+        REQUIRE(parsed.ok());
+        REQUIRE(parsed.value().target.has_value());
+        const auto compiled = compiler::compileField(parsed.value().graph, lab.snippets, *parsed.value().target);
+        CHECK(compiled.ok());
+        for (const project::Look& look : parsed.value().looks) {
+            CHECK(compiler::compileField(look.graph, lab.snippets, look.target).ok());
+        }
+    }
+    CHECK(found >= 15);
+    CHECK(threeD == 5);  // die fünf 3D-Beispiele in examples/3d/
 }

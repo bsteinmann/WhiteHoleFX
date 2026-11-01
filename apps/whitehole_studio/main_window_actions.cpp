@@ -131,24 +131,58 @@ void MainWindow::buildActions() {
     addShortcutHints();   // zuletzt: alle Aktionen existieren jetzt
 }
 
+namespace {
+
+/// Anzeigename einer Beispiel-Gruppe (Ordnername unter examples/); unbekannte Ordner erscheinen großgeschrieben.
+QString groupTitle(const QString& folder) {
+    if (folder == QStringLiteral("einstieg")) {
+        return QObject::tr("Einstieg");
+    }
+    if (folder == QStringLiteral("effekte")) {
+        return QObject::tr("Effekte (2D)");
+    }
+    if (folder == QStringLiteral("audio")) {
+        return QObject::tr("Audio");
+    }
+    if (folder == QStringLiteral("3d")) {
+        return QObject::tr("3D");
+    }
+    return folder.left(1).toUpper() + folder.mid(1);
+}
+
+}  // namespace
+
+bool MainWindow::fillExamplesFrom(QMenu* menu, const QDir& dir) {
+    bool any = false;
+    // Zuerst die Untergruppen (als Untermenüs), dann die Projekte dieses Ordners.
+    for (const QString& folder : dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot, QDir::Name)) {
+        auto* sub = new QMenu{groupTitle(folder), menu};
+        if (fillExamplesFrom(sub, QDir{dir.absoluteFilePath(folder)})) {
+            menu->addMenu(sub);
+            any = true;
+        } else {
+            delete sub;  // Ordner ohne Projekte (z. B. nur Daten)
+        }
+    }
+    for (const QString& name : dir.entryList({QStringLiteral("*.whfx")}, QDir::Files, QDir::Name)) {
+        const QString path = dir.absoluteFilePath(name);
+        QAction* action = menu->addAction(QFileInfo{name}.completeBaseName());
+        connect(action, &QAction::triggered, this, [this, path]() { openPath(path); });
+        any = true;
+    }
+    return any;
+}
+
 void MainWindow::fillExamplesMenu(QMenu* menu) {
     // Installiert: <präfix>/share/whiteholefx/examples; Windows-Paket und Entwicklungsbaum:
-    // "examples" neben dem Programm.
+    // "examples" neben dem Programm. Die Beispiele liegen in Untergruppen (Einstieg, Effekte, Audio, 3D).
     const QString app = QCoreApplication::applicationDirPath();
     const QStringList candidates{app + QStringLiteral("/../share/whiteholefx/examples"),
                                  app + QStringLiteral("/examples")};
     for (const QString& candidate : candidates) {
-        const QDir dir{candidate};
-        const QStringList files = dir.entryList({QStringLiteral("*.whfx")}, QDir::Files, QDir::Name);
-        if (files.isEmpty()) {
-            continue;
+        if (fillExamplesFrom(menu, QDir{candidate})) {
+            return;
         }
-        for (const QString& name : files) {
-            const QString path = dir.absoluteFilePath(name);
-            QAction* action = menu->addAction(QFileInfo{name}.completeBaseName());
-            connect(action, &QAction::triggered, this, [this, path]() { openPath(path); });
-        }
-        return;
     }
     menu->setEnabled(false);
 }

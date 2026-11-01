@@ -72,6 +72,7 @@ add_executable(wh_tests
     preview/view_test.cpp
     preview/view3d_test.cpp
     project/project_test.cpp
+    i18n/po_catalog_test.cpp
     runtime/audio_usage_test.cpp
     runtime/cli_summary_test.cpp
     runtime/graph_layout_test.cpp
@@ -96,6 +97,7 @@ target_link_libraries(wh_tests PRIVATE
     whitehole::core
     whitehole::gpu
     whitehole::graph
+    whitehole::i18n
     whitehole::values
     whitehole::input
     whitehole::audio

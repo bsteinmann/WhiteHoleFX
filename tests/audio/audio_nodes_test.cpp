@@ -311,8 +311,8 @@ TEST_CASE("Spektrum-Ausgang lässt sich nur mit Spektrum-Eingängen verbinden", 
     CHECK_FALSE(lab.graph.connect({level, "level"}, {bars, "spectrum"}).ok());
 }
 
-TEST_CASE("Beispiel: examples/audio.whfx lädt, kompiliert und das Spektrum erreicht den Puffer", "[audio][nodes]") {
-    const auto path = std::filesystem::path{__FILE__}.parent_path().parent_path().parent_path() / "examples" / "audio.whfx";
+TEST_CASE("Beispiel: examples/audio/audio.whfx lädt, kompiliert und das Spektrum erreicht den Puffer", "[audio][nodes]") {
+    const auto path = std::filesystem::path{__FILE__}.parent_path().parent_path().parent_path() / "examples" / "audio" / "audio.whfx";
     const auto text = project::readTextFile(path.string());
     REQUIRE(text.ok());
     Lab lab;

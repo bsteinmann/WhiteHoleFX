@@ -26,9 +26,17 @@ struct NamedColor {
 };
 
 constexpr NamedColor kColors[] = {
-    {"Weiß", 1.0F, 1.0F, 1.0F}, {"Rot", 1.0F, 0.0F, 0.0F},  {"Grün", 0.0F, 1.0F, 0.0F},
-    {"Blau", 0.0F, 0.0F, 1.0F}, {"Gelb", 1.0F, 1.0F, 0.0F}, {"Cyan", 0.0F, 1.0F, 1.0F},
-    {"Magenta", 1.0F, 0.0F, 1.0F},
+    {QT_TR_NOOP("Weiß"), 1.0F, 1.0F, 1.0F}, {QT_TR_NOOP("Rot"), 1.0F, 0.0F, 0.0F},
+    {QT_TR_NOOP("Grün"), 0.0F, 1.0F, 0.0F}, {QT_TR_NOOP("Blau"), 0.0F, 0.0F, 1.0F},
+    {QT_TR_NOOP("Gelb"), 1.0F, 1.0F, 0.0F}, {QT_TR_NOOP("Cyan"), 0.0F, 1.0F, 1.0F},
+    {QT_TR_NOOP("Magenta"), 1.0F, 0.0F, 1.0F},
+};
+
+// Die Namen der Testbilder kommen aus wh_runtime (testPatternName, deutsch). Hier stehen sie noch einmal als
+// Markierung, damit das Übersetzungsskript sie findet; übersetzt wird mit tr(testPatternName(...)).
+[[maybe_unused]] constexpr const char* kPatternNames[] = {
+    QT_TR_NOOP("Aus"),           QT_TR_NOOP("Farbe"),  QT_TR_NOOP("Auswahl hervorheben"),
+    QT_TR_NOOP("Laufbalken"),    QT_TR_NOOP("Farbreihenfolge"), QT_TR_NOOP("Lauflicht"),
 };
 
 constexpr TestPatternKind kKinds[] = {TestPatternKind::Off,        TestPatternKind::Color,

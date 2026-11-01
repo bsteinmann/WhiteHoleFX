@@ -1,0 +1,198 @@
+whitehole-project 1
+# 3D-Beispiel 5: Säule mit schraubenförmig gewickeltem Strip.
+# Ein einziger LED-Strip (150 LEDs) ist in fünf Windungen um eine Säule gelegt. Das Fixture besteht
+# aus einzelnen Punkten (point x y z) in Kabelreihenfolge; die Positionen kommen auch aus einer CSV-
+# oder JSON-Datei (Stage Config -> Punktwolke importieren). Auf der Säule läuft eine Helix, die sich
+# dreht, und eine Wellenfront von unten nach oben ergänzt sie. Der Farbton wandert langsam.
+#
+#   whitehole_studio examples/3d/saeule.whfx --run
+
+settings fps 40
+
+destination 0 127.0.0.1
+
+fixture Saeule
+  point 4 0 0
+  point 3.911 0.161 0.837
+  point 3.65 0.322 1.637
+  point 3.226 0.483 2.365
+  point 2.66 0.644 2.988
+  point 1.976 0.805 3.478
+  point 1.204 0.966 3.815
+  point 0.379 1.128 3.982
+  point -0.463 1.289 3.973
+  point -1.284 1.45 3.788
+  point -2.048 1.611 3.436
+  point -2.722 1.772 2.931
+  point -3.275 1.933 2.296
+  point -3.683 2.094 1.56
+  point -3.928 2.255 0.754
+  point -3.999 2.416 -0.084
+  point -3.893 2.577 -0.919
+  point -3.614 2.738 -1.714
+  point -3.176 2.899 -2.432
+  point -2.596 3.06 -3.043
+  point -1.902 3.221 -3.519
+  point -1.123 3.383 -3.839
+  point -0.295 3.544 -3.989
+  point 0.546 3.705 -3.962
+  point 1.364 3.866 -3.76
+  point 2.12 4.027 -3.392
+  point 2.783 4.188 -2.873
+  point 3.323 4.349 -2.227
+  point 3.715 4.51 -1.482
+  point 3.943 4.671 -0.672
+  point 3.996 4.832 0.169
+  point 3.873 4.993 1.001
+  point 3.577 5.154 1.79
+  point 3.124 5.315 2.499
+  point 2.531 5.477 3.097
+  point 1.827 5.638 3.558
+  point 1.042 5.799 3.862
+  point 0.211 5.96 3.994
+  point -0.63 6.121 3.95
+  point -1.443 6.282 3.731
+  point -2.192 6.443 3.346
+  point -2.843 6.604 2.813
+  point -3.369 6.765 2.156
+  point -3.746 6.926 1.403
+  point -3.957 7.087 0.588
+  point -3.992 7.248 -0.253
+  point -3.851 7.409 -1.083
+  point -3.539 7.57 -1.865
+  point -3.07 7.732 -2.564
+  point -2.466 7.893 -3.15
+  point -1.752 8.054 -3.596
+  point -0.96 8.215 -3.883
+  point -0.126 8.376 -3.998
+  point 0.713 8.537 -3.936
+  point 1.521 8.698 -3.7
+  point 2.262 8.859 -3.299
+  point 2.902 9.02 -2.753
+  point 3.414 9.181 -2.085
+  point 3.775 9.342 -1.324
+  point 3.968 9.503 -0.505
+  point 3.986 9.664 0.337
+  point 3.827 9.826 1.164
+  point 3.499 9.987 1.939
+  point 3.015 10.148 2.628
+  point 2.399 10.309 3.201
+  point 1.676 10.47 3.632
+  point 0.878 10.631 3.902
+  point 0.042 10.792 4
+  point -0.796 10.953 3.92
+  point -1.599 11.114 3.667
+  point -2.331 11.275 3.251
+  point -2.959 11.436 2.691
+  point -3.457 11.597 2.012
+  point -3.802 11.758 1.244
+  point -3.978 11.919 0.421
+  point -3.978 12.081 -0.421
+  point -3.802 12.242 -1.244
+  point -3.457 12.403 -2.012
+  point -2.959 12.564 -2.691
+  point -2.331 12.725 -3.251
+  point -1.599 12.886 -3.667
+  point -0.796 13.047 -3.92
+  point 0.042 13.208 -4
+  point 0.878 13.369 -3.902
+  point 1.676 13.53 -3.632
+  point 2.399 13.691 -3.201
+  point 3.015 13.852 -2.628
+  point 3.499 14.013 -1.939
+  point 3.827 14.174 -1.164
+  point 3.986 14.336 -0.337
+  point 3.968 14.497 0.505
+  point 3.775 14.658 1.324
+  point 3.414 14.819 2.085
+  point 2.902 14.98 2.753
+  point 2.262 15.141 3.299
+  point 1.521 15.302 3.7
+  point 0.713 15.463 3.936
+  point -0.126 15.624 3.998
+  point -0.96 15.785 3.883
+  point -1.752 15.946 3.596
+  point -2.466 16.107 3.15
+  point -3.07 16.268 2.564
+  point -3.539 16.43 1.865
+  point -3.851 16.591 1.083
+  point -3.992 16.752 0.253
+  point -3.957 16.913 -0.588
+  point -3.746 17.074 -1.403
+  point -3.369 17.235 -2.156
+  point -2.843 17.396 -2.813
+  point -2.192 17.557 -3.346
+  point -1.443 17.718 -3.731
+  point -0.63 17.879 -3.95
+  point 0.211 18.04 -3.994
+  point 1.042 18.201 -3.862
+  point 1.827 18.362 -3.558
+  point 2.531 18.523 -3.097
+  point 3.124 18.685 -2.499
+  point 3.577 18.846 -1.79
+  point 3.873 19.007 -1.001
+  point 3.996 19.168 -0.169
+  point 3.943 19.329 0.672
+  point 3.715 19.49 1.482
+  point 3.323 19.651 2.227
+  point 2.783 19.812 2.873
+  point 2.12 19.973 3.392
+  point 1.364 20.134 3.76
+  point 0.546 20.295 3.962
+  point -0.295 20.456 3.989
+  point -1.123 20.617 3.839
+  point -1.902 20.779 3.519
+  point -2.596 20.94 3.043
+  point -3.176 21.101 2.432
+  point -3.614 21.262 1.714
+  point -3.893 21.423 0.919
+  point -3.999 21.584 0.084
+  point -3.928 21.745 -0.754
+  point -3.683 21.906 -1.56
+  point -3.275 22.067 -2.296
+  point -2.722 22.228 -2.931
+  point -2.048 22.389 -3.436
+  point -1.284 22.55 -3.788
+  point -0.463 22.711 -3.973
+  point 0.379 22.872 -3.982
+  point 1.204 23.034 -3.815
+  point 1.976 23.195 -3.478
+  point 2.66 23.356 -2.988
+  point 3.226 23.517 -2.365
+  point 3.65 23.678 -1.637
+  point 3.911 23.839 -0.837
+  point 4 24 -0
+  patch artnet destination 0 universe 0 order GRB
+end
+
+node helix wh.generator.helix
+  set radius 0.45
+  set thickness 0.08
+  set strands 2
+  set pitch 2
+  set speed 0.3
+  set color 0 0.7 1 1
+end
+node welle wh.generator.wave
+  set dirX 0
+  set dirY 1
+  set dirZ 0
+  set frequency 1.5
+  set speed 0.4
+  set colorA 0 0 0 0
+  set colorB 1 0.2 0.5 1
+end
+node mischen wh.blend.blend
+  set mode 0
+end
+node farbton wh.modifier.coloradjust
+end
+node zeit wh.value.time
+  set speed 0.05
+end
+
+connect welle.out -> mischen.a
+connect helix.out -> mischen.b
+connect mischen.out -> farbton.source
+connect zeit.seconds -> farbton.hue
+output farbton.out

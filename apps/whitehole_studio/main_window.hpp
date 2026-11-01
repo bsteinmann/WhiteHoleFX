@@ -27,6 +27,7 @@
 
 class QAction;
 class QActionGroup;
+class QDir;
 class QDockWidget;
 class QLabel;
 class QMenu;
@@ -101,6 +102,7 @@ public:
     QString exerciseStageSetup();
     /// Rauchtest: Reihenfolge der Menüs, Hilfe-Menü, Kürzelliste, Tooltips, roter Senden-Knopf.
     QString exerciseMenus();
+    QString exerciseLanguage();
     /// Rauchtest: Umschalter 2D/3D, Orbit mit der Maus, Zoom, feste Ansichten.
     QString exerciseView3d();
     /// Live-Modus ein- und ausschalten (F9). Eintritt scheitert ohne Looks.
@@ -135,6 +137,7 @@ private:
     void buildEditorDock();
     /// Füllt das Menü "Beispiele" aus den Ordnern neben dem Programm; leer, wenn es keine gibt.
     void fillExamplesMenu(QMenu* menu);
+    bool fillExamplesFrom(QMenu* menu, const QDir& dir);  // rekursiv; true, wenn Projekte gefunden wurden
     void updateActions();
     void updateStatus();
     void reportError(const QString& title, const std::string& message, bool interactive);
@@ -183,6 +186,9 @@ private:
     void buildSettings(QMenu* editMenu);
     /// Hilfe-Menü und Kürzelliste (main_window_help.cpp).
     void buildHelp(QMenu* help);
+    void buildLanguageMenu(QMenu* help);
+    void chooseLanguage(const QString& code);
+    void showTutorial();
     [[nodiscard]] std::vector<std::pair<QString, QString>> shortcutList() const;  // (Kürzel, Name), nach Name
     void showShortcuts();
     void showAbout();

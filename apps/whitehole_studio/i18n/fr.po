@@ -1,0 +1,1543 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: WhiteHoleFX\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: node_palette.cpp:158
+msgid "\nRechtsklick: Favorit umschalten"
+msgstr "\nClic droit : ajouter/retirer des favoris"
+
+#: main_window.cpp:271
+msgid "   |   AUSGABE AN"
+msgstr "   |   SORTIE ACTIVE"
+
+#: main_window_audio.cpp:59
+msgid "   |   Audio-Nodes im Projekt, Eingang aus (Einstellungen)"
+msgstr "   |   Nœuds audio dans le projet, entrée désactivée (Réglages)"
+
+#: main_window_audio.cpp:61
+msgid "   |   Audio: %1"
+msgstr "   |   Audio : %1"
+
+#: main_window.cpp:271
+msgid "   |   Ausgabe aus (%1 Pakete nicht gesendet)"
+msgstr "   |   Sortie désactivée (%1 paquets non envoyés)"
+
+#: main_window.cpp:261
+msgid "   |   BLACKOUT"
+msgstr "   |   BLACKOUT"
+
+#: main_window_dmx.cpp:71
+msgid "   |   DMX-Eingang %1: %2 Pakete"
+msgstr "   |   Entrée DMX %1 : %2 paquets"
+
+#: main_window_dmx.cpp:61
+msgid "   |   DMX-Nodes im Projekt, Eingang aus (Einstellungen)"
+msgstr "   |   Nœuds DMX dans le projet, entrée désactivée (Réglages)"
+
+#: main_window.cpp:266
+msgid "   |   EINGANG FEHLT – LEDs aus"
+msgstr "   |   ENTRÉE MANQUANTE – LED éteintes"
+
+#: main_window.cpp:263
+msgid "   |   Master %1 %"
+msgstr "   |   Master %1 %"
+
+#: main_window.cpp:258
+msgid "   |   TESTMODUS"
+msgstr "   |   MODE TEST"
+
+#: main_window_dmx.cpp:69
+msgid " + sACN"
+msgstr " + sACN"
+
+#: test_panel.cpp:48
+msgid " Durchläufe/s"
+msgstr " passages/s"
+
+#: test_panel.cpp:50
+msgid " LEDs/s"
+msgstr " LED/s"
+
+#: main_window_controls.cpp:53
+msgid " Master "
+msgstr " Master "
+
+#: test_panel.cpp:49
+msgid " Wechsel/s"
+msgstr " changements/s"
+
+#: live_panel.cpp:70 look_panel.cpp:51
+msgid " s"
+msgstr " s"
+
+#: layout_panel.cpp:233
+msgid "%1  (%2 LEDs)"
+msgstr "%1  (%2 LED)"
+
+#: live_panel.cpp:147
+msgid "%1  →  %2"
+msgstr "%1  →  %2"
+
+#: main_window_controls.cpp:61
+msgid "%1 %"
+msgstr "%1 %"
+
+#: main_window_help.cpp:106
+msgid "%1 (%2)"
+msgstr "%1 (%2)"
+
+#: settings_dialog.cpp:134
+msgid "%1 (Standard)"
+msgstr "%1 (par défaut)"
+
+#: settings_dialog.cpp:44 settings_dialog.cpp:138
+msgid "%1 (nicht gefunden)"
+msgstr "%1 (introuvable)"
+
+#: add_fixture_dialog.cpp:278
+msgid "%1 LEDs · Größe %2 × %3 × %4 · %5 Kanäle (RGB), rund %6 Universe(s)"
+msgstr "%1 LED · taille %2 × %3 × %4 · %5 canaux (RVB), environ %6 univers"
+
+#: main_window.cpp:247
+msgid "%1 LEDs, Frame %2 (verworfen %3), Pakete %4, Sendefehler %5"
+msgstr "%1 LED, image %2 (perdues %3), paquets %4, erreurs d'envoi %5"
+
+#: main_window.cpp:245
+msgid "%1 LEDs, angehalten"
+msgstr "%1 LED, arrêté"
+
+#: main_window_view3d.cpp:39
+msgid "&2D (bearbeiten)"
+msgstr "&2D (éditer)"
+
+#: main_window_view3d.cpp:40
+msgid "&3D"
+msgstr "&3D"
+
+#: main_window_actions.cpp:86
+msgid "&Ansicht"
+msgstr "&Affichage"
+
+#: main_window_actions.cpp:59
+msgid "&Ausgabe senden"
+msgstr "Envoyer la &sortie"
+
+#: main_window_actions.cpp:79
+msgid "&Bearbeiten"
+msgstr "&Édition"
+
+#: main_window_actions.cpp:50
+msgid "&Beenden"
+msgstr "&Quitter"
+
+#: main_window_actions.cpp:70
+msgid "&Beispiele"
+msgstr "E&xemples"
+
+#: main_window_controls.cpp:35
+msgid "&Blackout"
+msgstr "&Blackout"
+
+#: main_window_actions.cpp:64
+msgid "&Datei"
+msgstr "&Fichier"
+
+#: main_window_help.cpp:31
+msgid "&Dokumentation"
+msgstr "&Documentation"
+
+#: main_window_settings.cpp:25
+msgid "&Einstellungen …"
+msgstr "&Réglages …"
+
+#: main_window_help.cpp:40
+msgid "&Fehler melden oder Idee vorschlagen …"
+msgstr "&Signaler un bogue ou proposer une idée …"
+
+#: main_window_actions.cpp:100
+msgid "&Hilfe"
+msgstr "&Aide"
+
+#: main_window_stage.cpp:32
+msgid "&Layout und Patch …"
+msgstr "&Disposition et patch …"
+
+#: main_window_view3d.cpp:116
+msgid "&Leuchten (additiv)"
+msgstr "&Halo (additif)"
+
+#: main_window_actions.cpp:96
+msgid "&Live"
+msgstr "&Live"
+
+#: main_window_live.cpp:69
+msgid "&Live-Modus"
+msgstr "Mode &live"
+
+#: main_window_live.cpp:64
+msgid "&Look speichern …"
+msgstr "&Enregistrer le look …"
+
+#: main_window_actions.cpp:22
+msgid "&Neu"
+msgstr "&Nouveau"
+
+#: main_window_actions.cpp:31
+msgid "&Neu laden"
+msgstr "&Recharger"
+
+#: main_window_actions.cpp:43
+msgid "&Rückgängig"
+msgstr "&Annuler"
+
+#: main_window_actions.cpp:35
+msgid "&Speichern"
+msgstr "Enregi&strer"
+
+#: main_window_actions.cpp:84
+msgid "&Stage Config"
+msgstr "&Stage Config"
+
+#: main_window.cpp:139 main_window_actions.cpp:54
+msgid "&Start"
+msgstr "&Démarrer"
+
+#: main_window.cpp:139
+msgid "&Stopp"
+msgstr "&Arrêter"
+
+#: main_window_help.cpp:44
+msgid "&Tastenkürzel …"
+msgstr "&Raccourcis clavier …"
+
+#: main_window_stage.cpp:37
+msgid "&Testmodus …"
+msgstr "Mode &test …"
+
+#: main_window_help.cpp:36
+msgid "&Tutorial …"
+msgstr "&Tutoriel …"
+
+#: main_window_actions.cpp:92
+msgid "&Wiedergabe"
+msgstr "&Lecture"
+
+#: main_window_actions.cpp:46
+msgid "&Wiederholen"
+msgstr "&Rétablir"
+
+#: main_window_actions.cpp:68
+msgid "&Zuletzt geöffnet"
+msgstr "Fichiers &récents"
+
+#: main_window_actions.cpp:27
+msgid "&Öffnen …"
+msgstr "&Ouvrir …"
+
+#: main_window_help.cpp:48
+msgid "&Über WhiteHoleFX"
+msgstr "À &propos de WhiteHoleFX"
+
+#: live_panel.cpp:147
+msgid "(kein Look)"
+msgstr "(aucun look)"
+
+#: node_editor_presets.cpp:108
+msgid "(keine Presets)"
+msgstr "(aucun préréglage)"
+
+#: main_window_controls.cpp:117
+msgid "(leer)"
+msgstr "(vide)"
+
+#: main_window_audio.cpp:65
+msgid ", %1 BPM"
+msgstr ", %1 BPM"
+
+#: main_window_audio.cpp:63
+msgid ", Pegel %1 %"
+msgstr ", niveau %1 %"
+
+#: main_window_controls.cpp:46
+msgid "100 %"
+msgstr "100 %"
+
+#: main_window_actions.cpp:148
+msgid "3D"
+msgstr "3D"
+
+#: main_window_view3d.cpp:41
+msgid "3D &Front"
+msgstr "3D &face"
+
+#: main_window_view3d.cpp:43
+msgid "3D &Oben"
+msgstr "3D &dessus"
+
+#: main_window_view3d.cpp:42
+msgid "3D &Seite"
+msgstr "3D &côté"
+
+#: main_window_view3d.cpp:43
+msgid "3D von oben (maßhaltig)"
+msgstr "3D vu de dessus (à l'échelle)"
+
+#: main_window_view3d.cpp:42
+msgid "3D von rechts (maßhaltig)"
+msgstr "3D vu de droite (à l'échelle)"
+
+#: main_window_view3d.cpp:41
+msgid "3D von vorn (maßhaltig, zum Drehen einfach ziehen)"
+msgstr "3D vu de face (à l'échelle, glisser pour tourner)"
+
+#: main_window_view3d.cpp:88
+msgid "3D-&Darstellung"
+msgstr "Affichage &3D"
+
+#: add_fixture_dialog.cpp:54
+msgid "3D-Gitter (Cube, Vorhang, Säule)"
+msgstr "Grille 3D (cube, rideau, colonne)"
+
+#: preview_widget.cpp:69
+msgid "3D: ziehen = drehen · Rechtsklick oder Umschalt+Ziehen = verschieben · Rad = Zoom · Doppelklick = Zoom zurücksetzen"
+msgstr "3D : glisser = tourner · clic droit ou Maj+glisser = déplacer · molette = zoom · double-clic = réinitialiser le zoom"
+
+#: fixture_form.cpp:141
+msgid "<b>3D-Gitter</b>"
+msgstr "<b>Grille 3D</b>"
+
+#: fixture_form.cpp:104
+msgid "<b>Matrix</b>"
+msgstr "<b>Matrice</b>"
+
+#: fixture_form.cpp:185
+msgid "<b>Patch</b>"
+msgstr "<b>Patch</b>"
+
+#: fixture_form.cpp:178
+msgid "<b>Punktwolke</b>: %1 Punkte, nur in der Datei änderbar"
+msgstr "<b>Nuage de points</b> : %1 points, modifiable seulement dans le fichier"
+
+#: fixture_form.cpp:128
+msgid "<b>Strip</b>"
+msgstr "<b>Strip</b>"
+
+#: main_window_help.cpp:94
+msgid "<b>WhiteHoleFX Studio</b> %1<br><br>Steuerung für LED-Matrizen, Cubes und Pixel mit einem Node-Editor.<br>Lizenz: PolyForm Shield 1.0.0<br><br><a href=\"%2\">%2</a>"
+msgstr "<b>WhiteHoleFX Studio</b> %1<br><br>Pilotage de matrices LED, de cubes et de pixels avec un éditeur de nœuds.<br>Licence : PolyForm Shield 1.0.0<br><br><a href=\"%2\">%2</a>"
+
+#: add_fixture_dialog.cpp:109 fixture_form.cpp:122
+msgid "Abstand x y"
+msgstr "Écart x y"
+
+#: add_fixture_dialog.cpp:149 fixture_form.cpp:172
+msgid "Abstand x y z"
+msgstr "Écart x y z"
+
+#: output_form.cpp:25
+msgid "Adresse (leer = Multicast)"
+msgstr "Adresse (vide = multicast)"
+
+#: look_panel.cpp:38
+msgid "Aktuellen Effekt als Look speichern …"
+msgstr "Enregistrer l'effet actuel comme look …"
+
+#: main_window_controls.cpp:38
+msgid "Alle LEDs aus; die Pakete laufen weiter (Strg+B)"
+msgstr "Toutes les LED éteintes ; les paquets continuent (Ctrl+B)"
+
+#: node_defaults_page.cpp:61
+msgid "Alle Standardwerte zurücksetzen"
+msgstr "Réinitialiser toutes les valeurs par défaut"
+
+#: main_window_help.cpp:45
+msgid "Alle Tastenkürzel in einer Liste"
+msgstr "Tous les raccourcis clavier dans une liste"
+
+#: parameter_editors.cpp:301
+msgid "Alpha 0: an dieser Stelle bleibt die LED aus (die Farbe bleibt gemerkt)."
+msgstr "Alpha 0 : la LED reste éteinte ici (la couleur est conservée)."
+
+#: node_editor_menu.cpp:55
+msgid "Als Ausgang setzen (output)"
+msgstr "Définir comme sortie (output)"
+
+#: node_editor_presets.cpp:51
+msgid "Als Preset speichern"
+msgstr "Enregistrer comme préréglage"
+
+#: node_editor_menu.cpp:67
+msgid "Als Preset speichern …"
+msgstr "Enregistrer comme préréglage …"
+
+#: add_fixture_dialog.cpp:125
+msgid "Anfang und Ende relativ zur Position; die erste LED sitzt am Anfang."
+msgstr "Début et fin relatifs à la position ; la première LED est au début."
+
+#: add_fixture_dialog.cpp:123 fixture_form.cpp:137
+msgid "Anfang x y z"
+msgstr "Début x y z"
+
+#: main_window_view3d.cpp:47 stage_setup_window.cpp:29
+msgid "Ansicht"
+msgstr "Affichage"
+
+#: main_window_view3d.cpp:39
+msgid "Ansicht von vorn: Fixtures verschieben, Bereich aufziehen"
+msgstr "Vue de face : déplacer les fixtures, tracer une zone"
+
+#: fixture_form.cpp:169
+msgid "Anzahl x"
+msgstr "Nombre x"
+
+#: fixture_form.cpp:170
+msgid "Anzahl y"
+msgstr "Nombre y"
+
+#: fixture_form.cpp:171
+msgid "Anzahl z"
+msgstr "Nombre z"
+
+#: main_window_dmx.cpp:66
+msgid "Art-Net"
+msgstr "Art-Net"
+
+#: settings_dialog.cpp:95
+msgid "Art-Net empfangen"
+msgstr "Recevoir Art-Net"
+
+#: settings_dialog.cpp:80
+msgid "Art-Net, sACN und DDP gehen über diese Karte hinaus. Bei „Automatisch“ entscheidet die Routingtabelle des Systems, bei mehreren Karten oft die falsche. Eine Karte auswählen, wenn die Lichtanlage an einem zweiten Netzwerkanschluss hängt."
+msgstr "Art-Net, sACN et DDP sortent par cette carte. Avec « Automatique », la table de routage du système décide, souvent à tort quand il y a plusieurs cartes. Choisissez une carte si l'installation lumière est sur une seconde prise réseau."
+
+#: settings_dialog.cpp:107
+msgid "Art-Net-Port (UDP):"
+msgstr "Port Art-Net (UDP) :"
+
+#: main_window_actions.cpp:145 settings_dialog.cpp:60
+msgid "Audio"
+msgstr "Audio"
+
+#: main_window_audio.cpp:50
+msgid "Audio-Eingang: %1"
+msgstr "Entrée audio : %1"
+
+#: parameter_panel.cpp:100
+msgid "Auf Standardwert zurücksetzen"
+msgstr "Rétablir la valeur par défaut"
+
+#: node_defaults_page.cpp:128
+msgid "Auf den Wert der Bibliothek zurückstellen"
+msgstr "Rétablir la valeur de la bibliothèque"
+
+#: node_palette.cpp:118 node_palette.cpp:258
+msgid "Auf die Fläche ziehen: Node hinzufügen.\nNode hierher ziehen: entfernen."
+msgstr "Glisser sur la zone : ajouter un nœud.\nGlisser un nœud ici : le supprimer."
+
+#: settings_dialog.cpp:169
+msgid "Aufnahmegeräte lassen sich nicht auflisten: %1"
+msgstr "Impossible de lister les périphériques de capture : %1"
+
+#: settings_dialog.cpp:120 test_panel.cpp:38
+msgid "Aus"
+msgstr "Désactivé"
+
+#: node_palette.cpp:225
+msgid "Aus Favoriten entfernen"
+msgstr "Retirer des favoris"
+
+#: main_window_view3d.cpp:97
+msgid "Aus-LEDs &grau"
+msgstr "LED éteintes en &gris"
+
+#: main_window_view3d.cpp:96
+msgid "Aus-LEDs &schwach"
+msgstr "LED éteintes &atténuées"
+
+#: main_window_view3d.cpp:95
+msgid "Aus-LEDs &unsichtbar"
+msgstr "LED éteintes &masquées"
+
+#: layout_panel.cpp:65
+msgid "Ausgabe"
+msgstr "Sortie"
+
+#: main_window_view3d.cpp:96
+msgid "Ausgeschaltete LEDs als sehr dunkle Punkte, nur als Orientierung"
+msgstr "LED éteintes en points très sombres, pour l'orientation seulement"
+
+#: test_panel.cpp:38
+msgid "Auswahl hervorheben"
+msgstr "Mettre la sélection en évidence"
+
+#: settings_dialog.cpp:38
+msgid "Automatisch (das System wählt)"
+msgstr "Automatique (le système choisit)"
+
+#: add_fixture_dialog.cpp:161
+msgid "Automatisch (nächstes freies Universe)"
+msgstr "Automatique (prochain univers libre)"
+
+#: main_window_controls.cpp:74
+msgid "BLACKOUT"
+msgstr "BLACKOUT"
+
+#: live_panel.cpp:148
+msgid "Bereit: %1 - GO drücken"
+msgstr "Prêt : %1 - appuyer sur GO"
+
+#: main_window_actions.cpp:111
+msgid "Betrieb"
+msgstr "Fonctionnement"
+
+#: output_form.cpp:51
+msgid "Bildrate (fps)"
+msgstr "Cadence (fps)"
+
+#: test_panel.cpp:30
+msgid "Blau"
+msgstr "Bleu"
+
+#: look_panel.cpp:74
+msgid "Blendet die Bearbeitung aus und zeigt große Knöpfe für alle Looks (F9)"
+msgstr "Masque l'édition et affiche de grands boutons pour tous les looks (F9)"
+
+#: layout_panel_add.cpp:40
+msgid "Cube"
+msgstr "Cube"
+
+#: test_panel.cpp:31
+msgid "Cyan"
+msgstr "Cyan"
+
+#: add_fixture_dialog.cpp:178 fixture_form.cpp:218
+msgid "DDP-Offset (Byte)"
+msgstr "Décalage DDP (octets)"
+
+#: settings_dialog.cpp:59
+msgid "DMX-Eingang"
+msgstr "Entrée DMX"
+
+#: main_window_dmx.cpp:45
+msgid "DMX-Eingang: %1"
+msgstr "Entrée DMX : %1"
+
+#: add_fixture_dialog.cpp:146 fixture_form.cpp:158
+msgid "Das Kabel beginnt an dieser Seite statt an der gegenüberliegenden"
+msgstr "Le câble commence de ce côté plutôt que du côté opposé"
+
+#: main_window.cpp:194
+msgid "Das Projekt wurde geändert. Änderungen verwerfen?"
+msgstr "Le projet a été modifié. Abandonner les modifications ?"
+
+#: test_panel.cpp:96
+msgid "Das Testbild ersetzt den Effekt in der Vorschau und, wenn „Ausgabe senden“ an ist, auch auf den LEDs. Es wird nicht im Projekt gespeichert.\n\nAchtung: Weiß und Farbe leuchten mit voller Helligkeit. Prüfe vorher, ob die Netzteile die ganze Wand auf 100 % tragen."
+msgstr "La mire remplace l'effet dans l'aperçu et, si « Envoyer la sortie » est activé, aussi sur les LED. Elle n'est pas enregistrée dans le projet.\n\nAttention : le blanc et la couleur s'allument à pleine luminosité. Vérifiez d'abord que les alimentations supportent tout le mur à 100 %."
+
+#: main_window_actions.cpp:103
+msgid "Datei"
+msgstr "Fichier"
+
+#: look_panel.cpp:258
+msgid "Den Look „%1“ durch den aktuellen Effekt ersetzen?"
+msgstr "Remplacer le look « %1 » par l'effet actuel ?"
+
+#: look_panel.cpp:284
+msgid "Den Look „%1“ löschen?"
+msgstr "Supprimer le look « %1 » ?"
+
+#: main_window_live.cpp:66
+msgid "Den aktuellen Effekt als Look in die Liste legen (Strg+L)"
+msgstr "Ajouter l'effet actuel à la liste comme look (Ctrl+L)"
+
+#: main_window_help.cpp:33
+msgid "Die Anleitung im Browser öffnen"
+msgstr "Ouvrir le manuel dans le navigateur"
+
+#: settings_dialog.cpp:110
+msgid "Die DMX-Nodes im Projekt lesen ihre Werte aus dem Empfang. Standard-Ports sind 6454 (Art-Net) und 5568 (sACN); nur ändern, wenn ein anderes Programm sie belegt. Nach der Installation ist der Empfang aus; unter Windows fragt die Firewall beim ersten Einschalten nach."
+msgstr "Les nœuds DMX du projet lisent leurs valeurs dans les données reçues. Les ports par défaut sont 6454 (Art-Net) et 5568 (sACN) ; ne les changez que si un autre programme les utilise. La réception est désactivée après l'installation ; sous Windows, le pare-feu pose la question à la première activation."
+
+#: test_panel.cpp:86
+msgid "Die Fixtures in der Layout-Liste; alle anderen bleiben dunkel."
+msgstr "Les fixtures de la liste de disposition ; tous les autres restent éteints."
+
+#: settings_dialog.cpp:173
+msgid "Die Quelle speist die Audio-Nodes (Pegel, Frequenzband, Beat, Spektrum)."
+msgstr "La source alimente les nœuds audio (niveau, bande de fréquences, beat, spectre)."
+
+#: layout_panel_add.cpp:157
+msgid "Die Reihenfolge in der Datei ist die Reihenfolge am Datenkabel."
+msgstr "L'ordre dans le fichier est l'ordre le long du câble de données."
+
+#: main_window_language.cpp:46
+msgid "Die Sprache wechselt beim nächsten Start."
+msgstr "La langue changera au prochain démarrage."
+
+#: main_window_language.cpp:43
+msgid "Die neue Sprache gilt nach einem Neustart von WhiteHoleFX. Jetzt neu starten?\n(Nicht gespeicherte Änderungen werden vorher abgefragt.)"
+msgstr "La nouvelle langue s'applique après le redémarrage de WhiteHoleFX. Redémarrer maintenant ?\n(Les modifications non enregistrées seront d'abord proposées à l'enregistrement.)"
+
+#: settings_dialog.cpp:88
+msgid "Die Änderung wirkt sofort nach „OK“."
+msgstr "La modification prend effet immédiatement après « OK »."
+
+#: main_window.cpp:171
+msgid "Dieser Node hat keine einstellbaren Parameter."
+msgstr "Ce nœud n'a pas de paramètres réglables."
+
+#: main.cpp:75
+msgid "Dieses Programm wurde ohne GPU-Backend gebaut (-DWHITEHOLEFX_WEBGPU=ON); es zeigt nur das Layout."
+msgstr "Ce programme a été compilé sans le backend GPU (-DWHITEHOLEFX_WEBGPU=ON) ; il n'affiche que la disposition."
+
+#: parameter_panel.cpp:56
+msgid "Dieses Projekt hat keine einstellbaren Parameter."
+msgstr "Ce projet n'a pas de paramètres réglables."
+
+#: node_editor_menu.cpp:64
+msgid "Duplizieren\tStrg+D"
+msgstr "Dupliquer\tCtrl+D"
+
+#: main_window_actions.cpp:142
+msgid "Effekte (2D)"
+msgstr "Effets (2D)"
+
+#: live_panel.cpp:63
+msgid "Eigene Überblendzeit:"
+msgstr "Durée de fondu personnalisée :"
+
+#: live_panel.cpp:62
+msgid "Ein Klick lädt den Look nur vor. GO (Leertaste) startet dann die Überblendung."
+msgstr "Un clic ne fait que précharger le look. GO (barre d'espace) lance ensuite le fondu."
+
+#: look_panel.cpp:32
+msgid "Ein Look ist ein fertiger Effekt (vom Generator bis zum Ausgang). Speichere deine Effekte hier und rufe sie im Live-Modus mit einem Klick ab."
+msgstr "Un look est un effet complet (du générateur à la sortie). Enregistrez vos effets ici et rappelez-les en mode live d'un clic."
+
+#: main_window_help.cpp:37
+msgid "Eine Einführung in die Bedienung, in der gewählten Sprache"
+msgstr "Une introduction à l'utilisation, dans la langue choisie"
+
+#: node_editor_menu.cpp:88
+msgid "Einfügen\tStrg+V"
+msgstr "Coller\tCtrl+V"
+
+#: main_window_settings.cpp:46 output_form.cpp:45 settings_dialog.cpp:56
+msgid "Einstellungen"
+msgstr "Réglages"
+
+#: main_window_actions.cpp:139
+msgid "Einstieg"
+msgstr "Premiers pas"
+
+#: add_fixture_dialog.cpp:124 fixture_form.cpp:138
+msgid "Ende x y z"
+msgstr "Fin x y z"
+
+#: layout_panel.cpp:43
+msgid "Entfernen"
+msgstr "Supprimer"
+
+#: layout_panel.cpp:169
+msgid "Erst Fixtures wählen (Strg oder Umschalt halten für mehrere)"
+msgstr "Sélectionnez d'abord des fixtures (Ctrl ou Maj pour plusieurs)"
+
+#: add_fixture_dialog.cpp:139
+msgid "Erste Achse = läuft am schnellsten entlang des Kabels"
+msgstr "Premier axe = le plus rapide le long du câble"
+
+#: add_fixture_dialog.cpp:177 fixture_form.cpp:217
+msgid "Erster Kanal"
+msgstr "Premier canal"
+
+#: node_editor_presets.cpp:62
+msgid "Es gibt schon ein Preset \"%1\". Ersetzen?"
+msgstr "Un préréglage « %1 » existe déjà. Le remplacer ?"
+
+#: look_panel.cpp:245
+msgid "Es gibt schon einen Look „%1“. Mit dem aktuellen Effekt überschreiben?"
+msgstr "Un look « %1 » existe déjà. L'écraser avec l'effet actuel ?"
+
+#: layout_panel_add.cpp:69
+msgid "Es ist kein Projekt geladen. Mit Strg+N ein neues anlegen oder mit Strg+O eins öffnen."
+msgstr "Aucun projet n'est chargé. Créez-en un avec Ctrl+N ou ouvrez-en un avec Ctrl+O."
+
+#: layout_panel_add.cpp:150
+msgid "Faktor auf alle Koordinaten, z. B. 0,1 für Millimeter in Zentimeter"
+msgstr "Facteur appliqué à toutes les coordonnées, p. ex. 0,1 pour des millimètres en centimètres"
+
+#: parameter_editors.cpp:87 test_panel.cpp:38 test_panel.cpp:72
+msgid "Farbe"
+msgstr "Couleur"
+
+#: add_fixture_dialog.cpp:179 fixture_form.cpp:219 test_panel.cpp:39
+msgid "Farbreihenfolge"
+msgstr "Ordre des couleurs"
+
+#: node_palette.cpp:178
+msgid "Favoriten"
+msgstr "Favoris"
+
+#: main_window_stage.cpp:24
+msgid "Fixture &hinzufügen …"
+msgstr "&Ajouter un fixture …"
+
+#: add_fixture_dialog.cpp:47
+msgid "Fixture hinzufügen"
+msgstr "Ajouter un fixture"
+
+#: layout_panel.cpp:59
+msgid "Fixtures"
+msgstr "Fixtures"
+
+#: main_window_stage.cpp:34
+msgid "Fixtures anordnen, Universen und Ziele einstellen (eigenes Fenster)"
+msgstr "Disposer les fixtures, régler univers et destinations (fenêtre séparée)"
+
+#: add_fixture_dialog.cpp:56
+msgid "Form"
+msgstr "Forme"
+
+#: main_window.cpp:310
+msgid "Frame"
+msgstr "Image"
+
+#: main_window_view3d.cpp:40
+msgid "Frei drehbare Ansicht: ziehen = drehen, Rechtsklick = verschieben, Rad = Zoom"
+msgstr "Vue librement orientable : glisser = tourner, clic droit = déplacer, molette = zoom"
+
+#: stage_view.cpp:50
+msgid "Front"
+msgstr "Face"
+
+#: main_window_live.cpp:91
+msgid "Für den Live-Modus erst Looks speichern (Dock „Looks“)."
+msgstr "Pour le mode live, enregistrez d'abord des looks (panneau « Looks »)."
+
+#: live_panel.cpp:73
+msgid "GO  (Leertaste)"
+msgstr "GO  (barre d'espace)"
+
+#: fixture_form.cpp:220
+msgid "Gamma"
+msgstr "Gamma"
+
+#: main_window_file.cpp:82
+msgid "Geladen: %1"
+msgstr "Chargé : %1"
+
+#: test_panel.cpp:31
+msgid "Gelb"
+msgstr "Jaune"
+
+#: settings_dialog.cpp:122
+msgid "Gerät:"
+msgstr "Périphérique :"
+
+#: main_window_controls.cpp:45
+msgid "Gesamthelligkeit (wirkt auf Vorschau und Ausgabe, nicht im Projekt gespeichert)"
+msgstr "Luminosité globale (agit sur l'aperçu et la sortie, non enregistrée dans le projet)"
+
+#: main_window_file.cpp:139 main_window_file.cpp:160
+msgid "Gespeichert: %1"
+msgstr "Enregistré : %1"
+
+#: layout_panel.cpp:152
+msgid "Gleiche Lücken senkrecht (ab drei Fixtures)"
+msgstr "Écarts verticaux égaux (à partir de trois fixtures)"
+
+#: layout_panel.cpp:150
+msgid "Gleiche Lücken waagrecht (ab drei Fixtures)"
+msgstr "Écarts horizontaux égaux (à partir de trois fixtures)"
+
+#: test_panel.cpp:30
+msgid "Grün"
+msgstr "Vert"
+
+#: fixture_form.cpp:221
+msgid "Helligkeit"
+msgstr "Luminosité"
+
+#: add_fixture_dialog.cpp:71
+msgid "Hinzufügen"
+msgstr "Ajouter"
+
+#: layout_panel.cpp:39
+msgid "Hinzufügen …"
+msgstr "Ajouter …"
+
+#: layout_panel.cpp:41
+msgid "Import …"
+msgstr "Importer …"
+
+#: layout_panel_add.cpp:144
+msgid "Import: %1"
+msgstr "Importation : %1"
+
+#: look_panel.cpp:59
+msgid "In den Editor laden"
+msgstr "Charger dans l'éditeur"
+
+#: add_fixture_dialog.cpp:110 add_fixture_dialog.cpp:152 fixture_form.cpp:123
+msgid "Kabel beginnt"
+msgstr "Le câble commence"
+
+#: settings_dialog.cpp:84
+msgid "Karte zum Empfangen:"
+msgstr "Carte pour la réception :"
+
+#: settings_dialog.cpp:79
+msgid "Karte zum Senden:"
+msgstr "Carte pour l'envoi :"
+
+#: fixture_form.cpp:68
+msgid "Kein Fixture ausgewählt."
+msgstr "Aucun fixture sélectionné."
+
+#: main.cpp:72
+msgid "Kein GPU-Adapter: %1"
+msgstr "Aucun adaptateur GPU : %1"
+
+#: main_window.cpp:243
+msgid "Kein Projekt"
+msgstr "Aucun projet"
+
+#: parameter_panel.cpp:45 stage_view.cpp:97
+msgid "Kein Projekt geladen."
+msgstr "Aucun projet chargé."
+
+#: settings_dialog.cpp:171
+msgid "Keine Aufnahmegeräte gefunden. Ein Audio-Interface anschließen und das Fenster neu öffnen."
+msgstr "Aucun périphérique de capture trouvé. Branchez une interface audio et rouvrez la fenêtre."
+
+#: node_editor_menu.cpp:63
+msgid "Kopieren\tStrg+C"
+msgstr "Copier\tCtrl+C"
+
+#: layout_panel.cpp:42
+msgid "LED-Positionen aus einer CSV- oder JSON-Datei als Punktwolke laden"
+msgstr "Charger les positions des LED depuis un fichier CSV ou JSON comme nuage de points"
+
+#: main_window_stage.cpp:29
+msgid "LED-Positionen aus einer CSV- oder JSON-Datei laden"
+msgstr "Charger les positions des LED depuis un fichier CSV ou JSON"
+
+#: layout_panel_add.cpp:138
+msgid "LED-Positionen importieren"
+msgstr "Importer les positions des LED"
+
+#: add_fixture_dialog.cpp:122 fixture_form.cpp:136
+msgid "LEDs"
+msgstr "LED"
+
+#: add_fixture_dialog.cpp:108
+msgid "LEDs breit × hoch"
+msgstr "LED en largeur × hauteur"
+
+#: add_fixture_dialog.cpp:148
+msgid "LEDs x y z"
+msgstr "LED x y z"
+
+#: main_window.cpp:255
+msgid "LIVE   |   "
+msgstr "LIVE   |   "
+
+#: test_panel.cpp:39
+msgid "Laufbalken"
+msgstr "Barre de balayage"
+
+#: test_panel.cpp:39
+msgid "Lauflicht"
+msgstr "Chenillard"
+
+#: stage_setup_window.cpp:27
+msgid "Layout"
+msgstr "Disposition"
+
+#: output_form.cpp:52
+msgid "Layout auf Würfel abbilden"
+msgstr "Projeter la disposition sur le cube"
+
+#: output_form.cpp:31
+msgid "Letztes Ziel −"
+msgstr "Dernière destination −"
+
+#: main_window_view3d.cpp:119
+msgid "Leuchtende LEDs mit weichem Schein, Farben addieren sich; nichts verdeckt etwas"
+msgstr "LED lumineuses avec un halo doux, les couleurs s'additionnent ; rien n'en cache d'autres"
+
+#: layout_panel.cpp:144
+msgid "Linke Kanten ausrichten"
+msgstr "Aligner les bords gauches"
+
+#: main_window_controls.cpp:121
+msgid "Liste leeren"
+msgstr "Vider la liste"
+
+#: main_window_live.cpp:57
+msgid "Live"
+msgstr "Live"
+
+#: look_panel.cpp:72
+msgid "Live-Modus starten  ▶"
+msgstr "Démarrer le mode live  ▶"
+
+#: look_panel.cpp:160
+msgid "Look %1"
+msgstr "Look %1"
+
+#: look_panel.cpp:245
+msgid "Look ersetzen"
+msgstr "Remplacer le look"
+
+#: look_panel.cpp:284
+msgid "Look löschen"
+msgstr "Supprimer le look"
+
+#: look_panel.cpp:238
+msgid "Look speichern"
+msgstr "Enregistrer le look"
+
+#: look_panel.cpp:270
+msgid "Look umbenennen"
+msgstr "Renommer le look"
+
+#: look_panel.cpp:258
+msgid "Look überschreiben"
+msgstr "Écraser le look"
+
+#: main_window_live.cpp:52
+msgid "Looks"
+msgstr "Looks"
+
+#: node_palette.cpp:254
+msgid "Loslassen: Node wird entfernt"
+msgstr "Relâcher : le nœud sera supprimé"
+
+#: look_panel.cpp:61
+msgid "Löschen"
+msgstr "Supprimer"
+
+#: test_panel.cpp:32
+msgid "Magenta"
+msgstr "Magenta"
+
+#: add_fixture_dialog.cpp:161
+msgid "Manuell"
+msgstr "Manuel"
+
+#: layout_panel_add.cpp:34 layout_panel_add.cpp:112
+msgid "Matrix"
+msgstr "Matrice"
+
+#: add_fixture_dialog.cpp:54
+msgid "Matrix (Fläche)"
+msgstr "Matrice (surface)"
+
+#: main_window_stage.cpp:25
+msgid "Matrix, Strip oder 3D-Gitter mit Größe x y z, Lage, Verkabelung und Patch anlegen"
+msgstr "Créer une matrice, un strip ou une grille 3D avec taille x y z, position, câblage et patch"
+
+#: layout_panel.cpp:40
+msgid "Matrix, Strip oder 3D-Gitter mit Größe, Lage, Verkabelung und Patch anlegen"
+msgstr "Créer une matrice, un strip ou une grille 3D avec taille, position, câblage et patch"
+
+#: layout_panel_add.cpp:154
+msgid "Maßstab"
+msgstr "Échelle"
+
+#: live_panel.cpp:61
+msgid "Mit GO (vorladen)"
+msgstr "Avec GO (préchargement)"
+
+#: look_panel.cpp:58
+msgid "Mit aktuellem Effekt überschreiben"
+msgstr "Écraser avec l'effet actuel"
+
+#: add_fixture_dialog.cpp:172
+msgid "Modus"
+msgstr "Mode"
+
+#: add_fixture_dialog.cpp:55 fixture_form.cpp:74
+msgid "Name"
+msgstr "Nom"
+
+#: look_panel.cpp:238
+msgid "Name des Looks:"
+msgstr "Nom du look :"
+
+#: node_editor_presets.cpp:51
+msgid "Name des Presets:"
+msgstr "Nom du préréglage :"
+
+#: settings_dialog.cpp:58
+msgid "Netzwerk"
+msgstr "Réseau"
+
+#: main_window_settings.cpp:58
+msgid "Netzwerkkarte zum Senden: %1"
+msgstr "Carte réseau pour l'envoi : %1"
+
+#: main_window_settings.cpp:27
+msgid "Netzwerkkarte, DMX-Eingang, Audio-Interface und Standardwerte für Nodes"
+msgstr "Carte réseau, entrée DMX, interface audio et valeurs par défaut des nœuds"
+
+#: node_defaults_page.cpp:36
+msgid "Neue Nodes starten mit diesen Werten statt mit denen der Bibliothek. Bestehende Nodes und geladene Projekte ändern sich nicht. Fett markierte Typen haben eigene Werte."
+msgstr "Les nouveaux nœuds démarrent avec ces valeurs au lieu de celles de la bibliothèque. Les nœuds existants et les projets chargés ne changent pas. Les types en gras ont leurs propres valeurs."
+
+#: look_panel.cpp:270
+msgid "Neuer Name:"
+msgstr "Nouveau nom :"
+
+#: main_window_file.cpp:94
+msgid "Neues Projekt"
+msgstr "Nouveau projet"
+
+#: main_window_actions.cpp:24
+msgid "Neues Projekt (Strg+N)"
+msgstr "Nouveau projet (Ctrl+N)"
+
+#: main_window.cpp:121
+msgid "Neues Projekt (Strg+N), Projekt öffnen (Strg+O) oder eine .whfx-Datei hierher ziehen.\n\n%1"
+msgstr "Nouveau projet (Ctrl+N), ouvrir un projet (Ctrl+O) ou glisser un fichier .whfx ici.\n\n%1"
+
+#: main_window_file.cpp:98
+msgid "Neues Projekt. Mit Strg+S speichern."
+msgstr "Nouveau projet. Enregistrer avec Ctrl+S."
+
+#: add_fixture_dialog.cpp:161
+msgid "Nicht senden"
+msgstr "Ne pas envoyer"
+
+#: node_editor_menu.cpp:29
+msgid "Node hinzufügen"
+msgstr "Ajouter un nœud"
+
+#: node_editor_menu.cpp:71
+msgid "Node löschen"
+msgstr "Supprimer le nœud"
+
+#: node_editor_menu.cpp:85
+msgid "Node suchen …\tStrg+Leertaste"
+msgstr "Chercher un nœud …\tCtrl+Espace"
+
+#: node_editor_search.cpp:77
+msgid "Node suchen … (Pfeiltasten, Enter)"
+msgstr "Chercher un nœud … (flèches, Entrée)"
+
+#: settings_dialog.cpp:62
+msgid "Node-Standardwerte"
+msgstr "Valeurs par défaut des nœuds"
+
+#: node_defaults_page.cpp:47
+msgid "Node-Typ suchen …"
+msgstr "Chercher un type de nœud …"
+
+#: main_window_editor.cpp:50
+msgid "Nodes"
+msgstr "Nœuds"
+
+#: node_palette.cpp:105
+msgid "Nodes suchen …"
+msgstr "Chercher des nœuds …"
+
+#: test_panel.cpp:85
+msgid "Nur auf gewählten Fixtures"
+msgstr "Seulement sur les fixtures sélectionnés"
+
+#: main_window_view3d.cpp:95
+msgid "Nur leuchtende LEDs zeichnen: man sieht durch den Cube hindurch"
+msgstr "Dessiner seulement les LED allumées : on voit à travers le cube"
+
+#: stage_view.cpp:52
+msgid "Oben"
+msgstr "Dessus"
+
+#: layout_panel.cpp:147
+msgid "Obere Kanten ausrichten"
+msgstr "Aligner les bords supérieurs"
+
+#: add_fixture_dialog.cpp:153
+msgid "Ohne Häkchen beginnt das Kabel links, unten, hinten. x nach rechts, y nach oben, z zum Betrachter."
+msgstr "Sans coche, le câble commence à gauche, en bas, à l'arrière. x vers la droite, y vers le haut, z vers l'observateur."
+
+#: main_window_actions.cpp:61
+msgid "Pakete (Art-Net, sACN, DDP) wirklich ins Netz schicken"
+msgstr "Envoyer réellement les paquets (Art-Net, sACN, DDP) sur le réseau"
+
+#: main_window.cpp:85
+msgid "Parameter"
+msgstr "Paramètres"
+
+#: add_fixture_dialog.cpp:159
+msgid "Patch (Ausgabe)"
+msgstr "Patch (sortie)"
+
+#: stage_view.cpp:49
+msgid "Perspektive"
+msgstr "Perspective"
+
+#: output_form.cpp:25
+msgid "Port (0 = Standard)"
+msgstr "Port (0 = par défaut)"
+
+#: add_fixture_dialog.cpp:57
+msgid "Position x y z"
+msgstr "Position x y z"
+
+#: layout_panel_add.cpp:139
+msgid "Positionen (*.csv *.txt *.tsv *.json);;Alle Dateien (*)"
+msgstr "Positions (*.csv *.txt *.tsv *.json);;Tous les fichiers (*)"
+
+#: node_editor_presets.cpp:96
+msgid "Preset \"%1\" gelöscht."
+msgstr "Préréglage « %1 » supprimé."
+
+#: node_editor_presets.cpp:41
+msgid "Preset \"%1\" gespeichert (%2 Nodes)."
+msgstr "Préréglage « %1 » enregistré (%2 nœuds)."
+
+#: node_editor_presets.cpp:118
+msgid "Preset \"%1\" löschen?"
+msgstr "Supprimer le préréglage « %1 » ?"
+
+#: node_editor_presets.cpp:105
+msgid "Preset einfügen"
+msgstr "Insérer le préréglage"
+
+#: node_editor_presets.cpp:62
+msgid "Preset ersetzen"
+msgstr "Remplacer le préréglage"
+
+#: node_editor_presets.cpp:106 node_editor_presets.cpp:118
+msgid "Preset löschen"
+msgstr "Supprimer le préréglage"
+
+#: main_window_file.cpp:74
+msgid "Projekt laden"
+msgstr "Charger un projet"
+
+#: main_window_file.cpp:145
+msgid "Projekt speichern unter"
+msgstr "Enregistrer le projet sous"
+
+#: main_window_file.cpp:109
+msgid "Projekt öffnen"
+msgstr "Ouvrir un projet"
+
+#: add_fixture_dialog.cpp:174 fixture_form.cpp:214
+msgid "Protokoll"
+msgstr "Protocole"
+
+#: layout_panel_add.cpp:42
+msgid "Punkte"
+msgstr "Points"
+
+#: main_window_stage.cpp:28
+msgid "Punktwolke &importieren …"
+msgstr "&Importer un nuage de points …"
+
+#: output_form.cpp:54
+msgid "Quellname (sACN)"
+msgstr "Nom de la source (sACN)"
+
+#: layout_panel.cpp:146
+msgid "Rechte Kanten ausrichten"
+msgstr "Aligner les bords droits"
+
+#: layout_panel.cpp:146
+msgid "Rechts ⇥"
+msgstr "Droite ⇥"
+
+#: fixture_form.cpp:173
+msgid "Reihenfolge (schnellste zuerst)"
+msgstr "Ordre (le plus rapide d'abord)"
+
+#: test_panel.cpp:76
+msgid "Richtung"
+msgstr "Direction"
+
+#: test_panel.cpp:29
+msgid "Rot"
+msgstr "Rouge"
+
+#: stage_view.cpp:51
+msgid "Seite"
+msgstr "Côté"
+
+#: output_form.cpp:48
+msgid "Seitenverhältnis halten (KeepAspect)"
+msgstr "Conserver les proportions (KeepAspect)"
+
+#: layout_panel.cpp:148
+msgid "Senkrecht mittig ausrichten"
+msgstr "Centrer verticalement"
+
+#: fixture_form.cpp:111 fixture_form.cpp:149
+msgid "Serpentine"
+msgstr "Serpentin"
+
+#: add_fixture_dialog.cpp:140
+msgid "Serpentine (Strang kehrt an jedem Ende um)"
+msgstr "Serpentin (le brin repart en sens inverse à chaque extrémité)"
+
+#: add_fixture_dialog.cpp:106
+msgid "Serpentine (jede zweite Zeile rückwärts)"
+msgstr "Serpentin (une ligne sur deux en sens inverse)"
+
+#: look_panel.cpp:52
+msgid "So lange dauert das Überblenden zu diesem Look. 0 = hartes Umschalten."
+msgstr "Durée du fondu vers ce look. 0 = changement brutal."
+
+#: node_palette.cpp:190
+msgid "Sonstige"
+msgstr "Autres"
+
+#: fixture_form.cpp:110 fixture_form.cpp:120
+msgid "Spalten"
+msgstr "Colonnes"
+
+#: add_fixture_dialog.cpp:105
+msgid "Spalten (senkrecht)"
+msgstr "Colonnes (verticales)"
+
+#: main_window_file.cpp:135 main_window_file.cpp:155
+msgid "Speichern"
+msgstr "Enregistrer"
+
+#: main_window_actions.cpp:39
+msgid "Speichern &unter …"
+msgstr "Enregistrer &sous …"
+
+#: main_window_language.cpp:42
+msgid "Sprache"
+msgstr "Langue"
+
+#: stage_setup_window.cpp:23
+msgid "Stage Config"
+msgstr "Stage Config"
+
+#: settings_dialog.cpp:121
+msgid "Standardgerät des Systems"
+msgstr "Périphérique par défaut du système"
+
+#: main_window.cpp:289
+msgid "Start"
+msgstr "Démarrer"
+
+#: live_panel.cpp:64
+msgid "Statt der Zeit, die beim Look gespeichert ist"
+msgstr "Au lieu de la durée enregistrée avec le look"
+
+#: layout_panel_add.cpp:37 layout_panel_add.cpp:119
+msgid "Strip"
+msgstr "Strip"
+
+#: add_fixture_dialog.cpp:54
+msgid "Strip (Linie)"
+msgstr "Strip (ligne)"
+
+#: main_window_controls.cpp:78
+msgid "TESTMODUS: %1"
+msgstr "MODE TEST : %1"
+
+#: main_window_help.cpp:87
+msgid "Tastenkürzel"
+msgstr "Raccourcis clavier"
+
+#: test_panel.cpp:83
+msgid "Tempo"
+msgstr "Vitesse"
+
+#: test_panel.cpp:66
+msgid "Testbild"
+msgstr "Mire"
+
+#: main_window_stage.cpp:38
+msgid "Testbilder auf die LEDs schicken, um Verkabelung und Patch zu prüfen"
+msgstr "Envoyer des mires aux LED pour vérifier le câblage et le patch"
+
+#: stage_setup_window.cpp:28
+msgid "Testmodus"
+msgstr "Mode test"
+
+#: test_panel.cpp:90
+msgid "Testmodus beenden"
+msgstr "Quitter le mode test"
+
+#: main_window_language.cpp:62
+msgid "Tutorial"
+msgstr "Tutoriel"
+
+#: look_panel.cpp:60
+msgid "Umbenennen …"
+msgstr "Renommer …"
+
+#: main_window.cpp:193
+msgid "Ungespeicherte Änderungen"
+msgstr "Modifications non enregistrées"
+
+#: add_fixture_dialog.cpp:176 fixture_form.cpp:216
+msgid "Universe"
+msgstr "Univers"
+
+#: add_fixture_dialog.cpp:284
+msgid "Universe %1 ab Kanal 1"
+msgstr "Univers %1 à partir du canal 1"
+
+#: layout_panel.cpp:149
+msgid "Unten ⤓"
+msgstr "Bas ⤓"
+
+#: layout_panel.cpp:149
+msgid "Untere Kanten ausrichten"
+msgstr "Aligner les bords inférieurs"
+
+#: fixture_form.cpp:80
+msgid "Ursprung x y z"
+msgstr "Origine x y z"
+
+#: node_editor_menu.cpp:78
+msgid "Verbindung trennen"
+msgstr "Déconnecter"
+
+#: layout_panel.cpp:150
+msgid "Verteilen ↔"
+msgstr "Répartir ↔"
+
+#: layout_panel.cpp:152
+msgid "Verteilen ↕"
+msgstr "Répartir ↕"
+
+#: settings_dialog.cpp:123
+msgid "WAV-Datei in Schleife:"
+msgstr "Fichier WAV en boucle :"
+
+#: settings_dialog.cpp:179
+msgid "WAV-Datei wählen"
+msgstr "Choisir un fichier WAV"
+
+#: settings_dialog.cpp:179
+msgid "WAV-Dateien (*.wav)"
+msgstr "Fichiers WAV (*.wav)"
+
+#: layout_panel.cpp:145
+msgid "Waagrecht mittig ausrichten"
+msgstr "Centrer horizontalement"
+
+#: test_panel.cpp:29
+msgid "Weiß"
+msgstr "Blanc"
+
+#: main_window.cpp:113 main_window.cpp:147
+msgid "WhiteHoleFX"
+msgstr "WhiteHoleFX"
+
+#: main_window.cpp:151
+msgid "WhiteHoleFX – %1%2"
+msgstr "WhiteHoleFX – %1%2"
+
+#: main_window_file.cpp:146
+msgid "WhiteHoleFX-Projekte (*.whfx)"
+msgstr "Projets WhiteHoleFX (*.whfx)"
+
+#: main_window_file.cpp:110
+msgid "WhiteHoleFX-Projekte (*.whfx);;Alle Dateien (*)"
+msgstr "Projets WhiteHoleFX (*.whfx);;Tous les fichiers (*)"
+
+#: main_window_view3d.cpp:97
+msgid "Wie in der 2D-Ansicht; graue Punkte der vorderen Schicht verdecken LEDs dahinter"
+msgstr "Comme dans la vue 2D ; les points gris de la couche avant cachent les LED derrière"
+
+#: parameter_panel.cpp:107
+msgid "Wird durch eine Verbindung im Graphen gesteuert."
+msgstr "Piloté par une connexion dans le graphe."
+
+#: settings_dialog.cpp:126
+msgid "Wählen …"
+msgstr "Choisir …"
+
+#: fixture_form.cpp:110 fixture_form.cpp:121
+msgid "Zeilen"
+msgstr "Lignes"
+
+#: add_fixture_dialog.cpp:105
+msgid "Zeilen (waagrecht)"
+msgstr "Lignes (horizontales)"
+
+#: stage_view.cpp:43
+msgid "Ziehen dreht, Rad zoomt. Die erste LED am Kabel ist weiß; x rot, y grün, z blau."
+msgstr "Glisser fait tourner, la molette zoome. La première LED du câble est blanche ; x rouge, y vert, z bleu."
+
+#: output_form.cpp:30
+msgid "Ziel +"
+msgstr "Destination +"
+
+#: add_fixture_dialog.cpp:175 fixture_form.cpp:215
+msgid "Ziel Nr."
+msgstr "Destination n°"
+
+#: output_form.cpp:22
+msgid "Ziele (Controller)"
+msgstr "Destinations (contrôleurs)"
+
+#: node_palette.cpp:225
+msgid "Zu Favoriten hinzufügen"
+msgstr "Ajouter aux favoris"
+
+#: add_fixture_dialog.cpp:111 fixture_form.cpp:124
+msgid "Zuerst entlang"
+msgstr "D'abord le long de"
+
+#: layout_panel.cpp:185
+msgid "Zum Verteilen mindestens drei Fixtures wählen"
+msgstr "Sélectionnez au moins trois fixtures à répartir"
+
+#: live_panel.cpp:77
+msgid "Zurück zum Editor (Esc)"
+msgstr "Retour à l'éditeur (Échap)"
+
+#: main_window_live.cpp:72
+msgid "Zwischen Bearbeiten und Live-Betrieb wechseln (F9)"
+msgstr "Basculer entre édition et mode live (F9)"
+
+#: add_fixture_dialog.cpp:150
+msgid "Zählrichtung"
+msgstr "Sens de comptage"
+
+#: fixture_form.cpp:186
+msgid "an die Ausgabe schicken"
+msgstr "envoyer à la sortie"
+
+#: add_fixture_dialog.cpp:52
+msgid "automatisch (Matrix 1, Cube 1 …)"
+msgstr "automatique (Matrice 1, Cube 1 …)"
+
+#: layout_panel_add.cpp:152
+msgid "kleinste Koordinate auf 0 schieben"
+msgstr "décaler la plus petite coordonnée à 0"
+
+#: add_fixture_dialog.cpp:143 fixture_form.cpp:152
+msgid "oben (y max)"
+msgstr "haut (y max)"
+
+#: add_fixture_dialog.cpp:104 fixture_form.cpp:108
+msgid "oben links"
+msgstr "en haut à gauche"
+
+#: add_fixture_dialog.cpp:104 fixture_form.cpp:108
+msgid "oben rechts"
+msgstr "en haut à droite"
+
+#: add_fixture_dialog.cpp:142 fixture_form.cpp:151
+msgid "rechts (x max)"
+msgstr "droite (x max)"
+
+#: main_window_dmx.cpp:69
+msgid "sACN"
+msgstr "sACN"
+
+#: settings_dialog.cpp:96
+msgid "sACN (E1.31) empfangen"
+msgstr "Recevoir sACN (E1.31)"
+
+#: settings_dialog.cpp:109
+msgid "sACN-Port (UDP):"
+msgstr "Port sACN (UDP) :"
+
+#: output_form.cpp:53
+msgid "sACN-Priorität"
+msgstr "Priorité sACN"
+
+#: output_form.cpp:48
+msgid "strecken (Stretch)"
+msgstr "étirer (Stretch)"
+
+#: main_window.cpp:150
+msgid "unbenannt"
+msgstr "sans titre"
+
+#: add_fixture_dialog.cpp:104 fixture_form.cpp:108
+msgid "unten links"
+msgstr "en bas à gauche"
+
+#: add_fixture_dialog.cpp:104 fixture_form.cpp:108
+msgid "unten rechts"
+msgstr "en bas à droite"
+
+#: add_fixture_dialog.cpp:144 fixture_form.cpp:153
+msgid "vorn (z max)"
+msgstr "avant (z max)"
+
+#: test_panel.cpp:75
+msgid "x (links → rechts)"
+msgstr "x (gauche → droite)"
+
+#: test_panel.cpp:75
+msgid "y (unten → oben)"
+msgstr "y (bas → haut)"
+
+#: layout_panel_add.cpp:151
+msgid "y spiegeln (y zeigt in der Datei nach unten)"
+msgstr "inverser y (y pointe vers le bas dans le fichier)"
+
+#: test_panel.cpp:75
+msgid "z (Tiefe)"
+msgstr "z (profondeur)"
+
+#: main_window_help.cpp:41
+msgid "Öffnet GitHub: ein neues Issue anlegen"
+msgstr "Ouvre GitHub : créer un nouveau ticket"
+
+#: main_window_help.cpp:97
+msgid "Über WhiteHoleFX"
+msgstr "À propos de WhiteHoleFX"
+
+#: settings_dialog.cpp:85
+msgid "Über diese Karte tritt der sACN-Empfang den Multicast-Gruppen bei. Art-Net-Broadcast und Unicast-Pakete kommen weiterhin von jeder Karte an."
+msgstr "La réception sACN rejoint les groupes multicast via cette carte. Les paquets Art-Net en broadcast et unicast arrivent toujours sur chaque carte."
+
+#: live_panel.cpp:118
+msgid "Überblendzeit %1 s"
+msgstr "Durée de fondu %1 s"
+
+#: look_panel.cpp:46
+msgid "Überblendzeit:"
+msgstr "Durée de fondu :"
+
+#: app_language.hpp:3
+msgid "…"
+msgstr "…"
+
+#: layout_panel.cpp:145
+msgid "↔ Mitte"
+msgstr "↔ Centre"
+
+#: layout_panel.cpp:148
+msgid "↕ Mitte"
+msgstr "↕ Centre"
+
+#: layout_panel.cpp:144
+msgid "⇤ Links"
+msgstr "⇤ Gauche"
+
+#: look_panel.cpp:62
+msgid "▲ nach oben"
+msgstr "▲ vers le haut"
+
+#: look_panel.cpp:63
+msgid "▼ nach unten"
+msgstr "▼ vers le bas"
+
+#: add_fixture_dialog.cpp:273
+msgid "⚠ %1"
+msgstr "⚠ %1"
+
+#: layout_panel.cpp:147
+msgid "⤒ Oben"
+msgstr "⤒ Haut"

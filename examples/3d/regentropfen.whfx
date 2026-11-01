@@ -1,0 +1,40 @@
+whitehole-project 1
+# 3D-Beispiel 4: Regentropfen im Raum.
+# Ripples mit space = Volume: Die Tropfen fallen an zufälligen Stellen im Raum und breiten sich als
+# Kugelschalen aus (im flachen Modus wären es Ringe). Ein 10 x 10 x 10 Würfel (1000 LEDs).
+# Eine zweite Ebene mit langsam blinkenden Würfeln (Fading Pixels, Volume) gibt dem Raum Tiefe.
+#
+#   whitehole_studio examples/3d/regentropfen.whfx --run
+
+settings fps 40
+
+destination 0 127.0.0.1
+
+fixture Wuerfel
+  grid 10 10 10 pitch 1 1 1 order XYZ serpentine
+  patch artnet destination 0 universe 0
+end
+
+node tropfen wh.generator.ripples
+  set rate 2.5
+  set speed 0.35
+  set width 0.09
+  set color 0.3 0.8 1 1
+  set space 1
+end
+node glimmer wh.generator.fading
+  set cells 5
+  set rate 0.6
+  set density 0.25
+  set sharpness 2
+  set colorA 0 0.05 0.25 1
+  set colorB 0.2 0 0.35 1
+  set space 1
+end
+node mischen wh.blend.blend
+  set mode 0
+end
+
+connect glimmer.out -> mischen.a
+connect tropfen.out -> mischen.b
+output mischen.out

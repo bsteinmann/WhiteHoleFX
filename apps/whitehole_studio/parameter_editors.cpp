@@ -84,7 +84,7 @@ std::optional<QColor> pickColor(QWidget* anchor, const QColor& initial) {
         }
     }
     QColorDialog dialog{initial, owner};
-    dialog.setWindowTitle(QStringLiteral("Farbe"));
+    dialog.setWindowTitle(QObject::tr("Farbe"));
     dialog.setOption(QColorDialog::ShowAlphaChannel);
     dialog.setOption(QColorDialog::DontUseNativeDialog);
     dialog.setWindowModality(Qt::ApplicationModal);
@@ -298,7 +298,7 @@ Editor colorEditor(const runtime::ParameterInfo& info, const Commit& commit, QWi
     layout->setContentsMargins(0, 0, 0, 0);
     auto* button = new QPushButton{box};
     auto* transparent = new QCheckBox{QStringLiteral("Transparent"), box};
-    transparent->setToolTip(QStringLiteral("Alpha 0: an dieser Stelle bleibt die LED aus (die Farbe bleibt gemerkt)."));
+    transparent->setToolTip(QObject::tr("Alpha 0: an dieser Stelle bleibt die LED aus (die Farbe bleibt gemerkt)."));
     layout->addWidget(button);
     layout->addWidget(transparent);
     layout->addStretch(1);

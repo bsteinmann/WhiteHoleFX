@@ -1,0 +1,13 @@
+<!-- studio.qrc: in das Programm eingebettete Dateien. Die Übersetzungskataloge (gettext .po, gepflegt mit
+     scripts/i18n.py) und das Tutorial in vier Sprachen (Quelle: docs/tutorial/). -->
+<RCC>
+    <qresource prefix="/">
+        <file alias="i18n/en.po">i18n/en.po</file>
+        <file alias="i18n/fr.po">i18n/fr.po</file>
+        <file alias="i18n/es.po">i18n/es.po</file>
+        <file alias="tutorial/de.md">../../docs/tutorial/de.md</file>
+        <file alias="tutorial/en.md">../../docs/tutorial/en.md</file>
+        <file alias="tutorial/fr.md">../../docs/tutorial/fr.md</file>
+        <file alias="tutorial/es.md">../../docs/tutorial/es.md</file>
+    </qresource>
+</RCC>

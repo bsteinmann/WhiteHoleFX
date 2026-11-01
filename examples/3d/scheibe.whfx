@@ -1,0 +1,43 @@
+whitehole-project 1
+# 3D-Beispiel 3: Eine Scheibe fährt durch den Würfel.
+# Scan Line mit elevation 90 wird zur waagerechten Scheibe, die ein Dreieck-LFO von unten nach oben
+# und zurück schiebt (Knight Rider in 3D). Dahinter liegt ein sehr dunkler Verlauf, damit man den
+# Würfel auch ohne Scheibe erkennt. Mit angle und elevation lässt sich die Scheibe beliebig kippen.
+#
+#   whitehole_studio examples/3d/scheibe.whfx --run
+
+settings fps 40
+
+destination 0 127.0.0.1
+
+fixture Wuerfel
+  grid 8 8 8 pitch 1 1 1 order XYZ serpentine
+  patch artnet destination 0 universe 0
+end
+
+node hintergrund wh.generator.gradient
+  set colorA 0 0 0.06 1
+  set colorB 0.12 0 0.1 1
+  set elevation 90
+end
+node scheibe wh.generator.scan
+  set width 0.12
+  set softness 0.6
+  set angle 90
+  set elevation 90
+  set color 0.1 1 0.9 1
+end
+node lfo wh.value.lfo
+  set shape 1
+  set frequency 0.35
+  set min 0.05
+  set max 0.95
+end
+node mischen wh.blend.blend
+  set mode 0
+end
+
+connect lfo.out -> scheibe.position
+connect hintergrund.out -> mischen.a
+connect scheibe.out -> mischen.b
+output mischen.out

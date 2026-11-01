@@ -23,7 +23,7 @@ QString toQString(const std::string& text) {
 
 // Ausgangspunkt für ein neues Projekt: eine 16x8-Matrix mit Art-Net auf den eigenen Rechner
 // (127.0.0.1, also ungefährlich) und ein Farbverlauf als Effekt. Dieselben Zeilen wie in
-// examples/wand.whfx, nur ohne Strip und Dreher; so sieht man sofort ein Bild und kann Nodes
+// examples/einstieg/wand.whfx, nur ohne Strip und Dreher; so sieht man sofort ein Bild und kann Nodes
 // und Layout nach Wunsch ändern (Ziel-IP und Universen unter "Layout").
 constexpr const char* kNewProject = R"(whitehole-project 1
 settings fps 40

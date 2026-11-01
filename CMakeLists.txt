@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.25)
 
 project(WhiteHoleFX
-    VERSION 0.31.0
+    VERSION 0.32.0
     DESCRIPTION "Quelloffene Echtzeitsteuerung für LED-Matrizen, LED-Cubes und Pixelinstallationen"
     LANGUAGES CXX)
 
@@ -32,6 +32,7 @@ include(WhiteHoleFXSettings)
 #   core <- mapping
 #   gpu <- gpu_webgpu (optional, WHITEHOLEFX_WEBGPU)
 add_subdirectory(libs/wh_core)
+add_subdirectory(libs/wh_i18n)
 add_subdirectory(libs/wh_gpu)
 add_subdirectory(libs/wh_graph)
 add_subdirectory(libs/wh_values)

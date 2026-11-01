@@ -1,5 +1,17 @@
 # Änderungen
 
+## 0.32.0
+
+- **Sprachen:** Die Oberfläche gibt es auf Deutsch, Englisch, Französisch und Spanisch. Umschalten unter *Hilfe → Sprache / Language*
+  (der Titel ist absichtlich zweisprachig); das Programm bietet den nötigen Neustart an und öffnet dasselbe Projekt wieder.
+  Ohne Wahl gilt die Sprache des Systems (sonst Englisch). `whitehole_studio --lang fr` überstimmt die Wahl. Die Kataloge sind
+  gettext-Dateien (`apps/whitehole_studio/i18n/*.po`), gepflegt mit `scripts/i18n.py`; neue Texte sind dort sofort sichtbar und
+  die CI prüft, dass nichts fehlt und die Platzhalter (%1) stimmen. Siehe [Sprachen und Übersetzen](docs/translating.md).
+- **Tutorial:** Eingebaut unter *Hilfe → Tutorial*, in allen vier Sprachen (`docs/tutorial/`).
+- **Fünf 3D-Beispiele** unter *Datei → Beispiele → 3D*: Ausrichtung prüfen, Plasma im Würfel, Scheibe durch den Cube, Regentropfen
+  als Kugelschalen, Säule mit gewickeltem Strip. Die Beispiele liegen jetzt in Untergruppen (Einstieg, Effekte, Audio, 3D,
+  Daten); das Menü zeigt sie als Untermenüs. Siehe [Beispielprojekte](docs/examples.md).
+
 ## 0.31.0
 
 - **Port-Farben und -Formen:** Die zwölf Port-Typen haben neue, über den Farbkreis verteilte Farben. Dazu kommt eine Form

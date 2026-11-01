@@ -5,6 +5,7 @@
 find_package(Qt6 REQUIRED COMPONENTS Widgets Network)
 
 set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)  # studio.qrc: Übersetzungskataloge und Tutorial
 
 add_executable(whitehole_studio
     fixture_form.cpp
@@ -22,6 +23,10 @@ add_executable(whitehole_studio
     main_window_editor.cpp
     main_window_live.cpp
     main_window_help.cpp
+    main_window_language.cpp
+    app_language.cpp
+    app_language.hpp
+    studio.qrc
     main_window_settings.cpp
     main_window_stage.cpp
     main_window_view3d.cpp
@@ -77,6 +82,7 @@ target_link_libraries(whitehole_studio PRIVATE
     Qt6::Widgets
     Qt6::Network
     whitehole::audio
+    whitehole::i18n
     whitehole::input
     whitehole::nodes
     whitehole::output

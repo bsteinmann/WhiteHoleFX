@@ -71,7 +71,7 @@ Jeder Parameter hat wie üblich einen Modulations-Eingang. Rezepte:
 
 - **Equalizer:** `Audio Spectrum` → `Spectrum Bars` → Ausgang. Über Plasma legen: `Blend` (Mode *Over*) mit dem
   Plasma als A und den Balken als B.
-- **Oszilloskop:** `Audio Waveform` → `Oscilloscope` → Ausgang. Beispiel: `examples/oszilloskop.whfx`.
+- **Oszilloskop:** `Audio Waveform` → `Oscilloscope` → Ausgang. Beispiel: `examples/audio/oszilloskop.whfx`.
 - **Blitz im Takt:** `Beat.pulse` → `Color Adjust.brightness` eines Effekts.
 - **Bass lässt es wachsen:** `Audio Band` (40–150 Hz) → `Scale.factor`.
 - **Farbwechsel im Takt:** `Beat.phase` → `Color Ramp.position` (mit `loop`).
