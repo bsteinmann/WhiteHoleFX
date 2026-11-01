@@ -29,21 +29,21 @@ beliebigen Koordinaten abtastet.
 
 | Typ | Wirkung | Raum |
 |---|---|---|
-| `wh.generator.gradient` | Verlauf entlang einer Richtung in der xy-Ebene | 2D |
+| `wh.generator.gradient` | Verlauf entlang einer Richtung; `angle` dreht sie in der xy-Ebene, `elevation` kippt sie zur z-Achse (90° = von hinten nach vorn) | 2D, 3D |
 | `wh.generator.noise` | Value-Noise, die Zeit läuft über die z-Achse. Alle Regler gehen von 0 bis 1 (direkt mit einem LFO fahrbar): `scale` (1 bis 64 Zellen über die Leinwand), `speed` (0 bis 8 Zellen pro Sekunde), **`density`** (Anteil der Pixel, die an sind: 0 alles aus, 1 alles an, 0,5 die Hälfte), `softness` (0 harte Kante, 1 weich), `colorA` (aus) und `colorB` (an), beide auch von Color-Nodes speisbar | 3D |
-| `wh.generator.plasma` | klassisches Plasma | 2D |
+| `wh.generator.plasma` | klassisches Plasma; `depth` > 0 legt die Wellen auch durch z (0 = in jeder Ebene gleich) | 2D, 3D |
 | `wh.generator.sphere` | Kugel mit weichem Rand, Mittelpunkt und Radius einstellbar | 3D |
 | `wh.generator.wave` | ebene Welle entlang einer 3D-Richtung | 3D |
 | `wh.generator.rain` | „Digital Rain“: fallende Pixel mit Spur (Spalten, Tempo, Spurlänge, Dichte, Kopf-/Spurfarbe); die Spur ist durchsichtig und lässt sich über andere Effekte legen. Im Cube fallen Säulen in x/z | 3D |
 | `wh.generator.solid` | Fläche in einer Farbe (zum Einfärben mit Mask/Blend oder als Blitzfläche) | beliebig |
-| `wh.generator.scan` | Scan-Linie / Knight Rider: ein Streifen quer zur Richtung `angle` an der Stelle `position` (0..1), Breite und Weichheit einstellbar; die Position mit einem Dreieck-LFO steuern lässt ihn hin- und herlaufen. Der Rest ist durchsichtig | 2D |
-| `wh.generator.ripples` | Wellenringe wie Regentropfen im Wasser (Tropfen pro Sekunde, Ausbreitung, Ringbreite, Farbe), ohne Zustand, durchsichtig außerhalb der Ringe | 2D |
-| `wh.generator.fire` | Feuer: nach oben wanderndes Rauschen mit Hitzeverlauf von unten nach oben, Palette Schwarz–Rot–Gelb–Weiß | 2D |
-| `wh.generator.metaballs` | Metaballs: 1–6 weiche Kugeln wandern auf eigenen Bahnen und fließen ineinander, wenn sie sich nähern (Anzahl, Größe, Tempo, Randweichheit, Hintergrund- und Blobfarbe) | 2D |
-| `wh.generator.starfield` | Sternenhimmel: `cells` Zellen je Achse, in jeder mit Wahrscheinlichkeit `density` ein flimmernder Stern (Größe, Flimmertempo, `drift` nach unten, zwei Farben nach Zufall); der Himmel ist durchsichtig und lässt sich über andere Effekte legen | 2D |
-| `wh.generator.fading` | Fading Pixels: einzelne Zellen leuchten auf und verlöschen, jede in eigenem Takt (Zellen, Rate, Dichte, `sharpness` = Abklingkurve, zwei Farben nach Zufall); der Rest ist durchsichtig | 2D |
-| `wh.generator.shapes` | Expanding Shapes: Kreise, Quadrate oder Rauten (Auswahlfeld), die von `cx`/`cy` nach außen laufen (Abstand, Tempo — negativ nach innen —, Dicke, Verblassen nach außen); durchsichtig zwischen den Ringen | 2D |
-| `wh.generator.sinelines` | Sine Lines: 1–8 Sinuswellen quer über die Leinwand, jede um `spread` Perioden gegen die vorige verschoben, Farbe von der ersten zur letzten Linie; überlappende Linien addieren sich | 2D |
+| `wh.generator.scan` | Scan-Linie / Knight Rider: ein Streifen quer zur Richtung `angle` an der Stelle `position` (0..1), Breite und Weichheit einstellbar; die Position mit einem Dreieck-LFO steuern lässt ihn hin- und herlaufen. Der Rest ist durchsichtig; mit `elevation` wird aus dem Streifen eine Scheibe, die durch den Würfel läuft | 2D, 3D |
+| `wh.generator.ripples` | Wellenringe wie Regentropfen im Wasser (Tropfen pro Sekunde, Ausbreitung, Ringbreite, Farbe), ohne Zustand, durchsichtig außerhalb der Ringe; `space` *Volume* lässt die Tropfen an Zufallsstellen im Raum fallen und als Kugelschalen wachsen | 2D, 3D |
+| `wh.generator.fire` | Feuer: nach oben wanderndes Rauschen mit Hitzeverlauf von unten nach oben, Palette Schwarz–Rot–Gelb–Weiß; `depth` lässt das Rauschen auch in z variieren | 2D, 3D |
+| `wh.generator.metaballs` | Metaballs: 1–6 weiche Kugeln wandern auf eigenen Bahnen und fließen ineinander, wenn sie sich nähern (Anzahl, Größe, Tempo, Randweichheit, Hintergrund- und Blobfarbe); `space` *Volume* gibt jeder Kugel eine z-Bahn | 2D, 3D |
+| `wh.generator.starfield` | Sternenhimmel: `cells` Zellen je Achse, in jeder mit Wahrscheinlichkeit `density` ein flimmernder Stern (Größe, Flimmertempo, `drift` nach unten, zwei Farben nach Zufall); der Himmel ist durchsichtig und lässt sich über andere Effekte legen; `space` *Volume* setzt die Sterne in ein Raster aus Würfeln | 2D, 3D |
+| `wh.generator.fading` | Fading Pixels: einzelne Zellen leuchten auf und verlöschen, jede in eigenem Takt (Zellen, Rate, Dichte, `sharpness` = Abklingkurve, zwei Farben nach Zufall); der Rest ist durchsichtig; `space` *Volume* gibt jedem Würfel des Raums seinen eigenen Takt | 2D, 3D |
+| `wh.generator.shapes` | Expanding Shapes: Kreise, Quadrate oder Rauten (Auswahlfeld), die von `cx`/`cy` nach außen laufen (Abstand, Tempo — negativ nach innen —, Dicke, Verblassen nach außen); durchsichtig zwischen den Ringen; mit `space` *Volume* und `cz` werden daraus Kugel-, Würfel- und Oktaederschalen | 2D, 3D |
+| `wh.generator.sinelines` | Sine Lines: 1–8 Sinuswellen quer über die Leinwand, jede um `spread` Perioden gegen die vorige verschoben, Farbe von der ersten zur letzten Linie; überlappende Linien addieren sich; `frequencyZ` macht aus jeder Linie eine gewellte Fläche im Würfel | 2D, 3D |
 | `wh.generator.lightning` | Lightning: bis zu drei Blitze (`bolts`) hängen oben an der Leinwand und laufen nach unten. `rate` Schläge pro Sekunde, `duration` Sekunden sichtbar (höchstens ein ganzer Takt), `decay` Abklingen, `width`, `jag` Zackigkeit, `glow` Leuchthof, `branches` Helligkeit eines Seitenastes (0 = keiner), `reach` wie tief der Blitz reicht, `flash` hellt die ganze Fläche mit auf; Farbe `color`. Die Stelle jedes Schlags wird aus der Taktnummer gewürfelt, ein Nachschlag bei etwa 30 % der Sichtbarkeit. Der Rest ist durchsichtig, siehe `examples/gewitter.whfx` | 2D |
 | `wh.generator.particles` | Particles: `count` (bis 48) Teilchen strömen aus (`ex`, `ey`), gestaffelt über `lifetime` Sekunden. `direction` in Grad (0 = rechts, 90 = oben), `spread` der Fächer in Umläufen (1 = rundum), `speed`, `gravity` (positiv = nach unten), `size`, `trail` Schweiflänge in Sekunden, `shrink` Schrumpfen über das Leben, Palette *Two colors* (zufällig zwischen `colorA` und `colorB`) oder *Rainbow* (Konfetti). Jedes Teilchen hat in jedem Durchlauf eine neue Richtung und ein neues Tempo (Hash), die Bahn ist eine Wurfparabel in geschlossener Form: kein Zustand, gleiches Bild bei jedem Abspielen. Durchsichtig außerhalb der Teilchen, siehe `examples/funken.whfx` | 2D |
 | `wh.generator.spectrum` | Spectrum Bars: Equalizer aus `bars` Balken, die von unten (oder von der Mitte aus) so hoch wachsen wie das Audio-Spektrum am Eingang `spectrum` (Porttyp AudioSpectrum, von „Audio Spectrum“); `gap`, `softness`, Farbverlauf `color` → `colorTop`. Ohne Verbindung durchsichtig, siehe [Audio](audio.md) | 2D |
@@ -52,14 +52,18 @@ beliebigen Koordinaten abtastet.
 | `wh.transform.rotate` | Drehung in der xy-Ebene um die Mitte | 2D |
 | `wh.transform.rotate3d` | Drehung um alle drei Achsen um die Mitte (0,5; 0,5; 0,5) | 3D |
 | `wh.transform.symmetry` | Symmetrie: eine Hälfte des Eingangs wird an einer Linie gespiegelt. `axis` (X, Y, Z) und `half` (untere oder obere Hälfte als Vorlage) sind Auswahlfelder, `center` setzt die Linie. Einfacher zu bedienen als Mirror, der mehrere Achsen gleichzeitig kann | 2D, 3D |
-| `wh.transform.region` | Bildet den Eingang auf ein Rechteck der Leinwand ab (`left`, `top` von oben, `width`, `height`), außerhalb durchsichtig; der Effekt füllt so nur einen Teil der Wand | 2D |
-| `wh.transform.mirror`, `wh.transform.scale` | Spiegeln an einer Linie in x, y und/oder z (Lage `centerX/Y/Z`, mit `otherHalf` ist die obere Hälfte die Vorlage), Zoomen in x und y | 2D (Spiegeln auch 3D) |
+| `wh.transform.region` | Bildet den Eingang auf ein Rechteck der Leinwand ab (`left`, `top` von oben, `width`, `height`), außerhalb durchsichtig; der Effekt füllt so nur einen Teil der Wand. `zStart` und `zSize` schneiden im Raum einen Quader aus (Standard: die ganze Tiefe) | 2D, 3D |
+| `wh.transform.mirror`, `wh.transform.scale` | Spiegeln an einer Linie in x, y und/oder z (Lage `centerX/Y/Z`, mit `otherHalf` ist die obere Hälfte die Vorlage), Zoomen in x und y (`factorZ` zoomt die Tiefe getrennt) | 2D, 3D |
 | `wh.transform.kaleidoscope` | Kaleidoskop: die Ebene wird um (`cx`, `cy`) in `segments` Keile geteilt, jeder zweite ist das Spiegelbild des Nachbarn. `angle` dreht den Ausschnitt, `zoom` vergrößert. `aspect` (Breite / Höhe der Leinwand, 32×16 = 2) hält die Winkel gleich, siehe unten | 2D |
 | `wh.transform.tunnel` | Tunnel: Winkel und Tiefe (1 / Abstand) werden zu den Koordinaten des Eingangs. `repeat` Wiederholungen um den Tunnel, `speed` Kacheln pro Sekunde in die Tiefe (negativ: heraus), `depth` Verkleinerung zur Mitte, `twist` dreht mit der Tiefe, `fade` blendet die Mitte aus (Alpha) | 2D |
 | `wh.transform.vortex` | Wirbel: dreht die Koordinate um (`cx`, `cy`) umso stärker, je näher sie der Mitte liegt: `turns` Umdrehungen im Mittelpunkt, keine bei `radius` und außerhalb | 2D |
-| `wh.transform.slide` | Verschiebt das Bild um `x`, `y` (Anteile der Leinwand), mit `wrap` kommt es auf der anderen Seite wieder herein, sonst bleibt der Rest durchsichtig. Mit Time oder LFO an `x` entsteht ein Scroll oder ein Übergang („Move left/right“) | 2D |
-| `wh.transform.tile` | Kachelt das Bild `countX` × `countY` mal, optional jede zweite Kachel gespiegelt | 2D |
-| `wh.transform.pixelate` | Mosaik: `cellsX` × `cellsY` Zellen, jede zeigt den Wert an ihrer Mitte | 2D |
+| `wh.transform.slide` | Verschiebt das Bild um `x`, `y` (Anteile der Leinwand), mit `wrap` kommt es auf der anderen Seite wieder herein, sonst bleibt der Rest durchsichtig. Mit Time oder LFO an `x` entsteht ein Scroll oder ein Übergang („Move left/right“). `z` verschiebt in der Tiefe | 2D, 3D |
+| `wh.transform.tile` | Kachelt das Bild `countX` × `countY` mal, optional jede zweite Kachel gespiegelt; `countZ` > 1 kachelt auch die Tiefe | 2D, 3D |
+| `wh.transform.pixelate` | Mosaik: `cellsX` × `cellsY` Zellen, jede zeigt den Wert an ihrer Mitte; `cellsZ` ≥ 1 rastert auch die Tiefe (Würfel statt Quadrate) | 2D, 3D |
+| `wh.generator.box` | Quader mit weichem Rand: Mitte `cx`/`cy`/`cz`, Kantenlängen `sizeX`/`sizeY`/`sizeZ`, Farbe innen und außen | 3D |
+| `wh.generator.helix` | Schraube: `strands` Linien winden sich um eine senkrechte Achse durch (`cx`, `cz`) mit `radius`, `pitch` Umdrehungen pro Höhe 1 und `speed` Umdrehungen pro Sekunde; durchsichtig außerhalb der Linien | 3D |
+| `wh.generator.position` | Position Test: Rot = x, Grün = y, Blau = z. Zeigt am Würfel sofort, welche Seite wo liegt und ob Verkabelung und Startecke stimmen | 3D |
+| `wh.transform.twist` | Twist: verdreht den Raum um eine Achse durch die Mitte (`axis` X, Y oder Z), je weiter eine Ebene von der Mitte entfernt ist, desto stärker (`angle` Grad pro Einheit); aus einer geraden Säule wird eine Spirale | 3D |
 | `wh.blend.mix`, `wh.blend.add` | Überblenden, Addieren | beliebig |
 | `wh.blend.blend` | B über A mit Modus (Auswahlfeld): Add, Multiply, Screen, Subtract, Difference, Lighten, Darken, Over; `amount` überblendet zwischen A und dem Ergebnis | beliebig |
 | `wh.blend.crossfade` | Überblenden mit `amount` (Position): *Linear* blendet A aus, während B einblendet; *Progressive* lässt beide in der Mitte voll leuchten | beliebig |
@@ -86,8 +90,20 @@ beliebigen Koordinaten abtastet.
 - **Ringe mit Inhalt:** Expanding Shapes als `mask` einer Mask, Plasma als Content.
 - **Master:** Ausgang `brightness` für die Gesamthelligkeit, Color Adjust `gamma`, Strobe für den Master-Blitz.
 
-2D-Nodes lassen `p.z` unverändert, sie laufen also auch in einem Cube, wirken dort aber
-in jeder z-Ebene gleich. Die z-Variante kommt, wo sie sich lohnt (Rotate 3D ist da).
+- **Würfel prüfen:** Position Test an den Ausgang: Rot wächst nach rechts, Grün nach oben, Blau nach hinten vorn.
+  Stimmt eine Richtung nicht, im Stage Config die Startecke oder Zählrichtung des Gitters ändern.
+- **Scheibe durch den Würfel:** Scan Line mit `elevation` 90, `position` mit einem Dreieck-LFO.
+- **Feuerwerk im Raum:** Expanding Shapes oder Ripples mit `space` *Volume*, danach Color Adjust.
+- **Spirale aus Säulen:** Ein senkrechter Effekt (z. B. Digital Rain) durch Twist, `angle` mit einem LFO.
+
+### 2D und 3D
+
+Die Spalte „Raum“ nennt, was ein Node im Raum tut. Nodes mit **2D** lassen `p.z` unverändert und
+laufen in einem Cube, wirken dort aber in jeder z-Ebene gleich. Bei den Nodes, die „2D, 3D“ nennen,
+sind die z-Regler ergänzt worden (`elevation`, `depth`, `space`, `factorZ` ...): Ihre Standardwerte sind
+so gewählt, dass das Bild auf einer 2D-Leinwand und in alten Projekten **unverändert** bleibt. Wer den Raum
+nutzen will, stellt den Regler um. Kaleidoscope, Tunnel und Vortex rechnen um die z-Achse und ziehen ihr
+Muster damit als Säule durch den Würfel; Outline und Text bleiben zweidimensional.
 
 ## Ein Node besteht aus zwei Teilen
 

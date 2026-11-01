@@ -187,6 +187,7 @@ std::vector<compiler::NodeDefinition> sparkNodes();  // Lightning, Particles
 std::vector<compiler::NodeDefinition> textNodes();   // Text / Laufschrift
 std::vector<compiler::NodeDefinition> transformNodes();
 std::vector<compiler::NodeDefinition> warpNodes();  // Kaleidoscope, Tunnel, Vortex
+std::vector<compiler::NodeDefinition> volumeNodes();  // Box, Helix, Position Test, Twist (3D)
 std::vector<compiler::NodeDefinition> blendNodes();
 std::vector<compiler::NodeDefinition> modifierNodes();  // Modifier und Ausgang
 std::vector<values::CpuNodeDefinition> valueNodes();

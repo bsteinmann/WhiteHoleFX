@@ -1,5 +1,18 @@
 # Änderungen
 
+## 0.29.0
+
+- **3D-Nodes:** Die Nodes kennen jetzt die Tiefe. Alle neuen Regler stehen am Ende des Parameterfensters und sind so voreingestellt,
+  dass 2D-Bilder und alte Projekte unverändert aussehen.
+  - Linear Gradient und Scan Line: `elevation` kippt die Richtung zur z-Achse (Scan Line wird zur Scheibe durch den Würfel).
+  - Plasma, Fire: `depth` legt die Wellen beziehungsweise das Rauschen durch z.
+  - Ripples, Metaballs, Starfield, Fading Pixels, Expanding Shapes: Auswahlfeld `space` (Flat oder Volume); Volume rechnet
+    Kugelschalen, Würfelzellen und z-Bahnen. Expanding Shapes hat dazu `cz`. Sine Lines: `frequencyZ`.
+  - Scale (`factorZ`), Slide (`z`), Tile (`countZ`), Pixelate (`cellsZ`), Region (`zStart`, `zSize`) wirken auch in der Tiefe.
+  - **Neu:** Box (Quader), Helix (Schraube), Position Test (x/y/z als Rot/Grün/Blau, zum Prüfen von Verkabelung und Startecke)
+    und Twist (verdreht den Raum um eine Achse).
+  - Neuer GPU-Test, der einen 3×2×4-Würfel abtastet und jede LED mit einer Rechnung auf der CPU vergleicht.
+
 ## 0.28.0
 
 - **Menü „Stage Config“:** Die Bühne wird einmal am Anfang eingerichtet und danach selten angefasst, darum hat sie ein eigenes

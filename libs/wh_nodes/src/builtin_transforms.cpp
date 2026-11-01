@@ -41,19 +41,25 @@ return @in(source, q);)wgsl";
 // "Region" (Bild-in-Bild): Der Eingang wird auf ein Rechteck der Leinwand abgebildet, als wäre dieses
 // Rechteck die ganze Leinwand; außerhalb ist das Ergebnis durchsichtig (Alpha 0, die LED bleibt aus).
 // left und top zählen von der linken oberen Ecke, alle vier Werte sind Anteile der Leinwand (0..1).
-// Breite und Höhe haben eine Untergrenze, damit nie durch null geteilt wird. Die z-Koordinate bleibt.
+// Breite und Höhe haben eine Untergrenze, damit nie durch null geteilt wird. Im Raum wird aus dem Rechteck
+// ein Quader: `zStart` und `zSize` sind der Ausschnitt in z (Anteile der Tiefe); der Standard 0 und 1 nimmt
+// die ganze Tiefe, dann bleibt z unverändert.
 constexpr const char* kRegionBody = R"wgsl(let w = max(@param(width), 0.0001);
 let h = max(@param(height), 0.0001);
+let dz = max(@param(zSize), 0.0001);
 let u = (p.x - @param(left)) / w;
 let v = (p.y - (1.0 - @param(top) - h)) / h;
-if (u < -0.0001 || u > 1.0001 || v < -0.0001 || v > 1.0001) {
+let k = (p.z - @param(zStart)) / dz;
+if (u < -0.0001 || u > 1.0001 || v < -0.0001 || v > 1.0001 || k < -0.0001 || k > 1.0001) {
     return vec4<f32>(0.0, 0.0, 0.0, 0.0);
 }
-return @in(source, vec3<f32>(u, v, p.z));)wgsl";
+return @in(source, vec3<f32>(u, v, k));)wgsl";
 
-// Zoom um die Mitte in x und y: factor 2 zeigt das Bild doppelt so groß.
-constexpr const char* kScaleBody = R"wgsl(let c = vec3<f32>(0.5, 0.5, p.z);
-return @in(source, (p - c) / @param(factor) + c);)wgsl";
+// Zoom um die Mitte (0.5, 0.5, 0.5): factor 2 zeigt das Bild doppelt so groß. `factorZ` zoomt die Tiefe
+// getrennt; bei 1 (Standard) bleibt z wie es ist, das Bild verhält sich also wie auf einer 2D-Leinwand.
+constexpr const char* kScaleBody = R"wgsl(let c = vec3<f32>(0.5, 0.5, 0.5);
+let f = vec3<f32>(@param(factor), @param(factor), @param(factorZ));
+return @in(source, (p - c) / f + c);)wgsl";
 
 // Dreht das Bild im Raum um die Mitte (0.5, 0.5, 0.5). Positive Winkel drehen rechtshändig
 // um die jeweilige Achse (Daumen zeigt in Achsenrichtung): +x wandert unter angleZ nach +y,
@@ -77,31 +83,39 @@ return @in(source, q);)wgsl";
 
 // Verschiebt das Bild um (x, y) Leinwandbreiten. Mit Wrap kommt es auf der anderen Seite wieder herein,
 // sonst bleibt der Rest durchsichtig. Mit einem LFO oder Time an x entsteht ein Übergang oder Scroll.
-constexpr const char* kSlideBody = R"wgsl(var q = vec3<f32>(p.x - @param(x), p.y - @param(y), p.z);
+// `z` verschiebt in der Tiefe; solange z = 0 ist, bleibt die Tiefe unangetastet (kein Umbruch, kein Abschneiden).
+constexpr const char* kSlideBody = R"wgsl(var q = vec3<f32>(p.x - @param(x), p.y - @param(y), p.z - @param(z));
+let moveZ = abs(@param(z)) > 0.00001;
 if (@param(wrap) > 0.5) {
-    q = vec3<f32>(fract(q.x), fract(q.y), q.z);
-} else if (q.x < 0.0 || q.x > 1.0 || q.y < 0.0 || q.y > 1.0) {
+    q = vec3<f32>(fract(q.x), fract(q.y), select(q.z, fract(q.z), moveZ));
+} else if (q.x < 0.0 || q.x > 1.0 || q.y < 0.0 || q.y > 1.0 || (moveZ && (q.z < -0.0001 || q.z > 1.0001))) {
     return vec4<f32>(0.0, 0.0, 0.0, 0.0);
 }
 return @in(source, q);)wgsl";
 
-// Kachelt das Bild countX mal countY; mit Mirror wird jede zweite Kachel gespiegelt (nahtlos).
-constexpr const char* kTileBody = R"wgsl(let n = vec2<f32>(max(@param(countX), 1.0), max(@param(countY), 1.0));
-let u = p.xy * n;
+// Kachelt das Bild countX mal countY (und countZ mal in der Tiefe); mit Mirror wird jede zweite Kachel
+// gespiegelt (nahtlos). countZ = 1 (Standard) lässt z unangetastet.
+constexpr const char* kTileBody = R"wgsl(let n = vec3<f32>(max(@param(countX), 1.0), max(@param(countY), 1.0), max(@param(countZ), 1.0));
+let tileZ = n.z > 1.0;
+let u = vec3<f32>(p.xy * n.xy, select(0.0, p.z * n.z, tileZ));
 var f = fract(u);
 if (@param(mirror) > 0.5) {
     let cell = floor(u);
     let oddX = cell.x - 2.0 * floor(cell.x * 0.5);
     let oddY = cell.y - 2.0 * floor(cell.y * 0.5);
-    f = vec2<f32>(select(f.x, 1.0 - f.x, oddX > 0.5), select(f.y, 1.0 - f.y, oddY > 0.5));
+    let oddZ = cell.z - 2.0 * floor(cell.z * 0.5);
+    f = vec3<f32>(select(f.x, 1.0 - f.x, oddX > 0.5), select(f.y, 1.0 - f.y, oddY > 0.5), select(f.z, 1.0 - f.z, oddZ > 0.5));
 }
-return @in(source, vec3<f32>(f.x, f.y, p.z));)wgsl";
+return @in(source, vec3<f32>(f.x, f.y, select(p.z, f.z, tileZ)));)wgsl";
 
-// Mosaik: jede Zelle zeigt den Wert an ihrer Mitte.
+// Mosaik: jede Zelle zeigt den Wert an ihrer Mitte. `cellsZ` rastert auch die Tiefe (Würfel statt Quadrate);
+// 0 (Standard) lässt z glatt.
 constexpr const char* kPixelateBody = R"wgsl(let n = vec2<f32>(max(@param(cellsX), 1.0), max(@param(cellsY), 1.0));
 let cell = min(floor(p.xy * n), n - vec2<f32>(1.0, 1.0));
 let c = (cell + vec2<f32>(0.5, 0.5)) / n;
-return @in(source, vec3<f32>(c.x, c.y, p.z));)wgsl";
+let nz = floor(@param(cellsZ));
+let cz = (min(floor(p.z * nz), nz - 1.0) + 0.5) / max(nz, 1.0);
+return @in(source, vec3<f32>(c.x, c.y, select(p.z, cz, nz >= 1.0)));)wgsl";
 
 // +y unter angleX nach +z, +z unter angleY nach +x. Die Reihenfolge ist R = Rz * Ry * Rx
 // (erst um x, dann um y, dann um z). Gesampelt wird mit der Umkehrung R^-1.
@@ -143,29 +157,33 @@ std::vector<compiler::NodeDefinition> transformNodes() {
     nodes.push_back(fieldNode("wh.transform.slide", "Slide", "Transform",
                               {fieldInput("source", "Source"), fieldOutput()},
                               {number("x", "Offset X", 0.0, -1.0, 1.0), number("y", "Offset Y", 0.0, -1.0, 1.0),
-                               toggle("wrap", "Wrap around", false)},
+                               toggle("wrap", "Wrap around", false), number("z", "Offset Z", 0.0, -1.0, 1.0)},
                               kSlideBody));
 
     nodes.push_back(fieldNode("wh.transform.tile", "Tile", "Transform",
                               {fieldInput("source", "Source"), fieldOutput()},
                               {number("countX", "Tiles X", 2.0, 1.0, 64.0), number("countY", "Tiles Y", 2.0, 1.0, 64.0),
-                               toggle("mirror", "Mirror every other tile", false)},
+                               toggle("mirror", "Mirror every other tile", false),
+                               number("countZ", "Tiles Z", 1.0, 1.0, 64.0)},
                               kTileBody));
 
     nodes.push_back(fieldNode("wh.transform.pixelate", "Pixelate", "Transform",
                               {fieldInput("source", "Source"), fieldOutput()},
-                              {number("cellsX", "Cells X", 8.0, 1.0, 256.0), number("cellsY", "Cells Y", 8.0, 1.0, 256.0)},
+                              {number("cellsX", "Cells X", 8.0, 1.0, 256.0), number("cellsY", "Cells Y", 8.0, 1.0, 256.0),
+                               number("cellsZ", "Cells Z (0 = smooth)", 0.0, 0.0, 256.0)},
                               kPixelateBody));
 
     nodes.push_back(fieldNode("wh.transform.region", "Region", "Transform",
                               {fieldInput("source", "Source"), fieldOutput()},
                               {number("left", "Left", 0.0, 0.0, 1.0), number("top", "Top", 0.0, 0.0, 1.0),
-                               number("width", "Width", 0.5, 0.0, 1.0), number("height", "Height", 0.5, 0.0, 1.0)},
+                               number("width", "Width", 0.5, 0.0, 1.0), number("height", "Height", 0.5, 0.0, 1.0),
+                               number("zStart", "Depth start", 0.0, 0.0, 1.0), number("zSize", "Depth size", 1.0, 0.0, 1.0)},
                               kRegionBody));
 
     nodes.push_back(fieldNode("wh.transform.scale", "Scale", "Transform",
                               {fieldInput("source", "Source"), fieldOutput()},
-                              {number("factor", "Factor", 1.0, 0.01, 100.0)}, kScaleBody));
+                              {number("factor", "Factor", 1.0, 0.01, 100.0), number("factorZ", "Factor Z", 1.0, 0.01, 100.0)},
+                              kScaleBody));
 
     nodes.push_back(fieldNode("wh.transform.rotate3d", "Rotate 3D", "Transform",
                               {fieldInput("source", "Source"), fieldOutput()},

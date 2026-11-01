@@ -17,6 +17,7 @@ wh_add_library(wh_nodes
         src/builtin_text.cpp
         src/builtin_nodes.cpp
         src/builtin_transforms.cpp
+        src/builtin_volume.cpp
         src/builtin_warps.cpp
         src/builtin_color_values.cpp
         src/builtin_dmx.cpp

@@ -33,10 +33,13 @@ fn wh_value_noise(p: vec3<f32>) -> f32 {
 }
 )wgsl";
 
-// Verlauf entlang einer Richtung durch die Mitte (0.5, 0.5). Winkel in Grad.
+// Verlauf entlang einer Richtung durch die Mitte (0.5, 0.5, 0.5). `angle` dreht die Richtung in der
+// x/y-Ebene (Grad, 0 = nach rechts, 90 = nach oben), `elevation` kippt sie aus dieser Ebene zur z-Achse
+// (90 = auf den Betrachter zu). Mit elevation 0 ist es der reine 2D-Verlauf wie bisher.
 constexpr const char* kGradientBody = R"wgsl(let a = radians(@param(angle));
-let d = vec2<f32>(cos(a), sin(a));
-let t = clamp(dot(p.xy - vec2<f32>(0.5, 0.5), d) + 0.5, 0.0, 1.0);
+let e = radians(@param(elevation));
+let d = vec3<f32>(cos(e) * cos(a), cos(e) * sin(a), sin(e));
+let t = clamp(dot(p - vec3<f32>(0.5, 0.5, 0.5), d) + 0.5, 0.0, 1.0);
 return wh_mix_color(@param(colorA), @param(colorB), t);)wgsl";
 
 // Value Noise mit Reglern von 0 bis 1 (damit ein LFO sie direkt fahren kann):
@@ -73,11 +76,14 @@ let mixed = mix(vec4<f32>(ca.rgb * ca.a, ca.a), vec4<f32>(cb.rgb * cb.a, cb.a), 
 return vec4<f32>(mixed.rgb / max(mixed.a, 0.000001), mixed.a);)wgsl";
 
 // Klassisches Plasma: Summe mehrerer Sinuswellen, in drei phasenverschobene Kanäle gelegt.
+// `depth` legt die Wellen auch durch die z-Achse: z = p.z * scale * depth verschiebt die Phase der Sinusterme,
+// bei 0 (Standard) ist das Plasma überall in z gleich, also wie auf einer 2D-Leinwand.
 constexpr const char* kPlasmaBody =
     R"wgsl(let s = @param(scale);
 let t = @time * @param(speed);
 let q = p * s;
-let v = sin(q.x + t) + sin(q.y * 1.3 + t * 1.1) + sin((q.x + q.y + t) * 0.7) + sin(length(q.xy - vec2<f32>(0.5 * s)) + t);
+let z = q.z * @param(depth);
+let v = sin(q.x + t + z) + sin(q.y * 1.3 + t * 1.1 + z * 0.7) + sin((q.x + q.y + t + z) * 0.7) + sin(length(q.xy - vec2<f32>(0.5 * s)) + t - z);
 let w = v * 1.5707963;
 return vec4<f32>(0.5 + 0.5 * sin(w), 0.5 + 0.5 * sin(w + 2.0943951), 0.5 + 0.5 * sin(w + 4.1887902), 1.0);)wgsl";
 
@@ -136,9 +142,12 @@ constexpr const char* kSolidBody = R"wgsl(return @param(color);)wgsl";
 
 // Scan-Linie (wie ein Radar oder Knight Rider): ein Streifen quer zur Richtung `angle`, an der Stelle
 // `position` (0..1). Position mit einem LFO (Dreieck) gesteuert ergibt das Hin- und Herlaufen.
+// Im Raum ist der Streifen eine Scheibe: `elevation` kippt die Richtung wie beim Linear Gradient aus der
+// x/y-Ebene, 90 Grad ergibt eine Scheibe, die von hinten nach vorn durch den Würfel läuft.
 constexpr const char* kScanBody = R"wgsl(let a = radians(@param(angle));
-let d = vec2<f32>(cos(a), sin(a));
-let x = dot(p.xy - vec2<f32>(0.5, 0.5), d) + 0.5;
+let e = radians(@param(elevation));
+let d = vec3<f32>(cos(e) * cos(a), cos(e) * sin(a), sin(e));
+let x = dot(p - vec3<f32>(0.5, 0.5, 0.5), d) + 0.5;
 let w = max(@param(width), 0.0001);
 let s = clamp(@param(softness), 0.01, 1.0);
 let v = 1.0 - smoothstep(w * (1.0 - s), w, abs(x - @param(position)));
@@ -147,7 +156,8 @@ return vec4<f32>(col.rgb, col.a * v);)wgsl";
 
 // Wellenringe wie Regentropfen im Wasser. Ohne Zustand: Tropfen Nummer k entsteht zur Zeit k / rate an
 // einer Zufallsstelle, der Ring wächst mit `speed` und verblasst nach vier Perioden. Die letzten
-// vier Tropfen überlagern sich.
+// vier Tropfen überlagern sich. Mit space = Volume fällt der Tropfen an einer Zufallsstelle im Raum
+// und breitet sich als Kugelschale aus (Flat: Kreisring in x/y, wie bisher).
 constexpr const char* kRipplePrelude = R"wgsl(fn wh_hash11(x: f32) -> f32 {
     return fract(sin(x * 127.1) * 43758.5453);
 }
@@ -159,7 +169,8 @@ for (var i = 0; i < 4; i = i + 1) {
     let k = floor(t) - f32(i);
     let age = t - k;
     let c = vec2<f32>(wh_hash11(k * 1.37 + 0.11), wh_hash11(k * 2.71 + 5.31));
-    let d = length(p.xy - c);
+    let c3 = vec3<f32>(c, wh_hash11(k * 3.17 + 2.3));
+    let d = select(length(p.xy - c), length(p - c3), @param(space) > 0.5);
     let ring = 1.0 - smoothstep(0.0, max(@param(width), 0.001), abs(d - age * @param(speed)));
     v = v + ring * clamp(1.0 - age / 4.0, 0.0, 1.0);
 }
@@ -167,10 +178,11 @@ let col = @param(color);
 return vec4<f32>(col.rgb, col.a * clamp(v, 0.0, 1.0));)wgsl";
 
 // Feuer: Rauschen, das nach oben wandert, dazu eine Hitze, die mit der Höhe abnimmt (unten y = 0 ist
-// am heißesten). Farbverlauf von Schwarz über Rot und Gelb zu Weiß.
+// am heißesten). Farbverlauf von Schwarz über Rot und Gelb zu Weiß. `depth` lässt das Rauschen auch
+// in z variieren, damit die Flammen im Würfel nicht in jeder Scheibe gleich aussehen (0 = wie 2D).
 constexpr const char* kFireBody = R"wgsl(let t = @time * @param(speed);
 let s = @param(scale);
-let q = vec3<f32>(p.x * s, p.y * s * 0.6 - t, 0.0);
+let q = vec3<f32>(p.x * s, p.y * s * 0.6 - t, p.z * s * @param(depth));
 let n = wh_value_noise(q) * 0.65 + wh_value_noise(q * 2.0 + vec3<f32>(0.0, 0.0, 3.7)) * 0.35;
 let heat = clamp(n * 1.4 + (1.0 - p.y / max(@param(height), 0.05)) - 0.5, 0.0, 1.0);
 return vec4<f32>(clamp(heat * 2.0, 0.0, 1.0), clamp(heat * 2.0 - 0.7, 0.0, 1.0), clamp(heat * 3.0 - 2.0, 0.0, 1.0), 1.0);)wgsl";
@@ -183,7 +195,8 @@ std::vector<compiler::NodeDefinition> generatorNodes() {
     nodes.push_back(fieldNode(
         "wh.generator.gradient", "Linear Gradient", "Generators", {fieldOutput()},
         {number("angle", "Angle (deg)", 0.0), color("colorA", "Color A", ColorRgba{0.0F, 0.0F, 0.0F, 1.0F}),
-         color("colorB", "Color B", ColorRgba{1.0F, 1.0F, 1.0F, 1.0F})},
+         color("colorB", "Color B", ColorRgba{1.0F, 1.0F, 1.0F, 1.0F}),
+         number("elevation", "Elevation (deg, tilt toward z)", 0.0, -90.0, 90.0)},
         kGradientBody, kColorPrelude));
 
     nodes.push_back(fieldNode("wh.generator.noise", "Value Noise", "Generators", {fieldOutput()},
@@ -194,8 +207,8 @@ std::vector<compiler::NodeDefinition> generatorNodes() {
                               kNoiseBody, kNoisePrelude));
 
     nodes.push_back(fieldNode("wh.generator.plasma", "Plasma", "Generators", {fieldOutput()},
-                              {number("scale", "Scale", 3.0, 0.1, 64.0),
-                               number("speed", "Speed", 1.0, -20.0, 20.0)},
+                              {number("scale", "Scale", 3.0, 0.1, 64.0), number("speed", "Speed", 1.0, -20.0, 20.0),
+                               number("depth", "Depth (waves along z)", 0.0, 0.0, 4.0)},
                               kPlasmaBody));
 
     nodes.push_back(fieldNode(
@@ -231,18 +244,21 @@ std::vector<compiler::NodeDefinition> generatorNodes() {
         "wh.generator.scan", "Scan Line", "Generators", {fieldOutput()},
         {number("position", "Position", 0.5, 0.0, 1.0), number("width", "Width", 0.08, 0.001, 1.0),
          number("softness", "Softness", 0.5, 0.0, 1.0), number("angle", "Angle (deg)", 0.0),
-         color("color", "Color", ColorRgba{1.0F, 1.0F, 1.0F, 1.0F})},
+         color("color", "Color", ColorRgba{1.0F, 1.0F, 1.0F, 1.0F}),
+         number("elevation", "Elevation (deg, tilt toward z)", 0.0, -90.0, 90.0)},
         kScanBody));
 
     nodes.push_back(fieldNode(
         "wh.generator.ripples", "Ripples", "Generators", {fieldOutput()},
         {number("rate", "Drops per second", 0.7, 0.01, 20.0), number("speed", "Spread speed", 0.25, 0.0, 5.0),
-         number("width", "Ring width", 0.05, 0.001, 0.5), color("color", "Color", ColorRgba{0.3F, 0.7F, 1.0F, 1.0F})},
+         number("width", "Ring width", 0.05, 0.001, 0.5), color("color", "Color", ColorRgba{0.3F, 0.7F, 1.0F, 1.0F}),
+         choice("space", "Space", {"Flat (x/y rings)", "Volume (x/y/z shells)"})},
         kRippleBody, kRipplePrelude));
 
     nodes.push_back(fieldNode("wh.generator.fire", "Fire", "Generators", {fieldOutput()},
                               {number("scale", "Scale", 4.0, 0.1, 64.0), number("speed", "Speed", 1.5, -20.0, 20.0),
-                               number("height", "Flame height", 0.8, 0.05, 2.0)},
+                               number("height", "Flame height", 0.8, 0.05, 2.0),
+                               number("depth", "Depth (noise along z)", 0.0, 0.0, 4.0)},
                               kFireBody, kNoisePrelude));
 
     return nodes;

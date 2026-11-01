@@ -36,6 +36,7 @@ add_executable(wh_tests
     input/dmx_receiver_test.cpp
     nodes/builtin_nodes_test.cpp
     nodes/node_audit_test.cpp
+    nodes/volume_nodes_test.cpp
     nodes/perf_bench_test.cpp
     nodes/example_projects_test.cpp
     nodes/text_node_test.cpp
@@ -135,6 +136,7 @@ if(TARGET wh_gpu_webgpu)
         gpu_device/spark_nodes_on_device_test.cpp
         gpu_device/text_on_device_test.cpp
         gpu_device/warps_on_device_test.cpp
+        gpu_device/volume_on_device_test.cpp
         gpu_device/session_on_device_test.cpp
         gpu_device/sampling_on_device_test.cpp
         gpu_device/stage_on_device_test.cpp

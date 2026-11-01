@@ -104,7 +104,7 @@ TEST_CASE("Bleibt die Parametergröße gleich, behält die Stage ihren Parameter
     const std::size_t sizeBefore =
         compiler::compileField(fx.lab.graph, fx.lab.snippets, fx.target()).value().layout.sizeBytes;
 
-    insertMix(fx, "wh.generator.plasma");
+    insertMix(fx, "wh.generator.position");
     REQUIRE(compiler::compileField(fx.lab.graph, fx.lab.snippets, fx.target()).value().layout.sizeBytes ==
             sizeBefore);
     REQUIRE(fx.stage->setGraph(fx.lab.graph).ok());
