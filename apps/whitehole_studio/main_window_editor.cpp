@@ -4,10 +4,8 @@
 // mit der Palette weiter.
 #include <QApplication>
 #include <QDockWidget>
-#include <QDropEvent>
-#include <QEvent>
-#include <QObject>
 #include <QMimeData>
+#include <QPoint>
 #include <QSplitter>
 #include <QStandardPaths>
 #include <QStatusBar>
@@ -20,23 +18,6 @@
 #include "node_palette.hpp"
 
 namespace whitehole::studio {
-
-namespace {
-
-// Zählt, welche Ereignisse an einem Widget ankommen (nur für die Diagnose im Rauchtest).
-class EventTally : public QObject {
-public:
-    explicit EventTally(QObject* parent) : QObject{parent} {}
-    bool eventFilter(QObject*, QEvent* event) override {
-        if (event->type() == QEvent::Drop) {
-            ++drops;
-        }
-        return false;
-    }
-    int drops{0};
-};
-
-}  // namespace
 
 void MainWindow::buildEditorDock() {
     editor_ = new NodeEditor{*player_, this};
@@ -87,30 +68,8 @@ QString MainWindow::exercisePalette() {
     // Ziehen und Ablegen aus der Palette: derselbe Weg wie mit der Maus (Typ-ID im MIME-Typ).
     QMimeData mime;
     mime.setData(QString::fromLatin1(kNodeTypeMime), QByteArray{"wh.generator.solid"});
-    QDropEvent drop{QPointF{60.0, 60.0}, Qt::CopyAction, &mime, Qt::LeftButton, Qt::NoModifier};
-    drop.setAccepted(false);
-    EventTally viewportTally{editor_};
-    EventTally editorTally{editor_};
-    editor_->viewport()->installEventFilter(&viewportTally);
-    editor_->installEventFilter(&editorTally);
-    QApplication::sendEvent(editor_->viewport(), &drop);
-    if (!drop.isAccepted()) {
-        // Je nach Qt-Version und Plattform kommt ein von Hand gesendeter Drop nur am Editor selbst an
-        QApplication::sendEvent(editor_, &drop);
-    }
-    if (editor_->nodeCount() != before + 1) {
-        return tr("Palette: Ablegen hat keinen Node angelegt (%1 -> %2, angenommen: %3, acceptDrops: %4/%5, Status: \"%6\", Drops am Viewport/Editor: %7/%8, sichtbar: %9/%10, aktiv: %11)")
-            .arg(before)
-            .arg(editor_->nodeCount())
-            .arg(drop.isAccepted())
-            .arg(editor_->acceptDrops())
-            .arg(editor_->viewport()->acceptDrops())
-            .arg(statusBar()->currentMessage())
-            .arg(viewportTally.drops)
-            .arg(editorTally.drops)
-            .arg(editor_->isVisible())
-            .arg(editor_->viewport()->isVisible())
-            .arg(editor_->isEnabled());
+    if (!editor_->handleNodeDrop(&mime, QPoint{60, 60}) || editor_->nodeCount() != before + 1) {
+        return tr("Palette: Ablegen hat keinen Node angelegt (%1 -> %2)").arg(before).arg(editor_->nodeCount());
     }
     if (!editor_->addNodeAtCenter("wh.generator.solid").has_value() || editor_->nodeCount() != before + 2) {
         return tr("Palette: Doppelklick-Weg legt keinen Node an");

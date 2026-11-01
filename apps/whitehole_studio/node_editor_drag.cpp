@@ -37,14 +37,21 @@ void NodeEditor::dragMoveEvent(QDragMoveEvent* event) {
 }
 
 void NodeEditor::dropEvent(QDropEvent* event) {
-    if (!carriesNodeType(event->mimeData())) {
+    if (!handleNodeDrop(event->mimeData(), event->position().toPoint())) {
         QGraphicsView::dropEvent(event);
         return;
     }
-    const std::string typeId = QString::fromUtf8(event->mimeData()->data(QString::fromLatin1(kNodeTypeMime))).toStdString();
-    // Der Mauszeiger steht in der Mitte des neuen Nodes
-    addNodeAt(typeId, mapToScene(event->position().toPoint()) - QPointF{70.0, 20.0});
     event->acceptProposedAction();
+}
+
+bool NodeEditor::handleNodeDrop(const QMimeData* mime, const QPoint& viewportPos) {
+    if (!carriesNodeType(mime)) {
+        return false;
+    }
+    const std::string typeId = QString::fromUtf8(mime->data(QString::fromLatin1(kNodeTypeMime))).toStdString();
+    // Der Mauszeiger steht in der Mitte des neuen Nodes
+    addNodeAt(typeId, mapToScene(viewportPos) - QPointF{70.0, 20.0});
+    return true;
 }
 
 bool NodeEditor::viewportEvent(QEvent* event) {

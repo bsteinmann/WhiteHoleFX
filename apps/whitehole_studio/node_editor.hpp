@@ -37,6 +37,7 @@ class QDragMoveEvent;
 class QDropEvent;
 class QEvent;
 class QMenu;
+class QMimeData;
 
 namespace whitehole::studio {
 
@@ -83,6 +84,10 @@ public:
 
     /// Legt einen Node in der Mitte der sichtbaren Fläche an (Doppelklick in der Palette).
     std::optional<NodeId> addNodeAtCenter(const std::string& typeId);
+    /// Legt den Node an, den ein Drag aus der Palette mitbringt (Typ-ID im MIME-Typ), an der Stelle `viewportPos`.
+    /// Falsch, wenn die Daten keinen Node-Typ tragen. Von dropEvent benutzt; der Rauchtest ruft es direkt auf,
+    /// weil sich Drag-Ereignisse nicht per sendEvent einspeisen lassen.
+    bool handleNodeDrop(const QMimeData* mime, const QPoint& viewportPos);
     /// Das Widget, auf dem losgelassene Nodes gelöscht werden (die Palette). Gehört dem Aufrufer.
     void setDeleteZone(QWidget* zone);
 
