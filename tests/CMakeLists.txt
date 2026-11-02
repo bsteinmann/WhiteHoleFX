@@ -72,6 +72,7 @@ add_executable(wh_tests
     preview/view_test.cpp
     preview/view3d_test.cpp
     project/project_test.cpp
+    project/cue_test.cpp
     fuzz/parser_fuzz_test.cpp
     fuzz/player_ops_fuzz_test.cpp
     i18n/po_catalog_test.cpp
@@ -84,6 +85,8 @@ add_executable(wh_tests
     runtime/node_catalog_test.cpp
     runtime/color_pick_test.cpp
     runtime/master_dmx_test.cpp
+    runtime/cue_runner_test.cpp
+    runtime/player_cues_test.cpp
     runtime/node_clipboard_test.cpp
     runtime/node_defaults_test.cpp
     runtime/point_file_test.cpp

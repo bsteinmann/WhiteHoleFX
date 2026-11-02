@@ -95,6 +95,7 @@ LivePanel::LivePanel(runtime::Player& player, QWidget* parent) : QWidget{parent}
     connect(escape, &QShortcut::activated, this, [this]() { Q_EMIT leaveRequested(); });
     for (int i = 0; i < 9; ++i) {
         auto* key = new QShortcut{QKeySequence{static_cast<int>(Qt::Key_1) + i}, this};
+        digitKeys_.push_back(key);
         connect(key, &QShortcut::activated, this, [this, i]() {
             if (i < buttonCount()) {
                 trigger(i);
@@ -126,6 +127,11 @@ void LivePanel::rebuild() {
 }
 
 void LivePanel::refresh() {
+    // Läuft die Cuelist, gehören die Zifferntasten ihr (Tasten-Auslöser); sonst wären sie doppelt belegt.
+    const bool cuesRunning = player_.cuesRunning();
+    for (QShortcut* key : digitKeys_) {
+        key->setEnabled(!cuesRunning);
+    }
     const runtime::LiveStatus st = player_.liveStatus();
     const auto& looks = player_.looks();
     auto nameOf = [&looks](int index) {
@@ -170,6 +176,10 @@ void LivePanel::setUseGo(bool useGo) { useGo_->setChecked(useGo); }
 bool LivePanel::useGo() const { return useGo_->isChecked(); }
 
 bool LivePanel::trigger(int index) {
+    if (player_.cuesRunning()) {
+        Q_EMIT failed(tr("Die Cuelist läuft und schaltet die Looks selbst. Erst in der Cuelist auf Stopp drücken."));
+        return false;
+    }
     const Result<void> r = useGo_->isChecked() ? player_.liveArm(index) : player_.liveTrigger(index, fadeOverride());
     if (!r.ok()) {
         Q_EMIT failed(fromStd(r.error().message));
@@ -180,6 +190,10 @@ bool LivePanel::trigger(int index) {
 }
 
 bool LivePanel::go() {
+    if (player_.cuesRunning()) {
+        player_.cueGo();  // die Cuelist läuft: GO löst ihren nächsten Cue aus
+        return true;
+    }
     const Result<void> r = player_.liveGo(fadeOverride());
     if (!r.ok()) {
         Q_EMIT failed(fromStd(r.error().message));

@@ -51,6 +51,7 @@ Result<void> Player::adopt(project::Project project, std::string path) {
     }
     stop();
     live_.reset();
+    cueRunner_.stop();
     liveLast_.reset();
     map_ = std::move(parts.value().map);
     applyLayoutIfMissing(project.graph);
@@ -167,6 +168,7 @@ Result<void> Player::step() {
         }
     }
     pollMasterDmx();
+    advanceCues();
     bool structural = false;
     if (live_) {
         // Die Überblendung läuft mit der Uhrzeit, nicht mit der Zahl der Frames

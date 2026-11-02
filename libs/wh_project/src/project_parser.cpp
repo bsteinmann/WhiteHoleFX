@@ -8,6 +8,7 @@
 #include <unordered_map>
 #include <variant>
 
+#include "project_cue.hpp"
 #include "project_fixture_parser.hpp"
 #include "project_names.hpp"
 #include "whitehole/project/project.hpp"
@@ -108,7 +109,7 @@ std::optional<Error> Parser::handleOutside(const Line& line) {
     Reader r{line, 0};
     const std::string key = r.word("Schlüsselwort");
     std::optional<Error> error;
-    if (look_ && (key == "settings" || key == "destination" || key == "fixture")) {
+    if (look_ && (key == "settings" || key == "destination" || key == "fixture" || key == "cue")) {
         r.fail("\"" + key + "\" gehört nicht in einen look-Block");
     } else if (key == "settings") {
         error = settings(r);
@@ -127,6 +128,8 @@ std::optional<Error> Parser::handleOutside(const Line& line) {
         error = connect(r);
     } else if (key == "output") {
         error = output(r);
+    } else if (key == "cue") {
+        project_.cues.push_back(detail::parseCue(r));
     } else if (key == "look") {
         error = beginLook(r, line.number);
     } else if (key == "endlook") {
@@ -403,6 +406,9 @@ Result<Project> Parser::finish() {
     if (state_ != State::Outside) {
         return Error{ErrorCode::InvalidArgument,
                      "Zeile " + std::to_string(blockStart_) + ": Block ist nicht mit \"end\" beendet"};
+    }
+    if (const Result<void> cues = detail::checkCues(project_.cues, project_.looks); !cues.ok()) {
+        return cues.error();
     }
     return std::move(project_);
 }

@@ -8,6 +8,7 @@ Die Beispiele liegen in `examples/`, nach Themen in Untergruppen. Im Studio ersc
 | Einstieg | `einstieg/wand.whfx` | 16×8-Matrix und Strip mit drehendem Verlauf; kleinstes sinnvolles Projekt |
 | Einstieg | `einstieg/regler.whfx` | Plasma mit Spiegeln, Zoom und LFO-Drehung; alle Reglertypen |
 | Einstieg | `einstieg/looks.whfx` | drei gespeicherte Looks für den Live-Modus |
+| Einstieg | `einstieg/cuelist.whfx` | dieselben Looks als Cuelist: GO, Zeit-Auslöser, Taste F5, Delay/Fade, Schwarz am Ende |
 | Effekte (2D) | `effekte/gewitter.whfx` | Blitze über Plasma-Wolken |
 | Effekte (2D) | `effekte/funken.whfx` | Funken (Particles) |
 | Effekte (2D) | `effekte/kaleidoskop.whfx` | Metaballs im Kaleidoskop |

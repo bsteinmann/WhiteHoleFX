@@ -2,6 +2,7 @@
 # Reine Textverarbeitung, kein Netzwerk und keine GPU. Kein Qt.
 wh_add_library(wh_project
     SOURCES
+        src/project_cue.cpp
         src/project_fixture_parser.cpp
         src/project_parser.cpp
         src/project_text.cpp

@@ -30,11 +30,11 @@ msgstr "   |   Output off (%1 packets not sent)"
 msgid "   |   BLACKOUT"
 msgstr "   |   BLACKOUT"
 
-#: main_window_dmx.cpp:109
+#: main_window_dmx.cpp:114
 msgid "   |   DMX-Eingang %1: %2 Pakete"
 msgstr "   |   DMX input %1: %2 packets"
 
-#: main_window_dmx.cpp:99
+#: main_window_dmx.cpp:104
 msgid "   |   DMX-Nodes im Projekt, Eingang aus (Einstellungen)"
 msgstr "   |   DMX nodes in project, input off (Settings)"
 
@@ -50,7 +50,7 @@ msgstr "   |   Master %1 %"
 msgid "   |   TESTMODUS"
 msgstr "   |   TEST MODE"
 
-#: main_window_dmx.cpp:107
+#: main_window_dmx.cpp:112
 msgid " + sACN"
 msgstr " + sACN"
 
@@ -70,7 +70,7 @@ msgstr " Master "
 msgid " Wechsel/s"
 msgstr " changes/s"
 
-#: live_panel.cpp:71 look_panel.cpp:52
+#: cue_dialog.cpp:54 cue_dialog.cpp:74 cue_dialog.cpp:77
 msgid " s"
 msgstr " s"
 
@@ -78,11 +78,11 @@ msgstr " s"
 msgid "%1  (%2 LEDs)"
 msgstr "%1  (%2 LEDs)"
 
-#: live_panel.cpp:148
+#: live_panel.cpp:154
 msgid "%1  →  %2"
 msgstr "%1  →  %2"
 
-#: main_window_controls.cpp:62 main_window_dmx.cpp:85
+#: main_window_controls.cpp:62 main_window_dmx.cpp:90
 msgid "%1 %"
 msgstr "%1 %"
 
@@ -158,7 +158,7 @@ msgstr "&Settings …"
 msgid "&Fehler melden oder Idee vorschlagen …"
 msgstr "&Report a bug or suggest an idea …"
 
-#: main_window_actions.cpp:100
+#: main_window_actions.cpp:101
 msgid "&Hilfe"
 msgstr "&Help"
 
@@ -170,15 +170,15 @@ msgstr "&Layout and Patch …"
 msgid "&Leuchten (additiv)"
 msgstr "&Glow (additive)"
 
-#: main_window_actions.cpp:96
+#: main_window_actions.cpp:97
 msgid "&Live"
 msgstr "&Live"
 
-#: main_window_live.cpp:69
+#: main_window_live.cpp:83
 msgid "&Live-Modus"
 msgstr "&Live mode"
 
-#: main_window_live.cpp:64
+#: main_window_live.cpp:78
 msgid "&Look speichern …"
 msgstr "&Save look …"
 
@@ -222,7 +222,7 @@ msgstr "&Test mode …"
 msgid "&Tutorial …"
 msgstr "&Tutorial …"
 
-#: main_window_actions.cpp:92
+#: main_window_actions.cpp:93
 msgid "&Wiedergabe"
 msgstr "&Playback"
 
@@ -242,7 +242,11 @@ msgstr "&Open …"
 msgid "&Über WhiteHoleFX"
 msgstr "&About WhiteHoleFX"
 
-#: live_panel.cpp:148
+#: cue_dialog.cpp:37 cue_panel.cpp:119
+msgid "(Schwarz)"
+msgstr "(Black)"
+
+#: live_panel.cpp:154
 msgid "(kein Look)"
 msgstr "(no look)"
 
@@ -266,7 +270,7 @@ msgstr ", level %1 %"
 msgid "100 %"
 msgstr "100 %"
 
-#: main_window_actions.cpp:148
+#: main_window_actions.cpp:149
 msgid "3D"
 msgstr "3D"
 
@@ -402,7 +406,7 @@ msgstr "Count y"
 msgid "Anzahl z"
 msgstr "Count z"
 
-#: main_window_dmx.cpp:104 settings_dialog.cpp:115
+#: cue_dialog.cpp:63 cue_panel.cpp:39 main_window_dmx.cpp:109
 msgid "Art-Net"
 msgstr "Art-Net"
 
@@ -418,9 +422,13 @@ msgstr "Art-Net, sACN and DDP leave through this card. With “Automatic” the 
 msgid "Art-Net-Port (UDP):"
 msgstr "Art-Net port (UDP):"
 
-#: main_window_actions.cpp:145 settings_dialog.cpp:61
+#: main_window_actions.cpp:146 settings_dialog.cpp:61
 msgid "Audio"
 msgstr "Audio"
+
+#: cue_dialog.cpp:49 cue_panel.cpp:43
+msgid "Audio-Beat"
+msgstr "Audio beat"
 
 #: main_window_audio.cpp:50
 msgid "Audio-Eingang: %1"
@@ -470,6 +478,10 @@ msgstr "Output"
 msgid "Ausgeschaltete LEDs als sehr dunkle Punkte, nur als Orientierung"
 msgstr "Switched-off LEDs as very dark dots, for orientation only"
 
+#: cue_dialog.cpp:51 cue_panel.cpp:53
+msgid "Auslöser"
+msgstr "Trigger"
+
 #: test_panel.cpp:38
 msgid "Auswahl hervorheben"
 msgstr "Highlight selection"
@@ -486,11 +498,15 @@ msgstr "Automatic (next free universe)"
 msgid "BLACKOUT"
 msgstr "BLACKOUT"
 
-#: live_panel.cpp:149
+#: cue_panel.cpp:64
+msgid "Bearbeiten …"
+msgstr "Edit …"
+
+#: live_panel.cpp:155
 msgid "Bereit: %1 - GO drücken"
 msgstr "Ready: %1 - press GO"
 
-#: main_window_actions.cpp:111
+#: main_window_actions.cpp:112
 msgid "Betrieb"
 msgstr "Operation"
 
@@ -510,6 +526,26 @@ msgstr "Hides editing and shows large buttons for all looks (F9)"
 msgid "Cube"
 msgstr "Cube"
 
+#: cue_panel.cpp:62
+msgid "Cue +"
+msgstr "Cue +"
+
+#: cue_dialog.cpp:28
+msgid "Cue bearbeiten"
+msgstr "Edit cue"
+
+#: cue_panel.cpp:63
+msgid "Cue −"
+msgstr "Cue −"
+
+#: main_window_live.cpp:61
+msgid "Cuelist"
+msgstr "Cue list"
+
+#: cue_panel.cpp:69
+msgid "Cuelist starten: wechselt in den Live-Modus und zeigt Cue 1"
+msgstr "Start the cue list: switches to live mode and shows cue 1"
+
 #: test_panel.cpp:31
 msgid "Cyan"
 msgstr "Cyan"
@@ -518,13 +554,37 @@ msgstr "Cyan"
 msgid "DDP-Offset (Byte)"
 msgstr "DDP offset (bytes)"
 
+#: cue_panel.cpp:38
+msgid "DMX %1 U%2 K%3 ab %4"
+msgstr "DMX %1 U%2 Ch%3 from %4"
+
+#: cue_dialog.cpp:70
+msgid "DMX-Auslöser: Kanal"
+msgstr "DMX trigger: channel"
+
+#: cue_dialog.cpp:68
+msgid "DMX-Auslöser: Protokoll"
+msgstr "DMX trigger: protocol"
+
+#: cue_dialog.cpp:71
+msgid "DMX-Auslöser: Schwelle (1 bis 255)"
+msgstr "DMX trigger: threshold (1 to 255)"
+
+#: cue_dialog.cpp:69
+msgid "DMX-Auslöser: Universe"
+msgstr "DMX trigger: universe"
+
 #: settings_dialog.cpp:60
 msgid "DMX-Eingang"
 msgstr "DMX input"
 
-#: main_window_dmx.cpp:51
+#: main_window_dmx.cpp:52
 msgid "DMX-Eingang: %1"
 msgstr "DMX input: %1"
+
+#: cue_dialog.cpp:49
+msgid "DMX-Kanal"
+msgstr "DMX channel"
 
 #: add_fixture_dialog.cpp:146 fixture_form.cpp:158
 msgid "Das Kabel beginnt an dieser Seite statt an der gegenüberliegenden"
@@ -538,9 +598,17 @@ msgstr "The project has been modified. Discard changes?"
 msgid "Das Testbild ersetzt den Effekt in der Vorschau und, wenn „Ausgabe senden“ an ist, auch auf den LEDs. Es wird nicht im Projekt gespeichert.\n\nAchtung: Weiß und Farbe leuchten mit voller Helligkeit. Prüfe vorher, ob die Netzteile die ganze Wand auf 100 % tragen."
 msgstr "The test pattern replaces the effect in the preview and, if “Send output” is on, on the LEDs too. It is not saved in the project.\n\nCaution: white and color light up at full brightness. Check beforehand that the power supplies can carry the whole wall at 100 %."
 
-#: main_window_actions.cpp:103
+#: main_window_actions.cpp:104
 msgid "Datei"
 msgstr "File"
+
+#: cue_dialog.cpp:78
+msgid "Dauer der Überblendung; der vorige Look blendet im selben Zug aus"
+msgstr "Duration of the crossfade; the previous look fades out at the same time"
+
+#: cue_dialog.cpp:79 cue_panel.cpp:53
+msgid "Delay"
+msgstr "Delay"
 
 #: look_panel.cpp:259
 msgid "Den Look „%1“ durch den aktuellen Effekt ersetzen?"
@@ -550,21 +618,33 @@ msgstr "Replace the look “%1” with the current effect?"
 msgid "Den Look „%1“ löschen?"
 msgstr "Delete the look “%1”?"
 
-#: main_window_live.cpp:66
+#: main_window_live.cpp:80
 msgid "Den aktuellen Effekt als Look in die Liste legen (Strg+L)"
 msgstr "Put the current effect into the list as a look (Ctrl+L)"
+
+#: cue_dialog.cpp:67
+msgid "Der Cue löst aus, wenn der Kanalwert auf diese Zahl oder darüber steigt"
+msgstr "The cue fires when the channel value rises to this number or above"
 
 #: settings_dialog.cpp:128
 msgid "Der Kanalwert 0 bis 255 setzt den Master auf 0 bis 100 %. Solange Pakete kommen, folgt der Master-Regler dem Pult; bleibt das Signal weg, hält der Master seinen Wert. Der Empfang oben muss für das gewählte Protokoll eingeschaltet sein."
 msgstr "The channel value 0 to 255 sets the master to 0 to 100 %. While packets arrive, the master slider follows the console; if the signal stops, the master keeps its value. Reception above must be enabled for the chosen protocol."
 
-#: main_window_dmx.cpp:90
+#: main_window_dmx.cpp:95
 msgid "Der Master kommt gerade vom DMX-Kanal (Einstellungen → DMX-Eingang)"
 msgstr "The master is currently coming from the DMX channel (Settings → DMX input)"
 
 #: main_window_help.cpp:33
 msgid "Die Anleitung im Browser öffnen"
 msgstr "Open the manual in the browser"
+
+#: main_window_cues.cpp:27
+msgid "Die Cuelist ist leer. Erst Cues anlegen (Dock „Cuelist“)."
+msgstr "The cue list is empty. Create cues first (Cue list dock)."
+
+#: live_panel.cpp:180
+msgid "Die Cuelist läuft und schaltet die Looks selbst. Erst in der Cuelist auf Stopp drücken."
+msgstr "The cue list is running and switches the looks itself. Press Stop in the cue list first."
 
 #: settings_dialog.cpp:132
 msgid "Die DMX-Nodes im Projekt lesen ihre Werte aus dem Empfang. Standard-Ports sind 6454 (Art-Net) und 5568 (sACN); nur ändern, wenn ein anderes Programm sie belegt. Nach der Installation ist der Empfang aus; unter Windows fragt die Firewall beim ersten Einschalten nach."
@@ -610,7 +690,7 @@ msgstr "This project has no adjustable parameters."
 msgid "Duplizieren\tStrg+D"
 msgstr "Duplicate\tCtrl+D"
 
-#: main_window_actions.cpp:142
+#: main_window_actions.cpp:143
 msgid "Effekte (2D)"
 msgstr "Effects (2D)"
 
@@ -638,7 +718,7 @@ msgstr "Paste\tCtrl+V"
 msgid "Einstellungen"
 msgstr "Settings"
 
-#: main_window_actions.cpp:139
+#: main_window_actions.cpp:140
 msgid "Einstieg"
 msgstr "Getting started"
 
@@ -673,6 +753,10 @@ msgstr "A look “%1” already exists. Overwrite it with the current effect?"
 #: layout_panel_add.cpp:69
 msgid "Es ist kein Projekt geladen. Mit Strg+N ein neues anlegen oder mit Strg+O eins öffnen."
 msgstr "No project is loaded. Create one with Ctrl+N or open one with Ctrl+O."
+
+#: cue_dialog.cpp:80 cue_panel.cpp:53
+msgid "Fade"
+msgstr "Fade"
 
 #: layout_panel_add.cpp:150
 msgid "Faktor auf alle Koordinaten, z. B. 0,1 für Millimeter in Zentimeter"
@@ -722,13 +806,21 @@ msgstr "Freely rotatable view: drag = rotate, right-click = pan, wheel = zoom"
 msgid "Front"
 msgstr "Front"
 
-#: main_window_live.cpp:91
+#: main_window_live.cpp:105
 msgid "Für den Live-Modus erst Looks speichern (Dock „Looks“)."
 msgstr "For live mode, save looks first (dock “Looks”)."
+
+#: cue_panel.cpp:34 cue_panel.cpp:70
+msgid "GO"
+msgstr "GO"
 
 #: live_panel.cpp:74
 msgid "GO  (Leertaste)"
 msgstr "GO  (Space)"
+
+#: cue_dialog.cpp:49
+msgid "GO (von Hand)"
+msgstr "GO (manual)"
 
 #: fixture_form.cpp:220
 msgid "Gamma"
@@ -746,7 +838,7 @@ msgstr "Yellow"
 msgid "Gerät:"
 msgstr "Device:"
 
-#: main_window_controls.cpp:46 main_window_dmx.cpp:91
+#: main_window_controls.cpp:46 main_window_dmx.cpp:96
 msgid "Gesamthelligkeit (wirkt auf Vorschau und Ausgabe, nicht im Projekt gespeichert)"
 msgstr "Overall brightness (affects preview and output, not saved in the project)"
 
@@ -886,13 +978,17 @@ msgstr "Align left edges"
 msgid "Liste leeren"
 msgstr "Clear list"
 
-#: main_window_live.cpp:57
+#: main_window_live.cpp:71
 msgid "Live"
 msgstr "Live"
 
 #: look_panel.cpp:73
 msgid "Live-Modus starten  ▶"
 msgstr "Start live mode  ▶"
+
+#: cue_dialog.cpp:46 cue_panel.cpp:53
+msgid "Look"
+msgstr "Look"
 
 #: look_panel.cpp:161
 msgid "Look %1"
@@ -918,7 +1014,7 @@ msgstr "Rename look"
 msgid "Look überschreiben"
 msgstr "Overwrite look"
 
-#: main_window_live.cpp:52
+#: main_window_live.cpp:66
 msgid "Looks"
 msgstr "Looks"
 
@@ -986,7 +1082,7 @@ msgstr "Overwrite with current effect"
 msgid "Modus"
 msgstr "Mode"
 
-#: add_fixture_dialog.cpp:55 fixture_form.cpp:74
+#: add_fixture_dialog.cpp:55 cue_dialog.cpp:34 cue_panel.cpp:53
 msgid "Name"
 msgstr "Name"
 
@@ -1070,6 +1166,10 @@ msgstr "Nodes"
 msgid "Nodes suchen …"
 msgstr "Search nodes …"
 
+#: cue_panel.cpp:53
+msgid "Nr."
+msgstr "No."
+
 #: test_panel.cpp:86
 msgid "Nur auf gewählten Fixtures"
 msgstr "Only on selected fixtures"
@@ -1077,6 +1177,10 @@ msgstr "Only on selected fixtures"
 #: main_window_view3d.cpp:95
 msgid "Nur leuchtende LEDs zeichnen: man sieht durch den Cube hindurch"
 msgstr "Draw only lit LEDs: you can see through the cube"
+
+#: cue_panel.cpp:71
+msgid "Nächsten Cue auslösen (Leertaste)"
+msgstr "Fire the next cue (space bar)"
 
 #: stage_view.cpp:52
 msgid "Oben"
@@ -1101,6 +1205,10 @@ msgstr "Parameters"
 #: add_fixture_dialog.cpp:159
 msgid "Patch (Ausgabe)"
 msgstr "Patch (output)"
+
+#: cue_dialog.cpp:75
+msgid "Pause zwischen Auslöser und Beginn der Überblendung"
+msgstr "Pause between trigger and start of the crossfade"
 
 #: stage_view.cpp:49
 msgid "Perspektive"
@@ -1250,13 +1358,17 @@ msgstr "Stage Config"
 msgid "Standardgerät des Systems"
 msgstr "System default device"
 
-#: main_window.cpp:289
+#: cue_panel.cpp:67 cue_panel.cpp:144 main_window.cpp:289
 msgid "Start"
 msgstr "Start"
 
 #: live_panel.cpp:64
 msgid "Statt der Zeit, die beim Look gespeichert ist"
 msgstr "Instead of the time saved with the look"
+
+#: cue_panel.cpp:144
+msgid "Stopp"
+msgstr "Stop"
 
 #: layout_panel_add.cpp:37 layout_panel_add.cpp:119
 msgid "Strip"
@@ -1269,6 +1381,22 @@ msgstr "Strip (line)"
 #: main_window_controls.cpp:79
 msgid "TESTMODUS: %1"
 msgstr "TEST MODE: %1"
+
+#: cue_dialog.cpp:49
+msgid "Taste"
+msgstr "Key"
+
+#: cue_panel.cpp:36
+msgid "Taste %1"
+msgstr "Key %1"
+
+#: cue_dialog.cpp:59
+msgid "Taste drücken, die den Cue auslösen soll"
+msgstr "Press the key that should fire the cue"
+
+#: cue_dialog.cpp:61
+msgid "Tasten-Auslöser: Taste"
+msgstr "Key trigger: key"
 
 #: main_window_help.cpp:87
 msgid "Tastenkürzel"
@@ -1354,6 +1482,10 @@ msgstr "WAV files (*.wav)"
 msgid "Waagrecht mittig ausrichten"
 msgstr "Center horizontally"
 
+#: cue_dialog.cpp:55
+msgid "Wartezeit nach dem Ende der vorigen Überblendung"
+msgstr "Wait after the previous crossfade has finished"
+
 #: test_panel.cpp:29
 msgid "Weiß"
 msgstr "White"
@@ -1394,6 +1526,18 @@ msgstr "Rows"
 msgid "Zeilen (waagrecht)"
 msgstr "Rows (horizontal)"
 
+#: cue_dialog.cpp:49
+msgid "Zeit"
+msgstr "Time"
+
+#: cue_dialog.cpp:56
+msgid "Zeit-Auslöser: Wartezeit"
+msgstr "Time trigger: wait"
+
+#: cue_panel.cpp:35
+msgid "Zeit: %1 nach dem vorigen"
+msgstr "Time: %1 after the previous one"
+
 #: stage_view.cpp:43
 msgid "Ziehen dreht, Rad zoomt. Die erste LED am Kabel ist weiß; x rot, y grün, z blau."
 msgstr "Dragging rotates, the wheel zooms. The first LED on the cable is white; x red, y green, z blue."
@@ -1426,7 +1570,7 @@ msgstr "Select at least three fixtures to distribute"
 msgid "Zurück zum Editor (Esc)"
 msgstr "Back to editor (Esc)"
 
-#: main_window_live.cpp:72
+#: main_window_live.cpp:86
 msgid "Zwischen Bearbeiten und Live-Betrieb wechseln (F9)"
 msgstr "Switch between editing and live operation (F9)"
 
@@ -1462,7 +1606,7 @@ msgstr "top right"
 msgid "rechts (x max)"
 msgstr "right (x max)"
 
-#: main_window_dmx.cpp:107 settings_dialog.cpp:116
+#: cue_dialog.cpp:63 cue_panel.cpp:39 main_window_dmx.cpp:112
 msgid "sACN"
 msgstr "sACN"
 
@@ -1526,7 +1670,7 @@ msgstr "About WhiteHoleFX"
 msgid "Über diese Karte tritt der sACN-Empfang den Multicast-Gruppen bei. Art-Net-Broadcast und Unicast-Pakete kommen weiterhin von jeder Karte an."
 msgstr "sACN reception joins the multicast groups on this card. Art-Net broadcast and unicast packets still arrive on every card."
 
-#: live_panel.cpp:119
+#: live_panel.cpp:120
 msgid "Überblendzeit %1 s"
 msgstr "Fade time %1 s"
 

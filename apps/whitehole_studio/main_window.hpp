@@ -38,6 +38,7 @@ class QToolBar;
 namespace whitehole::studio {
 
 class LayoutPanel;
+class CuePanel;
 class LivePanel;
 class LookPanel;
 class NodeEditor;
@@ -95,6 +96,7 @@ public:
     QString exercisePalette();
     /// Rauchtest: Looks speichern/ordnen/umbenennen, Live-Modus mit Überblendung, GO und Rückkehr.
     QString exerciseLive();
+    QString exerciseCues();
     /// Rauchtest: Einstellungsdialog (Rundlauf der Felder), Netzwerkkarte wählen, DMX/Audio anwenden.
     QString exerciseSettings();
     QString exerciseNodeDefaults();  // Teil von exerciseSettings (main_window_settings.cpp)
@@ -131,6 +133,9 @@ private:
     void setViewMode(ViewMode mode);
     void onCameraChanged(const preview::Camera3d& camera);
     void resetLive();
+    /// Cuelist (main_window_cues.cpp): Start wechselt in den Live-Modus, Stopp lässt den Live-Modus stehen.
+    void startCues();
+    void stopCues();
     void hideEditDocks();  // Live-Modus: Editor-Docks verstecken ...
     void showEditDocks();  // ... und danach wieder zeigen
     /// Dock "Nodes": Palette und Node-Editor (main_window_editor.cpp).
@@ -231,6 +236,8 @@ private:
     LookPanel* lookPanel_{nullptr};
     QDockWidget* lookDock_{nullptr};
     LivePanel* livePanel_{nullptr};
+    CuePanel* cuePanel_{nullptr};
+    QDockWidget* cueDock_{nullptr};
     QDockWidget* liveDock_{nullptr};
     QAction* liveAction_{nullptr};
     QAction* saveLookAction_{nullptr};

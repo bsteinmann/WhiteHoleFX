@@ -25,6 +25,7 @@ class QDoubleSpinBox;
 class QGridLayout;
 class QLabel;
 class QProgressBar;
+class QShortcut;
 class QPushButton;
 
 namespace whitehole::studio {
@@ -63,6 +64,7 @@ private:
     QGridLayout* grid_{nullptr};
     QWidget* gridHost_{nullptr};
     std::vector<QPushButton*> buttons_;
+    std::vector<QShortcut*> digitKeys_;  // Tasten 1 bis 9 (aus, solange die Cuelist läuft)
     QLabel* nowLabel_{nullptr};
     QLabel* nextLabel_{nullptr};
     QProgressBar* progress_{nullptr};

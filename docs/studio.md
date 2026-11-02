@@ -319,6 +319,27 @@ geben. Der **Fade selbst** ändert nur einen Zahlenwert und läuft ohne Neuüber
 ruckelfrei braucht, nutzt „Mit GO“ und lädt vorher. Der Editor-Graph ruht im Live-Betrieb; Rückgängig ist
 gesperrt. Ein Projekt zu laden beendet den Live-Modus.
 
+## Cuelist
+
+Die **Cuelist** (Ansicht → Cuelist) bringt Looks in eine feste Reihenfolge, wie am Lichtpult. Jeder Cue hat einen Look
+(oder Schwarz), einen **Auslöser**, ein **Delay** und eine **Überblendzeit**. Sie steht in der Projektdatei (`cue ...`,
+siehe [Projektdatei](project-format.md)) und wird mit Strg+S gespeichert.
+
+| Auslöser | Wann der Cue läuft |
+|---|---|
+| GO | auf Knopf GO oder Leertaste |
+| Zeit | selbsttätig die eingestellten Sekunden, nachdem der vorige Cue fertig eingeblendet ist |
+| Taste | wenn die Taste gedrückt wird, von jedem Stand aus (auch Cues überspringen oder zurückspringen) |
+| DMX | wenn ein DMX-Kanal (Art-Net oder sACN) auf den Schwellwert steigt; nur die steigende Flanke zählt |
+| Audio | beim nächsten Beat |
+
+Bedienung: *Start* wechselt in den Live-Modus und zeigt Cue 1. *GO* löst immer den nächsten Cue aus, egal welchen
+Auslöser er hat. *Stopp* beendet nur den Ablauf; das Bild bleibt stehen. Solange die Cuelist läuft, sind die Zifferntasten
+der Looks gesperrt, damit sich nichts dazwischen mischt. Cues hinzufügen, bearbeiten, löschen und verschieben geht im
+Dock; Looks, die umbenannt werden, ziehen die Cues mit, ein gelöschter Look macht den Cue zu Schwarz.
+
+Das Beispiel `examples/einstieg/cuelist.whfx` zeigt GO, Zeit, Taste F5, Delay/Fade und Schwarz am Ende.
+
 ## Master, Blackout, LED-Info, Zuletzt geöffnet
 
 - **Master:** Der Regler „Master“ in der Leiste „Betrieb“ ist die Gesamthelligkeit von 0 bis 100 %. Er

@@ -50,6 +50,9 @@ public:
     /// sichtbare Deck unberührt, das verdeckte zeigt einen durchsichtigen Platzhalter.
     Result<void> arm(const project::Look& look, int index);
 
+    /// Lädt Schwarz (eine durchsichtige Fläche) ins verdeckte Deck: go() blendet dann den aktuellen Look aus (Cuelist).
+    Result<void> armBlank();
+
     /// Startet die Überblendung zum vorgeladenen Look in `fadeSeconds` (0 = sofort).
     /// Fehler: InvalidArgument (nichts vorgeladen, Zeit negativ oder nicht endlich).
     Result<void> go(double fadeSeconds);

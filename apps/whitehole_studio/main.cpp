@@ -147,9 +147,11 @@ int main(int argc, char** argv) {
         std::printf("3D-Vorschau: %s\n", view3d.isEmpty() ? "ok" : "FEHLER");
         const QString menus = view3d.isEmpty() ? window.exerciseMenus() : QString{};
         std::printf("Menüleiste: %s\n", menus.isEmpty() ? "ok" : "FEHLER");
-        const QString languages = menus.isEmpty() ? window.exerciseLanguage() : QString{};
+        const QString cues = menus.isEmpty() ? window.exerciseCues() : QString{};
+        std::printf("Cuelist: %s\n", cues.isEmpty() ? "ok" : "FEHLER");
+        const QString languages = cues.isEmpty() ? window.exerciseLanguage() : QString{};
         std::printf("Sprachen/Tutorial: %s\n", languages.isEmpty() ? "ok" : "FEHLER");
-        for (const QString& failure : {selection, created, transparency, controls, dmx, audio, palette, live, settingsResult, stage, view3d, menus, languages}) {
+        for (const QString& failure : {selection, created, transparency, controls, dmx, audio, palette, live, settingsResult, stage, view3d, menus, cues, languages}) {
             if (!failure.isEmpty()) {
                 std::fprintf(stderr, "Rauchtest fehlgeschlagen: %s\n", failure.toUtf8().constData());
                 return 1;

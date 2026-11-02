@@ -30,6 +30,7 @@
 #include <cmath>
 #include <filesystem>
 
+#include "cue_panel.hpp"
 #include "layout_panel.hpp"
 #include "live_panel.hpp"
 #include "look_panel.hpp"
@@ -314,6 +315,7 @@ void MainWindow::tick() {
     if (liveMode_) {
         livePanel_->refresh();
     }
+    cuePanel_->refresh();
     refreshImage();
 }
 

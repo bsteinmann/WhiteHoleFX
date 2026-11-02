@@ -30,11 +30,11 @@ msgstr "   |   Sortie désactivée (%1 paquets non envoyés)"
 msgid "   |   BLACKOUT"
 msgstr "   |   BLACKOUT"
 
-#: main_window_dmx.cpp:109
+#: main_window_dmx.cpp:114
 msgid "   |   DMX-Eingang %1: %2 Pakete"
 msgstr "   |   Entrée DMX %1 : %2 paquets"
 
-#: main_window_dmx.cpp:99
+#: main_window_dmx.cpp:104
 msgid "   |   DMX-Nodes im Projekt, Eingang aus (Einstellungen)"
 msgstr "   |   Nœuds DMX dans le projet, entrée désactivée (Réglages)"
 
@@ -50,7 +50,7 @@ msgstr "   |   Master %1 %"
 msgid "   |   TESTMODUS"
 msgstr "   |   MODE TEST"
 
-#: main_window_dmx.cpp:107
+#: main_window_dmx.cpp:112
 msgid " + sACN"
 msgstr " + sACN"
 
@@ -70,7 +70,7 @@ msgstr " Master "
 msgid " Wechsel/s"
 msgstr " changements/s"
 
-#: live_panel.cpp:71 look_panel.cpp:52
+#: cue_dialog.cpp:54 cue_dialog.cpp:74 cue_dialog.cpp:77
 msgid " s"
 msgstr " s"
 
@@ -78,11 +78,11 @@ msgstr " s"
 msgid "%1  (%2 LEDs)"
 msgstr "%1  (%2 LED)"
 
-#: live_panel.cpp:148
+#: live_panel.cpp:154
 msgid "%1  →  %2"
 msgstr "%1  →  %2"
 
-#: main_window_controls.cpp:62 main_window_dmx.cpp:85
+#: main_window_controls.cpp:62 main_window_dmx.cpp:90
 msgid "%1 %"
 msgstr "%1 %"
 
@@ -158,7 +158,7 @@ msgstr "&Réglages …"
 msgid "&Fehler melden oder Idee vorschlagen …"
 msgstr "&Signaler un bogue ou proposer une idée …"
 
-#: main_window_actions.cpp:100
+#: main_window_actions.cpp:101
 msgid "&Hilfe"
 msgstr "&Aide"
 
@@ -170,15 +170,15 @@ msgstr "&Disposition et patch …"
 msgid "&Leuchten (additiv)"
 msgstr "&Halo (additif)"
 
-#: main_window_actions.cpp:96
+#: main_window_actions.cpp:97
 msgid "&Live"
 msgstr "&Live"
 
-#: main_window_live.cpp:69
+#: main_window_live.cpp:83
 msgid "&Live-Modus"
 msgstr "Mode &live"
 
-#: main_window_live.cpp:64
+#: main_window_live.cpp:78
 msgid "&Look speichern …"
 msgstr "&Enregistrer le look …"
 
@@ -222,7 +222,7 @@ msgstr "Mode &test …"
 msgid "&Tutorial …"
 msgstr "&Tutoriel …"
 
-#: main_window_actions.cpp:92
+#: main_window_actions.cpp:93
 msgid "&Wiedergabe"
 msgstr "&Lecture"
 
@@ -242,7 +242,11 @@ msgstr "&Ouvrir …"
 msgid "&Über WhiteHoleFX"
 msgstr "À &propos de WhiteHoleFX"
 
-#: live_panel.cpp:148
+#: cue_dialog.cpp:37 cue_panel.cpp:119
+msgid "(Schwarz)"
+msgstr "(Noir)"
+
+#: live_panel.cpp:154
 msgid "(kein Look)"
 msgstr "(aucun look)"
 
@@ -266,7 +270,7 @@ msgstr ", niveau %1 %"
 msgid "100 %"
 msgstr "100 %"
 
-#: main_window_actions.cpp:148
+#: main_window_actions.cpp:149
 msgid "3D"
 msgstr "3D"
 
@@ -402,7 +406,7 @@ msgstr "Nombre y"
 msgid "Anzahl z"
 msgstr "Nombre z"
 
-#: main_window_dmx.cpp:104 settings_dialog.cpp:115
+#: cue_dialog.cpp:63 cue_panel.cpp:39 main_window_dmx.cpp:109
 msgid "Art-Net"
 msgstr "Art-Net"
 
@@ -418,9 +422,13 @@ msgstr "Art-Net, sACN et DDP sortent par cette carte. Avec « Automatique », la
 msgid "Art-Net-Port (UDP):"
 msgstr "Port Art-Net (UDP) :"
 
-#: main_window_actions.cpp:145 settings_dialog.cpp:61
+#: main_window_actions.cpp:146 settings_dialog.cpp:61
 msgid "Audio"
 msgstr "Audio"
+
+#: cue_dialog.cpp:49 cue_panel.cpp:43
+msgid "Audio-Beat"
+msgstr "Beat audio"
 
 #: main_window_audio.cpp:50
 msgid "Audio-Eingang: %1"
@@ -470,6 +478,10 @@ msgstr "Sortie"
 msgid "Ausgeschaltete LEDs als sehr dunkle Punkte, nur als Orientierung"
 msgstr "LED éteintes en points très sombres, pour l'orientation seulement"
 
+#: cue_dialog.cpp:51 cue_panel.cpp:53
+msgid "Auslöser"
+msgstr "Déclencheur"
+
 #: test_panel.cpp:38
 msgid "Auswahl hervorheben"
 msgstr "Mettre la sélection en évidence"
@@ -486,11 +498,15 @@ msgstr "Automatique (prochain univers libre)"
 msgid "BLACKOUT"
 msgstr "BLACKOUT"
 
-#: live_panel.cpp:149
+#: cue_panel.cpp:64
+msgid "Bearbeiten …"
+msgstr "Modifier …"
+
+#: live_panel.cpp:155
 msgid "Bereit: %1 - GO drücken"
 msgstr "Prêt : %1 - appuyer sur GO"
 
-#: main_window_actions.cpp:111
+#: main_window_actions.cpp:112
 msgid "Betrieb"
 msgstr "Fonctionnement"
 
@@ -510,6 +526,26 @@ msgstr "Masque l'édition et affiche de grands boutons pour tous les looks (F9)"
 msgid "Cube"
 msgstr "Cube"
 
+#: cue_panel.cpp:62
+msgid "Cue +"
+msgstr "Cue +"
+
+#: cue_dialog.cpp:28
+msgid "Cue bearbeiten"
+msgstr "Modifier le cue"
+
+#: cue_panel.cpp:63
+msgid "Cue −"
+msgstr "Cue −"
+
+#: main_window_live.cpp:61
+msgid "Cuelist"
+msgstr "Liste de cues"
+
+#: cue_panel.cpp:69
+msgid "Cuelist starten: wechselt in den Live-Modus und zeigt Cue 1"
+msgstr "Démarrer la liste de cues : passe en mode live et affiche le cue 1"
+
 #: test_panel.cpp:31
 msgid "Cyan"
 msgstr "Cyan"
@@ -518,13 +554,37 @@ msgstr "Cyan"
 msgid "DDP-Offset (Byte)"
 msgstr "Décalage DDP (octets)"
 
+#: cue_panel.cpp:38
+msgid "DMX %1 U%2 K%3 ab %4"
+msgstr "DMX %1 U%2 C%3 dès %4"
+
+#: cue_dialog.cpp:70
+msgid "DMX-Auslöser: Kanal"
+msgstr "Déclencheur DMX : canal"
+
+#: cue_dialog.cpp:68
+msgid "DMX-Auslöser: Protokoll"
+msgstr "Déclencheur DMX : protocole"
+
+#: cue_dialog.cpp:71
+msgid "DMX-Auslöser: Schwelle (1 bis 255)"
+msgstr "Déclencheur DMX : seuil (1 à 255)"
+
+#: cue_dialog.cpp:69
+msgid "DMX-Auslöser: Universe"
+msgstr "Déclencheur DMX : univers"
+
 #: settings_dialog.cpp:60
 msgid "DMX-Eingang"
 msgstr "Entrée DMX"
 
-#: main_window_dmx.cpp:51
+#: main_window_dmx.cpp:52
 msgid "DMX-Eingang: %1"
 msgstr "Entrée DMX : %1"
+
+#: cue_dialog.cpp:49
+msgid "DMX-Kanal"
+msgstr "Canal DMX"
 
 #: add_fixture_dialog.cpp:146 fixture_form.cpp:158
 msgid "Das Kabel beginnt an dieser Seite statt an der gegenüberliegenden"
@@ -538,9 +598,17 @@ msgstr "Le projet a été modifié. Abandonner les modifications ?"
 msgid "Das Testbild ersetzt den Effekt in der Vorschau und, wenn „Ausgabe senden“ an ist, auch auf den LEDs. Es wird nicht im Projekt gespeichert.\n\nAchtung: Weiß und Farbe leuchten mit voller Helligkeit. Prüfe vorher, ob die Netzteile die ganze Wand auf 100 % tragen."
 msgstr "La mire remplace l'effet dans l'aperçu et, si « Envoyer la sortie » est activé, aussi sur les LED. Elle n'est pas enregistrée dans le projet.\n\nAttention : le blanc et la couleur s'allument à pleine luminosité. Vérifiez d'abord que les alimentations supportent tout le mur à 100 %."
 
-#: main_window_actions.cpp:103
+#: main_window_actions.cpp:104
 msgid "Datei"
 msgstr "Fichier"
+
+#: cue_dialog.cpp:78
+msgid "Dauer der Überblendung; der vorige Look blendet im selben Zug aus"
+msgstr "Durée du fondu enchaîné ; le look précédent disparaît en même temps"
+
+#: cue_dialog.cpp:79 cue_panel.cpp:53
+msgid "Delay"
+msgstr "Délai"
 
 #: look_panel.cpp:259
 msgid "Den Look „%1“ durch den aktuellen Effekt ersetzen?"
@@ -550,21 +618,33 @@ msgstr "Remplacer le look « %1 » par l'effet actuel ?"
 msgid "Den Look „%1“ löschen?"
 msgstr "Supprimer le look « %1 » ?"
 
-#: main_window_live.cpp:66
+#: main_window_live.cpp:80
 msgid "Den aktuellen Effekt als Look in die Liste legen (Strg+L)"
 msgstr "Ajouter l'effet actuel à la liste comme look (Ctrl+L)"
+
+#: cue_dialog.cpp:67
+msgid "Der Cue löst aus, wenn der Kanalwert auf diese Zahl oder darüber steigt"
+msgstr "Le cue se déclenche quand la valeur du canal monte à ce nombre ou plus"
 
 #: settings_dialog.cpp:128
 msgid "Der Kanalwert 0 bis 255 setzt den Master auf 0 bis 100 %. Solange Pakete kommen, folgt der Master-Regler dem Pult; bleibt das Signal weg, hält der Master seinen Wert. Der Empfang oben muss für das gewählte Protokoll eingeschaltet sein."
 msgstr "La valeur du canal de 0 à 255 règle le master de 0 à 100 %. Tant que des paquets arrivent, le curseur master suit la console ; si le signal s’arrête, le master garde sa valeur. La réception ci-dessus doit être activée pour le protocole choisi."
 
-#: main_window_dmx.cpp:90
+#: main_window_dmx.cpp:95
 msgid "Der Master kommt gerade vom DMX-Kanal (Einstellungen → DMX-Eingang)"
 msgstr "Le master vient actuellement du canal DMX (Réglages → Entrée DMX)"
 
 #: main_window_help.cpp:33
 msgid "Die Anleitung im Browser öffnen"
 msgstr "Ouvrir le manuel dans le navigateur"
+
+#: main_window_cues.cpp:27
+msgid "Die Cuelist ist leer. Erst Cues anlegen (Dock „Cuelist“)."
+msgstr "La liste de cues est vide. Créez d’abord des cues (panneau Liste de cues)."
+
+#: live_panel.cpp:180
+msgid "Die Cuelist läuft und schaltet die Looks selbst. Erst in der Cuelist auf Stopp drücken."
+msgstr "La liste de cues tourne et change les looks elle-même. Appuyez d’abord sur Stop dans la liste."
 
 #: settings_dialog.cpp:132
 msgid "Die DMX-Nodes im Projekt lesen ihre Werte aus dem Empfang. Standard-Ports sind 6454 (Art-Net) und 5568 (sACN); nur ändern, wenn ein anderes Programm sie belegt. Nach der Installation ist der Empfang aus; unter Windows fragt die Firewall beim ersten Einschalten nach."
@@ -610,7 +690,7 @@ msgstr "Ce projet n'a pas de paramètres réglables."
 msgid "Duplizieren\tStrg+D"
 msgstr "Dupliquer\tCtrl+D"
 
-#: main_window_actions.cpp:142
+#: main_window_actions.cpp:143
 msgid "Effekte (2D)"
 msgstr "Effets (2D)"
 
@@ -638,7 +718,7 @@ msgstr "Coller\tCtrl+V"
 msgid "Einstellungen"
 msgstr "Réglages"
 
-#: main_window_actions.cpp:139
+#: main_window_actions.cpp:140
 msgid "Einstieg"
 msgstr "Premiers pas"
 
@@ -673,6 +753,10 @@ msgstr "Un look « %1 » existe déjà. L'écraser avec l'effet actuel ?"
 #: layout_panel_add.cpp:69
 msgid "Es ist kein Projekt geladen. Mit Strg+N ein neues anlegen oder mit Strg+O eins öffnen."
 msgstr "Aucun projet n'est chargé. Créez-en un avec Ctrl+N ou ouvrez-en un avec Ctrl+O."
+
+#: cue_dialog.cpp:80 cue_panel.cpp:53
+msgid "Fade"
+msgstr "Fondu"
 
 #: layout_panel_add.cpp:150
 msgid "Faktor auf alle Koordinaten, z. B. 0,1 für Millimeter in Zentimeter"
@@ -722,13 +806,21 @@ msgstr "Vue librement orientable : glisser = tourner, clic droit = déplacer, mo
 msgid "Front"
 msgstr "Face"
 
-#: main_window_live.cpp:91
+#: main_window_live.cpp:105
 msgid "Für den Live-Modus erst Looks speichern (Dock „Looks“)."
 msgstr "Pour le mode live, enregistrez d'abord des looks (panneau « Looks »)."
+
+#: cue_panel.cpp:34 cue_panel.cpp:70
+msgid "GO"
+msgstr "GO"
 
 #: live_panel.cpp:74
 msgid "GO  (Leertaste)"
 msgstr "GO  (barre d'espace)"
+
+#: cue_dialog.cpp:49
+msgid "GO (von Hand)"
+msgstr "GO (manuel)"
 
 #: fixture_form.cpp:220
 msgid "Gamma"
@@ -746,7 +838,7 @@ msgstr "Jaune"
 msgid "Gerät:"
 msgstr "Périphérique :"
 
-#: main_window_controls.cpp:46 main_window_dmx.cpp:91
+#: main_window_controls.cpp:46 main_window_dmx.cpp:96
 msgid "Gesamthelligkeit (wirkt auf Vorschau und Ausgabe, nicht im Projekt gespeichert)"
 msgstr "Luminosité globale (agit sur l'aperçu et la sortie, non enregistrée dans le projet)"
 
@@ -886,13 +978,17 @@ msgstr "Aligner les bords gauches"
 msgid "Liste leeren"
 msgstr "Vider la liste"
 
-#: main_window_live.cpp:57
+#: main_window_live.cpp:71
 msgid "Live"
 msgstr "Live"
 
 #: look_panel.cpp:73
 msgid "Live-Modus starten  ▶"
 msgstr "Démarrer le mode live  ▶"
+
+#: cue_dialog.cpp:46 cue_panel.cpp:53
+msgid "Look"
+msgstr "Look"
 
 #: look_panel.cpp:161
 msgid "Look %1"
@@ -918,7 +1014,7 @@ msgstr "Renommer le look"
 msgid "Look überschreiben"
 msgstr "Écraser le look"
 
-#: main_window_live.cpp:52
+#: main_window_live.cpp:66
 msgid "Looks"
 msgstr "Looks"
 
@@ -986,7 +1082,7 @@ msgstr "Écraser avec l'effet actuel"
 msgid "Modus"
 msgstr "Mode"
 
-#: add_fixture_dialog.cpp:55 fixture_form.cpp:74
+#: add_fixture_dialog.cpp:55 cue_dialog.cpp:34 cue_panel.cpp:53
 msgid "Name"
 msgstr "Nom"
 
@@ -1070,6 +1166,10 @@ msgstr "Nœuds"
 msgid "Nodes suchen …"
 msgstr "Chercher des nœuds …"
 
+#: cue_panel.cpp:53
+msgid "Nr."
+msgstr "N°"
+
 #: test_panel.cpp:86
 msgid "Nur auf gewählten Fixtures"
 msgstr "Seulement sur les fixtures sélectionnés"
@@ -1077,6 +1177,10 @@ msgstr "Seulement sur les fixtures sélectionnés"
 #: main_window_view3d.cpp:95
 msgid "Nur leuchtende LEDs zeichnen: man sieht durch den Cube hindurch"
 msgstr "Dessiner seulement les LED allumées : on voit à travers le cube"
+
+#: cue_panel.cpp:71
+msgid "Nächsten Cue auslösen (Leertaste)"
+msgstr "Déclencher le cue suivant (barre d’espace)"
 
 #: stage_view.cpp:52
 msgid "Oben"
@@ -1101,6 +1205,10 @@ msgstr "Paramètres"
 #: add_fixture_dialog.cpp:159
 msgid "Patch (Ausgabe)"
 msgstr "Patch (sortie)"
+
+#: cue_dialog.cpp:75
+msgid "Pause zwischen Auslöser und Beginn der Überblendung"
+msgstr "Pause entre le déclencheur et le début du fondu"
 
 #: stage_view.cpp:49
 msgid "Perspektive"
@@ -1250,13 +1358,17 @@ msgstr "Stage Config"
 msgid "Standardgerät des Systems"
 msgstr "Périphérique par défaut du système"
 
-#: main_window.cpp:289
+#: cue_panel.cpp:67 cue_panel.cpp:144 main_window.cpp:289
 msgid "Start"
 msgstr "Démarrer"
 
 #: live_panel.cpp:64
 msgid "Statt der Zeit, die beim Look gespeichert ist"
 msgstr "Au lieu de la durée enregistrée avec le look"
+
+#: cue_panel.cpp:144
+msgid "Stopp"
+msgstr "Stop"
 
 #: layout_panel_add.cpp:37 layout_panel_add.cpp:119
 msgid "Strip"
@@ -1269,6 +1381,22 @@ msgstr "Strip (ligne)"
 #: main_window_controls.cpp:79
 msgid "TESTMODUS: %1"
 msgstr "MODE TEST : %1"
+
+#: cue_dialog.cpp:49
+msgid "Taste"
+msgstr "Touche"
+
+#: cue_panel.cpp:36
+msgid "Taste %1"
+msgstr "Touche %1"
+
+#: cue_dialog.cpp:59
+msgid "Taste drücken, die den Cue auslösen soll"
+msgstr "Appuyez sur la touche qui doit déclencher le cue"
+
+#: cue_dialog.cpp:61
+msgid "Tasten-Auslöser: Taste"
+msgstr "Déclencheur touche : touche"
 
 #: main_window_help.cpp:87
 msgid "Tastenkürzel"
@@ -1354,6 +1482,10 @@ msgstr "Fichiers WAV (*.wav)"
 msgid "Waagrecht mittig ausrichten"
 msgstr "Centrer horizontalement"
 
+#: cue_dialog.cpp:55
+msgid "Wartezeit nach dem Ende der vorigen Überblendung"
+msgstr "Attente après la fin du fondu précédent"
+
 #: test_panel.cpp:29
 msgid "Weiß"
 msgstr "Blanc"
@@ -1394,6 +1526,18 @@ msgstr "Lignes"
 msgid "Zeilen (waagrecht)"
 msgstr "Lignes (horizontales)"
 
+#: cue_dialog.cpp:49
+msgid "Zeit"
+msgstr "Temps"
+
+#: cue_dialog.cpp:56
+msgid "Zeit-Auslöser: Wartezeit"
+msgstr "Déclencheur temps : attente"
+
+#: cue_panel.cpp:35
+msgid "Zeit: %1 nach dem vorigen"
+msgstr "Temps : %1 après le précédent"
+
 #: stage_view.cpp:43
 msgid "Ziehen dreht, Rad zoomt. Die erste LED am Kabel ist weiß; x rot, y grün, z blau."
 msgstr "Glisser fait tourner, la molette zoome. La première LED du câble est blanche ; x rouge, y vert, z bleu."
@@ -1426,7 +1570,7 @@ msgstr "Sélectionnez au moins trois fixtures à répartir"
 msgid "Zurück zum Editor (Esc)"
 msgstr "Retour à l'éditeur (Échap)"
 
-#: main_window_live.cpp:72
+#: main_window_live.cpp:86
 msgid "Zwischen Bearbeiten und Live-Betrieb wechseln (F9)"
 msgstr "Basculer entre édition et mode live (F9)"
 
@@ -1462,7 +1606,7 @@ msgstr "en haut à droite"
 msgid "rechts (x max)"
 msgstr "droite (x max)"
 
-#: main_window_dmx.cpp:107 settings_dialog.cpp:116
+#: cue_dialog.cpp:63 cue_panel.cpp:39 main_window_dmx.cpp:112
 msgid "sACN"
 msgstr "sACN"
 
@@ -1526,7 +1670,7 @@ msgstr "À propos de WhiteHoleFX"
 msgid "Über diese Karte tritt der sACN-Empfang den Multicast-Gruppen bei. Art-Net-Broadcast und Unicast-Pakete kommen weiterhin von jeder Karte an."
 msgstr "La réception sACN rejoint les groupes multicast via cette carte. Les paquets Art-Net en broadcast et unicast arrivent toujours sur chaque carte."
 
-#: live_panel.cpp:119
+#: live_panel.cpp:120
 msgid "Überblendzeit %1 s"
 msgstr "Durée de fondu %1 s"
 

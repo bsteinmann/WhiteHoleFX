@@ -152,6 +152,31 @@ look "Regen blau" fade 3
 endlook
 ```
 
+### `cue name "<name>" look <look> trigger <art> ...`
+
+Eine Zeile der Cuelist (siehe [Cuelist](studio.md)), nach den Looks. Die Reihenfolge der Zeilen ist die Reihenfolge der
+Cues. Alle Angaben außer `trigger` sind optional und stehen in beliebiger Reihenfolge in derselben Zeile:
+
+| Angabe | Bedeutung |
+|---|---|
+| `name "<text>"` | frei wählbarer Name (darf fehlen) |
+| `look <name>` | Name eines Looks der Datei; fehlt die Angabe, blendet der Cue nach Schwarz |
+| `trigger go` | von Hand: GO-Knopf oder Leertaste |
+| `trigger time <s>` | selbsttätig `<s>` Sekunden, nachdem der vorige Cue fertig eingeblendet ist |
+| `trigger key <taste>` | eine Taste (`F5`, `A`, `1`), von jedem Stand aus |
+| `trigger dmx artnet\|sacn <universe> <kanal>` | DMX-Kanal steigt auf `threshold` (1 bis 255, Standard 128) oder höher |
+| `trigger audio` | der nächste Beat |
+| `delay <s>` | Sekunden zwischen Auslöser und Beginn der Überblendung (0 bis 3600) |
+| `fade <s>` | Sekunden der Überblendung (0 bis 3600, Standard 2) |
+
+Ein `look`, den es nicht gibt, ist ein Lesefehler. Ältere Programme lehnen Dateien mit Cues ab.
+
+```
+cue name "Regen" look Regen trigger time 6 fade 3
+cue name "Feuer" look Feuer trigger key F5 delay 1.5 fade 1.5
+cue name "Ende" trigger go fade 4
+```
+
 ## Fehlermeldungen
 
 Jede Meldung nennt die Zeile: `Zeile 7: Node-Typ "wh.x" hat keinen Parameter "tempo"`. Fehler in

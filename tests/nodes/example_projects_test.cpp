@@ -80,6 +80,29 @@ TEST_CASE("Beispiel: examples/einstieg/looks.whfx hat drei Looks, die alle kompi
     CHECK(again.value().looks.size() == 3);
 }
 
+TEST_CASE("Beispiel: examples/einstieg/cuelist.whfx hat vier Cues mit allen Auslöser-Arten, die überleben Schreiben", "[examples][nodes][cues]") {
+    const auto path = std::filesystem::path{__FILE__}.parent_path().parent_path().parent_path() / "examples" / "einstieg" / "cuelist.whfx";
+    const auto text = project::readTextFile(path.string());
+    REQUIRE(text.ok());
+    Lab lab;
+    auto parsed = project::parseProject(text.value(), lab.registry);
+    REQUIRE(parsed.ok());
+    const auto& cues = parsed.value().cues;
+    REQUIRE(cues.size() == 4);
+    CHECK(cues[0].look == "Plasma");
+    CHECK(cues[1].trigger == project::CueTrigger::Time);
+    CHECK(cues[1].time == 6.0);
+    CHECK(cues[2].trigger == project::CueTrigger::Key);
+    CHECK(cues[2].key == "F5");
+    CHECK(cues[2].delay == 1.5);
+    CHECK(cues[3].look.empty());
+    const auto written = project::writeProject(parsed.value());
+    REQUIRE(written.ok());
+    auto again = project::parseProject(written.value(), lab.registry);
+    REQUIRE(again.ok());
+    CHECK(again.value().cues == cues);
+}
+
 TEST_CASE("Beispiele: jede Datei in examples/ (auch in Untergruppen) kompiliert", "[examples][nodes]") {
     const auto dir = std::filesystem::path{__FILE__}.parent_path().parent_path().parent_path() / "examples";
     Lab lab;

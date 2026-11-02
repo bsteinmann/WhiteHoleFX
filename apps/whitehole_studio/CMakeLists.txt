@@ -19,6 +19,7 @@ add_executable(whitehole_studio
     main_window_actions.cpp
     main_window_audio.cpp
     main_window_controls.cpp
+    main_window_cues.cpp
     main_window_dmx.cpp
     main_window_editor.cpp
     main_window_live.cpp
@@ -30,6 +31,10 @@ add_executable(whitehole_studio
     main_window_settings.cpp
     main_window_stage.cpp
     main_window_view3d.cpp
+    cue_dialog.cpp
+    cue_dialog.hpp
+    cue_panel.cpp
+    cue_panel.hpp
     live_panel.cpp
     live_panel.hpp
     look_panel.cpp

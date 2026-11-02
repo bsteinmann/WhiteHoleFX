@@ -87,6 +87,7 @@ void MainWindow::buildActions() {
     view->addAction(editorDock_->toggleViewAction());
     view->addAction(dock_->toggleViewAction());
     view->addAction(lookDock_->toggleViewAction());
+    view->addAction(cueDock_->toggleViewAction());
 
     // Reihenfolge wie im Betrieb: erst Wiedergabe und Ausgabe, dann der Live-Modus, ganz rechts die Hilfe.
     QMenu* run = menuBar()->addMenu(tr("&Wiedergabe"));

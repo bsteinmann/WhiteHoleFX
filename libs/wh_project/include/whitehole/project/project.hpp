@@ -26,6 +26,7 @@
 #include "whitehole/mapping/layout.hpp"
 #include "whitehole/output/output_pipeline.hpp"
 #include "whitehole/output/output_plan.hpp"
+#include "whitehole/project/cue.hpp"
 
 namespace whitehole::project {
 
@@ -59,6 +60,9 @@ struct Project {
 
     /// Die Look-Liste für den Live-Betrieb, in der Reihenfolge der Datei. Namen sind eindeutig.
     std::vector<Look> looks;
+
+    /// Die Cuelist (Issue #21): Looks in fester Reihenfolge mit Auslösern und Zeiten. Leer = keine Cuelist.
+    std::vector<Cue> cues;
 
     std::vector<output::Destination> destinations;
     std::string sourceName{"WhiteHoleFX"};

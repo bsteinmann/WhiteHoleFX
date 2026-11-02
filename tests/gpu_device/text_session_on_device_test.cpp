@@ -59,7 +59,7 @@ std::size_t brightestFrame(gpu::WebGpuDevice& device, const std::string& text, i
     return best;
 }
 
-std::string project(const std::string& nodeSettings) {
+std::string projectText(const std::string& nodeSettings) {
     return "whitehole-project 1\ndestination 0 127.0.0.1\n"
            "fixture Wand\n  matrix 32 16 serpentine\n  patch artnet destination 0 universe 0 gamma 1\nend\n"
            "node s wh.generator.text\n" +
@@ -74,7 +74,7 @@ TEST_CASE("Text im Projekt: die Laufschrift mit den Standardwerten erreicht die 
         SKIP("Kein WebGPU-Adapter verfügbar");
     }
     // Standardwerte: weißer Text, durchsichtiger Hintergrund, 12 Punkte/s; nach 120 Frames (3 s) ist der Text im Bild.
-    CHECK(brightestFrame(*device, project(""), 120) > 10);
+    CHECK(brightestFrame(*device, projectText(""), 120) > 10);
 }
 
 TEST_CASE("Text im Projekt: ein eigener Text, stehend und rollend", "[gpu_device][text][session]") {
@@ -82,6 +82,6 @@ TEST_CASE("Text im Projekt: ein eigener Text, stehend und rollend", "[gpu_device
     if (!device) {
         SKIP("Kein WebGPU-Adapter verfügbar");
     }
-    CHECK(brightestFrame(*device, project("  set text \"Hallo\"\n  set mode 1\n"), 3) > 10);
-    CHECK(brightestFrame(*device, project("  set text \"Hallo\"\n  set speed 40\n"), 120) > 10);
+    CHECK(brightestFrame(*device, projectText("  set text \"Hallo\"\n  set mode 1\n"), 3) > 10);
+    CHECK(brightestFrame(*device, projectText("  set text \"Hallo\"\n  set speed 40\n"), 120) > 10);
 }

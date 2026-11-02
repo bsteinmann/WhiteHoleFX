@@ -1,5 +1,13 @@
 # Änderungen
 
+## 0.35.0
+
+- **Cuelist (#21):** Looks in fester Reihenfolge mit Auslöser (GO, Zeit, Taste, DMX, Audio-Beat), Delay und Überblendzeit.
+  Neues Dock Ansicht → Cuelist, `cue`-Zeilen in der Projektdatei, Beispiel `examples/einstieg/cuelist.whfx`.
+  Hinweis: Ältere Programme lehnen Projekte mit Cues ab.
+- **Build:** Die GPU- und Windows-Tests übersetzen wieder (Hilfsfunktion in `text_session_on_device_test.cpp` hieß wie ein
+  Namensraum).
+
 ## 0.34.0
 
 - **Master per DMX (#17):** Einstellungen → DMX-Eingang: Ein DMX-Kanal (Art-Net oder sACN, Universe, Kanal) steuert die

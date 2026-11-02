@@ -21,6 +21,7 @@
 #include <algorithm>
 #include <string>
 
+#include "cue_panel.hpp"
 #include "live_panel.hpp"
 #include "look_panel.hpp"
 #include "main_window.hpp"
@@ -48,6 +49,19 @@ void MainWindow::buildLive() {
     connect(lookPanel_, &LookPanel::loadedIntoEditor, this, &MainWindow::afterRestore);
     connect(lookPanel_, &LookPanel::liveRequested, this, [this](int first) { enterLive(first); });
     connect(livePanel_, &LivePanel::leaveRequested, this, [this]() { leaveLive(); });
+
+    cuePanel_ = new CuePanel{*player_, this};
+    connect(cuePanel_, &CuePanel::failed, this, toStatus);
+    connect(cuePanel_, &CuePanel::changed, this, [this]() {
+        updateTitle();
+        updateActions();
+    });
+    connect(cuePanel_, &CuePanel::startRequested, this, [this]() { startCues(); });
+    connect(cuePanel_, &CuePanel::stopRequested, this, [this]() { stopCues(); });
+    cueDock_ = new QDockWidget{tr("Cuelist"), this};
+    cueDock_->setWidget(cuePanel_);
+    addDockWidget(Qt::RightDockWidgetArea, cueDock_);
+    cueDock_->hide();  // erst auf Wunsch (Ansicht → Cuelist), damit das Fenster so bleibt, wie man es kennt
 
     lookDock_ = new QDockWidget{tr("Looks"), this};
     lookDock_->setWidget(lookPanel_);
@@ -169,6 +183,7 @@ void MainWindow::resetLive() {
     }
     lookPanel_->rebuild();
     livePanel_->rebuild();
+    cuePanel_->rebuild();
 }
 
 QString MainWindow::exerciseLive() {

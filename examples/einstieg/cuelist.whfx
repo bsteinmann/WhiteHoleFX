@@ -1,0 +1,62 @@
+whitehole-project 1
+# Beispiel für die Cuelist: dieselben drei Looks, aber in fester Reihenfolge mit Auslösern und Zeiten.
+#
+# So ausprobieren:
+#   whitehole_studio examples/einstieg/cuelist.whfx --run
+# Dann Ansicht → Cuelist öffnen und "Start" drücken (wechselt in den Live-Modus und zeigt Cue 1).
+#   Cue 1 "Plasma"  GO (Leertaste) löst den nächsten Cue aus
+#   Cue 2 "Regen"   kommt von selbst, 6 Sekunden nachdem Cue 1 fertig eingeblendet ist
+#   Cue 3 "Feuer"   Taste F5 (von jedem Stand aus), 1,5 s Delay, 1,5 s Fade
+#   Cue 4 "Ende"    ohne Look: blendet in 4 Sekunden nach Schwarz
+# Die cue-Zeilen stehen am Ende der Datei. Auslöser: go, time <s>, key <Taste>, dmx artnet|sacn <universe> <kanal>
+# (mit threshold <1..255>) und audio (nächster Beat). delay und fade sind in Sekunden.
+
+settings fps 40
+
+destination 0 127.0.0.1
+
+fixture Wand
+  matrix 32 16 serpentine
+  patch artnet destination 0 universe 0
+end
+
+node plasma wh.generator.plasma
+  set scale 3
+end
+node ausgang wh.output.canvas
+end
+connect plasma.out -> ausgang.source
+output ausgang.out
+
+look "Plasma" fade 2
+  node plasma wh.generator.plasma
+    set scale 3
+  end
+  node ausgang wh.output.canvas
+  end
+  connect plasma.out -> ausgang.source
+  output ausgang.out
+endlook
+
+look "Regen" fade 3
+  node regen wh.generator.rain
+  end
+  node ausgang wh.output.canvas
+  end
+  connect regen.out -> ausgang.source
+  output ausgang.out
+endlook
+
+look "Feuer" fade 1.5
+  node feuer wh.generator.fire
+  end
+  node ausgang wh.output.canvas
+  end
+  connect feuer.out -> ausgang.source
+  output ausgang.out
+endlook
+
+cue name "Plasma" look Plasma trigger go fade 0
+cue name "Regen" look Regen trigger time 6 fade 3
+cue name "Feuer" look Feuer trigger key F5 delay 1.5 fade 1.5
+cue name "Ende" trigger go fade 4

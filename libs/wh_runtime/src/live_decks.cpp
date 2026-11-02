@@ -122,6 +122,17 @@ Result<void> LiveDecks::arm(const project::Look& look, int index) {
     return {};
 }
 
+Result<void> LiveDecks::armBlank() {
+    if (fading_) {
+        finishFade();
+    }
+    const Deck hidden = other(visible_);
+    clear(hidden);
+    fill(hidden);
+    armed_ = true;
+    return {};
+}
+
 Result<void> LiveDecks::go(double fadeSeconds) {
     if (!armed_) {
         return Error{ErrorCode::InvalidArgument, "Es ist kein Look vorgeladen"};

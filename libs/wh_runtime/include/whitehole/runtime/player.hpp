@@ -38,6 +38,7 @@
 #include "whitehole/runtime/audio_usage.hpp"
 #include "whitehole/runtime/dmx_usage.hpp"
 #include "whitehole/runtime/led_info.hpp"
+#include "whitehole/runtime/cue_runner.hpp"
 #include "whitehole/runtime/live_decks.hpp"
 #include "whitehole/runtime/master_dmx.hpp"
 #include "whitehole/runtime/node_clipboard.hpp"
@@ -302,6 +303,28 @@ public:
     /// Uhr für die Überblendung in Sekunden (Standard: Systemuhr). Nur für Tests austauschbar.
     void setLiveClock(std::function<double()> clock) { liveClock_ = std::move(clock); }
 
+    // --- Cuelist (Issue #21) ---------------------------------------------------------------------------------
+    // Die Cues stehen im Projekt (Zeilen `cue ...`). Der Ablauf braucht den Live-Betrieb: cuesStart() startet ihn,
+    // zeigt den ersten Cue sofort und lässt dann die Auslöser (GO, Zeit, Taste, DMX, Beat) die weiteren auslösen.
+
+    [[nodiscard]] const std::vector<project::Cue>& cues() const;
+    /// Ersetzt die Cuelist (hält einen laufenden Ablauf an). Fehler: InvalidArgument (kein Projekt, Zeit außerhalb
+    /// 0..3600, Kanal oder Schwelle außerhalb des Bereichs, Taste fehlt), NotFound (Look gibt es nicht).
+    Result<void> setCues(std::vector<project::Cue> cues);
+    /// Startet Live-Betrieb und Ablauf. Fehler: InvalidArgument (keine Cues, keine Looks), NotFound.
+    Result<void> cuesStart();
+    void cuesStop();
+    [[nodiscard]] bool cuesRunning() const noexcept { return cueRunner_.running(); }
+    /// GO: löst den nächsten Cue aus (wirkt beim nächsten step()).
+    void cueGo() { cueGo_ = true; }
+    /// Eine Taste wurde gedrückt (Name wie im Cue, z. B. "F5"); wirkt beim nächsten step().
+    void cueKey(std::string key) { cueKeys_.push_back(std::move(key)); }
+    /// Springt zu einem Cue (Doppelklick in der Liste). Fehler: InvalidArgument (läuft nicht), NotFound (Nummer).
+    Result<void> cueFire(int index);
+    [[nodiscard]] CueRunnerStatus cueStatus() const { return cueRunner_.status(liveNow()); }
+    /// Letzter Fehler beim Ausführen eines Cues (z. B. ein Look, der sich nicht aufbauen lässt); leer, wenn keiner.
+    [[nodiscard]] const std::optional<Error>& cueError() const noexcept { return cueError_; }
+
     /// Die LED unter einem Bildpunkt der Vorschau (`frame` ist der Ausschnitt des gezeichneten Bildes)
     /// samt Fixture, Nummer am Kabel, Adresse und Farbe. Leer, wenn keine LED näher als `maxDistance`
     /// Pixel liegt oder nichts geladen ist.
@@ -351,6 +374,8 @@ private:
     void refreshCompleteness();
     void applyOutputLevel();
     void pollMasterDmx();
+    void advanceCues();
+    Result<void> executeCue(int index);
     [[nodiscard]] double liveNow() const {
         return liveClock_ ? liveClock_()
                           : std::chrono::duration<double>(std::chrono::steady_clock::now().time_since_epoch()).count();
@@ -385,6 +410,11 @@ private:
     float master_{1.0F};
     std::optional<MasterDmxSource> masterDmx_;
     bool masterDmxLive_{false};
+    CueRunner cueRunner_;
+    bool cueGo_{false};
+    std::vector<std::string> cueKeys_;
+    std::uint64_t cueBeats_{0};  // Zahl der Beats beim letzten Blick (Flanke für den Audio-Auslöser)
+    std::optional<Error> cueError_;
     bool blackout_{false};
     bool incomplete_{false};  // der Weg zum Ausgang hat eine Lücke: LEDs aus (siehe outputIncomplete)
 };

@@ -53,6 +53,12 @@ Result<void> Player::removeLook(int index) {
     if (live_) {
         return Error{ErrorCode::InvalidArgument, "Im Live-Betrieb lassen sich Looks nicht löschen"};
     }
+    const std::string removed = project_->looks[static_cast<std::size_t>(index)].name;
+    for (project::Cue& cue : project_->cues) {
+        if (cue.look == removed) {
+            cue.look.clear();  // der Cue blendet dann nach Schwarz, statt dass die Datei nicht mehr lesbar ist
+        }
+    }
     project_->looks.erase(project_->looks.begin() + index);
     modified_ = true;
     return {};
@@ -71,6 +77,12 @@ Result<void> Player::renameLook(int index, const std::string& name) {
     const int other = findLook(project_->looks, name);
     if (other >= 0 && other != index) {
         return Error{ErrorCode::AlreadyExists, "Es gibt schon einen Look mit diesem Namen"};
+    }
+    const std::string oldName = project_->looks[static_cast<std::size_t>(index)].name;
+    for (project::Cue& cue : project_->cues) {
+        if (cue.look == oldName) {
+            cue.look = name;
+        }
     }
     project_->looks[static_cast<std::size_t>(index)].name = name;
     modified_ = true;
@@ -180,6 +192,7 @@ void Player::stopLive() {
     }
     live_.reset();
     liveLast_.reset();
+    cueRunner_.stop();
     if (session_) {
         rebuildDirty_ = true;
     }

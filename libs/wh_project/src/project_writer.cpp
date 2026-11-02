@@ -9,6 +9,7 @@
 #include <unordered_map>
 #include <variant>
 
+#include "project_cue.hpp"
 #include "project_names.hpp"
 #include "whitehole/project/project.hpp"
 
@@ -163,6 +164,12 @@ Result<std::string> writeProject(const Project& project) {
             return graph.error();
         }
         out << "endlook\n";
+    }
+    if (!project.cues.empty()) {
+        out << "\n";
+        for (const Cue& cue : project.cues) {
+            detail::writeCue(out, cue);
+        }
     }
     return out.str();
 }
