@@ -1,5 +1,9 @@
 # Änderungen
 
+## 0.37.3
+
+- **Build:** 0.37.2 ließ sich auf Ubuntu 22.04 nicht bauen (fehlendes `#include <QAction>` in `main_window_exercise.cpp`).
+
 ## 0.37.2
 
 - **Strg+N gleich nach dem Start (#26):** Neue Prüfung `whitehole_studio --ctrl-n` löst „Neu“ ohne geladenes Projekt aus, wie ein

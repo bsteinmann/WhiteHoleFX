@@ -4,6 +4,7 @@
 // und melden, was nicht wie erwartet reagiert. Eigene Datei, weil sie mit dem normalen Betrieb
 // nichts zu tun haben und main_window.cpp sonst zu lang wird.
 #include <QAbstractSpinBox>
+#include <QAction>
 #include <QApplication>
 #include <QCheckBox>
 #include <QDoubleSpinBox>
