@@ -166,6 +166,7 @@ Result<void> Player::step() {
             return restarted;
         }
     }
+    pollMasterDmx();
     bool structural = false;
     if (live_) {
         // Die Überblendung läuft mit der Uhrzeit, nicht mit der Zahl der Frames

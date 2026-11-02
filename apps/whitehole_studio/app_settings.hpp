@@ -6,7 +6,7 @@
 // Dialogfenster bearbeitet und das Hauptfenster anwendet.
 //
 // Schlüssel in QSettings (Organisation und Anwendung "WhiteHoleFX"): dmx/artnet, dmx/sacn, audio/source
-// wie bisher, neu dmx/artnetPort, dmx/sacnPort, network/outInterface, network/inInterface,
+// wie bisher, neu dmx/artnetPort, dmx/sacnPort, dmx/masterEnabled, dmx/masterProtocol, dmx/masterUniverse, dmx/masterChannel, network/outInterface, network/inInterface,
 // nodeDefaults/<Typ-ID>/<Parameter> (Wert als Text, siehe encodeParameterValue).
 #pragma once
 
@@ -21,6 +21,11 @@ struct AppSettings {
     bool sacnIn{false};     // sACN empfangen
     int artnetPort{6454};
     int sacnPort{5568};
+    /// Master-Helligkeit über einen DMX-Kanal (Issue #17). Protokoll: 0 = Art-Net, 1 = sACN.
+    bool masterDmx{false};
+    int masterDmxProtocol{0};
+    int masterDmxUniverse{0};
+    int masterDmxChannel{1};
     /// IPv4-Adresse der Netzwerkkarte zum Senden bzw. Empfangen; leer = das System wählt.
     QString outputInterface;
     QString inputInterface;

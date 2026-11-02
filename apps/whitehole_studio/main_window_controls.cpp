@@ -19,6 +19,7 @@
 #include <vector>
 
 #include "main_window.hpp"
+#include "whitehole/input/dmx_store.hpp"
 #include "preview_widget.hpp"
 #include "test_panel.hpp"
 #include "whitehole/runtime/recent_files.hpp"
@@ -96,6 +97,26 @@ QString MainWindow::exerciseControls() {
     masterSlider_->setValue(100);
     if (player_->blackout() || std::abs(player_->masterBrightness() - 1.0F) > 1e-4F) {
         return QStringLiteral("Master/Blackout: Zurücksetzen gescheitert");
+    }
+    // Master über DMX (Issue #17): Ein Kanalwert fährt den Regler, der Regler ist dann gesperrt.
+    if (player_->status().running) {
+        const AppSettings saved = appSettings_;
+        appSettings_.masterDmx = true;
+        appSettings_.masterDmxProtocol = 0;
+        appSettings_.masterDmxUniverse = 9;
+        appSettings_.masterDmxChannel = 2;
+        applyMasterDmx();
+        library_->dmx->write(input::DmxProtocol::ArtNet, 9, std::vector<std::uint8_t>{0, 128});
+        tick();
+        const bool followed = std::abs(player_->masterBrightness() - 128.0F / 255.0F) < 1e-4F && masterSlider_->value() == 50 &&
+                              !masterSlider_->isEnabled();
+        appSettings_ = saved;
+        applyMasterDmx();
+        masterSlider_->setEnabled(true);
+        masterSlider_->setValue(100);
+        if (!followed) {
+            return QStringLiteral("Master über DMX: der Kanalwert erreicht den Regler nicht");
+        }
     }
     return {};
 }

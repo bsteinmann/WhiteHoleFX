@@ -76,6 +76,7 @@ TestPanel::TestPanel(runtime::Player& player, LayoutPanel& layoutPanel, QWidget*
     form->addRow(tr("Richtung"), axis_);
 
     rate_ = new QDoubleSpinBox{this};
+    rate_->setKeyboardTracking(false);  // Issue #22: erst bei Enter übernehmen
     rate_->setRange(0.05, 100.0);
     rate_->setDecimals(2);
     rate_->setSingleStep(0.1);

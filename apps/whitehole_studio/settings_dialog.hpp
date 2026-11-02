@@ -45,6 +45,10 @@ private:
     QCheckBox* sacn_{nullptr};
     QSpinBox* artnetPort_{nullptr};
     QSpinBox* sacnPort_{nullptr};
+    QCheckBox* masterDmx_{nullptr};
+    QComboBox* masterProtocol_{nullptr};
+    QSpinBox* masterUniverse_{nullptr};
+    QSpinBox* masterChannel_{nullptr};
     QRadioButton* audioOff_{nullptr};
     QRadioButton* audioDefault_{nullptr};
     QRadioButton* audioDevice_{nullptr};

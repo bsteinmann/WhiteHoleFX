@@ -22,6 +22,10 @@ AppSettings loadAppSettings() {
     result.sacnIn = s.value(QStringLiteral("dmx/sacn"), result.sacnIn).toBool();
     result.artnetPort = validPort(s.value(QStringLiteral("dmx/artnetPort"), result.artnetPort).toInt(), result.artnetPort);
     result.sacnPort = validPort(s.value(QStringLiteral("dmx/sacnPort"), result.sacnPort).toInt(), result.sacnPort);
+    result.masterDmx = s.value(QStringLiteral("dmx/masterEnabled"), result.masterDmx).toBool();
+    result.masterDmxProtocol = std::clamp(s.value(QStringLiteral("dmx/masterProtocol"), 0).toInt(), 0, 1);
+    result.masterDmxUniverse = std::clamp(s.value(QStringLiteral("dmx/masterUniverse"), 0).toInt(), 0, 32767);
+    result.masterDmxChannel = std::clamp(s.value(QStringLiteral("dmx/masterChannel"), 1).toInt(), 1, 512);
     result.outputInterface = s.value(QStringLiteral("network/outInterface")).toString();
     result.inputInterface = s.value(QStringLiteral("network/inInterface")).toString();
     result.audioSource = s.value(QStringLiteral("audio/source"), result.audioSource).toString();
@@ -47,6 +51,10 @@ void saveAppSettings(const AppSettings& settings) {
     s.setValue(QStringLiteral("dmx/sacn"), settings.sacnIn);
     s.setValue(QStringLiteral("dmx/artnetPort"), settings.artnetPort);
     s.setValue(QStringLiteral("dmx/sacnPort"), settings.sacnPort);
+    s.setValue(QStringLiteral("dmx/masterEnabled"), settings.masterDmx);
+    s.setValue(QStringLiteral("dmx/masterProtocol"), settings.masterDmxProtocol);
+    s.setValue(QStringLiteral("dmx/masterUniverse"), settings.masterDmxUniverse);
+    s.setValue(QStringLiteral("dmx/masterChannel"), settings.masterDmxChannel);
     s.setValue(QStringLiteral("network/outInterface"), settings.outputInterface);
     s.setValue(QStringLiteral("network/inInterface"), settings.inputInterface);
     s.setValue(QStringLiteral("audio/source"), settings.audioSource);

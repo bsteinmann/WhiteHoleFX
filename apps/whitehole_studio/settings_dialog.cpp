@@ -15,6 +15,7 @@
 #include <QTabWidget>
 #include <QVBoxLayout>
 
+#include <algorithm>
 #include <string>
 
 #include "network_interfaces.hpp"
@@ -107,6 +108,27 @@ QWidget* SettingsDialog::buildDmxPage(const AppSettings& current) {
     form->addRow(tr("Art-Net-Port (UDP):"), artnetPort_);
     form->addRow(sacn_);
     form->addRow(tr("sACN-Port (UDP):"), sacnPort_);
+    // Master-Helligkeit über einen Kanal (Issue #17): ein Fader am Pult fährt den Master-Regler.
+    masterDmx_ = new QCheckBox{tr("Master-Helligkeit über einen DMX-Kanal steuern"), page};
+    masterDmx_->setChecked(current.masterDmx);
+    masterProtocol_ = new QComboBox{page};
+    masterProtocol_->addItem(tr("Art-Net"));
+    masterProtocol_->addItem(tr("sACN"));
+    masterProtocol_->setCurrentIndex(std::clamp(current.masterDmxProtocol, 0, 1));
+    masterUniverse_ = new QSpinBox{page};
+    masterUniverse_->setRange(0, 32767);
+    masterUniverse_->setValue(current.masterDmxUniverse);
+    masterChannel_ = new QSpinBox{page};
+    masterChannel_->setRange(1, 512);
+    masterChannel_->setValue(current.masterDmxChannel);
+    form->addRow(masterDmx_);
+    form->addRow(tr("Master: Protokoll:"), masterProtocol_);
+    form->addRow(tr("Master: Universe:"), masterUniverse_);
+    form->addRow(tr("Master: Kanal (1 bis 512):"), masterChannel_);
+    form->addRow(note(tr("Der Kanalwert 0 bis 255 setzt den Master auf 0 bis 100 %. Solange Pakete kommen, folgt der "
+                         "Master-Regler dem Pult; bleibt das Signal weg, hält der Master seinen Wert. Der Empfang oben "
+                         "muss für das gewählte Protokoll eingeschaltet sein."),
+                     page));
     form->addRow(note(tr("Die DMX-Nodes im Projekt lesen ihre Werte aus dem Empfang. Standard-Ports sind 6454 (Art-Net) "
                          "und 5568 (sACN); nur ändern, wenn ein anderes Programm sie belegt. Nach der Installation ist "
                          "der Empfang aus; unter Windows fragt die Firewall beim ersten Einschalten nach."),
@@ -191,6 +213,10 @@ AppSettings SettingsDialog::settings() const {
     result.sacnIn = sacn_->isChecked();
     result.artnetPort = artnetPort_->value();
     result.sacnPort = sacnPort_->value();
+    result.masterDmx = masterDmx_->isChecked();
+    result.masterDmxProtocol = masterProtocol_->currentIndex();
+    result.masterDmxUniverse = masterUniverse_->value();
+    result.masterDmxChannel = masterChannel_->value();
     if (audioDefault_->isChecked()) {
         result.audioSource = QStringLiteral("default");
     } else if (audioDevice_->isChecked() && audioDevices_->currentIndex() >= 0) {

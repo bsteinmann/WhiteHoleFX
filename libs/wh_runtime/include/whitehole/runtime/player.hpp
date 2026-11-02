@@ -39,6 +39,7 @@
 #include "whitehole/runtime/dmx_usage.hpp"
 #include "whitehole/runtime/led_info.hpp"
 #include "whitehole/runtime/live_decks.hpp"
+#include "whitehole/runtime/master_dmx.hpp"
 #include "whitehole/runtime/node_clipboard.hpp"
 #include "whitehole/runtime/node_defaults.hpp"
 #include "whitehole/runtime/session.hpp"
@@ -252,6 +253,12 @@ public:
     /// Gesamthelligkeit 0..1 (außerhalb oder nicht endlich wird begrenzt bzw. auf 1 gesetzt). Liefert den Wert.
     float setMasterBrightness(float master);
     [[nodiscard]] float masterBrightness() const noexcept { return master_; }
+    /// Master über einen DMX-Kanal (Issue #17): Solange Pakete kommen, setzt jeder step() den Master auf Wert/255.
+    /// `std::nullopt` schaltet es ab (der Master bleibt, wo er ist). Gespeichert wird nichts.
+    void setMasterDmx(std::optional<MasterDmxSource> source);
+    [[nodiscard]] const std::optional<MasterDmxSource>& masterDmx() const noexcept { return masterDmx_; }
+    /// Wahr, wenn der Master gerade vom DMX-Kanal kommt (eingestellt und das Signal ist frisch).
+    [[nodiscard]] bool masterFromDmx() const noexcept { return masterDmxLive_; }
     /// Blackout: alle LEDs aus, die Pakete laufen weiter (Controller bleiben verbunden).
     void setBlackout(bool on);
     [[nodiscard]] bool blackout() const noexcept { return blackout_; }
@@ -343,6 +350,7 @@ private:
     [[nodiscard]] bool targetIncomplete() const;
     void refreshCompleteness();
     void applyOutputLevel();
+    void pollMasterDmx();
     [[nodiscard]] double liveNow() const {
         return liveClock_ ? liveClock_()
                           : std::chrono::duration<double>(std::chrono::steady_clock::now().time_since_epoch()).count();
@@ -375,6 +383,8 @@ private:
     std::string lastEditKey_;  // zum Zusammenfassen gleichartiger Änderungen
     TestPattern testPattern_;  // Art Off = kein Testbild
     float master_{1.0F};
+    std::optional<MasterDmxSource> masterDmx_;
+    bool masterDmxLive_{false};
     bool blackout_{false};
     bool incomplete_{false};  // der Weg zum Ausgang hat eine Lücke: LEDs aus (siehe outputIncomplete)
 };

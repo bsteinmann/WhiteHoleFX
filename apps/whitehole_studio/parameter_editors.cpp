@@ -30,6 +30,8 @@
 #include <type_traits>
 #include <variant>
 
+#include "whitehole/runtime/color_pick.hpp"
+
 namespace whitehole::studio {
 
 namespace {
@@ -52,6 +54,9 @@ QDoubleSpinBox* makeSpin(QWidget* parent, double min, double max, double step) {
     spin->setDecimals(3);
     spin->setRange(min, max);
     spin->setSingleStep(step);
+    // Erst bei Enter oder beim Verlassen übernehmen (Issue #22): Sonst schreibt jede Taste den Wert zurück ins Feld,
+    // und halb getippte Zahlen wie "0," werden mitten im Tippen überschrieben.
+    spin->setKeyboardTracking(false);
     return spin;
 }
 
@@ -220,6 +225,7 @@ Editor integerEditor(const runtime::ParameterInfo& info, const Commit& commit, Q
         return choiceEditor(info, commit, parent);
     }
     auto* spin = new QSpinBox{parent};
+    spin->setKeyboardTracking(false);  // siehe makeSpin (Issue #22)
     const auto limit = [](std::optional<double> v, int fallback) {
         return v ? static_cast<int>(std::clamp(*v, -2e9, 2e9)) : fallback;
     };
@@ -305,8 +311,10 @@ Editor colorEditor(const runtime::ParameterInfo& info, const Commit& commit, QWi
 
     auto current = std::make_shared<ColorRgba>(std::get<ColorRgba>(info.value));
     QObject::connect(button, &QPushButton::clicked, button, [=]() {
-        if (const std::optional<QColor> picked = pickColor(button, toQColor(*current))) {
-            commit(fromQColor(*picked));
+        // Issue #20: Durchsichtige Farben (Alpha 0) starten sichtbar, und ein Ergebnis mit Alpha 0 wird sichtbar;
+        // durchsichtig macht der Schalter "Transparent".
+        if (const std::optional<QColor> picked = pickColor(button, toQColor(runtime::colorPickerStart(*current)))) {
+            commit(runtime::colorFromPicker(fromQColor(*picked)));
         }
     });
     QObject::connect(transparent, &QCheckBox::toggled, transparent, [=](bool on) {

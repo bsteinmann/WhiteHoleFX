@@ -45,6 +45,7 @@ LookPanel::LookPanel(runtime::Player& player, QWidget* parent) : QWidget{parent}
     auto* fadeRow = new QHBoxLayout;
     fadeRow->addWidget(new QLabel{tr("Überblendzeit:"), this});
     fade_ = new QDoubleSpinBox{this};
+    fade_->setKeyboardTracking(false);  // Issue #22: erst bei Enter übernehmen
     fade_->setRange(0.0, 600.0);
     fade_->setDecimals(1);
     fade_->setSingleStep(0.5);

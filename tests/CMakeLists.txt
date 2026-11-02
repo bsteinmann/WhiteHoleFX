@@ -82,6 +82,8 @@ add_executable(wh_tests
     runtime/player_arrange_test.cpp
     runtime/dmx_usage_test.cpp
     runtime/node_catalog_test.cpp
+    runtime/color_pick_test.cpp
+    runtime/master_dmx_test.cpp
     runtime/node_clipboard_test.cpp
     runtime/node_defaults_test.cpp
     runtime/point_file_test.cpp
@@ -140,6 +142,7 @@ if(TARGET wh_gpu_webgpu)
         gpu_device/node_patterns_on_device_test.cpp
         gpu_device/spark_nodes_on_device_test.cpp
         gpu_device/text_on_device_test.cpp
+        gpu_device/text_session_on_device_test.cpp
         gpu_device/warps_on_device_test.cpp
         gpu_device/volume_on_device_test.cpp
         gpu_device/session_on_device_test.cpp

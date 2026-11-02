@@ -3,6 +3,7 @@
 // Sie bedienen die Oberfläche so, wie ein Mensch es täte (Regler, Node-Auswahl, Neu, Farbkästchen),
 // und melden, was nicht wie erwartet reagiert. Eigene Datei, weil sie mit dem normalen Betrieb
 // nichts zu tun haben und main_window.cpp sonst zu lang wird.
+#include <QAbstractSpinBox>
 #include <QApplication>
 #include <QCheckBox>
 #include <QDoubleSpinBox>
@@ -24,6 +25,17 @@ int MainWindow::exerciseParameters() {
         if (slider->isEnabled()) {
             slider->setValue((slider->minimum() + slider->maximum()) / 3);
             ++changed;
+        }
+    }
+    // Issue #22: Zahlenfelder übernehmen erst bei Enter, nicht bei jeder Taste (sonst geht Tippen schief).
+    for (QAbstractSpinBox* spin : parameters_->findChildren<QAbstractSpinBox*>()) {
+        if (qobject_cast<QDoubleSpinBox*>(spin) != nullptr || qobject_cast<QSpinBox*>(spin) != nullptr) {
+            const bool tracking = qobject_cast<QDoubleSpinBox*>(spin) != nullptr
+                                      ? qobject_cast<QDoubleSpinBox*>(spin)->keyboardTracking()
+                                      : qobject_cast<QSpinBox*>(spin)->keyboardTracking();
+            if (tracking) {
+                return -1;
+            }
         }
     }
     for (QDoubleSpinBox* spin : parameters_->findChildren<QDoubleSpinBox*>()) {

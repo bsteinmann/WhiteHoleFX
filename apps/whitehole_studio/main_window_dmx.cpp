@@ -8,10 +8,17 @@
 // Seite DMX-Eingang) öffnet den UDP-Port (unter Windows fragt die Firewall dann nach). Die Wahl wird
 // gemerkt, weil sie bewusst getroffen wurde.
 #include <QCoreApplication>
+#include <QSignalBlocker>
+#include <QSlider>
+#include <QLabel>
 #include <QStatusBar>
 #include <QThread>
 
+#include <algorithm>
+#include <cmath>
 #include <cstdint>
+#include <optional>
+#include <set>
 #include <memory>
 #include <vector>
 
@@ -50,7 +57,43 @@ QString MainWindow::applyDmxInput() {
 
 void MainWindow::syncDmxUniverses() {
     if (dmxReceiver_) {
-        dmxReceiver_->setSacnUniverses(player_->dmxUsage().sacn);  // tut nichts, solange sich die Menge nicht ändert
+        std::set<std::uint32_t> sacn = player_->dmxUsage().sacn;
+        if (appSettings_.masterDmx && appSettings_.masterDmxProtocol == 1) {
+            sacn.insert(static_cast<std::uint32_t>(std::max(0, appSettings_.masterDmxUniverse)));  // der Master-Kanal auch
+        }
+        dmxReceiver_->setSacnUniverses(sacn);  // tut nichts, solange sich die Menge nicht ändert
+    }
+}
+
+void MainWindow::applyMasterDmx() {
+    if (!appSettings_.masterDmx) {
+        player_->setMasterDmx(std::nullopt);
+        return;
+    }
+    runtime::MasterDmxSource source;
+    source.protocol = appSettings_.masterDmxProtocol == 1 ? input::DmxProtocol::Sacn : input::DmxProtocol::ArtNet;
+    source.universe = static_cast<std::uint32_t>(std::max(0, appSettings_.masterDmxUniverse));
+    source.channel = static_cast<std::uint32_t>(std::clamp(appSettings_.masterDmxChannel, 1, 512));
+    player_->setMasterDmx(source);
+}
+
+void MainWindow::followMasterDmx() {
+    if (masterSlider_ == nullptr || masterLabel_ == nullptr) {
+        return;
+    }
+    const bool fromDmx = player_->masterFromDmx();
+    if (fromDmx) {
+        const int percent = static_cast<int>(std::lround(player_->masterBrightness() * 100.0F));
+        if (masterSlider_->value() != percent) {
+            const QSignalBlocker block{masterSlider_};
+            masterSlider_->setValue(percent);
+            masterLabel_->setText(tr("%1 %").arg(percent));
+        }
+    }
+    if (masterSlider_->isEnabled() == fromDmx) {
+        masterSlider_->setEnabled(!fromDmx);
+        masterSlider_->setToolTip(fromDmx ? tr("Der Master kommt gerade vom DMX-Kanal (Einstellungen → DMX-Eingang)")
+                                          : tr("Gesamthelligkeit (wirkt auf Vorschau und Ausgabe, nicht im Projekt gespeichert)"));
     }
 }
 

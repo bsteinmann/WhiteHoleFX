@@ -400,6 +400,12 @@ Für sACN tritt das Studio den Multicast-Gruppen genau der Universen bei, die da
 Pakete kommen immer an. Ist der Port belegt, bleibt der Empfang aus und eine Meldung nennt den Grund.
 Die Nodes selbst: `docs/value-graph.md`, Abschnitt „DMX-Eingang“.
 
+**Master per DMX:** Auf derselben Seite lässt sich ein Kanal (Protokoll, Universe, Kanal 1 bis 512) wählen, der die
+Gesamthelligkeit steuert: Wert 0 bis 255 ergibt 0 bis 100 %. Solange Pakete kommen, folgt der Master-Regler in der
+Werkzeugleiste dem Pult und ist gesperrt; bleibt das Signal länger als 5 Sekunden weg, hält der Master seinen Wert und der
+Regler ist wieder frei. Der Empfang muss für das gewählte Protokoll eingeschaltet sein; bei sACN tritt das Studio der
+Multicast-Gruppe des Master-Universe von selbst bei.
+
 ## Audio-Eingang
 
 Einstellungen, Seite **Audio**: *Aus*, *Standardgerät*, ein Gerät aus der Liste oder *WAV-Datei in Schleife*.

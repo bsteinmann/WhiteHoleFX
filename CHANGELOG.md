@@ -1,5 +1,21 @@
 # Änderungen
 
+## 0.34.0
+
+- **Master per DMX (#17):** Einstellungen → DMX-Eingang: Ein DMX-Kanal (Art-Net oder sACN, Universe, Kanal) steuert die
+  Gesamthelligkeit. Der Master-Regler folgt dem Pult; fällt das Signal 5 Sekunden aus, hält der Master seinen Wert.
+- **Farbwahl (#20):** Eine gewählte Farbe wird nicht mehr durchsichtig. Der Dialog startete bei Farben mit Alpha 0 (zum Beispiel
+  dem Text-Hintergrund) mit Alpha 0 und gab es zurück. Jetzt startet er sichtbar, und ein Ergebnis mit Alpha 0 wird sichtbar;
+  durchsichtig macht der Schalter „Transparent“. Das kann auch die „fehlende“ Schrift im Text-Node erklären (#13): eine so
+  gewählte Textfarbe war unsichtbar.
+- **Zahlenfelder (#22):** Felder im Parameter-Panel sowie bei Überblendzeit und Testmuster übernehmen den Wert erst bei Enter
+  oder beim Verlassen. Vorher schrieb jede Taste den Wert zurück ins Feld, und halb getippte Zahlen („0,“) wurden mitten im
+  Tippen überschrieben.
+- **Value Noise (#19, #16):** ruhiger. Die höchste Geschwindigkeit sinkt von 8 auf 3 Zellen pro Sekunde, und `scale` beginnt bei 2
+  statt 1 Zelle über die Leinwand, damit nicht die ganze Wand eine einzige Zelle ist und gemeinsam aufleuchtet.
+- **Text-Node (#13):** Neue Prüfung auf dem GPU-Gerät, die das ganze Projekt (Layout 32 × 16, Standardwerte, Laufschrift über die
+  Zeit) bis zu den LED-Farben fährt (`text_session_on_device_test.cpp`).
+
 ## 0.33.0
 
 - **Schnellere 3D-Vorschau:** Der Schein (Glow) rechnet nur noch innerhalb seines Hofs (Vergleich der Abstandsquadrate statt Wurzel für

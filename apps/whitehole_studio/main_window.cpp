@@ -310,6 +310,7 @@ void MainWindow::tick() {
         reportError(tr("Frame"), r.error().message, false);
         updateActions();
     }
+    followMasterDmx();
     if (liveMode_) {
         livePanel_->refresh();
     }

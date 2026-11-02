@@ -176,6 +176,9 @@ private:
     /// (leer = in Ordnung); bei einem Fehler sind beide Protokolle in appSettings_ aus.
     QString applyDmxInput();
     void syncDmxUniverses();
+    /// Master über DMX (main_window_dmx.cpp): gibt die Wahl aus appSettings_ an den Player; der Regler folgt dem Pult.
+    void applyMasterDmx();
+    void followMasterDmx();
     [[nodiscard]] QString dmxStatusText() const;
     /// Audio-Eingang (main_window_audio.cpp). `choice`: "off", "default", "device:<Name>" oder "file:<Pfad>".
     /// Liefert den Fehlertext (leer = in Ordnung; bei einem Fehler bleibt der Eingang aus).

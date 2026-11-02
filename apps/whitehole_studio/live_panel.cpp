@@ -63,6 +63,7 @@ LivePanel::LivePanel(runtime::Player& player, QWidget* parent) : QWidget{parent}
     customFade_ = new QCheckBox{tr("Eigene Überblendzeit:"), this};
     customFade_->setToolTip(tr("Statt der Zeit, die beim Look gespeichert ist"));
     fade_ = new QDoubleSpinBox{this};
+    fade_->setKeyboardTracking(false);  // Issue #22: erst bei Enter übernehmen
     fade_->setRange(0.0, 600.0);
     fade_->setDecimals(1);
     fade_->setSingleStep(0.5);

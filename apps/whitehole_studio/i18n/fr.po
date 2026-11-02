@@ -30,11 +30,11 @@ msgstr "   |   Sortie désactivée (%1 paquets non envoyés)"
 msgid "   |   BLACKOUT"
 msgstr "   |   BLACKOUT"
 
-#: main_window_dmx.cpp:71
+#: main_window_dmx.cpp:109
 msgid "   |   DMX-Eingang %1: %2 Pakete"
 msgstr "   |   Entrée DMX %1 : %2 paquets"
 
-#: main_window_dmx.cpp:61
+#: main_window_dmx.cpp:99
 msgid "   |   DMX-Nodes im Projekt, Eingang aus (Einstellungen)"
 msgstr "   |   Nœuds DMX dans le projet, entrée désactivée (Réglages)"
 
@@ -50,7 +50,7 @@ msgstr "   |   Master %1 %"
 msgid "   |   TESTMODUS"
 msgstr "   |   MODE TEST"
 
-#: main_window_dmx.cpp:69
+#: main_window_dmx.cpp:107
 msgid " + sACN"
 msgstr " + sACN"
 
@@ -62,7 +62,7 @@ msgstr " passages/s"
 msgid " LEDs/s"
 msgstr " LED/s"
 
-#: main_window_controls.cpp:53
+#: main_window_controls.cpp:54
 msgid " Master "
 msgstr " Master "
 
@@ -70,7 +70,7 @@ msgstr " Master "
 msgid " Wechsel/s"
 msgstr " changements/s"
 
-#: live_panel.cpp:70 look_panel.cpp:51
+#: live_panel.cpp:71 look_panel.cpp:52
 msgid " s"
 msgstr " s"
 
@@ -78,11 +78,11 @@ msgstr " s"
 msgid "%1  (%2 LEDs)"
 msgstr "%1  (%2 LED)"
 
-#: live_panel.cpp:147
+#: live_panel.cpp:148
 msgid "%1  →  %2"
 msgstr "%1  →  %2"
 
-#: main_window_controls.cpp:61
+#: main_window_controls.cpp:62 main_window_dmx.cpp:85
 msgid "%1 %"
 msgstr "%1 %"
 
@@ -90,11 +90,11 @@ msgstr "%1 %"
 msgid "%1 (%2)"
 msgstr "%1 (%2)"
 
-#: settings_dialog.cpp:134
+#: settings_dialog.cpp:156
 msgid "%1 (Standard)"
 msgstr "%1 (par défaut)"
 
-#: settings_dialog.cpp:44 settings_dialog.cpp:138
+#: settings_dialog.cpp:45 settings_dialog.cpp:160
 msgid "%1 (nicht gefunden)"
 msgstr "%1 (introuvable)"
 
@@ -138,7 +138,7 @@ msgstr "&Quitter"
 msgid "&Beispiele"
 msgstr "E&xemples"
 
-#: main_window_controls.cpp:35
+#: main_window_controls.cpp:36
 msgid "&Blackout"
 msgstr "&Blackout"
 
@@ -242,7 +242,7 @@ msgstr "&Ouvrir …"
 msgid "&Über WhiteHoleFX"
 msgstr "À &propos de WhiteHoleFX"
 
-#: live_panel.cpp:147
+#: live_panel.cpp:148
 msgid "(kein Look)"
 msgstr "(aucun look)"
 
@@ -250,7 +250,7 @@ msgstr "(aucun look)"
 msgid "(keine Presets)"
 msgstr "(aucun préréglage)"
 
-#: main_window_controls.cpp:117
+#: main_window_controls.cpp:138
 msgid "(leer)"
 msgstr "(vide)"
 
@@ -262,7 +262,7 @@ msgstr ", %1 BPM"
 msgid ", Pegel %1 %"
 msgstr ", niveau %1 %"
 
-#: main_window_controls.cpp:46
+#: main_window_controls.cpp:47
 msgid "100 %"
 msgstr "100 %"
 
@@ -346,7 +346,7 @@ msgstr "Adresse (vide = multicast)"
 msgid "Aktuellen Effekt als Look speichern …"
 msgstr "Enregistrer l'effet actuel comme look …"
 
-#: main_window_controls.cpp:38
+#: main_window_controls.cpp:39
 msgid "Alle LEDs aus; die Pakete laufen weiter (Strg+B)"
 msgstr "Toutes les LED éteintes ; les paquets continuent (Ctrl+B)"
 
@@ -358,7 +358,7 @@ msgstr "Réinitialiser toutes les valeurs par défaut"
 msgid "Alle Tastenkürzel in einer Liste"
 msgstr "Tous les raccourcis clavier dans une liste"
 
-#: parameter_editors.cpp:301
+#: parameter_editors.cpp:307
 msgid "Alpha 0: an dieser Stelle bleibt die LED aus (die Farbe bleibt gemerkt)."
 msgstr "Alpha 0 : la LED reste éteinte ici (la couleur est conservée)."
 
@@ -402,23 +402,23 @@ msgstr "Nombre y"
 msgid "Anzahl z"
 msgstr "Nombre z"
 
-#: main_window_dmx.cpp:66
+#: main_window_dmx.cpp:104 settings_dialog.cpp:115
 msgid "Art-Net"
 msgstr "Art-Net"
 
-#: settings_dialog.cpp:95
+#: settings_dialog.cpp:96
 msgid "Art-Net empfangen"
 msgstr "Recevoir Art-Net"
 
-#: settings_dialog.cpp:80
+#: settings_dialog.cpp:81
 msgid "Art-Net, sACN und DDP gehen über diese Karte hinaus. Bei „Automatisch“ entscheidet die Routingtabelle des Systems, bei mehreren Karten oft die falsche. Eine Karte auswählen, wenn die Lichtanlage an einem zweiten Netzwerkanschluss hängt."
 msgstr "Art-Net, sACN et DDP sortent par cette carte. Avec « Automatique », la table de routage du système décide, souvent à tort quand il y a plusieurs cartes. Choisissez une carte si l'installation lumière est sur une seconde prise réseau."
 
-#: settings_dialog.cpp:107
+#: settings_dialog.cpp:108
 msgid "Art-Net-Port (UDP):"
 msgstr "Port Art-Net (UDP) :"
 
-#: main_window_actions.cpp:145 settings_dialog.cpp:60
+#: main_window_actions.cpp:145 settings_dialog.cpp:61
 msgid "Audio"
 msgstr "Audio"
 
@@ -438,11 +438,11 @@ msgstr "Rétablir la valeur de la bibliothèque"
 msgid "Auf die Fläche ziehen: Node hinzufügen.\nNode hierher ziehen: entfernen."
 msgstr "Glisser sur la zone : ajouter un nœud.\nGlisser un nœud ici : le supprimer."
 
-#: settings_dialog.cpp:169
+#: settings_dialog.cpp:191
 msgid "Aufnahmegeräte lassen sich nicht auflisten: %1"
 msgstr "Impossible de lister les périphériques de capture : %1"
 
-#: settings_dialog.cpp:120 test_panel.cpp:38
+#: settings_dialog.cpp:142 test_panel.cpp:38
 msgid "Aus"
 msgstr "Désactivé"
 
@@ -474,7 +474,7 @@ msgstr "LED éteintes en points très sombres, pour l'orientation seulement"
 msgid "Auswahl hervorheben"
 msgstr "Mettre la sélection en évidence"
 
-#: settings_dialog.cpp:38
+#: settings_dialog.cpp:39
 msgid "Automatisch (das System wählt)"
 msgstr "Automatique (le système choisit)"
 
@@ -482,11 +482,11 @@ msgstr "Automatique (le système choisit)"
 msgid "Automatisch (nächstes freies Universe)"
 msgstr "Automatique (prochain univers libre)"
 
-#: main_window_controls.cpp:74
+#: main_window_controls.cpp:75
 msgid "BLACKOUT"
 msgstr "BLACKOUT"
 
-#: live_panel.cpp:148
+#: live_panel.cpp:149
 msgid "Bereit: %1 - GO drücken"
 msgstr "Prêt : %1 - appuyer sur GO"
 
@@ -502,7 +502,7 @@ msgstr "Cadence (fps)"
 msgid "Blau"
 msgstr "Bleu"
 
-#: look_panel.cpp:74
+#: look_panel.cpp:75
 msgid "Blendet die Bearbeitung aus und zeigt große Knöpfe für alle Looks (F9)"
 msgstr "Masque l'édition et affiche de grands boutons pour tous les looks (F9)"
 
@@ -518,11 +518,11 @@ msgstr "Cyan"
 msgid "DDP-Offset (Byte)"
 msgstr "Décalage DDP (octets)"
 
-#: settings_dialog.cpp:59
+#: settings_dialog.cpp:60
 msgid "DMX-Eingang"
 msgstr "Entrée DMX"
 
-#: main_window_dmx.cpp:45
+#: main_window_dmx.cpp:51
 msgid "DMX-Eingang: %1"
 msgstr "Entrée DMX : %1"
 
@@ -534,7 +534,7 @@ msgstr "Le câble commence de ce côté plutôt que du côté opposé"
 msgid "Das Projekt wurde geändert. Änderungen verwerfen?"
 msgstr "Le projet a été modifié. Abandonner les modifications ?"
 
-#: test_panel.cpp:96
+#: test_panel.cpp:97
 msgid "Das Testbild ersetzt den Effekt in der Vorschau und, wenn „Ausgabe senden“ an ist, auch auf den LEDs. Es wird nicht im Projekt gespeichert.\n\nAchtung: Weiß und Farbe leuchten mit voller Helligkeit. Prüfe vorher, ob die Netzteile die ganze Wand auf 100 % tragen."
 msgstr "La mire remplace l'effet dans l'aperçu et, si « Envoyer la sortie » est activé, aussi sur les LED. Elle n'est pas enregistrée dans le projet.\n\nAttention : le blanc et la couleur s'allument à pleine luminosité. Vérifiez d'abord que les alimentations supportent tout le mur à 100 %."
 
@@ -542,11 +542,11 @@ msgstr "La mire remplace l'effet dans l'aperçu et, si « Envoyer la sortie » e
 msgid "Datei"
 msgstr "Fichier"
 
-#: look_panel.cpp:258
+#: look_panel.cpp:259
 msgid "Den Look „%1“ durch den aktuellen Effekt ersetzen?"
 msgstr "Remplacer le look « %1 » par l'effet actuel ?"
 
-#: look_panel.cpp:284
+#: look_panel.cpp:285
 msgid "Den Look „%1“ löschen?"
 msgstr "Supprimer le look « %1 » ?"
 
@@ -554,19 +554,27 @@ msgstr "Supprimer le look « %1 » ?"
 msgid "Den aktuellen Effekt als Look in die Liste legen (Strg+L)"
 msgstr "Ajouter l'effet actuel à la liste comme look (Ctrl+L)"
 
+#: settings_dialog.cpp:128
+msgid "Der Kanalwert 0 bis 255 setzt den Master auf 0 bis 100 %. Solange Pakete kommen, folgt der Master-Regler dem Pult; bleibt das Signal weg, hält der Master seinen Wert. Der Empfang oben muss für das gewählte Protokoll eingeschaltet sein."
+msgstr "La valeur du canal de 0 à 255 règle le master de 0 à 100 %. Tant que des paquets arrivent, le curseur master suit la console ; si le signal s’arrête, le master garde sa valeur. La réception ci-dessus doit être activée pour le protocole choisi."
+
+#: main_window_dmx.cpp:90
+msgid "Der Master kommt gerade vom DMX-Kanal (Einstellungen → DMX-Eingang)"
+msgstr "Le master vient actuellement du canal DMX (Réglages → Entrée DMX)"
+
 #: main_window_help.cpp:33
 msgid "Die Anleitung im Browser öffnen"
 msgstr "Ouvrir le manuel dans le navigateur"
 
-#: settings_dialog.cpp:110
+#: settings_dialog.cpp:132
 msgid "Die DMX-Nodes im Projekt lesen ihre Werte aus dem Empfang. Standard-Ports sind 6454 (Art-Net) und 5568 (sACN); nur ändern, wenn ein anderes Programm sie belegt. Nach der Installation ist der Empfang aus; unter Windows fragt die Firewall beim ersten Einschalten nach."
 msgstr "Les nœuds DMX du projet lisent leurs valeurs dans les données reçues. Les ports par défaut sont 6454 (Art-Net) et 5568 (sACN) ; ne les changez que si un autre programme les utilise. La réception est désactivée après l'installation ; sous Windows, le pare-feu pose la question à la première activation."
 
-#: test_panel.cpp:86
+#: test_panel.cpp:87
 msgid "Die Fixtures in der Layout-Liste; alle anderen bleiben dunkel."
 msgstr "Les fixtures de la liste de disposition ; tous les autres restent éteints."
 
-#: settings_dialog.cpp:173
+#: settings_dialog.cpp:195
 msgid "Die Quelle speist die Audio-Nodes (Pegel, Frequenzband, Beat, Spektrum)."
 msgstr "La source alimente les nœuds audio (niveau, bande de fréquences, beat, spectre)."
 
@@ -574,15 +582,15 @@ msgstr "La source alimente les nœuds audio (niveau, bande de fréquences, beat,
 msgid "Die Reihenfolge in der Datei ist die Reihenfolge am Datenkabel."
 msgstr "L'ordre dans le fichier est l'ordre le long du câble de données."
 
-#: main_window_language.cpp:46
+#: main_window_language.cpp:50
 msgid "Die Sprache wechselt beim nächsten Start."
 msgstr "La langue changera au prochain démarrage."
 
-#: main_window_language.cpp:43
+#: main_window_language.cpp:47
 msgid "Die neue Sprache gilt nach einem Neustart von WhiteHoleFX. Jetzt neu starten?\n(Nicht gespeicherte Änderungen werden vorher abgefragt.)"
 msgstr "La nouvelle langue s'applique après le redémarrage de WhiteHoleFX. Redémarrer maintenant ?\n(Les modifications non enregistrées seront d'abord proposées à l'enregistrement.)"
 
-#: settings_dialog.cpp:88
+#: settings_dialog.cpp:89
 msgid "Die Änderung wirkt sofort nach „OK“."
 msgstr "La modification prend effet immédiatement après « OK »."
 
@@ -626,7 +634,7 @@ msgstr "Une introduction à l'utilisation, dans la langue choisie"
 msgid "Einfügen\tStrg+V"
 msgstr "Coller\tCtrl+V"
 
-#: main_window_settings.cpp:46 output_form.cpp:45 settings_dialog.cpp:56
+#: main_window_settings.cpp:46 output_form.cpp:45 settings_dialog.cpp:57
 msgid "Einstellungen"
 msgstr "Réglages"
 
@@ -658,7 +666,7 @@ msgstr "Premier canal"
 msgid "Es gibt schon ein Preset \"%1\". Ersetzen?"
 msgstr "Un préréglage « %1 » existe déjà. Le remplacer ?"
 
-#: look_panel.cpp:245
+#: look_panel.cpp:246
 msgid "Es gibt schon einen Look „%1“. Mit dem aktuellen Effekt überschreiben?"
 msgstr "Un look « %1 » existe déjà. L'écraser avec l'effet actuel ?"
 
@@ -670,7 +678,7 @@ msgstr "Aucun projet n'est chargé. Créez-en un avec Ctrl+N ou ouvrez-en un ave
 msgid "Faktor auf alle Koordinaten, z. B. 0,1 für Millimeter in Zentimeter"
 msgstr "Facteur appliqué à toutes les coordonnées, p. ex. 0,1 pour des millimètres en centimètres"
 
-#: parameter_editors.cpp:87 test_panel.cpp:38 test_panel.cpp:72
+#: parameter_editors.cpp:92 test_panel.cpp:38 test_panel.cpp:72
 msgid "Farbe"
 msgstr "Couleur"
 
@@ -718,7 +726,7 @@ msgstr "Face"
 msgid "Für den Live-Modus erst Looks speichern (Dock „Looks“)."
 msgstr "Pour le mode live, enregistrez d'abord des looks (panneau « Looks »)."
 
-#: live_panel.cpp:73
+#: live_panel.cpp:74
 msgid "GO  (Leertaste)"
 msgstr "GO  (barre d'espace)"
 
@@ -734,11 +742,11 @@ msgstr "Chargé : %1"
 msgid "Gelb"
 msgstr "Jaune"
 
-#: settings_dialog.cpp:122
+#: settings_dialog.cpp:144
 msgid "Gerät:"
 msgstr "Périphérique :"
 
-#: main_window_controls.cpp:45
+#: main_window_controls.cpp:46 main_window_dmx.cpp:91
 msgid "Gesamthelligkeit (wirkt auf Vorschau und Ausgabe, nicht im Projekt gespeichert)"
 msgstr "Luminosité globale (agit sur l'aperçu et la sortie, non enregistrée dans le projet)"
 
@@ -778,7 +786,7 @@ msgstr "Importer …"
 msgid "Import: %1"
 msgstr "Importation : %1"
 
-#: look_panel.cpp:59
+#: look_panel.cpp:60
 msgid "In den Editor laden"
 msgstr "Charger dans l'éditeur"
 
@@ -786,11 +794,11 @@ msgstr "Charger dans l'éditeur"
 msgid "Kabel beginnt"
 msgstr "Le câble commence"
 
-#: settings_dialog.cpp:84
+#: settings_dialog.cpp:85
 msgid "Karte zum Empfangen:"
 msgstr "Carte pour la réception :"
 
-#: settings_dialog.cpp:79
+#: settings_dialog.cpp:80
 msgid "Karte zum Senden:"
 msgstr "Carte pour l'envoi :"
 
@@ -810,7 +818,7 @@ msgstr "Aucun projet"
 msgid "Kein Projekt geladen."
 msgstr "Aucun projet chargé."
 
-#: settings_dialog.cpp:171
+#: settings_dialog.cpp:193
 msgid "Keine Aufnahmegeräte gefunden. Ein Audio-Interface anschließen und das Fenster neu öffnen."
 msgstr "Aucun périphérique de capture trouvé. Branchez une interface audio et rouvrez la fenêtre."
 
@@ -874,7 +882,7 @@ msgstr "LED lumineuses avec un halo doux, les couleurs s'additionnent ; rien n'e
 msgid "Linke Kanten ausrichten"
 msgstr "Aligner les bords gauches"
 
-#: main_window_controls.cpp:121
+#: main_window_controls.cpp:142
 msgid "Liste leeren"
 msgstr "Vider la liste"
 
@@ -882,31 +890,31 @@ msgstr "Vider la liste"
 msgid "Live"
 msgstr "Live"
 
-#: look_panel.cpp:72
+#: look_panel.cpp:73
 msgid "Live-Modus starten  ▶"
 msgstr "Démarrer le mode live  ▶"
 
-#: look_panel.cpp:160
+#: look_panel.cpp:161
 msgid "Look %1"
 msgstr "Look %1"
 
-#: look_panel.cpp:245
+#: look_panel.cpp:246
 msgid "Look ersetzen"
 msgstr "Remplacer le look"
 
-#: look_panel.cpp:284
+#: look_panel.cpp:285
 msgid "Look löschen"
 msgstr "Supprimer le look"
 
-#: look_panel.cpp:238
+#: look_panel.cpp:239
 msgid "Look speichern"
 msgstr "Enregistrer le look"
 
-#: look_panel.cpp:270
+#: look_panel.cpp:271
 msgid "Look umbenennen"
 msgstr "Renommer le look"
 
-#: look_panel.cpp:258
+#: look_panel.cpp:259
 msgid "Look überschreiben"
 msgstr "Écraser le look"
 
@@ -918,7 +926,7 @@ msgstr "Looks"
 msgid "Loslassen: Node wird entfernt"
 msgstr "Relâcher : le nœud sera supprimé"
 
-#: look_panel.cpp:61
+#: look_panel.cpp:62
 msgid "Löschen"
 msgstr "Supprimer"
 
@@ -929,6 +937,22 @@ msgstr "Magenta"
 #: add_fixture_dialog.cpp:161
 msgid "Manuell"
 msgstr "Manuel"
+
+#: settings_dialog.cpp:112
+msgid "Master-Helligkeit über einen DMX-Kanal steuern"
+msgstr "Piloter la luminosité master avec un canal DMX"
+
+#: settings_dialog.cpp:127
+msgid "Master: Kanal (1 bis 512):"
+msgstr "Master : canal (1 à 512) :"
+
+#: settings_dialog.cpp:125
+msgid "Master: Protokoll:"
+msgstr "Master : protocole :"
+
+#: settings_dialog.cpp:126
+msgid "Master: Universe:"
+msgstr "Master : univers :"
 
 #: layout_panel_add.cpp:34 layout_panel_add.cpp:112
 msgid "Matrix"
@@ -954,7 +978,7 @@ msgstr "Échelle"
 msgid "Mit GO (vorladen)"
 msgstr "Avec GO (préchargement)"
 
-#: look_panel.cpp:58
+#: look_panel.cpp:59
 msgid "Mit aktuellem Effekt überschreiben"
 msgstr "Écraser avec l'effet actuel"
 
@@ -966,7 +990,7 @@ msgstr "Mode"
 msgid "Name"
 msgstr "Nom"
 
-#: look_panel.cpp:238
+#: look_panel.cpp:239
 msgid "Name des Looks:"
 msgstr "Nom du look :"
 
@@ -974,7 +998,7 @@ msgstr "Nom du look :"
 msgid "Name des Presets:"
 msgstr "Nom du préréglage :"
 
-#: settings_dialog.cpp:58
+#: settings_dialog.cpp:59
 msgid "Netzwerk"
 msgstr "Réseau"
 
@@ -990,7 +1014,7 @@ msgstr "Carte réseau, entrée DMX, interface audio et valeurs par défaut des n
 msgid "Neue Nodes starten mit diesen Werten statt mit denen der Bibliothek. Bestehende Nodes und geladene Projekte ändern sich nicht. Fett markierte Typen haben eigene Werte."
 msgstr "Les nouveaux nœuds démarrent avec ces valeurs au lieu de celles de la bibliothèque. Les nœuds existants et les projets chargés ne changent pas. Les types en gras ont leurs propres valeurs."
 
-#: look_panel.cpp:270
+#: look_panel.cpp:271
 msgid "Neuer Name:"
 msgstr "Nouveau nom :"
 
@@ -1030,7 +1054,7 @@ msgstr "Chercher un nœud …\tCtrl+Espace"
 msgid "Node suchen … (Pfeiltasten, Enter)"
 msgstr "Chercher un nœud … (flèches, Entrée)"
 
-#: settings_dialog.cpp:62
+#: settings_dialog.cpp:63
 msgid "Node-Standardwerte"
 msgstr "Valeurs par défaut des nœuds"
 
@@ -1046,7 +1070,7 @@ msgstr "Nœuds"
 msgid "Nodes suchen …"
 msgstr "Chercher des nœuds …"
 
-#: test_panel.cpp:85
+#: test_panel.cpp:86
 msgid "Nur auf gewählten Fixtures"
 msgstr "Seulement sur les fixtures sélectionnés"
 
@@ -1190,7 +1214,7 @@ msgstr "Serpentin (le brin repart en sens inverse à chaque extrémité)"
 msgid "Serpentine (jede zweite Zeile rückwärts)"
 msgstr "Serpentin (une ligne sur deux en sens inverse)"
 
-#: look_panel.cpp:52
+#: look_panel.cpp:53
 msgid "So lange dauert das Überblenden zu diesem Look. 0 = hartes Umschalten."
 msgstr "Durée du fondu vers ce look. 0 = changement brutal."
 
@@ -1214,7 +1238,7 @@ msgstr "Enregistrer"
 msgid "Speichern &unter …"
 msgstr "Enregistrer &sous …"
 
-#: main_window_language.cpp:42
+#: main_window_language.cpp:46
 msgid "Sprache"
 msgstr "Langue"
 
@@ -1222,7 +1246,7 @@ msgstr "Langue"
 msgid "Stage Config"
 msgstr "Stage Config"
 
-#: settings_dialog.cpp:121
+#: settings_dialog.cpp:143
 msgid "Standardgerät des Systems"
 msgstr "Périphérique par défaut du système"
 
@@ -1242,7 +1266,7 @@ msgstr "Strip"
 msgid "Strip (Linie)"
 msgstr "Strip (ligne)"
 
-#: main_window_controls.cpp:78
+#: main_window_controls.cpp:79
 msgid "TESTMODUS: %1"
 msgstr "MODE TEST : %1"
 
@@ -1250,7 +1274,7 @@ msgstr "MODE TEST : %1"
 msgid "Tastenkürzel"
 msgstr "Raccourcis clavier"
 
-#: test_panel.cpp:83
+#: test_panel.cpp:84
 msgid "Tempo"
 msgstr "Vitesse"
 
@@ -1266,15 +1290,15 @@ msgstr "Envoyer des mires aux LED pour vérifier le câblage et le patch"
 msgid "Testmodus"
 msgstr "Mode test"
 
-#: test_panel.cpp:90
+#: test_panel.cpp:91
 msgid "Testmodus beenden"
 msgstr "Quitter le mode test"
 
-#: main_window_language.cpp:62
+#: main_window_language.cpp:66
 msgid "Tutorial"
 msgstr "Tutoriel"
 
-#: look_panel.cpp:60
+#: look_panel.cpp:61
 msgid "Umbenennen …"
 msgstr "Renommer …"
 
@@ -1314,15 +1338,15 @@ msgstr "Répartir ↔"
 msgid "Verteilen ↕"
 msgstr "Répartir ↕"
 
-#: settings_dialog.cpp:123
+#: settings_dialog.cpp:145
 msgid "WAV-Datei in Schleife:"
 msgstr "Fichier WAV en boucle :"
 
-#: settings_dialog.cpp:179
+#: settings_dialog.cpp:201
 msgid "WAV-Datei wählen"
 msgstr "Choisir un fichier WAV"
 
-#: settings_dialog.cpp:179
+#: settings_dialog.cpp:201
 msgid "WAV-Dateien (*.wav)"
 msgstr "Fichiers WAV (*.wav)"
 
@@ -1358,7 +1382,7 @@ msgstr "Comme dans la vue 2D ; les points gris de la couche avant cachent les LE
 msgid "Wird durch eine Verbindung im Graphen gesteuert."
 msgstr "Piloté par une connexion dans le graphe."
 
-#: settings_dialog.cpp:126
+#: settings_dialog.cpp:148
 msgid "Wählen …"
 msgstr "Choisir …"
 
@@ -1398,7 +1422,7 @@ msgstr "D'abord le long de"
 msgid "Zum Verteilen mindestens drei Fixtures wählen"
 msgstr "Sélectionnez au moins trois fixtures à répartir"
 
-#: live_panel.cpp:77
+#: live_panel.cpp:78
 msgid "Zurück zum Editor (Esc)"
 msgstr "Retour à l'éditeur (Échap)"
 
@@ -1438,15 +1462,15 @@ msgstr "en haut à droite"
 msgid "rechts (x max)"
 msgstr "droite (x max)"
 
-#: main_window_dmx.cpp:69
+#: main_window_dmx.cpp:107 settings_dialog.cpp:116
 msgid "sACN"
 msgstr "sACN"
 
-#: settings_dialog.cpp:96
+#: settings_dialog.cpp:97
 msgid "sACN (E1.31) empfangen"
 msgstr "Recevoir sACN (E1.31)"
 
-#: settings_dialog.cpp:109
+#: settings_dialog.cpp:110
 msgid "sACN-Port (UDP):"
 msgstr "Port sACN (UDP) :"
 
@@ -1498,11 +1522,11 @@ msgstr "Ouvre GitHub : créer un nouveau ticket"
 msgid "Über WhiteHoleFX"
 msgstr "À propos de WhiteHoleFX"
 
-#: settings_dialog.cpp:85
+#: settings_dialog.cpp:86
 msgid "Über diese Karte tritt der sACN-Empfang den Multicast-Gruppen bei. Art-Net-Broadcast und Unicast-Pakete kommen weiterhin von jeder Karte an."
 msgstr "La réception sACN rejoint les groupes multicast via cette carte. Les paquets Art-Net en broadcast et unicast arrivent toujours sur chaque carte."
 
-#: live_panel.cpp:118
+#: live_panel.cpp:119
 msgid "Überblendzeit %1 s"
 msgstr "Durée de fondu %1 s"
 
@@ -1526,11 +1550,11 @@ msgstr "↕ Centre"
 msgid "⇤ Links"
 msgstr "⇤ Gauche"
 
-#: look_panel.cpp:62
+#: look_panel.cpp:63
 msgid "▲ nach oben"
 msgstr "▲ vers le haut"
 
-#: look_panel.cpp:63
+#: look_panel.cpp:64
 msgid "▼ nach unten"
 msgstr "▼ vers le bas"
 

@@ -65,6 +65,8 @@ QString MainWindow::applySettings(const AppSettings& wanted, bool persist) {
                             next.inputInterface != appSettings_.inputInterface;
     const QString audioBefore = appSettings_.audioSource;
     appSettings_ = next;
+    applyMasterDmx();
+    syncDmxUniverses();  // sACN: Der Master-Kanal braucht seine Multicast-Gruppe
     if (!(player_->nodeDefaults() == next.nodeDefaults)) {
         player_->setNodeDefaults(next.nodeDefaults);
     }
@@ -96,6 +98,10 @@ QString MainWindow::exerciseSettings() {
     probe.sacnIn = true;
     probe.artnetPort = 7000;
     probe.sacnPort = 7001;
+    probe.masterDmx = true;
+    probe.masterDmxProtocol = 1;
+    probe.masterDmxUniverse = 5;
+    probe.masterDmxChannel = 77;
     probe.outputInterface = QStringLiteral("203.0.113.9");
     probe.inputInterface = QStringLiteral("203.0.113.10");
     probe.audioSource = QStringLiteral("device:Nicht vorhanden");

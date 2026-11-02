@@ -156,8 +156,11 @@ int main(int argc, char** argv) {
             }
         }
         const QString problem = window.problem();
-        if (changed == 0 || !problem.isEmpty()) {
-            std::fprintf(stderr, "Rauchtest fehlgeschlagen: %s\n", changed == 0 ? "kein Regler gefunden" : problem.toUtf8().constData());
+        if (changed <= 0 || !problem.isEmpty()) {
+            const char* reason = changed == 0 ? "kein Regler gefunden"
+                                 : changed < 0 ? "Zahlenfeld übernimmt bei jeder Taste (Tastaturverfolgung an)"
+                                               : nullptr;
+            std::fprintf(stderr, "Rauchtest fehlgeschlagen: %s\n", reason != nullptr ? reason : problem.toUtf8().constData());
             return 1;
         }
     }

@@ -59,7 +59,7 @@ return wh_mix_color(@param(colorA), @param(colorB), t);)wgsl";
 constexpr const char* kNoiseBody =
     R"wgsl(let s = clamp(@param(scale), 0.0, 1.0);
 let sp = clamp(@param(speed), 0.0, 1.0);
-let q = p * (1.0 + 63.0 * s * s) + vec3<f32>(0.0, 0.0, @time * sp * sp * 8.0);
+let q = p * (2.0 + 62.0 * s * s) + vec3<f32>(0.0, 0.0, @time * sp * sp * 3.0);
 let fz = fract(q.z);
 let w = fz * fz * (3.0 - 2.0 * fz);
 let dev = (wh_value_noise(q) - 0.5) / sqrt((1.0 - w) * (1.0 - w) + w * w);
