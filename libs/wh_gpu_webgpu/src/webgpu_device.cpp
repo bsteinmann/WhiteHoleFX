@@ -140,7 +140,7 @@ Result<std::unique_ptr<WebGpuDevice>> WebGpuDevice::create(const WebGpuOptions& 
     // WHITEHOLEFX_GPU_BACKEND=vulkan|gl|dx12|metal wählt die Grafikschnittstelle. Gedacht für die Fehlersuche (Issue #13):
     // Dieselbe GPU kann je nach Schnittstelle andere Shader-Übersetzung und andere Treiberfehler haben.
     WGPUInstanceExtras extras{};
-    extras.chain.sType = WGPUSType_InstanceExtras;
+    extras.chain.sType = static_cast<WGPUSType>(WGPUSType_InstanceExtras);
     WGPUInstanceDescriptor instanceDesc{};
     if (const char* wanted = std::getenv("WHITEHOLEFX_GPU_BACKEND"); wanted != nullptr) {
         const std::string name{wanted};
