@@ -117,6 +117,13 @@ QString MainWindow::exerciseSelection() {
     return {};
 }
 
+void MainWindow::exerciseCtrlN() {
+    newAction_->trigger();
+    for (int i = 0; i < 20; ++i) {
+        QApplication::processEvents();
+    }
+}
+
 QString MainWindow::exerciseNewProject() {
     if (!newProject(false)) {
         return tr("Neu: Vorlage lässt sich nicht anlegen: %1").arg(problem());

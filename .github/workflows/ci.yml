@@ -200,6 +200,10 @@ jobs:
           run_studio examples/einstieg/wand.whfx --run --software --frames 40 --grab fenster-lauf.png
           run_studio examples/einstieg/regler.whfx --run --software --frames 40 --exercise --grab fenster-regler.png
           run_studio examples/effekte/laufschrift.whfx --run --software --frames 200 --grab fenster-text.png
+          # Issue 26: Strg+N gleich nach dem Start, ohne geladenes Projekt (ohne und mit Wiedergabe)
+          run_studio --ctrl-n --software --grab fenster-neu.png
+          run_studio --ctrl-n --run --software --frames 20 --grab fenster-neu-lauf.png
+          run_studio --software --grab fenster-leer.png
           test -s fenster-layout.png && test -s fenster-lauf.png && test -s fenster-regler.png && test -s fenster-text.png || fail=1
           # Issue 13: Die Schrift muss im fertigen Fensterbild zu sehen sein.
           PIP_BREAK_SYSTEM_PACKAGES=1 python3 -m pip install --quiet pillow

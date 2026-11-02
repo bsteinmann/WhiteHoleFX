@@ -43,7 +43,8 @@ int main(int argc, char** argv) {
     const QCommandLineOption framesOption{QStringLiteral("frames"), QStringLiteral("Frames vor --grab (Standard 30 mit --run)"), QStringLiteral("n"), QStringLiteral("30")};
     const QCommandLineOption exerciseOption{QStringLiteral("exercise"), QStringLiteral("vor --grab alle Regler einmal verstellen (Rauchtest)")};
     const QCommandLineOption langOption{QStringLiteral("lang"), QStringLiteral("Sprache der Oberfläche: de, en, fr oder es"), QStringLiteral("code")};
-    parser.addOptions({runOption, softwareOption, grabOption, framesOption, exerciseOption, langOption});
+    const QCommandLineOption ctrlNOption{QStringLiteral("ctrl-n"), QStringLiteral("gleich nach dem Start Strg+N (Neu) auslösen (Prüfung für Issue #26)")};
+    parser.addOptions({runOption, softwareOption, grabOption, framesOption, exerciseOption, langOption, ctrlNOption});
     parser.process(app);
 
     // Sprache vor dem ersten Fenster setzen. Die Rauchtests (--grab) prüfen deutsche Texte und laufen deshalb
@@ -96,6 +97,10 @@ int main(int argc, char** argv) {
         if (!window.startPlayback(!grab) && grab) {
             return 1;
         }
+    }
+
+    if (parser.isSet(ctrlNOption)) {
+        window.exerciseCtrlN();
     }
 
     if (!grab) {

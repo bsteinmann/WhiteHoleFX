@@ -84,6 +84,8 @@ public:
     QString exerciseSelection();
     /// Rauchtest: "Neu" legt ein lauffähiges Projekt an. Danach ist das neue Projekt geladen.
     QString exerciseNewProject();
+    /// Löst "Neu" (Strg+N) aus wie ein Tastendruck, auch ohne geladenes Projekt (main.cpp: --ctrl-n).
+    void exerciseCtrlN();
     /// Rauchtest: das Kästchen "Transparent" einer Farbe setzt Alpha auf 0 und wieder auf 1.
     QString exerciseTransparency();
     /// Rauchtest: Master-Regler und Blackout-Schalter erreichen den Player; danach ist alles zurückgesetzt.

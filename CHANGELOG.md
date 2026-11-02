@@ -1,5 +1,10 @@
 # Änderungen
 
+## 0.37.2
+
+- **Strg+N gleich nach dem Start (#26):** Neue Prüfung `whitehole_studio --ctrl-n` löst „Neu“ ohne geladenes Projekt aus, wie ein
+  Tastendruck direkt nach dem Start. Die CI führt es (auch mit Wiedergabe) aus und zeigt bei einem Absturz den Aufrufstapel.
+
 ## 0.37.1
 
 - **Fehlersuche Einfrieren (#26):** Im Terminal meldet das Studio jetzt, wenn die Hauptschleife länger als 0,5 s stand, ein Frame
