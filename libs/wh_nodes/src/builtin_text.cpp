@@ -12,8 +12,12 @@
 // Rollen und Stillstand: mode Scroll schiebt den Text mit `speed` Schriftpunkten pro Sekunde durch (negativ:
 // nach rechts) und beginnt nach `gap` Punkten Pause von vorn; Static setzt ihn links, mittig oder rechts.
 // Die Position ist auf ganze Schriftpunkte gerundet, die Schrift bleibt scharf.
+#include <cstdlib>
+#include <string>
+
 #include "builtin_internal.hpp"
 #include "builtin_text_font.hpp"
+#include "builtin_text_variants.hpp"
 
 namespace whitehole::nodes::detail {
 
@@ -75,7 +79,7 @@ std::vector<compiler::NodeDefinition> textNodes() {
          number("aspect", "Canvas aspect (w/h)", 2.0, 0.1, 20.0), integer("spacing", "Letter spacing (dots)", 1, 0, 8),
          color("color", "Color", ColorRgba{1.0F, 1.0F, 1.0F, 1.0F}),
          color("background", "Background", ColorRgba{0.0F, 0.0F, 0.0F, 0.0F})},
-        kTextBody, kTextPrelude));
+        textBodyVariant(kTextBody), textPreludeVariant(kTextPrelude)));
     return nodes;
 }
 

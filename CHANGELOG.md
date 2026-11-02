@@ -1,5 +1,12 @@
 # Änderungen
 
+## 0.36.3
+
+- **Fehlersuche Text auf NVIDIA (#13):** Der Text-Node läuft auf Software-Vulkan und OpenGL, bleibt aber auf einer GeForce GTX 760
+  (Vulkan) unsichtbar. Mit `WHITEHOLEFX_TEXT_VARIANT` (`a`, `b`, `c` oder kombiniert, zum Beispiel `abc`) lassen sich drei
+  gleichwertige Umschreibungen des Shaders einschalten, um die Stelle zu finden, die der Treiber falsch übersetzt
+  (siehe `builtin_text_variants.hpp`). `whitehole_cli --snapshot` zeigt jetzt die Zahl heller LEDs.
+
 ## 0.36.2
 
 - **Grafikschnittstelle wählbar (#13):** Mit der Umgebungsvariable `WHITEHOLEFX_GPU_BACKEND` (`vulkan`, `gl`, `dx12`, `metal`)

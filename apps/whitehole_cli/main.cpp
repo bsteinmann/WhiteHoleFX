@@ -4,6 +4,7 @@
 // sonst GPU-Gerät und UDP-Versand anlegen, die Session starten und im Takt der Bildrate Frames
 // rendern, bis --frames erreicht ist oder Strg+C kommt. Beendet wird immer geordnet: die
 // laufenden Frames werden noch ausgeliefert, dann erscheint eine Zusammenfassung.
+#include <algorithm>
 #include <atomic>
 #include <cctype>
 #include <chrono>
@@ -196,6 +197,11 @@ int run(const project::Project& project, const nodes::BuiltinLibrary& library, c
             return fail(saved.error());
         }
         std::cout << "Vorschau gespeichert: " << options.snapshotPath << "\n";
+        // Für die Fehlersuche ohne Bildbetrachter: wie viele LEDs leuchten im letzten Frame hell?
+        const auto bright = std::count_if(colors.begin(), colors.end(), [](const ColorRgba& c) {
+            return c.a > 0.5F && std::max({c.r, c.g, c.b}) > 0.5F;
+        });
+        std::cout << "Helle LEDs im letzten Frame (über 50 %): " << bright << " von " << colors.size() << "\n";
     }
     if (const auto error = session.value()->lastOutputError()) {
         std::cerr << "Letzter Ausgabefehler: " << error->message << "\n";
