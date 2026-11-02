@@ -1,5 +1,11 @@
 # Änderungen
 
+## 0.36.4
+
+- **Messvarianten für den Text-Node (#13):** `WHITEHOLEFX_TEXT_VARIANT` kennt jetzt zusätzlich `s` (feste Startposition), `g`
+  (jedes Zeichen ein „A“), `h` (jeder Schriftpunkt gesetzt), `k` (ganzes Bild in der Textfarbe) und `q` (ganzes Bild rot).
+  Auf einer GTX 760 (Vulkan) zeigten die Umschreibungen a, b und c keine Wirkung; so wird sichtbar, welche Stufe versagt.
+
 ## 0.36.3
 
 - **Fehlersuche Text auf NVIDIA (#13):** Der Text-Node läuft auf Software-Vulkan und OpenGL, bleibt aber auf einer GeForce GTX 760

@@ -7,6 +7,12 @@
 //   a  statt `switch` eine Kette aus `if` für die Umlaute
 //   b  nur ein `return` am Ende (kein vorzeitiges Verlassen der Funktion)
 //   c  die Schrifttabelle als lokale Variable in wh_text_bit statt als private Variable mit Anfangswert
+// Messvarianten, die einzelne Stufen des Shaders ausblenden und so zeigen, welche Stufe auf der Karte versagt:
+//   s  Startposition fest 0 (ohne Zeit und Laufschrift)
+//   g  jedes Zeichen ist ein "A" (ohne den Text-Puffer txt[ci])
+//   h  jeder Punkt der Schrift ist gesetzt (ohne Schrifttabelle und Bit-Auswahl)
+//   k  das ganze Bild in der Textfarbe (prüft den Parameter `color`)
+//   q  das ganze Bild in festem Rot (prüft, ob der Node überhaupt mitzeichnet)
 // Ohne die Variable bleibt alles wie bisher. Wird die Ursache gefunden, wird die passende Form zur festen und die
 // Umschaltung entfällt wieder.
 #pragma once
@@ -55,12 +61,9 @@ inline std::string textPreludeVariant(std::string prelude) {
     return prelude;
 }
 
-/// Rumpf des Nodes in der gewählten Variante.
-inline std::string textBodyVariant(std::string body) {
-    if (!textVariantOn('b')) {
-        return body;
-    }
-    return R"wgsl(var txt = @text(text);
+/// Körper mit nur einem `return` am Ende (Variante b).
+inline std::string textBodySingleReturn() {
+    return std::string{R"wgsl(var txt = @text(text);
 let n = i32(@textlen(text));
 var result = @param(background);
 let fy = clamp(@param(height), 0.05, 4.0) / 8.0;
@@ -91,7 +94,31 @@ if (n > 0 && u >= 0.0 && rowF >= 0.0 && rowF < 8.0 && ci < n && col <= 4) {
         result = @param(color);
     }
 }
-return result;)wgsl";
+return result;)wgsl"};
 }
+
+/// Rumpf des Nodes in der gewählten Variante.
+inline std::string textBodyVariant(std::string body) {
+    if (textVariantOn('b')) {
+        body = textBodySingleReturn();
+    }
+    if (textVariantOn('s')) {
+        replaceOnce(body, "start = floor(start + 0.5);", "start = 0.0;");
+    }
+    if (textVariantOn('g')) {
+        replaceOnce(body, "wh_text_glyph(txt[ci])", "33u");
+    }
+    if (textVariantOn('h')) {
+        replaceOnce(body, "if (wh_text_bit(glyph, u32(col), u32(floor(rowF)))) {", "if (true) {");
+    }
+    if (textVariantOn('k')) {
+        body = "return @param(color);";
+    }
+    if (textVariantOn('q')) {
+        body = "return vec4<f32>(1.0, 0.0, 0.0, 1.0);";
+    }
+    return body;
+}
+
 
 }  // namespace whitehole::nodes::detail
