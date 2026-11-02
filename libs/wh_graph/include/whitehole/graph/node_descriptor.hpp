@@ -32,7 +32,15 @@ struct PortDescriptor {
     PortType type{PortType::Image};
     PortDirection direction{PortDirection::Input};
     bool required{false};
+    /// Issue #25: Ein Eingang von Nodes mit mehreren Eingängen (Blend, Mix ...). Im nachsichtigen Modus (Standard) gilt er
+    /// unverbunden als durchsichtiges Schwarz; nur im strengen Modus (Graph::strictInputs) ist er ein Pflicht-Eingang.
+    bool optionalWhenLenient{false};
 };
+
+/// Ob ein unverbundener Eingang den Graphen unvollständig macht (Fehler beim Kompilieren, LEDs aus).
+[[nodiscard]] inline bool isRequiredInput(const PortDescriptor& port, bool strictInputs) noexcept {
+    return port.required && (strictInputs || !port.optionalWhenLenient);
+}
 
 struct ParameterDescriptor {
     std::string key;

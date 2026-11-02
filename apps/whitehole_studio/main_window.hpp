@@ -154,6 +154,8 @@ private:
     void onUndo();
     void onRedo();
     void afterRestore();
+    /// Bearbeiten > Strenge Eingänge (main_window_editor.cpp): schaltet den strengen Modus im Player um.
+    void onStrictInputs(bool on);
     void updateUndoActions();
     void onNew();
     void onOpen();
@@ -262,6 +264,7 @@ private:
     QAction* reloadAction_{nullptr};
     QAction* saveAsAction_{nullptr};
     QAction* undoAction_{nullptr};
+    QAction* strictAction_{nullptr};  // Bearbeiten > Strenge Eingänge (Issue #25)
     QAction* redoAction_{nullptr};
     QAction* runAction_{nullptr};
     QAction* sendAction_{nullptr};

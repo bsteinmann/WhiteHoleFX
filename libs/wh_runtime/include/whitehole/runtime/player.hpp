@@ -281,6 +281,10 @@ public:
     Result<void> removeLook(int index);
     Result<void> renameLook(int index, const std::string& name);
     Result<void> setLookFade(int index, double seconds);
+    /// Strenger Modus (Issue #25): an = unverbundene Blend-Eingänge sind Pflicht (LEDs aus), aus (Standard) = durchsichtiges
+    /// Schwarz. Ein Undo-Schritt; nicht im Live-Betrieb. Fehler: InvalidArgument (kein Projekt, Live aktiv).
+    Result<void> setStrictInputs(bool strict);
+    [[nodiscard]] bool strictInputs() const;
     /// Verschiebt einen Look in der Liste an die Stelle `to`.
     Result<void> moveLook(int from, int to);
     /// Ersetzt den Editor-Graphen durch den Look (ein Undo-Schritt), um ihn zu bearbeiten. Nicht im

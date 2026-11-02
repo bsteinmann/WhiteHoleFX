@@ -79,6 +79,12 @@ void MainWindow::buildActions() {
     QMenu* edit = menuBar()->addMenu(tr("&Bearbeiten"));
     edit->addAction(undoAction_);
     edit->addAction(redoAction_);
+    // Issue #25: Aus (Standard) gilt ein unverbundener Eingang von Blend-Nodes als durchsichtiges Schwarz.
+    strictAction_ = edit->addAction(tr("Strenge &Eingänge"));
+    strictAction_->setCheckable(true);
+    strictAction_->setToolTip(tr("An: Ein nicht angeschlossener Eingang von Blend, Mix, Crossfade, Add oder Mask lässt die "
+                                 "LEDs ausgehen. Aus: Er gilt als durchsichtiges Schwarz."));
+    connect(strictAction_, &QAction::toggled, this, [this](bool on) { onStrictInputs(on); });
 
     // Stage Config: einmal am Anfang einrichten (Fixtures, Patch, Testbilder), danach selten gebraucht.
     buildStageConfig(menuBar()->addMenu(tr("&Stage Config")));

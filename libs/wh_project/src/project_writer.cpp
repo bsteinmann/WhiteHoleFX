@@ -127,7 +127,8 @@ Result<std::string> writeProject(const Project& project) {
     out << "whitehole-project " << kFormatVersion << "\n\n";
     out << "settings fps " << formatDouble(project.framesPerSecond) << " normalize "
         << nameOf(detail::kNormalizeModes, project.normalize) << " sacn-priority "
-        << static_cast<unsigned>(project.sacnPriority) << " source-name " << quoteWord(project.sourceName) << "\n\n";
+        << static_cast<unsigned>(project.sacnPriority) << " source-name " << quoteWord(project.sourceName)
+        << (project.strictInputs ? " strict-inputs on" : "") << "\n\n";
 
     for (std::size_t i = 0; i < project.destinations.size(); ++i) {
         const output::Destination& d = project.destinations[i];

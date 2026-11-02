@@ -98,7 +98,7 @@ Result<std::string> describeNode(const graph::INodeRegistry& registry, std::stri
         out << "  " << (port.direction == graph::PortDirection::Input ? "Eingang " : "Ausgang ") << port.key << "  "
             << port.displayName << "  " << portTypeName(port.type);
         if (port.required) {
-            out << "  (Pflicht)";
+            out << (port.optionalWhenLenient ? "  (Pflicht nur im strengen Modus; sonst durchsichtiges Schwarz)" : "  (Pflicht)");
         }
         if (modulation) {
             out << "  (steuert den gleichnamigen Parameter)";

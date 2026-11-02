@@ -68,7 +68,14 @@ struct Project {
     std::string sourceName{"WhiteHoleFX"};
     std::uint8_t sacnPriority{100};
     double framesPerSecond{40.0};
+    /// Issue #25: Aus (Standard) gilt ein unverbundener Eingang von Blend, Mix, Crossfade, Add und Mask als durchsichtiges
+    /// Schwarz. An (Datei: `settings ... strict-inputs on`) ist er wie früher ein Pflicht-Eingang. Die Graphen (Haupt
+    /// und Looks) tragen dasselbe als Graph::strictInputs; applyStrictInputs() hält beides gleich.
+    bool strictInputs{false};
 };
+
+/// Setzt strictInputs im Projekt und in allen Graphen (Hauptgraph und Looks).
+void applyStrictInputs(Project& project, bool strict);
 
 /// Fehler: InvalidArgument mit "Zeile N: ..." in der Meldung; NotFound für unbekannte
 /// Node-Typen, Parameter und Ports; sonst die Fehler von Layout und Graph.

@@ -158,6 +158,12 @@ std::optional<Error> Parser::settings(Reader& r) {
             project_.sacnPriority = static_cast<std::uint8_t>(r.whole("Priorität", 200));
         } else if (key == "source-name") {
             project_.sourceName = r.word("Quellname");
+        } else if (key == "strict-inputs") {
+            const std::string value = r.word("on oder off");
+            if (r.ok() && value != "on" && value != "off") {
+                r.fail("strict-inputs muss on oder off sein, nicht \"" + value + "\"");
+            }
+            project_.strictInputs = value == "on";
         } else if (r.ok()) {
             r.fail("Unbekannte Einstellung \"" + key + "\"");
         }
@@ -410,10 +416,19 @@ Result<Project> Parser::finish() {
     if (const Result<void> cues = detail::checkCues(project_.cues, project_.looks); !cues.ok()) {
         return cues.error();
     }
+    applyStrictInputs(project_, project_.strictInputs);
     return std::move(project_);
 }
 
 }  // namespace
+
+void applyStrictInputs(Project& project, bool strict) {
+    project.strictInputs = strict;
+    project.graph.setStrictInputs(strict);
+    for (Look& look : project.looks) {
+        look.graph.setStrictInputs(strict);
+    }
+}
 
 Result<Project> parseProject(std::string_view text, std::shared_ptr<const graph::INodeRegistry> registry) {
     auto lines = detail::splitLines(text);

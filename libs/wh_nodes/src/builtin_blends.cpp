@@ -77,27 +77,27 @@ std::vector<compiler::NodeDefinition> blendNodes() {
     std::vector<compiler::NodeDefinition> nodes;
 
     nodes.push_back(fieldNode("wh.blend.mix", "Mix", "Blend",
-                              {fieldInput("a", "A"), fieldInput("b", "B"), fieldOutput()},
+                              {blendInput("a", "A"), blendInput("b", "B"), fieldOutput()},
                               {number("amount", "Amount", 0.5, 0.0, 1.0)}, kMixBody, kColorPrelude));
 
     nodes.push_back(fieldNode("wh.blend.add", "Add", "Blend",
-                              {fieldInput("a", "A"), fieldInput("b", "B"), fieldOutput()}, {},
+                              {blendInput("a", "A"), blendInput("b", "B"), fieldOutput()}, {},
                               kAddBody, kColorPrelude));
 
     nodes.push_back(fieldNode(
-        "wh.blend.blend", "Blend", "Blend", {fieldInput("a", "A (below)"), fieldInput("b", "B (above)"), fieldOutput()},
+        "wh.blend.blend", "Blend", "Blend", {blendInput("a", "A (below)"), blendInput("b", "B (above)"), fieldOutput()},
         {choice("mode", "Mode", {"Add", "Multiply", "Screen", "Subtract", "Difference", "Lighten", "Darken", "Over"}),
          number("amount", "Amount", 1.0, 0.0, 1.0)},
         kBlendBody, kColorPrelude));
 
     nodes.push_back(fieldNode("wh.blend.crossfade", "Crossfade", "Blend",
-                              {fieldInput("a", "A"), fieldInput("b", "B"), fieldOutput()},
+                              {blendInput("a", "A"), blendInput("b", "B"), fieldOutput()},
                               {choice("mode", "Mode", {"Linear", "Progressive"}),
                                number("amount", "Position", 0.5, 0.0, 1.0)},
                               kCrossfadeBody, kColorPrelude));
 
     nodes.push_back(fieldNode("wh.blend.mask", "Mask", "Blend",
-                              {fieldInput("content", "Content"), fieldInput("mask", "Mask"), fieldOutput()},
+                              {blendInput("content", "Content"), blendInput("mask", "Mask"), fieldOutput()},
                               {choice("mode", "Mode", {"Shape (hard edge)", "Intensity (keeps fades)"}, 1),
                                number("threshold", "Threshold", 0.05, 0.0, 1.0), number("softness", "Softness", 0.05, 0.0, 1.0),
                                toggle("invert", "Invert mask", false)},

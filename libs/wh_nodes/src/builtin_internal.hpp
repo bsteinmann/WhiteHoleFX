@@ -27,6 +27,14 @@ inline graph::PortDescriptor fieldInput(std::string key, std::string displayName
                                  graph::PortDirection::Input, true};
 }
 
+/// Eingang eines Nodes mit mehreren Eingängen (Issue #25): unverbunden gilt er als durchsichtiges Schwarz,
+/// außer das Projekt ist im strengen Modus.
+inline graph::PortDescriptor blendInput(std::string key, std::string displayName) {
+    graph::PortDescriptor port = fieldInput(std::move(key), std::move(displayName));
+    port.optionalWhenLenient = true;
+    return port;
+}
+
 // SplitMix64-artiger Hash auf [0,1): plattformunabhängig und ohne <random>.
 inline double hashToUnit(std::int64_t index, std::int64_t seed) {
     std::uint64_t x = static_cast<std::uint64_t>(index) * 0x9E3779B97F4A7C15ULL +

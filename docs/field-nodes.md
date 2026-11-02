@@ -142,6 +142,10 @@ Es gibt sieben Platzhalter:
 - Platzhalter dürfen verschachtelt werden: `@in(a, p + vec3<f32>(@param(shift), 0.0, 0.0))`.
 - Ein **nicht verbundener optionaler** Eingang liefert `vec4<f32>(0.0, 0.0, 0.0, 0.0)`.
   Ein nicht verbundener **Pflicht**-Eingang ist ein Kompilierfehler.
+- **Blend, Mix, Crossfade, Add und Mask** (Issue #25) haben mehrere Eingänge und gelten im Standard als nachsichtig: Ein
+  unverbundener Eingang liefert ebenfalls durchsichtiges Schwarz (bei Blend/Over bleibt dann A sichtbar). Mit
+  `settings ... strict-inputs on` (Studio: Bearbeiten → Strenge Eingänge) sind sie wieder Pflicht-Eingänge. Nodes mit nur einem
+  Eingang (Modifier, Transform, Key, Ausgang) bleiben immer streng, damit ein vergessenes Kabel auffällt.
 - Hängt an einem Field-Eingang ein `Scalar` oder eine `Color`, liefert `@in(...)` dessen
   Wert als konstantes Feld, an jeder Koordinate. Die Koordinate im Platzhalter wird dann
   ignoriert.

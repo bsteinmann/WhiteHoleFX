@@ -1,5 +1,12 @@
 # Änderungen
 
+## 0.37.0
+
+- **Fehlende Eingänge (#25):** Bei Blend, Mix, Crossfade, Add und Mask gilt ein unverbundener Eingang jetzt als durchsichtiges
+  Schwarz statt die Ausgabe zu sperren (bei Blend/Over bleibt A sichtbar, wenn B fehlt). Bearbeiten → Strenge Eingänge schaltet
+  das alte Verhalten wieder ein (`settings ... strict-inputs on`, ein Rückgängig-Schritt). Nodes mit nur einem Eingang bleiben streng.
+  Ältere Programme lehnen Dateien mit `strict-inputs` ab.
+
 ## 0.36.5
 
 - **Einfrieren (#26):** Der GPU-Start ist wieder genau wie vor 0.36.2: Ohne `WHITEHOLEFX_GPU_BACKEND` bekommt die Bibliothek keinen

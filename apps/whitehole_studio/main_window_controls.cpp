@@ -94,6 +94,18 @@ QString MainWindow::exerciseControls() {
         tick();  // mit Master und Blackout läuft die Ausgabe weiter
     }
     blackoutAction_->setChecked(false);
+    // Issue #25: "Strenge Eingänge" erreicht den Player und lässt sich wieder ausschalten.
+    if (strictAction_ == nullptr || !strictAction_->isEnabled()) {
+        return QStringLiteral("Strenge Eingänge: der Menüpunkt fehlt oder ist gesperrt");
+    }
+    strictAction_->trigger();
+    if (!player_->strictInputs() || !strictAction_->isChecked()) {
+        return QStringLiteral("Strenge Eingänge: der Schalter erreicht den Player nicht");
+    }
+    strictAction_->trigger();
+    if (player_->strictInputs() || strictAction_->isChecked()) {
+        return QStringLiteral("Strenge Eingänge: der Schalter lässt sich nicht ausschalten");
+    }
     masterSlider_->setValue(100);
     if (player_->blackout() || std::abs(player_->masterBrightness() - 1.0F) > 1e-4F) {
         return QStringLiteral("Master/Blackout: Zurücksetzen gescheitert");

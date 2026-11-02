@@ -109,7 +109,7 @@ bool Player::targetIncomplete() const {
             }
             const graph::Connection* connection = graph.findInputConnection(id, port.key);
             if (connection == nullptr) {
-                if (port.required) {
+                if (graph::isRequiredInput(port, graph.strictInputs())) {
                     return true;
                 }
                 continue;

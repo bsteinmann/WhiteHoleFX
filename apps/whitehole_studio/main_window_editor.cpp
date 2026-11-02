@@ -109,4 +109,12 @@ QString MainWindow::exercisePalette() {
     return problem();
 }
 
+void MainWindow::onStrictInputs(bool on) {
+    const Result<void> r = player_->setStrictInputs(on);
+    if (!r.ok()) {
+        reportError(tr("Strenge Eingänge"), r.error().message, false);
+    }
+    afterRestore();  // setzt auch den Haken im Menü auf den Stand des Players zurück, falls es nicht ging
+}
+
 }  // namespace whitehole::studio

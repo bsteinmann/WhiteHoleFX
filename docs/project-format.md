@@ -92,6 +92,7 @@ output b.out                          # dieser Ausgang wird auf die LEDs abgetas
 | `normalize stretch\|keep-aspect` | wie das Layout auf den Einheitswürfel abgebildet wird | stretch |
 | `sacn-priority <0..200>` | sACN-Priorität | 100 |
 | `source-name <text>` | Name der sACN-Quelle; aus ihm wird auch die stabile Sender-ID abgeleitet | WhiteHoleFX |
+| `strict-inputs on\|off` | `on`: ein unverbundener Eingang von Blend, Mix, Crossfade, Add oder Mask ist ein Fehler (LEDs aus); `off`: er gilt als durchsichtiges Schwarz | off |
 
 ### `destination <nummer> <adresse|multicast> [port]`
 

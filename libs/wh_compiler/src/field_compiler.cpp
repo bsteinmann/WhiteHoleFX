@@ -225,7 +225,7 @@ private:
                 continue;
             }
             if (connection == nullptr) {
-                if (port.required) {
+                if (graph::isRequiredInput(port, graph_.strictInputs())) {
                     return Error{ErrorCode::InvalidArgument,
                                  describe(node) + ": Pflicht-Eingang '" + port.key +
                                      "' ist nicht verbunden"};

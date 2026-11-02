@@ -263,6 +263,10 @@ Steckt ein gelöschter Node in einer Kette (A → X → B), verbindet der Editor
 Pflicht-Eingang (Kabel gelöscht oder getrennt), gehen die LEDs aus und die Statuszeile meldet „EINGANG FEHLT“; sie halten **nicht** das
 letzte Bild. Sobald der Graph vollständig ist, läuft der Effekt weiter.
 
+Ausnahme: Bei **Blend, Mix, Crossfade, Add und Mask** gilt ein unverbundener Eingang als durchsichtiges Schwarz, die LEDs
+bleiben also an (bei Blend/Over bleibt A sichtbar, wenn B fehlt). Wer das alte Verhalten will, schaltet unter **Bearbeiten →
+Strenge Eingänge** den strengen Modus ein; er wird mit dem Projekt gespeichert und ist ein Rückgängig-Schritt.
+
 ## Aufbau des Fensters
 
 - **Oben:** die Menüs Datei, Bearbeiten, Stage Config, Ansicht, Wiedergabe, Live und Hilfe (siehe unten), darunter die Leiste „Datei“

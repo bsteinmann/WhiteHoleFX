@@ -47,6 +47,9 @@ Result<void> Player::restored(const std::optional<graph::PortRef>& previousTarge
     graphDirty_ = true;
     modified_ = true;
     lastEditKey_.clear();
+    // Die Look-Liste gehört nicht zum Verlauf, der strenge Modus (Issue #25) schon: Looks angleichen.
+    project::applyStrictInputs(*project_, project_->strictInputs);
+    refreshCompleteness();
     if (previousTarget != project_->target) {
         rebuildDirty_ = true;
     }

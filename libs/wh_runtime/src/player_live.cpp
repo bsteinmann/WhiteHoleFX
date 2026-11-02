@@ -89,6 +89,27 @@ Result<void> Player::renameLook(int index, const std::string& name) {
     return {};
 }
 
+bool Player::strictInputs() const { return project_ && project_->strictInputs; }
+
+Result<void> Player::setStrictInputs(bool strict) {
+    if (!project_) {
+        return noProject();
+    }
+    if (live_) {
+        return Error{ErrorCode::InvalidArgument, "Im Live-Betrieb lässt sich der strenge Modus nicht ändern"};
+    }
+    if (project_->strictInputs == strict) {
+        return {};
+    }
+    std::optional<project::Project> before = beginEdit({});
+    project::applyStrictInputs(*project_, strict);
+    finishEdit(std::move(before), {}, true);
+    modified_ = true;
+    graphDirty_ = true;
+    refreshCompleteness();
+    return {};
+}
+
 Result<void> Player::setLookFade(int index, double seconds) {
     if (!project_) {
         return noProject();

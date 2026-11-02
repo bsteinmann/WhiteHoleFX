@@ -140,6 +140,11 @@ void MainWindow::updateActions() {
     runAction_->setText(s.running ? tr("&Stopp") : tr("&Start"));
     sendAction_->setChecked(gate_->enabled());
     updateUndoActions();
+    if (strictAction_ != nullptr) {
+        const QSignalBlocker block{strictAction_};
+        strictAction_->setChecked(player_->strictInputs());
+        strictAction_->setEnabled(s.loaded && !liveMode_);  // im Live-Betrieb ruht der Editor-Graph
+    }
 }
 
 void MainWindow::updateTitle() {

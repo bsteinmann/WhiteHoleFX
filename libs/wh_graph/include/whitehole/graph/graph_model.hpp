@@ -83,6 +83,11 @@ public:
     /// Dasselbe Verzeichnis als geteilter Zeiger (für Graphen, die dazu passen müssen, etwa die Looks).
     [[nodiscard]] std::shared_ptr<const INodeRegistry> registryPtr() const noexcept { return registry_; }
 
+    /// Strenger Modus (Issue #25): Aus (Standard) gilt ein unverbundener Eingang eines Blend-Nodes als durchsichtiges
+    /// Schwarz; an ist er wie früher ein Pflicht-Eingang. Gilt für Kompilierung und Vollständigkeitsprüfung.
+    void setStrictInputs(bool strict) noexcept { strictInputs_ = strict; }
+    [[nodiscard]] bool strictInputs() const noexcept { return strictInputs_; }
+
     [[nodiscard]] const std::vector<NodeInstance>& nodes() const noexcept { return nodes_; }
     [[nodiscard]] const std::vector<Connection>& connections() const noexcept {
         return connections_;
@@ -94,6 +99,7 @@ private:
     std::vector<Connection> connections_;
     IdGenerator<NodeId> nodeIds_;
     IdGenerator<ConnectionId> connectionIds_;
+    bool strictInputs_{false};
 };
 
 }  // namespace whitehole::graph

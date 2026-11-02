@@ -10,7 +10,7 @@ msgstr ""
 msgid "\nRechtsklick: Favorit umschalten"
 msgstr "\nClic droit : ajouter/retirer des favoris"
 
-#: main_window.cpp:271
+#: main_window.cpp:277
 msgid "   |   AUSGABE AN"
 msgstr "   |   SORTIE ACTIVE"
 
@@ -22,11 +22,11 @@ msgstr "   |   Nœuds audio dans le projet, entrée désactivée (Réglages)"
 msgid "   |   Audio: %1"
 msgstr "   |   Audio : %1"
 
-#: main_window.cpp:271
+#: main_window.cpp:277
 msgid "   |   Ausgabe aus (%1 Pakete nicht gesendet)"
 msgstr "   |   Sortie désactivée (%1 paquets non envoyés)"
 
-#: main_window.cpp:261
+#: main_window.cpp:267
 msgid "   |   BLACKOUT"
 msgstr "   |   BLACKOUT"
 
@@ -38,15 +38,15 @@ msgstr "   |   Entrée DMX %1 : %2 paquets"
 msgid "   |   DMX-Nodes im Projekt, Eingang aus (Einstellungen)"
 msgstr "   |   Nœuds DMX dans le projet, entrée désactivée (Réglages)"
 
-#: main_window.cpp:266
+#: main_window.cpp:272
 msgid "   |   EINGANG FEHLT – LEDs aus"
 msgstr "   |   ENTRÉE MANQUANTE – LED éteintes"
 
-#: main_window.cpp:263
+#: main_window.cpp:269
 msgid "   |   Master %1 %"
 msgstr "   |   Master %1 %"
 
-#: main_window.cpp:258
+#: main_window.cpp:264
 msgid "   |   TESTMODUS"
 msgstr "   |   MODE TEST"
 
@@ -70,7 +70,7 @@ msgstr " Master "
 msgid " Wechsel/s"
 msgstr " changements/s"
 
-#: cue_dialog.cpp:54 cue_dialog.cpp:74 cue_dialog.cpp:77
+#: cue_dialog.cpp:54 cue_dialog.cpp:75 cue_dialog.cpp:78
 msgid " s"
 msgstr " s"
 
@@ -86,7 +86,7 @@ msgstr "%1  →  %2"
 msgid "%1 %"
 msgstr "%1 %"
 
-#: main_window_help.cpp:106
+#: main_window_help.cpp:111
 msgid "%1 (%2)"
 msgstr "%1 (%2)"
 
@@ -102,11 +102,11 @@ msgstr "%1 (introuvable)"
 msgid "%1 LEDs · Größe %2 × %3 × %4 · %5 Kanäle (RGB), rund %6 Universe(s)"
 msgstr "%1 LED · taille %2 × %3 × %4 · %5 canaux (RVB), environ %6 univers"
 
-#: main_window.cpp:247
+#: main_window.cpp:253
 msgid "%1 LEDs, Frame %2 (verworfen %3), Pakete %4, Sendefehler %5"
 msgstr "%1 LED, image %2 (perdues %3), paquets %4, erreurs d'envoi %5"
 
-#: main_window.cpp:245
+#: main_window.cpp:251
 msgid "%1 LEDs, angehalten"
 msgstr "%1 LED, arrêté"
 
@@ -118,7 +118,7 @@ msgstr "&2D (éditer)"
 msgid "&3D"
 msgstr "&3D"
 
-#: main_window_actions.cpp:86
+#: main_window_actions.cpp:92
 msgid "&Ansicht"
 msgstr "&Affichage"
 
@@ -146,7 +146,7 @@ msgstr "&Blackout"
 msgid "&Datei"
 msgstr "&Fichier"
 
-#: main_window_help.cpp:31
+#: main_window_help.cpp:32
 msgid "&Dokumentation"
 msgstr "&Documentation"
 
@@ -154,11 +154,11 @@ msgstr "&Documentation"
 msgid "&Einstellungen …"
 msgstr "&Réglages …"
 
-#: main_window_help.cpp:40
+#: main_window_help.cpp:41
 msgid "&Fehler melden oder Idee vorschlagen …"
 msgstr "&Signaler un bogue ou proposer une idée …"
 
-#: main_window_actions.cpp:101
+#: main_window_actions.cpp:107
 msgid "&Hilfe"
 msgstr "&Aide"
 
@@ -170,7 +170,7 @@ msgstr "&Disposition et patch …"
 msgid "&Leuchten (additiv)"
 msgstr "&Halo (additif)"
 
-#: main_window_actions.cpp:97
+#: main_window_actions.cpp:103
 msgid "&Live"
 msgstr "&Live"
 
@@ -198,19 +198,19 @@ msgstr "&Annuler"
 msgid "&Speichern"
 msgstr "Enregi&strer"
 
-#: main_window_actions.cpp:84
+#: main_window_actions.cpp:90
 msgid "&Stage Config"
 msgstr "&Stage Config"
 
-#: main_window.cpp:139 main_window_actions.cpp:54
+#: main_window.cpp:140 main_window_actions.cpp:54
 msgid "&Start"
 msgstr "&Démarrer"
 
-#: main_window.cpp:139
+#: main_window.cpp:140
 msgid "&Stopp"
 msgstr "&Arrêter"
 
-#: main_window_help.cpp:44
+#: main_window_help.cpp:45
 msgid "&Tastenkürzel …"
 msgstr "&Raccourcis clavier …"
 
@@ -218,11 +218,11 @@ msgstr "&Raccourcis clavier …"
 msgid "&Testmodus …"
 msgstr "Mode &test …"
 
-#: main_window_help.cpp:36
+#: main_window_help.cpp:37
 msgid "&Tutorial …"
 msgstr "&Tutoriel …"
 
-#: main_window_actions.cpp:93
+#: main_window_actions.cpp:99
 msgid "&Wiedergabe"
 msgstr "&Lecture"
 
@@ -238,7 +238,7 @@ msgstr "Fichiers &récents"
 msgid "&Öffnen …"
 msgstr "&Ouvrir …"
 
-#: main_window_help.cpp:48
+#: main_window_help.cpp:49
 msgid "&Über WhiteHoleFX"
 msgstr "À &propos de WhiteHoleFX"
 
@@ -254,7 +254,7 @@ msgstr "(aucun look)"
 msgid "(keine Presets)"
 msgstr "(aucun préréglage)"
 
-#: main_window_controls.cpp:138
+#: main_window_controls.cpp:150
 msgid "(leer)"
 msgstr "(vide)"
 
@@ -270,7 +270,7 @@ msgstr ", niveau %1 %"
 msgid "100 %"
 msgstr "100 %"
 
-#: main_window_actions.cpp:149
+#: main_window_actions.cpp:155
 msgid "3D"
 msgstr "3D"
 
@@ -330,7 +330,7 @@ msgstr "<b>Nuage de points</b> : %1 points, modifiable seulement dans le fichier
 msgid "<b>Strip</b>"
 msgstr "<b>Strip</b>"
 
-#: main_window_help.cpp:94
+#: main_window_help.cpp:95
 msgid "<b>WhiteHoleFX Studio</b> %1<br><br>Steuerung für LED-Matrizen, Cubes und Pixel mit einem Node-Editor.<br>Lizenz: PolyForm Shield 1.0.0<br><br><a href=\"%2\">%2</a>"
 msgstr "<b>WhiteHoleFX Studio</b> %1<br><br>Pilotage de matrices LED, de cubes et de pixels avec un éditeur de nœuds.<br>Licence : PolyForm Shield 1.0.0<br><br><a href=\"%2\">%2</a>"
 
@@ -358,7 +358,7 @@ msgstr "Toutes les LED éteintes ; les paquets continuent (Ctrl+B)"
 msgid "Alle Standardwerte zurücksetzen"
 msgstr "Réinitialiser toutes les valeurs par défaut"
 
-#: main_window_help.cpp:45
+#: main_window_help.cpp:46
 msgid "Alle Tastenkürzel in einer Liste"
 msgstr "Tous les raccourcis clavier dans une liste"
 
@@ -377,6 +377,10 @@ msgstr "Enregistrer comme préréglage"
 #: node_editor_menu.cpp:67
 msgid "Als Preset speichern …"
 msgstr "Enregistrer comme préréglage …"
+
+#: main_window_actions.cpp:85
+msgid "An: Ein nicht angeschlossener Eingang von Blend, Mix, Crossfade, Add oder Mask lässt die LEDs ausgehen. Aus: Er gilt als durchsichtiges Schwarz."
+msgstr "Activé : une entrée non connectée de Blend, Mix, Crossfade, Add ou Mask éteint les LED. Désactivé : elle compte comme du noir transparent."
 
 #: add_fixture_dialog.cpp:125
 msgid "Anfang und Ende relativ zur Position; die erste LED sitzt am Anfang."
@@ -406,7 +410,7 @@ msgstr "Nombre y"
 msgid "Anzahl z"
 msgstr "Nombre z"
 
-#: cue_dialog.cpp:63 cue_panel.cpp:39 main_window_dmx.cpp:109
+#: cue_dialog.cpp:64 cue_panel.cpp:39 main_window_dmx.cpp:109
 msgid "Art-Net"
 msgstr "Art-Net"
 
@@ -422,7 +426,7 @@ msgstr "Art-Net, sACN et DDP sortent par cette carte. Avec « Automatique », la
 msgid "Art-Net-Port (UDP):"
 msgstr "Port Art-Net (UDP) :"
 
-#: main_window_actions.cpp:146 settings_dialog.cpp:61
+#: main_window_actions.cpp:152 settings_dialog.cpp:61
 msgid "Audio"
 msgstr "Audio"
 
@@ -506,7 +510,7 @@ msgstr "Modifier …"
 msgid "Bereit: %1 - GO drücken"
 msgstr "Prêt : %1 - appuyer sur GO"
 
-#: main_window_actions.cpp:112
+#: main_window_actions.cpp:118
 msgid "Betrieb"
 msgstr "Fonctionnement"
 
@@ -558,19 +562,19 @@ msgstr "Décalage DDP (octets)"
 msgid "DMX %1 U%2 K%3 ab %4"
 msgstr "DMX %1 U%2 C%3 dès %4"
 
-#: cue_dialog.cpp:70
+#: cue_dialog.cpp:71
 msgid "DMX-Auslöser: Kanal"
 msgstr "Déclencheur DMX : canal"
 
-#: cue_dialog.cpp:68
+#: cue_dialog.cpp:69
 msgid "DMX-Auslöser: Protokoll"
 msgstr "Déclencheur DMX : protocole"
 
-#: cue_dialog.cpp:71
+#: cue_dialog.cpp:72
 msgid "DMX-Auslöser: Schwelle (1 bis 255)"
 msgstr "Déclencheur DMX : seuil (1 à 255)"
 
-#: cue_dialog.cpp:69
+#: cue_dialog.cpp:70
 msgid "DMX-Auslöser: Universe"
 msgstr "Déclencheur DMX : univers"
 
@@ -590,7 +594,7 @@ msgstr "Canal DMX"
 msgid "Das Kabel beginnt an dieser Seite statt an der gegenüberliegenden"
 msgstr "Le câble commence de ce côté plutôt que du côté opposé"
 
-#: main_window.cpp:194
+#: main_window.cpp:200
 msgid "Das Projekt wurde geändert. Änderungen verwerfen?"
 msgstr "Le projet a été modifié. Abandonner les modifications ?"
 
@@ -598,15 +602,15 @@ msgstr "Le projet a été modifié. Abandonner les modifications ?"
 msgid "Das Testbild ersetzt den Effekt in der Vorschau und, wenn „Ausgabe senden“ an ist, auch auf den LEDs. Es wird nicht im Projekt gespeichert.\n\nAchtung: Weiß und Farbe leuchten mit voller Helligkeit. Prüfe vorher, ob die Netzteile die ganze Wand auf 100 % tragen."
 msgstr "La mire remplace l'effet dans l'aperçu et, si « Envoyer la sortie » est activé, aussi sur les LED. Elle n'est pas enregistrée dans le projet.\n\nAttention : le blanc et la couleur s'allument à pleine luminosité. Vérifiez d'abord que les alimentations supportent tout le mur à 100 %."
 
-#: main_window_actions.cpp:104
+#: main_window_actions.cpp:110
 msgid "Datei"
 msgstr "Fichier"
 
-#: cue_dialog.cpp:78
+#: cue_dialog.cpp:79
 msgid "Dauer der Überblendung; der vorige Look blendet im selben Zug aus"
 msgstr "Durée du fondu enchaîné ; le look précédent disparaît en même temps"
 
-#: cue_dialog.cpp:79 cue_panel.cpp:53
+#: cue_dialog.cpp:80 cue_panel.cpp:53
 msgid "Delay"
 msgstr "Délai"
 
@@ -622,7 +626,7 @@ msgstr "Supprimer le look « %1 » ?"
 msgid "Den aktuellen Effekt als Look in die Liste legen (Strg+L)"
 msgstr "Ajouter l'effet actuel à la liste comme look (Ctrl+L)"
 
-#: cue_dialog.cpp:67
+#: cue_dialog.cpp:68
 msgid "Der Cue löst aus, wenn der Kanalwert auf diese Zahl oder darüber steigt"
 msgstr "Le cue se déclenche quand la valeur du canal monte à ce nombre ou plus"
 
@@ -634,7 +638,7 @@ msgstr "La valeur du canal de 0 à 255 règle le master de 0 à 100 %. Tant que 
 msgid "Der Master kommt gerade vom DMX-Kanal (Einstellungen → DMX-Eingang)"
 msgstr "Le master vient actuellement du canal DMX (Réglages → Entrée DMX)"
 
-#: main_window_help.cpp:33
+#: main_window_help.cpp:34
 msgid "Die Anleitung im Browser öffnen"
 msgstr "Ouvrir le manuel dans le navigateur"
 
@@ -674,11 +678,11 @@ msgstr "La nouvelle langue s'applique après le redémarrage de WhiteHoleFX. Red
 msgid "Die Änderung wirkt sofort nach „OK“."
 msgstr "La modification prend effet immédiatement après « OK »."
 
-#: main_window.cpp:171
+#: main_window.cpp:177
 msgid "Dieser Node hat keine einstellbaren Parameter."
 msgstr "Ce nœud n'a pas de paramètres réglables."
 
-#: main.cpp:75
+#: main.cpp:79
 msgid "Dieses Programm wurde ohne GPU-Backend gebaut (-DWHITEHOLEFX_WEBGPU=ON); es zeigt nur das Layout."
 msgstr "Ce programme a été compilé sans le backend GPU (-DWHITEHOLEFX_WEBGPU=ON) ; il n'affiche que la disposition."
 
@@ -690,7 +694,7 @@ msgstr "Ce projet n'a pas de paramètres réglables."
 msgid "Duplizieren\tStrg+D"
 msgstr "Dupliquer\tCtrl+D"
 
-#: main_window_actions.cpp:143
+#: main_window_actions.cpp:149
 msgid "Effekte (2D)"
 msgstr "Effets (2D)"
 
@@ -706,7 +710,7 @@ msgstr "Un clic ne fait que précharger le look. GO (barre d'espace) lance ensui
 msgid "Ein Look ist ein fertiger Effekt (vom Generator bis zum Ausgang). Speichere deine Effekte hier und rufe sie im Live-Modus mit einem Klick ab."
 msgstr "Un look est un effet complet (du générateur à la sortie). Enregistrez vos effets ici et rappelez-les en mode live d'un clic."
 
-#: main_window_help.cpp:37
+#: main_window_help.cpp:38
 msgid "Eine Einführung in die Bedienung, in der gewählten Sprache"
 msgstr "Une introduction à l'utilisation, dans la langue choisie"
 
@@ -718,7 +722,7 @@ msgstr "Coller\tCtrl+V"
 msgid "Einstellungen"
 msgstr "Réglages"
 
-#: main_window_actions.cpp:140
+#: main_window_actions.cpp:146
 msgid "Einstieg"
 msgstr "Premiers pas"
 
@@ -754,7 +758,7 @@ msgstr "Un look « %1 » existe déjà. L'écraser avec l'effet actuel ?"
 msgid "Es ist kein Projekt geladen. Mit Strg+N ein neues anlegen oder mit Strg+O eins öffnen."
 msgstr "Aucun projet n'est chargé. Créez-en un avec Ctrl+N ou ouvrez-en un avec Ctrl+O."
 
-#: cue_dialog.cpp:80 cue_panel.cpp:53
+#: cue_dialog.cpp:81 cue_panel.cpp:53
 msgid "Fade"
 msgstr "Fondu"
 
@@ -794,7 +798,7 @@ msgstr "Disposer les fixtures, régler univers et destinations (fenêtre sépar�
 msgid "Form"
 msgstr "Forme"
 
-#: main_window.cpp:310
+#: main_window.cpp:316
 msgid "Frame"
 msgstr "Image"
 
@@ -898,11 +902,11 @@ msgstr "Carte pour l'envoi :"
 msgid "Kein Fixture ausgewählt."
 msgstr "Aucun fixture sélectionné."
 
-#: main.cpp:72
+#: main.cpp:76
 msgid "Kein GPU-Adapter: %1"
 msgstr "Aucun adaptateur GPU : %1"
 
-#: main_window.cpp:243
+#: main_window.cpp:249
 msgid "Kein Projekt"
 msgstr "Aucun projet"
 
@@ -942,7 +946,7 @@ msgstr "LED en largeur × hauteur"
 msgid "LEDs x y z"
 msgstr "LED x y z"
 
-#: main_window.cpp:255
+#: main_window.cpp:261
 msgid "LIVE   |   "
 msgstr "LIVE   |   "
 
@@ -974,7 +978,7 @@ msgstr "LED lumineuses avec un halo doux, les couleurs s'additionnent ; rien n'e
 msgid "Linke Kanten ausrichten"
 msgstr "Aligner les bords gauches"
 
-#: main_window_controls.cpp:142
+#: main_window_controls.cpp:154
 msgid "Liste leeren"
 msgstr "Vider la liste"
 
@@ -1122,7 +1126,7 @@ msgstr "Nouveau projet"
 msgid "Neues Projekt (Strg+N)"
 msgstr "Nouveau projet (Ctrl+N)"
 
-#: main_window.cpp:121
+#: main_window.cpp:122
 msgid "Neues Projekt (Strg+N), Projekt öffnen (Strg+O) oder eine .whfx-Datei hierher ziehen.\n\n%1"
 msgstr "Nouveau projet (Ctrl+N), ouvrir un projet (Ctrl+O) ou glisser un fichier .whfx ici.\n\n%1"
 
@@ -1198,7 +1202,7 @@ msgstr "Sans coche, le câble commence à gauche, en bas, à l'arrière. x vers 
 msgid "Pakete (Art-Net, sACN, DDP) wirklich ins Netz schicken"
 msgstr "Envoyer réellement les paquets (Art-Net, sACN, DDP) sur le réseau"
 
-#: main_window.cpp:85
+#: main_window.cpp:86
 msgid "Parameter"
 msgstr "Paramètres"
 
@@ -1206,7 +1210,7 @@ msgstr "Paramètres"
 msgid "Patch (Ausgabe)"
 msgstr "Patch (sortie)"
 
-#: cue_dialog.cpp:75
+#: cue_dialog.cpp:76
 msgid "Pause zwischen Auslöser und Beginn der Überblendung"
 msgstr "Pause entre le déclencheur et le début du fondu"
 
@@ -1358,7 +1362,7 @@ msgstr "Stage Config"
 msgid "Standardgerät des Systems"
 msgstr "Périphérique par défaut du système"
 
-#: cue_panel.cpp:67 cue_panel.cpp:144 main_window.cpp:289
+#: cue_panel.cpp:67 cue_panel.cpp:144 main_window.cpp:295
 msgid "Start"
 msgstr "Démarrer"
 
@@ -1369,6 +1373,14 @@ msgstr "Au lieu de la durée enregistrée avec le look"
 #: cue_panel.cpp:144
 msgid "Stopp"
 msgstr "Stop"
+
+#: main_window_actions.cpp:83
+msgid "Strenge &Eingänge"
+msgstr "Entrées &strictes"
+
+#: main_window_editor.cpp:115
+msgid "Strenge Eingänge"
+msgstr "Entrées strictes"
 
 #: layout_panel_add.cpp:37 layout_panel_add.cpp:119
 msgid "Strip"
@@ -1390,15 +1402,15 @@ msgstr "Touche"
 msgid "Taste %1"
 msgstr "Touche %1"
 
-#: cue_dialog.cpp:59
+#: cue_dialog.cpp:60
 msgid "Taste drücken, die den Cue auslösen soll"
 msgstr "Appuyez sur la touche qui doit déclencher le cue"
 
-#: cue_dialog.cpp:61
+#: cue_dialog.cpp:62
 msgid "Tasten-Auslöser: Taste"
 msgstr "Déclencheur touche : touche"
 
-#: main_window_help.cpp:87
+#: main_window_help.cpp:88
 msgid "Tastenkürzel"
 msgstr "Raccourcis clavier"
 
@@ -1430,7 +1442,7 @@ msgstr "Tutoriel"
 msgid "Umbenennen …"
 msgstr "Renommer …"
 
-#: main_window.cpp:193
+#: main_window.cpp:199
 msgid "Ungespeicherte Änderungen"
 msgstr "Modifications non enregistrées"
 
@@ -1490,11 +1502,11 @@ msgstr "Attente après la fin du fondu précédent"
 msgid "Weiß"
 msgstr "Blanc"
 
-#: main_window.cpp:113 main_window.cpp:147
+#: main_window.cpp:114 main_window.cpp:153
 msgid "WhiteHoleFX"
 msgstr "WhiteHoleFX"
 
-#: main_window.cpp:151
+#: main_window.cpp:157
 msgid "WhiteHoleFX – %1%2"
 msgstr "WhiteHoleFX – %1%2"
 
@@ -1606,7 +1618,7 @@ msgstr "en haut à droite"
 msgid "rechts (x max)"
 msgstr "droite (x max)"
 
-#: cue_dialog.cpp:63 cue_panel.cpp:39 main_window_dmx.cpp:112
+#: cue_dialog.cpp:64 cue_panel.cpp:39 main_window_dmx.cpp:112
 msgid "sACN"
 msgstr "sACN"
 
@@ -1626,7 +1638,7 @@ msgstr "Priorité sACN"
 msgid "strecken (Stretch)"
 msgstr "étirer (Stretch)"
 
-#: main_window.cpp:150
+#: main_window.cpp:156
 msgid "unbenannt"
 msgstr "sans titre"
 
@@ -1658,11 +1670,11 @@ msgstr "inverser y (y pointe vers le bas dans le fichier)"
 msgid "z (Tiefe)"
 msgstr "z (profondeur)"
 
-#: main_window_help.cpp:41
+#: main_window_help.cpp:42
 msgid "Öffnet GitHub: ein neues Issue anlegen"
 msgstr "Ouvre GitHub : créer un nouveau ticket"
 
-#: main_window_help.cpp:97
+#: main_window_help.cpp:102
 msgid "Über WhiteHoleFX"
 msgstr "À propos de WhiteHoleFX"
 
