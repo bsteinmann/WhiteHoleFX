@@ -42,6 +42,22 @@ TEST_CASE("Metaballs, Starfield, Fading Pixels, Expanding Shapes und Sine Lines"
         const Pixels image = render(*device, lab, fading, 8, 8, 2.0);
         CHECK(closeTo(image.at(3, 3)[3], 0.0F));
     }
+    {  // Random Pixels: Dichte 0 = nichts, Dichte 1 mit Blink = jedes Pixel (4 x 4 Zellen = 4 x 4 Bildpunkte)
+        Lab lab;
+        const NodeId pixels = lab.add("wh.generator.randompixels");
+        lab.set(pixels, "columns", std::int64_t{4});
+        lab.set(pixels, "rows", std::int64_t{4});
+        lab.set(pixels, "density", 0.0);
+        const Pixels none = render(*device, lab, pixels, 4, 4, 1.3);
+        lab.set(pixels, "density", 1.0);
+        const Pixels all = render(*device, lab, pixels, 4, 4, 1.3);
+        for (std::uint32_t y = 0; y < 4; ++y) {
+            for (std::uint32_t x = 0; x < 4; ++x) {
+                CHECK(closeTo(none.at(x, y)[3], 0.0F));
+                CHECK(closeTo(all.at(x, y)[3], 1.0F));
+            }
+        }
+    }
     {  // Expanding Shapes: Quadrat und Raute unterscheiden sich an einer Ecke; Mitte ist ein Ring
         Lab lab;
         const NodeId shapes = lab.add("wh.generator.shapes");

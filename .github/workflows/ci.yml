@@ -183,7 +183,11 @@ jobs:
           run_studio examples/einstieg/wand.whfx --grab fenster-layout.png
           run_studio examples/einstieg/wand.whfx --run --software --frames 40 --grab fenster-lauf.png
           run_studio examples/einstieg/regler.whfx --run --software --frames 40 --exercise --grab fenster-regler.png
-          test -s fenster-layout.png && test -s fenster-lauf.png && test -s fenster-regler.png || fail=1
+          run_studio examples/effekte/laufschrift.whfx --run --software --frames 200 --grab fenster-text.png
+          test -s fenster-layout.png && test -s fenster-lauf.png && test -s fenster-regler.png && test -s fenster-text.png || fail=1
+          # Issue 13: Die Schrift muss im fertigen Fensterbild zu sehen sein.
+          PIP_BREAK_SYSTEM_PACKAGES=1 python3 -m pip install --quiet pillow
+          python3 scripts/check_text_pixels.py fenster-text.png || fail=1
           exit $fail
       - name: Fensterbilder bereitstellen
         uses: actions/upload-artifact@v4
@@ -193,6 +197,7 @@ jobs:
             fenster-layout.png
             fenster-lauf.png
             fenster-regler.png
+            fenster-text.png
 
   windows-studio:
     name: Windows Oberfläche (Qt 6, MSVC, fertiges Paket als Artefakt, experimentell)

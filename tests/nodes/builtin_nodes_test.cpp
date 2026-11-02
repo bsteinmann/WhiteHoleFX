@@ -60,7 +60,7 @@ TEST_CASE("Built-ins: alle Nodes werden samt Snippet beziehungsweise Kernel regi
         "wh.modifier.strobe", "wh.modifier.outline", "wh.output.canvas", "wh.transform.slide", "wh.transform.tile",
         "wh.transform.pixelate", "wh.generator.solid", "wh.generator.scan", "wh.generator.ripples", "wh.generator.fire",
         "wh.blend.add", "wh.generator.metaballs", "wh.generator.starfield", "wh.generator.fading",
-        "wh.generator.shapes", "wh.generator.sinelines", "wh.generator.spectrum",
+        "wh.generator.shapes", "wh.generator.sinelines", "wh.generator.spectrum", "wh.generator.randompixels",
         "wh.generator.lightning", "wh.generator.particles", "wh.generator.scope", "wh.generator.text",
         "wh.transform.kaleidoscope", "wh.transform.tunnel", "wh.transform.vortex", "wh.modifier.colormap",
         "wh.generator.box", "wh.generator.helix", "wh.generator.position", "wh.transform.twist"};

@@ -1,5 +1,12 @@
 # Änderungen
 
+## 0.36.0
+
+- **Random Pixels (#24):** Neuer Generator `wh.generator.randompixels`: leuchtet zufällige Pixel auf, ein Feld je LED
+  (`columns` x `rows`, Standard 32 x 16), Dichte, Takt, Blink oder Fade, Farbe zwischen A und B.
+- **Text (#13):** Die CI prüft jetzt das fertige Fensterbild der Laufschrift (`scripts/check_text_pixels.py`), nicht nur
+  die Session. So zeigt sich, ob die Schrift auf dem Weg Player, Vorschau, Zeichnen verloren geht.
+
 ## 0.35.0
 
 - **Cuelist (#21):** Looks in fester Reihenfolge mit Auslöser (GO, Zeit, Taste, DMX, Audio-Beat), Delay und Überblendzeit.

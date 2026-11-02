@@ -1,4 +1,4 @@
-// Formen und Muster: Metaballs, Sternenhimmel, Funkeln, wachsende Formen, Sinuslinien.
+// Formen und Muster: Metaballs, Sternenhimmel, Funkeln, Zufallspixel, wachsende Formen, Sinuslinien.
 //
 // Warum eine eigene Datei: builtin_generators.cpp enthält die Grundgeneratoren (Verlauf, Rauschen,
 // Plasma ...) und bleibt damit kurz genug. Alle Nodes hier sind zustandslos: Das Bild hängt nur
@@ -85,6 +85,25 @@ let fade = pow(1.0 - age, max(@param(sharpness), 0.1));
 let col = mix(@param(colorA), @param(colorB), h1);
 return vec4<f32>(col.rgb, col.a * fade * select(0.0, 1.0, lit));)wgsl";
 
+// Zufallspixel (Issue #24): Das Raster hat `columns` x `rows` Zellen und passt damit zu einer Wand (Standard 32 x 16,
+// ein Feld je LED). Jedes Pixel hat einen eigenen Takt von `rate` Schritten pro Sekunde; in jedem Schritt leuchtet es
+// mit der Wahrscheinlichkeit `density` auf, in der Farbe zwischen A und B nach Zufall. Blink schaltet hart an und aus,
+// Fade lässt es über den Schritt abklingen. Der Rest ist durchsichtig. Schritte werden mit 997 abgeschnitten, damit der
+// Hash nach Tagen Laufzeit nicht an Float-Genauigkeit verliert.
+constexpr const char* kRandomPixelsBody = R"wgsl(let cols = max(floor(@param(columns)), 1.0);
+let rows = max(floor(@param(rows)), 1.0);
+let cell = min(floor(vec2<f32>(p.x * cols, p.y * rows)), vec2<f32>(cols - 1.0, rows - 1.0));
+let phase = wh_cell_hash(cell + vec2<f32>(13.0, 7.0));
+let t = @time * max(@param(rate), 0.0) + phase;
+let whole = floor(t);
+let step = whole - 997.0 * floor(whole / 997.0);
+let lit = wh_cell_hash(cell + vec2<f32>(step * 7.13, step * 3.71)) < @param(density);
+let age = fract(t);
+let level = select(1.0, 1.0 - age, @param(mode) > 0.5);
+let pick = wh_cell_hash(cell + vec2<f32>(step * 5.31 + 3.0, step * 2.17 + 41.0));
+let col = mix(@param(colorA), @param(colorB), pick);
+return vec4<f32>(col.rgb, col.a * level * select(0.0, 1.0, lit));)wgsl";
+
 // Wachsende Formen: Kreise, Quadrate oder Rauten, die von einem Punkt nach außen laufen. Der Abstand d
 // ist je nach Form euklidisch, Maximum oder Summe der Beträge; die Ringe liegen im Abstand `spacing`
 // und wandern mit `speed` (negativ: nach innen). `fade` lässt sie nach außen verblassen.
@@ -160,6 +179,15 @@ std::vector<compiler::NodeDefinition> shapeNodes() {
          color("colorB", "Color B", ColorRgba{0.2F, 0.5F, 1.0F, 1.0F}),
          choice("space", "Space", {"Flat (x/y)", "Volume (x/y/z)"})},
         kFadingBody, kCellHashPrelude));
+
+    nodes.push_back(fieldNode(
+        "wh.generator.randompixels", "Random Pixels", "Generators", {fieldOutput()},
+        {integer("columns", "Columns (LEDs across)", 32, 1, 512), integer("rows", "Rows (LEDs high)", 16, 1, 512),
+         number("density", "Density (share lit)", 0.15, 0.0, 1.0), number("rate", "Steps per second", 4.0, 0.0, 60.0),
+         choice("mode", "Mode", {"Blink", "Fade"}),
+         color("colorA", "Color A", ColorRgba{1.0F, 1.0F, 1.0F, 1.0F}),
+         color("colorB", "Color B", ColorRgba{0.3F, 0.7F, 1.0F, 1.0F})},
+        kRandomPixelsBody, kCellHashPrelude));
 
     nodes.push_back(fieldNode(
         "wh.generator.shapes", "Expanding Shapes", "Generators", {fieldOutput()},
