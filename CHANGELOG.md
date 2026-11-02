@@ -1,5 +1,10 @@
 # Änderungen
 
+## 0.36.1
+
+- **GPU-Adapter sichtbar (#13):** Studio (Hilfe → Über und Terminal) und `whitehole_cli` zeigen, auf welchem Adapter gerechnet
+  wird. Bei Fehlern, die nur auf echter Hardware auftreten (Schrift fehlt), ist das der erste Hinweis.
+
 ## 0.36.0
 
 - **Random Pixels (#24):** Neuer Generator `wh.generator.randompixels`: leuchtet zufällige Pixel auf, ein Feld je LED

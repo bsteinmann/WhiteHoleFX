@@ -116,6 +116,7 @@ int run(const project::Project& project, const nodes::BuiltinLibrary& library, c
     if (!device.ok()) {
         return fail(device.error());
     }
+    std::cerr << "GPU-Adapter: " << device.value()->adapterName() << (gpuOptions.forceFallbackAdapter ? " (Software)" : "") << "\n";
     auto sender = output::UdpSender::create();
     if (!sender.ok()) {
         return fail(sender.error());

@@ -67,6 +67,10 @@ int main(int argc, char** argv) {
         created = gpu::WebGpuDevice::create(gpuOptions);
     }
     if (created.ok()) {
+        // Issue #13: Bei Fehlern, die nur auf echter Hardware auftreten, zählt, welcher Adapter rechnet.
+        const std::string adapter = created.value()->adapterName();
+        std::fprintf(stderr, "GPU-Adapter: %s%s\n", adapter.c_str(), gpuOptions.forceFallbackAdapter ? " (Software)" : "");
+        app.setProperty("whfxGpuAdapter", QString::fromUtf8(adapter.c_str()));
         device = std::move(created).value();
     } else {
         note = QObject::tr("Kein GPU-Adapter: %1").arg(QString::fromUtf8(created.error().message.c_str()));

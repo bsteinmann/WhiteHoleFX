@@ -3,6 +3,7 @@
 // Warum eine eigene Datei: Das Menü gehört zu keinem Arbeitsbereich, und die Kürzelliste soll nicht von Hand gepflegt
 // werden: Sie wird aus den Aktionen des Fensters gelesen und kann deshalb nie vom Menü abweichen.
 #include <QAction>
+#include <QApplication>
 #include <QDesktopServices>
 #include <QKeySequence>
 #include <QMenu>
@@ -90,10 +91,14 @@ void MainWindow::showShortcuts() {
 }
 
 void MainWindow::showAbout() {
-    const QString text =
+    QString text =
         tr("<b>WhiteHoleFX Studio</b> %1<br><br>Steuerung für LED-Matrizen, Cubes und Pixel mit einem Node-Editor.<br>"
            "Lizenz: PolyForm Shield 1.0.0<br><br><a href=\"%2\">%2</a>")
             .arg(QStringLiteral(WH_VERSION), QString::fromLatin1(kRepoUrl));
+    const QString adapter = QApplication::instance()->property("whfxGpuAdapter").toString();
+    if (!adapter.isEmpty()) {
+        text += QStringLiteral("<br><br>GPU: ") + adapter.toHtmlEscaped();  // hilft bei Fehlern, die nur auf echter Hardware auftreten
+    }
     QMessageBox::about(this, tr("Über WhiteHoleFX"), text);
 }
 
