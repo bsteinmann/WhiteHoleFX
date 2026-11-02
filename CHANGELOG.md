@@ -1,5 +1,10 @@
 # Änderungen
 
+## 0.37.1
+
+- **Fehlersuche Einfrieren (#26):** Im Terminal meldet das Studio jetzt, wenn die Hauptschleife länger als 0,5 s stand, ein Frame
+  länger als 0,25 s dauerte (getrennt nach Player und Bild/Panels) oder der Grafiktreiber länger als 0,3 s für einen Shader brauchte.
+
 ## 0.37.0
 
 - **Fehlende Eingänge (#25):** Bei Blend, Mix, Crossfade, Add und Mask gilt ein unverbundener Eingang jetzt als durchsichtiges

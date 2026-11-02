@@ -27,6 +27,8 @@
 #include <QUrl>
 
 #include <algorithm>
+#include <cstdio>
+#include <chrono>
 #include <cmath>
 #include <filesystem>
 
@@ -310,7 +312,16 @@ void MainWindow::stopPlayback() {
 }
 
 void MainWindow::tick() {
+    // Fehlersuche (Issue #26): Wer das Studio im Terminal startet, sieht, wenn die Hauptschleife stand oder ein Schritt lange dauerte.
+    using Clock = std::chrono::steady_clock;
+    static Clock::time_point lastTick{};
+    const Clock::time_point begin = Clock::now();
+    const auto ms = [](Clock::duration d) { return std::chrono::duration_cast<std::chrono::milliseconds>(d).count(); };
+    if (lastTick != Clock::time_point{} && ms(begin - lastTick) > 500) {
+        std::fprintf(stderr, "Hauptschleife stand %lld ms (zwischen zwei Frames)\n", static_cast<long long>(ms(begin - lastTick)));
+    }
     const Result<void> r = player_->step();
+    const Clock::time_point stepped = Clock::now();
     if (!r.ok()) {
         timer_.stop();
         reportError(tr("Frame"), r.error().message, false);
@@ -322,6 +333,12 @@ void MainWindow::tick() {
     }
     cuePanel_->refresh();
     refreshImage();
+    lastTick = Clock::now();
+    if (ms(lastTick - begin) > 250) {
+        std::fprintf(stderr, "Langsamer Frame: %lld ms (Player %lld ms, Bild und Panels %lld ms)\n",
+                     static_cast<long long>(ms(lastTick - begin)), static_cast<long long>(ms(stepped - begin)),
+                     static_cast<long long>(ms(lastTick - stepped)));
+    }
 }
 
 void MainWindow::refreshImage() {

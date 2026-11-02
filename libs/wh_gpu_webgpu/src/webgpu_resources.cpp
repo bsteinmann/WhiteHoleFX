@@ -1,4 +1,6 @@
 // webgpu_resources.cpp: Puffer, Texturen und Shadermodule des WebGPU-Geräts anlegen, beschreiben und freigeben.
+#include <chrono>
+#include <cstdio>
 #include <algorithm>
 #include <utility>
 
@@ -163,8 +165,14 @@ Result<ComputePipelineHandle> WebGpuDevice::createComputePipeline(const ComputeP
     cpd.layout = pipelineLayout;
     cpd.compute.module = module;
     cpd.compute.entryPoint = view(desc.shader.entryPoint);
+    const auto compileStart = std::chrono::steady_clock::now();
     WGPUComputePipeline pipeline = wgpuDeviceCreateComputePipeline(impl.device, &cpd);
     impl.pump(true);
+    // Fehlersuche (Issue #26): Wer im Terminal startet, sieht, wenn der Treiber lange für einen Shader braucht.
+    const auto compileMs = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - compileStart).count();
+    if (compileMs > 300) {
+        std::fprintf(stderr, "Shader übersetzt in %lld ms (%zu Zeichen)\n", static_cast<long long>(compileMs), desc.shader.code.size());
+    }
     const std::vector<std::string> errors = impl.drainErrors();
 
     wgpuShaderModuleRelease(module);
