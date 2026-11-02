@@ -142,6 +142,7 @@ Result<std::unique_ptr<WebGpuDevice>> WebGpuDevice::create(const WebGpuOptions& 
     WGPUInstanceExtras extras{};
     extras.chain.sType = static_cast<WGPUSType>(WGPUSType_InstanceExtras);
     WGPUInstanceDescriptor instanceDesc{};
+    bool backendChosen = false;
     if (const char* wanted = std::getenv("WHITEHOLEFX_GPU_BACKEND"); wanted != nullptr) {
         const std::string name{wanted};
         extras.backends = name == "vulkan" ? WGPUInstanceBackend_Vulkan
@@ -150,8 +151,10 @@ Result<std::unique_ptr<WebGpuDevice>> WebGpuDevice::create(const WebGpuOptions& 
                           : name == "metal" ? WGPUInstanceBackend_Metal
                                             : WGPUInstanceBackend_All;
         instanceDesc.nextInChain = &extras.chain;
+        backendChosen = true;
     }
-    impl->instance = wgpuCreateInstance(&instanceDesc);
+    // Ohne Wunsch genau wie vor 0.36.2: kein Deskriptor, die Bibliothek nimmt ihre Voreinstellung.
+    impl->instance = wgpuCreateInstance(backendChosen ? &instanceDesc : nullptr);
     if (impl->instance == nullptr) {
         return Error{ErrorCode::GpuError, "Die WebGPU-Instanz ließ sich nicht anlegen"};
     }

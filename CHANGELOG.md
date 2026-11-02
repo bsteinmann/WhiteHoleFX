@@ -1,5 +1,11 @@
 # Änderungen
 
+## 0.36.5
+
+- **Einfrieren (#26):** Der GPU-Start ist wieder genau wie vor 0.36.2: Ohne `WHITEHOLEFX_GPU_BACKEND` bekommt die Bibliothek keinen
+  Instanz-Deskriptor mehr und wählt ihre Voreinstellung. 0.36.2 hatte immer einen (leeren) Deskriptor übergeben; das ist
+  der einzige Unterschied beim GPU-Start zwischen 0.36.0 und 0.36.3, und das Studio fror erst danach ein.
+
 ## 0.36.4
 
 - **Messvarianten für den Text-Node (#13):** `WHITEHOLEFX_TEXT_VARIANT` kennt jetzt zusätzlich `s` (feste Startposition), `g`
