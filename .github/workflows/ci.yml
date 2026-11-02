@@ -57,6 +57,22 @@ jobs:
         run: cmake --build build --parallel --target wh_gpu_tests whitehole_cli
       - name: Testen
         run: ./build/tests/wh_gpu_tests
+      - name: Dieselben Text-Tests auf der OpenGL-Schnittstelle (Issue 13, Fehlersuche, bricht nicht ab)
+        continue-on-error: true
+        run: |
+          sudo apt-get install -y libegl1 libgl1-mesa-dri libgles2
+          export WHITEHOLEFX_GPU_BACKEND=gl
+          code=0
+          out=$(./build/apps/whitehole_cli/whitehole_cli examples/effekte/laufschrift.whfx --frames 200 --snapshot gl-text.png 2>&1) || code=$?
+          echo "$out"
+          pip_out=$(PIP_BREAK_SYSTEM_PACKAGES=1 python3 -m pip install --quiet pillow 2>&1) || true
+          check=$(python3 scripts/check_text_pixels.py gl-text.png 2>&1) || code=$?
+          echo "$check"
+          tests=$(./build/tests/wh_gpu_tests "[text]" 2>&1 | tail -40) || code=$?
+          echo "$tests"
+          msg=$(printf '%s\n%s\n%s' "$out" "$check" "$tests" | tail -50 | sed 's/%/%25/g' | awk '{printf "%s%%0A", $0}')
+          echo "::warning title=OpenGL-Lauf (Code $code)::${msg}"
+          exit $code
       - name: Runner mit echtem Gerät (20 Frames, Software-Adapter)
         run: |
           ./build/apps/whitehole_cli/whitehole_cli examples/einstieg/wand.whfx --check

@@ -1,5 +1,11 @@
 # Änderungen
 
+## 0.36.2
+
+- **Grafikschnittstelle wählbar (#13):** Mit der Umgebungsvariable `WHITEHOLEFX_GPU_BACKEND` (`vulkan`, `gl`, `dx12`, `metal`)
+  lässt sich die Schnittstelle erzwingen, zum Beispiel `WHITEHOLEFX_GPU_BACKEND=vulkan whitehole_studio`. Der Adapter-Name
+  zeigt jetzt auch die Schnittstelle. Die CI führt die Text-Prüfung zusätzlich auf OpenGL aus.
+
 ## 0.36.1
 
 - **GPU-Adapter sichtbar (#13):** Studio (Hilfe → Über und Terminal) und `whitehole_cli` zeigen, auf welchem Adapter gerechnet

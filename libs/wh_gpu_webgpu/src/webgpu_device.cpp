@@ -2,6 +2,7 @@
 #include "whitehole/gpu_webgpu/webgpu_device.hpp"
 
 #include <chrono>
+#include <cstdlib>
 #include <thread>
 #include <utility>
 
@@ -136,7 +137,21 @@ std::vector<std::string> WebGpuDevice::takeErrors() {
 Result<std::unique_ptr<WebGpuDevice>> WebGpuDevice::create(const WebGpuOptions& options) {
     auto impl = std::make_unique<Impl>();
 
-    impl->instance = wgpuCreateInstance(nullptr);
+    // WHITEHOLEFX_GPU_BACKEND=vulkan|gl|dx12|metal wählt die Grafikschnittstelle. Gedacht für die Fehlersuche (Issue #13):
+    // Dieselbe GPU kann je nach Schnittstelle andere Shader-Übersetzung und andere Treiberfehler haben.
+    WGPUInstanceExtras extras{};
+    extras.chain.sType = WGPUSType_InstanceExtras;
+    WGPUInstanceDescriptor instanceDesc{};
+    if (const char* wanted = std::getenv("WHITEHOLEFX_GPU_BACKEND"); wanted != nullptr) {
+        const std::string name{wanted};
+        extras.backends = name == "vulkan" ? WGPUInstanceBackend_Vulkan
+                          : name == "gl"   ? WGPUInstanceBackend_GL
+                          : name == "dx12" ? WGPUInstanceBackend_DX12
+                          : name == "metal" ? WGPUInstanceBackend_Metal
+                                            : WGPUInstanceBackend_All;
+        instanceDesc.nextInChain = &extras.chain;
+    }
+    impl->instance = wgpuCreateInstance(&instanceDesc);
     if (impl->instance == nullptr) {
         return Error{ErrorCode::GpuError, "Die WebGPU-Instanz ließ sich nicht anlegen"};
     }
@@ -164,6 +179,14 @@ Result<std::unique_ptr<WebGpuDevice>> WebGpuDevice::create(const WebGpuOptions& 
         impl->adapterName = toString(info.device);
         if (impl->adapterName.empty()) {
             impl->adapterName = toString(info.description);
+        }
+        switch (info.backendType) {
+            case WGPUBackendType_Vulkan: impl->adapterName += " [Vulkan]"; break;
+            case WGPUBackendType_OpenGL:
+            case WGPUBackendType_OpenGLES: impl->adapterName += " [OpenGL]"; break;
+            case WGPUBackendType_D3D12: impl->adapterName += " [DX12]"; break;
+            case WGPUBackendType_Metal: impl->adapterName += " [Metal]"; break;
+            default: break;
         }
         wgpuAdapterInfoFreeMembers(info);
     }
