@@ -94,3 +94,16 @@ TEST_CASE("addNodeDocked: ein ungültiger Plan ändert nichts") {
     CHECK_FALSE(rig.player.addNodeDocked("wh.output.canvas", Vec2{}, graph::DockPlan{}).ok());
     CHECK(rig.nodeCount() == 2);
 }
+
+TEST_CASE("addNodeDocked verschiebt Nodes, die Platz machen, im selben Rückgängig-Schritt") {
+    Rig rig;
+    const NodeId mirror = rig.id("wh.transform.mirror");
+    const Vec2 before = rig.player.project()->graph.findNode(mirror)->position;
+    const std::vector<graph::NodeMove> moves{{mirror, Vec2{before.x + 300.0F, before.y}}};
+    const auto id = rig.player.addNodeDocked("wh.generator.plasma", Vec2{1.0F, 2.0F}, graph::DockPlan{}, moves);
+    REQUIRE(id.ok());
+    CHECK(rig.player.project()->graph.findNode(mirror)->position.x == before.x + 300.0F);
+    REQUIRE(rig.player.undo().ok());
+    CHECK(rig.player.project()->graph.findNode(mirror)->position.x == before.x);
+    CHECK(rig.nodeCount() == 2);
+}

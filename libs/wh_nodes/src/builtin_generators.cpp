@@ -175,7 +175,7 @@ for (var i = 0; i < 4; i = i + 1) {
     let age = t - k;
     let c = vec2<f32>(wh_hash11(k * 1.37 + 0.11), wh_hash11(k * 2.71 + 5.31));
     let c3 = vec3<f32>(c, wh_hash11(k * 3.17 + 2.3));
-    let d = select(length(p.xy - c), length(p - c3), @param(space) > 0.5);
+    let d = select(length(p.xy - c), length(p - c3), ((@param(space) > 0.5 && @param(space) < 1.5) || (@param(space) >= 1.5 && @volume)));
     let ring = 1.0 - smoothstep(0.0, max(@param(width), 0.001), abs(d - age * @param(speed)));
     v = v + ring * clamp(1.0 - age / 4.0, 0.0, 1.0);
 }
@@ -258,7 +258,7 @@ std::vector<compiler::NodeDefinition> generatorNodes() {
         "wh.generator.ripples", "Ripples", "Generators", {fieldOutput()},
         {number("rate", "Drops per second", 0.7, 0.01, 20.0), number("speed", "Spread speed", 0.25, 0.0, 5.0),
          number("width", "Ring width", 0.05, 0.001, 0.5), color("color", "Color", ColorRgba{0.3F, 0.7F, 1.0F, 1.0F}),
-         choice("space", "Space", {"Flat (x/y rings)", "Volume (x/y/z shells)"})},
+         choice("space", "Space", {"Flat (x/y rings)", "Volume (x/y/z shells)", "Auto (by layout)"}, 2)},
         kRippleBody, kRipplePrelude));
 
     nodes.push_back(fieldNode("wh.generator.fire", "Fire", "Generators", {fieldOutput()},

@@ -1,5 +1,10 @@
 # Änderungen
 
+## 0.42.0
+
+- **Einrasten: Platzierung ohne Überlappung:** Ein in ein Kabel eingefügter Node sitzt jetzt mittig zwischen Quelle und Ziel; fehlt der Platz, rücken das Ziel und alles, was dahinter hängt, nach rechts. Links vor einem Zielnode steht der neue Node direkt davor, rechts dahinter direkt dahinter (auch hier machen Nachbarn bei Bedarf Platz). Das Verschieben gehört zum selben Schritt Rückgängig. Die Rechnung steht in `graph/node_placement.hpp` und ist getestet; der Rauchtest prüft, dass sich nach dem Einfügen kein Node überdeckt.
+- **Space auf Auto:** Ripples, Metaballs, Starfield, Fading Pixels und Expanding Shapes haben wie Sphere und Box die Auswahl „Auto (by layout)“ als Standard: Auf flachen Matrizen rechnen sie in 2D, bei einem räumlichen Aufbau (LEDs mit Tiefe) in 3D. Gespeicherte Projekte mit gesetztem „Space“ bleiben unverändert; nur Nodes, die den Standard nutzten, folgen jetzt dem Aufbau.
+
 ## 0.41.0
 
 - **#30 Info-Zeichen:** Jeder Node hat im Kopf ein kleines „i“. Mit der Maus darüber erscheint eine Beschreibung des Node-Typs als Tooltip, ein Klick zeigt sie sofort. Dieselbe Beschreibung steht im Tooltip der Palette. Die 69 Texte gibt es auf Deutsch und Englisch (Französisch und Spanisch zeigen vorerst den englischen Text). Der Rauchtest (`--exercise`) meldet jeden Node-Typ ohne Beschreibung, neue Typen brauchen also einen Eintrag in `node_info_texts.cpp`.

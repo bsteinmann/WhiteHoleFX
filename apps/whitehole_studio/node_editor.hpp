@@ -93,8 +93,9 @@ public:
     void setDeleteZone(QWidget* zone);
 
     /// Legt einen Node an; meldet Fehler über `failed`. Mit `plan` (siehe dockPlanAt) wird er gleich verdrahtet,
-    /// alles in einem Schritt für Rückgängig.
-    std::optional<NodeId> addNodeAt(const std::string& typeId, const QPointF& scenePos, const graph::DockPlan* plan = nullptr);
+    /// alles in einem Schritt für Rückgängig. `moves`: Nodes, die dafür Platz machen.
+    std::optional<NodeId> addNodeAt(const std::string& typeId, const QPointF& scenePos, const graph::DockPlan* plan = nullptr,
+                                    const std::vector<graph::NodeMove>* moves = nullptr);
 
     /// Einrasten (siehe graph/node_docking.hpp): Wohin würde ein Node vom Typ `typeId` einrasten, wenn der Mauszeiger
     /// bei `scenePos` loslässt? Auf einem Node: links davor, rechts dahinter; auf einem Kabel: dazwischen. Mit `alt`

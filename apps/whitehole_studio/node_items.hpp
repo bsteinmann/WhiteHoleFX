@@ -13,6 +13,7 @@
 #include <QGraphicsPathItem>
 #include <QGraphicsSceneHoverEvent>
 #include <QPainter>
+#include <QSizeF>
 #include <QString>
 
 #include <functional>
@@ -55,6 +56,9 @@ public:
     NodeItem(NodeId id, const graph::NodeDescriptor& descriptor, const QString& title);
 
     [[nodiscard]] NodeId nodeId() const noexcept { return id_; }
+    /// Größe des Nodes (ohne Rand) in Szenenkoordinaten; `sizeFor` rechnet sie für einen Typ, der noch nicht im Editor steht.
+    [[nodiscard]] QSizeF size() const;
+    [[nodiscard]] static QSizeF sizeFor(const graph::NodeDescriptor& descriptor);
     [[nodiscard]] const std::vector<PortSlot>& ports() const noexcept { return ports_; }
     [[nodiscard]] const PortSlot* findPort(const std::string& key) const;
     /// Der Port unter einem Punkt in Szenenkoordinaten, sonst nullptr.

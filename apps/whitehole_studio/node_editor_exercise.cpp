@@ -318,6 +318,14 @@ QString NodeEditor::exerciseDocking(NodeId source, NodeId sink) {
             .arg(nodesBefore + 1)
             .arg(wiresBefore + 2);
     }
+    // Der eingefügte Node überdeckt keinen anderen
+    for (const auto& [idA, itemA] : nodes_) {
+        for (const auto& [idB, itemB] : nodes_) {
+            if (idA < idB && QRectF{itemA->pos(), itemA->size()}.intersects(QRectF{itemB->pos(), itemB->size()})) {
+                return QStringLiteral("Einrasten: Node %1 und Node %2 überdecken sich nach dem Einfügen").arg(idA).arg(idB);
+            }
+        }
+    }
     if (!player_.undo().ok()) {
         return QStringLiteral("Einrasten: Rückgängig scheitert");
     }

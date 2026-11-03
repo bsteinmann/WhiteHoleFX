@@ -6,6 +6,7 @@ wh_add_library(wh_graph
         src/graph.cpp
         src/graph_topology.cpp
         src/node_docking.cpp
+        src/node_placement.cpp
         src/node_registry_impl.cpp
         src/parameter_resolve.cpp
     PUBLIC_DEPS

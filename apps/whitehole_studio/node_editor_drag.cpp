@@ -67,9 +67,26 @@ bool NodeEditor::handleNodeDrop(const QMimeData* mime, const QPoint& viewportPos
     const QPointF scenePos = mapToScene(viewportPos);
     const std::optional<graph::DockPlan> plan = dockPlanAt(typeId, scenePos, altPressed());
     clearDockPreview();
-    // Der Mauszeiger steht in der Mitte des neuen Nodes
-    if (plan.has_value() && addNodeAt(typeId, scenePos - QPointF{70.0, 20.0}, &*plan).has_value()) {
-        return true;
+    // Der Mauszeiger steht in der Mitte des neuen Nodes; eingerastet sitzt er zwischen seinen Nachbarn (Platz machen)
+    const std::optional<graph::DockTarget> target = plan.has_value() ? findDockTarget(scenePos) : std::nullopt;
+    const graph::NodeDescriptor* type = player_.project()->graph.registry().find(typeId);
+    if (plan.has_value() && target.has_value() && type != nullptr) {
+        std::vector<graph::NodeRect> rects;
+        for (const auto& [id, item] : nodes_) {
+            const QSizeF size = item->size();
+            rects.push_back({item->nodeId(), static_cast<float>(item->pos().x()), static_cast<float>(item->pos().y()),
+                             static_cast<float>(size.width()), static_cast<float>(size.height())});
+        }
+        const QSizeF size = NodeItem::sizeFor(*type);
+        const QPointF corner = scenePos - QPointF{70.0, 20.0};
+        const graph::Placement placement = graph::placeDockedNode(
+            player_.project()->graph, rects, *plan, *target, Vec2{static_cast<float>(size.width()), static_cast<float>(size.height())},
+            Vec2{static_cast<float>(corner.x()), static_cast<float>(corner.y())});
+        if (addNodeAt(typeId, QPointF{static_cast<double>(placement.position.x), static_cast<double>(placement.position.y)}, &*plan,
+                      &placement.moved)
+                .has_value()) {
+            return true;
+        }
     }
     addNodeAt(typeId, scenePos - QPointF{70.0, 20.0});
     return true;

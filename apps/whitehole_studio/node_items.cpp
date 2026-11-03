@@ -143,7 +143,18 @@ NodeItem::NodeItem(NodeId id, const graph::NodeDescriptor& descriptor, const QSt
         }
         ports_.push_back(std::move(slot));
     }
-    height_ = kTitleHeight + 12.0 + std::max(1, std::max(inputs, outputs)) * kRowHeight;
+    height_ = sizeFor(descriptor).height();
+}
+
+QSizeF NodeItem::size() const { return QSizeF{kWidth, height_}; }
+
+QSizeF NodeItem::sizeFor(const graph::NodeDescriptor& descriptor) {
+    int inputs = 0;
+    int outputs = 0;
+    for (const graph::PortDescriptor& port : descriptor.ports) {
+        (port.direction == graph::PortDirection::Output ? outputs : inputs) += 1;
+    }
+    return QSizeF{kWidth, kTitleHeight + 12.0 + std::max(1, std::max(inputs, outputs)) * kRowHeight};
 }
 
 namespace {

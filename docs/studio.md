@@ -277,7 +277,9 @@ passt er nicht, gilt bei mehreren Eingängen der erste freie des richtigen Typs,
 Eingang schon belegt, wird der neue Node in das Kabel eingefügt; verträgt er den bisherigen Ausgang nicht, rastet
 nichts ein, damit kein Kabel verloren geht. Vor dem Loslassen zeigt der Editor hellblau, was passiert (Rahmen,
 Kabel, Port; die neuen Kabel gestrichelt). **Alt** gedrückt halten schaltet das Einrasten ab, **Esc** bricht den
-Drag ab. Der Ausgangs-Node rastet nirgends ein. Node und Kabel entstehen in **einem** Schritt Rückgängig.
+Drag ab. Der Ausgangs-Node rastet nirgends ein. Der Node sitzt danach nicht unter der Maus, sondern zwischen seinen
+Nachbarn (im Kabel mittig, am Node direkt davor oder dahinter); wo der Platz fehlt, rücken das Ziel und alles, was
+dahinter hängt, nach rechts, so überdeckt nichts etwas anderes. Node und Kabel entstehen in **einem** Schritt Rückgängig.
 
 Die Kategorien sind beim Start **zugeklappt**; beim Suchen sind die Treffer aufgeklappt. Mit Rechtsklick auf einen Node-Typ
 („Zu Favoriten hinzufügen“) wird er zum **Favoriten**: Er steht oben in der Gruppe „Favoriten“ (immer offen) und in seiner Kategorie

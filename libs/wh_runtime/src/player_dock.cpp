@@ -6,7 +6,8 @@
 
 namespace whitehole::runtime {
 
-Result<NodeId> Player::addNodeDocked(std::string_view typeId, Vec2 position, const graph::DockPlan& plan) {
+Result<NodeId> Player::addNodeDocked(std::string_view typeId, Vec2 position, const graph::DockPlan& plan,
+                                     const std::vector<graph::NodeMove>& moves) {
     if (!project_) {
         return Error{ErrorCode::InvalidArgument, "Es ist kein Projekt geladen"};
     }
@@ -29,6 +30,11 @@ Result<NodeId> Player::addNodeDocked(std::string_view typeId, Vec2 position, con
     if (const NodeDefaults::Values* own = nodeDefaults_.valuesOf(std::string{typeId})) {
         for (const auto& [key, value] : *own) {
             (void)g.setParameter(id, key, value);
+        }
+    }
+    for (const graph::NodeMove& move : moves) {
+        if (const Result<void> r = g.setPosition(move.first, move.second); !r.ok()) {
+            return fail(r.error());
         }
     }
     for (const ConnectionId wire : plan.remove) {

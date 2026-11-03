@@ -37,7 +37,7 @@ for (var i = 0; i < 6; i = i + 1) {
         let c = vec2<f32>(0.5 + 0.35 * sin(ph * (0.7 + 0.23 * fi) + fi * 2.1),
                           0.5 + 0.35 * cos(ph * (0.5 + 0.19 * fi) + fi * 1.3));
         let cz = 0.5 + 0.35 * sin(ph * (0.6 + 0.17 * fi) + fi * 0.9);
-        let d = select(vec3<f32>(p.xy - c, 0.0), p - vec3<f32>(c, cz), @param(space) > 0.5);
+        let d = select(vec3<f32>(p.xy - c, 0.0), p - vec3<f32>(c, cz), ((@param(space) > 0.5 && @param(space) < 1.5) || (@param(space) >= 1.5 && @volume)));
         f = f + r * r / (dot(d, d) + 0.0001);
     }
 }
@@ -51,7 +51,7 @@ return wh_mix_color(@param(colorA), @param(colorB), v);)wgsl";
 // Mit space = Volume sitzen die Sterne in einem Raster aus Würfeln statt Quadraten (die Zelle bekommt ihren
 // Zufall aus x, y und z); Flat ignoriert z und ist damit gleich dem 2D-Himmel von früher.
 constexpr const char* kStarfieldBody = R"wgsl(let cells = max(floor(@param(cells)), 1.0);
-let vol = @param(space) > 0.5;
+let vol = ((@param(space) > 0.5 && @param(space) < 1.5) || (@param(space) >= 1.5 && @volume));
 let q = vec3<f32>(p.x, p.y + @time * @param(drift), select(0.0, p.z, vol)) * cells;
 let cell3 = floor(q);
 let id = cell3.xy + vec2<f32>(cell3.z * 19.0, cell3.z * 11.0);
@@ -72,7 +72,7 @@ return vec4<f32>(col.rgb, col.a * star * tw * on);)wgsl";
 // der Abklingkurve (größer = kurzer Blitz mit langem Dunkel). Mit space = Volume ist jede Zelle ein Würfel
 // des Raums (eigener Takt je Würfel), Flat gruppiert nur nach x/y wie bisher.
 constexpr const char* kFadingBody = R"wgsl(let cells = max(floor(@param(cells)), 1.0);
-let cell3 = floor(vec3<f32>(p.x, p.y, select(0.0, p.z, @param(space) > 0.5)) * cells);
+let cell3 = floor(vec3<f32>(p.x, p.y, select(0.0, p.z, ((@param(space) > 0.5 && @param(space) < 1.5) || (@param(space) >= 1.5 && @volume)))) * cells);
 let id = cell3.xy + vec2<f32>(cell3.z * 19.0, cell3.z * 11.0);
 let h1 = wh_cell_hash(id);
 let h2 = wh_cell_hash(id + vec2<f32>(13.0, 7.0));
@@ -110,7 +110,7 @@ return vec4<f32>(col.rgb, col.a * level * select(0.0, 1.0, lit));)wgsl";
 // Mit space = Volume wachsen daraus Kugelschalen, Würfelschalen und Oktaeder um (cx, cy, cz); Flat lässt
 // z weg und rechnet wie bisher.
 constexpr const char* kShapesBody = R"wgsl(let center = vec3<f32>(@param(cx), @param(cy), @param(cz));
-let d0 = select(vec3<f32>(p.xy - center.xy, 0.0), p - center, @param(space) > 0.5);
+let d0 = select(vec3<f32>(p.xy - center.xy, 0.0), p - center, ((@param(space) > 0.5 && @param(space) < 1.5) || (@param(space) >= 1.5 && @volume)));
 let shape = i32(floor(@param(shape) + 0.5));
 var d = length(d0);
 if (shape == 1) {
@@ -158,7 +158,7 @@ std::vector<compiler::NodeDefinition> shapeNodes() {
          number("speed", "Speed", 0.6, -10.0, 10.0), number("softness", "Edge softness", 0.3, 0.01, 2.0),
          color("colorA", "Background", ColorRgba{0.0F, 0.0F, 0.0F, 1.0F}),
          color("colorB", "Blobs", ColorRgba{1.0F, 0.2F, 0.6F, 1.0F}),
-         choice("space", "Space", {"Flat (x/y)", "Volume (x/y/z)"})},
+         choice("space", "Space", {"Flat (x/y)", "Volume (x/y/z)", "Auto (by layout)"}, 2)},
         kMetaballsBody, kColorPrelude));
 
     nodes.push_back(fieldNode(
@@ -168,7 +168,7 @@ std::vector<compiler::NodeDefinition> shapeNodes() {
          number("drift", "Drift (down)", 0.0, -5.0, 5.0),
          color("colorA", "Color A", ColorRgba{1.0F, 1.0F, 1.0F, 1.0F}),
          color("colorB", "Color B", ColorRgba{0.6F, 0.75F, 1.0F, 1.0F}),
-         choice("space", "Space", {"Flat (x/y)", "Volume (x/y/z)"})},
+         choice("space", "Space", {"Flat (x/y)", "Volume (x/y/z)", "Auto (by layout)"}, 2)},
         kStarfieldBody, kCellHashPrelude));
 
     nodes.push_back(fieldNode(
@@ -177,7 +177,7 @@ std::vector<compiler::NodeDefinition> shapeNodes() {
          number("density", "Density", 0.4, 0.0, 1.0), number("sharpness", "Sharpness", 2.0, 0.1, 10.0),
          color("colorA", "Color A", ColorRgba{1.0F, 0.4F, 0.1F, 1.0F}),
          color("colorB", "Color B", ColorRgba{0.2F, 0.5F, 1.0F, 1.0F}),
-         choice("space", "Space", {"Flat (x/y)", "Volume (x/y/z)"})},
+         choice("space", "Space", {"Flat (x/y)", "Volume (x/y/z)", "Auto (by layout)"}, 2)},
         kFadingBody, kCellHashPrelude));
 
     nodes.push_back(fieldNode(
@@ -195,7 +195,7 @@ std::vector<compiler::NodeDefinition> shapeNodes() {
          number("cy", "Center Y", 0.5, 0.0, 1.0), number("spacing", "Spacing", 0.3, 0.02, 2.0),
          number("speed", "Speed", 0.2, -5.0, 5.0), number("thickness", "Thickness", 0.3, 0.02, 1.0),
          number("fade", "Fade out", 0.5, 0.0, 4.0), color("color", "Color", ColorRgba{1.0F, 1.0F, 1.0F, 1.0F}),
-         number("cz", "Center Z", 0.5, 0.0, 1.0), choice("space", "Space", {"Flat (x/y)", "Volume (x/y/z)"})},
+         number("cz", "Center Z", 0.5, 0.0, 1.0), choice("space", "Space", {"Flat (x/y)", "Volume (x/y/z)", "Auto (by layout)"}, 2)},
         kShapesBody));
 
     nodes.push_back(fieldNode(

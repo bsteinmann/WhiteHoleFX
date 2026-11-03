@@ -31,6 +31,7 @@
 #include "whitehole/gpu/gpu_device.hpp"
 #include "whitehole/mapping/region_edit.hpp"
 #include "whitehole/graph/node_docking.hpp"
+#include "whitehole/graph/node_placement.hpp"
 #include "whitehole/nodes/builtin_library.hpp"
 #include "whitehole/output/packet_sink.hpp"
 #include "whitehole/preview/preview.hpp"
@@ -131,9 +132,11 @@ public:
 
     /// Legt einen Node an und verdrahtet ihn nach `plan` (siehe graph::planDocking: einfügen in ein Kabel oder an einen
     /// Node hängen). Ein einziger Schritt für Rückgängig; scheitert ein Kabel, ändert sich nichts. Nicht für den
-    /// Ausgangs-Node (wh.output.canvas), der sich beim Anlegen selbst verdrahtet. Fehler: InvalidArgument, NotFound
+    /// Ausgangs-Node (wh.output.canvas), der sich beim Anlegen selbst verdrahtet. `moves` verschiebt dabei andere
+    /// Nodes, die Platz machen (graph::placeDockedNode), im selben Schritt. Fehler: InvalidArgument, NotFound
     /// (Typ unbekannt) und die von Graph::connect.
-    Result<NodeId> addNodeDocked(std::string_view typeId, Vec2 position, const graph::DockPlan& plan);
+    Result<NodeId> addNodeDocked(std::string_view typeId, Vec2 position, const graph::DockPlan& plan,
+                                 const std::vector<graph::NodeMove>& moves = {});
 
     /// Eigene Standardwerte für neue Nodes (Einstellungen). Sie gelten nur für künftig angelegte Nodes; ein
     /// Wert, der nicht zum Parameter passt, wird beim Anlegen übersprungen. Gehören dem Nutzer, nicht dem Projekt.

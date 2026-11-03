@@ -38,7 +38,7 @@ double numberOf(const graph::ParameterDescriptor& parameter) {
 
 }  // namespace
 
-TEST_CASE("3D-Regler älterer Nodes haben neutrale Standardwerte (2D-Bild bleibt gleich)", "[nodes][volume]") {
+TEST_CASE("3D-Regler älterer Nodes haben neutrale Standardwerte (2D-Bild bleibt gleich; Space steht auf Auto)", "[nodes][volume]") {
     const auto all = nodes::builtinNodeDefinitions();
     struct Expect {
         const char* typeId;
@@ -48,9 +48,9 @@ TEST_CASE("3D-Regler älterer Nodes haben neutrale Standardwerte (2D-Bild bleibt
     const Expect expected[] = {
         {"wh.generator.gradient", "elevation", 0.0}, {"wh.generator.scan", "elevation", 0.0},
         {"wh.generator.plasma", "depth", 0.0},       {"wh.generator.fire", "depth", 0.0},
-        {"wh.generator.ripples", "space", 0.0},      {"wh.generator.metaballs", "space", 0.0},
-        {"wh.generator.starfield", "space", 0.0},    {"wh.generator.fading", "space", 0.0},
-        {"wh.generator.shapes", "space", 0.0},       {"wh.generator.sinelines", "frequencyZ", 0.0},
+        {"wh.generator.ripples", "space", 2.0},      {"wh.generator.metaballs", "space", 2.0},
+        {"wh.generator.starfield", "space", 2.0},    {"wh.generator.fading", "space", 2.0},
+        {"wh.generator.shapes", "space", 2.0},       {"wh.generator.sinelines", "frequencyZ", 0.0},
         {"wh.transform.scale", "factorZ", 1.0},      {"wh.transform.slide", "z", 0.0},
         {"wh.transform.tile", "countZ", 1.0},        {"wh.transform.pixelate", "cellsZ", 0.0},
         {"wh.transform.region", "zStart", 0.0},      {"wh.transform.region", "zSize", 1.0},
@@ -63,16 +63,17 @@ TEST_CASE("3D-Regler älterer Nodes haben neutrale Standardwerte (2D-Bild bleibt
     }
 }
 
-TEST_CASE("Die 3D-Auswahlfelder bieten Flat und Volume an", "[nodes][volume]") {
+TEST_CASE("Die 3D-Auswahlfelder bieten Flat, Volume und Auto an", "[nodes][volume]") {
     const auto all = nodes::builtinNodeDefinitions();
     for (const char* typeId : {"wh.generator.ripples", "wh.generator.metaballs", "wh.generator.starfield",
                                "wh.generator.fading", "wh.generator.shapes"}) {
         INFO(typeId);
         const graph::ParameterDescriptor* parameter = find(all, typeId, "space");
         REQUIRE(parameter != nullptr);
-        REQUIRE(parameter->choices.size() == 2U);
+        REQUIRE(parameter->choices.size() == 3U);
         CHECK(parameter->choices[0].rfind("Flat", 0) == 0U);
         CHECK(parameter->choices[1].rfind("Volume", 0) == 0U);
+        CHECK(parameter->choices[2].rfind("Auto", 0) == 0U);
     }
 }
 

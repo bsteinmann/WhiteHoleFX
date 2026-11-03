@@ -18,6 +18,7 @@ add_executable(wh_tests
     graph/parameter_resolve_test.cpp
     graph/port_type_test.cpp
     graph/node_docking_test.cpp
+    graph/node_placement_test.cpp
     graph/port_family_test.cpp
     values/cpu_kernel_test.cpp
     values/value_evaluator_test.cpp

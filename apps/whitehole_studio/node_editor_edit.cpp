@@ -15,9 +15,10 @@ namespace whitehole::studio {
 
 // --- Änderungen am Graphen ----------------------------------------------------------------------
 
-std::optional<NodeId> NodeEditor::addNodeAt(const std::string& typeId, const QPointF& scenePos, const graph::DockPlan* plan) {
+std::optional<NodeId> NodeEditor::addNodeAt(const std::string& typeId, const QPointF& scenePos, const graph::DockPlan* plan,
+                                         const std::vector<graph::NodeMove>* moves) {
     const Vec2 position{static_cast<float>(scenePos.x()), static_cast<float>(scenePos.y())};
-    const auto id = plan != nullptr ? player_.addNodeDocked(typeId, position, *plan) : player_.addNode(typeId, position);
+    const auto id = plan != nullptr ? player_.addNodeDocked(typeId, position, *plan, moves != nullptr ? *moves : std::vector<graph::NodeMove>{}) : player_.addNode(typeId, position);
     if (!id.ok()) {
         fail(id.error().message);
         return std::nullopt;

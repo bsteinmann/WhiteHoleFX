@@ -13,7 +13,7 @@ fn wh_field(p: vec3<f32>) -> vec4<f32>
 ```
 
 - `p` liegt in [0,1]³. Bei einem 2D-Canvas ist `p.z = 0`.
-- `@volume` (nur für Node-Autoren) ist wahr, wenn die LED-Karte Ausdehnung in z hat. Nodes mit `space` *Auto* (Sphere, Box) wählen damit selbst zwischen 2D und 3D.
+- `@volume` (nur für Node-Autoren) ist wahr, wenn die LED-Karte Ausdehnung in z hat. Nodes mit `space` *Auto* (Sphere, Box, Ripples, Metaballs, Starfield, Fading Pixels, Expanding Shapes) wählen damit selbst zwischen 2D und 3D.
 - Die Farbe ist linear RGBA mit „geradem“ Alpha (RGB und Alpha getrennt). Gamma und Farbreihenfolge
   setzt erst der Ausgabe-Pass, der die Farbe zuletzt mit Alpha multipliziert (transparent = LED aus).
   Wer Farben überblendet oder addiert, nimmt `wh_mix_color` und `wh_add_color` (Prelude
@@ -38,7 +38,7 @@ beliebigen Koordinaten abtastet.
 | `wh.generator.rain` | „Digital Rain“: fallende Pixel mit Spur (Spalten, Tempo, Spurlänge, Dichte, Kopf-/Spurfarbe); die Spur ist durchsichtig und lässt sich über andere Effekte legen. Im Cube fallen Säulen in x/z | 3D |
 | `wh.generator.solid` | Fläche in einer Farbe (zum Einfärben mit Mask/Blend oder als Blitzfläche) | beliebig |
 | `wh.generator.scan` | Scan-Linie / Knight Rider: ein Streifen quer zur Richtung `angle` an der Stelle `position` (0..1), Breite und Weichheit einstellbar; die Position mit einem Dreieck-LFO steuern lässt ihn hin- und herlaufen. Der Rest ist durchsichtig; mit `elevation` wird aus dem Streifen eine Scheibe, die durch den Würfel läuft | 2D, 3D |
-| `wh.generator.ripples` | Wellenringe wie Regentropfen im Wasser (Tropfen pro Sekunde, Ausbreitung, Ringbreite, Farbe), ohne Zustand, durchsichtig außerhalb der Ringe; `space` *Volume* lässt die Tropfen an Zufallsstellen im Raum fallen und als Kugelschalen wachsen | 2D, 3D |
+| `wh.generator.ripples` | Wellenringe wie Regentropfen im Wasser (Tropfen pro Sekunde, Ausbreitung, Ringbreite, Farbe), ohne Zustand, durchsichtig außerhalb der Ringe; `space` *Auto* (Standard; flach auf 2D-Matrizen, räumlich bei räumlichem Aufbau) oder *Volume* lässt die Tropfen an Zufallsstellen im Raum fallen und als Kugelschalen wachsen | 2D, 3D |
 | `wh.generator.fire` | Feuer: nach oben wanderndes Rauschen mit Hitzeverlauf von unten nach oben, Palette Schwarz–Rot–Gelb–Weiß; `depth` lässt das Rauschen auch in z variieren | 2D, 3D |
 | `wh.generator.metaballs` | Metaballs: 1–6 weiche Kugeln wandern auf eigenen Bahnen und fließen ineinander, wenn sie sich nähern (Anzahl, Größe, Tempo, Randweichheit, Hintergrund- und Blobfarbe); `space` *Volume* gibt jeder Kugel eine z-Bahn | 2D, 3D |
 | `wh.generator.starfield` | Sternenhimmel: `cells` Zellen je Achse, in jeder mit Wahrscheinlichkeit `density` ein flimmernder Stern (Größe, Flimmertempo, `drift` nach unten, zwei Farben nach Zufall); der Himmel ist durchsichtig und lässt sich über andere Effekte legen; `space` *Volume* setzt die Sterne in ein Raster aus Würfeln | 2D, 3D |
