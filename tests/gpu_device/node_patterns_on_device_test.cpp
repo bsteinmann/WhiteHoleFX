@@ -108,7 +108,7 @@ TEST_CASE("Sphere und Box zeigen auf einer 2D-Leinwand einen Kreis und ein Recht
         Lab lab;
         const NodeId sphere = lab.add("wh.generator.sphere");
         lab.set(sphere, "softness", 0.0);
-        lab.set(sphere, "space", 1.0);
+        lab.set(sphere, "space", std::int64_t{1});
         const Pixels image = render(*device, lab, sphere, 21, 21);
         CHECK(isColor(image.at(10, 10), 0.0F, 0.0F, 0.0F));
     }
