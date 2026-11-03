@@ -390,5 +390,4 @@ jobs:
         with:
           name: WhiteHoleFX-Linux-deb
           path: dist/*.deb
-          retention-days: 14
           retention-days: 7
