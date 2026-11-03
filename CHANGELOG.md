@@ -1,5 +1,9 @@
 # Änderungen
 
+## 0.37.7
+
+- **Fix:** Node-Editor: Das Mausrad blockierte komplett, wenn die Ansicht außerhalb von 0,25..3-fach lag (etwa nach „Alles zeigen“ bei vielen Nodes). Jetzt zoomt es immer in Richtung dieses Bereichs. Neuer Zoom-Test im Rauchtest (`--exercise`).
+
 ## 0.37.6
 
 - **Fehlersuche #26:** Der Wächter nimmt bei einem Stillstand nach einer Sekunde eine zweite Stapelprobe und zeigt, welche Qt-Ereignisse (Klasse und Typ) in dieser Zeit am häufigsten waren. Der erste Stapel aus dem Freeze zeigte eine Ereignisschleife beim Ein-/Ausblenden von Widgets; so lässt sich das betroffene Widget benennen.

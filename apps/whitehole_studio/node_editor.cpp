@@ -283,12 +283,18 @@ void NodeEditor::mouseReleaseEvent(QMouseEvent* event) {
 
 void NodeEditor::wheelEvent(QWheelEvent* event) {
     fitPending_ = false;
-    const double factor = std::pow(1.0015, event->angleDelta().y());
-    const double next = transform().m11() * factor;
-    if (next >= 0.25 && next <= 3.0) {
-        scale(factor, factor);
-    }
+    zoomBy(std::pow(1.0015, event->angleDelta().y()));
     event->accept();
+}
+
+void NodeEditor::zoomBy(double factor) {
+    // Früher wurde der Schritt ganz verworfen, wenn das Ergebnis außerhalb von 0,25..3 lag. Stand die Ansicht
+    // schon außerhalb (Fit bei vielen Nodes ergibt unter 0,25), ging dadurch weder rein noch raus.
+    const double current = transform().m11();
+    const double target = std::clamp(current * factor, std::min(0.25, current), std::max(3.0, current));
+    if (target != current && current > 0.0) {
+        scale(target / current, target / current);
+    }
 }
 
 void NodeEditor::keyPressEvent(QKeyEvent* event) {

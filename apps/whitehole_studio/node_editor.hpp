@@ -105,6 +105,10 @@ public:
     /// sonst eine Meldung, welcher Schritt scheiterte.
     QString exercise();
 
+    /// Zoomt um `factor`. Der Bereich ist 0,25 bis 3; liegt die Ansicht schon außerhalb (etwa nach "Alles
+    /// zeigen" bei vielen Nodes), geht es nur in Richtung des Bereichs - das Rad blockiert nie ganz.
+    void zoomBy(double factor);
+
     [[nodiscard]] int nodeCount() const noexcept { return static_cast<int>(nodes_.size()); }
     [[nodiscard]] int wireCount() const noexcept { return static_cast<int>(wires_.size()); }
 

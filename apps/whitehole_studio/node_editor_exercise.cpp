@@ -5,8 +5,10 @@
 // dem normalen Betrieb nichts zu tun hat.
 #include <QPointF>
 #include <QString>
+#include <QTransform>
 #include <QTemporaryDir>
 
+#include <cmath>
 #include <filesystem>
 
 #include "node_editor.hpp"
@@ -18,6 +20,32 @@ QString NodeEditor::exercise() {
     if (player_.project() == nullptr) {
         return QStringLiteral("kein Projekt");
     }
+    // Zoom: Auch eine Ansicht außerhalb von 0,25..3 (Fit bei vielen Nodes) muss sich wieder in den Bereich zoomen lassen.
+    {
+        const QTransform saved = transform();
+        resetTransform();
+        scale(0.1, 0.1);
+        zoomBy(2.0);
+        const double zoomedIn = transform().m11();
+        zoomBy(0.5);
+        const double notFurtherOut = transform().m11();
+        resetTransform();
+        scale(5.0, 5.0);
+        zoomBy(0.5);
+        const double zoomedOut = transform().m11();
+        zoomBy(2.0);
+        const double notFurtherIn = transform().m11();
+        resetTransform();
+        zoomBy(1.2);
+        const double inRange = transform().m11();
+        setTransform(saved);
+        if (std::abs(zoomedIn - 0.2) > 1e-6 || std::abs(notFurtherOut - 0.2) > 1e-6 || std::abs(zoomedOut - 2.5) > 1e-6 ||
+            std::abs(notFurtherIn - 3.0) > 1e-6 || std::abs(inRange - 1.2) > 1e-6) {
+            return QStringLiteral("Zoom: %1 / %2 / %3 / %4 / %5, erwartet 0.2 / 0.2 / 2.5 / 3 / 1.2")
+                .arg(zoomedIn).arg(notFurtherOut).arg(zoomedOut).arg(notFurtherIn).arg(inRange);
+        }
+    }
+
     const std::size_t nodesBefore = player_.project()->graph.nodes().size();
     const std::size_t wiresBefore = player_.project()->graph.connections().size();
 
