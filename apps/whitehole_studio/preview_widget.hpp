@@ -13,6 +13,7 @@
 #pragma once
 
 #include <QImage>
+#include <QLineF>
 #include <QList>
 #include <QRectF>
 #include <QWidget>
@@ -27,6 +28,8 @@ struct PreviewOverlay {
     QRectF rubberBand;           // Auswahlrahmen beim Aufziehen; leer = keiner
     QRectF wall;                 // die ganze Leinwand (nur beim Bearbeiten des Bereichs gezeichnet)
     QRectF region;               // Rechteck des gewählten Region-Nodes; leer = keiner
+    QList<QLineF> gridMinor;     // Rasterlinien (nur in der 2D-Ansicht gezeichnet)
+    QList<QLineF> gridMajor;     // jede zehnte Rasterlinie
     bool editingRegion{false};   // Region-Node gewählt: Griffe an Ecken und Mitte, Leinwand angedeutet
 };
 

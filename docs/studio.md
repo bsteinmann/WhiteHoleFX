@@ -177,6 +177,11 @@ Liste richten die gewählten Fixtures aus (links, rechts, oben, unten, waagrecht
 mittig; Bezug ist die Gesamtbox der Auswahl) und reihen zwei oder mehr aneinander („Nebeneinander“ und „Übereinander“; das erste bleibt stehen, das Feld „Abstand“ setzt die Lücke, 0 heißt dicht an dicht).
 Jeder Knopf ist ein Schritt für Rückgängig.
 
+**Raster und Einrasten:** Unter den Knöpfen zeigt „Raster“ ein Raster in der 2D-Vorschau (jede zehnte Linie
+kräftiger; bei kleinem Zoom wird es gröber). „Einrasten“ lässt beim Ziehen die linke untere Ecke der gewählten
+Fixtures auf dem Raster einrasten, die Weite stellt man daneben ein (0,1 bis 10). Mit gedrückter Alt-Taste zieht man
+ohne Einrasten. Die Einstellungen gelten für das Studio und bleiben erhalten.
+
 **Ausgabe:** Tabelle der Ziele (Adresse, Port; leere Adresse = Multicast, Port 0 = Standard) mit
 „Ziel +“ und „Letztes Ziel −“, darunter Bildrate, Abbildung auf den Würfel (Stretch oder
 KeepAspect), sACN-Priorität und Quellname.

@@ -13,6 +13,7 @@ add_executable(whitehole_studio
     form_helpers.hpp
     layout_panel.cpp
     layout_panel_add.cpp
+    layout_panel_grid.cpp
     layout_panel.hpp
     main.cpp
     main_window.cpp

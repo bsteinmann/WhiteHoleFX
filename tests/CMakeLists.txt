@@ -70,6 +70,7 @@ add_executable(wh_tests
     output/output_worker_test.cpp
     output/sacn_test.cpp
     output/udp_sender_test.cpp
+    preview/grid_test.cpp
     preview/png_test.cpp
     preview/preview_test.cpp
     preview/view_test.cpp

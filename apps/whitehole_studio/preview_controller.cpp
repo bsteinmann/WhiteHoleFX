@@ -1,6 +1,7 @@
 // preview_controller.cpp: Maus und Tastatur in der Vorschau, siehe preview_controller.hpp.
 #include "preview_controller.hpp"
 
+#include <QGuiApplication>
 #include <QLineF>
 #include <QToolTip>
 
@@ -10,6 +11,7 @@
 
 #include "form_helpers.hpp"
 #include "layout_panel.hpp"
+#include "whitehole/preview/grid.hpp"
 
 namespace whitehole::studio {
 
@@ -40,6 +42,7 @@ PreviewController::PreviewController(runtime::Player& player, PreviewWidget* wid
     connect(widget_, &PreviewWidget::hovered, this, &PreviewController::onHover);
     connect(widget_, &PreviewWidget::hoverEnded, this, []() { QToolTip::hideText(); });
     connect(panel_, &LayoutPanel::selectionChanged, this, [this]() { refreshOverlay(); });
+    connect(panel_, &LayoutPanel::gridChanged, this, [this]() { refreshOverlay(); });
 }
 
 QString PreviewController::ledText(QPointF position, float maxDistance) const {
@@ -128,6 +131,18 @@ void PreviewController::refreshOverlay() {
             overlay.editingRegion = true;
         }
     }
+    if (haveFrame_ && panel_->gridVisible() && !widget_->view3d()) {
+        const preview::Grid grid = preview::buildGrid(lastFrame_, static_cast<float>(widget_->width()),
+                                                      static_cast<float>(widget_->height()), panel_->gridStep());
+        const qreal w = widget_->width();
+        const qreal h = widget_->height();
+        for (const preview::GridLine& line : grid.vertical) {
+            (line.major ? overlay.gridMajor : overlay.gridMinor).append(QLineF{line.pixel, 0.0, line.pixel, h});
+        }
+        for (const preview::GridLine& line : grid.horizontal) {
+            (line.major ? overlay.gridMajor : overlay.gridMinor).append(QLineF{0.0, line.pixel, w, line.pixel});
+        }
+    }
     overlay.rubberBand = rubber_;
     widget_->setOverlay(overlay);
 }
@@ -179,6 +194,7 @@ void PreviewController::onPressed(QPointF position, Qt::KeyboardModifiers modifi
         }
         select(selection);
         dragged_ = selection;
+        dragOrigin_ = dragCorner();
         mode_ = Mode::MoveFixtures;
         return;
     }
@@ -220,6 +236,20 @@ bool PreviewController::pressRegion(QPointF position) {
     return false;  // sonst wie gewohnt: Fixture wählen oder Gummiband
 }
 
+Vec3 PreviewController::dragCorner() const {
+    Vec3 corner{};
+    bool first = true;
+    for (const mapping::FixtureId id : dragged_) {
+        if (const mapping::Fixture* fixture = player_.project()->layout.find(id)) {
+            const mapping::Box box = preview::worldBox(*fixture);
+            corner.x = first ? box.min.x : std::min(corner.x, box.min.x);
+            corner.y = first ? box.min.y : std::min(corner.y, box.min.y);
+            first = false;
+        }
+    }
+    return corner;
+}
+
 void PreviewController::applyDrag(QPointF position, bool force) {
     if (!force && throttle_.isValid() && throttle_.elapsed() < kThrottleMs) {
         return;
@@ -231,7 +261,14 @@ void PreviewController::applyDrag(QPointF position, bool force) {
     if (mode_ == Mode::MoveFixtures) {
         moved_ = true;
         const float scale = lastFrame_.scale > 0.0F ? lastFrame_.scale : 1.0F;
-        const Vec3 total{snapTenth(delta.x() / scale), snapTenth(-delta.y() / scale), 0.0F};
+        const bool snap = panel_->snapEnabled() && !QGuiApplication::queryKeyboardModifiers().testFlag(Qt::AltModifier);
+        Vec3 total{snapTenth(delta.x() / scale), snapTenth(-delta.y() / scale), 0.0F};
+        if (snap) {
+            // Die linke untere Ecke der gezogenen Fixtures rastet auf dem Raster ein
+            const float step = panel_->gridStep();
+            total.x = preview::snapToGrid(dragOrigin_.x + static_cast<float>(delta.x() / scale), step) - dragOrigin_.x;
+            total.y = preview::snapToGrid(dragOrigin_.y - static_cast<float>(delta.y() / scale), step) - dragOrigin_.y;
+        }
         const Vec3 step{total.x - applied_.x, total.y - applied_.y, 0.0F};
         if (step.x == 0.0F && step.y == 0.0F) {
             return;

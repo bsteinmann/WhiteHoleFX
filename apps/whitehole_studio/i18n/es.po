@@ -74,7 +74,7 @@ msgstr " cambios/s"
 msgid " s"
 msgstr " s"
 
-#: layout_panel.cpp:243
+#: layout_panel.cpp:244
 msgid "%1  (%2 LEDs)"
 msgstr "%1  (%2 LED)"
 
@@ -306,7 +306,7 @@ msgstr "Presentación &3D"
 msgid "3D-Gitter (Cube, Vorhang, Säule)"
 msgstr "Cuadrícula 3D (cubo, cortina, columna)"
 
-#: preview_widget.cpp:69
+#: preview_widget.cpp:70
 msgid "3D: ziehen = drehen · Rechtsklick oder Umschalt+Ziehen = verschieben · Rad = Zoom · Doppelklick = Zoom zurücksetzen"
 msgstr "3D: arrastrar = girar · clic derecho o Mayús+arrastrar = desplazar · rueda = zoom · doble clic = restablecer zoom"
 
@@ -517,6 +517,10 @@ msgstr "BLACKOUT"
 #: cue_panel.cpp:64
 msgid "Bearbeiten …"
 msgstr "Editar …"
+
+#: layout_panel_grid.cpp:39
+msgid "Beim Ziehen rastet die linke untere Ecke der Fixtures am Raster ein (Alt gedrückt: ohne Einrasten)"
+msgstr "Al arrastrar, la esquina inferior izquierda de los fixtures se ajusta a la cuadrícula (con Alt: sin ajustar)"
 
 #: live_panel.cpp:155
 msgid "Bereit: %1 - GO drücken"
@@ -790,6 +794,10 @@ msgstr "A fixed number. Handy for feeding the same value to several parameters."
 msgid "Einfügen\tStrg+V"
 msgstr "Pegar\tCtrl+V"
 
+#: layout_panel_grid.cpp:38
+msgid "Einrasten"
+msgstr "Ajustar"
+
 #: main_window_settings.cpp:46 output_form.cpp:45 settings_dialog.cpp:57
 msgid "Einstellungen"
 msgstr "Ajustes"
@@ -810,7 +818,7 @@ msgstr "Quitar"
 msgid "Erkennt den Takt der Musik und liefert Beat-Impuls, Pulse (klingt ab), Phase und Tempo (BPM). Das Tempo lässt sich auch fest vorgeben."
 msgstr "Detects the beat of the music and outputs a beat trigger, a decaying pulse, phase and tempo (BPM). The tempo can also be fixed by hand."
 
-#: layout_panel.cpp:179
+#: layout_panel.cpp:180
 msgid "Erst Fixtures wählen (Strg oder Umschalt halten für mehrere)"
 msgstr "Primero selecciona fixtures (mantén Ctrl o Mayús para varios)"
 
@@ -1454,6 +1462,18 @@ msgstr "&Importar nube de puntos …"
 msgid "Quellname (sACN)"
 msgstr "Nombre de la fuente (sACN)"
 
+#: layout_panel_grid.cpp:35
+msgid "Raster"
+msgstr "Cuadrícula"
+
+#: layout_panel_grid.cpp:36
+msgid "Raster in der Vorschau anzeigen"
+msgstr "Mostrar la cuadrícula en la vista previa"
+
+#: layout_panel_grid.cpp:42
+msgid "Rasterweite in Layout-Einheiten"
+msgstr "Separación de la cuadrícula en unidades de layout"
+
 #: node_info_texts.cpp:139
 msgid "Rechnet einen Wert von einem Bereich in einen anderen um (In min/max auf Out min/max), auf Wunsch begrenzt."
 msgstr "Converts a value from one range to another (In min/max to Out min/max), optionally clamped."
@@ -1862,7 +1882,7 @@ msgstr "Randomly lighting pixels, blinking or fading, between two colors."
 msgid "Zufällige Zellen, die auf- und abblenden (Fading Pixels), zwischen zwei Farben."
 msgstr "Random cells that fade in and out, between two colors."
 
-#: layout_panel.cpp:195
+#: layout_panel.cpp:196
 msgid "Zum Aneinanderreihen mindestens zwei Fixtures wählen"
 msgstr "Selecciona al menos dos fixtures para alinear"
 

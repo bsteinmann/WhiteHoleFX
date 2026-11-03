@@ -7,6 +7,7 @@
 #include "form_helpers.hpp"
 #include "layout_panel.hpp"
 #include "preview_controller.hpp"
+#include "whitehole/preview/grid.hpp"
 
 namespace whitehole::studio {
 
@@ -38,6 +39,8 @@ QString PreviewController::exercise() {
     const auto originOf = [this, id]() { return player_.project()->layout.find(id)->origin; };
     const Vec3 original = originOf();
     const std::size_t fixtureCount = player_.project()->layout.fixtures().size();
+
+    panel_->setGrid(true, false, 1.0F);  // Teil 1 bis 5 ziehen ohne Einrasten
 
     // 1. Fixture anklicken und 40 Bildpunkte nach rechts ziehen.
     const QRectF box = toQRect(preview::toPixels(lastFrame_, preview::worldBox(*player_.project()->layout.find(id))));
@@ -144,6 +147,30 @@ QString PreviewController::exercise() {
     }
     if (!ledText(QPointF{-5000.0, -5000.0}, 5.0F).isEmpty()) {
         return QStringLiteral("Vorschau: weit außerhalb darf es keine LED-Info geben");
+    }
+
+    // 6. Raster: Linien erscheinen im Overlay, und beim Ziehen rastet die linke untere Ecke ein.
+    if (const QString note = render(); !note.isEmpty()) {
+        return note;
+    }
+    const preview::Grid grid = preview::buildGrid(lastFrame_, 800.0F, 450.0F, 1.0F);
+    if (grid.vertical.size() < 2 || grid.horizontal.size() < 2) {
+        return QStringLiteral("Vorschau: Raster hat %1 senkrechte und %2 waagrechte Linien")
+            .arg(grid.vertical.size())
+            .arg(grid.horizontal.size());
+    }
+    panel_->setGrid(true, true, 1.0F);
+    const QPointF grab = toQRect(preview::toPixels(lastFrame_, preview::worldBox(*player_.project()->layout.find(id)))).center();
+    onPressed(grab, Qt::NoModifier);
+    onDragged(grab + QPointF{13.0, 7.0});
+    onReleased(grab + QPointF{26.0, 14.0});
+    const mapping::Box snapped = preview::worldBox(*player_.project()->layout.find(id));
+    const auto onGrid = [](float value) { return std::abs(value - preview::snapToGrid(value, 1.0F)) < 1e-3F; };
+    if (!onGrid(snapped.min.x) || !onGrid(snapped.min.y)) {
+        return QStringLiteral("Vorschau: nach dem Ziehen liegt die Ecke bei %1/%2, nicht auf dem Raster (Weite %3)")
+            .arg(static_cast<double>(snapped.min.x))
+            .arg(static_cast<double>(snapped.min.y))
+            .arg(1.0);
     }
     return {};
 }

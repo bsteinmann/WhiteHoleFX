@@ -6,6 +6,7 @@
 #include <QFont>
 #include <QFontMetrics>
 #include <QPainter>
+#include <QPen>
 #include <QResizeEvent>
 #include <QWheelEvent>
 
@@ -68,6 +69,12 @@ void PreviewWidget::paintEvent(QPaintEvent*) {
         painter.drawText(rect().adjusted(12, 8, -12, -8), Qt::AlignBottom | Qt::AlignLeft,
                          tr("3D: ziehen = drehen · Rechtsklick oder Umschalt+Ziehen = verschieben · Rad = Zoom · "
                             "Doppelklick = Zoom zurücksetzen"));
+    }
+    if (!view3d_ && (!overlay_.gridMinor.isEmpty() || !overlay_.gridMajor.isEmpty())) {
+        painter.setPen(QPen{QColor{255, 255, 255, 28}, 1.0});
+        painter.drawLines(overlay_.gridMinor.constData(), static_cast<int>(overlay_.gridMinor.size()));
+        painter.setPen(QPen{QColor{255, 255, 255, 70}, 1.0});
+        painter.drawLines(overlay_.gridMajor.constData(), static_cast<int>(overlay_.gridMajor.size()));
     }
     if (!view3d_ && overlay_.editingRegion && !overlay_.wall.isEmpty()) {
         drawFrame(painter, overlay_.wall, QColor{140, 140, 150}, Qt::DotLine, 1.0);

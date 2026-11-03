@@ -3,6 +3,7 @@
 # in einem Fenster; der Konsolen-Runner schreibt es als Datei.
 wh_add_library(wh_preview
     SOURCES
+        src/grid.cpp
         src/png.cpp
         src/preview.cpp
         src/view.cpp

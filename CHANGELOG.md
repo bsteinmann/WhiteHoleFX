@@ -1,5 +1,9 @@
 # Änderungen
 
+## 0.44.0
+
+- **Layout-Editor: Raster und Einrasten.** Unter den Anordnen-Knöpfen im Layout gibt es „Raster“ (Linien in der 2D-Vorschau, jede zehnte kräftiger), „Einrasten“ und die Rasterweite (0,1 bis 10 Layout-Einheiten). Beim Ziehen rastet die linke untere Ecke der gezogenen Fixtures am Raster ein, bei mehreren die der Gesamtbox; mit gedrückter Alt-Taste wird ohne Einrasten gezogen. Bei kleinem Zoom wird das Raster automatisch gröber. Die Einstellungen werden zwischen Sitzungen gemerkt. Die Rechnung steht in `preview/grid.hpp` und ist getestet; der Rauchtest prüft Linien und Einrasten.
+
 ## 0.43.0
 
 - **Fixtures nebeneinander reihen:** „Verteilen“ im Layout ist ersetzt durch „Nebeneinander ↔“ und „Übereinander ↕“. Die gewählten Fixtures werden in der Reihenfolge ihrer Lage dicht aneinandergesetzt, das erste bleibt stehen; ein Feld „Abstand“ erlaubt eine Lücke. Es genügen zwei Fixtures, und es kann sich nichts mehr überlappen. Kern: `Player::packFixtures` (ersetzt `distributeFixtures`), getestet.

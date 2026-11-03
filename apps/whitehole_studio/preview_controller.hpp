@@ -74,6 +74,8 @@ private:
     void onHover(QPointF position);
     bool pressRegion(QPointF position);
     void applyDrag(QPointF position, bool force);
+    /// Linke untere Ecke (x, y) der Gesamtbox der gezogenen Fixtures.
+    [[nodiscard]] Vec3 dragCorner() const;
     void finish();
     void select(const std::vector<mapping::FixtureId>& ids);
     void report(const Result<void>& result);
@@ -96,6 +98,7 @@ private:
     Mode mode_{Mode::Idle};
     QPointF press_;
     bool moved_{false};
+    Vec3 dragOrigin_;                             // linke untere Ecke der gezogenen Fixtures beim Drücken
     Vec3 applied_;                                // bereits angewendeter Versatz der Ziehbewegung
     std::vector<mapping::FixtureId> dragged_;     // die Fixtures, die gezogen werden
     std::vector<mapping::FixtureId> base_;        // Auswahl vor dem Gummiband (bei Strg/Umschalt)

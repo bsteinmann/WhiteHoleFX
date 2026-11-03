@@ -74,7 +74,7 @@ msgstr ""
 msgid " s"
 msgstr ""
 
-#: layout_panel.cpp:243
+#: layout_panel.cpp:244
 msgid "%1  (%2 LEDs)"
 msgstr ""
 
@@ -306,7 +306,7 @@ msgstr ""
 msgid "3D-Gitter (Cube, Vorhang, Säule)"
 msgstr ""
 
-#: preview_widget.cpp:69
+#: preview_widget.cpp:70
 msgid "3D: ziehen = drehen · Rechtsklick oder Umschalt+Ziehen = verschieben · Rad = Zoom · Doppelklick = Zoom zurücksetzen"
 msgstr ""
 
@@ -516,6 +516,10 @@ msgstr ""
 
 #: cue_panel.cpp:64
 msgid "Bearbeiten …"
+msgstr ""
+
+#: layout_panel_grid.cpp:39
+msgid "Beim Ziehen rastet die linke untere Ecke der Fixtures am Raster ein (Alt gedrückt: ohne Einrasten)"
 msgstr ""
 
 #: live_panel.cpp:155
@@ -790,6 +794,10 @@ msgstr ""
 msgid "Einfügen\tStrg+V"
 msgstr ""
 
+#: layout_panel_grid.cpp:38
+msgid "Einrasten"
+msgstr ""
+
 #: main_window_settings.cpp:46 output_form.cpp:45 settings_dialog.cpp:57
 msgid "Einstellungen"
 msgstr ""
@@ -810,7 +818,7 @@ msgstr ""
 msgid "Erkennt den Takt der Musik und liefert Beat-Impuls, Pulse (klingt ab), Phase und Tempo (BPM). Das Tempo lässt sich auch fest vorgeben."
 msgstr ""
 
-#: layout_panel.cpp:179
+#: layout_panel.cpp:180
 msgid "Erst Fixtures wählen (Strg oder Umschalt halten für mehrere)"
 msgstr ""
 
@@ -1454,6 +1462,18 @@ msgstr ""
 msgid "Quellname (sACN)"
 msgstr ""
 
+#: layout_panel_grid.cpp:35
+msgid "Raster"
+msgstr ""
+
+#: layout_panel_grid.cpp:36
+msgid "Raster in der Vorschau anzeigen"
+msgstr ""
+
+#: layout_panel_grid.cpp:42
+msgid "Rasterweite in Layout-Einheiten"
+msgstr ""
+
 #: node_info_texts.cpp:139
 msgid "Rechnet einen Wert von einem Bereich in einen anderen um (In min/max auf Out min/max), auf Wunsch begrenzt."
 msgstr ""
@@ -1862,7 +1882,7 @@ msgstr ""
 msgid "Zufällige Zellen, die auf- und abblenden (Fading Pixels), zwischen zwei Farben."
 msgstr ""
 
-#: layout_panel.cpp:195
+#: layout_panel.cpp:196
 msgid "Zum Aneinanderreihen mindestens zwei Fixtures wählen"
 msgstr ""
 

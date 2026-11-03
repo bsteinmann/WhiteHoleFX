@@ -170,6 +170,7 @@ QWidget* LayoutPanel::buildArrangeBar() {
     packGap_->setToolTip(tr("Abstand zwischen den Fixtures beim Aneinanderreihen (0 = dicht an dicht)"));
     grid->addWidget(new QLabel{tr("Abstand")}, 3, 0);
     grid->addWidget(packGap_, 3, 1);
+    grid->addWidget(buildGridBar(), 4, 0, 1, 3);
     return bar;
 }
 

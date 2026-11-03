@@ -19,6 +19,8 @@
 #include "whitehole/mapping/point_import.hpp"
 #include "whitehole/runtime/player.hpp"
 
+class QCheckBox;
+class QComboBox;
 class QDoubleSpinBox;
 
 namespace whitehole::studio {
@@ -28,6 +30,13 @@ class LayoutPanel : public QTabWidget {
 
 public:
     explicit LayoutPanel(runtime::Player& player, QWidget* parent = nullptr);
+
+    /// Raster im Layout-Editor: anzeigen, Einrasten beim Ziehen, Weite in Layout-Einheiten.
+    [[nodiscard]] bool gridVisible() const;
+    [[nodiscard]] bool snapEnabled() const;
+    [[nodiscard]] float gridStep() const;
+    /// Setzt alle drei (für den Rauchtest); meldet `gridChanged`.
+    void setGrid(bool show, bool snap, float step);
 
     /// Liest alles neu aus dem Player (nach Laden, Undo, Redo). Behält das gewählte Fixture, wenn es
     /// noch existiert.
@@ -70,9 +79,12 @@ Q_SIGNALS:
     void projectNeeded();
     /// Der Nutzer hat in der Liste eine andere Auswahl getroffen.
     void selectionChanged();
+    /// Raster gezeigt/ausgeblendet, Einrasten oder Rasterweite geändert.
+    void gridChanged();
 
 private:
     QWidget* buildArrangeBar();
+    QWidget* buildGridBar();
     QString exerciseArrange();
     QString exerciseImport();
     QString exerciseAddDialog();
@@ -87,6 +99,9 @@ private:
     QListWidget* list_{nullptr};
     FixtureForm* fixture_{nullptr};
     OutputForm* output_{nullptr};
+    QCheckBox* showGrid_{nullptr};
+    QCheckBox* snap_{nullptr};
+    QComboBox* gridStep_{nullptr};
     QDoubleSpinBox* packGap_{nullptr};  // Abstand für "Nebeneinander"/"Übereinander"
     StageView* miniView_{nullptr};  // kleine Bühnenansicht über der Liste
 };
