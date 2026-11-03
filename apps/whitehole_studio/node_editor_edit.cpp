@@ -157,6 +157,7 @@ bool NodeEditor::beginWire(const QPointF& scenePos) {
     tempWire_ = scene_.addPath(QPainterPath{}, QPen{portColor(wireSlot_.type), 2.5, Qt::DashLine});
     tempWire_->setZValue(10.0);
     moveWire(scenePos);
+    Q_EMIT wireDragBegan(static_cast<int>(wireSlot_.type), wireSlot_.output);
     return true;
 }
 
@@ -169,12 +170,16 @@ void NodeEditor::moveWire(const QPointF& scenePos) {
 }
 
 void NodeEditor::cancelWire() {
+    const bool dragged = tempWire_ != nullptr;
     if (tempWire_ != nullptr) {
         scene_.removeItem(tempWire_);
         delete tempWire_;
         tempWire_ = nullptr;
     }
     wireNode_ = nullptr;
+    if (dragged) {
+        Q_EMIT wireDragEnded();
+    }
 }
 
 bool NodeEditor::endWire(const QPointF& scenePos) {

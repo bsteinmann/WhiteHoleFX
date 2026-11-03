@@ -1,5 +1,10 @@
 # Änderungen
 
+## 0.39.0
+
+- **Palette farbig:** Vor jedem Node in der Palette steht ein Punkt in der Farbe dessen, was er liefert (Bild blau, Wert grün, Farbe rosa, Audio himmelblau, sonst grau). Ansicht → „Palette farbig“ schaltet ihn ab.
+- **Passende Nodes hervorheben:** Beim Ziehen eines Kabels aus einem Port werden in der Palette die Nodes abgedunkelt, die sich nicht anschließen lassen. Die Regeln stehen in `graph/port_family.hpp` und sind getestet.
+
 ## 0.38.1
 
 - **Scalar → Integer:** Zahlen-Ausgänge (LFO, Math, Map …) lassen sich jetzt auch an ganzzahlige Eingänge und Auswahlfelder anschließen (türkise Rauten, z. B. Mode, Strands, Count). Der Wert wird gerundet und auf den Bereich des Parameters begrenzt; Werte, die keine Zahl sind, bleiben wirkungslos.

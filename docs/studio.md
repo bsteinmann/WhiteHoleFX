@@ -249,12 +249,22 @@ Die Wahl wird gespeichert und gilt für alle 3D-Ansichten. Die 2D-Ansicht bleibt
 
 ### Node-Palette
 
-Links im Dock „Nodes“ steht die Palette: alle verfügbaren Node-Typen nach Kategorien (Generator, Modifier,
+Links im Dock „Nodes“ steht die Palette: alle verfügbaren Node-Typen nach Kategorien (Generators, Effects,
 Value, Audio ...), oben ein Suchfeld. Getippt wird nach Name, Kategorie und Typ-ID, jedes Wort muss passen
 („blend add“). Ein Typ lässt sich in den Editor **ziehen** (er entsteht unter der Maus) oder per Doppelklick
 oder Enter in die Mitte der Ansicht legen. Zum **Entfernen** ziehst du einen Node im Editor auf die
 Palette; sie wird rot, beim Loslassen ist der Node (samt Kabeln) weg. Alles ist ein Schritt Rückgängig.
 Neue Node-Typen erscheinen automatisch, die Palette liest die Registrierung.
+
+**Farbige Punkte:** Vor jedem Namen steht ein Punkt in der Farbe dessen, was der Node liefert: blau = Bild
+(Field), grün = Wert (Zahl, Ganzzahl, Schalter, Trigger), rosa = Farbe, himmelblau = Audio, grau = sonstiges.
+Das sind dieselben Farben wie die Ports im Editor, nur zu fünf Familien zusammengefasst. Ansicht → „Palette
+farbig“ schaltet die Punkte ab.
+
+**Passende Nodes beim Kabelziehen:** Zieht man im Editor ein Kabel aus einem Port, bleiben in der Palette nur die
+Nodes hell, die sich daran anschließen lassen; alle anderen werden abgedunkelt. Aus einem Ausgang gezogen sind
+das Nodes mit passendem Eingang, aus einem Eingang gezogen Nodes mit passendem Ausgang. Loslassen hebt die
+Hervorhebung auf. So findet man z. B. zur türkisen Raute (Ganzzahl) die Nodes, die sie speisen können.
 
 Die Kategorien sind beim Start **zugeklappt**; beim Suchen sind die Treffer aufgeklappt. Mit Rechtsklick auf einen Node-Typ
 („Zu Favoriten hinzufügen“) wird er zum **Favoriten**: Er steht oben in der Gruppe „Favoriten“ (immer offen) und in seiner Kategorie

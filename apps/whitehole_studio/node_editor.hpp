@@ -131,6 +131,10 @@ Q_SIGNALS:
     void selectionChanged();
     /// Ein Node wird gerade über die Löschzone gezogen (true) oder wieder davon weg (false).
     void deleteZoneHover(bool over);
+    /// Ein Kabel wird aus einem Port gezogen (Porttyp als Zahl, `fromOutput`: aus einem Ausgang) bzw. ist beendet.
+    /// Die Palette hebt damit die Nodes hervor, die sich anschließen lassen.
+    void wireDragBegan(int portType, bool fromOutput);
+    void wireDragEnded();
 
 protected:
     void dragEnterEvent(QDragEnterEvent* event) override;

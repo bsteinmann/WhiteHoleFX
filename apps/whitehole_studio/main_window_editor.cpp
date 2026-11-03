@@ -36,6 +36,10 @@ void MainWindow::buildEditorDock() {
     palette_ = new NodePalette{player_->registry(), this};
     editor_->setDeleteZone(palette_);
     connect(editor_, &NodeEditor::deleteZoneHover, palette_, &NodePalette::setRemoveHighlight);
+    connect(editor_, &NodeEditor::wireDragBegan, palette_, [this](int type, bool fromOutput) {
+        palette_->setWireNeed(static_cast<graph::PortType>(type), fromOutput);
+    });
+    connect(editor_, &NodeEditor::wireDragEnded, palette_, &NodePalette::clearWireNeed);
     connect(palette_, &NodePalette::addRequested, this,
             [this](const QString& typeId) { editor_->addNodeAtCenter(typeId.toStdString()); });
 
@@ -85,6 +89,29 @@ QString MainWindow::exercisePalette() {
     palette_->setFilter({});
     if (all < 10 || some < 1 || some >= all) {
         return tr("Palette: Filter zeigt %1 von %2 Typen").arg(some).arg(all);
+    }
+    // Farbige Punkte und Hervorhebung beim Kabelziehen
+    {
+        const bool wasColored = palette_->colored();
+        palette_->setColored(true);
+        const int dots = palette_->dotTypeCount();
+        palette_->setColored(false);
+        const int noDots = palette_->dotTypeCount();
+        palette_->setColored(wasColored);
+        if (dots < all - 5 || noDots != 0) {
+            return tr("Palette: %1 Punkte mit Farbe, %2 ohne (von %3 Typen)").arg(dots).arg(noDots).arg(all);
+        }
+        palette_->setWireNeed(graph::PortType::Text, true);  // an Text lässt sich fast nichts anschließen
+        const int dimmedForText = palette_->dimmedTypeCount();
+        palette_->setWireNeed(graph::PortType::Field, true);
+        const int dimmedForField = palette_->dimmedTypeCount();
+        palette_->clearWireNeed();
+        if (dimmedForText <= dimmedForField || dimmedForField == 0 || palette_->dimmedTypeCount() != 0) {
+            return tr("Palette: abgedunkelt für Text %1, für Bild %2, danach %3")
+                .arg(dimmedForText)
+                .arg(dimmedForField)
+                .arg(palette_->dimmedTypeCount());
+        }
     }
     const int before = editor_->nodeCount();
     // Ziehen und Ablegen aus der Palette: derselbe Weg wie mit der Maus (Typ-ID im MIME-Typ).

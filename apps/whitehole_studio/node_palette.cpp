@@ -6,6 +6,7 @@
 #include <QColor>
 #include <QDrag>
 #include <QFont>
+#include <QIcon>
 #include <QLabel>
 #include <QLineEdit>
 #include <QMenu>
@@ -16,9 +17,12 @@
 #include <QStringList>
 #include <QTreeWidget>
 #include <QTreeWidgetItem>
+#include <QTreeWidgetItemIterator>
 #include <QVBoxLayout>
 
+#include "node_items.hpp"
 #include "node_search.hpp"
+#include "whitehole/graph/port_family.hpp"
 
 namespace whitehole::studio {
 
@@ -28,7 +32,32 @@ QString fromStd(const std::string& text) { return QString::fromUtf8(text.data(),
 
 constexpr int kTypeIdRole = Qt::UserRole;
 constexpr int kFavoritesRole = Qt::UserRole + 1;  // gesetzt auf der Gruppe "Favoriten"
+constexpr int kDimRole = Qt::UserRole + 2;  // true: gerade nicht anschließbar (abgedunkelt)
 constexpr const char* kFavoritesKey = "palette/favorites";
+constexpr const char* kColoredKey = "palette/colored";
+
+/// Farbe des Punkts einer Familie; die Farben sind die der Port-Typen im Editor (node_items.cpp).
+QColor familyColor(graph::PortFamily family) {
+    switch (family) {
+        case graph::PortFamily::Image: return portColor(graph::PortType::Field);
+        case graph::PortFamily::Value: return portColor(graph::PortType::Scalar);
+        case graph::PortFamily::Color: return portColor(graph::PortType::Color);
+        case graph::PortFamily::Audio: return portColor(graph::PortType::AudioSpectrum);
+        case graph::PortFamily::Other: return QColor{150, 150, 158};
+    }
+    return QColor{150, 150, 158};
+}
+
+QIcon dotIcon(const QColor& color) {
+    QPixmap pixmap{12, 12};
+    pixmap.fill(Qt::transparent);
+    QPainter painter{&pixmap};
+    painter.setRenderHint(QPainter::Antialiasing);
+    painter.setPen(Qt::NoPen);
+    painter.setBrush(color);
+    painter.drawEllipse(QRectF{2.0, 2.0, 8.0, 8.0});
+    return QIcon{pixmap};
+}
 
 QStringList loadFavorites() {
     QSettings settings{QStringLiteral("WhiteHoleFX"), QStringLiteral("WhiteHoleFX")};
@@ -121,6 +150,9 @@ NodePalette::NodePalette(std::shared_ptr<const graph::INodeRegistry> registry, Q
     setRemoveHighlight(false);
 
     favorites_ = loadFavorites();
+    colored_ = QSettings{QStringLiteral("WhiteHoleFX"), QStringLiteral("WhiteHoleFX")}
+                   .value(QString::fromLatin1(kColoredKey), true)
+                   .toBool();
     tree_->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(tree_, &QTreeWidget::customContextMenuRequested, this, &NodePalette::showContextMenu);
     connect(tree_, &QTreeWidget::itemExpanded, this, [this](QTreeWidgetItem* item) {
@@ -192,9 +224,76 @@ void NodePalette::fill(const QString& filter) {
         addType(category, *type, favorites_.contains(fromStd(type->typeId)));
     }
     filling_ = false;
+    applyStyles();
     if (filtered && tree_->topLevelItemCount() > 0 && tree_->topLevelItem(0)->childCount() > 0) {
         tree_->setCurrentItem(tree_->topLevelItem(0)->child(0));
     }
+}
+
+void NodePalette::applyStyles() {
+    const QBrush normal = tree_->palette().brush(QPalette::Text);
+    const QBrush dimmed{QColor{110, 110, 118}};
+    for (QTreeWidgetItemIterator it{tree_}; *it != nullptr; ++it) {
+        QTreeWidgetItem* item = *it;
+        const QString typeId = item->data(0, kTypeIdRole).toString();
+        if (typeId.isEmpty()) {
+            continue;  // eine Kategorie
+        }
+        const graph::NodeDescriptor* type = registry_->find(typeId.toStdString());
+        if (type == nullptr) {
+            continue;
+        }
+        // Punkt: Farbe der Familie des ersten Ausgangs; ohne Ausgang bleibt eine leere Fläche, damit alles bündig steht.
+        const std::optional<graph::PortFamily> family = graph::outputFamily(*type);
+        item->setIcon(0, colored_ ? (family ? dotIcon(familyColor(*family)) : dotIcon(Qt::transparent)) : QIcon{});
+        bool fits = true;
+        if (need_) {
+            fits = need_->fromOutput ? graph::acceptsInputFrom(*type, need_->type)
+                                     : graph::offersOutputFor(*type, need_->type);
+        }
+        item->setData(0, kDimRole, !fits);
+        item->setForeground(0, fits ? normal : dimmed);
+    }
+}
+
+void NodePalette::setColored(bool on) {
+    colored_ = on;
+    QSettings{QStringLiteral("WhiteHoleFX"), QStringLiteral("WhiteHoleFX")}.setValue(QString::fromLatin1(kColoredKey), on);
+    applyStyles();
+}
+
+void NodePalette::setWireNeed(graph::PortType type, bool fromOutput) {
+    need_ = WireNeed{type, fromOutput};
+    applyStyles();
+}
+
+void NodePalette::clearWireNeed() {
+    need_.reset();
+    applyStyles();
+}
+
+int NodePalette::dotTypeCount() const {
+    int count = 0;
+    for (QTreeWidgetItemIterator it{tree_}; *it != nullptr; ++it) {
+        const QTreeWidgetItem* item = *it;
+        if (!item->data(0, kTypeIdRole).toString().isEmpty() && !item->icon(0).isNull() &&
+            !(item->parent() != nullptr && item->parent()->data(0, kFavoritesRole).toBool())) {
+            ++count;
+        }
+    }
+    return count;
+}
+
+int NodePalette::dimmedTypeCount() const {
+    int count = 0;
+    for (QTreeWidgetItemIterator it{tree_}; *it != nullptr; ++it) {
+        const QTreeWidgetItem* item = *it;
+        if (item->data(0, kDimRole).toBool() &&
+            !(item->parent() != nullptr && item->parent()->data(0, kFavoritesRole).toBool())) {
+            ++count;
+        }
+    }
+    return count;
 }
 
 void NodePalette::setFavorite(const QString& typeId, bool on) {

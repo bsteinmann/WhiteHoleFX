@@ -6,7 +6,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: node_palette.cpp:158
+#: node_palette.cpp:190
 msgid "\nRechtsklick: Favorit umschalten"
 msgstr "\nClic droit : ajouter/retirer des favoris"
 
@@ -158,7 +158,7 @@ msgstr "&Réglages …"
 msgid "&Fehler melden oder Idee vorschlagen …"
 msgstr "&Signaler un bogue ou proposer une idée …"
 
-#: main_window_actions.cpp:109
+#: main_window_actions.cpp:114
 msgid "&Hilfe"
 msgstr "&Aide"
 
@@ -170,7 +170,7 @@ msgstr "&Disposition et patch …"
 msgid "&Leuchten (additiv)"
 msgstr "&Halo (additif)"
 
-#: main_window_actions.cpp:105
+#: main_window_actions.cpp:110
 msgid "&Live"
 msgstr "&Live"
 
@@ -222,7 +222,7 @@ msgstr "Mode &test …"
 msgid "&Tutorial …"
 msgstr "&Tutoriel …"
 
-#: main_window_actions.cpp:101
+#: main_window_actions.cpp:106
 msgid "&Wiedergabe"
 msgstr "&Lecture"
 
@@ -270,7 +270,7 @@ msgstr ", niveau %1 %"
 msgid "100 %"
 msgstr "100 %"
 
-#: main_window_actions.cpp:157
+#: main_window_actions.cpp:162
 msgid "3D"
 msgstr "3D"
 
@@ -426,7 +426,7 @@ msgstr "Art-Net, sACN et DDP sortent par cette carte. Avec « Automatique », la
 msgid "Art-Net-Port (UDP):"
 msgstr "Port Art-Net (UDP) :"
 
-#: main_window_actions.cpp:154 settings_dialog.cpp:61
+#: main_window_actions.cpp:159 settings_dialog.cpp:61
 msgid "Audio"
 msgstr "Audio"
 
@@ -446,7 +446,7 @@ msgstr "Rétablir la valeur par défaut"
 msgid "Auf den Wert der Bibliothek zurückstellen"
 msgstr "Rétablir la valeur de la bibliothèque"
 
-#: node_palette.cpp:118 node_palette.cpp:258
+#: node_palette.cpp:147 node_palette.cpp:357
 msgid "Auf die Fläche ziehen: Node hinzufügen.\nNode hierher ziehen: entfernen."
 msgstr "Glisser sur la zone : ajouter un nœud.\nGlisser un nœud ici : le supprimer."
 
@@ -458,7 +458,7 @@ msgstr "Impossible de lister les périphériques de capture : %1"
 msgid "Aus"
 msgstr "Désactivé"
 
-#: node_palette.cpp:225
+#: node_palette.cpp:324
 msgid "Aus Favoriten entfernen"
 msgstr "Retirer des favoris"
 
@@ -510,7 +510,7 @@ msgstr "Modifier …"
 msgid "Bereit: %1 - GO drücken"
 msgstr "Prêt : %1 - appuyer sur GO"
 
-#: main_window_actions.cpp:120
+#: main_window_actions.cpp:125
 msgid "Betrieb"
 msgstr "Fonctionnement"
 
@@ -602,7 +602,7 @@ msgstr "Le projet a été modifié. Abandonner les modifications ?"
 msgid "Das Testbild ersetzt den Effekt in der Vorschau und, wenn „Ausgabe senden“ an ist, auch auf den LEDs. Es wird nicht im Projekt gespeichert.\n\nAchtung: Weiß und Farbe leuchten mit voller Helligkeit. Prüfe vorher, ob die Netzteile die ganze Wand auf 100 % tragen."
 msgstr "La mire remplace l'effet dans l'aperçu et, si « Envoyer la sortie » est activé, aussi sur les LED. Elle n'est pas enregistrée dans le projet.\n\nAttention : le blanc et la couleur s'allument à pleine luminosité. Vérifiez d'abord que les alimentations supportent tout le mur à 100 %."
 
-#: main_window_actions.cpp:112
+#: main_window_actions.cpp:117
 msgid "Datei"
 msgstr "Fichier"
 
@@ -694,7 +694,7 @@ msgstr "Ce projet n'a pas de paramètres réglables."
 msgid "Duplizieren\tStrg+D"
 msgstr "Dupliquer\tCtrl+D"
 
-#: main_window_actions.cpp:151
+#: main_window_actions.cpp:156
 msgid "Effekte (2D)"
 msgstr "Effets (2D)"
 
@@ -722,7 +722,7 @@ msgstr "Coller\tCtrl+V"
 msgid "Einstellungen"
 msgstr "Réglages"
 
-#: main_window_actions.cpp:148
+#: main_window_actions.cpp:153
 msgid "Einstieg"
 msgstr "Premiers pas"
 
@@ -770,15 +770,19 @@ msgstr "Facteur appliqué à toutes les coordonnées, p. ex. 0,1 pour des millim
 msgid "Farbe"
 msgstr "Couleur"
 
+#: main_window_actions.cpp:101
+msgid "Farbige Punkte vor den Nodes in der Palette: was der Node liefert"
+msgstr "Points de couleur devant les nodes de la palette : ce que le node fournit"
+
 #: add_fixture_dialog.cpp:179 fixture_form.cpp:219 test_panel.cpp:39
 msgid "Farbreihenfolge"
 msgstr "Ordre des couleurs"
 
-#: node_palette.cpp:178
+#: node_palette.cpp:210
 msgid "Favoriten"
 msgstr "Favoris"
 
-#: main_window_actions.cpp:98
+#: main_window_actions.cpp:103
 msgid "Fensteranordnung &zurücksetzen"
 msgstr "Réinitialiser la disposition de la &fenêtre"
 
@@ -1030,7 +1034,7 @@ msgstr "Écraser le look"
 msgid "Looks"
 msgstr "Looks"
 
-#: node_palette.cpp:254
+#: node_palette.cpp:353
 msgid "Loslassen: Node wird entfernt"
 msgstr "Relâcher : le nœud sera supprimé"
 
@@ -1170,11 +1174,11 @@ msgstr "Valeurs par défaut des nœuds"
 msgid "Node-Typ suchen …"
 msgstr "Chercher un type de nœud …"
 
-#: main_window_editor.cpp:50
+#: main_window_editor.cpp:54
 msgid "Nodes"
 msgstr "Nœuds"
 
-#: node_palette.cpp:105
+#: node_palette.cpp:134
 msgid "Nodes suchen …"
 msgstr "Chercher des nœuds …"
 
@@ -1209,6 +1213,10 @@ msgstr "Sans coche, le câble commence à gauche, en bas, à l'arrière. x vers 
 #: main_window_actions.cpp:61
 msgid "Pakete (Art-Net, sACN, DDP) wirklich ins Netz schicken"
 msgstr "Envoyer réellement les paquets (Art-Net, sACN, DDP) sur le réseau"
+
+#: main_window_actions.cpp:98
+msgid "Palette &farbig"
+msgstr "&Palette en couleur"
 
 #: main_window.cpp:88
 msgid "Parameter"
@@ -1338,7 +1346,7 @@ msgstr "Serpentin (une ligne sur deux en sens inverse)"
 msgid "So lange dauert das Überblenden zu diesem Look. 0 = hartes Umschalten."
 msgstr "Durée du fondu vers ce look. 0 = changement brutal."
 
-#: node_palette.cpp:190
+#: node_palette.cpp:222
 msgid "Sonstige"
 msgstr "Autres"
 
@@ -1386,7 +1394,7 @@ msgstr "Stop"
 msgid "Strenge &Eingänge"
 msgstr "Entrées &strictes"
 
-#: main_window_editor.cpp:115
+#: main_window_editor.cpp:142
 msgid "Strenge Eingänge"
 msgstr "Entrées strictes"
 
@@ -1574,7 +1582,7 @@ msgstr "Destination n°"
 msgid "Ziele (Controller)"
 msgstr "Destinations (contrôleurs)"
 
-#: node_palette.cpp:225
+#: node_palette.cpp:324
 msgid "Zu Favoriten hinzufügen"
 msgstr "Ajouter aux favoris"
 

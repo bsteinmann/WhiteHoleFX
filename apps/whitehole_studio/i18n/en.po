@@ -6,7 +6,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: node_palette.cpp:158
+#: node_palette.cpp:190
 msgid "\nRechtsklick: Favorit umschalten"
 msgstr "\nRight-click: toggle favorite"
 
@@ -158,7 +158,7 @@ msgstr "&Settings …"
 msgid "&Fehler melden oder Idee vorschlagen …"
 msgstr "&Report a bug or suggest an idea …"
 
-#: main_window_actions.cpp:109
+#: main_window_actions.cpp:114
 msgid "&Hilfe"
 msgstr "&Help"
 
@@ -170,7 +170,7 @@ msgstr "&Layout and Patch …"
 msgid "&Leuchten (additiv)"
 msgstr "&Glow (additive)"
 
-#: main_window_actions.cpp:105
+#: main_window_actions.cpp:110
 msgid "&Live"
 msgstr "&Live"
 
@@ -222,7 +222,7 @@ msgstr "&Test mode …"
 msgid "&Tutorial …"
 msgstr "&Tutorial …"
 
-#: main_window_actions.cpp:101
+#: main_window_actions.cpp:106
 msgid "&Wiedergabe"
 msgstr "&Playback"
 
@@ -270,7 +270,7 @@ msgstr ", level %1 %"
 msgid "100 %"
 msgstr "100 %"
 
-#: main_window_actions.cpp:157
+#: main_window_actions.cpp:162
 msgid "3D"
 msgstr "3D"
 
@@ -426,7 +426,7 @@ msgstr "Art-Net, sACN and DDP leave through this card. With “Automatic” the 
 msgid "Art-Net-Port (UDP):"
 msgstr "Art-Net port (UDP):"
 
-#: main_window_actions.cpp:154 settings_dialog.cpp:61
+#: main_window_actions.cpp:159 settings_dialog.cpp:61
 msgid "Audio"
 msgstr "Audio"
 
@@ -446,7 +446,7 @@ msgstr "Reset to default"
 msgid "Auf den Wert der Bibliothek zurückstellen"
 msgstr "Reset to the library value"
 
-#: node_palette.cpp:118 node_palette.cpp:258
+#: node_palette.cpp:147 node_palette.cpp:357
 msgid "Auf die Fläche ziehen: Node hinzufügen.\nNode hierher ziehen: entfernen."
 msgstr "Drag onto the canvas: add a node.\nDrag a node here: remove it."
 
@@ -458,7 +458,7 @@ msgstr "Cannot list capture devices: %1"
 msgid "Aus"
 msgstr "Off"
 
-#: node_palette.cpp:225
+#: node_palette.cpp:324
 msgid "Aus Favoriten entfernen"
 msgstr "Remove from favorites"
 
@@ -510,7 +510,7 @@ msgstr "Edit …"
 msgid "Bereit: %1 - GO drücken"
 msgstr "Ready: %1 - press GO"
 
-#: main_window_actions.cpp:120
+#: main_window_actions.cpp:125
 msgid "Betrieb"
 msgstr "Operation"
 
@@ -602,7 +602,7 @@ msgstr "The project has been modified. Discard changes?"
 msgid "Das Testbild ersetzt den Effekt in der Vorschau und, wenn „Ausgabe senden“ an ist, auch auf den LEDs. Es wird nicht im Projekt gespeichert.\n\nAchtung: Weiß und Farbe leuchten mit voller Helligkeit. Prüfe vorher, ob die Netzteile die ganze Wand auf 100 % tragen."
 msgstr "The test pattern replaces the effect in the preview and, if “Send output” is on, on the LEDs too. It is not saved in the project.\n\nCaution: white and color light up at full brightness. Check beforehand that the power supplies can carry the whole wall at 100 %."
 
-#: main_window_actions.cpp:112
+#: main_window_actions.cpp:117
 msgid "Datei"
 msgstr "File"
 
@@ -694,7 +694,7 @@ msgstr "This project has no adjustable parameters."
 msgid "Duplizieren\tStrg+D"
 msgstr "Duplicate\tCtrl+D"
 
-#: main_window_actions.cpp:151
+#: main_window_actions.cpp:156
 msgid "Effekte (2D)"
 msgstr "Effects (2D)"
 
@@ -722,7 +722,7 @@ msgstr "Paste\tCtrl+V"
 msgid "Einstellungen"
 msgstr "Settings"
 
-#: main_window_actions.cpp:148
+#: main_window_actions.cpp:153
 msgid "Einstieg"
 msgstr "Getting started"
 
@@ -770,15 +770,19 @@ msgstr "Factor for all coordinates, e.g. 0.1 for millimeters to centimeters"
 msgid "Farbe"
 msgstr "Color"
 
+#: main_window_actions.cpp:101
+msgid "Farbige Punkte vor den Nodes in der Palette: was der Node liefert"
+msgstr "Colored dots in front of the nodes in the palette: what the node delivers"
+
 #: add_fixture_dialog.cpp:179 fixture_form.cpp:219 test_panel.cpp:39
 msgid "Farbreihenfolge"
 msgstr "Color order"
 
-#: node_palette.cpp:178
+#: node_palette.cpp:210
 msgid "Favoriten"
 msgstr "Favorites"
 
-#: main_window_actions.cpp:98
+#: main_window_actions.cpp:103
 msgid "Fensteranordnung &zurücksetzen"
 msgstr "Reset window &layout"
 
@@ -1030,7 +1034,7 @@ msgstr "Overwrite look"
 msgid "Looks"
 msgstr "Looks"
 
-#: node_palette.cpp:254
+#: node_palette.cpp:353
 msgid "Loslassen: Node wird entfernt"
 msgstr "Release: node will be removed"
 
@@ -1170,11 +1174,11 @@ msgstr "Node defaults"
 msgid "Node-Typ suchen …"
 msgstr "Search node type …"
 
-#: main_window_editor.cpp:50
+#: main_window_editor.cpp:54
 msgid "Nodes"
 msgstr "Nodes"
 
-#: node_palette.cpp:105
+#: node_palette.cpp:134
 msgid "Nodes suchen …"
 msgstr "Search nodes …"
 
@@ -1209,6 +1213,10 @@ msgstr "Unchecked, the cable starts left, bottom, back. x to the right, y up, z 
 #: main_window_actions.cpp:61
 msgid "Pakete (Art-Net, sACN, DDP) wirklich ins Netz schicken"
 msgstr "Really send packets (Art-Net, sACN, DDP) onto the network"
+
+#: main_window_actions.cpp:98
+msgid "Palette &farbig"
+msgstr "Colored &palette"
 
 #: main_window.cpp:88
 msgid "Parameter"
@@ -1338,7 +1346,7 @@ msgstr "Serpentine (every second row backwards)"
 msgid "So lange dauert das Überblenden zu diesem Look. 0 = hartes Umschalten."
 msgstr "This is how long the fade to this look takes. 0 = hard switch."
 
-#: node_palette.cpp:190
+#: node_palette.cpp:222
 msgid "Sonstige"
 msgstr "Other"
 
@@ -1386,7 +1394,7 @@ msgstr "Stop"
 msgid "Strenge &Eingänge"
 msgstr "Strict &inputs"
 
-#: main_window_editor.cpp:115
+#: main_window_editor.cpp:142
 msgid "Strenge Eingänge"
 msgstr "Strict inputs"
 
@@ -1574,7 +1582,7 @@ msgstr "Destination no."
 msgid "Ziele (Controller)"
 msgstr "Destinations (controllers)"
 
-#: node_palette.cpp:225
+#: node_palette.cpp:324
 msgid "Zu Favoriten hinzufügen"
 msgstr "Add to favorites"
 

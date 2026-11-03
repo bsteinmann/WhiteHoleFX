@@ -95,6 +95,11 @@ void MainWindow::buildActions() {
     view->addAction(lookDock_->toggleViewAction());
     view->addAction(cueDock_->toggleViewAction());
     view->addSeparator();
+    QAction* coloredPalette = view->addAction(tr("Palette &farbig"));
+    coloredPalette->setCheckable(true);
+    coloredPalette->setChecked(palette_->colored());
+    coloredPalette->setToolTip(tr("Farbige Punkte vor den Nodes in der Palette: was der Node liefert"));
+    connect(coloredPalette, &QAction::toggled, this, [this](bool on) { palette_->setColored(on); });
     view->addAction(tr("Fensteranordnung &zurücksetzen"), this, [this]() { resetWindowLayout(); });
 
     // Reihenfolge wie im Betrieb: erst Wiedergabe und Ausgabe, dann der Live-Modus, ganz rechts die Hilfe.

@@ -16,6 +16,11 @@
 // übersichtlich bleibt; wer sucht, sieht die Treffer aufgeklappt. Welche Kategorien man geöffnet hat,
 // merkt sich die Palette, solange sie läuft.
 //
+// Farbe und Hervorhebung: Vor jedem Namen steht ein kleiner Punkt in der Farbe dessen, was der Node liefert
+// (Bild blau, Wert grün, Farbe rosa, Audio himmelblau, sonst grau; siehe graph/port_family.hpp). Zieht man ein
+// Kabel aus einem Port, bleiben nur die Nodes hell, die sich daran anschließen lassen, die übrigen werden
+// abgedunkelt. Die Punkte lassen sich im Menü Ansicht abschalten ("palette/colored" in den Einstellungen).
+//
 // Die Palette kennt nur das Verzeichnis der Node-Typen, nicht den Graphen.
 #pragma once
 
@@ -25,8 +30,10 @@
 #include <QWidget>
 
 #include <memory>
+#include <optional>
 
 #include "whitehole/graph/node_registry.hpp"
+#include "whitehole/graph/port_type.hpp"
 
 class QLabel;
 class QLineEdit;
@@ -56,6 +63,18 @@ public:
     /// Zeigt die Palette als "Papierkorb": rot mit dem Hinweis, dass Loslassen den Node entfernt.
     void setRemoveHighlight(bool on);
 
+    /// Farbige Punkte vor den Namen an/aus (wird gemerkt, Standard: an).
+    [[nodiscard]] bool colored() const noexcept { return colored_; }
+    void setColored(bool on);
+    /// Während ein Kabel gezogen wird: nur Nodes hervorheben, die sich anschließen lassen. `fromOutput`: das
+    /// Kabel kommt aus einem Ausgang vom Typ `type` (gesucht: Nodes mit passendem Eingang); sonst aus einem
+    /// Eingang (gesucht: Nodes mit passendem Ausgang).
+    void setWireNeed(graph::PortType type, bool fromOutput);
+    void clearWireNeed();
+    /// Für die Prüfung (--exercise): Zahl der Typen mit Punkt und der abgedunkelten Typen (Favoriten-Kopien nicht doppelt).
+    [[nodiscard]] int dotTypeCount() const;
+    [[nodiscard]] int dimmedTypeCount() const;
+
     [[nodiscard]] QSize sizeHint() const override { return {230, 300}; }
 
 Q_SIGNALS:
@@ -64,6 +83,7 @@ Q_SIGNALS:
 
 private:
     void fill(const QString& filter);
+    void applyStyles();
     void showContextMenu(const QPoint& position);
 
     std::shared_ptr<const graph::INodeRegistry> registry_;
@@ -73,6 +93,12 @@ private:
     QStringList favorites_;
     QSet<QString> expanded_;  // Namen der Kategorien, die der Nutzer geöffnet hat
     bool filling_{false};
+    bool colored_{true};
+    struct WireNeed {
+        graph::PortType type;
+        bool fromOutput;
+    };
+    std::optional<WireNeed> need_;
 };
 
 }  // namespace whitehole::studio
