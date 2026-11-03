@@ -1,9 +1,18 @@
 name: CI
 
+# Das Windows-Paket (Artefakt) entsteht nur bei Start von Hand: Actions -> CI -> Run workflow, oder
+# `gh workflow run CI`. Bei normalen Pushes wird Windows nur gebaut und getestet. Releases bauen
+# ihr Paket selbst (release.yml).
 on:
   push:
     branches: [main]
   pull_request:
+  workflow_dispatch:
+
+# Ein neuer Push bricht den noch laufenden Lauf desselben Zweigs ab.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   gcc:
@@ -96,6 +105,7 @@ jobs:
           path: |
             vorschau.png
             layout.png
+          retention-days: 7
 
   windows:
     name: Windows (MSVC, experimentell, Fehler brechen den Lauf nicht ab)
@@ -223,6 +233,7 @@ jobs:
             fenster-lauf.png
             fenster-regler.png
             fenster-text.png
+          retention-days: 7
 
   windows-studio:
     name: Windows Oberfläche (Qt 6, MSVC, fertiges Paket als Artefakt, experimentell)
@@ -280,6 +291,7 @@ jobs:
           Write-Output "::notice title=Rauchtest mit Lauf::Exit-Code $($p2.ExitCode)"
           if (-not (Test-Path fenster-regler.png)) { exit 1 }
       - name: Paket schnüren (windeployqt)
+        if: github.event_name == 'workflow_dispatch'
         run: |
           $env:PATH = "C:\Qt\$env:QT_VERSION\msvc2022_64\bin;$env:PATH"
           New-Item -ItemType Directory -Force -Path paket/WhiteHoleFX | Out-Null
@@ -290,15 +302,18 @@ jobs:
           windeployqt --release --no-translations paket/WhiteHoleFX/whitehole_studio.exe
           Get-ChildItem paket/WhiteHoleFX | Select-Object -First 40 Name
       - name: Paket bereitstellen
+        if: github.event_name == 'workflow_dispatch'
         uses: actions/upload-artifact@v4
         with:
           name: WhiteHoleFX-Windows
           path: paket
+          retention-days: 14
       - name: Fensterbilder bereitstellen
         uses: actions/upload-artifact@v4
         with:
           name: fenster-windows
           path: fenster-*.png
+          retention-days: 7
 
   linux-package:
     name: Linux-Paket (.deb, gebaut auf Ubuntu 22.04, Installationstest in 22.04 und 24.04)
@@ -375,3 +390,5 @@ jobs:
         with:
           name: WhiteHoleFX-Linux-deb
           path: dist/*.deb
+          retention-days: 14
+          retention-days: 7
