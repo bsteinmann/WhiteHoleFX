@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.25)
 
 project(WhiteHoleFX
-    VERSION 0.37.7
+    VERSION 0.37.8
     DESCRIPTION "Quelloffene Echtzeitsteuerung für LED-Matrizen, LED-Cubes und Pixelinstallationen"
     LANGUAGES CXX)
 

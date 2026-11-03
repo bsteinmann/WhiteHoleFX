@@ -1,5 +1,11 @@
 # Änderungen
 
+## 0.37.8
+
+- **#29:** Ein per Doppelklick (oder Suche, Menü, Palette) angelegter Node ist danach der einzige ausgewählte. Vorher blieben die bisher gewählten Nodes gewählt, und der nächste Zug mit der Maus verschob alle mit. Mit Prüfung im Rauchtest.
+- **#27:** Das Studio merkt sich Fenstergröße, Lage und die Anordnung der Docks und Leisten und stellt sie beim nächsten Start wieder her. Ansicht → „Fensteranordnung zurücksetzen“ vergisst sie wieder. Im Live-Modus wird nur die Geometrie gemerkt.
+- Intern: Node-Überbrückung (Bypass) im Kern, noch ohne Schalter im Editor (Zeile `bypass` in der Projektdatei).
+
 ## 0.37.7
 
 - **Fix:** Node-Editor: Das Mausrad blockierte komplett, wenn die Ansicht außerhalb von 0,25..3-fach lag (etwa nach „Alles zeigen“ bei vielen Nodes). Jetzt zoomt es immer in Richtung dieses Bereichs. Neuer Zoom-Test im Rauchtest (`--exercise`).

@@ -402,6 +402,7 @@ void MainWindow::closeEvent(QCloseEvent* event) {
         event->ignore();
         return;
     }
+    saveWindowLayout();
     stopPlayback();
     event->accept();
 }

@@ -102,6 +102,9 @@ int main(int argc, char** argv) {
 
     studio::MainWindow window{device.get(), note};
     window.resize(1100, 680);
+    if (!grabbing) {
+        window.restoreWindowLayout();  // Issue #27; --grab bleibt unabhängig von gespeicherten Einstellungen
+    }
     window.show();
 
     const QStringList args = parser.positionalArguments();

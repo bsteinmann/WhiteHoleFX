@@ -10,7 +10,7 @@ msgstr ""
 msgid "\nRechtsklick: Favorit umschalten"
 msgstr "\nClic droit : ajouter/retirer des favoris"
 
-#: main_window.cpp:277
+#: main_window.cpp:279
 msgid "   |   AUSGABE AN"
 msgstr "   |   SORTIE ACTIVE"
 
@@ -22,11 +22,11 @@ msgstr "   |   Nœuds audio dans le projet, entrée désactivée (Réglages)"
 msgid "   |   Audio: %1"
 msgstr "   |   Audio : %1"
 
-#: main_window.cpp:277
+#: main_window.cpp:279
 msgid "   |   Ausgabe aus (%1 Pakete nicht gesendet)"
 msgstr "   |   Sortie désactivée (%1 paquets non envoyés)"
 
-#: main_window.cpp:267
+#: main_window.cpp:269
 msgid "   |   BLACKOUT"
 msgstr "   |   BLACKOUT"
 
@@ -38,15 +38,15 @@ msgstr "   |   Entrée DMX %1 : %2 paquets"
 msgid "   |   DMX-Nodes im Projekt, Eingang aus (Einstellungen)"
 msgstr "   |   Nœuds DMX dans le projet, entrée désactivée (Réglages)"
 
-#: main_window.cpp:272
+#: main_window.cpp:274
 msgid "   |   EINGANG FEHLT – LEDs aus"
 msgstr "   |   ENTRÉE MANQUANTE – LED éteintes"
 
-#: main_window.cpp:269
+#: main_window.cpp:271
 msgid "   |   Master %1 %"
 msgstr "   |   Master %1 %"
 
-#: main_window.cpp:264
+#: main_window.cpp:266
 msgid "   |   TESTMODUS"
 msgstr "   |   MODE TEST"
 
@@ -102,11 +102,11 @@ msgstr "%1 (introuvable)"
 msgid "%1 LEDs · Größe %2 × %3 × %4 · %5 Kanäle (RGB), rund %6 Universe(s)"
 msgstr "%1 LED · taille %2 × %3 × %4 · %5 canaux (RVB), environ %6 univers"
 
-#: main_window.cpp:253
+#: main_window.cpp:255
 msgid "%1 LEDs, Frame %2 (verworfen %3), Pakete %4, Sendefehler %5"
 msgstr "%1 LED, image %2 (perdues %3), paquets %4, erreurs d'envoi %5"
 
-#: main_window.cpp:251
+#: main_window.cpp:253
 msgid "%1 LEDs, angehalten"
 msgstr "%1 LED, arrêté"
 
@@ -158,7 +158,7 @@ msgstr "&Réglages …"
 msgid "&Fehler melden oder Idee vorschlagen …"
 msgstr "&Signaler un bogue ou proposer une idée …"
 
-#: main_window_actions.cpp:107
+#: main_window_actions.cpp:109
 msgid "&Hilfe"
 msgstr "&Aide"
 
@@ -170,7 +170,7 @@ msgstr "&Disposition et patch …"
 msgid "&Leuchten (additiv)"
 msgstr "&Halo (additif)"
 
-#: main_window_actions.cpp:103
+#: main_window_actions.cpp:105
 msgid "&Live"
 msgstr "&Live"
 
@@ -202,11 +202,11 @@ msgstr "Enregi&strer"
 msgid "&Stage Config"
 msgstr "&Stage Config"
 
-#: main_window.cpp:140 main_window_actions.cpp:54
+#: main_window.cpp:142 main_window_actions.cpp:54
 msgid "&Start"
 msgstr "&Démarrer"
 
-#: main_window.cpp:140
+#: main_window.cpp:142
 msgid "&Stopp"
 msgstr "&Arrêter"
 
@@ -222,7 +222,7 @@ msgstr "Mode &test …"
 msgid "&Tutorial …"
 msgstr "&Tutoriel …"
 
-#: main_window_actions.cpp:99
+#: main_window_actions.cpp:101
 msgid "&Wiedergabe"
 msgstr "&Lecture"
 
@@ -270,7 +270,7 @@ msgstr ", niveau %1 %"
 msgid "100 %"
 msgstr "100 %"
 
-#: main_window_actions.cpp:155
+#: main_window_actions.cpp:157
 msgid "3D"
 msgstr "3D"
 
@@ -426,7 +426,7 @@ msgstr "Art-Net, sACN et DDP sortent par cette carte. Avec « Automatique », la
 msgid "Art-Net-Port (UDP):"
 msgstr "Port Art-Net (UDP) :"
 
-#: main_window_actions.cpp:152 settings_dialog.cpp:61
+#: main_window_actions.cpp:154 settings_dialog.cpp:61
 msgid "Audio"
 msgstr "Audio"
 
@@ -510,7 +510,7 @@ msgstr "Modifier …"
 msgid "Bereit: %1 - GO drücken"
 msgstr "Prêt : %1 - appuyer sur GO"
 
-#: main_window_actions.cpp:118
+#: main_window_actions.cpp:120
 msgid "Betrieb"
 msgstr "Fonctionnement"
 
@@ -594,7 +594,7 @@ msgstr "Canal DMX"
 msgid "Das Kabel beginnt an dieser Seite statt an der gegenüberliegenden"
 msgstr "Le câble commence de ce côté plutôt que du côté opposé"
 
-#: main_window.cpp:200
+#: main_window.cpp:202
 msgid "Das Projekt wurde geändert. Änderungen verwerfen?"
 msgstr "Le projet a été modifié. Abandonner les modifications ?"
 
@@ -602,7 +602,7 @@ msgstr "Le projet a été modifié. Abandonner les modifications ?"
 msgid "Das Testbild ersetzt den Effekt in der Vorschau und, wenn „Ausgabe senden“ an ist, auch auf den LEDs. Es wird nicht im Projekt gespeichert.\n\nAchtung: Weiß und Farbe leuchten mit voller Helligkeit. Prüfe vorher, ob die Netzteile die ganze Wand auf 100 % tragen."
 msgstr "La mire remplace l'effet dans l'aperçu et, si « Envoyer la sortie » est activé, aussi sur les LED. Elle n'est pas enregistrée dans le projet.\n\nAttention : le blanc et la couleur s'allument à pleine luminosité. Vérifiez d'abord que les alimentations supportent tout le mur à 100 %."
 
-#: main_window_actions.cpp:110
+#: main_window_actions.cpp:112
 msgid "Datei"
 msgstr "Fichier"
 
@@ -678,11 +678,11 @@ msgstr "La nouvelle langue s'applique après le redémarrage de WhiteHoleFX. Red
 msgid "Die Änderung wirkt sofort nach „OK“."
 msgstr "La modification prend effet immédiatement après « OK »."
 
-#: main_window.cpp:177
+#: main_window.cpp:179
 msgid "Dieser Node hat keine einstellbaren Parameter."
 msgstr "Ce nœud n'a pas de paramètres réglables."
 
-#: main.cpp:79
+#: main.cpp:100
 msgid "Dieses Programm wurde ohne GPU-Backend gebaut (-DWHITEHOLEFX_WEBGPU=ON); es zeigt nur das Layout."
 msgstr "Ce programme a été compilé sans le backend GPU (-DWHITEHOLEFX_WEBGPU=ON) ; il n'affiche que la disposition."
 
@@ -694,7 +694,7 @@ msgstr "Ce projet n'a pas de paramètres réglables."
 msgid "Duplizieren\tStrg+D"
 msgstr "Dupliquer\tCtrl+D"
 
-#: main_window_actions.cpp:149
+#: main_window_actions.cpp:151
 msgid "Effekte (2D)"
 msgstr "Effets (2D)"
 
@@ -722,7 +722,7 @@ msgstr "Coller\tCtrl+V"
 msgid "Einstellungen"
 msgstr "Réglages"
 
-#: main_window_actions.cpp:146
+#: main_window_actions.cpp:148
 msgid "Einstieg"
 msgstr "Premiers pas"
 
@@ -778,6 +778,14 @@ msgstr "Ordre des couleurs"
 msgid "Favoriten"
 msgstr "Favoris"
 
+#: main_window_actions.cpp:98
+msgid "Fensteranordnung &zurücksetzen"
+msgstr "Réinitialiser la disposition de la &fenêtre"
+
+#: main_window_layout.cpp:63
+msgid "Fensteranordnung zurückgesetzt: Sie gilt ab dem nächsten Start."
+msgstr "Disposition de la fenêtre réinitialisée : elle s'applique au prochain démarrage."
+
 #: main_window_stage.cpp:24
 msgid "Fixture &hinzufügen …"
 msgstr "&Ajouter un fixture …"
@@ -798,7 +806,7 @@ msgstr "Disposer les fixtures, régler univers et destinations (fenêtre sépar�
 msgid "Form"
 msgstr "Forme"
 
-#: main_window.cpp:316
+#: main_window.cpp:327
 msgid "Frame"
 msgstr "Image"
 
@@ -902,11 +910,11 @@ msgstr "Carte pour l'envoi :"
 msgid "Kein Fixture ausgewählt."
 msgstr "Aucun fixture sélectionné."
 
-#: main.cpp:76
+#: main.cpp:97
 msgid "Kein GPU-Adapter: %1"
 msgstr "Aucun adaptateur GPU : %1"
 
-#: main_window.cpp:249
+#: main_window.cpp:251
 msgid "Kein Projekt"
 msgstr "Aucun projet"
 
@@ -946,7 +954,7 @@ msgstr "LED en largeur × hauteur"
 msgid "LEDs x y z"
 msgstr "LED x y z"
 
-#: main_window.cpp:261
+#: main_window.cpp:263
 msgid "LIVE   |   "
 msgstr "LIVE   |   "
 
@@ -1126,7 +1134,7 @@ msgstr "Nouveau projet"
 msgid "Neues Projekt (Strg+N)"
 msgstr "Nouveau projet (Ctrl+N)"
 
-#: main_window.cpp:122
+#: main_window.cpp:124
 msgid "Neues Projekt (Strg+N), Projekt öffnen (Strg+O) oder eine .whfx-Datei hierher ziehen.\n\n%1"
 msgstr "Nouveau projet (Ctrl+N), ouvrir un projet (Ctrl+O) ou glisser un fichier .whfx ici.\n\n%1"
 
@@ -1202,7 +1210,7 @@ msgstr "Sans coche, le câble commence à gauche, en bas, à l'arrière. x vers 
 msgid "Pakete (Art-Net, sACN, DDP) wirklich ins Netz schicken"
 msgstr "Envoyer réellement les paquets (Art-Net, sACN, DDP) sur le réseau"
 
-#: main_window.cpp:86
+#: main_window.cpp:88
 msgid "Parameter"
 msgstr "Paramètres"
 
@@ -1362,7 +1370,7 @@ msgstr "Stage Config"
 msgid "Standardgerät des Systems"
 msgstr "Périphérique par défaut du système"
 
-#: cue_panel.cpp:67 cue_panel.cpp:144 main_window.cpp:295
+#: cue_panel.cpp:67 cue_panel.cpp:144 main_window.cpp:297
 msgid "Start"
 msgstr "Démarrer"
 
@@ -1442,7 +1450,7 @@ msgstr "Tutoriel"
 msgid "Umbenennen …"
 msgstr "Renommer …"
 
-#: main_window.cpp:199
+#: main_window.cpp:201
 msgid "Ungespeicherte Änderungen"
 msgstr "Modifications non enregistrées"
 
@@ -1502,11 +1510,11 @@ msgstr "Attente après la fin du fondu précédent"
 msgid "Weiß"
 msgstr "Blanc"
 
-#: main_window.cpp:114 main_window.cpp:153
+#: main_window.cpp:116 main_window.cpp:155
 msgid "WhiteHoleFX"
 msgstr "WhiteHoleFX"
 
-#: main_window.cpp:157
+#: main_window.cpp:159
 msgid "WhiteHoleFX – %1%2"
 msgstr "WhiteHoleFX – %1%2"
 
@@ -1638,7 +1646,7 @@ msgstr "Priorité sACN"
 msgid "strecken (Stretch)"
 msgstr "étirer (Stretch)"
 
-#: main_window.cpp:156
+#: main_window.cpp:158
 msgid "unbenannt"
 msgstr "sans titre"
 

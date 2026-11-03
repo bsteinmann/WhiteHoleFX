@@ -86,6 +86,11 @@ public:
     QString exerciseNewProject();
     /// Löst "Neu" (Strg+N) aus wie ein Tastendruck, auch ohne geladenes Projekt (main.cpp: --ctrl-n).
     void exerciseCtrlN();
+    /// Fensteranordnung zwischen Sitzungen (main_window_layout.cpp): beim Start laden, beim Beenden speichern.
+    void restoreWindowLayout();
+    void saveWindowLayout();
+    /// Vergisst die gemerkte Anordnung; sie gilt ab dem nächsten Start.
+    void resetWindowLayout();
     /// Rauchtest: das Kästchen "Transparent" einer Farbe setzt Alpha auf 0 und wieder auf 1.
     QString exerciseTransparency();
     /// Rauchtest: Master-Regler und Blackout-Schalter erreichen den Player; danach ist alles zurückgesetzt.
@@ -120,6 +125,7 @@ protected:
     void closeEvent(QCloseEvent* event) override;
 
 private:
+    void nameLayoutParts();  // Objektnamen der Docks, damit Qt ihren Zustand speichern kann
     void buildActions();
     /// Looks und Live-Betrieb (main_window_live.cpp).
     void buildLive();

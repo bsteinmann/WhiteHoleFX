@@ -10,7 +10,7 @@ msgstr ""
 msgid "\nRechtsklick: Favorit umschalten"
 msgstr ""
 
-#: main_window.cpp:277
+#: main_window.cpp:279
 msgid "   |   AUSGABE AN"
 msgstr ""
 
@@ -22,11 +22,11 @@ msgstr ""
 msgid "   |   Audio: %1"
 msgstr ""
 
-#: main_window.cpp:277
+#: main_window.cpp:279
 msgid "   |   Ausgabe aus (%1 Pakete nicht gesendet)"
 msgstr ""
 
-#: main_window.cpp:267
+#: main_window.cpp:269
 msgid "   |   BLACKOUT"
 msgstr ""
 
@@ -38,15 +38,15 @@ msgstr ""
 msgid "   |   DMX-Nodes im Projekt, Eingang aus (Einstellungen)"
 msgstr ""
 
-#: main_window.cpp:272
+#: main_window.cpp:274
 msgid "   |   EINGANG FEHLT – LEDs aus"
 msgstr ""
 
-#: main_window.cpp:269
+#: main_window.cpp:271
 msgid "   |   Master %1 %"
 msgstr ""
 
-#: main_window.cpp:264
+#: main_window.cpp:266
 msgid "   |   TESTMODUS"
 msgstr ""
 
@@ -102,11 +102,11 @@ msgstr ""
 msgid "%1 LEDs · Größe %2 × %3 × %4 · %5 Kanäle (RGB), rund %6 Universe(s)"
 msgstr ""
 
-#: main_window.cpp:253
+#: main_window.cpp:255
 msgid "%1 LEDs, Frame %2 (verworfen %3), Pakete %4, Sendefehler %5"
 msgstr ""
 
-#: main_window.cpp:251
+#: main_window.cpp:253
 msgid "%1 LEDs, angehalten"
 msgstr ""
 
@@ -158,7 +158,7 @@ msgstr ""
 msgid "&Fehler melden oder Idee vorschlagen …"
 msgstr ""
 
-#: main_window_actions.cpp:107
+#: main_window_actions.cpp:109
 msgid "&Hilfe"
 msgstr ""
 
@@ -170,7 +170,7 @@ msgstr ""
 msgid "&Leuchten (additiv)"
 msgstr ""
 
-#: main_window_actions.cpp:103
+#: main_window_actions.cpp:105
 msgid "&Live"
 msgstr ""
 
@@ -202,11 +202,11 @@ msgstr ""
 msgid "&Stage Config"
 msgstr ""
 
-#: main_window.cpp:140 main_window_actions.cpp:54
+#: main_window.cpp:142 main_window_actions.cpp:54
 msgid "&Start"
 msgstr ""
 
-#: main_window.cpp:140
+#: main_window.cpp:142
 msgid "&Stopp"
 msgstr ""
 
@@ -222,7 +222,7 @@ msgstr ""
 msgid "&Tutorial …"
 msgstr ""
 
-#: main_window_actions.cpp:99
+#: main_window_actions.cpp:101
 msgid "&Wiedergabe"
 msgstr ""
 
@@ -270,7 +270,7 @@ msgstr ""
 msgid "100 %"
 msgstr ""
 
-#: main_window_actions.cpp:155
+#: main_window_actions.cpp:157
 msgid "3D"
 msgstr ""
 
@@ -426,7 +426,7 @@ msgstr ""
 msgid "Art-Net-Port (UDP):"
 msgstr ""
 
-#: main_window_actions.cpp:152 settings_dialog.cpp:61
+#: main_window_actions.cpp:154 settings_dialog.cpp:61
 msgid "Audio"
 msgstr ""
 
@@ -510,7 +510,7 @@ msgstr ""
 msgid "Bereit: %1 - GO drücken"
 msgstr ""
 
-#: main_window_actions.cpp:118
+#: main_window_actions.cpp:120
 msgid "Betrieb"
 msgstr ""
 
@@ -594,7 +594,7 @@ msgstr ""
 msgid "Das Kabel beginnt an dieser Seite statt an der gegenüberliegenden"
 msgstr ""
 
-#: main_window.cpp:200
+#: main_window.cpp:202
 msgid "Das Projekt wurde geändert. Änderungen verwerfen?"
 msgstr ""
 
@@ -602,7 +602,7 @@ msgstr ""
 msgid "Das Testbild ersetzt den Effekt in der Vorschau und, wenn „Ausgabe senden“ an ist, auch auf den LEDs. Es wird nicht im Projekt gespeichert.\n\nAchtung: Weiß und Farbe leuchten mit voller Helligkeit. Prüfe vorher, ob die Netzteile die ganze Wand auf 100 % tragen."
 msgstr ""
 
-#: main_window_actions.cpp:110
+#: main_window_actions.cpp:112
 msgid "Datei"
 msgstr ""
 
@@ -678,11 +678,11 @@ msgstr ""
 msgid "Die Änderung wirkt sofort nach „OK“."
 msgstr ""
 
-#: main_window.cpp:177
+#: main_window.cpp:179
 msgid "Dieser Node hat keine einstellbaren Parameter."
 msgstr ""
 
-#: main.cpp:79
+#: main.cpp:100
 msgid "Dieses Programm wurde ohne GPU-Backend gebaut (-DWHITEHOLEFX_WEBGPU=ON); es zeigt nur das Layout."
 msgstr ""
 
@@ -694,7 +694,7 @@ msgstr ""
 msgid "Duplizieren\tStrg+D"
 msgstr ""
 
-#: main_window_actions.cpp:149
+#: main_window_actions.cpp:151
 msgid "Effekte (2D)"
 msgstr ""
 
@@ -722,7 +722,7 @@ msgstr ""
 msgid "Einstellungen"
 msgstr ""
 
-#: main_window_actions.cpp:146
+#: main_window_actions.cpp:148
 msgid "Einstieg"
 msgstr ""
 
@@ -778,6 +778,14 @@ msgstr ""
 msgid "Favoriten"
 msgstr ""
 
+#: main_window_actions.cpp:98
+msgid "Fensteranordnung &zurücksetzen"
+msgstr ""
+
+#: main_window_layout.cpp:63
+msgid "Fensteranordnung zurückgesetzt: Sie gilt ab dem nächsten Start."
+msgstr ""
+
 #: main_window_stage.cpp:24
 msgid "Fixture &hinzufügen …"
 msgstr ""
@@ -798,7 +806,7 @@ msgstr ""
 msgid "Form"
 msgstr ""
 
-#: main_window.cpp:316
+#: main_window.cpp:327
 msgid "Frame"
 msgstr ""
 
@@ -902,11 +910,11 @@ msgstr ""
 msgid "Kein Fixture ausgewählt."
 msgstr ""
 
-#: main.cpp:76
+#: main.cpp:97
 msgid "Kein GPU-Adapter: %1"
 msgstr ""
 
-#: main_window.cpp:249
+#: main_window.cpp:251
 msgid "Kein Projekt"
 msgstr ""
 
@@ -946,7 +954,7 @@ msgstr ""
 msgid "LEDs x y z"
 msgstr ""
 
-#: main_window.cpp:261
+#: main_window.cpp:263
 msgid "LIVE   |   "
 msgstr ""
 
@@ -1126,7 +1134,7 @@ msgstr ""
 msgid "Neues Projekt (Strg+N)"
 msgstr ""
 
-#: main_window.cpp:122
+#: main_window.cpp:124
 msgid "Neues Projekt (Strg+N), Projekt öffnen (Strg+O) oder eine .whfx-Datei hierher ziehen.\n\n%1"
 msgstr ""
 
@@ -1202,7 +1210,7 @@ msgstr ""
 msgid "Pakete (Art-Net, sACN, DDP) wirklich ins Netz schicken"
 msgstr ""
 
-#: main_window.cpp:86
+#: main_window.cpp:88
 msgid "Parameter"
 msgstr ""
 
@@ -1362,7 +1370,7 @@ msgstr ""
 msgid "Standardgerät des Systems"
 msgstr ""
 
-#: cue_panel.cpp:67 cue_panel.cpp:144 main_window.cpp:295
+#: cue_panel.cpp:67 cue_panel.cpp:144 main_window.cpp:297
 msgid "Start"
 msgstr ""
 
@@ -1442,7 +1450,7 @@ msgstr ""
 msgid "Umbenennen …"
 msgstr ""
 
-#: main_window.cpp:199
+#: main_window.cpp:201
 msgid "Ungespeicherte Änderungen"
 msgstr ""
 
@@ -1502,11 +1510,11 @@ msgstr ""
 msgid "Weiß"
 msgstr ""
 
-#: main_window.cpp:114 main_window.cpp:153
+#: main_window.cpp:116 main_window.cpp:155
 msgid "WhiteHoleFX"
 msgstr ""
 
-#: main_window.cpp:157
+#: main_window.cpp:159
 msgid "WhiteHoleFX – %1%2"
 msgstr ""
 
@@ -1638,7 +1646,7 @@ msgstr ""
 msgid "strecken (Stretch)"
 msgstr ""
 
-#: main_window.cpp:156
+#: main_window.cpp:158
 msgid "unbenannt"
 msgstr ""
 

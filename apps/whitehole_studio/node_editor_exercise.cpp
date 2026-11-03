@@ -61,6 +61,10 @@ QString NodeEditor::exercise() {
     if (!sink) {
         return QStringLiteral("Mirror-Node anlegen");
     }
+    // Issue #29: Ein neuer Node ist der einzige ausgewählte, auch wenn vorher andere gewählt waren.
+    if (scene_.selectedItems().size() != 1 || !itemOf(*sink)->isSelected()) {
+        return QStringLiteral("Neuer Node: %1 Nodes ausgewählt, erwartet nur der neue").arg(scene_.selectedItems().size());
+    }
     NodeItem* from = itemOf(*source);
     NodeItem* to = itemOf(*sink);
     if (from == nullptr || to == nullptr || from->findPort("out") == nullptr || to->findPort("source") == nullptr) {

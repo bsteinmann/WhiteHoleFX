@@ -21,6 +21,9 @@ std::optional<NodeId> NodeEditor::addNodeAt(const std::string& typeId, const QPo
         fail(id.error().message);
         return std::nullopt;
     }
+    // Issue #29: Nur der neue Node soll ausgewählt sein. Sonst blieben die bisherigen gewählt, und der nächste
+    // Zug mit der Maus verschöbe sie alle mit. rebuild() merkt sich die Auswahl, also vorher leeren.
+    scene_.clearSelection();
     rebuild();
     if (NodeItem* item = itemOf(id.value())) {
         item->setSelected(true);

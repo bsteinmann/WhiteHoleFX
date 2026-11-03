@@ -94,6 +94,8 @@ void MainWindow::buildActions() {
     view->addAction(dock_->toggleViewAction());
     view->addAction(lookDock_->toggleViewAction());
     view->addAction(cueDock_->toggleViewAction());
+    view->addSeparator();
+    view->addAction(tr("Fensteranordnung &zurücksetzen"), this, [this]() { resetWindowLayout(); });
 
     // Reihenfolge wie im Betrieb: erst Wiedergabe und Ausgabe, dann der Live-Modus, ganz rechts die Hilfe.
     QMenu* run = menuBar()->addMenu(tr("&Wiedergabe"));
