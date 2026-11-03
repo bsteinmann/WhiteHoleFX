@@ -270,7 +270,10 @@ QString NodeEditor::exerciseDocking(NodeId source, NodeId sink) {
     }
     const WireItem* wire = nullptr;
     for (const WireItem* candidate : wires_) {
-        wire = candidate;
+        const graph::Connection* c = player_.project()->graph.findConnection(candidate->connectionId());
+        if (c != nullptr && c->from.node == source && c->to.node == sink) {
+            wire = candidate;
+        }
     }
     if (wire == nullptr) {
         return QStringLiteral("Einrasten: kein Kabel zum Treffen");
@@ -318,11 +321,16 @@ QString NodeEditor::exerciseDocking(NodeId source, NodeId sink) {
     // Zustand wie vorher: das Test-Kabel wieder weg
     scene_.clearSelection();
     for (WireItem* candidate : wires_) {
-        candidate->setSelected(true);
+        const graph::Connection* c = player_.project()->graph.findConnection(candidate->connectionId());
+        if (c != nullptr && c->from.node == source && c->to.node == sink) {
+            candidate->setSelected(true);  // nur das Test-Kabel, die übrigen Kabel des Projekts bleiben
+        }
     }
     removeSelected();
     if (player_.project()->graph.connections().size() != wiresBefore) {
-        return QStringLiteral("Einrasten: Test-Kabel nicht entfernt");
+        return QStringLiteral("Einrasten: Test-Kabel nicht entfernt (%1 Kabel, erwartet %2)")
+            .arg(player_.project()->graph.connections().size())
+            .arg(wiresBefore);
     }
     return {};
 }
