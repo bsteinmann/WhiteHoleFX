@@ -28,7 +28,7 @@ jobs:
           -DWHITEHOLEFX_WARNINGS_AS_ERRORS=ON
           -DCMAKE_CXX_FLAGS="-fsanitize=address,undefined -fno-sanitize-recover=undefined"
       - name: Bauen
-        run: cmake --build build --parallel
+        run: cmake --build build --parallel 3
       - name: Testen
         run: ctest --test-dir build --output-on-failure
 
