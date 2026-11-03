@@ -15,6 +15,7 @@
 
 #include "main_window.hpp"
 #include "node_editor.hpp"
+#include "node_palette.hpp"
 
 namespace whitehole::studio {
 
