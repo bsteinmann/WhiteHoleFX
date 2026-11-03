@@ -28,6 +28,8 @@ add_executable(whitehole_studio
     app_language.cpp
     app_language.hpp
     studio.qrc
+    stall_watchdog.cpp
+    stall_watchdog.hpp
     main_window_settings.cpp
     main_window_stage.cpp
     main_window_view3d.cpp
@@ -102,6 +104,11 @@ if(TARGET wh_gpu_webgpu)
     target_link_libraries(whitehole_studio PRIVATE wh_gpu_webgpu)
     target_compile_definitions(whitehole_studio PRIVATE WH_STUDIO_HAVE_GPU=1)
     wh_copy_wgpu_dll(whitehole_studio)
+endif()
+if(UNIX AND NOT APPLE)
+    # -rdynamic: Der Wächter (stall_watchdog.cpp) gibt bei Freeze oder Absturz den Aufrufstapel aus; mit
+    # exportierten Symbolen stehen dort Funktionsnamen statt nur Adressen.
+    set_target_properties(whitehole_studio PROPERTIES ENABLE_EXPORTS ON)
 endif()
 if(WIN32)
     set_target_properties(whitehole_studio PROPERTIES WIN32_EXECUTABLE ON)

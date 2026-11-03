@@ -465,3 +465,12 @@ erreicht ist.
 
 Punktwolken bearbeiten (importieren geht), Fixtures drehen, Layout in der 3D-Ansicht bearbeiten (sie ist nur zum Ansehen), Kopieren/Einfügen von Fixtures. Solches entsteht bis dahin in der Projektdatei (siehe
 [Projektdatei](project-format.md)); „Neu laden“ übernimmt Änderungen sofort.
+
+## Wenn das Studio einfriert oder abstürzt
+
+Unter Linux läuft im Studio ein Wächter mit. Steht die Hauptschleife länger als zwei Sekunden, gibt er den
+Aufrufstapel des Hauptthreads aus, bei einem Absturz ebenso. Die Ausgabe steht im Terminal (stderr) und in
+`~/.cache/WhiteHoleFX/stack.txt`. Wer ein Problem melden will, hängt diese Datei an. Außerdem schreibt das
+Studio dort "Hauptschleife stand N ms" und "Shader übersetzt in N ms", wenn ein Schritt auffallend lange
+dauert. Mit `WHITEHOLEFX_NO_WATCHDOG=1` lässt sich der Wächter abschalten; `whitehole_studio --hang-test`
+prüft ihn (hält den Hauptthread 3 s an).

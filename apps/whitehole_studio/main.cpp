@@ -8,8 +8,11 @@
 // Rauchtest der ganzen Oberfläche.
 #include <QApplication>
 #include <QCommandLineParser>
+#include <QDir>
 #include <QPixmap>
+#include <QStandardPaths>
 #include <QThread>
+#include <QTimer>
 
 #include <chrono>
 #include <cstdio>
@@ -17,6 +20,7 @@
 
 #include "app_language.hpp"
 #include "main_window.hpp"
+#include "stall_watchdog.hpp"
 
 #ifdef WH_STUDIO_HAVE_GPU
 #include "whitehole/gpu_webgpu/webgpu_device.hpp"
@@ -32,6 +36,18 @@ int main(int argc, char** argv) {
     QApplication::setApplicationVersion(QStringLiteral(WH_VERSION));
     QGuiApplication::setDesktopFileName(QStringLiteral("whitehole-studio"));  // passt zum Starter (.desktop)
 
+    // Issue #26: Bei Freeze (Hauptschleife steht über 2 s) oder Absturz den Aufrufstapel ausgeben, auf stderr und in
+    // <Cache>/stack.txt. Den Herzschlag liefert ein Timer im Hauptthread.
+    const QString cacheDir = QStandardPaths::writableLocation(QStandardPaths::CacheLocation);
+    QDir{}.mkpath(cacheDir);
+    const QByteArray stackFile = QDir{cacheDir}.filePath(QStringLiteral("stack.txt")).toLocal8Bit();
+    QTimer heartbeat;
+    if (whitehole::studio::startStallWatchdog(stackFile.constData())) {
+        heartbeat.setInterval(100);
+        QObject::connect(&heartbeat, &QTimer::timeout, &whitehole::studio::stallHeartbeat);
+        heartbeat.start();
+    }
+
     QCommandLineParser parser;
     parser.setApplicationDescription(QStringLiteral("WhiteHoleFX Studio"));
     parser.addHelpOption();
@@ -44,7 +60,8 @@ int main(int argc, char** argv) {
     const QCommandLineOption exerciseOption{QStringLiteral("exercise"), QStringLiteral("vor --grab alle Regler einmal verstellen (Rauchtest)")};
     const QCommandLineOption langOption{QStringLiteral("lang"), QStringLiteral("Sprache der Oberfläche: de, en, fr oder es"), QStringLiteral("code")};
     const QCommandLineOption ctrlNOption{QStringLiteral("ctrl-n"), QStringLiteral("gleich nach dem Start Strg+N (Neu) auslösen (Prüfung für Issue #26)")};
-    parser.addOptions({runOption, softwareOption, grabOption, framesOption, exerciseOption, langOption, ctrlNOption});
+    const QCommandLineOption hangTestOption{QStringLiteral("hang-test"), QStringLiteral("Selbsttest des Wächters: den Hauptthread 3 s anhalten")};
+    parser.addOptions({runOption, softwareOption, grabOption, framesOption, exerciseOption, langOption, ctrlNOption, hangTestOption});
     parser.process(app);
 
     // Sprache vor dem ersten Fenster setzen. Die Rauchtests (--grab) prüfen deutsche Texte und laufen deshalb
@@ -97,6 +114,12 @@ int main(int argc, char** argv) {
         if (!window.startPlayback(!grab) && grab) {
             return 1;
         }
+    }
+
+    if (parser.isSet(hangTestOption)) {
+        QApplication::processEvents();
+        whitehole::studio::stallForTest(3000);
+        QApplication::processEvents();
     }
 
     if (parser.isSet(ctrlNOption)) {

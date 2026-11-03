@@ -1,5 +1,9 @@
 # Änderungen
 
+## 0.37.5
+
+- **Fehlersuche #26 (Freeze/Absturz):** Das Studio hat unter Linux einen Wächter. Steht die Hauptschleife länger als 2 s, gibt er den Aufrufstapel des Hauptthreads aus (stderr und `~/.cache/WhiteHoleFX/stack.txt`); dasselbe bei einem Absturz (SIGSEGV, SIGABRT …). Abschalten mit `WHITEHOLEFX_NO_WATCHDOG=1`. Selbsttest: `whitehole_studio --hang-test` (läuft auch in der CI).
+
 ## 0.37.4
 
 - **Fix:** Sphere und Box zeigten auf einer 2D-Matrix nichts (dort ist `p.z = 0`, die Körper lagen bei `cz = 0.5`). Neuer Parameter `space` mit *Flat*, *Volume* und *Auto* (Standard): Auto wählt selbst — flache LED-Karte → Kreis/Rechteck, räumliche → Kugel/Quader.

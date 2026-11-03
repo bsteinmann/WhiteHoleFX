@@ -204,6 +204,10 @@ jobs:
           run_studio --ctrl-n --software --grab fenster-neu.png
           run_studio --ctrl-n --run --software --frames 20 --grab fenster-neu-lauf.png
           run_studio --software --grab fenster-leer.png
+          # Wächter (Issue 26): Ein 3 s langer Stillstand muss einen Aufrufstapel auf stderr ausgeben.
+          hang=$("$studio" --hang-test --software --grab fenster-hang.png 2>&1) || true
+          echo "$hang" | grep -E "Hauptthread|Studio:" | head
+          echo "$hang" | grep -q "Hauptthread reagiert nicht" || { echo "Wächter hat nicht ausgelöst"; fail=1; }
           test -s fenster-layout.png && test -s fenster-lauf.png && test -s fenster-regler.png && test -s fenster-text.png || fail=1
           # Issue 13: Die Schrift muss im fertigen Fensterbild zu sehen sein.
           PIP_BREAK_SYSTEM_PACKAGES=1 python3 -m pip install --quiet pillow
