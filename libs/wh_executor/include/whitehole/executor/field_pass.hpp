@@ -87,6 +87,9 @@ public:
     bool record(const FrameTime& time, gpu::ICommandRecorder& recorder,
                 std::span<const gpu::Binding> consumerBindings, const DispatchSize& size);
 
+    /// Meldet dem Shader, ob die LED-Karte räumlich ist (WhFrame.volume, Platzhalter @volume). Standard: nein.
+    void setVolume(bool volume) noexcept { volume_ = volume; }
+
     [[nodiscard]] bool ready() const noexcept { return pipeline_.has_value() && graph_.has_value(); }
     [[nodiscard]] const std::optional<Error>& graphError() const noexcept { return graphError_; }
     [[nodiscard]] const std::optional<Error>& frameError() const noexcept { return frameError_; }
@@ -109,6 +112,7 @@ private:
     EntryFn entry_;
 
     gpu::BufferHandle frameBuffer_;
+    bool volume_{false};
 
     std::optional<graph::Graph> graph_;
     compiler::ParameterLayout layout_;

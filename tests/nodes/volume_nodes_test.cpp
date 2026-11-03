@@ -89,3 +89,17 @@ TEST_CASE("Neue Volumen-Nodes: Box, Helix, Position Test und Twist", "[nodes][vo
     CHECK(numberOf(*axis) == 1.0);
     CHECK(axis->choices.size() == 3U);
 }
+
+TEST_CASE("Sphere und Box: Space hat die Stufen Flat, Volume und Auto, Standard ist Auto", "[nodes][volume]") {
+    const auto all = nodes::builtinNodeDefinitions();
+    for (const char* typeId : {"wh.generator.sphere", "wh.generator.box"}) {
+        INFO(typeId);
+        const graph::ParameterDescriptor* parameter = find(all, typeId, "space");
+        REQUIRE(parameter != nullptr);
+        REQUIRE(parameter->choices.size() == 3U);
+        CHECK(parameter->choices[0].rfind("Flat", 0) == 0U);
+        CHECK(parameter->choices[1].rfind("Volume", 0) == 0U);
+        CHECK(parameter->choices[2].rfind("Auto", 0) == 0U);
+        CHECK(numberOf(*parameter) == 2.0);
+    }
+}

@@ -160,7 +160,7 @@ bool FieldPass::record(const FrameTime& time, gpu::ICommandRecorder& recorder,
     // 3. Frame-Daten
     const compiler::FrameUniforms frame{static_cast<float>(time.time.count()),
                                         static_cast<float>(time.delta.count()),
-                                        static_cast<std::uint32_t>(time.frame), 0U};
+                                        static_cast<std::uint32_t>(time.frame), volume_ ? 1U : 0U};
     if (const Result<void> written =
             device_.writeBuffer(frameBuffer_, 0, std::as_bytes(std::span{&frame, std::size_t{1}}));
         !written.ok()) {

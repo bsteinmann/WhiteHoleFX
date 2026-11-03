@@ -26,10 +26,12 @@ struct SnippetBindings {
     std::function<Result<std::string>(std::string_view key)> textLength;
     /// @time
     std::string time;
+    /// @volume: WGSL-Ausdruck vom Typ bool, wahr bei einer räumlichen LED-Karte (Auto-Einstellung von "Space").
+    std::string volume;
 };
 
 /// Platzhalter: @in(port, koordinate), @param(schluessel), @spectrum(port, band), @text(schluessel),
-/// @textlen(schluessel), @time.
+/// @textlen(schluessel), @time, @volume.
 /// - Klammern in `koordinate` dürfen verschachtelt sein, auch weitere Platzhalter.
 /// - Alles außerhalb von Platzhaltern bleibt unverändert.
 /// Fehler (InvalidArgument): unbekannter Platzhalter, fehlende oder unpassende

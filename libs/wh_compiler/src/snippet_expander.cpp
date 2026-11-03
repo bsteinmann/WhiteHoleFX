@@ -75,6 +75,11 @@ Result<std::string> expandSnippet(std::string_view body, const SnippetBindings& 
             i = nameEnd;
             continue;
         }
+        if (name == "volume") {
+            result += bindings.volume;
+            i = nameEnd;
+            continue;
+        }
         if (name != "in" && name != "param" && name != "spectrum" && name != "text" && name != "textlen") {
             return invalid("unbekannter Platzhalter '@" + std::string{name} + "'");
         }

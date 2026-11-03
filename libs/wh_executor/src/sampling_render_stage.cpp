@@ -1,6 +1,7 @@
 // sampling_render_stage.cpp: Umsetzung zu sampling_render_stage.hpp. Tastet eine Field-Kette an den Positionen der LEDs ab.
 #include "whitehole/executor/sampling_render_stage.hpp"
 
+#include <algorithm>
 #include <array>
 #include <cstring>
 #include <utility>
@@ -121,6 +122,8 @@ Result<void> SamplingRenderStage::setMap(const mapping::LedMap& map) {
         return written;
     }
     ledCount_ = count;
+    // Räumlich, sobald irgendeine LED z > 0 hat (flache Anlagen bleiben bei z = 0, siehe LedMap::unit).
+    pass_->setVolume(std::any_of(map.unit.begin(), map.unit.end(), [](const Vec3& p) { return p.z > 0.0F; }));
     return {};
 }
 

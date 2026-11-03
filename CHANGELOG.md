@@ -1,5 +1,10 @@
 # Änderungen
 
+## 0.37.4
+
+- **Fix:** Sphere und Box zeigten auf einer 2D-Matrix nichts (dort ist `p.z = 0`, die Körper lagen bei `cz = 0.5`). Neuer Parameter `space` mit *Flat*, *Volume* und *Auto* (Standard): Auto wählt selbst — flache LED-Karte → Kreis/Rechteck, räumliche → Kugel/Quader.
+- Intern: neuer Shader-Platzhalter `@volume` (aus `WhFrame.volume`, gesetzt von der Sampling-Stage, sobald eine LED z > 0 hat).
+
 ## 0.37.3
 
 - **Build:** 0.37.2 ließ sich auf Ubuntu 22.04 nicht bauen (fehlendes `#include <QAction>` in `main_window_exercise.cpp`).

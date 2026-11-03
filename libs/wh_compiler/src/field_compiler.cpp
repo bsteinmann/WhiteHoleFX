@@ -267,6 +267,7 @@ private:
                                           const InputBindings& inputCalls) {
         SnippetBindings bindings;
         bindings.time = "wh_frame.time";
+        bindings.volume = "(wh_frame.volume != 0u)";
         bindings.input = [&](std::string_view port, std::string_view coordinate) -> Result<std::string> {
             const auto it = inputCalls.find(port);
             if (it == inputCalls.end()) {
@@ -360,7 +361,7 @@ private:
 
         result.wgsl =
             "// Von WhiteHoleFX erzeugt (Feldcompiler). Nicht von Hand ändern.\n"
-            "struct WhFrame {\n    time: f32,\n    delta: f32,\n    frame: u32,\n    _pad: u32,\n}\n" +
+            "struct WhFrame {\n    time: f32,\n    delta: f32,\n    frame: u32,\n    volume: u32,\n}\n" +
             bindingLine(kFrameBinding, "wh_frame: WhFrame") + "\n" +
             wgslParameterStruct(result.layout) +
             bindingLine(kParametersBinding, "wh_params: WhParams") + "\n" + preludes_ + functions_ +

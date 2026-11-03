@@ -94,7 +94,12 @@ return vec4<f32>(0.5 + 0.5 * sin(w), 0.5 + 0.5 * sin(w + 2.0943951), 0.5 + 0.5 *
 constexpr const char* kSphereBody =
     R"wgsl(let center = vec3<f32>(@param(cx), @param(cy), @param(cz));
 let r = @param(radius);
-let t = smoothstep(r, r + max(@param(softness), 0.0001), length(p - center));
+// space: 0 = Flat (z ignorieren, Kreis), 1 = Volume (Kugel), 2 = Auto (Kugel nur bei räumlicher LED-Karte).
+// Auf einer 2D-Matrix ist p.z = 0; eine Kugel bei cz = 0.5 träfe sie nie.
+let sp = @param(space);
+let volumetric = (sp > 0.5 && sp < 1.5) || (sp >= 1.5 && @volume);
+let d = select(length(p.xy - center.xy), length(p - center), volumetric);
+let t = smoothstep(r, r + max(@param(softness), 0.0001), d);
 return wh_mix_color(@param(colorInside), @param(colorOutside), t);)wgsl";
 
 // Ebene Welle, die sich entlang einer Richtung bewegt. Die Richtung wird normiert;
@@ -217,7 +222,8 @@ std::vector<compiler::NodeDefinition> generatorNodes() {
          number("cz", "Center Z", 0.5, 0.0, 1.0), number("radius", "Radius", 0.3, 0.0, 2.0),
          number("softness", "Softness", 0.1, 0.0, 1.0),
          color("colorInside", "Inside", ColorRgba{1.0F, 1.0F, 1.0F, 1.0F}),
-         color("colorOutside", "Outside", ColorRgba{0.0F, 0.0F, 0.0F, 1.0F})},
+         color("colorOutside", "Outside", ColorRgba{0.0F, 0.0F, 0.0F, 1.0F}),
+         choice("space", "Space", {"Flat (x/y circle)", "Volume (x/y/z sphere)", "Auto (by layout)"}, 2)},
         kSphereBody, kColorPrelude));
 
     nodes.push_back(fieldNode(

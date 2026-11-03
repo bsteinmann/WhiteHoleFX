@@ -13,6 +13,7 @@ fn wh_field(p: vec3<f32>) -> vec4<f32>
 ```
 
 - `p` liegt in [0,1]³. Bei einem 2D-Canvas ist `p.z = 0`.
+- `@volume` (nur für Node-Autoren) ist wahr, wenn die LED-Karte Ausdehnung in z hat. Nodes mit `space` *Auto* (Sphere, Box) wählen damit selbst zwischen 2D und 3D.
 - Die Farbe ist linear RGBA mit „geradem“ Alpha (RGB und Alpha getrennt). Gamma und Farbreihenfolge
   setzt erst der Ausgabe-Pass, der die Farbe zuletzt mit Alpha multipliziert (transparent = LED aus).
   Wer Farben überblendet oder addiert, nimmt `wh_mix_color` und `wh_add_color` (Prelude
@@ -32,7 +33,7 @@ beliebigen Koordinaten abtastet.
 | `wh.generator.gradient` | Verlauf entlang einer Richtung; `angle` dreht sie in der xy-Ebene, `elevation` kippt sie zur z-Achse (90° = von hinten nach vorn) | 2D, 3D |
 | `wh.generator.noise` | Value-Noise, die Zeit läuft über die z-Achse. Alle Regler gehen von 0 bis 1 (direkt mit einem LFO fahrbar): `scale` (2 bis 64 Zellen über die Leinwand, nie die ganze Wand als eine Zelle), `speed` (0 bis 3 Zellen pro Sekunde, quadratisch: unten fein einstellbar), **`density`** (Anteil der Pixel, die an sind: 0 alles aus, 1 alles an, 0,5 die Hälfte), `softness` (0 harte Kante, 1 weich), `colorA` (aus) und `colorB` (an), beide auch von Color-Nodes speisbar | 3D |
 | `wh.generator.plasma` | klassisches Plasma; `depth` > 0 legt die Wellen auch durch z (0 = in jeder Ebene gleich) | 2D, 3D |
-| `wh.generator.sphere` | Kugel mit weichem Rand, Mittelpunkt und Radius einstellbar | 3D |
+| `wh.generator.sphere` | Kugel mit weichem Rand, Mittelpunkt und Radius einstellbar; `space` *Auto* (Standard) zeigt auf einer flachen Matrix einen Kreis, bei räumlicher Anlage eine Kugel | 2D, 3D |
 | `wh.generator.wave` | ebene Welle entlang einer 3D-Richtung | 3D |
 | `wh.generator.rain` | „Digital Rain“: fallende Pixel mit Spur (Spalten, Tempo, Spurlänge, Dichte, Kopf-/Spurfarbe); die Spur ist durchsichtig und lässt sich über andere Effekte legen. Im Cube fallen Säulen in x/z | 3D |
 | `wh.generator.solid` | Fläche in einer Farbe (zum Einfärben mit Mask/Blend oder als Blitzfläche) | beliebig |
@@ -61,7 +62,7 @@ beliebigen Koordinaten abtastet.
 | `wh.transform.slide` | Verschiebt das Bild um `x`, `y` (Anteile der Leinwand), mit `wrap` kommt es auf der anderen Seite wieder herein, sonst bleibt der Rest durchsichtig. Mit Time oder LFO an `x` entsteht ein Scroll oder ein Übergang („Move left/right“). `z` verschiebt in der Tiefe | 2D, 3D |
 | `wh.transform.tile` | Kachelt das Bild `countX` × `countY` mal, optional jede zweite Kachel gespiegelt; `countZ` > 1 kachelt auch die Tiefe | 2D, 3D |
 | `wh.transform.pixelate` | Mosaik: `cellsX` × `cellsY` Zellen, jede zeigt den Wert an ihrer Mitte; `cellsZ` ≥ 1 rastert auch die Tiefe (Würfel statt Quadrate) | 2D, 3D |
-| `wh.generator.box` | Quader mit weichem Rand: Mitte `cx`/`cy`/`cz`, Kantenlängen `sizeX`/`sizeY`/`sizeZ`, Farbe innen und außen | 3D |
+| `wh.generator.box` | Quader mit weichem Rand: Mitte `cx`/`cy`/`cz`, Kantenlängen `sizeX`/`sizeY`/`sizeZ`, Farbe innen und außen; `space` *Auto* (Standard) macht daraus auf einer flachen Matrix ein Rechteck (z wird ignoriert), bei räumlicher Anlage einen Quader | 2D, 3D |
 | `wh.generator.helix` | Schraube: `strands` Linien winden sich um eine senkrechte Achse durch (`cx`, `cz`) mit `radius`, `pitch` Umdrehungen pro Höhe 1 und `speed` Umdrehungen pro Sekunde; durchsichtig außerhalb der Linien | 3D |
 | `wh.generator.position` | Position Test: Rot = x, Grün = y, Blau = z. Zeigt am Würfel sofort, welche Seite wo liegt und ob Verkabelung und Startecke stimmen | 3D |
 | `wh.transform.twist` | Twist: verdreht den Raum um eine Achse durch die Mitte (`axis` X, Y oder Z), je weiter eine Ebene von der Mitte entfernt ist, desto stärker (`angle` Grad pro Einheit); aus einer geraden Säule wird eine Spirale | 3D |

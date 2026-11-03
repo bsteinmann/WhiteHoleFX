@@ -85,3 +85,31 @@ TEST_CASE("Metaballs, Starfield, Fading Pixels, Expanding Shapes und Sine Lines"
         CHECK(isColor(two.at(0, 0), 1.0F, 0.9F, 1.0F, 1.0F));
     }
 }
+
+TEST_CASE("Sphere und Box zeigen auf einer 2D-Leinwand einen Kreis und ein Rechteck", "[gpu_device][nodes]") {
+    REQUIRE_DEVICE();
+    {  // Standard (Flat): Auf der Leinwand ist p.z = 0; die Mitte ist innen, die Ecke außen
+        Lab lab;
+        const NodeId sphere = lab.add("wh.generator.sphere");
+        lab.set(sphere, "softness", 0.0);
+        const Pixels image = render(*device, lab, sphere, 21, 21);
+        CHECK(isColor(image.at(10, 10), 1.0F, 1.0F, 1.0F));
+        CHECK(isColor(image.at(0, 0), 0.0F, 0.0F, 0.0F));
+    }
+    {
+        Lab lab;
+        const NodeId box = lab.add("wh.generator.box");
+        lab.set(box, "softness", 0.0);
+        const Pixels image = render(*device, lab, box, 21, 21);
+        CHECK(isColor(image.at(10, 10), 1.0F, 1.0F, 1.0F));
+        CHECK(isColor(image.at(0, 0), 0.0F, 0.0F, 0.0F));
+    }
+    {  // Volume: Bei cz = 0.5 schneidet die Ebene z = 0 den Körper nicht - das alte Verhalten bleibt wählbar
+        Lab lab;
+        const NodeId sphere = lab.add("wh.generator.sphere");
+        lab.set(sphere, "softness", 0.0);
+        lab.set(sphere, "space", 1.0);
+        const Pixels image = render(*device, lab, sphere, 21, 21);
+        CHECK(isColor(image.at(10, 10), 0.0F, 0.0F, 0.0F));
+    }
+}

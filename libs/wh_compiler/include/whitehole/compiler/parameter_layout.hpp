@@ -59,12 +59,13 @@ struct ParameterLayout {
     std::uint32_t sizeBytes{0};
 };
 
-/// Frame-Daten am Binding 0 (WGSL: struct WhFrame { time, delta, frame, _pad }).
+/// Frame-Daten am Binding 0 (WGSL: struct WhFrame { time, delta, frame, volume }).
 struct FrameUniforms {
     float time{0.0F};
     float delta{0.0F};
     std::uint32_t frame{0};
-    std::uint32_t padding{0};
+    /// 1, wenn die LED-Karte räumlich ist (Ausdehnung in z); sonst 0. Der Platzhalter @volume liest es.
+    std::uint32_t volume{0};
 };
 static_assert(sizeof(FrameUniforms) == 16, "FrameUniforms muss dem WGSL-Struct WhFrame entsprechen");
 

@@ -112,6 +112,7 @@ TEST_CASE("Box: innen die eine, außen die andere Farbe", "[gpu_device][nodes][v
     rig->lab.set(box, "sizeY", 2.0);
     rig->lab.set(box, "sizeZ", 0.6);
     rig->lab.set(box, "softness", 0.0);
+    // Space bleibt auf Auto: Die räumliche LED-Karte des Würfels schaltet den Quader von selbst auf 3D.
     const std::vector<ColorRgba> colors = sample(*device, *rig, box);
     int inside = 0;
     int outside = 0;

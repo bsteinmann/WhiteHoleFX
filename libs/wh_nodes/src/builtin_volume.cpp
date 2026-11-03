@@ -19,8 +19,13 @@ namespace {
 constexpr const char* kBoxBody =
     R"wgsl(let c = vec3<f32>(@param(cx), @param(cy), @param(cz));
 let ext = vec3<f32>(@param(sizeX), @param(sizeY), @param(sizeZ)) * 0.5;
+// space: 0 = Flat (z ignorieren, Rechteck), 1 = Volume (Quader), 2 = Auto (Quader nur bei räumlicher LED-Karte).
+// Auf einer 2D-Matrix ist p.z = 0; ein Quader bei cz = 0.5 träfe sie nie.
+let sp = @param(space);
+let is_flat = !((sp > 0.5 && sp < 1.5) || (sp >= 1.5 && @volume));
 let q = abs(p - c) - ext;
-let d = length(max(q, vec3<f32>(0.0, 0.0, 0.0))) + min(max(q.x, max(q.y, q.z)), 0.0);
+let qz = select(q.z, -1.0, is_flat);
+let d = length(max(vec3<f32>(q.x, q.y, qz), vec3<f32>(0.0, 0.0, 0.0))) + min(max(q.x, max(q.y, qz)), 0.0);
 let t = smoothstep(0.0, max(@param(softness), 0.0001), d);
 return wh_mix_color(@param(colorInside), @param(colorOutside), t);)wgsl";
 
@@ -83,7 +88,8 @@ std::vector<compiler::NodeDefinition> volumeNodes() {
          number("sizeY", "Size Y", 0.5, 0.0, 2.0), number("sizeZ", "Size Z", 0.5, 0.0, 2.0),
          number("softness", "Softness", 0.1, 0.0, 1.0),
          color("colorInside", "Inside", ColorRgba{1.0F, 1.0F, 1.0F, 1.0F}),
-         color("colorOutside", "Outside", ColorRgba{0.0F, 0.0F, 0.0F, 1.0F})},
+         color("colorOutside", "Outside", ColorRgba{0.0F, 0.0F, 0.0F, 1.0F}),
+         choice("space", "Space", {"Flat (x/y rectangle)", "Volume (x/y/z box)", "Auto (by layout)"}, 2)},
         kBoxBody, kColorPrelude));
 
     nodes.push_back(fieldNode(
