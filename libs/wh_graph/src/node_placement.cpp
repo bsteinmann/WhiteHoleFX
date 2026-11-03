@@ -80,16 +80,22 @@ Placement placeDockedNode(const Graph& graph, const std::vector<NodeRect>& rectL
     }
     NodeRect node{NodeId{}, mouse.x, mouse.y, size.x, size.y};
     std::unordered_set<std::uint64_t> pushed;  // Nodes, die Platz machen
+    // Ohne berechenbare Mitte bleibt es bei der Mausposition, aber nie auf einem anderen Node
+    const auto atMouse = [&]() {
+        clearBelow(node, rects);
+        result.position = Vec2{node.x, node.y};
+        return result;
+    };
 
     if (target.kind == DockTarget::Kind::Wire) {
         if (plan.links.size() != 2 || !rects.contains(plan.links[0].from.node.value()) ||
             !rects.contains(plan.links[1].to.node.value())) {
-            return result;
+            return atMouse();
         }
         const NodeRect source = rects[plan.links[0].from.node.value()];
         const NodeId sinkId = plan.links[1].to.node;
         if (rects[sinkId.value()].x < right(source)) {
-            return result;  // Kabel läuft rückwärts: dort gibt es keine Mitte
+            return atMouse();  // Kabel läuft rückwärts: dort gibt es keine Mitte
         }
         // Platz zwischen Quelle und Ziel schaffen, dann mittig und auf halber Höhe einsetzen
         pushed = downstreamOf(graph, sinkId, true);
@@ -100,7 +106,7 @@ Placement placeDockedNode(const Graph& graph, const std::vector<NodeRect>& rectL
         node.y = (source.y + sink.y) / 2.0F;
     } else {
         if (!rects.contains(target.node.value())) {
-            return result;
+            return atMouse();
         }
         const NodeRect host = rects[target.node.value()];
         if (!target.rightHalf) {

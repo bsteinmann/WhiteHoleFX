@@ -176,3 +176,21 @@ TEST_CASE("Unbekannte Nodes: die Mausposition bleibt") {
     CHECK(p.position.y == kMouse.y);
     CHECK(p.moved.empty());
 }
+
+TEST_CASE("Rückwärts laufendes Kabel mit Maus auf einem Node: der neue Node weicht aus") {
+    Fixture f;
+    const NodeId a = f.add("t.gen", 600, 0);
+    const NodeId b = f.add("t.sink", 0, 0);
+    DockTarget target;
+    target.kind = DockTarget::Kind::Wire;
+    target.wire = f.wire(a, b);
+    const auto plan = planDocking(f.graph, f.fx(), target);
+    REQUIRE(plan.has_value());
+    const Vec2 onNode{f.rects[1].x, f.rects[1].y};
+    const Placement p = placeDockedNode(f.graph, f.rects, *plan, target, kSize, onNode);
+    for (const NodeRect& r : f.rects) {
+        const bool apart = p.position.x + kSize.x <= r.x || r.x + r.w <= p.position.x || p.position.y + kSize.y <= r.y ||
+                           r.y + r.h <= p.position.y;
+        CHECK(apart);
+    }
+}
