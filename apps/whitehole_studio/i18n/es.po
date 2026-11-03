@@ -6,7 +6,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: node_palette.cpp:190
+#: node_palette.cpp:194
 msgid "\nRechtsklick: Favorit umschalten"
 msgstr "\nClic derecho: añadir/quitar de favoritos"
 
@@ -118,23 +118,23 @@ msgstr "&2D (editar)"
 msgid "&3D"
 msgstr "&3D"
 
-#: main_window_actions.cpp:92
+#: main_window_actions.cpp:93
 msgid "&Ansicht"
 msgstr "&Vista"
 
-#: main_window_actions.cpp:59
+#: main_window_actions.cpp:60
 msgid "&Ausgabe senden"
 msgstr "Enviar &salida"
 
-#: main_window_actions.cpp:79
+#: main_window_actions.cpp:80
 msgid "&Bearbeiten"
 msgstr "&Edición"
 
-#: main_window_actions.cpp:50
+#: main_window_actions.cpp:51
 msgid "&Beenden"
 msgstr "&Salir"
 
-#: main_window_actions.cpp:70
+#: main_window_actions.cpp:71
 msgid "&Beispiele"
 msgstr "E&jemplos"
 
@@ -142,7 +142,7 @@ msgstr "E&jemplos"
 msgid "&Blackout"
 msgstr "&Blackout"
 
-#: main_window_actions.cpp:64
+#: main_window_actions.cpp:65
 msgid "&Datei"
 msgstr "&Archivo"
 
@@ -158,7 +158,7 @@ msgstr "&Ajustes …"
 msgid "&Fehler melden oder Idee vorschlagen …"
 msgstr "&Informar de un error o sugerir una idea …"
 
-#: main_window_actions.cpp:114
+#: main_window_actions.cpp:115
 msgid "&Hilfe"
 msgstr "A&yuda"
 
@@ -170,7 +170,7 @@ msgstr "&Disposición y patch …"
 msgid "&Leuchten (additiv)"
 msgstr "&Brillo (aditivo)"
 
-#: main_window_actions.cpp:110
+#: main_window_actions.cpp:111
 msgid "&Live"
 msgstr "&Live"
 
@@ -182,27 +182,27 @@ msgstr "Modo &live"
 msgid "&Look speichern …"
 msgstr "&Guardar look …"
 
-#: main_window_actions.cpp:22
+#: main_window_actions.cpp:23
 msgid "&Neu"
 msgstr "&Nuevo"
 
-#: main_window_actions.cpp:31
+#: main_window_actions.cpp:32
 msgid "&Neu laden"
 msgstr "&Recargar"
 
-#: main_window_actions.cpp:43
+#: main_window_actions.cpp:44
 msgid "&Rückgängig"
 msgstr "&Deshacer"
 
-#: main_window_actions.cpp:35
+#: main_window_actions.cpp:36
 msgid "&Speichern"
 msgstr "&Guardar"
 
-#: main_window_actions.cpp:90
+#: main_window_actions.cpp:91
 msgid "&Stage Config"
 msgstr "&Stage Config"
 
-#: main_window.cpp:142 main_window_actions.cpp:54
+#: main_window.cpp:142 main_window_actions.cpp:55
 msgid "&Start"
 msgstr "&Iniciar"
 
@@ -222,19 +222,19 @@ msgstr "Modo de &prueba …"
 msgid "&Tutorial …"
 msgstr "&Tutorial …"
 
-#: main_window_actions.cpp:106
+#: main_window_actions.cpp:107
 msgid "&Wiedergabe"
 msgstr "&Reproducción"
 
-#: main_window_actions.cpp:46
+#: main_window_actions.cpp:47
 msgid "&Wiederholen"
 msgstr "&Rehacer"
 
-#: main_window_actions.cpp:68
+#: main_window_actions.cpp:69
 msgid "&Zuletzt geöffnet"
 msgstr "Abrir &reciente"
 
-#: main_window_actions.cpp:27
+#: main_window_actions.cpp:28
 msgid "&Öffnen …"
 msgstr "&Abrir …"
 
@@ -270,7 +270,7 @@ msgstr ", nivel %1 %"
 msgid "100 %"
 msgstr "100 %"
 
-#: main_window_actions.cpp:162
+#: main_window_actions.cpp:163
 msgid "3D"
 msgstr "3D"
 
@@ -342,6 +342,10 @@ msgstr "Separación x y"
 msgid "Abstand x y z"
 msgstr "Separación x y z"
 
+#: node_info_texts.cpp:31
+msgid "Addiert zwei Bilder: Das Licht summiert sich wie bei zwei Scheinwerfern."
+msgstr "Adds two images: the light sums up like two spotlights."
+
 #: output_form.cpp:25
 msgid "Adresse (leer = Multicast)"
 msgstr "Dirección (vacío = multicast)"
@@ -378,7 +382,7 @@ msgstr "Guardar como preajuste"
 msgid "Als Preset speichern …"
 msgstr "Guardar como preajuste …"
 
-#: main_window_actions.cpp:85
+#: main_window_actions.cpp:86
 msgid "An: Ein nicht angeschlossener Eingang von Blend, Mix, Crossfade, Add oder Mask lässt die LEDs ausgehen. Aus: Er gilt als durchsichtiges Schwarz."
 msgstr "Activado: una entrada sin conectar de Blend, Mix, Crossfade, Add o Mask apaga los LED. Desactivado: cuenta como negro transparente."
 
@@ -426,7 +430,7 @@ msgstr "Art-Net, sACN y DDP salen por esta tarjeta. Con «Automático» decide l
 msgid "Art-Net-Port (UDP):"
 msgstr "Puerto Art-Net (UDP):"
 
-#: main_window_actions.cpp:159 settings_dialog.cpp:61
+#: main_window_actions.cpp:160 settings_dialog.cpp:61
 msgid "Audio"
 msgstr "Audio"
 
@@ -446,7 +450,7 @@ msgstr "Restablecer al valor predeterminado"
 msgid "Auf den Wert der Bibliothek zurückstellen"
 msgstr "Restablecer al valor de la biblioteca"
 
-#: node_palette.cpp:147 node_palette.cpp:357
+#: node_palette.cpp:151 node_palette.cpp:361
 msgid "Auf die Fläche ziehen: Node hinzufügen.\nNode hierher ziehen: entfernen."
 msgstr "Arrastra al lienzo: añadir un nodo.\nArrastra un nodo aquí: eliminarlo."
 
@@ -458,7 +462,7 @@ msgstr "No se pueden listar los dispositivos de captura: %1"
 msgid "Aus"
 msgstr "Apagado"
 
-#: node_palette.cpp:324
+#: node_palette.cpp:328
 msgid "Aus Favoriten entfernen"
 msgstr "Quitar de favoritos"
 
@@ -510,7 +514,7 @@ msgstr "Editar …"
 msgid "Bereit: %1 - GO drücken"
 msgstr "Listo: %1 - pulsa GO"
 
-#: main_window_actions.cpp:125
+#: main_window_actions.cpp:126
 msgid "Betrieb"
 msgstr "Funcionamiento"
 
@@ -525,6 +529,10 @@ msgstr "Azul"
 #: look_panel.cpp:75
 msgid "Blendet die Bearbeitung aus und zeigt große Knöpfe für alle Looks (F9)"
 msgstr "Oculta la edición y muestra botones grandes para todos los looks (F9)"
+
+#: node_info_texts.cpp:89
+msgid "Blitze: Zufällige verzweigte Einschläge mit Nachglühen und Aufhellen. Häufigkeit, Breite und Verästelung einstellbar."
+msgstr "Lightning: random branching strikes with afterglow and flash. Frequency, width and branching are adjustable."
 
 #: layout_panel_add.cpp:40
 msgid "Cube"
@@ -602,7 +610,7 @@ msgstr "El proyecto se ha modificado. ¿Descartar los cambios?"
 msgid "Das Testbild ersetzt den Effekt in der Vorschau und, wenn „Ausgabe senden“ an ist, auch auf den LEDs. Es wird nicht im Projekt gespeichert.\n\nAchtung: Weiß und Farbe leuchten mit voller Helligkeit. Prüfe vorher, ob die Netzteile die ganze Wand auf 100 % tragen."
 msgstr "La imagen de prueba sustituye al efecto en la vista previa y, si «Enviar salida» está activado, también en los LED. No se guarda en el proyecto.\n\nAtención: el blanco y el color se encienden a pleno brillo. Comprueba antes que las fuentes de alimentación soportan toda la pared al 100 %."
 
-#: main_window_actions.cpp:117
+#: main_window_actions.cpp:118
 msgid "Datei"
 msgstr "Archivo"
 
@@ -625,6 +633,10 @@ msgstr "¿Eliminar el look «%1»?"
 #: main_window_live.cpp:80
 msgid "Den aktuellen Effekt als Look in die Liste legen (Strg+L)"
 msgstr "Añadir el efecto actual a la lista como look (Ctrl+L)"
+
+#: node_info_texts.cpp:125
+msgid "Der Ausgang: Was hier ankommt, wird auf die LEDs gesendet. Mit „Mode“ in einen Bereich skalieren oder als Fenster ausschneiden, plus Helligkeit."
+msgstr "The output: whatever arrives here is sent to the LEDs. \"Mode\" scales into an area or cuts a window; plus brightness."
 
 #: cue_dialog.cpp:68
 msgid "Der Cue löst aus, wenn der Kanalwert auf diese Zahl oder darüber steigt"
@@ -658,6 +670,10 @@ msgstr "Los nodos DMX del proyecto leen sus valores de los datos recibidos. Los 
 msgid "Die Fixtures in der Layout-Liste; alle anderen bleiben dunkel."
 msgstr "Los fixtures de la lista de disposición; todos los demás permanecen apagados."
 
+#: node_info_texts.cpp:39
+msgid "Die Helligkeit der Maske bestimmt, wie viel vom Inhalt zu sehen ist. „Shape“ macht daraus eine harte Form, „Intensity“ behält Verläufe."
+msgstr "The brightness of the mask decides how much of the content is visible. \"Shape\" makes a hard-edged form, \"Intensity\" keeps fades."
+
 #: settings_dialog.cpp:195
 msgid "Die Quelle speist die Audio-Nodes (Pegel, Frequenzband, Beat, Spektrum)."
 msgstr "La fuente alimenta los nodos de audio (nivel, banda de frecuencia, beat, espectro)."
@@ -673,6 +689,10 @@ msgstr "El idioma cambiará en el próximo inicio."
 #: main_window_language.cpp:47
 msgid "Die neue Sprache gilt nach einem Neustart von WhiteHoleFX. Jetzt neu starten?\n(Nicht gespeicherte Änderungen werden vorher abgefragt.)"
 msgstr "El nuevo idioma se aplica tras reiniciar WhiteHoleFX. ¿Reiniciar ahora?\n(Antes se preguntará por los cambios sin guardar.)"
+
+#: node_info_texts.cpp:151
+msgid "Die vergangene Zeit in Sekunden, mit Tempo-Faktor und Versatz. Zum Antreiben von Bewegungen."
+msgstr "The elapsed time in seconds, with speed factor and offset. For driving motion."
 
 #: settings_dialog.cpp:89
 msgid "Die Änderung wirkt sofort nach „OK“."
@@ -690,11 +710,27 @@ msgstr "Este programa se compiló sin el backend de GPU (-DWHITEHOLEFX_WEBGPU=ON
 msgid "Dieses Projekt hat keine einstellbaren Parameter."
 msgstr "Este proyecto no tiene parámetros ajustables."
 
+#: node_info_texts.cpp:79
+msgid "Digitaler Regen: Spalten mit fallenden Leuchtspuren wie in der Matrix. Dichte, Tempo und Länge einstellbar."
+msgstr "Digital rain: columns of falling light trails like in the Matrix. Density, speed and trail length are adjustable."
+
+#: node_info_texts.cpp:59
+msgid "Dreht das Bild im Raum um die Mitte, um die Achsen X, Y und Z (Winkel in Grad). Für 3D-Aufbauten."
+msgstr "Rotates the image in space around the center, about the X, Y and Z axes (degrees). For 3D setups."
+
+#: node_info_texts.cpp:57
+msgid "Dreht das Bild um die Mitte (Winkel in Grad)."
+msgstr "Rotates the image around the center (angle in degrees)."
+
 #: node_editor_menu.cpp:64
 msgid "Duplizieren\tStrg+D"
 msgstr "Duplicar\tCtrl+D"
 
-#: main_window_actions.cpp:156
+#: node_info_texts.cpp:97
+msgid "Ebene Welle: Streifen, die in eine Richtung wandern (Frequenz, Tempo, zwei Farben)."
+msgstr "Plane wave: stripes moving in one direction (frequency, speed, two colors)."
+
+#: main_window_actions.cpp:157
 msgid "Effekte (2D)"
 msgstr "Efectos (2D)"
 
@@ -710,9 +746,37 @@ msgstr "Un clic solo precarga el look. GO (barra espaciadora) inicia entonces el
 msgid "Ein Look ist ein fertiger Effekt (vom Generator bis zum Ausgang). Speichere deine Effekte hier und rufe sie im Live-Modus mit einem Klick ab."
 msgstr "Un look es un efecto terminado (del generador a la salida). Guarda aquí tus efectos y llámalos en modo live con un clic."
 
+#: node_info_texts.cpp:77
+msgid "Eine Box (Rechteck oder Quader) mit weichem Rand. Innen- und Außenfarbe, Größe und Lage einstellbar. „Space“ wählt flach, Volumen oder automatisch nach Aufbau."
+msgstr "A box (rectangle or cuboid) with a soft edge. Inside and outside color, size and position are adjustable. \"Space\" chooses flat, volume or automatic by layout."
+
 #: main_window_help.cpp:38
 msgid "Eine Einführung in die Bedienung, in der gewählten Sprache"
 msgstr "Una introducción al manejo, en el idioma elegido"
+
+#: node_info_texts.cpp:129
+msgid "Eine Farbe als Wert, mit Farbton-Verschiebung, Sättigung und Helligkeit. Speist Farb-Eingänge anderer Nodes."
+msgstr "A color as a value, with hue shift, saturation and brightness. Feeds color inputs of other nodes."
+
+#: node_info_texts.cpp:113
+msgid "Eine Kugel (Kreis) mit weichem Rand, Innen- und Außenfarbe. „Space“ wählt flach, Volumen oder automatisch nach Aufbau."
+msgstr "A sphere (circle) with a soft edge, inside and outside color. \"Space\" chooses flat, volume or automatic by layout."
+
+#: node_info_texts.cpp:107
+msgid "Eine Scan-Linie, die über das Bild läuft. Position, Breite, Weichheit und Winkel einstellbar; mit „Position“ lässt sie sich steuern."
+msgstr "A scan line sweeping across the image. Position, width, softness and angle are adjustable; drive \"Position\" to move it."
+
+#: node_info_texts.cpp:87
+msgid "Eine Spirale (Helix) aus einer oder mehreren Strähnen, die sich um eine senkrechte Achse dreht. Für 3D-Aufbauten."
+msgstr "A helix of one or more strands rotating around a vertical axis. For 3D setups."
+
+#: node_info_texts.cpp:111
+msgid "Eine einfarbige Fläche. Der einfachste Generator, gut als Hintergrund oder Test."
+msgstr "A single solid color. The simplest generator, good as a background or for testing."
+
+#: node_info_texts.cpp:143
+msgid "Eine feste Zahl. Praktisch, um mehrere Parameter mit demselben Wert zu speisen."
+msgstr "A fixed number. Handy for feeding the same value to several parameters."
 
 #: node_editor_menu.cpp:92
 msgid "Einfügen\tStrg+V"
@@ -722,7 +786,7 @@ msgstr "Pegar\tCtrl+V"
 msgid "Einstellungen"
 msgstr "Ajustes"
 
-#: main_window_actions.cpp:153
+#: main_window_actions.cpp:154
 msgid "Einstieg"
 msgstr "Primeros pasos"
 
@@ -733,6 +797,10 @@ msgstr "Fin x y z"
 #: layout_panel.cpp:43
 msgid "Entfernen"
 msgstr "Quitar"
+
+#: node_info_texts.cpp:23
+msgid "Erkennt den Takt der Musik und liefert Beat-Impuls, Pulse (klingt ab), Phase und Tempo (BPM). Das Tempo lässt sich auch fest vorgeben."
+msgstr "Detects the beat of the music and outputs a beat trigger, a decaying pulse, phase and tempo (BPM). The tempo can also be fixed by hand."
 
 #: layout_panel.cpp:169
 msgid "Erst Fixtures wählen (Strg oder Umschalt halten für mehrere)"
@@ -770,7 +838,7 @@ msgstr "Factor para todas las coordenadas, p. ej. 0,1 para milímetros a centím
 msgid "Farbe"
 msgstr "Color"
 
-#: main_window_actions.cpp:101
+#: main_window_actions.cpp:102
 msgid "Farbige Punkte vor den Nodes in der Palette: was der Node liefert"
 msgstr "Puntos de color delante de los nodos de la paleta: lo que entrega el nodo"
 
@@ -778,11 +846,15 @@ msgstr "Puntos de color delante de los nodos de la paleta: lo que entrega el nod
 msgid "Farbreihenfolge"
 msgstr "Orden de colores"
 
-#: node_palette.cpp:210
+#: node_info_texts.cpp:131
+msgid "Farbverlauf aus bis zu vier Farben. „Position“ wählt die Stelle, oder er läuft von selbst im eingestellten Tempo."
+msgstr "A color ramp of up to four colors. \"Position\" picks the spot, or it runs by itself at the set speed."
+
+#: node_palette.cpp:214
 msgid "Favoriten"
 msgstr "Favoritos"
 
-#: main_window_actions.cpp:103
+#: main_window_actions.cpp:104
 msgid "Fensteranordnung &zurücksetzen"
 msgstr "Restablecer la disposición de la &ventana"
 
@@ -806,6 +878,10 @@ msgstr "Fixtures"
 msgid "Fixtures anordnen, Universen und Ziele einstellen (eigenes Fenster)"
 msgstr "Disponer fixtures, ajustar universos y destinos (ventana aparte)"
 
+#: node_info_texts.cpp:85
+msgid "Flammen: Aufsteigendes, flackerndes Feuer mit einstellbarer Skalierung, Tempo und Flammenhöhe."
+msgstr "Flames: rising, flickering fire with adjustable scale, speed and flame height."
+
 #: add_fixture_dialog.cpp:56
 msgid "Form"
 msgstr "Forma"
@@ -821,6 +897,10 @@ msgstr "Vista giratoria libre: arrastrar = girar, clic derecho = desplazar, rued
 #: stage_view.cpp:50
 msgid "Front"
 msgstr "Frontal"
+
+#: node_info_texts.cpp:45
+msgid "Färbt ein Bild nach seiner Helligkeit mit bis zu vier Farben um (von dunkel nach hell). „Shift“ lässt die Farben wandern."
+msgstr "Recolors an image by its brightness with up to four colors (dark to bright). \"Shift\" makes the colors travel."
 
 #: main_window_live.cpp:105
 msgid "Für den Live-Modus erst Looks speichern (Dock „Looks“)."
@@ -858,6 +938,10 @@ msgstr "Dispositivo:"
 msgid "Gesamthelligkeit (wirkt auf Vorschau und Ausgabe, nicht im Projekt gespeichert)"
 msgstr "Brillo global (afecta a la vista previa y a la salida, no se guarda en el proyecto)"
 
+#: node_info_texts.cpp:17
+msgid "Gesamtlautstärke des Audio-Eingangs als Pegel und Spitze, linear oder in dB, auf Wunsch mit automatischer Verstärkung."
+msgstr "Overall loudness of the audio input as level and peak, linear or in dB, optionally with automatic gain."
+
 #: main_window_file.cpp:139 main_window_file.cpp:160
 msgid "Gespeichert: %1"
 msgstr "Guardado: %1"
@@ -869,6 +953,10 @@ msgstr "Huecos verticales iguales (desde tres fixtures)"
 #: layout_panel.cpp:150
 msgid "Gleiche Lücken waagrecht (ab drei Fixtures)"
 msgstr "Huecos horizontales iguales (desde tres fixtures)"
+
+#: node_info_texts.cpp:149
+msgid "Glättet einen Wert: Er folgt dem Eingang mit einer Zeitkonstante, statt zu springen."
+msgstr "Smooths a value: it follows the input with a time constant instead of jumping."
 
 #: test_panel.cpp:30
 msgid "Grün"
@@ -886,6 +974,10 @@ msgstr "Añadir"
 msgid "Hinzufügen …"
 msgstr "Añadir …"
 
+#: node_info_texts.cpp:135
+msgid "Hüllkurve (ADSR): Aus einem Schalter wird ein weicher Verlauf mit Attack, Decay, Sustain und Release. Auch als Einzelimpuls."
+msgstr "Envelope (ADSR): turns a switch into a smooth curve with attack, decay, sustain and release. Also as a one-shot."
+
 #: layout_panel.cpp:41
 msgid "Import …"
 msgstr "Importar …"
@@ -901,6 +993,10 @@ msgstr "Cargar en el editor"
 #: add_fixture_dialog.cpp:110 add_fixture_dialog.cpp:152 fixture_form.cpp:123
 msgid "Kabel beginnt"
 msgstr "El cable empieza"
+
+#: node_info_texts.cpp:47
+msgid "Kaleidoskop: Spiegelt einen Ausschnitt um einen Mittelpunkt zu einem Muster mit mehreren Segmenten."
+msgstr "Kaleidoscope: mirrors a slice around a center into a pattern with several segments."
 
 #: settings_dialog.cpp:85
 msgid "Karte zum Empfangen:"
@@ -978,6 +1074,10 @@ msgstr "Disposición"
 msgid "Layout auf Würfel abbilden"
 msgstr "Proyectar la disposición sobre el cubo"
 
+#: node_info_texts.cpp:33
+msgid "Legt Bild B über Bild A. Der Modus bestimmt die Verrechnung (Addieren, Multiplizieren, Screen, Subtrahieren, Differenz …), „Amount“ blendet zwischen A und dem Ergebnis."
+msgstr "Lays image B over image A. The mode sets how they combine (add, multiply, screen, subtract, difference ...); \"Amount\" fades between A and the result."
+
 #: output_form.cpp:31
 msgid "Letztes Ziel −"
 msgstr "Último destino −"
@@ -985,6 +1085,22 @@ msgstr "Último destino −"
 #: main_window_view3d.cpp:119
 msgid "Leuchtende LEDs mit weichem Schein, Farben addieren sich; nichts verdeckt etwas"
 msgstr "LED encendidos con un brillo suave, los colores se suman; nada tapa a nada"
+
+#: node_info_texts.cpp:123
+msgid "Liest drei oder vier DMX-Kanäle (Art-Net oder sACN) als Farbe, wahlweise RGB oder RGB mit Dimmer."
+msgstr "Reads three or four DMX channels (Art-Net or sACN) as a color, either RGB or RGB with dimmer."
+
+#: node_info_texts.cpp:121
+msgid "Liest einen DMX-Kanal (Art-Net oder sACN) als Zahl. Mit Umrechnung auf einen Bereich, 16-Bit-Betrieb und Verhalten bei Signalverlust."
+msgstr "Reads a DMX channel (Art-Net or sACN) as a number. With scaling to a range, 16-bit mode and behavior on signal loss."
+
+#: node_info_texts.cpp:91
+msgid "Linearer Farbverlauf von Farbe A nach Farbe B in einem einstellbaren Winkel."
+msgstr "Linear gradient from color A to color B at an adjustable angle."
+
+#: node_info_texts.cpp:109
+msgid "Linien als Sinuswellen, die sich bewegen (Anzahl, Amplitude, Frequenz, Tempo, Phasenversatz)."
+msgstr "Moving sine-wave lines (count, amplitude, frequency, speed, phase spread)."
 
 #: layout_panel.cpp:144
 msgid "Linke Kanten ausrichten"
@@ -1034,13 +1150,25 @@ msgstr "Sobrescribir look"
 msgid "Looks"
 msgstr "Looks"
 
-#: node_palette.cpp:353
+#: node_palette.cpp:357
 msgid "Loslassen: Node wird entfernt"
 msgstr "Soltar: se eliminará el nodo"
+
+#: node_info_texts.cpp:65
+msgid "Lässt das Bild blitzen: Rate in Hz, Anteil der Leuchtzeit und optionales Ausblenden."
+msgstr "Makes the image flash: rate in Hz, share of on-time and an optional fade-out."
 
 #: look_panel.cpp:62
 msgid "Löschen"
 msgstr "Eliminar"
+
+#: node_info_texts.cpp:37
+msgid "Macht Schwarz durchsichtig (die Deckkraft folgt der Helligkeit). So lässt sich das Bild danach mit Blend oder Add über etwas anderes legen."
+msgstr "Makes black transparent (opacity follows brightness), so the image can then be laid over something else with Blend or Add."
+
+#: node_info_texts.cpp:67
+msgid "Macht das Bild symmetrisch: Eine Hälfte (untere oder obere) wird an der gewählten Achse gespiegelt."
+msgstr "Makes the image symmetric: one half (lower or upper) is mirrored across the chosen axis."
 
 #: test_panel.cpp:32
 msgid "Magenta"
@@ -1085,6 +1213,10 @@ msgstr "Crear una matriz, un strip o una cuadrícula 3D con tamaño, posición, 
 #: layout_panel_add.cpp:154
 msgid "Maßstab"
 msgstr "Escala"
+
+#: node_info_texts.cpp:41
+msgid "Mischt zwei Bilder: 0 zeigt nur A, 1 nur B, dazwischen eine Überblendung."
+msgstr "Mixes two images: 0 shows only A, 1 only B, in between a crossfade."
 
 #: live_panel.cpp:61
 msgid "Mit GO (vorladen)"
@@ -1134,7 +1266,7 @@ msgstr "Nuevo nombre:"
 msgid "Neues Projekt"
 msgstr "Nuevo proyecto"
 
-#: main_window_actions.cpp:24
+#: main_window_actions.cpp:25
 msgid "Neues Projekt (Strg+N)"
 msgstr "Nuevo proyecto (Ctrl+N)"
 
@@ -1178,7 +1310,7 @@ msgstr "Buscar tipo de nodo …"
 msgid "Nodes"
 msgstr "Nodos"
 
-#: node_palette.cpp:134
+#: node_palette.cpp:138
 msgid "Nodes suchen …"
 msgstr "Buscar nodos …"
 
@@ -1210,17 +1342,21 @@ msgstr "Alinear bordes superiores"
 msgid "Ohne Häkchen beginnt das Kabel links, unten, hinten. x nach rechts, y nach oben, z zum Betrachter."
 msgstr "Sin marcar, el cable empieza a la izquierda, abajo, atrás. x hacia la derecha, y hacia arriba, z hacia el observador."
 
-#: main_window_actions.cpp:61
+#: main_window_actions.cpp:62
 msgid "Pakete (Art-Net, sACN, DDP) wirklich ins Netz schicken"
 msgstr "Enviar realmente los paquetes (Art-Net, sACN, DDP) a la red"
 
-#: main_window_actions.cpp:98
+#: main_window_actions.cpp:99
 msgid "Palette &farbig"
 msgstr "&Paleta en color"
 
 #: main_window.cpp:88
 msgid "Parameter"
 msgstr "Parámetros"
+
+#: node_info_texts.cpp:95
+msgid "Partikel von einem Emitter: Lebensdauer, Tempo, Richtung, Streuung, Schwerkraft und Schweif einstellbar."
+msgstr "Particles from an emitter: lifetime, speed, direction, spread, gravity and trail are adjustable."
 
 #: add_fixture_dialog.cpp:159
 msgid "Patch (Ausgabe)"
@@ -1230,9 +1366,17 @@ msgstr "Patch (salida)"
 msgid "Pause zwischen Auslöser und Beginn der Überblendung"
 msgstr "Pausa entre el disparador y el inicio del fundido"
 
+#: node_info_texts.cpp:15
+msgid "Pegel eines Frequenzbereichs (Von–Bis in Hz) des Audio-Eingangs, geglättet mit Attack und Release. Gut für Bass- oder Höhen-Effekte. „Signal“ zeigt, ob Audio ankommt."
+msgstr "Level of one frequency band (From–To in Hz) of the audio input, smoothed with attack and release. Good for bass or treble effects. \"Signal\" shows whether audio is arriving."
+
 #: stage_view.cpp:49
 msgid "Perspektive"
 msgstr "Perspectiva"
+
+#: node_info_texts.cpp:99
+msgid "Plasma: Weich ineinanderfließende, wabernde Farbflächen. Skalierung, Tempo und Tiefe einstellbar."
+msgstr "Plasma: softly flowing, wobbling color fields. Scale, speed and depth are adjustable."
 
 #: output_form.cpp:25
 msgid "Port (0 = Standard)"
@@ -1298,6 +1442,14 @@ msgstr "&Importar nube de puntos …"
 msgid "Quellname (sACN)"
 msgstr "Nombre de la fuente (sACN)"
 
+#: node_info_texts.cpp:139
+msgid "Rechnet einen Wert von einem Bereich in einen anderen um (In min/max auf Out min/max), auf Wunsch begrenzt."
+msgstr "Converts a value from one range to another (In min/max to Out min/max), optionally clamped."
+
+#: node_info_texts.cpp:141
+msgid "Rechnet mit zwei Zahlen: Addieren, Subtrahieren, Multiplizieren, Dividieren, Minimum, Maximum und weitere."
+msgstr "Calculates with two numbers: add, subtract, multiply, divide, minimum, maximum and more."
+
 #: layout_panel.cpp:146
 msgid "Rechte Kanten ausrichten"
 msgstr "Alinear bordes derechos"
@@ -1317,6 +1469,14 @@ msgstr "Dirección"
 #: test_panel.cpp:29
 msgid "Rot"
 msgstr "Rojo"
+
+#: node_info_texts.cpp:147
+msgid "Schrittfolge mit bis zu acht Werten. Jedes Einschalten von „Advance“ geht einen Schritt weiter (vorwärts, rückwärts, hin und her oder zufällig)."
+msgstr "A step sequence with up to eight values. Each switch-on of \"Advance\" moves one step (forward, backward, ping-pong or random)."
+
+#: node_info_texts.cpp:137
+msgid "Schwingung (LFO): Sinus, Dreieck, Sägezahn oder Rechteck mit Frequenz, Phase und Wertebereich. Der Klassiker zum Bewegen von Parametern."
+msgstr "Oscillator (LFO): sine, triangle, saw or square with frequency, phase and value range. The classic for moving parameters."
 
 #: stage_view.cpp:51
 msgid "Seite"
@@ -1342,11 +1502,15 @@ msgstr "Serpentina (el tramo invierte el sentido en cada extremo)"
 msgid "Serpentine (jede zweite Zeile rückwärts)"
 msgstr "Serpentina (una de cada dos filas al revés)"
 
+#: node_info_texts.cpp:81
+msgid "Sich ausbreitende Formen (Kreis, Quadrat, Raute) von einem Mittelpunkt aus, mit Abstand, Tempo und Ausblenden."
+msgstr "Expanding shapes (circle, square, diamond) from a center, with spacing, speed and fade-out."
+
 #: look_panel.cpp:53
 msgid "So lange dauert das Überblenden zu diesem Look. 0 = hartes Umschalten."
 msgstr "Esto es lo que dura el fundido a este look. 0 = cambio brusco."
 
-#: node_palette.cpp:222
+#: node_palette.cpp:226
 msgid "Sonstige"
 msgstr "Otros"
 
@@ -1362,9 +1526,17 @@ msgstr "Columnas (verticales)"
 msgid "Speichern"
 msgstr "Guardar"
 
-#: main_window_actions.cpp:39
+#: main_window_actions.cpp:40
 msgid "Speichern &unter …"
 msgstr "Guardar &como …"
+
+#: node_info_texts.cpp:19
+msgid "Spektrum (32 Bänder) des Audio-Eingangs. Wird an „Spectrum Bars“ angeschlossen."
+msgstr "Spectrum (32 bands) of the audio input. Connect it to \"Spectrum Bars\"."
+
+#: node_info_texts.cpp:49
+msgid "Spiegelt das Bild an einer Linie in x, y und/oder z. Mit „Use other half“ ist die andere Hälfte die Vorlage."
+msgstr "Mirrors the image along a line in x, y and/or z. With \"Use other half\" the other half is the template."
 
 #: main_window_language.cpp:46
 msgid "Sprache"
@@ -1386,11 +1558,15 @@ msgstr "Inicio"
 msgid "Statt der Zeit, die beim Look gespeichert ist"
 msgstr "En lugar del tiempo guardado con el look"
 
+#: node_info_texts.cpp:115
+msgid "Sternenhimmel: Funkelnde Sterne mit einstellbarer Dichte, Größe und Funkeltempo, auf Wunsch langsam abwärts driftend."
+msgstr "Starfield: twinkling stars with adjustable density, size and twinkle speed, optionally drifting down."
+
 #: cue_panel.cpp:144
 msgid "Stopp"
 msgstr "Parar"
 
-#: main_window_actions.cpp:83
+#: main_window_actions.cpp:84
 msgid "Strenge &Eingänge"
 msgstr "Entradas &estrictas"
 
@@ -1409,6 +1585,10 @@ msgstr "Strip (línea)"
 #: main_window_controls.cpp:79
 msgid "TESTMODUS: %1"
 msgstr "MODO DE PRUEBA: %1"
+
+#: node_info_texts.cpp:127
+msgid "Taktgeber: Liefert im eingestellten Tempo (BPM) Impulse, Phase und Zähler. Läuft ohne Audio."
+msgstr "Clock: outputs ticks, phase and a counter at the set tempo (BPM). Runs without audio."
 
 #: cue_dialog.cpp:49
 msgid "Taste"
@@ -1434,9 +1614,17 @@ msgstr "Atajos de teclado"
 msgid "Tempo"
 msgstr "Velocidad"
 
+#: node_info_texts.cpp:29
+msgid "Tempo per Tippen: Jedes Einschalten von „Tap“ zählt als Schlag. Liefert Beat, Pulse, Phase und BPM, oder ein festes Tempo."
+msgstr "Tempo by tapping: each switch-on of \"Tap\" counts as a beat. Outputs beat, pulse, phase and BPM, or a fixed tempo."
+
 #: test_panel.cpp:66
 msgid "Testbild"
 msgstr "Imagen de prueba"
+
+#: node_info_texts.cpp:101
+msgid "Testbild für den Aufbau: x wird rot, y grün, z blau. So sieht man, welche Seite wo liegt und ob Verkabelung und Startecke stimmen."
+msgstr "Test image for the setup: x becomes red, y green, z blue, so you can see which side is where and whether cabling and start corner are right."
 
 #: main_window_stage.cpp:38
 msgid "Testbilder auf die LEDs schicken, um Verkabelung und Patch zu prüfen"
@@ -1449,6 +1637,14 @@ msgstr "Modo de prueba"
 #: test_panel.cpp:91
 msgid "Testmodus beenden"
 msgstr "Terminar modo de prueba"
+
+#: node_info_texts.cpp:117
+msgid "Text als Laufschrift oder statisch. Tempo, Ausrichtung, Höhe und Farben einstellbar."
+msgstr "Text as a scrolling ticker or static. Speed, alignment, height and colors are adjustable."
+
+#: node_info_texts.cpp:71
+msgid "Tunnel-Effekt: Das Bild wird zu einem Tunnel verzerrt, durch den man fliegt (Geschwindigkeit, Wiederholungen, Tiefe, Drehung)."
+msgstr "Tunnel effect: the image is warped into a tunnel you fly through (speed, repeats, depth, twist)."
 
 #: main_window_language.cpp:66
 msgid "Tutorial"
@@ -1486,6 +1682,22 @@ msgstr "Origen x y z"
 msgid "Verbindung trennen"
 msgstr "Desconectar"
 
+#: node_info_texts.cpp:73
+msgid "Verdreht das Bild entlang einer Achse, je weiter weg, desto stärker (Winkel pro Einheit)."
+msgstr "Twists the image along an axis, stronger the further away (angle per unit)."
+
+#: node_info_texts.cpp:133
+msgid "Vergleicht einen Wert mit einer Schwelle (mit Hysterese) und liefert Ja/Nein sowie Impulse beim Überschreiten und Unterschreiten."
+msgstr "Compares a value with a threshold (with hysteresis) and outputs yes/no plus triggers on rising and falling."
+
+#: node_info_texts.cpp:53
+msgid "Vergröbert das Bild zu einem Raster aus Zellen (Cells X/Y/Z), wie große Pixel."
+msgstr "Coarsens the image into a grid of cells (Cells X/Y/Z), like big pixels."
+
+#: node_info_texts.cpp:63
+msgid "Verschiebt das Bild in x, y und z. Mit „Wrap around“ kommt, was hinten hinausläuft, vorne wieder herein."
+msgstr "Shifts the image in x, y and z. With \"Wrap around\" what leaves on one side re-enters on the other."
+
 #: layout_panel.cpp:150
 msgid "Verteilen ↔"
 msgstr "Distribuir ↔"
@@ -1514,9 +1726,25 @@ msgstr "Centrar horizontalmente"
 msgid "Wartezeit nach dem Ende der vorigen Überblendung"
 msgstr "Espera tras terminar el fundido anterior"
 
+#: node_info_texts.cpp:93
+msgid "Weiche, ineinanderfließende Kugeln (Metaballs), die sich bewegen. Anzahl, Größe und Tempo einstellbar."
+msgstr "Soft, merging balls (metaballs) that move around. Number, size and speed are adjustable."
+
+#: node_info_texts.cpp:119
+msgid "Weiches Rauschen (Value Noise) als Muster aus zwei Farben. Skalierung, Tempo, Dichte und Weichheit einstellbar."
+msgstr "Soft value noise as a pattern of two colors. Scale, speed, density and softness are adjustable."
+
 #: test_panel.cpp:29
 msgid "Weiß"
 msgstr "Blanco"
+
+#: node_info_texts.cpp:21
+msgid "Wellenform des Audio-Eingangs (ein kurzes Zeitfenster, auf Wunsch an der steigenden Flanke ausgerichtet). Wird an „Oscilloscope“ angeschlossen."
+msgstr "Waveform of the audio input (a short time window, optionally aligned to a rising edge). Connect it to \"Oscilloscope\"."
+
+#: node_info_texts.cpp:105
+msgid "Wellenringe wie Wassertropfen: Ringe breiten sich von zufälligen Punkten aus (Tropfen pro Sekunde, Tempo, Ringbreite)."
+msgstr "Ripples like water drops: rings spread from random points (drops per second, speed, ring width)."
 
 #: main_window.cpp:116 main_window.cpp:155
 msgid "WhiteHoleFX"
@@ -1538,6 +1766,14 @@ msgstr "Proyectos de WhiteHoleFX (*.whfx);;Todos los archivos (*)"
 msgid "Wie in der 2D-Ansicht; graue Punkte der vorderen Schicht verdecken LEDs dahinter"
 msgstr "Como en la vista 2D; los puntos grises de la capa frontal tapan los LED de detrás"
 
+#: node_info_texts.cpp:69
+msgid "Wiederholt das Bild als Kacheln (Tiles X/Y/Z), auf Wunsch jede zweite gespiegelt."
+msgstr "Repeats the image as tiles (Tiles X/Y/Z), optionally mirroring every other tile."
+
+#: node_info_texts.cpp:75
+msgid "Wirbel: Dreht das Bild um einen Mittelpunkt, in der Mitte am stärksten, nach außen abklingend (Radius)."
+msgstr "Vortex: swirls the image around a center, strongest in the middle and fading outward (radius)."
+
 #: parameter_panel.cpp:107
 msgid "Wird durch eine Verbindung im Graphen gesteuert."
 msgstr "Controlado por una conexión en el grafo."
@@ -1545,6 +1781,22 @@ msgstr "Controlado por una conexión en el grafo."
 #: settings_dialog.cpp:148
 msgid "Wählen …"
 msgstr "Elegir …"
+
+#: node_info_texts.cpp:27
+msgid "Zeichnet das Audio-Spektrum als Balken, von unten oder von der Mitte aus. „Spectrum“ kommt von „Audio Spectrum“."
+msgstr "Draws the audio spectrum as bars, from the bottom or from the center. \"Spectrum\" comes from \"Audio Spectrum\"."
+
+#: node_info_texts.cpp:25
+msgid "Zeichnet eine Audio-Wellenform als Linie (Oszilloskop). „Wave“ kommt von „Audio Waveform“."
+msgstr "Draws an audio waveform as a line (oscilloscope). \"Wave\" comes from \"Audio Waveform\"."
+
+#: node_info_texts.cpp:51
+msgid "Zeichnet nur die Kanten des Bildes nach (Umriss) in einer wählbaren Farbe."
+msgstr "Draws only the edges of the image (outline) in a chosen color."
+
+#: node_info_texts.cpp:55
+msgid "Zeigt das Bild nur in einem Ausschnitt (links, oben, Breite, Höhe, Tiefe) und füllt den Rest mit Transparent."
+msgstr "Shows the image only in a section (left, top, width, height, depth); the rest becomes transparent."
 
 #: fixture_form.cpp:110 fixture_form.cpp:121
 msgid "Zeilen"
@@ -1582,13 +1834,29 @@ msgstr "Destino n.º"
 msgid "Ziele (Controller)"
 msgstr "Destinos (controladores)"
 
-#: node_palette.cpp:324
+#: node_info_texts.cpp:61
+msgid "Zoomt das Bild um die Mitte: Faktor über 1 vergrößert, unter 1 verkleinert. „Factor Z“ zoomt die Tiefe getrennt."
+msgstr "Zooms the image around the center: a factor above 1 enlarges, below 1 shrinks. \"Factor Z\" zooms the depth separately."
+
+#: node_palette.cpp:328
 msgid "Zu Favoriten hinzufügen"
 msgstr "Añadir a favoritos"
 
 #: add_fixture_dialog.cpp:111 fixture_form.cpp:124
 msgid "Zuerst entlang"
 msgstr "Primero a lo largo de"
+
+#: node_info_texts.cpp:145
+msgid "Zufallswert, der sich im eingestellten Takt ändert, auf Wunsch weich überblendet. Mit Seed wiederholbar."
+msgstr "A random value that changes at the set rate, optionally smoothed. Repeatable with a seed."
+
+#: node_info_texts.cpp:103
+msgid "Zufällig aufleuchtende Pixel, blinkend oder weich überblendend, zwischen zwei Farben."
+msgstr "Randomly lighting pixels, blinking or fading, between two colors."
+
+#: node_info_texts.cpp:83
+msgid "Zufällige Zellen, die auf- und abblenden (Fading Pixels), zwischen zwei Farben."
+msgstr "Random cells that fade in and out, between two colors."
 
 #: layout_panel.cpp:185
 msgid "Zum Verteilen mindestens drei Fixtures wählen"
@@ -1686,6 +1954,10 @@ msgstr "invertir y (y apunta hacia abajo en el archivo)"
 msgid "z (Tiefe)"
 msgstr "z (profundidad)"
 
+#: node_info_texts.cpp:43
+msgid "Ändert die Farben eines Bildes: Farbton verschieben, Sättigung, Helligkeit, Gamma, Invertieren."
+msgstr "Adjusts the colors of an image: hue shift, saturation, brightness, gamma, invert."
+
 #: main_window_help.cpp:42
 msgid "Öffnet GitHub: ein neues Issue anlegen"
 msgstr "Abre GitHub: crear una nueva incidencia"
@@ -1697,6 +1969,10 @@ msgstr "Acerca de WhiteHoleFX"
 #: settings_dialog.cpp:86
 msgid "Über diese Karte tritt der sACN-Empfang den Multicast-Gruppen bei. Art-Net-Broadcast und Unicast-Pakete kommen weiterhin von jeder Karte an."
 msgstr "La recepción de sACN se une a los grupos multicast a través de esta tarjeta. Los paquetes Art-Net de difusión y unicast siguen llegando por todas las tarjetas."
+
+#: node_info_texts.cpp:35
+msgid "Überblendet von Bild A zu Bild B (Position 0 bis 1). „Progressive“ lässt beide in der Mitte voll leuchten."
+msgstr "Fades from image A to image B (position 0 to 1). \"Progressive\" lets both shine fully in the middle."
 
 #: live_panel.cpp:120
 msgid "Überblendzeit %1 s"

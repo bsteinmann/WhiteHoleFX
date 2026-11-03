@@ -15,6 +15,7 @@
 #include <QMimeData>
 
 #include "node_editor.hpp"
+#include "node_info.hpp"
 #include "node_palette.hpp"
 #include "node_search.hpp"
 
@@ -50,6 +51,11 @@ QString NodeEditor::exercise() {
         }
     }
 
+    // Jeder Node-Typ hat eine Beschreibung (Info-Zeichen), und sie erscheint im Node.
+    if (const auto problems = nodeInfoProblems(player_.project()->graph.registry()); !problems.empty()) {
+        return QStringLiteral("Node-Beschreibungen: %1 (und %2 weitere)").arg(QString::fromStdString(problems.front())).arg(problems.size() - 1);
+    }
+
     const std::size_t nodesBefore = player_.project()->graph.nodes().size();
     const std::size_t wiresBefore = player_.project()->graph.connections().size();
 
@@ -71,6 +77,9 @@ QString NodeEditor::exercise() {
     }
     NodeItem* from = itemOf(*source);
     NodeItem* to = itemOf(*sink);
+    if (from == nullptr || from->info().isEmpty() || !from->infoButtonAt(from->mapToScene(QPointF{152.0, 13.0}))) {
+        return QStringLiteral("Info-Zeichen fehlt am neuen Node");
+    }
     if (from == nullptr || to == nullptr || from->findPort("out") == nullptr || to->findPort("source") == nullptr) {
         return QStringLiteral("Ports der neuen Nodes nicht gefunden");
     }

@@ -20,6 +20,7 @@
 #include <QTreeWidgetItemIterator>
 #include <QVBoxLayout>
 
+#include "node_info.hpp"
 #include "node_items.hpp"
 #include "node_search.hpp"
 #include "whitehole/graph/port_family.hpp"
@@ -110,6 +111,9 @@ QString describe(const graph::NodeDescriptor& type) {
         (port.direction == graph::PortDirection::Input ? inputs : outputs) << fromStd(port.displayName);
     }
     QString text = fromStd(type.displayName) + QStringLiteral("  (") + fromStd(type.typeId) + QLatin1Char(')');
+    if (const QString info = nodeInfoText(type.typeId); !info.isEmpty()) {
+        text += QStringLiteral("\n\n") + info + QLatin1Char('\n');
+    }
     if (!inputs.isEmpty()) {
         text += QStringLiteral("\nEingänge: ") + inputs.join(QStringLiteral(", "));
     }

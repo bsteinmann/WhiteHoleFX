@@ -266,6 +266,10 @@ Nodes hell, die sich daran anschließen lassen; alle anderen werden abgedunkelt.
 das Nodes mit passendem Eingang, aus einem Eingang gezogen Nodes mit passendem Ausgang. Loslassen hebt die
 Hervorhebung auf. So findet man z. B. zur türkisen Raute (Ganzzahl) die Nodes, die sie speisen können.
 
+**Info-Zeichen:** Im Kopf jedes Nodes steht ein kleines „i“ (links neben dem Schalter). Darüber mit der Maus
+bleiben zeigt eine Kurzbeschreibung des Node-Typs; ein Klick zeigt sie sofort. Dieselbe Beschreibung erscheint im
+Tooltip des Nodes in der Palette.
+
 **Einrasten:** Zieht man einen Node aus der Palette auf ein **Kabel**, wird er dazwischen eingefügt (A → neu → B).
 Auf einen **Node** gezogen speist er in dessen **linker Hälfte** einen Eingang, in der **rechten Hälfte** hängt er
 hinter dem Ausgang des Ziels. Welcher Port, entscheidet die Höhe der Maus (der nächste Port auf dieser Seite);

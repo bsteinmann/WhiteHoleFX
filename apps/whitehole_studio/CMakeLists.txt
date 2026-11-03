@@ -56,6 +56,9 @@ add_executable(whitehole_studio
     node_editor_menu.cpp
     node_editor_presets.cpp
     node_editor_search.cpp
+    node_info.cpp
+    node_info.hpp
+    node_info_texts.cpp
     node_items.cpp
     node_palette.cpp
     node_palette.hpp

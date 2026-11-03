@@ -11,6 +11,7 @@
 #include <QColor>
 #include <QGraphicsItem>
 #include <QGraphicsPathItem>
+#include <QGraphicsSceneHoverEvent>
 #include <QPainter>
 #include <QString>
 
@@ -72,6 +73,13 @@ public:
     /// Port `portKey` (leer = keiner) einen Ring. Aus mit `on = false`.
     void setDockHighlight(bool on, std::string portKey = {});
 
+    /// Info-Zeichen "i" im Kopf: Beschreibung des Node-Typs als Tooltip beim Überfahren; ein Klick zeigt ihn sofort.
+    /// Ohne Text (leer) gibt es kein Zeichen.
+    void setInfo(const QString& text);
+    [[nodiscard]] const QString& info() const noexcept { return info_; }
+    [[nodiscard]] const QString& title() const noexcept { return title_; }
+    [[nodiscard]] bool infoButtonAt(const QPointF& scenePos) const;
+
     /// Markiert den Ausgang, der auf die LEDs abgetastet wird (Orange).
     void setTargetKey(std::optional<std::string> key);
     /// Meldet Verschiebungen (für die Kabel). Schaltet die Meldung ein; erst nach setPos aufrufen,
@@ -86,6 +94,7 @@ public:
 
 protected:
     QVariant itemChange(GraphicsItemChange change, const QVariant& value) override;
+    void hoverMoveEvent(QGraphicsSceneHoverEvent* event) override;
 
 private:
     NodeId id_;
@@ -100,6 +109,7 @@ private:
     bool bypassed_{false};
     bool dockHighlight_{false};
     std::string dockPort_;
+    QString info_;
 };
 
 class WireItem : public QGraphicsPathItem {

@@ -6,10 +6,13 @@
 #include <QKeySequence>
 #include <QMouseEvent>
 #include <QScrollBar>
+#include <QToolTip>
 #include <QWheelEvent>
 
 #include <algorithm>
 #include <cmath>
+
+#include "node_info.hpp"
 
 namespace whitehole::studio {
 
@@ -130,6 +133,7 @@ void NodeEditor::buildScene() {
         }
         auto* item = new NodeItem{node.id, *descriptor, title};
         item->setBypassed(node.bypassed);
+        item->setInfo(nodeInfoText(node.typeId));
         item->setPos(static_cast<qreal>(node.position.x), static_cast<qreal>(node.position.y));
         scene_.addItem(item);
         item->setMoveCallback([this](NodeItem& moved) {
@@ -228,6 +232,12 @@ void NodeEditor::mousePressEvent(QMouseEvent* event) {
     if (event->button() == Qt::LeftButton) {
         // Schalter im Kopf eines Field-Nodes: überbrücken statt ziehen
         NodeItem* node = nodeAt(mapToScene(event->position().toPoint()));
+        if (node != nullptr && node->infoButtonAt(mapToScene(event->position().toPoint()))) {
+            // Info-Zeichen: den Tooltip gleich zeigen, statt zu warten
+            QToolTip::showText(event->globalPosition().toPoint(), node->title() + QStringLiteral("\n\n") + node->info(), this);
+            event->accept();
+            return;
+        }
         if (node != nullptr && node->bypassButtonAt(mapToScene(event->position().toPoint()))) {
             toggleBypass(node->nodeId());
             event->accept();

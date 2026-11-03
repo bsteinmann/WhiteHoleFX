@@ -125,6 +125,7 @@ NodeItem::NodeItem(NodeId id, const graph::NodeDescriptor& descriptor, const QSt
     : id_{id}, title_{title}, titleColor_{70, 74, 84} {
     setFlag(ItemIsMovable);
     setFlag(ItemIsSelectable);
+    setAcceptHoverEvents(true);  // für den Tooltip am Info-Zeichen
     canBypass_ = descriptor.domain == graph::NodeDomain::Field;
 
     int inputs = 0;
@@ -148,7 +149,27 @@ NodeItem::NodeItem(NodeId id, const graph::NodeDescriptor& descriptor, const QSt
 namespace {
 // Der Schalter sitzt rechts im Kopf, ein Kreis mit Strich ("Ein/Aus"-Zeichen).
 const QRectF kBypassButton{kWidth - 24.0, (kTitleHeight - 16.0) / 2.0, 16.0, 16.0};
+
+/// Das Info-Zeichen sitzt links neben dem Schalter (oder, ohne Schalter, ganz rechts).
+QRectF infoRect(bool hasBypass) {
+    return QRectF{kWidth - (hasBypass ? 46.0 : 24.0), (kTitleHeight - 16.0) / 2.0, 16.0, 16.0};
+}
 }  // namespace
+
+void NodeItem::setInfo(const QString& text) {
+    info_ = text;
+    update();
+}
+
+bool NodeItem::infoButtonAt(const QPointF& scenePos) const {
+    return !info_.isEmpty() && infoRect(canBypass_).adjusted(-3.0, -3.0, 3.0, 3.0).contains(mapFromScene(scenePos));
+}
+
+void NodeItem::hoverMoveEvent(QGraphicsSceneHoverEvent* event) {
+    const bool over = !info_.isEmpty() && infoRect(canBypass_).adjusted(-3.0, -3.0, 3.0, 3.0).contains(event->pos());
+    setToolTip(over ? title_ + QStringLiteral("\n\n") + info_ : QString{});
+    QGraphicsItem::hoverMoveEvent(event);
+}
 
 void NodeItem::setBypassed(bool on) {
     if (bypassed_ != on) {
@@ -258,9 +279,22 @@ void NodeItem::paint(QPainter* painter, const QStyleOptionGraphicsItem*, QWidget
     bold.setBold(true);
     painter->setFont(bold);
     painter->setPen(QColor{240, 240, 245});
-    const double titleWidth = kWidth - (canBypass_ ? 44.0 : 20.0);
+    const double titleWidth = kWidth - (canBypass_ ? 44.0 : 20.0) - (info_.isEmpty() ? 0.0 : 22.0);
     painter->drawText(QRectF{10.0, 0.0, titleWidth, kTitleHeight}, Qt::AlignVCenter | Qt::AlignLeft,
                       painter->fontMetrics().elidedText(title_, Qt::ElideRight, static_cast<int>(titleWidth)));
+    if (!info_.isEmpty()) {
+        // "i" im Kreis
+        const QRectF box = infoRect(canBypass_);
+        painter->save();
+        painter->setOpacity(1.0);
+        painter->setPen(QPen{QColor{150, 190, 255}, 1.5});
+        painter->setBrush(Qt::NoBrush);
+        painter->drawEllipse(box.adjusted(1.0, 1.0, -1.0, -1.0));
+        painter->setPen(QPen{QColor{150, 190, 255}, 1.8, Qt::SolidLine, Qt::RoundCap});
+        painter->drawPoint(QPointF{box.center().x(), box.top() + 4.6});
+        painter->drawLine(QPointF{box.center().x(), box.top() + 7.2}, QPointF{box.center().x(), box.bottom() - 3.8});
+        painter->restore();
+    }
     if (canBypass_) {
         const QPointF center = kBypassButton.center();
         const QColor mark = bypassed_ ? QColor{255, 110, 100} : QColor{130, 230, 150};

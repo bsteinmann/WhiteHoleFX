@@ -1,5 +1,9 @@
 # Änderungen
 
+## 0.41.0
+
+- **#30 Info-Zeichen:** Jeder Node hat im Kopf ein kleines „i“. Mit der Maus darüber erscheint eine Beschreibung des Node-Typs als Tooltip, ein Klick zeigt sie sofort. Dieselbe Beschreibung steht im Tooltip der Palette. Die 69 Texte gibt es auf Deutsch und Englisch (Französisch und Spanisch zeigen vorerst den englischen Text). Der Rauchtest (`--exercise`) meldet jeden Node-Typ ohne Beschreibung, neue Typen brauchen also einen Eintrag in `node_info_texts.cpp`.
+
 ## 0.40.1
 
 - **#32 Scale-Node:** Der Regler für „Factor“ und „Factor Z“ reichte von 0,01 bis 100 und war damit unbrauchbar (der sinnvolle Bereich lag auf den ersten Pixeln). Jetzt 0,1 bis 5 (10-fach verkleinern bis 5-fach vergrößern). Ältere Projekte mit Werten außerhalb werden auf den Bereich begrenzt.
