@@ -302,8 +302,8 @@ TEST_CASE("Player: nodes() beschreibt Parameter, Bereiche und verbundene Eingän
     const auto* scale = findParameter(*findNode(nodes, "Scale"), "factor");
     REQUIRE(scale != nullptr);
     CHECK(std::get<double>(scale->value) == 1.0);
-    CHECK(scale->minValue == 0.01);
-    CHECK(scale->maxValue == 100.0);
+    CHECK(scale->minValue == 0.1);
+    CHECK(scale->maxValue == 5.0);
     CHECK_FALSE(scale->driven);
 
     // Der Drehwinkel hängt an der Zeit: ein Regler hätte keine Wirkung.
@@ -330,7 +330,7 @@ TEST_CASE("Player: setParameter ändert den Wert, begrenzt ihn und meldet Fehler
 
     r = player.setParameter(scale, "factor", 5000.0);
     REQUIRE(r.ok());
-    CHECK(std::get<double>(r.value()) == 100.0);  // begrenzt
+    CHECK(std::get<double>(r.value()) == 5.0);  // begrenzt
 
     CHECK(player.setParameter(scale, "factor", std::string{"x"}).error().code == ErrorCode::InvalidArgument);
     CHECK(player.setParameter(scale, "nix", 1.0).error().code == ErrorCode::NotFound);

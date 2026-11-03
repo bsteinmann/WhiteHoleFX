@@ -1,5 +1,9 @@
 # Änderungen
 
+## 0.40.1
+
+- **#32 Scale-Node:** Der Regler für „Factor“ und „Factor Z“ reichte von 0,01 bis 100 und war damit unbrauchbar (der sinnvolle Bereich lag auf den ersten Pixeln). Jetzt 0,1 bis 5 (10-fach verkleinern bis 5-fach vergrößern). Ältere Projekte mit Werten außerhalb werden auf den Bereich begrenzt.
+
 ## 0.40.0
 
 - **Einrasten beim Ziehen aus der Palette:** Zieht man einen Node auf ein **Kabel**, wird er dazwischen eingefügt (A → neu → B). Zieht man ihn auf einen **Node**, speist er in der linken Hälfte einen Eingang des Ziels, in der rechten Hälfte hängt er hinter dessen Ausgang. Den Port wählt die Höhe der Maus; bei mehreren Eingängen gilt der erste freie des passenden Typs. Ein belegter Eingang bekommt den Node dazwischen. Vor dem Loslassen zeigt der Editor das Ziel hellblau (Rahmen, Kabel, Port) und die neuen Kabel gestrichelt. **Alt** gedrückt halten schaltet das Einrasten ab; Esc bricht den Drag ab. Alles ist ein Schritt Rückgängig. Der Ausgangs-Node rastet nirgends ein. Die Regeln stehen in `graph/node_docking.hpp` (`planDocking`) und sind getestet; `Player::addNodeDocked` führt sie in einem Schritt aus. Pfeiltasten zum Umschalten von Port und Seite folgen später (ein Qt-Drag reicht Tasten nicht durch).

@@ -182,7 +182,7 @@ std::vector<compiler::NodeDefinition> transformNodes() {
 
     nodes.push_back(fieldNode("wh.transform.scale", "Scale", "Effects",
                               {fieldInput("source", "Source"), fieldOutput()},
-                              {number("factor", "Factor", 1.0, 0.01, 100.0), number("factorZ", "Factor Z", 1.0, 0.01, 100.0)},
+                              {number("factor", "Factor", 1.0, 0.1, 5.0), number("factorZ", "Factor Z", 1.0, 0.1, 5.0)},
                               kScaleBody));
 
     nodes.push_back(fieldNode("wh.transform.rotate3d", "Rotate 3D", "Effects",
