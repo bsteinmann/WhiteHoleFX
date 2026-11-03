@@ -473,4 +473,4 @@ Aufrufstapel des Hauptthreads aus, bei einem Absturz ebenso. Die Ausgabe steht i
 `~/.cache/WhiteHoleFX/stack.txt`. Wer ein Problem melden will, hängt diese Datei an. Außerdem schreibt das
 Studio dort "Hauptschleife stand N ms" und "Shader übersetzt in N ms", wenn ein Schritt auffallend lange
 dauert. Mit `WHITEHOLEFX_NO_WATCHDOG=1` lässt sich der Wächter abschalten; `whitehole_studio --hang-test`
-prüft ihn (hält den Hauptthread 3 s an).
+prüft ihn (hält den Hauptthread 4 s an).

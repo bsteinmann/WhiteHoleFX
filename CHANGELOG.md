@@ -1,5 +1,9 @@
 # Änderungen
 
+## 0.37.6
+
+- **Fehlersuche #26:** Der Wächter nimmt bei einem Stillstand nach einer Sekunde eine zweite Stapelprobe und zeigt, welche Qt-Ereignisse (Klasse und Typ) in dieser Zeit am häufigsten waren. Der erste Stapel aus dem Freeze zeigte eine Ereignisschleife beim Ein-/Ausblenden von Widgets; so lässt sich das betroffene Widget benennen.
+
 ## 0.37.5
 
 - **Fehlersuche #26 (Freeze/Absturz):** Das Studio hat unter Linux einen Wächter. Steht die Hauptschleife länger als 2 s, gibt er den Aufrufstapel des Hauptthreads aus (stderr und `~/.cache/WhiteHoleFX/stack.txt`); dasselbe bei einem Absturz (SIGSEGV, SIGABRT …). Abschalten mit `WHITEHOLEFX_NO_WATCHDOG=1`. Selbsttest: `whitehole_studio --hang-test` (läuft auch in der CI).

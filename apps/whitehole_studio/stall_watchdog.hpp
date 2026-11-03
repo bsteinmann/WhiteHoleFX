@@ -18,6 +18,12 @@ bool startStallWatchdog(const char* logPath);
 /// "Der Hauptthread lebt": regelmäßig vom Hauptthread aufrufen (Studio: alle 100 ms per Timer).
 void stallHeartbeat();
 
+/// Zählt ein Ereignis für die Auswertung bei einem Stillstand: `name` ist ein Klassenname mit statischer
+/// Lebensdauer (QMetaObject::className), `type` der Ereignistyp. Steht der Hauptthread, zeigt der Wächter,
+/// welche (Klasse, Typ)-Paare in der letzten Sekunde am häufigsten vorkamen - eine Ereignisschleife (etwa
+/// Scrollleisten, die sich gegenseitig ein- und ausblenden) fällt so sofort auf. Thread-sicher, ohne Sperre.
+void stallCountEvent(const char* name, int type);
+
 /// Nur für den Selbsttest (--hang-test): blockiert den aufrufenden Thread für `milliseconds`.
 void stallForTest(int milliseconds);
 

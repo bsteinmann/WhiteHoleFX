@@ -20,6 +20,7 @@
 
 #include "app_language.hpp"
 #include "main_window.hpp"
+#include "stall_event_filter.hpp"
 #include "stall_watchdog.hpp"
 
 #ifdef WH_STUDIO_HAVE_GPU
@@ -42,7 +43,9 @@ int main(int argc, char** argv) {
     QDir{}.mkpath(cacheDir);
     const QByteArray stackFile = QDir{cacheDir}.filePath(QStringLiteral("stack.txt")).toLocal8Bit();
     QTimer heartbeat;
+    whitehole::studio::StallEventFilter eventTally;
     if (whitehole::studio::startStallWatchdog(stackFile.constData())) {
+        app.installEventFilter(&eventTally);
         heartbeat.setInterval(100);
         QObject::connect(&heartbeat, &QTimer::timeout, &whitehole::studio::stallHeartbeat);
         heartbeat.start();
@@ -60,7 +63,7 @@ int main(int argc, char** argv) {
     const QCommandLineOption exerciseOption{QStringLiteral("exercise"), QStringLiteral("vor --grab alle Regler einmal verstellen (Rauchtest)")};
     const QCommandLineOption langOption{QStringLiteral("lang"), QStringLiteral("Sprache der Oberfläche: de, en, fr oder es"), QStringLiteral("code")};
     const QCommandLineOption ctrlNOption{QStringLiteral("ctrl-n"), QStringLiteral("gleich nach dem Start Strg+N (Neu) auslösen (Prüfung für Issue #26)")};
-    const QCommandLineOption hangTestOption{QStringLiteral("hang-test"), QStringLiteral("Selbsttest des Wächters: den Hauptthread 3 s anhalten")};
+    const QCommandLineOption hangTestOption{QStringLiteral("hang-test"), QStringLiteral("Selbsttest des Wächters: den Hauptthread 4 s anhalten")};
     parser.addOptions({runOption, softwareOption, grabOption, framesOption, exerciseOption, langOption, ctrlNOption, hangTestOption});
     parser.process(app);
 
@@ -118,7 +121,7 @@ int main(int argc, char** argv) {
 
     if (parser.isSet(hangTestOption)) {
         QApplication::processEvents();
-        whitehole::studio::stallForTest(3000);
+        whitehole::studio::stallForTest(4000);
         QApplication::processEvents();
     }
 

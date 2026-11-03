@@ -28,6 +28,7 @@ add_executable(whitehole_studio
     app_language.cpp
     app_language.hpp
     studio.qrc
+    stall_event_filter.hpp
     stall_watchdog.cpp
     stall_watchdog.hpp
     main_window_settings.cpp
