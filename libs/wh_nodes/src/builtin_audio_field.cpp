@@ -70,6 +70,52 @@ v = max(v, inside * clamp(@param(fill), 0.0, 1.0));
 let col = @param(color);
 return vec4<f32>(col.rgb, col.a * v);)wgsl";
 
+// Treffer-Blitz: füllt das Bild (oder eine Form) mit `level`, gedacht für den Puls eines Kick-Erkenners.
+// Der Rest bleibt durchsichtig, der Blitz liegt also dunkel auf dunkel und lässt sich über andere Looks legen.
+// Form 0 füllt alles, 1 ist eine Scheibe aus der Mitte, 2 ein Rahmen am Rand, 3 ein senkrechter Balken
+// in der Mitte; `size` ist ihre Größe (0..1), `softness` die Breite des Rands.
+constexpr const char* kHitFlashBody = R"wgsl(let q = p.xy - vec2<f32>(0.5, 0.5);
+let shape = i32(floor(@param(shape) + 0.5));
+let s = clamp(@param(size), 0.0, 1.0);
+let soft = max(@param(softness), 0.001);
+var m = 1.0;
+if (shape == 1) {
+    let r = s * 0.75;
+    m = 1.0 - smoothstep(r - soft, r, length(q));
+}
+if (shape == 2) {
+    let e = 0.5 - max(abs(q.x), abs(q.y));
+    let w = s * 0.5;
+    m = 1.0 - smoothstep(w - soft, w, e);
+}
+if (shape == 3) {
+    let w = s * 0.5;
+    m = 1.0 - smoothstep(w - soft, w, abs(q.x));
+}
+let col = @param(color);
+return vec4<f32>(col.rgb, col.a * clamp(@param(level), 0.0, 1.0) * m);)wgsl";
+
+// Schockwelle: ein Ring (Kreis, Quadrat oder Raute), der `age` Sekunden nach dem Treffer mit `speed` nach
+// außen gelaufen ist und über `life` Sekunden verblasst. `age` kommt vom Ausgang "Age" des Kick-Erkenners;
+// der Standard 100 heißt: schon vergangen, kein Ring. Mit space = Volume wird daraus eine Kugelschale.
+constexpr const char* kShockwaveBody = R"wgsl(let center = vec3<f32>(@param(cx), @param(cy), @param(cz));
+let d0 = select(vec3<f32>(p.xy - center.xy, 0.0), p - center, ((@param(space) > 0.5 && @param(space) < 1.5) || (@param(space) >= 1.5 && @volume)));
+let shape = i32(floor(@param(shape) + 0.5));
+var d = length(d0);
+if (shape == 1) {
+    d = max(max(abs(d0.x), abs(d0.y)), abs(d0.z));
+}
+if (shape == 2) {
+    d = abs(d0.x) + abs(d0.y) + abs(d0.z);
+}
+let age = max(@param(age), 0.0);
+let life = max(@param(life), 0.05);
+let w = max(@param(thickness), 0.005);
+let ring = 1.0 - smoothstep(0.0, w, abs(d - age * @param(speed)));
+let fade = clamp(1.0 - age / life, 0.0, 1.0);
+let col = @param(color);
+return vec4<f32>(col.rgb, col.a * ring * fade);)wgsl";
+
 }  // namespace
 
 std::vector<compiler::NodeDefinition> audioFieldNodes() {
@@ -92,6 +138,21 @@ std::vector<compiler::NodeDefinition> audioFieldNodes() {
          number("glow", "Glow", 0.3, 0.0, 1.0), number("fill", "Fill", 0.0, 0.0, 1.0),
          color("color", "Color", ColorRgba{0.2F, 1.0F, 0.4F, 1.0F})},
         kScopeBody, kScopePrelude));
+    nodes.push_back(fieldNode(
+        "wh.generator.hitflash", "Hit Flash", "Audio", {fieldOutput()},
+        {number("level", "Level", 0.0, 0.0, 1.0), choice("shape", "Shape", {"Full", "Disc", "Frame", "Bar"}),
+         number("size", "Size", 0.6, 0.0, 1.0), number("softness", "Edge softness", 0.1, 0.0, 0.5),
+         color("color", "Color", ColorRgba{1.0F, 1.0F, 1.0F, 1.0F})},
+        kHitFlashBody));
+    nodes.push_back(fieldNode(
+        "wh.generator.shockwave", "Shockwave", "Audio", {fieldOutput()},
+        {number("age", "Age since hit (s)", 100.0, 0.0, 100.0), number("speed", "Speed", 1.2, 0.0, 10.0),
+         number("life", "Lifetime (s)", 0.8, 0.05, 10.0), number("thickness", "Ring width", 0.08, 0.005, 0.5),
+         choice("shape", "Shape", {"Circle", "Square", "Diamond"}), number("cx", "Center X", 0.5, 0.0, 1.0),
+         number("cy", "Center Y", 0.5, 0.0, 1.0), number("cz", "Center Z", 0.5, 0.0, 1.0),
+         color("color", "Color", ColorRgba{1.0F, 1.0F, 1.0F, 1.0F}),
+         choice("space", "Space", {"Flat (x/y)", "Volume (x/y/z)", "Auto (by layout)"}, 2)},
+        kShockwaveBody));
     return nodes;
 }
 

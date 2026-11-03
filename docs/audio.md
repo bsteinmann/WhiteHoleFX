@@ -38,6 +38,15 @@ Die Beat-Erkennung ist eine Heuristik für Musik mit erkennbarem Bass. Bei dicht
 Tempowechseln oder sehr leiser Musik irrt sie sich. Dafür gibt es *Tap Tempo* und das feste Tempo im
 Beat-Node.
 
+## Kick, Snare, Hi-Hat
+
+Neben dem Takt-Erkenner (`Beat`) gibt es einen Erkenner je Instrument. Jeder schaut nur auf seinen Frequenzbereich
+(Kick etwa 40–170 Hz, Snare 200 Hz–2,5 kHz, Hi-Hat ab etwa 5 kHz), löst schon beim Anstieg über die Schwelle aus
+(ohne das Maximum abzuwarten, das spart einen Analyseschritt von rund 10 ms) und rechnet relativ: Die Schwelle ist
+der Mittelwert der letzten Sekunde plus 1,5 Streuungen, ein leiser Kick wird also genauso erkannt wie ein lauter.
+Mindestabstand zwischen zwei Treffern: Kick 0,18 s, Snare 0,15 s, Hi-Hat 0,06 s. Die Rechnung steht in
+`wh_audio/onset_detector.hpp` und ist mit künstlichen Signalen getestet.
+
 ## Nodes (Kategorie „Audio“)
 
 | Typ | Ausgänge | Wichtige Parameter |
@@ -47,6 +56,9 @@ Beat-Node.
 | `wh.value.audiospectrum` | `spectrum` (AudioSpectrum), `present` | `gain`, `floor`, `attack`, `release` |
 | `wh.value.audiowave` | `wave` (AudioWave), `present` | `span` (Fenster in ms, 2–100), `gain`, `trigger` (steigender Nulldurchgang), `level` (Triggerschwelle), `smooth` |
 | `wh.value.beat` | `beat` (Trigger), `pulse`, `phase`, `bpm` (Scalar), `present` | `threshold` (Mindeststärke), `decay`, `manualBpm` (0 = erkennen) |
+| `wh.value.onset` (Kick / Snare / Hat) | `beat` (Trigger), `pulse`, `strength`, `age` (Sekunden seit dem Treffer), `present` | `band` (Kick, Snare, Hi-Hat), `threshold` (Mindeststärke), `decay` |
+| `wh.generator.hitflash` (Hit Flash) | Field | `level` (0..1), `shape` (Full, Disc, Frame, Bar), `size`, `softness`, `color` |
+| `wh.generator.shockwave` (Shockwave) | Field | `age`, `speed`, `life`, `thickness`, `shape`, `cx`/`cy`/`cz`, `color`, `space` |
 | `wh.value.tap` | `beat` (Trigger), `pulse`, `phase`, `bpm` | `tap` (jedes Einschalten zählt), `manualBpm`, `decay` |
 | `wh.generator.scope` | Field | Eingang `wave`; `amplitude` (halbe Höhe), `thickness`, `glow`, `fill` (Fläche zur Mittellinie), `color` |
 | `wh.generator.spectrum` | Field | Eingang `spectrum`; `bars` (4–32), `gap`, `mode` (von unten / von der Mitte), `softness`, `color`, `colorTop` |
@@ -72,6 +84,11 @@ Jeder Parameter hat wie üblich einen Modulations-Eingang. Rezepte:
 - **Equalizer:** `Audio Spectrum` → `Spectrum Bars` → Ausgang. Über Plasma legen: `Blend` (Mode *Over*) mit dem
   Plasma als A und den Balken als B.
 - **Oszilloskop:** `Audio Waveform` → `Oscilloscope` → Ausgang. Beispiel: `examples/audio/oszilloskop.whfx`.
+- **Techno (dunkel, ein Hit pro Instrument):** `Kick / Snare / Hat` (Instrument *Kick*) → `pulse` an `Hit Flash.level`,
+  `age` an `Shockwave.age`, beide mit `Add` zusammenlegen. Eine zweite Instanz mit *Hi-Hat* und kurzem `decay`
+  lässt einen dünnen Rahmen blitzen. Beispiel: `examples/audio/techno.whfx`.
+- **Phrasen zählen:** `Kick.beat` → `Sequencer.advance` (Schritte 4 oder 8, Wert 1 nur auf Schritt 1): `hit` kommt
+  dann nur auf der „Eins“ und kann einen Cue, Strobe oder einen Farbwechsel auslösen.
 - **Blitz im Takt:** `Beat.pulse` → `Color Adjust.brightness` eines Effekts.
 - **Bass lässt es wachsen:** `Audio Band` (40–150 Hz) → `Scale.factor`.
 - **Farbwechsel im Takt:** `Beat.phase` → `Color Ramp.position` (mit `loop`).

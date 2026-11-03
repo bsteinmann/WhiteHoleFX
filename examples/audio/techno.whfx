@@ -1,0 +1,64 @@
+whitehole-project 1
+# Beispiel für Techno: dunkel, weiße Treffer, nur eine zweite Farbe (Rot).
+#
+# So ausprobieren (WAV-Datei in Schleife, Standardmikrofon oder Gerät):
+#   whitehole_cli examples/audio/techno.whfx --audio-in musik.wav
+#   whitehole_studio examples/audio/techno.whfx --run   (Einstellungen -> Audio)
+#
+# Aufbau: Der Erkenner "kick" löst bei jedem Bass-Schlag aus. Sein Pulse füllt eine weiße Scheibe in
+# der Mitte (Hit Flash), sein Age lässt einen roten Ring nach außen laufen (Shockwave). Die Hi-Hat
+# (Erkenner "hat") blitzt kurz einen dünnen Rahmen. Alles andere bleibt schwarz.
+# Phrasen: Der Sequencer zählt die Kicks und gibt bei jedem vierten das Signal "hit" aus; hängt man
+# es zum Beispiel an "gate" von Strobe oder an einen Cue-Wechsel, passiert dort etwas im Takt.
+
+settings fps 40
+
+destination 0 127.0.0.1
+
+fixture Wand
+  matrix 32 16 serpentine
+  patch artnet destination 0 universe 0
+end
+
+node kick wh.value.onset
+  set band 0
+  set decay 0.18
+end
+node hat wh.value.onset
+  set band 2
+  set decay 0.08
+end
+node scheibe wh.generator.hitflash
+  set shape 1
+  set size 0.7
+  set color 1 1 1 1
+end
+node welle wh.generator.shockwave
+  set speed 1.4
+  set life 0.7
+  set thickness 0.1
+  set color 1 0.05 0.05 1
+end
+node rahmen wh.generator.hitflash
+  set shape 2
+  set size 0.12
+  set color 1 1 1 1
+end
+node summe1 wh.blend.add
+end
+node summe2 wh.blend.add
+end
+node takt wh.value.sequencer
+  set steps 4
+  set step1 1
+end
+
+connect kick.pulse -> scheibe.level
+connect kick.age -> welle.age
+connect hat.pulse -> rahmen.level
+connect kick.beat -> takt.advance
+connect scheibe.out -> summe1.a
+connect welle.out -> summe1.b
+connect summe1.out -> summe2.a
+connect rahmen.out -> summe2.b
+output summe2.out

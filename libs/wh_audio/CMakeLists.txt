@@ -10,6 +10,7 @@ option(WHITEHOLEFX_AUDIO_CAPTURE "Audio-Aufnahme von Geräten (miniaudio, wird g
 set(WH_AUDIO_SOURCES
     src/analyzer.cpp
     src/audio_input.cpp
+    src/onset_detector.cpp
     src/audio_store.cpp
     src/beat_detector.cpp
     src/fft.cpp

@@ -21,6 +21,7 @@
 
 #include "whitehole/audio/beat_detector.hpp"
 #include "whitehole/audio/fft.hpp"
+#include "whitehole/audio/onset_detector.hpp"
 #include "whitehole/core/spectrum.hpp"
 
 namespace whitehole::audio {
@@ -40,6 +41,9 @@ struct AudioFrame {
     float peak{0.0F};
     Spectrum spectrum{};
     BeatInfo beat{};
+    OnsetInfo kick{};            // Einsätze im Bassbereich (etwa 40..170 Hz)
+    OnsetInfo snare{};           // Mitten (etwa 200 Hz..2,5 kHz)
+    OnsetInfo hat{};             // Höhen (ab etwa 5 kHz)
     std::vector<float> recent;   // die letzten kRecentSamples Mono-Samples, älteste zuerst (Wellenform)
     double sampleRate{48000.0};  // zu `recent`
     double audioTime{0.0};       // Sekunden seit Start der Analyse (aus der Zahl der Samples)
@@ -70,6 +74,9 @@ private:
     AnalyzerConfig config_;
     Fft fft_;
     BeatDetector beat_;
+    OnsetDetector kick_;
+    OnsetDetector snare_;
+    OnsetDetector hat_;
     std::vector<float> window_;          // Hann-Fenster
     double windowGain_{1.0};             // Summe des Fensters / 2: Normierung auf Amplitude
     std::vector<float> ring_;            // die letzten fftSize Samples

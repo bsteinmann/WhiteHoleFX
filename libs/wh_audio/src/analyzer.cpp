@@ -25,7 +25,10 @@ AudioAnalyzer::AudioAnalyzer(AnalyzerConfig config)
     : config_{config},
       fft_{config.fftSize},
       beat_{static_cast<double>(config.hop) / (config.sampleRate > 0.0 ? config.sampleRate : 48000.0),
-            config.minBeatInterval} {
+            config.minBeatInterval},
+      kick_{static_cast<double>(config.hop) / (config.sampleRate > 0.0 ? config.sampleRate : 48000.0), 0, 8, 0.18},
+      snare_{static_cast<double>(config.hop) / (config.sampleRate > 0.0 ? config.sampleRate : 48000.0), 8, 23, 0.15},
+      hat_{static_cast<double>(config.hop) / (config.sampleRate > 0.0 ? config.sampleRate : 48000.0), 26, kSpectrumBands, 0.06} {
     if (config_.sampleRate <= 0.0) {
         config_.sampleRate = 48000.0;
     }
@@ -74,6 +77,9 @@ void AudioAnalyzer::reset() {
     totalSamples_ = 0;
     hopPeak_ = 0.0F;
     beat_.reset();
+    kick_.reset();
+    snare_.reset();
+    hat_.reset();
     frame_ = {};
 }
 
@@ -132,6 +138,12 @@ void AudioAnalyzer::step() {
     ++frame_.frameCount;
     beat_.push(spectrum, frame_.audioTime);
     frame_.beat = beat_.info();
+    kick_.push(spectrum, frame_.audioTime);
+    snare_.push(spectrum, frame_.audioTime);
+    hat_.push(spectrum, frame_.audioTime);
+    frame_.kick = kick_.info();
+    frame_.snare = snare_.info();
+    frame_.hat = hat_.info();
 }
 
 }  // namespace whitehole::audio

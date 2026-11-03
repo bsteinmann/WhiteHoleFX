@@ -1,4 +1,4 @@
-// Audio-Eingang als Nodes: Pegel, Frequenzband, Beat, Tap-Tempo und Spektrum.
+// Audio-Eingang als Nodes: Pegel, Frequenzband, Beat, Kick/Snare/Hat, Tap-Tempo und Spektrum.
 //
 // Warum es diese Datei gibt: Die Analyse (wh_audio) kennt keine Nodes. Hier hängen die Kernel am
 // gemeinsamen AudioStore, holen sich pro Frame den aktuellen Zustand und machen daraus Werte, die
@@ -231,6 +231,58 @@ private:
     std::uint64_t lastCount_{0};
 };
 
+// --- Einsatz (Kick / Snare / Hi-Hat) ------------------------------------------------------------
+
+/// Löst bei jedem Einsatz im gewählten Frequenzbereich aus (Kick, Snare, Hi-Hat), mit klingendem Puls.
+class AudioOnsetKernel final : public values::ICpuKernel {
+public:
+    explicit AudioOnsetKernel(std::shared_ptr<AudioStore> store) : store_{std::move(store)} {}
+
+    void evaluate(const KernelContext& context, KernelOutputs& outputs) override {
+        const auto& in = context.inputs;
+        const auto frame = freshFrame(*store_);
+        const double now = context.time.time.count();
+        const auto band = static_cast<int>(std::lround(in.number("band", 0.0)));
+
+        bool hit = false;
+        if (frame) {
+            const audio::OnsetInfo& onset = band == 1 ? frame->snare : (band == 2 ? frame->hat : frame->kick);
+            if (!initialized_ || onset.count < lastCount_ || band != lastBand_) {
+                lastCount_ = onset.count;  // erster Blick, Quelle neu gestartet oder Bereich gewechselt: nichts nachholen
+                lastBand_ = band;
+                initialized_ = true;
+            }
+            if (onset.count > lastCount_) {
+                lastCount_ = onset.count;
+                if (onset.strength >= in.number("threshold", 1.0)) {
+                    hit = true;
+                    lastBeat_ = now;
+                    // 1 = gerade über der Schwelle, 4 und mehr = sehr deutlich
+                    accent_ = std::clamp((static_cast<double>(onset.strength) - 1.0) / 3.0, 0.0, 1.0) * 0.5 + 0.5;
+                }
+            }
+        } else {
+            initialized_ = false;
+        }
+        const double decay = in.number("decay", 0.2);
+        const double elapsed = std::max(0.0, now - lastBeat_);
+        const double pulse = decay > 1e-6 ? std::exp(-elapsed / decay) : (hit ? 1.0 : 0.0);
+        outputs.set("beat", hit);
+        outputs.set("pulse", pulse);
+        outputs.set("strength", pulse * accent_);
+        outputs.set("age", std::min(elapsed, 60.0));
+        outputs.set("present", frame.has_value());
+    }
+
+private:
+    std::shared_ptr<AudioStore> store_;
+    bool initialized_{false};
+    std::uint64_t lastCount_{0};
+    int lastBand_{0};
+    double lastBeat_{-1e9};
+    double accent_{1.0};
+};
+
 // --- Tap-Tempo --------------------------------------------------------------------------------
 
 class TapTempoKernel final : public values::ICpuKernel {
@@ -288,6 +340,7 @@ private:
 };
 
 const std::vector<std::string> kLevelScale{"Linear", "dB"};
+const std::vector<std::string> kOnsetBand{"Kick", "Snare", "Hi-Hat"};
 
 std::vector<graph::ParameterDescriptor> followParameters(double release) {
     return {number("gain", "Gain", 1.0, 0.0, 50.0), number("attack", "Attack (s)", 0.01, 0.0, 5.0),
@@ -333,6 +386,14 @@ std::vector<values::CpuNodeDefinition> audioNodes(std::shared_ptr<audio::AudioSt
                             {number("threshold", "Min. strength", 1.0, 1.0, 6.0), number("decay", "Pulse decay (s)", 0.25, 0.0, 5.0),
                              number("manualBpm", "Fixed tempo (BPM, 0 = detect)", 0.0, 0.0, 300.0)},
                             [store] { return std::make_unique<AudioBeatKernel>(store); }));
+
+    nodes.push_back(cpuNode("wh.value.onset", "Kick / Snare / Hat", "Audio",
+                            {valueOutput("beat", "Hit", PortType::Trigger), valueOutput("pulse", "Pulse", PortType::Scalar),
+                             valueOutput("strength", "Strength", PortType::Scalar), valueOutput("age", "Age (s)", PortType::Scalar),
+                             valueOutput("present", "Signal", PortType::Boolean)},
+                            {choice("band", "Instrument", kOnsetBand, 0), number("threshold", "Min. strength", 1.0, 1.0, 6.0),
+                             number("decay", "Pulse decay (s)", 0.2, 0.0, 5.0)},
+                            [store] { return std::make_unique<AudioOnsetKernel>(store); }));
 
     nodes.push_back(cpuNode("wh.value.tap", "Tap Tempo", "Audio",
                             {valueOutput("beat", "Beat", PortType::Trigger), valueOutput("pulse", "Pulse", PortType::Scalar),
