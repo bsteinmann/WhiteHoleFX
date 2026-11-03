@@ -73,7 +73,7 @@ TEST_CASE("Anordnen: Fehler lassen alles unverändert", "[player][arrange]") {
     CHECK(rig.player.moveFixtures({mapping::FixtureId{99}}, Vec3{1.0F, 0.0F, 0.0F}).error().code == ErrorCode::NotFound);
     CHECK_FALSE(rig.player.moveFixtures({rig.id(0)}, Vec3{std::numeric_limits<float>::quiet_NaN(), 0.0F, 0.0F}).ok());
     CHECK_FALSE(rig.player.alignFixtures({}, Player::Align::Left).ok());
-    CHECK_FALSE(rig.player.distributeFixtures({rig.id(0), rig.id(1)}, Player::Axis::X).ok());
+    CHECK_FALSE(rig.player.packFixtures({rig.id(0)}, Player::Axis::X).ok());
     CHECK_FALSE(rig.player.canUndo());
     CHECK(rig.origin(0) == Vec3{});
 }
@@ -117,20 +117,33 @@ TEST_CASE("Anordnen: links, rechts, oben, unten und Mitte", "[player][arrange]")
     CHECK(rig.origin(2).y == Approx(0.0F));
 }
 
-TEST_CASE("Anordnen: gleichmäßig verteilen", "[player][arrange]") {
-    Rig rig;  // x-Boxen: A 0..4, C 5..7, B 10..12 -> Lücken 1 und 3, Summe der Breiten 8
-    REQUIRE(rig.player.distributeFixtures(rig.all(), Player::Axis::X).ok());
-    // Spanne 12, Breiten 4+2+2 = 8, Lücke (12-8)/2 = 2: A 0..4, C 6..8, B 10..12
+TEST_CASE("Anordnen: Fixtures nebeneinander reihen", "[player][arrange]") {
+    Rig rig;  // x-Boxen: A 0..4, C 5..7, B 10..12
+    REQUIRE(rig.player.packFixtures(rig.all(), Player::Axis::X).ok());
+    // A bleibt, C schließt bei 4 an (4..6), B bei 6 (6..8)
     CHECK(rig.origin(0).x == Approx(0.0F));
-    CHECK(rig.origin(2).x == Approx(6.0F));
-    CHECK(rig.origin(1).x == Approx(10.0F));
+    CHECK(rig.origin(2).x == Approx(4.0F));
+    CHECK(rig.origin(1).x == Approx(6.0F));
     REQUIRE(rig.player.undo().ok());
     CHECK(rig.origin(2).x == Approx(5.0F));
+    CHECK(rig.origin(1).x == Approx(10.0F));
 
-    REQUIRE(rig.player.distributeFixtures(rig.all(), Player::Axis::Y).ok());  // C -4..-3, A 0..2, B 3..5
+    REQUIRE(rig.player.packFixtures(rig.all(), Player::Axis::X, 1.0F).ok());  // Abstand 1: A 0..4, C 5..7, B 8..10
+    CHECK(rig.origin(2).x == Approx(5.0F));
+    CHECK(rig.origin(1).x == Approx(8.0F));
+    REQUIRE(rig.player.undo().ok());
+
+    REQUIRE(rig.player.packFixtures(rig.all(), Player::Axis::Y).ok());  // C -4..-3, A 0..2, B 3..5 -> C bleibt, dann dicht
     CHECK(rig.origin(2).y == Approx(-4.0F));
-    CHECK(rig.origin(1).y == Approx(3.0F));
-    CHECK(rig.origin(0).y == Approx(-1.0F));  // Spanne 9, Höhen 2+2+1, Lücke 2: A liegt bei -1..1
+    CHECK(rig.origin(0).y == Approx(-3.0F));
+    CHECK(rig.origin(1).y == Approx(-1.0F));
+}
+
+TEST_CASE("Anordnen: zwei Fixtures reichen, negativer Abstand wird abgelehnt", "[player][arrange]") {
+    Rig rig;
+    REQUIRE(rig.player.packFixtures({rig.id(0), rig.id(1)}, Player::Axis::X).ok());
+    CHECK(rig.origin(1).x == Approx(4.0F));
+    CHECK_FALSE(rig.player.packFixtures(rig.all(), Player::Axis::X, -1.0F).ok());
 }
 
 TEST_CASE("Region-Node: Rechteck setzen ist ein Undo-Schritt", "[player][region]") {

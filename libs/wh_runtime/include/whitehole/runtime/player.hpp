@@ -203,15 +203,15 @@ public:
     /// Ausrichten an der Gesamtbox der gewählten Fixtures. Oben/unten und links/rechts sind die
     /// Richtungen der Vorschau (y nach oben, x nach rechts).
     enum class Align : std::uint8_t { Left, HCenter, Right, Top, VCenter, Bottom };
-    /// Achse für gleichmäßiges Verteilen.
+    /// Achse zum Aneinanderreihen.
     enum class Axis : std::uint8_t { X, Y, Z };
     /// Richtet die Fixtures aus (ein Undo-Schritt). Fehler: NotFound (unbekannte Id), InvalidArgument
     /// (Liste leer).
     Result<void> alignFixtures(const std::vector<mapping::FixtureId>& ids, Align mode);
-    /// Verteilt die Fixtures so, dass die Lücken zwischen ihren Boxen auf der Achse gleich groß sind;
-    /// das erste und das letzte (nach Lage sortiert) bleiben stehen. Fehler: InvalidArgument bei
-    /// weniger als drei Fixtures, NotFound bei unbekannter Id.
-    Result<void> distributeFixtures(const std::vector<mapping::FixtureId>& ids, Axis axis);
+    /// Reiht die Fixtures auf der Achse nebeneinander, in der Reihenfolge ihrer Lage, mit `gap` Abstand
+    /// zwischen den Boxen; das erste bleibt stehen, die anderen rücken an (ein Undo-Schritt). Fehler:
+    /// InvalidArgument bei weniger als zwei Fixtures oder einem Abstand unter 0, NotFound bei unbekannter Id.
+    Result<void> packFixtures(const std::vector<mapping::FixtureId>& ids, Axis axis, float gap = 0.0F);
 
     /// Die Box der ganzen Wand (alle Fixtures) in Weltkoordinaten. Ohne Projekt eine leere Box.
     [[nodiscard]] mapping::Box wallBox() const noexcept { return map_.volume; }

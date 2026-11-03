@@ -1,5 +1,10 @@
 # Änderungen
 
+## 0.43.0
+
+- **Fixtures nebeneinander reihen:** „Verteilen“ im Layout ist ersetzt durch „Nebeneinander ↔“ und „Übereinander ↕“. Die gewählten Fixtures werden in der Reihenfolge ihrer Lage dicht aneinandergesetzt, das erste bleibt stehen; ein Feld „Abstand“ erlaubt eine Lücke. Es genügen zwei Fixtures, und es kann sich nichts mehr überlappen. Kern: `Player::packFixtures` (ersetzt `distributeFixtures`), getestet.
+- CI: Der GCC-Job mit ASan baut mit 3 Prozessen, weil der Runner beim Bauen wiederholt beendet wurde.
+
 ## 0.42.0
 
 - **Einrasten: Platzierung ohne Überlappung:** Ein in ein Kabel eingefügter Node sitzt jetzt mittig zwischen Quelle und Ziel; fehlt der Platz, rücken das Ziel und alles, was dahinter hängt, nach rechts. Links vor einem Zielnode steht der neue Node direkt davor, rechts dahinter direkt dahinter (auch hier machen Nachbarn bei Bedarf Platz). Das Verschieben gehört zum selben Schritt Rückgängig. Die Rechnung steht in `graph/node_placement.hpp` und ist getestet; der Rauchtest prüft, dass sich nach dem Einfügen kein Node überdeckt.

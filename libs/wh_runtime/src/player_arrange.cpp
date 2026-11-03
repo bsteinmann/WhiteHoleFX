@@ -1,8 +1,8 @@
-// player_arrange.cpp: mehrere Fixtures zusammen bewegen, ausrichten, verteilen; Rechteck eines Region- oder Ausgangs-Nodes setzen.
+// player_arrange.cpp: mehrere Fixtures zusammen bewegen, ausrichten, aneinanderreihen; Rechteck eines Region- oder Ausgangs-Nodes setzen.
 //
 // Warum es diese Datei gibt: player_layout.cpp bearbeitet einzelne Fixtures. Das Anordnen im
 // Layout-Editor wirkt auf eine Auswahl und muss genau ein Undo-Schritt sein; die Rechnung
-// (Gesamtbox, gleiche Lücken) steht hier, getrennt von der Oberfläche, damit sie testbar ist.
+// (Gesamtbox, Reihenfolge und Abstand) steht hier, getrennt von der Oberfläche, damit sie testbar ist.
 #include <algorithm>
 #include <cmath>
 
@@ -121,27 +121,23 @@ Result<void> Player::alignFixtures(const std::vector<mapping::FixtureId>& ids, A
     });
 }
 
-Result<void> Player::distributeFixtures(const std::vector<mapping::FixtureId>& ids, Axis axis) {
+Result<void> Player::packFixtures(const std::vector<mapping::FixtureId>& ids, Axis axis, float gap) {
+    if (!std::isfinite(gap) || gap < 0.0F) {
+        return invalid("Der Abstand muss eine Zahl ab 0 sein");
+    }
     return editProject({}, [&](project::Project& p) -> Result<void> {
         Result<std::vector<Placed>> collected = collect(p, ids);
         if (!collected.ok()) {
             return collected.error();
         }
         std::vector<Placed> items = std::move(collected.value());
-        if (items.size() < 3) {
-            return invalid("Zum Verteilen braucht es mindestens drei Fixtures");
+        if (items.size() < 2) {
+            return invalid("Zum Aneinanderreihen braucht es mindestens zwei Fixtures");
         }
-        std::sort(items.begin(), items.end(), [axis](const Placed& a, const Placed& b) {
+        std::stable_sort(items.begin(), items.end(), [axis](const Placed& a, const Placed& b) {
             return component(a.min, axis) + component(a.max, axis) < component(b.min, axis) + component(b.max, axis);
         });
-        const float start = component(items.front().min, axis);
-        const float end = component(items.back().max, axis);
-        float used = 0.0F;
-        for (const Placed& item : items) {
-            used += component(item.max, axis) - component(item.min, axis);
-        }
-        const float gap = (end - start - used) / static_cast<float>(items.size() - 1);
-        float cursor = start;
+        float cursor = component(items.front().min, axis);  // das erste bleibt stehen
         for (const Placed& item : items) {
             const float delta = cursor - component(item.min, axis);
             if (delta != 0.0F) {

@@ -174,7 +174,7 @@ ist die Reihenfolge am Kabel. Beispiel: `examples/daten/bogen.csv`.
 
 **Mehrere Fixtures:** Die Liste erlaubt mehrere Einträge (Strg oder Umschalt). Die Knöpfe unter der
 Liste richten die gewählten Fixtures aus (links, rechts, oben, unten, waagrecht oder senkrecht
-mittig; Bezug ist die Gesamtbox der Auswahl) und verteilen drei oder mehr mit gleichen Lücken.
+mittig; Bezug ist die Gesamtbox der Auswahl) und reihen zwei oder mehr aneinander („Nebeneinander“ und „Übereinander“; das erste bleibt stehen, das Feld „Abstand“ setzt die Lücke, 0 heißt dicht an dicht).
 Jeder Knopf ist ein Schritt für Rückgängig.
 
 **Ausgabe:** Tabelle der Ziele (Adresse, Port; leere Adresse = Multicast, Port 0 = Standard) mit

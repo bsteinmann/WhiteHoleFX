@@ -19,6 +19,8 @@
 #include "whitehole/mapping/point_import.hpp"
 #include "whitehole/runtime/player.hpp"
 
+class QDoubleSpinBox;
+
 namespace whitehole::studio {
 
 class LayoutPanel : public QTabWidget {
@@ -51,9 +53,9 @@ public:
     void refreshValues();
     /// Zeichnet die kleine Bühnenansicht neu (nach Änderungen am Layout) und gibt ihr die aktuelle Auswahl.
     void refreshView();
-    /// Richtet die gewählten Fixtures aus bzw. verteilt sie.
+    /// Richtet die gewählten Fixtures aus bzw. reiht sie aneinander (Abstand aus `packGap_`).
     void align(runtime::Player::Align mode);
-    void distribute(runtime::Player::Axis axis);
+    void pack(runtime::Player::Axis axis);
 
     /// Rauchtest für die CI (siehe FixtureForm::exercise und OutputForm::exercise). Leer bei Erfolg.
     QString exercise();
@@ -85,6 +87,7 @@ private:
     QListWidget* list_{nullptr};
     FixtureForm* fixture_{nullptr};
     OutputForm* output_{nullptr};
+    QDoubleSpinBox* packGap_{nullptr};  // Abstand für "Nebeneinander"/"Übereinander"
     StageView* miniView_{nullptr};  // kleine Bühnenansicht über der Liste
 };
 

@@ -1,8 +1,10 @@
 // layout_panel.cpp: Fixture-Liste und Seitenaufbau.
 #include "layout_panel.hpp"
 
+#include <QDoubleSpinBox>
 #include <QGridLayout>
 #include <QHBoxLayout>
+#include <QLabel>
 #include <QPushButton>
 #include <QScrollArea>
 #include <QSignalBlocker>
@@ -147,10 +149,10 @@ QWidget* LayoutPanel::buildArrangeBar() {
         {tr("⤒ Oben"), tr("Obere Kanten ausrichten"), [this]() { align(runtime::Player::Align::Top); }},
         {tr("↕ Mitte"), tr("Senkrecht mittig ausrichten"), [this]() { align(runtime::Player::Align::VCenter); }},
         {tr("Unten ⤓"), tr("Untere Kanten ausrichten"), [this]() { align(runtime::Player::Align::Bottom); }},
-        {tr("Verteilen ↔"), tr("Gleiche Lücken waagrecht (ab drei Fixtures)"),
-         [this]() { distribute(runtime::Player::Axis::X); }},
-        {tr("Verteilen ↕"), tr("Gleiche Lücken senkrecht (ab drei Fixtures)"),
-         [this]() { distribute(runtime::Player::Axis::Y); }},
+        {tr("Nebeneinander ↔"), tr("Gewählte Fixtures waagrecht aneinanderreihen (das linke bleibt stehen)"),
+         [this]() { pack(runtime::Player::Axis::X); }},
+        {tr("Übereinander ↕"), tr("Gewählte Fixtures senkrecht aufeinanderreihen (das untere bleibt stehen)"),
+         [this]() { pack(runtime::Player::Axis::Y); }},
     };
     int index = 0;
     for (const Entry& entry : entries) {
@@ -160,6 +162,14 @@ QWidget* LayoutPanel::buildArrangeBar() {
         grid->addWidget(button, index / 3, index % 3);
         ++index;
     }
+    packGap_ = new QDoubleSpinBox;
+    packGap_->setRange(0.0, 1000.0);
+    packGap_->setDecimals(2);
+    packGap_->setSingleStep(0.5);
+    packGap_->setValue(0.0);
+    packGap_->setToolTip(tr("Abstand zwischen den Fixtures beim Aneinanderreihen (0 = dicht an dicht)"));
+    grid->addWidget(new QLabel{tr("Abstand")}, 3, 0);
+    grid->addWidget(packGap_, 3, 1);
     return bar;
 }
 
@@ -179,14 +189,14 @@ void LayoutPanel::align(runtime::Player::Align mode) {
     Q_EMIT edited();
 }
 
-void LayoutPanel::distribute(runtime::Player::Axis axis) {
+void LayoutPanel::pack(runtime::Player::Axis axis) {
     const std::vector<mapping::FixtureId> ids = selectedIds();
-    if (player_.project() == nullptr || ids.size() < 3) {
-        Q_EMIT failed(tr("Zum Verteilen mindestens drei Fixtures wählen"));
+    if (player_.project() == nullptr || ids.size() < 2) {
+        Q_EMIT failed(tr("Zum Aneinanderreihen mindestens zwei Fixtures wählen"));
         return;
     }
     player_.closeEditGroup();
-    const Result<void> r = player_.distributeFixtures(ids, axis);
+    const Result<void> r = player_.packFixtures(ids, axis, static_cast<float>(packGap_->value()));
     if (!r.ok()) {
         Q_EMIT failed(fromStd(r.error().message));
         return;
@@ -337,7 +347,7 @@ QString LayoutPanel::exerciseArrange() {
             return QStringLiteral("Anordnen: untere Kanten liegen nach \"Unten\" nicht gleich");
         }
     }
-    distribute(runtime::Player::Axis::X);
+    pack(runtime::Player::Axis::X);
     // Ein Fixture vorn in der Liste entfernen (nicht nur das zuletzt angelegte), dann zurücknehmen.
     const std::size_t withAdded = player_.project()->layout.fixtures().size();
     setSelectedIds({player_.project()->layout.fixtures().front().id});
