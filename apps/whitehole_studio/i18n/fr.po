@@ -714,7 +714,7 @@ msgstr "Un look est un effet complet (du générateur à la sortie). Enregistrez
 msgid "Eine Einführung in die Bedienung, in der gewählten Sprache"
 msgstr "Une introduction à l'utilisation, dans la langue choisie"
 
-#: node_editor_menu.cpp:88
+#: node_editor_menu.cpp:92
 msgid "Einfügen\tStrg+V"
 msgstr "Coller\tCtrl+V"
 
@@ -1150,11 +1150,11 @@ msgstr "Ne pas envoyer"
 msgid "Node hinzufügen"
 msgstr "Ajouter un nœud"
 
-#: node_editor_menu.cpp:71
+#: node_editor_menu.cpp:75
 msgid "Node löschen"
 msgstr "Supprimer le nœud"
 
-#: node_editor_menu.cpp:85
+#: node_editor_menu.cpp:89
 msgid "Node suchen …\tStrg+Leertaste"
 msgstr "Chercher un nœud …\tCtrl+Espace"
 
@@ -1474,7 +1474,7 @@ msgstr "Aligner les bords inférieurs"
 msgid "Ursprung x y z"
 msgstr "Origine x y z"
 
-#: node_editor_menu.cpp:78
+#: node_editor_menu.cpp:82
 msgid "Verbindung trennen"
 msgstr "Déconnecter"
 
@@ -1697,6 +1697,14 @@ msgstr "Durée de fondu %1 s"
 #: look_panel.cpp:46
 msgid "Überblendzeit:"
 msgstr "Durée de fondu :"
+
+#: node_editor_menu.cpp:71
+msgid "Überbrücken\tB"
+msgstr "Contourner\tB"
+
+#: node_editor_menu.cpp:71
+msgid "Überbrückung aufheben\tB"
+msgstr "Réactiver\tB"
 
 #: app_language.hpp:3
 msgid "…"

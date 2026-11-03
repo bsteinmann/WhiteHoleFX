@@ -63,13 +63,13 @@ std::vector<compiler::NodeDefinition> warpNodes() {
         return own;
     };
 
-    nodes.push_back(fieldNode("wh.transform.kaleidoscope", "Kaleidoscope", "Transform",
+    nodes.push_back(fieldNode("wh.transform.kaleidoscope", "Kaleidoscope", "Effects",
                               {fieldInput("source", "Source"), fieldOutput()},
                               centerAndAspect({integer("segments", "Segments", 6, 1, 32), number("angle", "Angle (deg)", 0.0),
                                                number("zoom", "Zoom", 1.0, 0.1, 8.0)}),
                               kKaleidoscopeBody));
 
-    nodes.push_back(fieldNode("wh.transform.tunnel", "Tunnel", "Transform",
+    nodes.push_back(fieldNode("wh.transform.tunnel", "Tunnel", "Effects",
                               {fieldInput("source", "Source"), fieldOutput()},
                               centerAndAspect({number("speed", "Speed (tiles/s)", 0.3, -10.0, 10.0),
                                                integer("repeat", "Repeats around", 2, 1, 16),
@@ -77,7 +77,7 @@ std::vector<compiler::NodeDefinition> warpNodes() {
                                                number("fade", "Fade center", 0.1, 0.0, 1.0)}),
                               kTunnelBody));
 
-    nodes.push_back(fieldNode("wh.transform.vortex", "Vortex", "Transform",
+    nodes.push_back(fieldNode("wh.transform.vortex", "Vortex", "Effects",
                               {fieldInput("source", "Source"), fieldOutput()},
                               centerAndAspect({number("turns", "Turns at center", 1.0, -8.0, 8.0),
                                                number("radius", "Radius", 0.5, 0.01, 2.0)}),

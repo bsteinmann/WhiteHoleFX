@@ -714,7 +714,7 @@ msgstr "A look is a finished effect (from generator to output). Save your effect
 msgid "Eine Einführung in die Bedienung, in der gewählten Sprache"
 msgstr "An introduction to using the program, in the selected language"
 
-#: node_editor_menu.cpp:88
+#: node_editor_menu.cpp:92
 msgid "Einfügen\tStrg+V"
 msgstr "Paste\tCtrl+V"
 
@@ -1150,11 +1150,11 @@ msgstr "Do not send"
 msgid "Node hinzufügen"
 msgstr "Add node"
 
-#: node_editor_menu.cpp:71
+#: node_editor_menu.cpp:75
 msgid "Node löschen"
 msgstr "Delete node"
 
-#: node_editor_menu.cpp:85
+#: node_editor_menu.cpp:89
 msgid "Node suchen …\tStrg+Leertaste"
 msgstr "Search node …\tCtrl+Space"
 
@@ -1474,7 +1474,7 @@ msgstr "Align bottom edges"
 msgid "Ursprung x y z"
 msgstr "Origin x y z"
 
-#: node_editor_menu.cpp:78
+#: node_editor_menu.cpp:82
 msgid "Verbindung trennen"
 msgstr "Disconnect"
 
@@ -1697,6 +1697,14 @@ msgstr "Fade time %1 s"
 #: look_panel.cpp:46
 msgid "Überblendzeit:"
 msgstr "Fade time:"
+
+#: node_editor_menu.cpp:71
+msgid "Überbrücken\tB"
+msgstr "Bypass\tB"
+
+#: node_editor_menu.cpp:71
+msgid "Überbrückung aufheben\tB"
+msgstr "Remove bypass\tB"
 
 #: app_language.hpp:3
 msgid "…"

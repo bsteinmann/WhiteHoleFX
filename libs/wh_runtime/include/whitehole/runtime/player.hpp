@@ -151,6 +151,8 @@ public:
     /// Überbrückt einen Field-Node oder schaltet ihn wieder ein (Undo-fähig, baut den Shader neu).
     /// Fehler: Unsupported für Nodes ohne Field-Domäne.
     Result<void> setNodeBypassed(NodeId node, bool bypassed);
+    /// Wie setNodeBypassed für mehrere Nodes in einem Rückgängig-Schritt. Scheitert einer, ändert sich nichts.
+    Result<void> setNodesBypassed(const std::vector<NodeId>& nodes, bool bypassed);
     /// Wählt den Field-Ausgang, der auf die LEDs abgetastet wird. Läuft das Projekt, wird es im
     /// nächsten step() neu aufgebaut (kurze Unterbrechung der Ausgabe).
     /// Fehler: NotFound (Node oder Port), IncompatiblePorts (kein Field-Ausgang).

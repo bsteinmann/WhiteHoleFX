@@ -714,7 +714,7 @@ msgstr ""
 msgid "Eine Einführung in die Bedienung, in der gewählten Sprache"
 msgstr ""
 
-#: node_editor_menu.cpp:88
+#: node_editor_menu.cpp:92
 msgid "Einfügen\tStrg+V"
 msgstr ""
 
@@ -1150,11 +1150,11 @@ msgstr ""
 msgid "Node hinzufügen"
 msgstr ""
 
-#: node_editor_menu.cpp:71
+#: node_editor_menu.cpp:75
 msgid "Node löschen"
 msgstr ""
 
-#: node_editor_menu.cpp:85
+#: node_editor_menu.cpp:89
 msgid "Node suchen …\tStrg+Leertaste"
 msgstr ""
 
@@ -1474,7 +1474,7 @@ msgstr ""
 msgid "Ursprung x y z"
 msgstr ""
 
-#: node_editor_menu.cpp:78
+#: node_editor_menu.cpp:82
 msgid "Verbindung trennen"
 msgstr ""
 
@@ -1696,6 +1696,14 @@ msgstr ""
 
 #: look_panel.cpp:46
 msgid "Überblendzeit:"
+msgstr ""
+
+#: node_editor_menu.cpp:71
+msgid "Überbrücken\tB"
+msgstr ""
+
+#: node_editor_menu.cpp:71
+msgid "Überbrückung aufheben\tB"
 msgstr ""
 
 #: app_language.hpp:3

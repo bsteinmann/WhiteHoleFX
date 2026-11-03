@@ -67,6 +67,10 @@ void NodeEditor::contextMenuEvent(QContextMenuEvent* event) {
             connect(menu.addAction(tr("Als Preset speichern …")), &QAction::triggered, this,
                     [this]() { savePresetInteractive(); });
         }
+        if (node->canBypass()) {
+            connect(menu.addAction(node->bypassed() ? tr("Überbrückung aufheben\tB") : tr("Überbrücken\tB")),
+                    &QAction::triggered, this, [this]() { toggleBypassOfSelection(); });
+        }
         menu.addSeparator();
         QAction* action = menu.addAction(tr("Node löschen"));
         connect(action, &QAction::triggered, this, [this, node]() {

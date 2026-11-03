@@ -192,6 +192,25 @@ QString NodeEditor::exercise() {
         }
     }
 
+    // Überbrücken: Schalter im Kopf trifft, Taste B und Menü benutzen dieselbe Funktion; ein Schritt Rückgängig.
+    {
+        NodeItem* shifted = itemOf(*sink);
+        const QPointF buttonSpot = shifted->mapToScene(QPointF{166.0 + 8.0, 13.0});
+        if (shifted == nullptr || !shifted->canBypass() || !shifted->bypassButtonAt(buttonSpot) ||
+            shifted->bypassButtonAt(shifted->anchorScene(shifted->ports().front()))) {
+            return QStringLiteral("Überbrücken: der Schalter im Kopf wird nicht getroffen");
+        }
+        if (!toggleBypass(*sink) || !itemOf(*sink)->bypassed() ||
+            !player_.project()->graph.findNode(*sink)->bypassed) {
+            return QStringLiteral("Überbrücken: Schalter ohne Wirkung");
+        }
+        scene_.clearSelection();
+        itemOf(*sink)->setSelected(true);
+        if (!toggleBypassOfSelection() || itemOf(*sink)->bypassed() || player_.project()->graph.findNode(*sink)->bypassed) {
+            return QStringLiteral("Überbrücken: Taste B schaltet nicht wieder ein");
+        }
+    }
+
     // Beide Nodes auswählen und löschen
     NodeItem* sourceItem = itemOf(*source);
     NodeItem* sinkItem = itemOf(*sink);

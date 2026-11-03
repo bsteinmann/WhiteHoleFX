@@ -254,21 +254,36 @@ Result<void> Player::moveNode(NodeId node, Vec2 position) {
 }
 
 Result<void> Player::setNodeBypassed(NodeId node, bool bypassed) {
+    return setNodesBypassed({node}, bypassed);
+}
+
+Result<void> Player::setNodesBypassed(const std::vector<NodeId>& nodes, bool bypassed) {
     if (!project_) {
         return noProject();
     }
-    const graph::NodeInstance* instance = project_->graph.findNode(node);
-    if (instance != nullptr && instance->bypassed == bypassed) {
+    bool changes = false;
+    for (const NodeId id : nodes) {
+        const graph::NodeInstance* instance = project_->graph.findNode(id);
+        if (instance == nullptr) {
+            return Error{ErrorCode::NotFound, "Node existiert nicht"};
+        }
+        changes = changes || instance->bypassed != bypassed;
+    }
+    if (!changes) {
         return {};
     }
+    const project::Project backup = *project_;
     auto before = beginEdit({});
-    const Result<void> r = project_->graph.setBypassed(node, bypassed);
-    finishEdit(std::move(before), {}, r.ok());
-    if (r.ok()) {
-        modified_ = true;
-        graphDirty_ = true;
+    for (const NodeId id : nodes) {
+        if (const Result<void> r = project_->graph.setBypassed(id, bypassed); !r.ok()) {
+            *project_ = backup;  // alles oder nichts
+            return r;
+        }
     }
-    return r;
+    finishEdit(std::move(before), {}, true);
+    modified_ = true;
+    graphDirty_ = true;
+    return {};
 }
 
 Result<void> Player::setTarget(const graph::PortRef& port) {

@@ -135,11 +135,11 @@ return @in(source, d + c);)wgsl";
 std::vector<compiler::NodeDefinition> transformNodes() {
     std::vector<compiler::NodeDefinition> nodes;
 
-    nodes.push_back(fieldNode("wh.transform.rotate", "Rotate", "Transform",
+    nodes.push_back(fieldNode("wh.transform.rotate", "Rotate", "Effects",
                               {fieldInput("source", "Source"), fieldOutput()},
                               {number("angle", "Angle (deg)", 0.0)}, kRotateBody));
 
-    nodes.push_back(fieldNode("wh.transform.mirror", "Mirror", "Transform",
+    nodes.push_back(fieldNode("wh.transform.mirror", "Mirror", "Effects",
                               {fieldInput("source", "Source"), fieldOutput()},
                               {toggle("mirrorX", "Mirror X", true), toggle("mirrorY", "Mirror Y", false),
                                toggle("mirrorZ", "Mirror Z", false), number("centerX", "Center X", 0.5, 0.0, 1.0),
@@ -147,45 +147,45 @@ std::vector<compiler::NodeDefinition> transformNodes() {
                                toggle("otherHalf", "Use other half", false)},
                               kMirrorBody));
 
-    nodes.push_back(fieldNode("wh.transform.symmetry", "Symmetry", "Transform",
+    nodes.push_back(fieldNode("wh.transform.symmetry", "Symmetry", "Effects",
                               {fieldInput("source", "Source"), fieldOutput()},
                               {choice("axis", "Axis", {"X (left/right)", "Y (top/bottom)", "Z (front/back)"}),
                                choice("half", "Source half", {"Lower (left/bottom)", "Upper (right/top)"}),
                                number("center", "Center", 0.5, 0.0, 1.0)},
                               kSymmetryBody));
 
-    nodes.push_back(fieldNode("wh.transform.slide", "Slide", "Transform",
+    nodes.push_back(fieldNode("wh.transform.slide", "Slide", "Effects",
                               {fieldInput("source", "Source"), fieldOutput()},
                               {number("x", "Offset X", 0.0, -1.0, 1.0), number("y", "Offset Y", 0.0, -1.0, 1.0),
                                toggle("wrap", "Wrap around", false), number("z", "Offset Z", 0.0, -1.0, 1.0)},
                               kSlideBody));
 
-    nodes.push_back(fieldNode("wh.transform.tile", "Tile", "Transform",
+    nodes.push_back(fieldNode("wh.transform.tile", "Tile", "Effects",
                               {fieldInput("source", "Source"), fieldOutput()},
                               {number("countX", "Tiles X", 2.0, 1.0, 64.0), number("countY", "Tiles Y", 2.0, 1.0, 64.0),
                                toggle("mirror", "Mirror every other tile", false),
                                number("countZ", "Tiles Z", 1.0, 1.0, 64.0)},
                               kTileBody));
 
-    nodes.push_back(fieldNode("wh.transform.pixelate", "Pixelate", "Transform",
+    nodes.push_back(fieldNode("wh.transform.pixelate", "Pixelate", "Effects",
                               {fieldInput("source", "Source"), fieldOutput()},
                               {number("cellsX", "Cells X", 8.0, 1.0, 256.0), number("cellsY", "Cells Y", 8.0, 1.0, 256.0),
                                number("cellsZ", "Cells Z (0 = smooth)", 0.0, 0.0, 256.0)},
                               kPixelateBody));
 
-    nodes.push_back(fieldNode("wh.transform.region", "Region", "Transform",
+    nodes.push_back(fieldNode("wh.transform.region", "Region", "Effects",
                               {fieldInput("source", "Source"), fieldOutput()},
                               {number("left", "Left", 0.0, 0.0, 1.0), number("top", "Top", 0.0, 0.0, 1.0),
                                number("width", "Width", 0.5, 0.0, 1.0), number("height", "Height", 0.5, 0.0, 1.0),
                                number("zStart", "Depth start", 0.0, 0.0, 1.0), number("zSize", "Depth size", 1.0, 0.0, 1.0)},
                               kRegionBody));
 
-    nodes.push_back(fieldNode("wh.transform.scale", "Scale", "Transform",
+    nodes.push_back(fieldNode("wh.transform.scale", "Scale", "Effects",
                               {fieldInput("source", "Source"), fieldOutput()},
                               {number("factor", "Factor", 1.0, 0.01, 100.0), number("factorZ", "Factor Z", 1.0, 0.01, 100.0)},
                               kScaleBody));
 
-    nodes.push_back(fieldNode("wh.transform.rotate3d", "Rotate 3D", "Transform",
+    nodes.push_back(fieldNode("wh.transform.rotate3d", "Rotate 3D", "Effects",
                               {fieldInput("source", "Source"), fieldOutput()},
                               {number("angleX", "Angle X (deg)", 0.0), number("angleY", "Angle Y (deg)", 0.0),
                                number("angleZ", "Angle Z (deg)", 0.0)},

@@ -1,5 +1,10 @@
 # Änderungen
 
+## 0.38.0
+
+- **Node überbrücken (Bypass):** Field-Nodes haben im Kopf einen Schalter (Kreis mit Strich), dazu Taste B und Rechtsklick → „Überbrücken“. Der Node bleibt im Graphen, reicht aber seinen ersten Field-Eingang unverändert durch (Generatoren ohne Eingang: transparent). Überbrückte Nodes erscheinen abgeblendet mit gestrichelter Durchleitung. Mehrere ausgewählte Nodes lassen sich zugleich schalten, ein Schritt Rückgängig. Gespeichert wird es als Zeile `bypass` im node-Block der Projektdatei.
+- **Kategorien:** „Modifier“ und „Transform“ sind jetzt eine Kategorie „Effects“ (nur die Anzeige im Palettenfenster; Node-Typen und gespeicherte Projekte bleiben unverändert).
+
 ## 0.37.8
 
 - **#29:** Ein per Doppelklick (oder Suche, Menü, Palette) angelegter Node ist danach der einzige ausgewählte. Vorher blieben die bisher gewählten Nodes gewählt, und der nächste Zug mit der Maus verschob alle mit. Mit Prüfung im Rauchtest.

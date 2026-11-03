@@ -110,6 +110,7 @@ stehen nicht im Node, sondern im Dock „Parameter“; beide benutzen dieselbe N
 | kopieren, einfügen, duplizieren | Strg+C, Strg+V (an der Mausposition), Strg+D; auch im Rechtsklick-Menü. Kabel zwischen den ausgewählten Nodes kommen mit, Kabel nach draußen nicht. Die Kopie ist danach ausgewählt, ein Schritt Rückgängig nimmt sie komplett zurück |
 | Ausgang wählen | Rechtsklick auf einen Field-Ausgang, „Als Ausgang setzen“; der Node ist dann orange umrandet |
 | Ausgangs-Node | Node „Output“ (Kategorie Output) einfügen: er wird automatisch zum Ausgang und hängt sich hinter den bisherigen. Mit Rechteck bespielt er nur einen Teil der Leinwand |
+| überbrücken | Schalter (Kreis mit Strich) rechts im Kopf eines Field-Nodes, Taste B oder Rechtsklick → „Überbrücken“. Der Node bleibt im Graphen, reicht aber seinen ersten Field-Eingang unverändert durch (Generatoren: transparent); er erscheint abgeblendet mit gestrichelter Durchleitung. Mit mehreren ausgewählten Nodes schaltet B alle zugleich, ein Schritt Rückgängig |
 | Ansicht | Mausrad zoomt, mittlere Taste verschiebt, Taste F zeigt alles |
 
 Änderungen wirken sofort, auch während das Projekt läuft. Ist der Graph zwischendurch unvollständig

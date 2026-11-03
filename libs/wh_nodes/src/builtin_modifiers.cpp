@@ -117,14 +117,14 @@ return vec4<f32>(mix(a.rgb, b.rgb, f), mix(a.a, b.a, f) * src.a);)wgsl";
 std::vector<compiler::NodeDefinition> modifierNodes() {
     std::vector<compiler::NodeDefinition> nodes;
 
-    nodes.push_back(fieldNode("wh.modifier.coloradjust", "Color Adjust", "Modifier",
+    nodes.push_back(fieldNode("wh.modifier.coloradjust", "Color Adjust", "Effects",
                               {fieldInput("source", "Source"), fieldOutput()},
                               {number("hue", "Hue shift (turns)", 0.0), number("saturation", "Saturation", 1.0, 0.0, 4.0),
                                number("brightness", "Brightness", 1.0, 0.0, 4.0), number("gamma", "Gamma", 1.0, 0.1, 5.0),
                                toggle("invert", "Invert", false)},
                               kColorAdjustBody, kHsvPrelude));
 
-    nodes.push_back(fieldNode("wh.modifier.colormap", "Color Map", "Modifier",
+    nodes.push_back(fieldNode("wh.modifier.colormap", "Color Map", "Effects",
                               {fieldInput("source", "Source"), fieldOutput()},
                               {integer("count", "Colors", 4, 2, 4), number("shift", "Shift", 0.0, -4.0, 4.0), toggle("wrap", "Wrap (ring)", false),
                                color("color1", "Color 1 (dark)", ColorRgba{0.0F, 0.0F, 0.0F, 1.0F}),
@@ -133,13 +133,13 @@ std::vector<compiler::NodeDefinition> modifierNodes() {
                                color("color4", "Color 4 (bright)", ColorRgba{1.0F, 1.0F, 1.0F, 1.0F})},
                               kColorMapBody));
 
-    nodes.push_back(fieldNode("wh.modifier.strobe", "Strobe", "Modifier",
+    nodes.push_back(fieldNode("wh.modifier.strobe", "Strobe", "Effects",
                               {fieldInput("source", "Source"), fieldOutput()},
                               {number("rate", "Rate (Hz)", 4.0, 0.05, 60.0), number("duty", "On time (of period)", 0.3, 0.0, 1.0),
                                number("fade", "Fade out (of period)", 0.0, 0.0, 1.0)},
                               kStrobeBody));
 
-    nodes.push_back(fieldNode("wh.modifier.outline", "Outline", "Modifier",
+    nodes.push_back(fieldNode("wh.modifier.outline", "Outline", "Effects",
                               {fieldInput("source", "Source"), fieldOutput()},
                               {number("width", "Width", 0.04, 0.001, 0.5), number("threshold", "Threshold", 0.1, 0.0, 1.0),
                                color("color", "Outline color", ColorRgba{1.0F, 1.0F, 1.0F, 1.0F})},

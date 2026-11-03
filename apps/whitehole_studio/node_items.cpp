@@ -125,6 +125,7 @@ NodeItem::NodeItem(NodeId id, const graph::NodeDescriptor& descriptor, const QSt
     : id_{id}, title_{title}, titleColor_{70, 74, 84} {
     setFlag(ItemIsMovable);
     setFlag(ItemIsSelectable);
+    canBypass_ = descriptor.domain == graph::NodeDomain::Field;
 
     int inputs = 0;
     int outputs = 0;
@@ -142,6 +143,22 @@ NodeItem::NodeItem(NodeId id, const graph::NodeDescriptor& descriptor, const QSt
         ports_.push_back(std::move(slot));
     }
     height_ = kTitleHeight + 12.0 + std::max(1, std::max(inputs, outputs)) * kRowHeight;
+}
+
+namespace {
+// Der Schalter sitzt rechts im Kopf, ein Kreis mit Strich ("Ein/Aus"-Zeichen).
+const QRectF kBypassButton{kWidth - 24.0, (kTitleHeight - 16.0) / 2.0, 16.0, 16.0};
+}  // namespace
+
+void NodeItem::setBypassed(bool on) {
+    if (bypassed_ != on) {
+        bypassed_ = on;
+        update();
+    }
+}
+
+bool NodeItem::bypassButtonAt(const QPointF& scenePos) const {
+    return canBypass_ && kBypassButton.adjusted(-3.0, -3.0, 3.0, 3.0).contains(mapFromScene(scenePos));
 }
 
 const PortSlot* NodeItem::findPort(const std::string& key) const {
@@ -198,6 +215,9 @@ QVariant NodeItem::itemChange(GraphicsItemChange change, const QVariant& value) 
 void NodeItem::paint(QPainter* painter, const QStyleOptionGraphicsItem*, QWidget*) {
     painter->setRenderHint(QPainter::Antialiasing);
     const QRectF body{0.0, 0.0, kWidth, height_};
+    if (bypassed_) {
+        painter->setOpacity(0.5);
+    }
     const bool isTarget = targetKey_.has_value();
 
     QColor border{96, 100, 112};
@@ -225,8 +245,36 @@ void NodeItem::paint(QPainter* painter, const QStyleOptionGraphicsItem*, QWidget
     bold.setBold(true);
     painter->setFont(bold);
     painter->setPen(QColor{240, 240, 245});
-    painter->drawText(QRectF{10.0, 0.0, kWidth - 20.0, kTitleHeight}, Qt::AlignVCenter | Qt::AlignLeft,
-                      painter->fontMetrics().elidedText(title_, Qt::ElideRight, static_cast<int>(kWidth - 20.0)));
+    const double titleWidth = kWidth - (canBypass_ ? 44.0 : 20.0);
+    painter->drawText(QRectF{10.0, 0.0, titleWidth, kTitleHeight}, Qt::AlignVCenter | Qt::AlignLeft,
+                      painter->fontMetrics().elidedText(title_, Qt::ElideRight, static_cast<int>(titleWidth)));
+    if (canBypass_) {
+        const QPointF center = kBypassButton.center();
+        const QColor mark = bypassed_ ? QColor{255, 110, 100} : QColor{130, 230, 150};
+        painter->save();
+        painter->setOpacity(1.0);
+        painter->setPen(QPen{mark, 1.8, Qt::SolidLine, Qt::RoundCap});
+        painter->setBrush(Qt::NoBrush);
+        painter->drawArc(QRectF{center.x() - 5.5, center.y() - 5.5, 11.0, 11.0}, 120 * 16, 300 * 16);  // Lücke oben
+        painter->drawLine(QPointF{center.x(), center.y() - 6.5}, QPointF{center.x(), center.y() - 0.5});
+        painter->restore();
+    }
+    if (bypassed_) {
+        // Durchleitung: vom ersten Field-Eingang zum ersten Ausgang, gestrichelt quer durch den Node.
+        const PortSlot* in = nullptr;
+        const PortSlot* out = nullptr;
+        for (const PortSlot& port : ports_) {
+            if (!port.output && in == nullptr && port.type == graph::PortType::Field) {
+                in = &port;
+            } else if (port.output && out == nullptr) {
+                out = &port;
+            }
+        }
+        if (in != nullptr && out != nullptr) {
+            painter->setPen(QPen{QColor{200, 205, 215}, 1.5, Qt::DashLine});
+            painter->drawLine(in->anchor, out->anchor);
+        }
+    }
     bold.setBold(false);
     painter->setFont(bold);
 

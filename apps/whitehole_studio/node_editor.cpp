@@ -126,6 +126,7 @@ void NodeEditor::buildScene() {
             title += QStringLiteral(" %1").arg(index);
         }
         auto* item = new NodeItem{node.id, *descriptor, title};
+        item->setBypassed(node.bypassed);
         item->setPos(static_cast<qreal>(node.position.x), static_cast<qreal>(node.position.y));
         scene_.addItem(item);
         item->setMoveCallback([this](NodeItem& moved) {
@@ -220,6 +221,15 @@ void NodeEditor::mousePressEvent(QMouseEvent* event) {
         setCursor(Qt::ClosedHandCursor);
         event->accept();
         return;
+    }
+    if (event->button() == Qt::LeftButton) {
+        // Schalter im Kopf eines Field-Nodes: überbrücken statt ziehen
+        NodeItem* node = nodeAt(mapToScene(event->position().toPoint()));
+        if (node != nullptr && node->bypassButtonAt(mapToScene(event->position().toPoint()))) {
+            toggleBypass(node->nodeId());
+            event->accept();
+            return;
+        }
     }
     if (event->button() == Qt::LeftButton && beginWire(mapToScene(event->position().toPoint()))) {
         event->accept();
@@ -321,6 +331,11 @@ void NodeEditor::keyPressEvent(QKeyEvent* event) {
     }
     if (event->key() == Qt::Key_D && event->modifiers() == Qt::ControlModifier) {
         duplicateSelection();
+        event->accept();
+        return;
+    }
+    if (event->key() == Qt::Key_B && event->modifiers() == Qt::NoModifier) {
+        toggleBypassOfSelection();
         event->accept();
         return;
     }

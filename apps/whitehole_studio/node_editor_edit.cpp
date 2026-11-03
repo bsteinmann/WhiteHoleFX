@@ -32,6 +32,44 @@ std::optional<NodeId> NodeEditor::addNodeAt(const std::string& typeId, const QPo
     return id.value();
 }
 
+bool NodeEditor::toggleBypass(NodeId id) {
+    NodeItem* item = itemOf(id);
+    if (item == nullptr || !item->canBypass()) {
+        return false;
+    }
+    const auto r = player_.setNodeBypassed(id, !item->bypassed());
+    if (!r.ok()) {
+        fail(r.error().message);
+        return false;
+    }
+    rebuild();
+    Q_EMIT edited(true);
+    return true;
+}
+
+bool NodeEditor::toggleBypassOfSelection() {
+    std::vector<NodeId> ids;
+    bool anyActive = false;
+    for (QGraphicsItem* graphic : scene_.selectedItems()) {
+        if (const auto* node = dynamic_cast<NodeItem*>(graphic); node != nullptr && node->canBypass()) {
+            ids.push_back(node->nodeId());
+            anyActive = anyActive || !node->bypassed();
+        }
+    }
+    if (ids.empty()) {
+        return false;
+    }
+    // Ist irgendeiner noch aktiv, werden alle überbrückt; sind alle überbrückt, werden alle eingeschaltet.
+    const auto r = player_.setNodesBypassed(ids, anyActive);
+    if (!r.ok()) {
+        fail(r.error().message);
+        return false;
+    }
+    rebuild();
+    Q_EMIT edited(true);
+    return true;
+}
+
 bool NodeEditor::connectPorts(const graph::PortRef& from, const graph::PortRef& to) {
     const auto id = player_.connect(from, to);
     if (!id.ok()) {

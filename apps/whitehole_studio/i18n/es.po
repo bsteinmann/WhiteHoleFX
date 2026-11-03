@@ -714,7 +714,7 @@ msgstr "Un look es un efecto terminado (del generador a la salida). Guarda aquí
 msgid "Eine Einführung in die Bedienung, in der gewählten Sprache"
 msgstr "Una introducción al manejo, en el idioma elegido"
 
-#: node_editor_menu.cpp:88
+#: node_editor_menu.cpp:92
 msgid "Einfügen\tStrg+V"
 msgstr "Pegar\tCtrl+V"
 
@@ -1150,11 +1150,11 @@ msgstr "No enviar"
 msgid "Node hinzufügen"
 msgstr "Añadir nodo"
 
-#: node_editor_menu.cpp:71
+#: node_editor_menu.cpp:75
 msgid "Node löschen"
 msgstr "Eliminar nodo"
 
-#: node_editor_menu.cpp:85
+#: node_editor_menu.cpp:89
 msgid "Node suchen …\tStrg+Leertaste"
 msgstr "Buscar nodo …\tCtrl+Espacio"
 
@@ -1474,7 +1474,7 @@ msgstr "Alinear bordes inferiores"
 msgid "Ursprung x y z"
 msgstr "Origen x y z"
 
-#: node_editor_menu.cpp:78
+#: node_editor_menu.cpp:82
 msgid "Verbindung trennen"
 msgstr "Desconectar"
 
@@ -1697,6 +1697,14 @@ msgstr "Tiempo de fundido %1 s"
 #: look_panel.cpp:46
 msgid "Überblendzeit:"
 msgstr "Tiempo de fundido:"
+
+#: node_editor_menu.cpp:71
+msgid "Überbrücken\tB"
+msgstr "Puentear\tB"
+
+#: node_editor_menu.cpp:71
+msgid "Überbrückung aufheben\tB"
+msgstr "Quitar el puenteo\tB"
 
 #: app_language.hpp:3
 msgid "…"

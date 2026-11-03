@@ -5,6 +5,7 @@
 #include <catch2/catch_test_macros.hpp>
 
 #include <string>
+#include <vector>
 
 #include "fake_gpu_device.hpp"
 #include "recording_sink.hpp"
@@ -139,4 +140,20 @@ TEST_CASE("Projektdatei: bypass wird geschrieben und wieder gelesen", "[bypass][
     const std::string marker = "node lfo wh.value.lfo\n";
     broken.insert(broken.find(marker) + marker.size(), "  bypass\n");
     CHECK_FALSE(other.player.loadText(broken).ok());
+}
+
+TEST_CASE("Player: mehrere Nodes überbrücken ist ein Schritt, alles oder nichts", "[bypass][player]") {
+    Rig rig;
+    const std::vector<NodeId> both{rig.id("wh.generator.plasma"), rig.id("wh.transform.mirror")};
+    REQUIRE(rig.player.setNodesBypassed(both, true).ok());
+    CHECK(rig.bypassed("wh.generator.plasma"));
+    CHECK(rig.bypassed("wh.transform.mirror"));
+    REQUIRE(rig.player.undo().ok());  // ein einziger Schritt nimmt beide zurück
+    CHECK_FALSE(rig.bypassed("wh.generator.plasma"));
+    CHECK_FALSE(rig.bypassed("wh.transform.mirror"));
+
+    // Ein CPU-Node in der Liste lässt die ganze Änderung scheitern.
+    const std::vector<NodeId> mixed{rig.id("wh.transform.mirror"), rig.id("wh.value.lfo")};
+    CHECK_FALSE(rig.player.setNodesBypassed(mixed, true).ok());
+    CHECK_FALSE(rig.bypassed("wh.transform.mirror"));
 }

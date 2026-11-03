@@ -104,7 +104,7 @@ std::vector<compiler::NodeDefinition> volumeNodes() {
     nodes.push_back(fieldNode("wh.generator.position", "Position Test", "Generators", {fieldOutput()},
                               {number("gain", "Gain", 1.0, 0.0, 4.0)}, kPositionBody));
 
-    nodes.push_back(fieldNode("wh.transform.twist", "Twist", "Transform",
+    nodes.push_back(fieldNode("wh.transform.twist", "Twist", "Effects",
                               {fieldInput("source", "Source"), fieldOutput()},
                               {choice("axis", "Axis", {"X", "Y (vertical)", "Z"}, 1),
                                number("angle", "Angle (deg per unit)", 90.0, -1440.0, 1440.0)},

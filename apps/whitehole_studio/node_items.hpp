@@ -60,6 +60,14 @@ public:
     [[nodiscard]] const PortSlot* portAt(const QPointF& scenePos) const;
     [[nodiscard]] QPointF anchorScene(const PortSlot& port) const { return mapToScene(port.anchor); }
 
+    /// Überbrückung (Bypass): Field-Nodes haben im Kopf einen Schalter. Überbrückte Nodes erscheinen abgeblendet
+    /// mit einer gestrichelten Durchleitung vom ersten Eingang zum Ausgang.
+    [[nodiscard]] bool canBypass() const noexcept { return canBypass_; }
+    [[nodiscard]] bool bypassed() const noexcept { return bypassed_; }
+    void setBypassed(bool on);
+    /// Liegt der Punkt (Szenenkoordinaten) auf dem Schalter im Kopf des Nodes?
+    [[nodiscard]] bool bypassButtonAt(const QPointF& scenePos) const;
+
     /// Markiert den Ausgang, der auf die LEDs abgetastet wird (Orange).
     void setTargetKey(std::optional<std::string> key);
     /// Meldet Verschiebungen (für die Kabel). Schaltet die Meldung ein; erst nach setPos aufrufen,
@@ -84,6 +92,8 @@ private:
     std::optional<std::string> targetKey_;
     std::function<void(NodeItem&)> onMoved_;
     bool moved_{false};
+    bool canBypass_{false};
+    bool bypassed_{false};
 };
 
 class WireItem : public QGraphicsPathItem {

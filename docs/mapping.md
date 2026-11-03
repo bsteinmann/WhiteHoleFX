@@ -67,7 +67,7 @@ hat also immer `p.z = 0`.
 ## Effekt auf einen Teil der Leinwand (Region-Node)
 
 Soll ein Effekt nur einen Teil der Leinwand füllen, legt man den Node **Region**
-(`wh.transform.region`, Kategorie Transform) hinter den Generator: Er bildet seinen Eingang auf ein
+(`wh.transform.region`, Kategorie Effects) hinter den Generator: Er bildet seinen Eingang auf ein
 Rechteck der Leinwand ab, als wäre dieses Rechteck die ganze Leinwand; außerhalb ist er durchsichtig
 (Alpha 0), diese LEDs bleiben aus. Das Rechteck steht in den Parametern `left`, `top`, `width` und
 `height` (Anteile 0..1, `top` zählt von oben); die Mapping-Schicht weiß davon nichts, die

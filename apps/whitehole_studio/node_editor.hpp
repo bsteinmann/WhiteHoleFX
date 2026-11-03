@@ -105,6 +105,12 @@ public:
     /// sonst eine Meldung, welcher Schritt scheiterte.
     QString exercise();
 
+    /// Schaltet die Überbrückung des Nodes (Schalter im Kopf, Taste B, Kontextmenü). Rückgängig-fähig.
+    bool toggleBypass(NodeId id);
+    /// Wie toggleBypass für alle ausgewählten Field-Nodes in einem Schritt: Ist der erste noch aktiv, werden alle
+    /// überbrückt, sonst alle wieder eingeschaltet.
+    bool toggleBypassOfSelection();
+
     /// Zoomt um `factor`. Der Bereich ist 0,25 bis 3; liegt die Ansicht schon außerhalb (etwa nach "Alles
     /// zeigen" bei vielen Nodes), geht es nur in Richtung des Bereichs - das Rad blockiert nie ganz.
     void zoomBy(double factor);
