@@ -94,6 +94,9 @@ Result<void> writeGraph(std::ostream& out, const graph::Graph& graph, const std:
         names.emplace(node.id.value(), name);
         out << "node " << name << " " << node.typeId << "\n";
         out << "  at " << vec2(node.position) << "\n";
+        if (node.bypassed) {
+            out << "  bypass\n";
+        }
         const graph::NodeDescriptor* descriptor = graph.registry().find(node.typeId);
         if (descriptor != nullptr) {
             for (const graph::ParameterDescriptor& parameter : descriptor->parameters) {

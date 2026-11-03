@@ -180,6 +180,20 @@ Result<void> Graph::setPosition(NodeId id, Vec2 position) {
     return {};
 }
 
+Result<void> Graph::setBypassed(NodeId id, bool bypassed) {
+    const auto it = std::find_if(nodes_.begin(), nodes_.end(),
+                                 [id](const NodeInstance& node) { return node.id == id; });
+    if (it == nodes_.end()) {
+        return notFound("Node existiert nicht");
+    }
+    const NodeDescriptor* descriptor = registry_->find(it->typeId);
+    if (bypassed && (descriptor == nullptr || descriptor->domain != NodeDomain::Field)) {
+        return Error{ErrorCode::Unsupported, "Nur Field-Nodes lassen sich überbrücken"};
+    }
+    it->bypassed = bypassed;
+    return {};
+}
+
 const NodeInstance* Graph::findNode(NodeId id) const noexcept {
     const auto it = std::find_if(nodes_.begin(), nodes_.end(),
                                  [id](const NodeInstance& node) { return node.id == id; });

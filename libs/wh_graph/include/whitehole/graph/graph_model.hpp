@@ -38,6 +38,9 @@ struct NodeInstance {
     std::string label;
     Vec2 position;  // Lage im Node-Editor
     std::unordered_map<std::string, ParameterValue> parameters;
+    /// Überbrückt: Der Node ist noch da, wirkt aber nicht. Er reicht seinen ersten Field-Eingang unverändert
+    /// weiter; ohne verbundenen Field-Eingang (Generatoren) liefert er Transparent. Nur für Field-Nodes.
+    bool bypassed{false};
 };
 
 class Graph {
@@ -66,6 +69,10 @@ public:
     /// Fehler: NotFound (Node oder Parameter), InvalidArgument (falscher Typ
     /// oder nicht endliche Zahl).
     Result<void> setParameter(NodeId id, std::string_view key, ParameterValue value);
+
+    /// Schaltet die Überbrückung eines Field-Nodes (siehe NodeInstance::bypassed).
+    /// Fehler: NotFound, Unsupported (kein Field-Node, etwa ein CPU-Wert-Node).
+    Result<void> setBypassed(NodeId id, bool bypassed);
 
     /// Lage im Node-Editor. Hat keinen Einfluss auf das Ergebnis des Graphen.
     /// Fehler: NotFound, InvalidArgument (NaN oder Unendlich).

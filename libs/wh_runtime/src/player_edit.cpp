@@ -253,6 +253,24 @@ Result<void> Player::moveNode(NodeId node, Vec2 position) {
     return r;
 }
 
+Result<void> Player::setNodeBypassed(NodeId node, bool bypassed) {
+    if (!project_) {
+        return noProject();
+    }
+    const graph::NodeInstance* instance = project_->graph.findNode(node);
+    if (instance != nullptr && instance->bypassed == bypassed) {
+        return {};
+    }
+    auto before = beginEdit({});
+    const Result<void> r = project_->graph.setBypassed(node, bypassed);
+    finishEdit(std::move(before), {}, r.ok());
+    if (r.ok()) {
+        modified_ = true;
+        graphDirty_ = true;
+    }
+    return r;
+}
+
 Result<void> Player::setTarget(const graph::PortRef& port) {
     if (!project_) {
         return noProject();

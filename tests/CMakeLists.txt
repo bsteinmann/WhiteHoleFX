@@ -87,6 +87,7 @@ add_executable(wh_tests
     runtime/master_dmx_test.cpp
     runtime/cue_runner_test.cpp
     runtime/player_cues_test.cpp
+    runtime/node_bypass_test.cpp
     runtime/strict_inputs_test.cpp
     runtime/node_clipboard_test.cpp
     runtime/node_defaults_test.cpp

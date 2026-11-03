@@ -147,6 +147,10 @@ public:
     Result<void> disconnect(ConnectionId connection);
     /// Lage im Editor; ändert den Effekt nicht.
     Result<void> moveNode(NodeId node, Vec2 position);
+
+    /// Überbrückt einen Field-Node oder schaltet ihn wieder ein (Undo-fähig, baut den Shader neu).
+    /// Fehler: Unsupported für Nodes ohne Field-Domäne.
+    Result<void> setNodeBypassed(NodeId node, bool bypassed);
     /// Wählt den Field-Ausgang, der auf die LEDs abgetastet wird. Läuft das Projekt, wird es im
     /// nächsten step() neu aufgebaut (kurze Unterbrechung der Ausgabe).
     /// Fehler: NotFound (Node oder Port), IncompatiblePorts (kein Field-Ausgang).

@@ -129,6 +129,10 @@ Einfluss auf das Ergebnis. Fehlt sie bei allen Nodes, ordnet der Editor sie selb
 die Zeile nicht und lehnen solche Dateien ab; die Formatversion bleibt 1, weil neuere Programme
 alte Dateien unverändert lesen.
 
+`bypass` (ohne Argumente, nur bei Field-Nodes) überbrückt den Node: Er bleibt im Graphen, reicht aber seinen
+ersten Field-Eingang unverändert weiter; ohne verbundenen Field-Eingang (Generatoren) liefert er Transparent.
+Der Writer schreibt die Zeile nur für überbrückte Nodes. Ältere Programmversionen lehnen sie ab.
+
 ### `connect <node>.<ausgang> -> <node>.<eingang>` und `output <node>.<ausgang>`
 
 Verbindungen werden beim Lesen geprüft (Typen, Zyklen, Eingang schon belegt). `output` ist

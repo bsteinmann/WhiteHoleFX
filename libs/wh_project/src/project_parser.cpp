@@ -235,6 +235,15 @@ std::optional<Error> Parser::handleNode(const Line& line) {
         if (!result.ok()) {
             return withLine(r.line(), result.error());
         }
+    } else if (key == "bypass") {
+        r.expectEnd();
+        if (!r.ok()) {
+            return r.error();
+        }
+        const auto result = graph_->setBypassed(node_, true);
+        if (!result.ok()) {
+            return withLine(r.line(), result.error());
+        }
     } else {
         r.fail("Unbekannte Anweisung \"" + key + "\" im node-Block");
     }

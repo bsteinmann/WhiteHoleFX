@@ -138,6 +138,9 @@ private:
             return Error{ErrorCode::Unsupported,
                          describe(*node) + ": Field-Nodes brauchen genau einen Field-Ausgang"};
         }
+        if (node->bypassed) {
+            return visitBypassed(*node, *descriptor);
+        }
         const NodeSnippet* snippet = snippets_.find(node->typeId);
         if (snippet == nullptr) {
             return Error{ErrorCode::NotFound, describe(*node) + ": kein Shader-Snippet vorhanden"};
@@ -170,6 +173,39 @@ private:
         order_.push_back(id);
         emitted_.insert(id);
         visiting_.erase(id);
+        return {};
+    }
+
+    /// Überbrückter Node: reicht den ersten Field-Eingang unverändert weiter. Ist dort nichts verbunden (oder
+    /// hat der Node keinen Field-Eingang, etwa ein Generator), ist das Ergebnis transparent. Die übrigen
+    /// Eingänge und die Parameter spielen keine Rolle: Pflicht-Eingänge werden nicht geprüft, Uniform-Slots
+    /// nicht angelegt, und Nodes davor, die sonst nirgends gebraucht werden, entfallen aus dem Shader.
+    Result<void> visitBypassed(const NodeInstance& node, const NodeDescriptor& descriptor) {
+        std::string body = "return vec4<f32>(0.0, 0.0, 0.0, 0.0);";
+        visiting_.insert(node.id);
+        for (const PortDescriptor& port : descriptor.ports) {
+            if (port.direction != PortDirection::Input || port.type != PortType::Field) {
+                continue;
+            }
+            if (const graph::Connection* connection = graph_.findInputConnection(node.id, port.key); connection != nullptr) {
+                const NodeInstance* source = graph_.findNode(connection->from.node);
+                const NodeDescriptor* sourceDescriptor =
+                    source == nullptr ? nullptr : graph_.registry().find(source->typeId);
+                const PortDescriptor* sourcePort =
+                    sourceDescriptor == nullptr ? nullptr : sourceDescriptor->findPort(connection->from.portKey);
+                if (sourcePort != nullptr && sourcePort->type == PortType::Field) {
+                    if (Result<void> visited = visit(connection->from.node); !visited.ok()) {
+                        return visited;
+                    }
+                    body = "return " + functionName(connection->from.node) + "(p);";
+                }
+            }
+            break;  // nur der erste Field-Eingang zählt
+        }
+        functions_ += "fn " + functionName(node.id) + "(p: vec3<f32>) -> vec4<f32> {\n" + indent(body) + "}\n\n";
+        order_.push_back(node.id);
+        emitted_.insert(node.id);
+        visiting_.erase(node.id);
         return {};
     }
 
