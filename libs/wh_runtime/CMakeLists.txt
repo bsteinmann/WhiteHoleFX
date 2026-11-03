@@ -17,6 +17,7 @@ wh_add_library(wh_runtime
         src/cue_runner.cpp
         src/player_cues.cpp
         src/player_edit.cpp
+        src/player_dock.cpp
         src/player_master.cpp
         src/player_layout.cpp
         src/player_live.cpp

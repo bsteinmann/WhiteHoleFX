@@ -48,6 +48,7 @@ add_executable(whitehole_studio
     main_window.hpp
     node_editor.cpp
     node_editor_clipboard.cpp
+    node_editor_dock.cpp
     node_editor_drag.cpp
     node_editor_edit.cpp
     node_editor_exercise.cpp

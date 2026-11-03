@@ -11,7 +11,11 @@
 #include <cmath>
 #include <filesystem>
 
+#include <QByteArray>
+#include <QMimeData>
+
 #include "node_editor.hpp"
+#include "node_palette.hpp"
 #include "node_search.hpp"
 
 namespace whitehole::studio {
@@ -110,6 +114,11 @@ QString NodeEditor::exercise() {
     removeSelected();
     if (player_.project()->graph.connections().size() != wiresBefore) {
         return QStringLiteral("Kabel löschen: %1 Verbindungen, erwartet %2").arg(player_.project()->graph.connections().size()).arg(wiresBefore);
+    }
+
+    // Einrasten beim Ziehen aus der Palette: auf ein Kabel (dazwischen), auf einen Node (links davor, rechts dahinter).
+    if (const QString problem = exerciseDocking(*source, *sink); !problem.isEmpty()) {
+        return problem;
     }
 
     // Verschieben wie mit der Maus: Position ändern, Änderung übernehmen
@@ -225,6 +234,95 @@ QString NodeEditor::exercise() {
             .arg(player_.project()->graph.nodes().size())
             .arg(nodes_.size())
             .arg(nodesBefore);
+    }
+    return {};
+}
+
+}  // namespace whitehole::studio
+
+namespace whitehole::studio {
+
+QString NodeEditor::exerciseDocking(NodeId source, NodeId sink) {
+    const std::size_t nodesBefore = player_.project()->graph.nodes().size();
+    const std::size_t wiresBefore = player_.project()->graph.connections().size();
+    const std::string kColormap = "wh.modifier.colormap";
+
+    // Auf einen Node: links speist der neue den freien Eingang, rechts hängt er hinter dem Ausgang.
+    NodeItem* sinkItem = itemOf(sink);
+    if (sinkItem == nullptr) {
+        return QStringLiteral("Einrasten: Ziel-Node fehlt");
+    }
+    const auto onLeft = dockPlanAt("wh.generator.plasma", sinkItem->mapToScene(QPointF{30.0, 40.0}), false);
+    if (!onLeft.has_value() || onLeft->links.size() != 1 || !(onLeft->links[0].to == graph::PortRef{sink, "source"})) {
+        return QStringLiteral("Einrasten: linke Hälfte eines Nodes mit freiem Eingang");
+    }
+    const auto onRight = dockPlanAt(kColormap, sinkItem->mapToScene(QPointF{160.0, 40.0}), false);
+    if (!onRight.has_value() || onRight->links.size() != 1 || !(onRight->links[0].from.node == sink)) {
+        return QStringLiteral("Einrasten: rechte Hälfte eines Nodes");
+    }
+    if (dockPlanAt("wh.generator.plasma", sinkItem->mapToScene(QPointF{30.0, 40.0}), true).has_value()) {
+        return QStringLiteral("Einrasten: mit Alt darf nichts einrasten");
+    }
+
+    // Auf ein Kabel: dazwischen, alles in einem Schritt für Rückgängig.
+    if (!connectPorts(graph::PortRef{source, "out"}, graph::PortRef{sink, "source"})) {
+        return QStringLiteral("Einrasten: Kabel für den Test anlegen");
+    }
+    const WireItem* wire = nullptr;
+    for (const WireItem* candidate : wires_) {
+        wire = candidate;
+    }
+    if (wire == nullptr) {
+        return QStringLiteral("Einrasten: kein Kabel zum Treffen");
+    }
+    const QPointF middle = wire->path().pointAtPercent(0.5);
+    if (!dockPlanAt(kColormap, middle, false).has_value()) {
+        return QStringLiteral("Einrasten: Kabel bei %1/%2 nicht getroffen").arg(middle.x()).arg(middle.y());
+    }
+    if (dockPlanAt(kColormap, middle, true).has_value() || dockPlanAt(kColormap, middle + QPointF{0.0, 4000.0}, false).has_value() ||
+        dockPlanAt("wh.output.canvas", middle, false).has_value()) {
+        return QStringLiteral("Einrasten: mit Alt, weit weg vom Kabel oder beim Ausgangs-Node darf nichts einrasten");
+    }
+    showDockPreview(kColormap, middle, false);
+    if (dockWire_ == nullptr || dockLines_.size() != 2) {
+        return QStringLiteral("Einrasten: Vorschau zeigt %1 gestrichelte Kabel, erwartet 2").arg(dockLines_.size());
+    }
+    clearDockPreview();
+    if (dockWire_ != nullptr || !dockLines_.empty()) {
+        return QStringLiteral("Einrasten: Vorschau bleibt stehen");
+    }
+
+    QMimeData mime;
+    mime.setData(QString::fromLatin1(kNodeTypeMime), QByteArray{kColormap.c_str()});
+    if (!handleNodeDrop(&mime, mapFromScene(middle))) {
+        return QStringLiteral("Einrasten: Drop abgelehnt");
+    }
+    if (player_.project()->graph.nodes().size() != nodesBefore + 1 || player_.project()->graph.connections().size() != wiresBefore + 2 ||
+        scene_.selectedItems().size() != 1) {
+        return QStringLiteral("Einrasten auf ein Kabel: %1 Nodes, %2 Kabel, %3 ausgewählt; erwartet %4, %5, 1")
+            .arg(player_.project()->graph.nodes().size())
+            .arg(player_.project()->graph.connections().size())
+            .arg(scene_.selectedItems().size())
+            .arg(nodesBefore + 1)
+            .arg(wiresBefore + 2);
+    }
+    if (!player_.undo().ok()) {
+        return QStringLiteral("Einrasten: Rückgängig scheitert");
+    }
+    rebuild();
+    if (player_.project()->graph.nodes().size() != nodesBefore || player_.project()->graph.connections().size() != wiresBefore + 1) {
+        return QStringLiteral("Einrasten: ein Rückgängig muss Node und Kabel zugleich zurücknehmen (%1 Nodes, %2 Kabel)")
+            .arg(player_.project()->graph.nodes().size())
+            .arg(player_.project()->graph.connections().size());
+    }
+    // Zustand wie vorher: das Test-Kabel wieder weg
+    scene_.clearSelection();
+    for (WireItem* candidate : wires_) {
+        candidate->setSelected(true);
+    }
+    removeSelected();
+    if (player_.project()->graph.connections().size() != wiresBefore) {
+        return QStringLiteral("Einrasten: Test-Kabel nicht entfernt");
     }
     return {};
 }

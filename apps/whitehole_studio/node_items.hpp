@@ -68,6 +68,10 @@ public:
     /// Liegt der Punkt (Szenenkoordinaten) auf dem Schalter im Kopf des Nodes?
     [[nodiscard]] bool bypassButtonAt(const QPointF& scenePos) const;
 
+    /// Einrast-Vorschau beim Ziehen eines Nodes aus der Palette: der Node bekommt einen hellblauen Rahmen und der
+    /// Port `portKey` (leer = keiner) einen Ring. Aus mit `on = false`.
+    void setDockHighlight(bool on, std::string portKey = {});
+
     /// Markiert den Ausgang, der auf die LEDs abgetastet wird (Orange).
     void setTargetKey(std::optional<std::string> key);
     /// Meldet Verschiebungen (für die Kabel). Schaltet die Meldung ein; erst nach setPos aufrufen,
@@ -94,6 +98,8 @@ private:
     bool moved_{false};
     bool canBypass_{false};
     bool bypassed_{false};
+    bool dockHighlight_{false};
+    std::string dockPort_;
 };
 
 class WireItem : public QGraphicsPathItem {
@@ -106,6 +112,9 @@ public:
     [[nodiscard]] const NodeItem* toNode() const noexcept { return to_; }
     /// Zieht das Kabel an die aktuellen Port-Positionen nach.
     void updatePath();
+    /// Einrast-Vorschau: hellblau und dick, weil ein gezogener Node hier eingefügt würde.
+    void setDockHighlight(bool on);
+    [[nodiscard]] static QColor dockColor() { return QColor{90, 210, 255}; }
 
     /// Weicher Verlauf von `a` (Ausgang, Kabel läuft nach rechts) nach `b` (Eingang).
     [[nodiscard]] static QPainterPath curve(const QPointF& a, const QPointF& b);
@@ -121,6 +130,7 @@ private:
     std::string fromKey_;
     std::string toKey_;
     QColor color_;
+    bool dockHighlight_{false};
 };
 
 }  // namespace whitehole::studio

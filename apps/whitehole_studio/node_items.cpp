@@ -202,6 +202,15 @@ QPainterPath NodeItem::shape() const {
     return path;
 }
 
+void NodeItem::setDockHighlight(bool on, std::string portKey) {
+    if (dockHighlight_ == on && dockPort_ == portKey) {
+        return;
+    }
+    dockHighlight_ = on;
+    dockPort_ = on ? std::move(portKey) : std::string{};
+    update();
+}
+
 QVariant NodeItem::itemChange(GraphicsItemChange change, const QVariant& value) {
     if (change == ItemPositionHasChanged) {
         moved_ = true;
@@ -229,6 +238,10 @@ void NodeItem::paint(QPainter* painter, const QStyleOptionGraphicsItem*, QWidget
     if (isSelected()) {
         border = QColor{255, 255, 255};
         borderWidth = 2.0;
+    }
+    if (dockHighlight_) {
+        border = WireItem::dockColor();
+        borderWidth = 3.0;
     }
     painter->setPen(QPen{border, borderWidth});
     painter->setBrush(QColor{44, 46, 54});
@@ -286,6 +299,11 @@ void NodeItem::paint(QPainter* painter, const QStyleOptionGraphicsItem*, QWidget
             painter->setBrush(Qt::NoBrush);
             painter->drawEllipse(port.anchor, kPortRadius + 3.5, kPortRadius + 3.5);
         }
+        if (dockHighlight_ && !dockPort_.empty() && port.key == dockPort_) {
+            painter->setPen(QPen{WireItem::dockColor(), 2.5});
+            painter->setBrush(Qt::NoBrush);
+            painter->drawEllipse(port.anchor, kPortRadius + 4.5, kPortRadius + 4.5);
+        }
         drawPortMarker(painter, port.anchor, port.type, port.output, kPortRadius);
 
         painter->setPen(QColor{205, 207, 214});
@@ -332,9 +350,21 @@ QPainterPath WireItem::shape() const {
 
 QRectF WireItem::boundingRect() const { return shape().boundingRect(); }
 
+void WireItem::setDockHighlight(bool on) {
+    if (dockHighlight_ != on) {
+        dockHighlight_ = on;
+        update();
+    }
+}
+
 void WireItem::paint(QPainter* painter, const QStyleOptionGraphicsItem*, QWidget*) {
     painter->setRenderHint(QPainter::Antialiasing);
     painter->setBrush(Qt::NoBrush);
+    if (dockHighlight_) {
+        painter->setPen(QPen{dockColor(), 5.0});
+        painter->drawPath(path());
+        return;
+    }
     painter->setPen(QPen{isSelected() ? QColor{255, 255, 255} : color_, isSelected() ? 4.0 : 2.5});
     painter->drawPath(path());
 }

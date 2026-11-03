@@ -33,6 +33,7 @@
 #include "whitehole/runtime/player.hpp"
 
 class QDragEnterEvent;
+class QDragLeaveEvent;
 class QDragMoveEvent;
 class QDropEvent;
 class QEvent;
@@ -91,8 +92,17 @@ public:
     /// Das Widget, auf dem losgelassene Nodes gelöscht werden (die Palette). Gehört dem Aufrufer.
     void setDeleteZone(QWidget* zone);
 
-    /// Legt einen Node an; meldet Fehler über `failed`.
-    std::optional<NodeId> addNodeAt(const std::string& typeId, const QPointF& scenePos);
+    /// Legt einen Node an; meldet Fehler über `failed`. Mit `plan` (siehe dockPlanAt) wird er gleich verdrahtet,
+    /// alles in einem Schritt für Rückgängig.
+    std::optional<NodeId> addNodeAt(const std::string& typeId, const QPointF& scenePos, const graph::DockPlan* plan = nullptr);
+
+    /// Einrasten (siehe graph/node_docking.hpp): Wohin würde ein Node vom Typ `typeId` einrasten, wenn der Mauszeiger
+    /// bei `scenePos` loslässt? Auf einem Node: links davor, rechts dahinter; auf einem Kabel: dazwischen. Mit `alt`
+    /// (oder beim Ausgangs-Node) nie. Nichts, wenn nichts passt.
+    [[nodiscard]] std::optional<graph::DockPlan> dockPlanAt(const std::string& typeId, const QPointF& scenePos, bool alt) const;
+    /// Zeigt die Vorschau eines Einrastens (hellblauer Rahmen, Kabel, Port, gestrichelte Linien) bzw. nimmt sie weg.
+    void showDockPreview(const std::string& typeId, const QPointF& scenePos, bool alt);
+    void clearDockPreview();
     /// Verbindet Ausgang `from` mit Eingang `to`. Meldet Fehler über `failed`.
     bool connectPorts(const graph::PortRef& from, const graph::PortRef& to);
     /// Löscht die ausgewählten Nodes und Kabel.
@@ -139,6 +149,7 @@ Q_SIGNALS:
 protected:
     void dragEnterEvent(QDragEnterEvent* event) override;
     void dragMoveEvent(QDragMoveEvent* event) override;
+    void dragLeaveEvent(QDragLeaveEvent* event) override;
     void dropEvent(QDropEvent* event) override;
     /// Fängt Drags mit Node-Typ schon am Viewport ab (dorthin liefert Qt die Drops; QGraphicsView leitet sie sonst an die Szene).
     bool viewportEvent(QEvent* event) override;
@@ -156,6 +167,11 @@ private:
         const PortSlot* port{nullptr};
     };
 
+    /// Worauf fiele ein Node, der bei `scenePos` losgelassen wird? Ein Node (Hälfte und nächster Port nach Mausspitze
+    /// gewählt) geht vor einem Kabel in der Nähe.
+    /// Teil von exercise(): prüft das Einrasten (leer = in Ordnung, sonst die Meldung).
+    QString exerciseDocking(NodeId source, NodeId sink);
+    [[nodiscard]] std::optional<graph::DockTarget> findDockTarget(const QPointF& scenePos) const;
     [[nodiscard]] Hit portAt(const QPointF& scenePos) const;
     [[nodiscard]] NodeItem* nodeAt(const QPointF& scenePos) const;
     [[nodiscard]] WireItem* wireAt(const QPointF& scenePos) const;
@@ -191,6 +207,11 @@ private:
     NodeItem* wireNode_{nullptr};
     PortSlot wireSlot_;
     QGraphicsPathItem* tempWire_{nullptr};
+
+    // Einrast-Vorschau (leer, wenn nichts einrastet)
+    WireItem* dockWire_{nullptr};
+    NodeItem* dockNode_{nullptr};
+    std::vector<QGraphicsPathItem*> dockLines_;
 
     QWidget* deleteZone_{nullptr};
     bool nodeDragging_{false};  // die linke Maustaste ist auf einem Node gedrückt (Verschieben läuft)

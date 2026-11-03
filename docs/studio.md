@@ -266,6 +266,15 @@ Nodes hell, die sich daran anschließen lassen; alle anderen werden abgedunkelt.
 das Nodes mit passendem Eingang, aus einem Eingang gezogen Nodes mit passendem Ausgang. Loslassen hebt die
 Hervorhebung auf. So findet man z. B. zur türkisen Raute (Ganzzahl) die Nodes, die sie speisen können.
 
+**Einrasten:** Zieht man einen Node aus der Palette auf ein **Kabel**, wird er dazwischen eingefügt (A → neu → B).
+Auf einen **Node** gezogen speist er in dessen **linker Hälfte** einen Eingang, in der **rechten Hälfte** hängt er
+hinter dem Ausgang des Ziels. Welcher Port, entscheidet die Höhe der Maus (der nächste Port auf dieser Seite);
+passt er nicht, gilt bei mehreren Eingängen der erste freie des richtigen Typs, sonst der erste passende. Ist der
+Eingang schon belegt, wird der neue Node in das Kabel eingefügt; verträgt er den bisherigen Ausgang nicht, rastet
+nichts ein, damit kein Kabel verloren geht. Vor dem Loslassen zeigt der Editor hellblau, was passiert (Rahmen,
+Kabel, Port; die neuen Kabel gestrichelt). **Alt** gedrückt halten schaltet das Einrasten ab, **Esc** bricht den
+Drag ab. Der Ausgangs-Node rastet nirgends ein. Node und Kabel entstehen in **einem** Schritt Rückgängig.
+
 Die Kategorien sind beim Start **zugeklappt**; beim Suchen sind die Treffer aufgeklappt. Mit Rechtsklick auf einen Node-Typ
 („Zu Favoriten hinzufügen“) wird er zum **Favoriten**: Er steht oben in der Gruppe „Favoriten“ (immer offen) und in seiner Kategorie
 mit ★. Die Favoriten werden gespeichert.

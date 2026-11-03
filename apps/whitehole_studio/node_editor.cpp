@@ -101,6 +101,9 @@ void NodeEditor::buildScene() {
     nodes_.clear();
     tempWire_ = nullptr;
     wireNode_ = nullptr;
+    dockWire_ = nullptr;
+    dockNode_ = nullptr;
+    dockLines_.clear();
     scene_.clear();
 
     const project::Project* project = player_.project();

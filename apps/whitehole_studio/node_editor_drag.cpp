@@ -5,8 +5,10 @@
 // Entfernen: Das Verschieben von Nodes ist kein Qt-Drag, sondern Bewegen von Szene-Items. Darum prüft
 // der Editor beim Loslassen der Maus selbst, ob sie über der "Löschzone" (der Palette) steht.
 #include <QDragEnterEvent>
+#include <QDragLeaveEvent>
 #include <QDragMoveEvent>
 #include <QDropEvent>
+#include <QGuiApplication>
 #include <QMimeData>
 
 #include "node_editor.hpp"
@@ -17,6 +19,13 @@ namespace whitehole::studio {
 namespace {
 
 bool carriesNodeType(const QMimeData* mime) { return mime != nullptr && mime->hasFormat(QString::fromLatin1(kNodeTypeMime)); }
+
+std::string nodeTypeOf(const QMimeData* mime) {
+    return QString::fromUtf8(mime->data(QString::fromLatin1(kNodeTypeMime))).toStdString();
+}
+
+/// Alt gedrückt? Während eines Drags bekommt das Fenster keine Tastenereignisse, darum der Blick auf die Tastatur.
+bool altPressed() { return QGuiApplication::queryKeyboardModifiers().testFlag(Qt::AltModifier); }
 
 }  // namespace
 
@@ -31,9 +40,15 @@ void NodeEditor::dragEnterEvent(QDragEnterEvent* event) {
 void NodeEditor::dragMoveEvent(QDragMoveEvent* event) {
     if (carriesNodeType(event->mimeData())) {
         event->acceptProposedAction();
+        showDockPreview(nodeTypeOf(event->mimeData()), mapToScene(event->position().toPoint()), altPressed());
         return;
     }
     QGraphicsView::dragMoveEvent(event);
+}
+
+void NodeEditor::dragLeaveEvent(QDragLeaveEvent* event) {
+    clearDockPreview();  // Esc oder aus dem Editor gezogen
+    QGraphicsView::dragLeaveEvent(event);
 }
 
 void NodeEditor::dropEvent(QDropEvent* event) {
@@ -48,9 +63,15 @@ bool NodeEditor::handleNodeDrop(const QMimeData* mime, const QPoint& viewportPos
     if (!carriesNodeType(mime)) {
         return false;
     }
-    const std::string typeId = QString::fromUtf8(mime->data(QString::fromLatin1(kNodeTypeMime))).toStdString();
+    const std::string typeId = nodeTypeOf(mime);
+    const QPointF scenePos = mapToScene(viewportPos);
+    const std::optional<graph::DockPlan> plan = dockPlanAt(typeId, scenePos, altPressed());
+    clearDockPreview();
     // Der Mauszeiger steht in der Mitte des neuen Nodes
-    addNodeAt(typeId, mapToScene(viewportPos) - QPointF{70.0, 20.0});
+    if (plan.has_value() && addNodeAt(typeId, scenePos - QPointF{70.0, 20.0}, &*plan).has_value()) {
+        return true;
+    }
+    addNodeAt(typeId, scenePos - QPointF{70.0, 20.0});
     return true;
 }
 
@@ -67,6 +88,9 @@ bool NodeEditor::viewportEvent(QEvent* event) {
                 dragMoveEvent(static_cast<QDragMoveEvent*>(event));
                 return true;
             }
+            break;
+        case QEvent::DragLeave:
+            clearDockPreview();
             break;
         case QEvent::Drop:
             if (carriesNodeType(static_cast<QDropEvent*>(event)->mimeData())) {

@@ -1,5 +1,9 @@
 # Änderungen
 
+## 0.40.0
+
+- **Einrasten beim Ziehen aus der Palette:** Zieht man einen Node auf ein **Kabel**, wird er dazwischen eingefügt (A → neu → B). Zieht man ihn auf einen **Node**, speist er in der linken Hälfte einen Eingang des Ziels, in der rechten Hälfte hängt er hinter dessen Ausgang. Den Port wählt die Höhe der Maus; bei mehreren Eingängen gilt der erste freie des passenden Typs. Ein belegter Eingang bekommt den Node dazwischen. Vor dem Loslassen zeigt der Editor das Ziel hellblau (Rahmen, Kabel, Port) und die neuen Kabel gestrichelt. **Alt** gedrückt halten schaltet das Einrasten ab; Esc bricht den Drag ab. Alles ist ein Schritt Rückgängig. Der Ausgangs-Node rastet nirgends ein. Die Regeln stehen in `graph/node_docking.hpp` (`planDocking`) und sind getestet; `Player::addNodeDocked` führt sie in einem Schritt aus. Pfeiltasten zum Umschalten von Port und Seite folgen später (ein Qt-Drag reicht Tasten nicht durch).
+
 ## 0.39.0
 
 - **Palette farbig:** Vor jedem Node in der Palette steht ein Punkt in der Farbe dessen, was er liefert (Bild blau, Wert grün, Farbe rosa, Audio himmelblau, sonst grau). Ansicht → „Palette farbig“ schaltet ihn ab.
