@@ -1,7 +1,8 @@
-name: Release (Windows)
+name: Release
 
-# Baut das Windows-Paket und legt auf GitHub ein Test-Release ("Pre-release") mit der ZIP-Datei an.
-# Start: Actions -> "Release (Windows)" -> Run workflow, Tag eintragen (z. B. v0.22.0; er sollte zu CMakeLists.txt
+# Baut das Windows-Paket und das Linux-Paket (.deb) und legt auf GitHub ein Test-Release ("Pre-release") mit beiden an.
+# Mit "nur_deb" wird kein Release angelegt: Das .deb wird für den Tag gebaut und an das schon vorhandene Release gehängt.
+# Start: Actions -> "Release" -> Run workflow, Tag eintragen (z. B. v0.22.0; er sollte zu CMakeLists.txt
 # passen). Der Tag wird dabei am aktuellen Stand des gewählten Zweigs angelegt. Ein von Hand gepushter Tag v*
 # löst denselben Ablauf aus.
 on:
@@ -10,6 +11,10 @@ on:
       tag:
         description: "Tag des Releases, z. B. v0.22.0"
         required: true
+      nur_deb:
+        description: "Nur das .deb bauen und an das vorhandene Release des Tags hängen (kein neues Release)"
+        type: boolean
+        default: false
   push:
     tags: ["v*"]
 
@@ -19,6 +24,7 @@ permissions:
 jobs:
   windows:
     name: Windows-Paket bauen und veröffentlichen
+    if: ${{ !inputs.nur_deb }}
     runs-on: windows-latest
     env:
       QT_VERSION: "6.8.3"
@@ -60,3 +66,52 @@ jobs:
           $tag = "${{ inputs.tag || github.ref_name }}"
           $zip = "WhiteHoleFX-$tag-windows-x64.zip"
           gh release create $tag $zip --target "${{ github.sha }}" --prerelease --title "WhiteHoleFX $tag (Testversion für Windows)" --notes-file packaging/windows/RELEASE_NOTES.md
+
+  linux:
+    name: Linux-Paket (.deb) bauen, testen und ans Release hängen
+    needs: windows
+    # Läuft nach dem Windows-Job (der das Release anlegt) oder allein, wenn dieser übersprungen wurde (nur_deb)
+    if: ${{ always() && (needs.windows.result == 'success' || needs.windows.result == 'skipped') }}
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ inputs.nur_deb && inputs.tag || '' }}
+      - name: Bauwerkzeuge und Qt installieren
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y g++-12 qt6-base-dev libgl1-mesa-dev libxkbcommon-dev dpkg-dev \
+            desktop-file-utils shared-mime-info libxml2-utils unzip curl
+      - name: wgpu-native laden
+        run: scripts/fetch-wgpu-native.sh
+      - name: Konfigurieren (Release, Präfix /usr)
+        run: >
+          cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr
+          -DCMAKE_CXX_COMPILER=g++-12 -DCMAKE_C_COMPILER=gcc-12 -DWHITEHOLEFX_BUILD_STUDIO=ON -DWHITEHOLEFX_WEBGPU=ON -DWHITEHOLEFX_BUILD_TESTS=OFF
+          -DWGPU_NATIVE_ROOT="$PWD/third_party/wgpu-native"
+      - name: Bauen
+        run: cmake --build build --parallel
+      - name: Paket erzeugen
+        run: |
+          (cd build && cpack -G DEB)
+          mkdir -p dist
+          cp build/*.deb dist/
+          ls -l dist
+      - name: Installationstest in sauberem Ubuntu 22.04 und 24.04
+        run: |
+          for img in ubuntu:22.04 ubuntu:24.04; do
+            docker run --rm -v "$PWD/dist:/dist:ro" -e QT_QPA_PLATFORM=offscreen $img bash -c '
+              set -e
+              export DEBIAN_FRONTEND=noninteractive
+              apt-get update -qq
+              apt-get install -y -qq /dist/*.deb mesa-vulkan-drivers fonts-dejavu-core > /dev/null
+              whitehole_studio --version
+              whitehole_cli /usr/share/whiteholefx/examples/einstieg/wand.whfx --check
+              whitehole_cli /usr/share/whiteholefx/examples/einstieg/wand.whfx --frames 20 --software
+              echo ALLES-OK
+            '
+          done
+      - name: Ans Release hängen (legt kein Release an)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload "${{ inputs.tag || github.ref_name }}" dist/*.deb --clobber

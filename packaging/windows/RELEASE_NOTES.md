@@ -1,5 +1,10 @@
-**Testversion für Windows (64 Bit).** ZIP herunterladen, in einen eigenen Ordner entpacken, `whitehole_studio.exe` starten.
+**Testversion für Windows (64 Bit) und Linux.**
+
+**Windows:** ZIP herunterladen, in einen eigenen Ordner entpacken, `whitehole_studio.exe` starten.
 Windows warnt vor einem nicht signierten Programm: „Weitere Informationen“ → „Trotzdem ausführen“.
+
+**Linux (Ubuntu 22.04 und neuer, Debian):** `.deb` herunterladen und mit `sudo apt install ./whiteholefx_*.deb` installieren,
+dann `whitehole_studio` starten (oder aus dem Anwendungsmenü).
 
 **Neu seit v0.22.0** (alle Einzelheiten in `CHANGELOG.md`):
 
