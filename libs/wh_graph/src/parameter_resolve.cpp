@@ -92,6 +92,13 @@ std::optional<ParameterValue> convertForParameter(const ParameterValue& source,
     }
 
     if (std::holds_alternative<std::int64_t>(target.defaultValue)) {
+        if (const auto* real = std::get_if<double>(&source)) {
+            // Scalar -> Integer: auf die nächste ganze Zahl runden (siehe isConnectable)
+            if (!std::isfinite(*real)) {
+                return std::nullopt;
+            }
+            return ParameterValue{static_cast<std::int64_t>(clampTo(std::clamp(std::round(*real), -9.0e15, 9.0e15), target))};
+        }
         const auto* integer = std::get_if<std::int64_t>(&source);
         if (integer == nullptr) {
             return std::nullopt;

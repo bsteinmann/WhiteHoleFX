@@ -30,6 +30,7 @@ enum class PortType : std::uint8_t {
 /// werden? Gleiche Typen immer; dazu wenige verlustfreie Überführungen:
 ///   Field <-> Image        (Rasterisieren bzw. als Textur abtasten)
 ///   Scalar, Color -> Field (konstantes Feld)
+///   Scalar -> Integer      (gerundet; so steuert z. B. ein LFO eine Auswahl oder eine Anzahl)
 ///   Integer, Boolean -> Scalar
 ///   Trigger -> Boolean
 [[nodiscard]] constexpr bool isConnectable(PortType from, PortType to) noexcept {
@@ -42,6 +43,7 @@ enum class PortType : std::uint8_t {
         case PortType::Image:
             return to == PortType::Field;
         case PortType::Scalar:
+            return to == PortType::Field || to == PortType::Integer;
         case PortType::Color:
             return to == PortType::Field;
         case PortType::Integer:

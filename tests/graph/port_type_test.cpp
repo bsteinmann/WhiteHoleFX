@@ -38,7 +38,9 @@ TEST_CASE("Einfache Konvertierungen sind erlaubt, unverträgliche Typen nicht") 
     CHECK(isConnectable(PortType::Boolean, PortType::Scalar));
     CHECK(isConnectable(PortType::Trigger, PortType::Boolean));
 
-    CHECK_FALSE(isConnectable(PortType::Scalar, PortType::Integer));
+    CHECK(isConnectable(PortType::Scalar, PortType::Integer));  // gerundet: LFO -> Auswahl oder Anzahl
+    CHECK_FALSE(isConnectable(PortType::Boolean, PortType::Integer));
+    CHECK_FALSE(isConnectable(PortType::Color, PortType::Integer));
     CHECK_FALSE(isConnectable(PortType::Text, PortType::Color));
     CHECK_FALSE(isConnectable(PortType::Image, PortType::Scalar));
     CHECK_FALSE(isConnectable(PortType::Color, PortType::Scalar));

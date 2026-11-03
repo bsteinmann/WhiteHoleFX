@@ -36,7 +36,7 @@ passen.
 | Parameter | Eingang | Auch verbindbar von |
 |---|---|---|
 | Zahl (`double`) | `Scalar` | `Integer`, `Boolean` |
-| Ganzzahl (`int64`) | `Integer` | |
+| Ganzzahl (`int64`) | `Integer` | `Scalar` (auf die nächste ganze Zahl gerundet, dann auf den Bereich begrenzt; so steuert z. B. ein LFO eine Auswahl oder eine Anzahl) |
 | Schalter (`bool`) | `Boolean` | `Trigger` |
 | Farbe | `Color` | |
 | Vec2, Vec3, Text | (keiner) | |

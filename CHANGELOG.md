@@ -1,5 +1,9 @@
 # Änderungen
 
+## 0.38.1
+
+- **Scalar → Integer:** Zahlen-Ausgänge (LFO, Math, Map …) lassen sich jetzt auch an ganzzahlige Eingänge und Auswahlfelder anschließen (türkise Rauten, z. B. Mode, Strands, Count). Der Wert wird gerundet und auf den Bereich des Parameters begrenzt; Werte, die keine Zahl sind, bleiben wirkungslos.
+
 ## 0.38.0
 
 - **Node überbrücken (Bypass):** Field-Nodes haben im Kopf einen Schalter (Kreis mit Strich), dazu Taste B und Rechtsklick → „Überbrücken“. Der Node bleibt im Graphen, reicht aber seinen ersten Field-Eingang unverändert durch (Generatoren ohne Eingang: transparent). Überbrückte Nodes erscheinen abgeblendet mit gestrichelter Durchleitung. Mehrere ausgewählte Nodes lassen sich zugleich schalten, ein Schritt Rückgängig. Gespeichert wird es als Zeile `bypass` im node-Block der Projektdatei.

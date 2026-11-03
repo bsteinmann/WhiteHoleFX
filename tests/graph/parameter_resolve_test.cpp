@@ -1,6 +1,7 @@
 // Tests der Modulation: welcher Parameter über welchen Port gesteuert wird und welcher Wert zu welchem Porttyp passt.
 #include <catch2/catch_test_macros.hpp>
 
+#include <cmath>
 #include <cstdint>
 #include <limits>
 #include <memory>
@@ -141,12 +142,19 @@ TEST_CASE("convertForParameter: Ganzzahl, Bool, Farbe und Typen ohne Modulation"
     const auto registry = makeRegistry();
     const Graph graph{registry};
 
-    SECTION("int64 mit Bereich wird begrenzt, double wird abgelehnt") {
+    SECTION("int64 mit Bereich wird begrenzt, double wird gerundet und begrenzt") {
         const ParameterDescriptor& count = param(graph, "count");  // 0..10
         CHECK(std::get<std::int64_t>(*convertForParameter(ParameterValue{std::int64_t{4}}, count)) == 4);
         CHECK(std::get<std::int64_t>(*convertForParameter(ParameterValue{std::int64_t{99}}, count)) == 10);
         CHECK(std::get<std::int64_t>(*convertForParameter(ParameterValue{std::int64_t{-5}}, count)) == 0);
-        CHECK_FALSE(convertForParameter(ParameterValue{2.0}, count).has_value());
+        CHECK(std::get<std::int64_t>(*convertForParameter(ParameterValue{2.0}, count)) == 2);
+        CHECK(std::get<std::int64_t>(*convertForParameter(ParameterValue{2.4}, count)) == 2);
+        CHECK(std::get<std::int64_t>(*convertForParameter(ParameterValue{2.5}, count)) == 3);
+        CHECK(std::get<std::int64_t>(*convertForParameter(ParameterValue{-0.4}, count)) == 0);
+        CHECK(std::get<std::int64_t>(*convertForParameter(ParameterValue{99.7}, count)) == 10);
+        CHECK_FALSE(convertForParameter(ParameterValue{std::nan("")}, count).has_value());
+        const ParameterDescriptor& big = param(graph, "big");  // ohne Grenzen
+        CHECK(std::get<std::int64_t>(*convertForParameter(ParameterValue{1.0e300}, big)) > 0);  // kein Überlauf
     }
     SECTION("int64 ohne Grenzen bleibt auch über 2^53 exakt") {
         const std::int64_t huge = (std::int64_t{1} << 60) + 1;
