@@ -166,12 +166,33 @@ int run(const project::Project& project, const nodes::BuiltinLibrary& library, c
     }
     const auto start = std::chrono::steady_clock::now();
     auto lastReport = start;
+    // Zeitmessung (Fehlersuche bei ruckelnder Ausgabe): Abstand der Frames und Rechenzeit je Frame.
+    auto lastFrameStart = start;
+    double maxGapMs = 0.0;
+    double maxCalcMs = 0.0;
+    double sumCalcMs = 0.0;
+    std::uint64_t reportFrames = 0;
     for (std::uint64_t frame = 0; !gStop.load() && (!frames || frame < *frames); ++frame) {
+        const auto frameStart = std::chrono::steady_clock::now();
+        if (frame > 0) {
+            maxGapMs = std::max(maxGapMs, std::chrono::duration<double, std::milli>(frameStart - lastFrameStart).count());
+        }
+        lastFrameStart = frameStart;
         if (const Result<void> r = session.value()->renderFrame(); !r.ok()) {
             return fail(r.error());
         }
         const auto now = std::chrono::steady_clock::now();
+        const double calcMs = std::chrono::duration<double, std::milli>(now - frameStart).count();
+        maxCalcMs = std::max(maxCalcMs, calcMs);
+        sumCalcMs += calcMs;
+        ++reportFrames;
         if (now - lastReport >= std::chrono::seconds{2}) {
+            const double seconds = std::chrono::duration<double>(now - lastReport).count();
+            std::cerr << "Takt: " << static_cast<double>(reportFrames) / seconds << " fps (Soll " << fps
+                      << "), größte Lücke " << maxGapMs << " ms (Soll " << 1000.0 / fps << "), Rechenzeit Ø "
+                      << sumCalcMs / static_cast<double>(reportFrames) << " ms, max " << maxCalcMs << " ms\n";
+            maxGapMs = maxCalcMs = sumCalcMs = 0.0;
+            reportFrames = 0;
             lastReport = now;
             printStats(*session.value(), std::cerr);
         }

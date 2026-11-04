@@ -1,5 +1,9 @@
 # Änderungen
 
+## Unveröffentlicht
+
+- CLI: alle 2 s eine Zeitmessung (echte fps, größte Lücke zwischen Frames, Rechenzeit je Frame) zur Fehlersuche bei ruckelnder Ausgabe.
+
 ## 0.46.0
 
 - **Absturz- und Stillstandsbericht für Windows.** Bisher gab es den Wächter (#26) nur unter Linux. Jetzt schreibt das Studio unter Windows bei einem Absturz (nicht abgefangene Ausnahme, `abort()`, `std::terminate`) einen Textbericht (Version, Ausnahme, Adresse als Modul+Offset, Aufrufstapel, geladene Module, GPU-Adapter, Windows-Version) und einen Minidump (`.dmp`) nach `%LOCALAPPDATA%\WhiteHoleFX\cache\crash\`. Beim nächsten Start weist ein Hinweis darauf hin, mit Knopf „Ordner öffnen“. Steht der Hauptthread länger als 5 Sekunden, entsteht ebenfalls ein Bericht (`stall-…`), das Programm läuft weiter. `--crash-test` stürzt absichtlich ab (Selbsttest der CI). Die CI legt die `.pdb` als Artefakt „Symbole“ ab, damit sich Adressen später in Funktionsnamen auflösen lassen.
