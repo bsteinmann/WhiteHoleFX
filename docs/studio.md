@@ -505,3 +505,15 @@ Aufrufstapel des Hauptthreads aus, bei einem Absturz ebenso. Die Ausgabe steht i
 Studio dort "Hauptschleife stand N ms" und "Shader übersetzt in N ms", wenn ein Schritt auffallend lange
 dauert. Mit `WHITEHOLEFX_NO_WATCHDOG=1` lässt sich der Wächter abschalten; `whitehole_studio --hang-test`
 prüft ihn (hält den Hauptthread 4 s an).
+
+## Absturzbericht
+
+Stürzt das Studio ab oder reagiert es länger als einige Sekunden nicht, schreibt es einen Bericht:
+
+- **Windows:** nach `%LOCALAPPDATA%\WhiteHoleFX\cache\crash\`: `crash-<Zeit>.txt` (Version, Ausnahme, Aufrufstapel, geladene
+  Module, GPU-Adapter, Windows-Version) und `crash-<Zeit>.dmp` (Minidump). Bei einem Stillstand heißen sie `stall-…`
+  (das Programm läuft weiter). Beim nächsten Start weist das Studio auf den Bericht hin („Ordner öffnen“). Die
+  Funktionsnamen im Bericht lassen sich mit der `.pdb` der Version auflösen; ohne sie stehen dort Modul und Offset.
+- **Linux:** der Aufrufstapel steht auf stderr und in `stack.txt` im Cache-Ordner.
+- Das Speicherabbild enthält Teile des Arbeitsspeichers. Es bleibt auf dem Rechner, bis du es selbst weitergibst.
+- Ausschalten: Umgebungsvariable `WHITEHOLEFX_NO_WATCHDOG=1`. Selbsttest: `whitehole_studio --crash-test`.

@@ -20,6 +20,7 @@
 
 #include "app_language.hpp"
 #include "main_window.hpp"
+#include "crash_notice.hpp"
 #include "stall_event_filter.hpp"
 #include "stall_watchdog.hpp"
 
@@ -44,6 +45,7 @@ int main(int argc, char** argv) {
     const QByteArray stackFile = QDir{cacheDir}.filePath(QStringLiteral("stack.txt")).toLocal8Bit();
     QTimer heartbeat;
     whitehole::studio::StallEventFilter eventTally;
+    whitehole::studio::stallSetInfo(WH_VERSION, nullptr);
     if (whitehole::studio::startStallWatchdog(stackFile.constData())) {
         app.installEventFilter(&eventTally);
         heartbeat.setInterval(100);
@@ -64,7 +66,8 @@ int main(int argc, char** argv) {
     const QCommandLineOption langOption{QStringLiteral("lang"), QStringLiteral("Sprache der Oberfläche: de, en, fr oder es"), QStringLiteral("code")};
     const QCommandLineOption ctrlNOption{QStringLiteral("ctrl-n"), QStringLiteral("gleich nach dem Start Strg+N (Neu) auslösen (Prüfung für Issue #26)")};
     const QCommandLineOption hangTestOption{QStringLiteral("hang-test"), QStringLiteral("Selbsttest des Wächters: den Hauptthread 4 s anhalten")};
-    parser.addOptions({runOption, softwareOption, grabOption, framesOption, exerciseOption, langOption, ctrlNOption, hangTestOption});
+    const QCommandLineOption crashTestOption{QStringLiteral("crash-test"), QStringLiteral("Selbsttest des Absturzberichts: stürzt absichtlich ab")};
+    parser.addOptions({runOption, softwareOption, grabOption, framesOption, exerciseOption, langOption, ctrlNOption, hangTestOption, crashTestOption});
     parser.process(app);
 
     // Sprache vor dem ersten Fenster setzen. Die Rauchtests (--grab) prüfen deutsche Texte und laufen deshalb
@@ -92,6 +95,7 @@ int main(int argc, char** argv) {
         const std::string adapter = created.value()->adapterName();
         std::fprintf(stderr, "GPU-Adapter: %s%s\n", adapter.c_str(), gpuOptions.forceFallbackAdapter ? " (Software)" : "");
         app.setProperty("whfxGpuAdapter", QString::fromUtf8(adapter.c_str()));
+        whitehole::studio::stallSetInfo(nullptr, adapter.c_str());  // für den Absturzbericht
         device = std::move(created).value();
     } else {
         note = QObject::tr("Kein GPU-Adapter: %1").arg(QString::fromUtf8(created.error().message.c_str()));
@@ -106,6 +110,9 @@ int main(int argc, char** argv) {
         window.restoreWindowLayout();  // Issue #27; --grab bleibt unabhängig von gespeicherten Einstellungen
     }
     window.show();
+    if (!grabbing && !parser.isSet(crashTestOption)) {
+        studio::showCrashNotice(&window, studio::takePendingCrashReport(cacheDir));  // Absturz beim letzten Mal?
+    }
 
     const QStringList args = parser.positionalArguments();
     const bool grab = parser.isSet(grabOption);
@@ -126,6 +133,11 @@ int main(int argc, char** argv) {
         QApplication::processEvents();
         whitehole::studio::stallForTest(4000);
         QApplication::processEvents();
+    }
+
+    if (parser.isSet(crashTestOption)) {
+        QApplication::processEvents();
+        whitehole::studio::stallCrashTest();
     }
 
     if (parser.isSet(ctrlNOption)) {

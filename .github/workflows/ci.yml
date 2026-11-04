@@ -290,12 +290,51 @@ jobs:
           $p2 = Start-Process -FilePath $exe -ArgumentList "examples/einstieg/regler.whfx","--run","--software","--frames","30","--exercise","--grab","fenster-lauf.png" -Wait -PassThru
           Write-Output "::notice title=Rauchtest mit Lauf::Exit-Code $($p2.ExitCode)"
           if (-not (Test-Path fenster-regler.png)) { exit 1 }
+      - name: Absturzbericht prüfen (absichtlicher Absturz, Bericht und Dump müssen entstehen)
+        env:
+          QT_QPA_PLATFORM: offscreen
+          PATH_QT: C:\Qt\6.8.3\msvc2022_64\bin
+        run: |
+          $env:PATH = "$env:PATH_QT;$env:PATH"
+          $exe = "./build/apps/whitehole_studio/Release/whitehole_studio.exe"
+          $p = Start-Process -FilePath $exe -ArgumentList "examples/einstieg/regler.whfx","--crash-test" -Wait -PassThru
+          Write-Output "::notice title=Absturztest::Exit-Code $($p.ExitCode)"
+          if ($p.ExitCode -eq 0) { Write-Output "::error title=Absturztest::Das Programm ist nicht abgestürzt"; exit 1 }
+          $txt = Get-ChildItem $env:LOCALAPPDATA -Recurse -Filter "crash-*.txt" -ErrorAction SilentlyContinue | Select-Object -First 1
+          $dmp = Get-ChildItem $env:LOCALAPPDATA -Recurse -Filter "crash-*.dmp" -ErrorAction SilentlyContinue | Select-Object -First 1
+          $pending = Get-ChildItem $env:LOCALAPPDATA -Recurse -Filter "pending.txt" -ErrorAction SilentlyContinue | Select-Object -First 1
+          if (-not $txt -or -not $dmp -or -not $pending) {
+            Write-Output "::error title=Absturztest::Bericht fehlt (txt=$([bool]$txt), dmp=$([bool]$dmp), pending=$([bool]$pending))"
+            exit 1
+          }
+          $report = Get-Content $txt.FullName -Raw
+          Write-Output $report
+          $short = ($report -split "`r?`n" | Select-Object -First 25) -join "%0A"
+          Write-Output "::notice title=Absturzbericht::$short"
+          if ($report -notmatch "Zugriffsverletzung" -or $report -notmatch "whitehole_studio") {
+            Write-Output "::error title=Absturztest::Bericht ohne Ausnahme oder Modul"
+            exit 1
+          }
+          if ($dmp.Length -lt 10000) { Write-Output "::error title=Absturztest::Dump zu klein ($($dmp.Length) Bytes)"; exit 1 }
+          New-Item -ItemType Directory -Force -Path absturz | Out-Null
+          Copy-Item $txt.FullName, $dmp.FullName absturz/
+          # Marke entfernen, damit spätere Läufe auf dem Runner nichts melden
+          Remove-Item $pending.FullName
+      - name: Absturzbericht bereitstellen
+        uses: actions/upload-artifact@v4
+        with:
+          name: absturz-test
+          path: absturz
+          retention-days: 7
       - name: Paket schnüren (windeployqt)
         if: github.event_name == 'workflow_dispatch'
         run: |
           $env:PATH = "C:\Qt\$env:QT_VERSION\msvc2022_64\bin;$env:PATH"
           New-Item -ItemType Directory -Force -Path paket/WhiteHoleFX | Out-Null
           Copy-Item build/apps/whitehole_studio/Release/* paket/WhiteHoleFX/ -Recurse
+          # Die .pdb gehört nicht ins Paket, sondern in ein eigenes Artefakt (löst Adressen aus Absturzberichten auf)
+          New-Item -ItemType Directory -Force -Path symbole | Out-Null
+          Move-Item paket/WhiteHoleFX/*.pdb symbole/ -ErrorAction SilentlyContinue
           Copy-Item build/apps/whitehole_cli/Release/whitehole_cli.exe paket/WhiteHoleFX/
           Copy-Item examples paket/WhiteHoleFX/examples -Recurse
           Copy-Item README.md, BUILDING.md paket/WhiteHoleFX/
@@ -307,6 +346,13 @@ jobs:
         with:
           name: WhiteHoleFX-Windows
           path: paket
+          retention-days: 14
+      - name: Symbole bereitstellen (.pdb zum Auswerten von Absturzberichten)
+        if: github.event_name == 'workflow_dispatch'
+        uses: actions/upload-artifact@v4
+        with:
+          name: WhiteHoleFX-Windows-Symbole
+          path: symbole
           retention-days: 14
       - name: Fensterbilder bereitstellen
         uses: actions/upload-artifact@v4

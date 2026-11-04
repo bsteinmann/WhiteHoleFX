@@ -51,6 +51,8 @@ jobs:
           $name = "WhiteHoleFX-${{ inputs.tag || github.ref_name }}-windows-x64"
           New-Item -ItemType Directory -Force -Path "paket/$name" | Out-Null
           Copy-Item build/apps/whitehole_studio/Release/* "paket/$name/" -Recurse
+          New-Item -ItemType Directory -Force -Path symbole | Out-Null
+          Move-Item "paket/$name/*.pdb" symbole/ -ErrorAction SilentlyContinue
           Copy-Item build/apps/whitehole_cli/Release/whitehole_cli.exe "paket/$name/"
           Copy-Item examples "paket/$name/examples" -Recurse
           Copy-Item docs "paket/$name/docs" -Recurse

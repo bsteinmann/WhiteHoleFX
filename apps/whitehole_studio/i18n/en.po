@@ -350,6 +350,10 @@ msgstr "Spacing x y z"
 msgid "Abstand zwischen den Fixtures beim Aneinanderreihen (0 = dicht an dicht)"
 msgstr "Gap between fixtures when lining them up (0 = edge to edge)"
 
+#: crash_notice.cpp:32
+msgid "Absturz beim letzten Mal"
+msgstr "Crash last time"
+
 #: node_info_texts.cpp:37
 msgid "Addiert zwei Bilder: Das Licht summiert sich wie bei zwei Scheinwerfern."
 msgstr "Adds two images: the light sums up like two spotlights."
@@ -622,6 +626,10 @@ msgstr "The cable starts on this side instead of the opposite one"
 msgid "Das Projekt wurde geändert. Änderungen verwerfen?"
 msgstr "The project has been modified. Discard changes?"
 
+#: crash_notice.cpp:33
+msgid "Das Studio ist beim letzten Mal abgestürzt."
+msgstr "The Studio crashed last time."
+
 #: test_panel.cpp:97
 msgid "Das Testbild ersetzt den Effekt in der Vorschau und, wenn „Ausgabe senden“ an ist, auch auf den LEDs. Es wird nicht im Projekt gespeichert.\n\nAchtung: Weiß und Farbe leuchten mit voller Helligkeit. Prüfe vorher, ob die Netzteile die ganze Wand auf 100 % tragen."
 msgstr "The test pattern replaces the effect in the preview and, if “Send output” is on, on the LEDs too. It is not saved in the project.\n\nCaution: white and color light up at full brightness. Check beforehand that the power supplies can carry the whole wall at 100 %."
@@ -718,7 +726,7 @@ msgstr "The change takes effect immediately after “OK”."
 msgid "Dieser Node hat keine einstellbaren Parameter."
 msgstr "This node has no adjustable parameters."
 
-#: main.cpp:100
+#: main.cpp:104
 msgid "Dieses Programm wurde ohne GPU-Backend gebaut (-DWHITEHOLEFX_WEBGPU=ON); es zeigt nur das Layout."
 msgstr "This program was built without the GPU backend (-DWHITEHOLEFX_WEBGPU=ON); it only shows the layout."
 
@@ -753,6 +761,10 @@ msgstr "Effects (2D)"
 #: live_panel.cpp:63
 msgid "Eigene Überblendzeit:"
 msgstr "Custom fade time:"
+
+#: crash_notice.cpp:34
+msgid "Ein Bericht (.txt) und ein Speicherabbild (.dmp) liegen im Ordner:\n%1\n\nBitte schicke beide Dateien an den Entwickler. Das Speicherabbild enthält Teile des Arbeitsspeichers; gib es nur weiter, wenn du damit einverstanden bist."
+msgstr "A report (.txt) and a memory dump (.dmp) are in the folder:\n%1\n\nPlease send both files to the developer. The memory dump contains parts of the working memory; only share it if you are fine with that."
 
 #: live_panel.cpp:62
 msgid "Ein Klick lädt den Look nur vor. GO (Leertaste) startet dann die Überblendung."
@@ -1030,7 +1042,7 @@ msgstr "Card for sending:"
 msgid "Kein Fixture ausgewählt."
 msgstr "No fixture selected."
 
-#: main.cpp:97
+#: main.cpp:101
 msgid "Kein GPU-Adapter: %1"
 msgstr "No GPU adapter: %1"
 
@@ -1369,6 +1381,10 @@ msgstr "Align top edges"
 #: add_fixture_dialog.cpp:153
 msgid "Ohne Häkchen beginnt das Kabel links, unten, hinten. x nach rechts, y nach oben, z zum Betrachter."
 msgstr "Unchecked, the cable starts left, bottom, back. x to the right, y up, z toward the viewer."
+
+#: crash_notice.cpp:38
+msgid "Ordner öffnen"
+msgstr "Open folder"
 
 #: main_window_actions.cpp:62
 msgid "Pakete (Art-Net, sACN, DDP) wirklich ins Netz schicken"

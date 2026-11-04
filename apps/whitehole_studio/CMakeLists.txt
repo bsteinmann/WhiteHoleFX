@@ -32,6 +32,9 @@ add_executable(whitehole_studio
     studio.qrc
     stall_event_filter.hpp
     stall_watchdog.cpp
+    stall_watchdog_win.cpp
+    crash_notice.cpp
+    crash_notice.hpp
     stall_watchdog.hpp
     main_window_settings.cpp
     main_window_stage.cpp
@@ -119,4 +122,12 @@ if(UNIX AND NOT APPLE)
 endif()
 if(WIN32)
     set_target_properties(whitehole_studio PROPERTIES WIN32_EXECUTABLE ON)
+    # Absturzbericht (stall_watchdog_win.cpp): Minidump und Aufrufstapel über dbghelp.
+    target_link_libraries(whitehole_studio PRIVATE dbghelp)
+endif()
+if(MSVC)
+    # Auch im Release eine .pdb erzeugen: Mit ihr lassen sich Adressen aus einem Absturzbericht in Funktionsnamen
+    # und Zeilen auflösen. Die .pdb gehört nicht ins Paket; die CI legt sie als eigenes Artefakt ab.
+    target_compile_options(whitehole_studio PRIVATE $<$<CONFIG:Release>:/Zi>)
+    target_link_options(whitehole_studio PRIVATE $<$<CONFIG:Release>:/DEBUG> $<$<CONFIG:Release>:/OPT:REF> $<$<CONFIG:Release>:/OPT:ICF>)
 endif()

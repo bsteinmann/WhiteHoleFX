@@ -1,5 +1,5 @@
 // stall_watchdog.cpp: siehe stall_watchdog.hpp. Nur unter Linux mit glibc wirksam (execinfo.h);
-// auf allen anderen Systemen sind die Funktionen leer.
+// unter Windows gilt stall_watchdog_win.cpp, auf allen anderen Systemen sind die Funktionen leer.
 #include "stall_watchdog.hpp"
 
 #include <algorithm>
@@ -239,13 +239,22 @@ void stallCountEvent(const char* name, int type) {
 
 void stallForTest(int milliseconds) { std::this_thread::sleep_for(std::chrono::milliseconds(milliseconds)); }
 
-#else  // kein Linux/glibc: nichts zu tun
+void stallSetInfo(const char*, const char*) {}
+
+#elif !defined(_WIN32)  // kein Linux/glibc und kein Windows: nichts zu tun
 
 bool startStallWatchdog(const char*) { return false; }
 void stallHeartbeat() {}
 void stallCountEvent(const char*, int) {}
 void stallForTest(int milliseconds) { std::this_thread::sleep_for(std::chrono::milliseconds(milliseconds)); }
+void stallSetInfo(const char*, const char*) {}
 
 #endif
+
+void stallCrashTest() {
+    volatile int* nothing = nullptr;
+    *nothing = 1;  // absichtlich: Zugriff auf Adresse 0
+    std::abort();
+}
 
 }  // namespace whitehole::studio

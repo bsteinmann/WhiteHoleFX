@@ -350,6 +350,10 @@ msgstr ""
 msgid "Abstand zwischen den Fixtures beim Aneinanderreihen (0 = dicht an dicht)"
 msgstr ""
 
+#: crash_notice.cpp:32
+msgid "Absturz beim letzten Mal"
+msgstr ""
+
 #: node_info_texts.cpp:37
 msgid "Addiert zwei Bilder: Das Licht summiert sich wie bei zwei Scheinwerfern."
 msgstr ""
@@ -622,6 +626,10 @@ msgstr ""
 msgid "Das Projekt wurde geändert. Änderungen verwerfen?"
 msgstr ""
 
+#: crash_notice.cpp:33
+msgid "Das Studio ist beim letzten Mal abgestürzt."
+msgstr ""
+
 #: test_panel.cpp:97
 msgid "Das Testbild ersetzt den Effekt in der Vorschau und, wenn „Ausgabe senden“ an ist, auch auf den LEDs. Es wird nicht im Projekt gespeichert.\n\nAchtung: Weiß und Farbe leuchten mit voller Helligkeit. Prüfe vorher, ob die Netzteile die ganze Wand auf 100 % tragen."
 msgstr ""
@@ -718,7 +726,7 @@ msgstr ""
 msgid "Dieser Node hat keine einstellbaren Parameter."
 msgstr ""
 
-#: main.cpp:100
+#: main.cpp:104
 msgid "Dieses Programm wurde ohne GPU-Backend gebaut (-DWHITEHOLEFX_WEBGPU=ON); es zeigt nur das Layout."
 msgstr ""
 
@@ -752,6 +760,10 @@ msgstr ""
 
 #: live_panel.cpp:63
 msgid "Eigene Überblendzeit:"
+msgstr ""
+
+#: crash_notice.cpp:34
+msgid "Ein Bericht (.txt) und ein Speicherabbild (.dmp) liegen im Ordner:\n%1\n\nBitte schicke beide Dateien an den Entwickler. Das Speicherabbild enthält Teile des Arbeitsspeichers; gib es nur weiter, wenn du damit einverstanden bist."
 msgstr ""
 
 #: live_panel.cpp:62
@@ -1030,7 +1042,7 @@ msgstr ""
 msgid "Kein Fixture ausgewählt."
 msgstr ""
 
-#: main.cpp:97
+#: main.cpp:101
 msgid "Kein GPU-Adapter: %1"
 msgstr ""
 
@@ -1368,6 +1380,10 @@ msgstr ""
 
 #: add_fixture_dialog.cpp:153
 msgid "Ohne Häkchen beginnt das Kabel links, unten, hinten. x nach rechts, y nach oben, z zum Betrachter."
+msgstr ""
+
+#: crash_notice.cpp:38
+msgid "Ordner öffnen"
 msgstr ""
 
 #: main_window_actions.cpp:62

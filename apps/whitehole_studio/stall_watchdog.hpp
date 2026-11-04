@@ -1,12 +1,13 @@
 // stall_watchdog.hpp: Wächter gegen "das Studio friert ein" und gegen Abstürze (Issue #26).
 //
 // Warum es das gibt: Ein Freeze oder Absturz lässt sich oft nicht unter gdb nachstellen, weil schon das
-// Debuggen den Ablauf ändert. Der Wächter läuft deshalb immer mit (nur Linux, sonst leer): Ein Nebenthread
+// Debuggen den Ablauf ändert. Der Wächter läuft deshalb immer mit (Linux und Windows): Ein Nebenthread
 // prüft, ob der Hauptthread regelmäßig `stallHeartbeat()` aufruft. Bleibt der Herzschlag länger als zwei
 // Sekunden aus, schickt er dem Hauptthread ein Signal, dessen Handler den Aufrufstapel ausgibt - so sieht man,
 // wo das Programm steht. Dieselbe Ausgabe gibt es bei SIGSEGV, SIGABRT, SIGBUS, SIGFPE und SIGILL.
 // Ausgegeben wird auf stderr und zusätzlich in eine Datei (Pfad beim Start übergeben), damit es auch ohne
 // Terminal etwas zu lesen gibt. Abschalten: Umgebungsvariable WHITEHOLEFX_NO_WATCHDOG=1.
+// Unter Windows setzt stall_watchdog_win.cpp dieselbe Schnittstelle um (Textbericht und Minidump in <Cache>/crash/).
 #pragma once
 
 namespace whitehole::studio {
@@ -23,6 +24,13 @@ void stallHeartbeat();
 /// welche (Klasse, Typ)-Paare in der letzten Sekunde am häufigsten vorkamen - eine Ereignisschleife (etwa
 /// Scrollleisten, die sich gegenseitig ein- und ausblenden) fällt so sofort auf. Thread-sicher, ohne Sperre.
 void stallCountEvent(const char* name, int type);
+
+/// Teilt dem Wächter Version und GPU-Adapter für den Absturzbericht mit (nur Windows wertet es aus). Darf mehrfach
+/// aufgerufen werden, nullptr lässt den bisherigen Wert.
+void stallSetInfo(const char* version, const char* gpuAdapter);
+
+/// Nur für den Selbsttest (--crash-test): stürzt absichtlich ab (Zugriff auf Adresse 0).
+[[noreturn]] void stallCrashTest();
 
 /// Nur für den Selbsttest (--hang-test): blockiert den aufrufenden Thread für `milliseconds`.
 void stallForTest(int milliseconds);

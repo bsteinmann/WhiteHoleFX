@@ -350,6 +350,10 @@ msgstr "Écart x y z"
 msgid "Abstand zwischen den Fixtures beim Aneinanderreihen (0 = dicht an dicht)"
 msgstr "Écart entre les fixtures lors de l'alignement (0 = bord à bord)"
 
+#: crash_notice.cpp:32
+msgid "Absturz beim letzten Mal"
+msgstr "Plantage la dernière fois"
+
 #: node_info_texts.cpp:37
 msgid "Addiert zwei Bilder: Das Licht summiert sich wie bei zwei Scheinwerfern."
 msgstr "Adds two images: the light sums up like two spotlights."
@@ -622,6 +626,10 @@ msgstr "Le câble commence de ce côté plutôt que du côté opposé"
 msgid "Das Projekt wurde geändert. Änderungen verwerfen?"
 msgstr "Le projet a été modifié. Abandonner les modifications ?"
 
+#: crash_notice.cpp:33
+msgid "Das Studio ist beim letzten Mal abgestürzt."
+msgstr "Le Studio a planté la dernière fois."
+
 #: test_panel.cpp:97
 msgid "Das Testbild ersetzt den Effekt in der Vorschau und, wenn „Ausgabe senden“ an ist, auch auf den LEDs. Es wird nicht im Projekt gespeichert.\n\nAchtung: Weiß und Farbe leuchten mit voller Helligkeit. Prüfe vorher, ob die Netzteile die ganze Wand auf 100 % tragen."
 msgstr "La mire remplace l'effet dans l'aperçu et, si « Envoyer la sortie » est activé, aussi sur les LED. Elle n'est pas enregistrée dans le projet.\n\nAttention : le blanc et la couleur s'allument à pleine luminosité. Vérifiez d'abord que les alimentations supportent tout le mur à 100 %."
@@ -718,7 +726,7 @@ msgstr "La modification prend effet immédiatement après « OK »."
 msgid "Dieser Node hat keine einstellbaren Parameter."
 msgstr "Ce nœud n'a pas de paramètres réglables."
 
-#: main.cpp:100
+#: main.cpp:104
 msgid "Dieses Programm wurde ohne GPU-Backend gebaut (-DWHITEHOLEFX_WEBGPU=ON); es zeigt nur das Layout."
 msgstr "Ce programme a été compilé sans le backend GPU (-DWHITEHOLEFX_WEBGPU=ON) ; il n'affiche que la disposition."
 
@@ -753,6 +761,10 @@ msgstr "Effets (2D)"
 #: live_panel.cpp:63
 msgid "Eigene Überblendzeit:"
 msgstr "Durée de fondu personnalisée :"
+
+#: crash_notice.cpp:34
+msgid "Ein Bericht (.txt) und ein Speicherabbild (.dmp) liegen im Ordner:\n%1\n\nBitte schicke beide Dateien an den Entwickler. Das Speicherabbild enthält Teile des Arbeitsspeichers; gib es nur weiter, wenn du damit einverstanden bist."
+msgstr "Un rapport (.txt) et un vidage mémoire (.dmp) se trouvent dans le dossier :\n%1\n\nEnvoyez les deux fichiers au développeur. Le vidage contient une partie de la mémoire de travail ; ne le partagez que si cela vous convient."
 
 #: live_panel.cpp:62
 msgid "Ein Klick lädt den Look nur vor. GO (Leertaste) startet dann die Überblendung."
@@ -1030,7 +1042,7 @@ msgstr "Carte pour l'envoi :"
 msgid "Kein Fixture ausgewählt."
 msgstr "Aucun fixture sélectionné."
 
-#: main.cpp:97
+#: main.cpp:101
 msgid "Kein GPU-Adapter: %1"
 msgstr "Aucun adaptateur GPU : %1"
 
@@ -1369,6 +1381,10 @@ msgstr "Aligner les bords supérieurs"
 #: add_fixture_dialog.cpp:153
 msgid "Ohne Häkchen beginnt das Kabel links, unten, hinten. x nach rechts, y nach oben, z zum Betrachter."
 msgstr "Sans coche, le câble commence à gauche, en bas, à l'arrière. x vers la droite, y vers le haut, z vers l'observateur."
+
+#: crash_notice.cpp:38
+msgid "Ordner öffnen"
+msgstr "Ouvrir le dossier"
 
 #: main_window_actions.cpp:62
 msgid "Pakete (Art-Net, sACN, DDP) wirklich ins Netz schicken"

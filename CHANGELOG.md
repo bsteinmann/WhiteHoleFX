@@ -1,5 +1,9 @@
 # Änderungen
 
+## 0.46.0
+
+- **Absturz- und Stillstandsbericht für Windows.** Bisher gab es den Wächter (#26) nur unter Linux. Jetzt schreibt das Studio unter Windows bei einem Absturz (nicht abgefangene Ausnahme, `abort()`, `std::terminate`) einen Textbericht (Version, Ausnahme, Adresse als Modul+Offset, Aufrufstapel, geladene Module, GPU-Adapter, Windows-Version) und einen Minidump (`.dmp`) nach `%LOCALAPPDATA%\WhiteHoleFX\cache\crash\`. Beim nächsten Start weist ein Hinweis darauf hin, mit Knopf „Ordner öffnen“. Steht der Hauptthread länger als 5 Sekunden, entsteht ebenfalls ein Bericht (`stall-…`), das Programm läuft weiter. `--crash-test` stürzt absichtlich ab (Selbsttest der CI). Die CI legt die `.pdb` als Artefakt „Symbole“ ab, damit sich Adressen später in Funktionsnamen auflösen lassen.
+
 ## 0.45.0
 
 - **Audio: Kick, Snare und Hi-Hat getrennt (#121).** Die Analyse hat jetzt je Instrument einen Erkenner (`wh_audio/onset_detector.hpp`): eigener Frequenzbereich, relative Schwelle (auch leise Schläge werden erkannt), Auslösen schon beim Anstieg. Der neue Node **Kick / Snare / Hat** liefert Treffer, Pulse, Stärke und „Age“ (Sekunden seit dem Treffer).
