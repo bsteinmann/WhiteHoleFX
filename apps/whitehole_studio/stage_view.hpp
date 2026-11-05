@@ -25,12 +25,13 @@
 #include "whitehole/preview/wiring.hpp"
 #include "whitehole/runtime/player.hpp"
 
-namespace whitehole::studio {
-
-class PreviewWidget;
 class QCheckBox;
 class QLabel;
 class QPainter;
+
+namespace whitehole::studio {
+
+class PreviewWidget;
 
 class StageView : public QWidget {
     Q_OBJECT
