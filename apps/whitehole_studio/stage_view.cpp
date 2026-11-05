@@ -290,10 +290,10 @@ QString StageView::exercise() {
     if (wires_.empty() || wires_.front().dots.empty()) {
         return QStringLiteral("Bühnenansicht: kein Kabelweg berechnet");
     }
-    const preview::WireDot first = wires_.front().dots.front();
+    const preview::WireDot startDot = wires_.front().dots.front();
     const double sx = static_cast<double>(view_->width()) / imageOptions_.width;
     const double sy = static_cast<double>(view_->height()) / imageOptions_.height;
-    if (!pickAt(QPointF{first.x * sx, first.y * sy}) || !picked_ || infoText().isEmpty() || !infoText().contains(QStringLiteral("LED"))) {
+    if (!pickAt(QPointF{startDot.x * sx, startDot.y * sy}) || !picked_ || infoText().isEmpty() || !infoText().contains(QStringLiteral("LED"))) {
         return QStringLiteral("Bühnenansicht: der Klick auf eine LED zeigt keine Adresse");
     }
     setWiringVisible(false);
