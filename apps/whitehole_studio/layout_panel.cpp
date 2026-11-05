@@ -5,6 +5,7 @@
 #include <QGridLayout>
 #include <QHBoxLayout>
 #include <QLabel>
+#include <QMenu>
 #include <QPushButton>
 #include <QScrollArea>
 #include <QSignalBlocker>
@@ -42,8 +43,14 @@ LayoutPanel::LayoutPanel(runtime::Player& player, QWidget* parent) : QTabWidget{
     addButton->setToolTip(tr("Matrix, Strip oder 3D-Gitter mit Größe, Lage, Verkabelung und Patch anlegen"));
     auto* importButton = new QPushButton{tr("Import …")};
     importButton->setToolTip(tr("LED-Positionen aus einer CSV- oder JSON-Datei als Punktwolke laden"));
+    auto* libraryButton = new QPushButton{tr("Vorlagen")};
+    libraryButton->setToolTip(tr("Eigene Fixture-Bibliothek: Fixtures als Vorlage speichern und wieder anlegen"));
+    auto* libraryMenu = new QMenu{libraryButton};
+    libraryButton->setMenu(libraryMenu);
+    connect(libraryMenu, &QMenu::aboutToShow, this, [this, libraryMenu]() { fillLibraryMenu(libraryMenu); });
     auto* removeButton = new QPushButton{tr("Entfernen")};
     buttons->addWidget(addButton);
+    buttons->addWidget(libraryButton);
     buttons->addWidget(importButton);
     buttons->addWidget(removeButton);
     pageLayout->addLayout(buttons);

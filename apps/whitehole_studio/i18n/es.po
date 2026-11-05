@@ -74,7 +74,7 @@ msgstr " cambios/s"
 msgid " s"
 msgstr " s"
 
-#: layout_panel.cpp:244
+#: layout_panel.cpp:251
 msgid "%1  (%2 LEDs)"
 msgstr "%1  (%2 LED)"
 
@@ -334,7 +334,7 @@ msgstr "<b>Strip</b>"
 msgid "<b>WhiteHoleFX Studio</b> %1<br><br>Steuerung für LED-Matrizen, Cubes und Pixel mit einem Node-Editor.<br>Lizenz: PolyForm Shield 1.0.0<br><br><a href=\"%2\">%2</a>"
 msgstr "<b>WhiteHoleFX Studio</b> %1<br><br>Control de matrices LED, cubos y píxeles con un editor de nodos.<br>Licencia: PolyForm Shield 1.0.0<br><br><a href=\"%2\">%2</a>"
 
-#: layout_panel.cpp:171
+#: layout_panel.cpp:178
 msgid "Abstand"
 msgstr "Separación"
 
@@ -346,7 +346,7 @@ msgstr "Separación x y"
 msgid "Abstand x y z"
 msgstr "Separación x y z"
 
-#: layout_panel.cpp:170
+#: layout_panel.cpp:177
 msgid "Abstand zwischen den Fixtures beim Aneinanderreihen (0 = dicht an dicht)"
 msgstr "Separación entre fixtures al alinearlas (0 = borde con borde)"
 
@@ -393,6 +393,10 @@ msgstr "Guardar como preajuste"
 #: node_editor_menu.cpp:67
 msgid "Als Preset speichern …"
 msgstr "Guardar como preajuste …"
+
+#: layout_panel_library.cpp:64
+msgid "Als Vorlage speichern"
+msgstr "Guardar como plantilla"
 
 #: main_window_actions.cpp:86
 msgid "An: Ein nicht angeschlossener Eingang von Blend, Mix, Crossfade, Add oder Mask lässt die LEDs ausgehen. Aus: Er gilt als durchsichtiges Schwarz."
@@ -482,7 +486,7 @@ msgstr "LED apagados &tenues"
 msgid "Aus-LEDs &unsichtbar"
 msgstr "LED apagados &ocultos"
 
-#: layout_panel.cpp:67
+#: layout_panel.cpp:74
 msgid "Ausgabe"
 msgstr "Salida"
 
@@ -750,6 +754,10 @@ msgstr "Plane wave: stripes moving in one direction (frequency, speed, two color
 msgid "Effekte (2D)"
 msgstr "Efectos (2D)"
 
+#: layout_panel.cpp:47
+msgid "Eigene Fixture-Bibliothek: Fixtures als Vorlage speichern und wieder anlegen"
+msgstr "Tu biblioteca de fixtures: guarda fixtures como plantillas y vuelve a añadirlas"
+
 #: live_panel.cpp:63
 msgid "Eigene Überblendzeit:"
 msgstr "Tiempo de fundido propio:"
@@ -818,7 +826,7 @@ msgstr "Primeros pasos"
 msgid "Ende x y z"
 msgstr "Fin x y z"
 
-#: layout_panel.cpp:45
+#: layout_panel.cpp:51
 msgid "Entfernen"
 msgstr "Quitar"
 
@@ -826,7 +834,7 @@ msgstr "Quitar"
 msgid "Erkennt den Takt der Musik und liefert Beat-Impuls, Pulse (klingt ab), Phase und Tempo (BPM). Das Tempo lässt sich auch fest vorgeben."
 msgstr "Detects the beat of the music and outputs a beat trigger, a decaying pulse, phase and tempo (BPM). The tempo can also be fixed by hand."
 
-#: layout_panel.cpp:180
+#: layout_panel.cpp:187
 msgid "Erst Fixtures wählen (Strg oder Umschalt halten für mehrere)"
 msgstr "Primero selecciona fixtures (mantén Ctrl o Mayús para varios)"
 
@@ -894,7 +902,7 @@ msgstr "&Añadir fixture …"
 msgid "Fixture hinzufügen"
 msgstr "Añadir fixture"
 
-#: layout_panel.cpp:61
+#: layout_panel.cpp:68
 msgid "Fixtures"
 msgstr "Fixtures"
 
@@ -970,13 +978,17 @@ msgstr "Overall loudness of the audio input as level and peak, linear or in dB, 
 msgid "Gespeichert: %1"
 msgstr "Guardado: %1"
 
-#: layout_panel.cpp:154
+#: layout_panel.cpp:161
 msgid "Gewählte Fixtures senkrecht aufeinanderreihen (das untere bleibt stehen)"
 msgstr "Apilar los fixtures seleccionados en vertical (el más bajo se queda)"
 
-#: layout_panel.cpp:152
+#: layout_panel.cpp:159
 msgid "Gewählte Fixtures waagrecht aneinanderreihen (das linke bleibt stehen)"
 msgstr "Colocar los fixtures seleccionados uno junto a otro (el de la izquierda se queda)"
+
+#: layout_panel_library.cpp:32
+msgid "Gewähltes Fixture als Vorlage speichern …"
+msgstr "Guardar el fixture elegido como plantilla …"
 
 #: node_info_texts.cpp:155
 msgid "Glättet einen Wert: Er folgt dem Eingang mit einer Zeitkonstante, statt zu springen."
@@ -998,7 +1010,7 @@ msgstr "Brillo"
 msgid "Hinzufügen"
 msgstr "Añadir"
 
-#: layout_panel.cpp:41
+#: layout_panel.cpp:42
 msgid "Hinzufügen …"
 msgstr "Añadir …"
 
@@ -1006,7 +1018,7 @@ msgstr "Añadir …"
 msgid "Hüllkurve (ADSR): Aus einem Schalter wird ein weicher Verlauf mit Attack, Decay, Sustain und Release. Auch als Einzelimpuls."
 msgstr "Envelope (ADSR): turns a switch into a smooth curve with attack, decay, sustain and release. Also as a one-shot."
 
-#: layout_panel.cpp:43
+#: layout_panel.cpp:44
 msgid "Import …"
 msgstr "Importar …"
 
@@ -1058,7 +1070,7 @@ msgstr "No se encontraron dispositivos de captura. Conecta una interfaz de audio
 msgid "Kopieren\tStrg+C"
 msgstr "Copiar\tCtrl+C"
 
-#: layout_panel.cpp:44
+#: layout_panel.cpp:45
 msgid "LED-Positionen aus einer CSV- oder JSON-Datei als Punktwolke laden"
 msgstr "Cargar posiciones de LED desde un archivo CSV o JSON como nube de puntos"
 
@@ -1130,7 +1142,7 @@ msgstr "Linear gradient from color A to color B at an adjustable angle."
 msgid "Linien als Sinuswellen, die sich bewegen (Anzahl, Amplitude, Frequenz, Tempo, Phasenversatz)."
 msgstr "Moving sine-wave lines (count, amplitude, frequency, speed, phase spread)."
 
-#: layout_panel.cpp:146
+#: layout_panel.cpp:153
 msgid "Linke Kanten ausrichten"
 msgstr "Alinear bordes izquierdos"
 
@@ -1238,7 +1250,7 @@ msgstr "Matriz (superficie)"
 msgid "Matrix, Strip oder 3D-Gitter mit Größe x y z, Lage, Verkabelung und Patch anlegen"
 msgstr "Crear una matriz, un strip o una cuadrícula 3D con tamaño x y z, posición, cableado y patch"
 
-#: layout_panel.cpp:42
+#: layout_panel.cpp:43
 msgid "Matrix, Strip oder 3D-Gitter mit Größe, Lage, Verkabelung und Patch anlegen"
 msgstr "Crear una matriz, un strip o una cuadrícula 3D con tamaño, posición, cableado y patch"
 
@@ -1266,6 +1278,10 @@ msgstr "Modo"
 msgid "Name"
 msgstr "Nombre"
 
+#: layout_panel_library.cpp:64
+msgid "Name der Vorlage"
+msgstr "Nombre de la plantilla"
+
 #: look_panel.cpp:239
 msgid "Name des Looks:"
 msgstr "Nombre del look:"
@@ -1274,7 +1290,7 @@ msgstr "Nombre del look:"
 msgid "Name des Presets:"
 msgstr "Nombre del preajuste:"
 
-#: layout_panel.cpp:152
+#: layout_panel.cpp:159
 msgid "Nebeneinander ↔"
 msgstr "Uno junto a otro ↔"
 
@@ -1317,6 +1333,10 @@ msgstr "Proyecto nuevo. Guardar con Ctrl+S."
 #: add_fixture_dialog.cpp:161
 msgid "Nicht senden"
 msgstr "No enviar"
+
+#: layout_panel_library.cpp:38
+msgid "Noch keine Vorlagen"
+msgstr "Aún no hay plantillas"
 
 #: node_editor_menu.cpp:29
 msgid "Node hinzufügen"
@@ -1370,7 +1390,7 @@ msgstr "Disparar el siguiente cue (barra espaciadora)"
 msgid "Oben"
 msgstr "Superior"
 
-#: layout_panel.cpp:149
+#: layout_panel.cpp:156
 msgid "Obere Kanten ausrichten"
 msgstr "Alinear bordes superiores"
 
@@ -1502,11 +1522,11 @@ msgstr "Converts a value from one range to another (In min/max to Out min/max), 
 msgid "Rechnet mit zwei Zahlen: Addieren, Subtrahieren, Multiplizieren, Dividieren, Minimum, Maximum und weitere."
 msgstr "Calculates with two numbers: add, subtract, multiply, divide, minimum, maximum and more."
 
-#: layout_panel.cpp:148
+#: layout_panel.cpp:155
 msgid "Rechte Kanten ausrichten"
 msgstr "Alinear bordes derechos"
 
-#: layout_panel.cpp:148
+#: layout_panel.cpp:155
 msgid "Rechts ⇥"
 msgstr "Derecha ⇥"
 
@@ -1542,7 +1562,7 @@ msgstr "Lateral"
 msgid "Seitenverhältnis halten (KeepAspect)"
 msgstr "Mantener proporción (KeepAspect)"
 
-#: layout_panel.cpp:150
+#: layout_panel.cpp:157
 msgid "Senkrecht mittig ausrichten"
 msgstr "Centrar verticalmente"
 
@@ -1722,11 +1742,11 @@ msgstr "Universo"
 msgid "Universe %1 ab Kanal 1"
 msgstr "Universo %1 desde el canal 1"
 
-#: layout_panel.cpp:151
+#: layout_panel.cpp:158
 msgid "Unten ⤓"
 msgstr "Abajo ⤓"
 
-#: layout_panel.cpp:151
+#: layout_panel.cpp:158
 msgid "Untere Kanten ausrichten"
 msgstr "Alinear bordes inferiores"
 
@@ -1754,6 +1774,14 @@ msgstr "Coarsens the image into a grid of cells (Cells X/Y/Z), like big pixels."
 msgid "Verschiebt das Bild in x, y und z. Mit „Wrap around“ kommt, was hinten hinausläuft, vorne wieder herein."
 msgstr "Shifts the image in x, y and z. With \"Wrap around\" what leaves on one side re-enters on the other."
 
+#: layout_panel_library.cpp:44
+msgid "Vorlage löschen"
+msgstr "Eliminar plantilla"
+
+#: layout_panel.cpp:46
+msgid "Vorlagen"
+msgstr "Plantillas"
+
 #: settings_dialog.cpp:145
 msgid "WAV-Datei in Schleife:"
 msgstr "Archivo WAV en bucle:"
@@ -1766,7 +1794,7 @@ msgstr "Elegir archivo WAV"
 msgid "WAV-Dateien (*.wav)"
 msgstr "Archivos WAV (*.wav)"
 
-#: layout_panel.cpp:147
+#: layout_panel.cpp:154
 msgid "Waagrecht mittig ausrichten"
 msgstr "Centrar horizontalmente"
 
@@ -1825,6 +1853,10 @@ msgstr "Vortex: swirls the image around a center, strongest in the middle and fa
 #: parameter_panel.cpp:107
 msgid "Wird durch eine Verbindung im Graphen gesteuert."
 msgstr "Controlado por una conexión en el grafo."
+
+#: layout_panel_library.cpp:83
+msgid "Wähle zuerst ein Fixture in der Liste."
+msgstr "Elige primero un fixture de la lista."
 
 #: settings_dialog.cpp:148
 msgid "Wählen …"
@@ -1906,7 +1938,7 @@ msgstr "Randomly lighting pixels, blinking or fading, between two colors."
 msgid "Zufällige Zellen, die auf- und abblenden (Fading Pixels), zwischen zwei Farben."
 msgstr "Random cells that fade in and out, between two colors."
 
-#: layout_panel.cpp:196
+#: layout_panel.cpp:203
 msgid "Zum Aneinanderreihen mindestens zwei Fixtures wählen"
 msgstr "Selecciona al menos dos fixtures para alinear"
 
@@ -2038,7 +2070,7 @@ msgstr "Puentear\tB"
 msgid "Überbrückung aufheben\tB"
 msgstr "Quitar el puenteo\tB"
 
-#: layout_panel.cpp:154
+#: layout_panel.cpp:161
 msgid "Übereinander ↕"
 msgstr "Apilados ↕"
 
@@ -2046,15 +2078,15 @@ msgstr "Apilados ↕"
 msgid "…"
 msgstr "…"
 
-#: layout_panel.cpp:147
+#: layout_panel.cpp:154
 msgid "↔ Mitte"
 msgstr "↔ Centro"
 
-#: layout_panel.cpp:150
+#: layout_panel.cpp:157
 msgid "↕ Mitte"
 msgstr "↕ Centro"
 
-#: layout_panel.cpp:146
+#: layout_panel.cpp:153
 msgid "⇤ Links"
 msgstr "⇤ Izquierda"
 
@@ -2070,6 +2102,6 @@ msgstr "▼ bajar"
 msgid "⚠ %1"
 msgstr "⚠ %1"
 
-#: layout_panel.cpp:149
+#: layout_panel.cpp:156
 msgid "⤒ Oben"
 msgstr "⤒ Arriba"

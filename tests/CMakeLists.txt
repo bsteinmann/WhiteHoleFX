@@ -79,6 +79,7 @@ add_executable(wh_tests
     preview/view3d_test.cpp
     project/project_test.cpp
     project/cue_test.cpp
+    project/fixture_template_test.cpp
     fuzz/parser_fuzz_test.cpp
     fuzz/player_ops_fuzz_test.cpp
     i18n/po_catalog_test.cpp

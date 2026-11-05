@@ -17,11 +17,13 @@
 #include "output_form.hpp"
 #include "stage_view.hpp"
 #include "whitehole/mapping/point_import.hpp"
+#include "whitehole/project/fixture_template.hpp"
 #include "whitehole/runtime/player.hpp"
 
 class QCheckBox;
 class QComboBox;
 class QDoubleSpinBox;
+class QMenu;
 
 namespace whitehole::studio {
 
@@ -53,6 +55,12 @@ public:
     /// Wie importPoints, aber mit gegebener Datei und ohne Dialog. Wahr, wenn ein Fixture entstanden ist.
     bool importPointsFile(const QString& path, const mapping::ImportOptions& options);
     void removeSelected();
+
+    /// Fixture-Bibliothek: füllt das Menü (Speichern, Vorlagen zum Anlegen, Löschen), speichert das gewählte
+    /// Fixture als Vorlage und legt ein Fixture aus einer Vorlage an.
+    void fillLibraryMenu(QMenu* menu);
+    void saveAsTemplate();
+    void addFromTemplate(const project::FixtureTemplate& tpl);
 
     /// Alle in der Liste gewählten Fixtures (in Listenreihenfolge).
     [[nodiscard]] std::vector<mapping::FixtureId> selectedIds() const;

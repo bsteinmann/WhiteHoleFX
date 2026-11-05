@@ -74,7 +74,7 @@ msgstr ""
 msgid " s"
 msgstr ""
 
-#: layout_panel.cpp:244
+#: layout_panel.cpp:251
 msgid "%1  (%2 LEDs)"
 msgstr ""
 
@@ -334,7 +334,7 @@ msgstr ""
 msgid "<b>WhiteHoleFX Studio</b> %1<br><br>Steuerung für LED-Matrizen, Cubes und Pixel mit einem Node-Editor.<br>Lizenz: PolyForm Shield 1.0.0<br><br><a href=\"%2\">%2</a>"
 msgstr ""
 
-#: layout_panel.cpp:171
+#: layout_panel.cpp:178
 msgid "Abstand"
 msgstr ""
 
@@ -346,7 +346,7 @@ msgstr ""
 msgid "Abstand x y z"
 msgstr ""
 
-#: layout_panel.cpp:170
+#: layout_panel.cpp:177
 msgid "Abstand zwischen den Fixtures beim Aneinanderreihen (0 = dicht an dicht)"
 msgstr ""
 
@@ -392,6 +392,10 @@ msgstr ""
 
 #: node_editor_menu.cpp:67
 msgid "Als Preset speichern …"
+msgstr ""
+
+#: layout_panel_library.cpp:64
+msgid "Als Vorlage speichern"
 msgstr ""
 
 #: main_window_actions.cpp:86
@@ -482,7 +486,7 @@ msgstr ""
 msgid "Aus-LEDs &unsichtbar"
 msgstr ""
 
-#: layout_panel.cpp:67
+#: layout_panel.cpp:74
 msgid "Ausgabe"
 msgstr ""
 
@@ -750,6 +754,10 @@ msgstr ""
 msgid "Effekte (2D)"
 msgstr ""
 
+#: layout_panel.cpp:47
+msgid "Eigene Fixture-Bibliothek: Fixtures als Vorlage speichern und wieder anlegen"
+msgstr ""
+
 #: live_panel.cpp:63
 msgid "Eigene Überblendzeit:"
 msgstr ""
@@ -818,7 +826,7 @@ msgstr ""
 msgid "Ende x y z"
 msgstr ""
 
-#: layout_panel.cpp:45
+#: layout_panel.cpp:51
 msgid "Entfernen"
 msgstr ""
 
@@ -826,7 +834,7 @@ msgstr ""
 msgid "Erkennt den Takt der Musik und liefert Beat-Impuls, Pulse (klingt ab), Phase und Tempo (BPM). Das Tempo lässt sich auch fest vorgeben."
 msgstr ""
 
-#: layout_panel.cpp:180
+#: layout_panel.cpp:187
 msgid "Erst Fixtures wählen (Strg oder Umschalt halten für mehrere)"
 msgstr ""
 
@@ -894,7 +902,7 @@ msgstr ""
 msgid "Fixture hinzufügen"
 msgstr ""
 
-#: layout_panel.cpp:61
+#: layout_panel.cpp:68
 msgid "Fixtures"
 msgstr ""
 
@@ -970,12 +978,16 @@ msgstr ""
 msgid "Gespeichert: %1"
 msgstr ""
 
-#: layout_panel.cpp:154
+#: layout_panel.cpp:161
 msgid "Gewählte Fixtures senkrecht aufeinanderreihen (das untere bleibt stehen)"
 msgstr ""
 
-#: layout_panel.cpp:152
+#: layout_panel.cpp:159
 msgid "Gewählte Fixtures waagrecht aneinanderreihen (das linke bleibt stehen)"
+msgstr ""
+
+#: layout_panel_library.cpp:32
+msgid "Gewähltes Fixture als Vorlage speichern …"
 msgstr ""
 
 #: node_info_texts.cpp:155
@@ -998,7 +1010,7 @@ msgstr ""
 msgid "Hinzufügen"
 msgstr ""
 
-#: layout_panel.cpp:41
+#: layout_panel.cpp:42
 msgid "Hinzufügen …"
 msgstr ""
 
@@ -1006,7 +1018,7 @@ msgstr ""
 msgid "Hüllkurve (ADSR): Aus einem Schalter wird ein weicher Verlauf mit Attack, Decay, Sustain und Release. Auch als Einzelimpuls."
 msgstr ""
 
-#: layout_panel.cpp:43
+#: layout_panel.cpp:44
 msgid "Import …"
 msgstr ""
 
@@ -1058,7 +1070,7 @@ msgstr ""
 msgid "Kopieren\tStrg+C"
 msgstr ""
 
-#: layout_panel.cpp:44
+#: layout_panel.cpp:45
 msgid "LED-Positionen aus einer CSV- oder JSON-Datei als Punktwolke laden"
 msgstr ""
 
@@ -1130,7 +1142,7 @@ msgstr ""
 msgid "Linien als Sinuswellen, die sich bewegen (Anzahl, Amplitude, Frequenz, Tempo, Phasenversatz)."
 msgstr ""
 
-#: layout_panel.cpp:146
+#: layout_panel.cpp:153
 msgid "Linke Kanten ausrichten"
 msgstr ""
 
@@ -1238,7 +1250,7 @@ msgstr ""
 msgid "Matrix, Strip oder 3D-Gitter mit Größe x y z, Lage, Verkabelung und Patch anlegen"
 msgstr ""
 
-#: layout_panel.cpp:42
+#: layout_panel.cpp:43
 msgid "Matrix, Strip oder 3D-Gitter mit Größe, Lage, Verkabelung und Patch anlegen"
 msgstr ""
 
@@ -1266,6 +1278,10 @@ msgstr ""
 msgid "Name"
 msgstr ""
 
+#: layout_panel_library.cpp:64
+msgid "Name der Vorlage"
+msgstr ""
+
 #: look_panel.cpp:239
 msgid "Name des Looks:"
 msgstr ""
@@ -1274,7 +1290,7 @@ msgstr ""
 msgid "Name des Presets:"
 msgstr ""
 
-#: layout_panel.cpp:152
+#: layout_panel.cpp:159
 msgid "Nebeneinander ↔"
 msgstr ""
 
@@ -1316,6 +1332,10 @@ msgstr ""
 
 #: add_fixture_dialog.cpp:161
 msgid "Nicht senden"
+msgstr ""
+
+#: layout_panel_library.cpp:38
+msgid "Noch keine Vorlagen"
 msgstr ""
 
 #: node_editor_menu.cpp:29
@@ -1370,7 +1390,7 @@ msgstr ""
 msgid "Oben"
 msgstr ""
 
-#: layout_panel.cpp:149
+#: layout_panel.cpp:156
 msgid "Obere Kanten ausrichten"
 msgstr ""
 
@@ -1502,11 +1522,11 @@ msgstr ""
 msgid "Rechnet mit zwei Zahlen: Addieren, Subtrahieren, Multiplizieren, Dividieren, Minimum, Maximum und weitere."
 msgstr ""
 
-#: layout_panel.cpp:148
+#: layout_panel.cpp:155
 msgid "Rechte Kanten ausrichten"
 msgstr ""
 
-#: layout_panel.cpp:148
+#: layout_panel.cpp:155
 msgid "Rechts ⇥"
 msgstr ""
 
@@ -1542,7 +1562,7 @@ msgstr ""
 msgid "Seitenverhältnis halten (KeepAspect)"
 msgstr ""
 
-#: layout_panel.cpp:150
+#: layout_panel.cpp:157
 msgid "Senkrecht mittig ausrichten"
 msgstr ""
 
@@ -1722,11 +1742,11 @@ msgstr ""
 msgid "Universe %1 ab Kanal 1"
 msgstr ""
 
-#: layout_panel.cpp:151
+#: layout_panel.cpp:158
 msgid "Unten ⤓"
 msgstr ""
 
-#: layout_panel.cpp:151
+#: layout_panel.cpp:158
 msgid "Untere Kanten ausrichten"
 msgstr ""
 
@@ -1754,6 +1774,14 @@ msgstr ""
 msgid "Verschiebt das Bild in x, y und z. Mit „Wrap around“ kommt, was hinten hinausläuft, vorne wieder herein."
 msgstr ""
 
+#: layout_panel_library.cpp:44
+msgid "Vorlage löschen"
+msgstr ""
+
+#: layout_panel.cpp:46
+msgid "Vorlagen"
+msgstr ""
+
 #: settings_dialog.cpp:145
 msgid "WAV-Datei in Schleife:"
 msgstr ""
@@ -1766,7 +1794,7 @@ msgstr ""
 msgid "WAV-Dateien (*.wav)"
 msgstr ""
 
-#: layout_panel.cpp:147
+#: layout_panel.cpp:154
 msgid "Waagrecht mittig ausrichten"
 msgstr ""
 
@@ -1824,6 +1852,10 @@ msgstr ""
 
 #: parameter_panel.cpp:107
 msgid "Wird durch eine Verbindung im Graphen gesteuert."
+msgstr ""
+
+#: layout_panel_library.cpp:83
+msgid "Wähle zuerst ein Fixture in der Liste."
 msgstr ""
 
 #: settings_dialog.cpp:148
@@ -1906,7 +1938,7 @@ msgstr ""
 msgid "Zufällige Zellen, die auf- und abblenden (Fading Pixels), zwischen zwei Farben."
 msgstr ""
 
-#: layout_panel.cpp:196
+#: layout_panel.cpp:203
 msgid "Zum Aneinanderreihen mindestens zwei Fixtures wählen"
 msgstr ""
 
@@ -2038,7 +2070,7 @@ msgstr ""
 msgid "Überbrückung aufheben\tB"
 msgstr ""
 
-#: layout_panel.cpp:154
+#: layout_panel.cpp:161
 msgid "Übereinander ↕"
 msgstr ""
 
@@ -2046,15 +2078,15 @@ msgstr ""
 msgid "…"
 msgstr ""
 
-#: layout_panel.cpp:147
+#: layout_panel.cpp:154
 msgid "↔ Mitte"
 msgstr ""
 
-#: layout_panel.cpp:150
+#: layout_panel.cpp:157
 msgid "↕ Mitte"
 msgstr ""
 
-#: layout_panel.cpp:146
+#: layout_panel.cpp:153
 msgid "⇤ Links"
 msgstr ""
 
@@ -2070,6 +2102,6 @@ msgstr ""
 msgid "⚠ %1"
 msgstr ""
 
-#: layout_panel.cpp:149
+#: layout_panel.cpp:156
 msgid "⤒ Oben"
 msgstr ""
