@@ -318,11 +318,11 @@ msgstr "<b>3D grid</b>"
 msgid "<b>Matrix</b>"
 msgstr "<b>Matrix</b>"
 
-#: fixture_form.cpp:185
+#: fixture_form.cpp:183
 msgid "<b>Patch</b>"
 msgstr "<b>Patch</b>"
 
-#: fixture_form.cpp:178
+#: fixture_form.cpp:176
 msgid "<b>Punktwolke</b>: %1 Punkte, nur in der Datei änderbar"
 msgstr "<b>Point cloud</b>: %1 points, editable only in the file"
 
@@ -342,7 +342,7 @@ msgstr "Gap"
 msgid "Abstand x y"
 msgstr "Spacing x y"
 
-#: add_fixture_dialog.cpp:149 fixture_form.cpp:172
+#: add_fixture_dialog.cpp:149 fixture_form.cpp:170
 msgid "Abstand x y z"
 msgstr "Spacing x y z"
 
@@ -415,16 +415,8 @@ msgid "Ansicht von vorn: Fixtures verschieben, Bereich aufziehen"
 msgstr "View from the front: move fixtures, drag out an area"
 
 #: fixture_form.cpp:169
-msgid "Anzahl x"
-msgstr "Count x"
-
-#: fixture_form.cpp:170
-msgid "Anzahl y"
-msgstr "Count y"
-
-#: fixture_form.cpp:171
-msgid "Anzahl z"
-msgstr "Count z"
+msgid "Anzahl x y z"
+msgstr "Count x y z"
 
 #: cue_dialog.cpp:64 cue_panel.cpp:39 main_window_dmx.cpp:109
 msgid "Art-Net"
@@ -582,7 +574,7 @@ msgstr "Start the cue list: switches to live mode and shows cue 1"
 msgid "Cyan"
 msgstr "Cyan"
 
-#: add_fixture_dialog.cpp:178 fixture_form.cpp:218
+#: add_fixture_dialog.cpp:178 fixture_form.cpp:215
 msgid "DDP-Offset (Byte)"
 msgstr "DDP offset (bytes)"
 
@@ -842,7 +834,7 @@ msgstr "Select fixtures first (hold Ctrl or Shift for several)"
 msgid "Erste Achse = läuft am schnellsten entlang des Kabels"
 msgstr "First axis = runs fastest along the cable"
 
-#: add_fixture_dialog.cpp:177 fixture_form.cpp:217
+#: add_fixture_dialog.cpp:177 fixture_form.cpp:214
 msgid "Erster Kanal"
 msgstr "First channel"
 
@@ -874,7 +866,7 @@ msgstr "Color"
 msgid "Farbige Punkte vor den Nodes in der Palette: was der Node liefert"
 msgstr "Colored dots in front of the nodes in the palette: what the node delivers"
 
-#: add_fixture_dialog.cpp:179 fixture_form.cpp:219 test_panel.cpp:39
+#: add_fixture_dialog.cpp:179 fixture_form.cpp:216 test_panel.cpp:39
 msgid "Farbreihenfolge"
 msgstr "Color order"
 
@@ -950,7 +942,7 @@ msgstr "GO  (Space)"
 msgid "GO (von Hand)"
 msgstr "GO (manual)"
 
-#: fixture_form.cpp:220
+#: fixture_form.cpp:217
 msgid "Gamma"
 msgstr "Gamma"
 
@@ -990,11 +982,15 @@ msgstr "Line up the selected fixtures horizontally (the leftmost one stays)"
 msgid "Glättet einen Wert: Er folgt dem Eingang mit einer Zeitkonstante, statt zu springen."
 msgstr "Smooths a value: it follows the input with a time constant instead of jumping."
 
+#: fixture_form.cpp:120
+msgid "Größe"
+msgstr "Size"
+
 #: test_panel.cpp:30
 msgid "Grün"
 msgstr "Green"
 
-#: fixture_form.cpp:221
+#: fixture_form.cpp:217
 msgid "Helligkeit"
 msgstr "Brightness"
 
@@ -1470,7 +1466,7 @@ msgstr "Save project as"
 msgid "Projekt öffnen"
 msgstr "Open project"
 
-#: add_fixture_dialog.cpp:174 fixture_form.cpp:214
+#: add_fixture_dialog.cpp:174 fixture_form.cpp:212
 msgid "Protokoll"
 msgstr "Protocol"
 
@@ -1514,7 +1510,7 @@ msgstr "Align right edges"
 msgid "Rechts ⇥"
 msgstr "Right ⇥"
 
-#: fixture_form.cpp:173
+#: fixture_form.cpp:171
 msgid "Reihenfolge (schnellste zuerst)"
 msgstr "Order (fastest first)"
 
@@ -1574,7 +1570,7 @@ msgstr "This is how long the fade to this look takes. 0 = hard switch."
 msgid "Sonstige"
 msgstr "Other"
 
-#: fixture_form.cpp:110 fixture_form.cpp:120
+#: fixture_form.cpp:110 fixture_form.cpp:121
 msgid "Spalten"
 msgstr "Columns"
 
@@ -1718,7 +1714,7 @@ msgstr "Rename …"
 msgid "Ungespeicherte Änderungen"
 msgstr "Unsaved changes"
 
-#: add_fixture_dialog.cpp:176 fixture_form.cpp:216
+#: add_fixture_dialog.cpp:176 fixture_form.cpp:214
 msgid "Universe"
 msgstr "Universe"
 
@@ -1878,7 +1874,7 @@ msgstr "Dragging rotates, the wheel zooms. The first LED on the cable is white; 
 msgid "Ziel +"
 msgstr "Destination +"
 
-#: add_fixture_dialog.cpp:175 fixture_form.cpp:215
+#: add_fixture_dialog.cpp:175 fixture_form.cpp:213
 msgid "Ziel Nr."
 msgstr "Destination no."
 
@@ -1926,7 +1922,7 @@ msgstr "Switch between editing and live operation (F9)"
 msgid "Zählrichtung"
 msgstr "Counting direction"
 
-#: fixture_form.cpp:186
+#: fixture_form.cpp:184
 msgid "an die Ausgabe schicken"
 msgstr "send to the output"
 

@@ -8,6 +8,8 @@
 #include <QComboBox>
 #include <QDoubleSpinBox>
 #include <QHBoxLayout>
+#include <QLabel>
+#include <QAbstractSpinBox>
 #include <QSpinBox>
 #include <QString>
 #include <QStringList>
@@ -15,6 +17,7 @@
 
 #include <initializer_list>
 #include <string>
+#include <utility>
 
 #include "whitehole/core/types.hpp"
 
@@ -59,6 +62,25 @@ inline QWidget* rowOf(std::initializer_list<QWidget*> widgets) {
     return row;
 }
 
+/// Eine Zeile "Beschriftung Feld  Beschriftung Feld …": Zahlenfelder bleiben schmal (statt die ganze
+/// Fensterbreite zu füllen), der Rest der Zeile bleibt leer. So passen zusammengehörige Werte nebeneinander.
+inline QWidget* labeledRow(std::initializer_list<std::pair<QString, QWidget*>> items) {
+    auto* row = new QWidget;
+    auto* layout = new QHBoxLayout{row};
+    layout->setContentsMargins(0, 0, 0, 0);
+    for (const auto& [text, widget] : items) {
+        if (!text.isEmpty()) {
+            layout->addWidget(new QLabel{text});
+        }
+        if (qobject_cast<QAbstractSpinBox*>(widget) != nullptr) {
+            widget->setMaximumWidth(84);
+        }
+        layout->addWidget(widget);
+    }
+    layout->addStretch(1);
+    return row;
+}
+
 struct Vec3Boxes {
     QDoubleSpinBox* x{nullptr};
     QDoubleSpinBox* y{nullptr};
@@ -67,7 +89,7 @@ struct Vec3Boxes {
     [[nodiscard]] Vec3 value() const {
         return Vec3{static_cast<float>(x->value()), static_cast<float>(y->value()), static_cast<float>(z->value())};
     }
-    [[nodiscard]] QWidget* widget() const { return rowOf({x, y, z}); }
+    [[nodiscard]] QWidget* widget() const { return labeledRow({{QString{}, x}, {QString{}, y}, {QString{}, z}}); }
 };
 
 struct Vec2Boxes {
@@ -75,7 +97,7 @@ struct Vec2Boxes {
     QDoubleSpinBox* y{nullptr};
 
     [[nodiscard]] Vec2 value() const { return Vec2{static_cast<float>(x->value()), static_cast<float>(y->value())}; }
-    [[nodiscard]] QWidget* widget() const { return rowOf({x, y}); }
+    [[nodiscard]] QWidget* widget() const { return labeledRow({{QString{}, x}, {QString{}, y}}); }
 };
 
 inline Vec3Boxes vec3Boxes(const Vec3& v, double min = -1.0e6, double max = 1.0e6, double step = 1.0) {

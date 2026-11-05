@@ -117,11 +117,11 @@ void FixtureForm::buildShapeFields(QFormLayout& layout, const mapping::FixtureSh
                 onCombo(c_.corner);
                 onCombo(c_.firstAxis);
                 onCheck(c_.matrixSerpentine);
-                layout.addRow(tr("Spalten"), c_.columns);
-                layout.addRow(tr("Zeilen"), c_.rows);
+                layout.addRow(tr("Größe"),
+                              form::labeledRow({{tr("Spalten"), c_.columns}, {tr("Zeilen"), c_.rows}}));
                 layout.addRow(tr("Abstand x y"), c_.matrixPitch.widget());
-                layout.addRow(tr("Kabel beginnt"), c_.corner);
-                layout.addRow(tr("Zuerst entlang"), c_.firstAxis);
+                layout.addRow(tr("Kabel beginnt"),
+                              form::labeledRow({{QString{}, c_.corner}, {tr("Zuerst entlang"), c_.firstAxis}}));
                 layout.addRow(QString{}, c_.matrixSerpentine);
             },
             [&](const mapping::StripShape& s) {
@@ -133,7 +133,7 @@ void FixtureForm::buildShapeFields(QFormLayout& layout, const mapping::FixtureSh
                 for (QDoubleSpinBox* box : {c_.start.x, c_.start.y, c_.start.z, c_.end.x, c_.end.y, c_.end.z}) {
                     onDouble(box);
                 }
-                layout.addRow(tr("LEDs"), c_.count);
+                layout.addRow(tr("LEDs"), form::labeledRow({{QString{}, c_.count}}));
                 layout.addRow(tr("Anfang x y z"), c_.start.widget());
                 layout.addRow(tr("Ende x y z"), c_.end.widget());
             },
@@ -166,11 +166,9 @@ void FixtureForm::buildShapeFields(QFormLayout& layout, const mapping::FixtureSh
                 }
                 onCombo(c_.axisOrder);
                 onCheck(c_.gridSerpentine);
-                layout.addRow(tr("Anzahl x"), c_.nx);
-                layout.addRow(tr("Anzahl y"), c_.ny);
-                layout.addRow(tr("Anzahl z"), c_.nz);
+                layout.addRow(tr("Anzahl x y z"), form::labeledRow({{QString{}, c_.nx}, {QString{}, c_.ny}, {QString{}, c_.nz}}));
                 layout.addRow(tr("Abstand x y z"), c_.gridPitch.widget());
-                layout.addRow(tr("Reihenfolge (schnellste zuerst)"), c_.axisOrder);
+                layout.addRow(tr("Reihenfolge (schnellste zuerst)"), form::labeledRow({{QString{}, c_.axisOrder}}));
                 layout.addRow(QString{}, c_.gridSerpentine);
                 layout.addRow(tr("Kabel beginnt"), form::rowOf({c_.flipX, c_.flipY, c_.flipZ}));
             },
@@ -211,14 +209,12 @@ void FixtureForm::buildPatchFields(QFormLayout& layout, const output::FixturePat
     for (QDoubleSpinBox* box : {c_.gamma, c_.brightness}) {
         connect(box, qOverload<double>(&QDoubleSpinBox::valueChanged), this, [this](double) { applyPatch(); });
     }
-    layout.addRow(tr("Protokoll"), c_.protocol);
-    layout.addRow(tr("Ziel Nr."), c_.destination);
-    layout.addRow(tr("Universe"), c_.universe);
-    layout.addRow(tr("Erster Kanal"), c_.channel);
-    layout.addRow(tr("DDP-Offset (Byte)"), c_.ddpOffset);
-    layout.addRow(tr("Farbreihenfolge"), c_.colorOrder);
-    layout.addRow(tr("Gamma"), c_.gamma);
-    layout.addRow(tr("Helligkeit"), c_.brightness);
+    layout.addRow(tr("Protokoll"),
+                  form::labeledRow({{QString{}, c_.protocol}, {tr("Ziel Nr."), c_.destination}}));
+    layout.addRow(tr("Universe"), form::labeledRow({{QString{}, c_.universe}, {tr("Erster Kanal"), c_.channel}}));
+    layout.addRow(tr("DDP-Offset (Byte)"), form::labeledRow({{QString{}, c_.ddpOffset}}));
+    layout.addRow(tr("Farbreihenfolge"), form::labeledRow({{QString{}, c_.colorOrder}}));
+    layout.addRow(tr("Gamma"), form::labeledRow({{QString{}, c_.gamma}, {tr("Helligkeit"), c_.brightness}}));
     updatePatchEnabled();
 }
 
