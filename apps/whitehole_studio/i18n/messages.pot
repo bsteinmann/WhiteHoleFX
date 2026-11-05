@@ -74,6 +74,22 @@ msgstr ""
 msgid " s"
 msgstr ""
 
+#: stage_view.cpp:189
+msgid " · %1 Ziel %2 · Universe %3 · Kanal %4–%5"
+msgstr ""
+
+#: stage_view.cpp:186
+msgid " · DDP Ziel %1 · Byte %2–%3"
+msgstr ""
+
+#: stage_view.cpp:183
+msgid " · liegt hinter dem letzten Universe"
+msgstr ""
+
+#: stage_view.cpp:193
+msgid " · nicht gepatcht"
+msgstr ""
+
 #: layout_panel.cpp:251
 msgid "%1  (%2 LEDs)"
 msgstr ""
@@ -108,6 +124,10 @@ msgstr ""
 
 #: main_window.cpp:253
 msgid "%1 LEDs, angehalten"
+msgstr ""
+
+#: stage_view.cpp:176
+msgid "%1 · LED %2 von %3"
 msgstr ""
 
 #: main_window_view3d.cpp:39
@@ -306,7 +326,7 @@ msgstr ""
 msgid "3D-Gitter (Cube, Vorhang, Säule)"
 msgstr ""
 
-#: preview_widget.cpp:70
+#: preview_widget.cpp:73
 msgid "3D: ziehen = drehen · Rechtsklick oder Umschalt+Ziehen = verschieben · Rad = Zoom · Doppelklick = Zoom zurücksetzen"
 msgstr ""
 
@@ -926,7 +946,7 @@ msgstr ""
 msgid "Frei drehbare Ansicht: ziehen = drehen, Rechtsklick = verschieben, Rad = Zoom"
 msgstr ""
 
-#: stage_view.cpp:50
+#: stage_view.cpp:72
 msgid "Front"
 msgstr ""
 
@@ -1034,6 +1054,10 @@ msgstr ""
 msgid "Kabel beginnt"
 msgstr ""
 
+#: stage_view.cpp:51
+msgid "Kabelweg mit Pfeilen, Start-LED und LED-Nummern ein- und ausblenden"
+msgstr ""
+
 #: node_info_texts.cpp:53
 msgid "Kaleidoskop: Spiegelt einen Ausschnitt um einen Mittelpunkt zu einem Muster mit mehreren Segmenten."
 msgstr ""
@@ -1058,12 +1082,16 @@ msgstr ""
 msgid "Kein Projekt"
 msgstr ""
 
-#: parameter_panel.cpp:45 stage_view.cpp:97
+#: parameter_panel.cpp:45 stage_view.cpp:119
 msgid "Kein Projekt geladen."
 msgstr ""
 
 #: settings_dialog.cpp:193
 msgid "Keine Aufnahmegeräte gefunden. Ein Audio-Interface anschließen und das Fenster neu öffnen."
+msgstr ""
+
+#: stage_view.cpp:52 stage_view.cpp:158
+msgid "Klicke eine LED, um ihre Adresse zu sehen."
 msgstr ""
 
 #: node_editor_menu.cpp:63
@@ -1386,7 +1414,7 @@ msgstr ""
 msgid "Nächsten Cue auslösen (Leertaste)"
 msgstr ""
 
-#: stage_view.cpp:52
+#: stage_view.cpp:74
 msgid "Oben"
 msgstr ""
 
@@ -1430,7 +1458,7 @@ msgstr ""
 msgid "Pegel eines Frequenzbereichs (Von–Bis in Hz) des Audio-Eingangs, geglättet mit Attack und Release. Gut für Bass- oder Höhen-Effekte. „Signal“ zeigt, ob Audio ankommt."
 msgstr ""
 
-#: stage_view.cpp:49
+#: stage_view.cpp:71
 msgid "Perspektive"
 msgstr ""
 
@@ -1554,7 +1582,7 @@ msgstr ""
 msgid "Schwingung (LFO): Sinus, Dreieck, Sägezahn oder Rechteck mit Frequenz, Phase und Wertebereich. Der Klassiker zum Bewegen von Parametern."
 msgstr ""
 
-#: stage_view.cpp:51
+#: stage_view.cpp:73
 msgid "Seite"
 msgstr ""
 
@@ -1770,6 +1798,10 @@ msgstr ""
 msgid "Vergröbert das Bild zu einem Raster aus Zellen (Cells X/Y/Z), wie große Pixel."
 msgstr ""
 
+#: stage_view.cpp:49
+msgid "Verkabelung"
+msgstr ""
+
 #: node_info_texts.cpp:69
 msgid "Verschiebt das Bild in x, y und z. Mit „Wrap around“ kommt, was hinten hinausläuft, vorne wieder herein."
 msgstr ""
@@ -1898,7 +1930,7 @@ msgstr ""
 msgid "Zeit: %1 nach dem vorigen"
 msgstr ""
 
-#: stage_view.cpp:43
+#: stage_view.cpp:65
 msgid "Ziehen dreht, Rad zoomt. Die erste LED am Kabel ist weiß; x rot, y grün, z blau."
 msgstr ""
 

@@ -74,6 +74,22 @@ msgstr " changes/s"
 msgid " s"
 msgstr " s"
 
+#: stage_view.cpp:189
+msgid " · %1 Ziel %2 · Universe %3 · Kanal %4–%5"
+msgstr " · %1 target %2 · universe %3 · channel %4–%5"
+
+#: stage_view.cpp:186
+msgid " · DDP Ziel %1 · Byte %2–%3"
+msgstr " · DDP target %1 · byte %2–%3"
+
+#: stage_view.cpp:183
+msgid " · liegt hinter dem letzten Universe"
+msgstr " · lies beyond the last universe"
+
+#: stage_view.cpp:193
+msgid " · nicht gepatcht"
+msgstr " · not patched"
+
 #: layout_panel.cpp:251
 msgid "%1  (%2 LEDs)"
 msgstr "%1  (%2 LEDs)"
@@ -109,6 +125,10 @@ msgstr "%1 LEDs, frame %2 (dropped %3), packets %4, send errors %5"
 #: main_window.cpp:253
 msgid "%1 LEDs, angehalten"
 msgstr "%1 LEDs, stopped"
+
+#: stage_view.cpp:176
+msgid "%1 · LED %2 von %3"
+msgstr "%1 · LED %2 of %3"
 
 #: main_window_view3d.cpp:39
 msgid "&2D (bearbeiten)"
@@ -306,7 +326,7 @@ msgstr "3D &display"
 msgid "3D-Gitter (Cube, Vorhang, Säule)"
 msgstr "3D grid (cube, curtain, column)"
 
-#: preview_widget.cpp:70
+#: preview_widget.cpp:73
 msgid "3D: ziehen = drehen · Rechtsklick oder Umschalt+Ziehen = verschieben · Rad = Zoom · Doppelklick = Zoom zurücksetzen"
 msgstr "3D: drag = rotate · right-click or Shift+drag = pan · wheel = zoom · double-click = reset zoom"
 
@@ -926,7 +946,7 @@ msgstr "Frame"
 msgid "Frei drehbare Ansicht: ziehen = drehen, Rechtsklick = verschieben, Rad = Zoom"
 msgstr "Freely rotatable view: drag = rotate, right-click = pan, wheel = zoom"
 
-#: stage_view.cpp:50
+#: stage_view.cpp:72
 msgid "Front"
 msgstr "Front"
 
@@ -1034,6 +1054,10 @@ msgstr "Load into editor"
 msgid "Kabel beginnt"
 msgstr "Cable starts"
 
+#: stage_view.cpp:51
+msgid "Kabelweg mit Pfeilen, Start-LED und LED-Nummern ein- und ausblenden"
+msgstr "Show or hide the cable path with arrows, start LED and LED numbers"
+
 #: node_info_texts.cpp:53
 msgid "Kaleidoskop: Spiegelt einen Ausschnitt um einen Mittelpunkt zu einem Muster mit mehreren Segmenten."
 msgstr "Kaleidoscope: mirrors a slice around a center into a pattern with several segments."
@@ -1058,13 +1082,17 @@ msgstr "No GPU adapter: %1"
 msgid "Kein Projekt"
 msgstr "No project"
 
-#: parameter_panel.cpp:45 stage_view.cpp:97
+#: parameter_panel.cpp:45 stage_view.cpp:119
 msgid "Kein Projekt geladen."
 msgstr "No project loaded."
 
 #: settings_dialog.cpp:193
 msgid "Keine Aufnahmegeräte gefunden. Ein Audio-Interface anschließen und das Fenster neu öffnen."
 msgstr "No capture devices found. Connect an audio interface and reopen the window."
+
+#: stage_view.cpp:52 stage_view.cpp:158
+msgid "Klicke eine LED, um ihre Adresse zu sehen."
+msgstr "Click an LED to see its address."
 
 #: node_editor_menu.cpp:63
 msgid "Kopieren\tStrg+C"
@@ -1386,7 +1414,7 @@ msgstr "Draw only lit LEDs: you can see through the cube"
 msgid "Nächsten Cue auslösen (Leertaste)"
 msgstr "Fire the next cue (space bar)"
 
-#: stage_view.cpp:52
+#: stage_view.cpp:74
 msgid "Oben"
 msgstr "Top"
 
@@ -1430,7 +1458,7 @@ msgstr "Pause between trigger and start of the crossfade"
 msgid "Pegel eines Frequenzbereichs (Von–Bis in Hz) des Audio-Eingangs, geglättet mit Attack und Release. Gut für Bass- oder Höhen-Effekte. „Signal“ zeigt, ob Audio ankommt."
 msgstr "Level of one frequency band (From–To in Hz) of the audio input, smoothed with attack and release. Good for bass or treble effects. \"Signal\" shows whether audio is arriving."
 
-#: stage_view.cpp:49
+#: stage_view.cpp:71
 msgid "Perspektive"
 msgstr "Perspective"
 
@@ -1554,7 +1582,7 @@ msgstr "A step sequence with up to eight values. Each switch-on of \"Advance\" m
 msgid "Schwingung (LFO): Sinus, Dreieck, Sägezahn oder Rechteck mit Frequenz, Phase und Wertebereich. Der Klassiker zum Bewegen von Parametern."
 msgstr "Oscillator (LFO): sine, triangle, saw or square with frequency, phase and value range. The classic for moving parameters."
 
-#: stage_view.cpp:51
+#: stage_view.cpp:73
 msgid "Seite"
 msgstr "Side"
 
@@ -1770,6 +1798,10 @@ msgstr "Compares a value with a threshold (with hysteresis) and outputs yes/no p
 msgid "Vergröbert das Bild zu einem Raster aus Zellen (Cells X/Y/Z), wie große Pixel."
 msgstr "Coarsens the image into a grid of cells (Cells X/Y/Z), like big pixels."
 
+#: stage_view.cpp:49
+msgid "Verkabelung"
+msgstr "Wiring"
+
 #: node_info_texts.cpp:69
 msgid "Verschiebt das Bild in x, y und z. Mit „Wrap around“ kommt, was hinten hinausläuft, vorne wieder herein."
 msgstr "Shifts the image in x, y and z. With \"Wrap around\" what leaves on one side re-enters on the other."
@@ -1898,7 +1930,7 @@ msgstr "Time trigger: wait"
 msgid "Zeit: %1 nach dem vorigen"
 msgstr "Time: %1 after the previous one"
 
-#: stage_view.cpp:43
+#: stage_view.cpp:65
 msgid "Ziehen dreht, Rad zoomt. Die erste LED am Kabel ist weiß; x rot, y grün, z blau."
 msgstr "Dragging rotates, the wheel zooms. The first LED on the cable is white; x red, y green, z blue."
 

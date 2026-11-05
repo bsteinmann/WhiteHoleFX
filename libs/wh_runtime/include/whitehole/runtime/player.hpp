@@ -215,6 +215,8 @@ public:
 
     /// Die Box der ganzen Wand (alle Fixtures) in Weltkoordinaten. Ohne Projekt eine leere Box.
     [[nodiscard]] mapping::Box wallBox() const noexcept { return map_.volume; }
+    /// Die LED-Karte des geladenen Projekts (Positionen und Bereiche je Fixture), z. B. für die Verkabelungsanzeige.
+    [[nodiscard]] const mapping::LedMap& ledMap() const noexcept { return map_; }
 
     /// Setzt das Rechteck eines Region-Nodes (wh.transform.region) oder Ausgangs-Nodes
     /// (wh.output.canvas): left, top, width, height in

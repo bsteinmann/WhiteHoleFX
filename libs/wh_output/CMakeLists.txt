@@ -10,6 +10,7 @@ wh_add_library(wh_output
         src/artnet.cpp
         src/color_encoder.cpp
         src/ddp.cpp
+        src/led_address.cpp
         src/output_pipeline.cpp
         src/output_plan.cpp
         src/output_worker.cpp

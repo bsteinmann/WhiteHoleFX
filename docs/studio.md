@@ -252,6 +252,14 @@ leuchtenden dahinter. Darum gilt in 3D:
 Die Wahl wird gespeichert und gilt für alle 3D-Ansichten. Die 2D-Ansicht bleibt wie sie war. Der Kern (Kamera, Projektion, Zeichnen) liegt ohne Qt in
 `libs/wh_preview/include/whitehole/preview/view3d.hpp` und ist unit-getestet; `Player::image3d` liefert das Bild.
 
+### Verkabelung, LED-Adresse und Vorlagen
+
+In Stage Config → Layout zeigt die kleine Vorschau neben dem Formular den Kabelweg: weiße Linie mit Pfeilen in Laufrichtung, die Start-LED grün umrandet, bei weit genug auseinanderliegenden LEDs auch ihre Nummern. Der Schalter **Verkabelung** darunter blendet das alles aus.
+
+Ein Klick (ohne Ziehen) auf eine LED markiert sie gelb und zeigt in der Zeile darunter, wo sie ankommt: Fixture, LED-Nummer, Protokoll, Ziel, Universe und Kanäle (bei DDP das Byte). Eine LED belegt drei Kanäle und wird nicht über eine Universe-Grenze geteilt, daher beginnt das nächste Universe nach 170 LEDs (bei Startkanal 1).
+
+Der Knopf **Vorlagen** speichert das gewählte Fixture als Vorlage (Form, Maße, Abstand, Verkabelung, Protokoll, Farbreihenfolge, Gamma, Helligkeit; ohne Universe und Kanal) und legt sie später mit einem Klick neu an, mit dem nächsten freien Universe. Die Vorlagen sind `.whfx`-Dateien im Ordner `fixtures` des Programmordners (unter Windows `%APPDATA%\WhiteHoleFX\WhiteHoleFX\fixtures`), also kopierbar und weitergebbar.
+
 ### Node-Palette
 
 Links im Dock „Nodes“ steht die Palette: alle verfügbaren Node-Typen nach Kategorien (Generators, Effects,

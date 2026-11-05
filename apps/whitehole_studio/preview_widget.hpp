@@ -18,7 +18,11 @@
 #include <QRectF>
 #include <QWidget>
 
+#include <functional>
+
 #include "whitehole/preview/view3d.hpp"
+
+class QPainter;
 
 namespace whitehole::studio {
 
@@ -42,6 +46,8 @@ public:
     void setImage(const QImage& image);
     void setMessage(const QString& message);
     void setOverlay(const PreviewOverlay& overlay);
+    /// Zusätzliche Zeichnung über dem Bild (z. B. Kabelweg in der Stage Config); wird bei jedem Neuzeichnen gerufen.
+    void setPaintHook(std::function<void(QPainter&)> hook);
     /// Auffälliger Hinweis oben rechts (z. B. "TESTMODUS"); leer = keiner.
     void setBanner(const QString& banner);
 
@@ -65,6 +71,8 @@ Q_SIGNALS:
     /// Linke Maustaste gedrückt / bewegt (bei gedrückter Taste) / losgelassen; Punkte im Widget.
     void mousePressed(QPointF position, Qt::KeyboardModifiers modifiers);
     void mouseDragged(QPointF position);
+    /// 3D-Ansicht: Linksklick ohne Ziehen (zum Auswählen einer LED).
+    void clicked(QPointF position);
     void mouseReleased(QPointF position);
     /// Pfeiltaste: `dx` nach rechts, `dy` nach oben (je -1, 0 oder 1).
     void nudged(int dx, int dy, Qt::KeyboardModifiers modifiers);
@@ -96,6 +104,8 @@ private:
     Qt::MouseButton dragButton_{Qt::NoButton};  // 3D: welche Taste gerade zieht
     Qt::KeyboardModifiers dragModifiers_;
     QPointF lastPosition_;
+    QPointF pressPosition_;
+    std::function<void(QPainter&)> paintHook_;
 };
 
 }  // namespace whitehole::studio

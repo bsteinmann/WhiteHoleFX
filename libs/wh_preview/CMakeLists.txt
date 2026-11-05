@@ -7,6 +7,7 @@ wh_add_library(wh_preview
         src/png.cpp
         src/preview.cpp
         src/view.cpp
+        src/wiring.cpp
         src/view3d.cpp
     PUBLIC_DEPS
         wh_core

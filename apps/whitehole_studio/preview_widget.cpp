@@ -64,6 +64,9 @@ void PreviewWidget::paintEvent(QPaintEvent*) {
         // Fensters füllt das Bild einfach den Platz, bis das neue eintrifft.
         painter.drawImage(rect(), image_);
     }
+    if (view3d_ && paintHook_) {
+        paintHook_(painter);
+    }
     if (view3d_) {
         painter.setPen(QColor{150, 150, 160});
         painter.drawText(rect().adjusted(12, 8, -12, -8), Qt::AlignBottom | Qt::AlignLeft,
@@ -130,6 +133,7 @@ void PreviewWidget::mousePressEvent(QMouseEvent* event) {
         dragButton_ = event->button();
         dragModifiers_ = event->modifiers();
         lastPosition_ = event->position();
+        pressPosition_ = event->position();
         return;
     }
     if (event->button() != Qt::LeftButton) {
@@ -171,7 +175,12 @@ void PreviewWidget::leaveEvent(QEvent* event) {
 
 void PreviewWidget::mouseReleaseEvent(QMouseEvent* event) {
     if (view3d_) {
+        const bool click = dragButton_ == Qt::LeftButton && !dragModifiers_.testFlag(Qt::ShiftModifier) &&
+                           (event->position() - pressPosition_).manhattanLength() < 4.0;
         dragButton_ = Qt::NoButton;
+        if (click) {
+            Q_EMIT clicked(event->position());
+        }
         return;
     }
     if (event->button() == Qt::LeftButton && dragging_) {
@@ -219,6 +228,11 @@ void PreviewWidget::setView3d(bool on) {
     view3d_ = on;
     dragging_ = false;
     dragButton_ = Qt::NoButton;
+    update();
+}
+
+void PreviewWidget::setPaintHook(std::function<void(QPainter&)> hook) {
+    paintHook_ = std::move(hook);
     update();
 }
 

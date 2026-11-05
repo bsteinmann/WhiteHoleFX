@@ -1,7 +1,11 @@
 # Änderungen
 
-## Unveröffentlicht
+## 0.47.0
 
+- **Stage Config übersichtlicher.** Zusammengehörige Felder stehen nebeneinander (Spalten/Zeilen, Kabelstart/Richtung, Protokoll/Ziel, Universe/Kanal, Gamma/Helligkeit), Zahlenfelder sind schmal.
+- **Verkabelung in der Vorschau.** Die kleine Vorschau neben dem Formular zeigt den Kabelweg mit Pfeilen, die Start-LED und die LED-Nummern; der Schalter „Verkabelung“ blendet alles aus.
+- **LED anklicken.** Ein Klick auf eine LED zeigt Fixture, LED-Nummer, Protokoll, Ziel, Universe und Kanäle (z. B. „sACN Ziel 0 · Universe 2 · Kanal 109–111“). Die Rechnung nutzt dieselben Regeln wie die Ausgabe.
+- **Fixture-Bibliothek.** Knopf „Vorlagen“ im Layout: ein Fixture als Vorlage speichern (Form, Maße, Verkabelung, Protokoll, Farbreihenfolge, Gamma, Helligkeit; ohne Universe und Kanal), später mit einem Klick neu anlegen, Vorlagen löschen. Die Vorlagen liegen als `.whfx`-Dateien im Ordner `fixtures` im Programmordner des Nutzers.
 - CLI: alle 2 s eine Zeitmessung (echte fps, größte Lücke zwischen Frames, Rechenzeit je Frame) zur Fehlersuche bei ruckelnder Ausgabe.
 
 ## 0.46.0

@@ -77,6 +77,7 @@ add_executable(wh_tests
     preview/preview_test.cpp
     preview/view_test.cpp
     preview/view3d_test.cpp
+    preview/wiring_test.cpp
     project/project_test.cpp
     project/cue_test.cpp
     project/fixture_template_test.cpp
