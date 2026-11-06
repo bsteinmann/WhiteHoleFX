@@ -39,6 +39,10 @@ public:
     /// Fehler: NotFound.
     Result<void> remove(FixtureId id);
     Result<void> move(FixtureId id, const Vec3& origin);
+    /// Drehung in Grad um x, y, z (siehe Fixture::rotation). Fehler: NotFound, InvalidArgument (nicht endlich).
+    Result<void> rotate(FixtureId id, const Vec3& degrees);
+    /// Merkt den Namen des Bibliothekstyps (Fixture::type); die Form ändert das nicht. Fehler: NotFound.
+    Result<void> setType(FixtureId id, std::string type);
     /// Der Name wird nicht auf Eindeutigkeit geprüft (das tut die Projektebene). Fehler: NotFound.
     Result<void> rename(FixtureId id, std::string name);
     /// Tauscht die Form; bei einem Fehler bleibt die alte erhalten.

@@ -18,8 +18,8 @@
 //    exakt dieselben Punkte ab wie der Canvas (Pixelmitten).
 //  - Matrix: Zeile 0 ist oben (wie in einem Bild). Gitter: y = 0 ist unten (wie im Raum).
 //
-// Nicht enthalten (späteres Release): Drehung von Fixtures, Teilstücke mit Lücken,
-// gekrümmte Strips. Punktwolken decken diese Fälle bis dahin ab.
+// Nicht enthalten: Teilstücke mit Lücken und gekrümmte Strips. Punktwolken decken diese Fälle ab.
+// Ring und Säule sind eigene Formen; gedreht wird das ganze Fixture (Fixture::rotation, worldPositions).
 #pragma once
 
 #include <cstdint>
@@ -65,13 +65,40 @@ struct PointsShape {
     std::vector<Vec3> points;  // in Kabelreihenfolge, relativ zum Ursprung
 };
 
-using FixtureShape = std::variant<MatrixShape, StripShape, GridShape, PointsShape>;
+/// Ein Ring (Kreis) von LEDs in der x-y-Ebene. Der Mittelpunkt liegt bei (radius, radius, 0), die Box beginnt also
+/// wie bei einer Matrix im Ursprung. Die erste LED sitzt bei `startAngle` (Grad, 0 = rechts, 90 = oben), die
+/// weiteren folgen im Uhrzeigersinn (von vorn gesehen) oder dagegen. Drehen lässt sich der Ring über das Fixture.
+struct RingShape {
+    std::uint32_t count{16};
+    float radius{8.0F};
+    float startAngle{90.0F};
+    bool clockwise{true};
+};
+
+/// Eine Säule: LEDs in einer Spirale um die y-Achse, von unten nach oben (zum Beispiel ein um ein Rohr gewickelter
+/// Strip). Mittelachse bei x = z = radius, Höhe y in [0, height], `turns` Windungen, erste LED bei `startAngle`
+/// (Grad in der x-z-Ebene, 0 = +x).
+struct HelixShape {
+    std::uint32_t count{60};
+    float radius{5.0F};
+    float height{30.0F};
+    float turns{3.0F};
+    float startAngle{0.0F};
+    bool clockwise{true};
+};
+
+using FixtureShape = std::variant<MatrixShape, StripShape, GridShape, PointsShape, RingShape, HelixShape>;
 
 struct Fixture {
     FixtureId id;
     std::string name;
     Vec3 origin;  // Lage des Objekts im Raum
     FixtureShape shape;
+    /// Drehung in Grad um die x-, y- und z-Achse, um die Mitte der Box des Fixtures (Reihenfolge: erst x, dann y,
+    /// dann z). Null = unverändert.
+    Vec3 rotation{};
+    /// Name der Fixture-Bibliothek (Project::types), aus der die Form stammt; leer = eigene Form.
+    std::string type;
 };
 
 /// Achsenparallele Box.
@@ -99,5 +126,15 @@ struct Box {
 
 /// Lokale Position jeder LED in Kabelreihenfolge (Index 0 = erste LED am Kabel).
 [[nodiscard]] std::vector<Vec3> localPositions(const FixtureShape& shape);
+
+/// Position jeder LED im Raum: lokale Position, um die Mitte der lokalen Box gedreht (Fixture::rotation), plus
+/// Ursprung. Ohne Drehung genau `localPositions + origin`.
+[[nodiscard]] std::vector<Vec3> worldPositions(const Fixture& fixture);
+
+/// Umschließende Box des Fixtures im Raum (bei Drehung die Box der gedrehten Ecken der lokalen Box).
+[[nodiscard]] Box worldBox(const Fixture& fixture) noexcept;
+
+/// Dreht `point` um die Achsen x, y, z (Grad, in dieser Reihenfolge) um `center`.
+[[nodiscard]] Vec3 rotateAround(const Vec3& point, const Vec3& center, const Vec3& degrees) noexcept;
 
 }  // namespace whitehole::mapping

@@ -122,7 +122,7 @@ TEST_CASE("Ansicht: Gummiband wählt berührte Fixtures", "[preview][view]") {
 
 TEST_CASE("Ansicht: Weltbox eines Fixtures", "[preview][view]") {
     Scene scene;
-    const mapping::Box b = worldBox(*scene.layout.find(scene.right));
+    const mapping::Box b = preview::worldBox(*scene.layout.find(scene.right));
     CHECK(b.min.x == Approx(20.0F));
     CHECK(b.max.x == Approx(28.0F));
     CHECK(b.max.y == Approx(4.0F));

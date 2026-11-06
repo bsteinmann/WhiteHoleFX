@@ -13,7 +13,6 @@ bool finiteVec(const Vec3& v) noexcept {
     return std::isfinite(v.x) && std::isfinite(v.y) && std::isfinite(v.z);
 }
 
-Vec3 plus(const Vec3& a, const Vec3& b) noexcept { return Vec3{a.x + b.x, a.y + b.y, a.z + b.z}; }
 
 float clamp01(float v) noexcept { return std::clamp(v, 0.0F, 1.0F); }
 
@@ -38,7 +37,7 @@ Result<FixtureId> Layout::add(std::string name, const Vec3& origin, FixtureShape
         return valid.error();
     }
     const FixtureId id = ids_.next();
-    fixtures_.push_back(Fixture{id, std::move(name), origin, std::move(shape)});
+    fixtures_.push_back(Fixture{id, std::move(name), origin, std::move(shape), Vec3{}, std::string{}});
     return id;
 }
 
@@ -59,6 +58,29 @@ Result<void> Layout::move(FixtureId id, const Vec3& origin) {
     for (Fixture& fixture : fixtures_) {
         if (fixture.id == id) {
             fixture.origin = origin;
+            return {};
+        }
+    }
+    return Error{ErrorCode::NotFound, "Fixture unbekannt"};
+}
+
+Result<void> Layout::rotate(FixtureId id, const Vec3& degrees) {
+    if (!finiteVec(degrees)) {
+        return Error{ErrorCode::InvalidArgument, "Die Drehung des Fixtures muss aus endlichen Zahlen bestehen"};
+    }
+    for (Fixture& fixture : fixtures_) {
+        if (fixture.id == id) {
+            fixture.rotation = degrees;
+            return {};
+        }
+    }
+    return Error{ErrorCode::NotFound, "Fixture unbekannt"};
+}
+
+Result<void> Layout::setType(FixtureId id, std::string type) {
+    for (Fixture& fixture : fixtures_) {
+        if (fixture.id == id) {
+            fixture.type = std::move(type);
             return {};
         }
     }
@@ -114,8 +136,7 @@ Result<LedMap> Layout::bake(NormalizeMode mode) const {
 
     bool first = true;
     for (const Fixture& fixture : fixtures_) {
-        const Box local = localBox(fixture.shape);
-        const Box box{plus(local.min, fixture.origin), plus(local.max, fixture.origin)};
+        const Box box = worldBox(fixture);
         if (first) {
             map.volume = box;
             first = false;
@@ -127,8 +148,8 @@ Result<LedMap> Layout::bake(NormalizeMode mode) const {
         }
 
         const auto start = static_cast<std::uint32_t>(map.world.size());
-        for (const Vec3& p : localPositions(fixture.shape)) {
-            map.world.push_back(plus(p, fixture.origin));
+        for (const Vec3& p : worldPositions(fixture)) {
+            map.world.push_back(p);
         }
         map.ranges.push_back(
             FixtureRange{fixture.id, start, static_cast<std::uint32_t>(map.world.size()) - start});

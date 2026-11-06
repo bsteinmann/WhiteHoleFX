@@ -110,15 +110,15 @@ std::optional<Error> Parser::handleOutside(const Line& line) {
     Reader r{line, 0};
     const std::string key = r.word("Schlüsselwort");
     std::optional<Error> error;
-    if (look_ && (key == "settings" || key == "destination" || key == "fixture" || key == "cue" || key == "group" ||
+    if (look_ && (key == "settings" || key == "destination" || key == "fixture" || key == "fixturetype" || key == "cue" || key == "group" ||
                   key == "region")) {
         r.fail("\"" + key + "\" gehört nicht in einen look-Block");
     } else if (key == "settings") {
         error = settings(r);
     } else if (key == "destination") {
         destination(r);
-    } else if (key == "fixture") {
-        fixture_ = detail::beginFixture(r);
+    } else if (key == "fixture" || key == "fixturetype") {
+        fixture_ = detail::beginFixture(r, key == "fixturetype");
         blockStart_ = line.number;
         if (r.ok()) {
             state_ = State::Fixture;

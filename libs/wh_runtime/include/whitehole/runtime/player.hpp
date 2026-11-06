@@ -211,6 +211,24 @@ public:
     Result<void> renameFixture(mapping::FixtureId id, std::string name);
     Result<void> moveFixture(mapping::FixtureId id, const Vec3& origin);
     Result<void> setFixtureShape(mapping::FixtureId id, mapping::FixtureShape shape);
+
+    // Fixture-Bibliothek (Bauformen) und Drehung. Die Exemplare im Layout verweisen über Fixture::type auf eine
+    // Bauform; ändert man diese, folgen alle Exemplare. Alles ist ein Schritt Rückgängig.
+    [[nodiscard]] const std::vector<project::FixtureType>& fixtureTypes() const;
+    /// Neue Bauform. Fehler: InvalidArgument (Name, Form), AlreadyExists.
+    Result<void> addFixtureType(std::string name, mapping::FixtureShape shape);
+    /// Tauscht die Form der Bauform und aller Exemplare. Fehler: NotFound, InvalidArgument.
+    Result<void> replaceFixtureType(const std::string& name, mapping::FixtureShape shape);
+    Result<void> renameFixtureType(const std::string& from, std::string to);
+    /// Entfernt die Bauform; die Exemplare behalten ihre Form als eigene. Fehler: NotFound.
+    Result<void> removeFixtureType(const std::string& name);
+    /// Setzt die Bauform eines Fixtures (übernimmt deren Form); mit leerem Namen wird es von der Bibliothek gelöst.
+    Result<void> assignFixtureType(mapping::FixtureId id, const std::string& typeName);
+    /// Legt ein Exemplar einer Bauform an (Lage, Drehung, optional Patch).
+    Result<mapping::FixtureId> addFixtureOfType(std::string name, const std::string& typeName, const Vec3& origin,
+                                                const Vec3& rotation, std::optional<output::FixturePatch> patch = std::nullopt);
+    /// Drehung in Grad um x, y, z (um die Mitte des Fixtures).
+    Result<void> setFixtureRotation(mapping::FixtureId id, const Vec3& degrees);
     /// Verschiebt mehrere Fixtures um denselben Versatz (ein Undo-Schritt, wie ein Ziehen mit der Maus).
     /// Fehler: NotFound bei unbekannter Id, InvalidArgument bei nicht endlichem Versatz.
     Result<void> moveFixtures(const std::vector<mapping::FixtureId>& ids, const Vec3& delta);

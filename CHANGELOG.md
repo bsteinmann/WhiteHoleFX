@@ -1,5 +1,9 @@
 # Änderungen
 
+## 0.54.0
+
+- **Datenmodell für das neue Stage-Config-Fenster.** Neue Formen **Ring** (`ring`) und **Säule** (`helix`), **Drehung** von Fixtures um drei Achsen (`rotate x y z`) und eine **Fixture-Bibliothek** im Projekt (`fixturetype "Name"` … `end`, Verwendung mit `type "Name"`). Ändert man eine Bauform, folgen alle Exemplare. Abtastung und Vorschau berücksichtigen die Drehung. Die Bedienung im Studio folgt mit den nächsten Versionen; bestehende Projekte laden unverändert.
+
 ## 0.53.0
 
 - **Mausrad ändert keine Werte mehr.** Im ganzen Programm scrollt das Mausrad nur noch die Fläche; Zahlenfelder, Auswahlfelder und Schieber ändern ihren Wert nur durch Klick, Ziehen, Tippen oder Pfeiltasten. Der Rauchtest der CI prüft das.

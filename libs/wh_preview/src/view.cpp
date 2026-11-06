@@ -34,19 +34,14 @@ PixelRect toPixels(const ViewFrame& frame, const mapping::Box& box) noexcept {
     return rect;
 }
 
-mapping::Box worldBox(const mapping::Fixture& fixture) noexcept {
-    const mapping::Box local = mapping::localBox(fixture.shape);
-    const Vec3& o = fixture.origin;
-    return mapping::Box{Vec3{o.x + local.min.x, o.y + local.min.y, o.z + local.min.z},
-                        Vec3{o.x + local.max.x, o.y + local.max.y, o.z + local.max.z}};
-}
+mapping::Box worldBox(const mapping::Fixture& fixture) noexcept { return mapping::worldBox(fixture); }
 
 std::optional<mapping::FixtureId> fixtureAt(const mapping::Layout& layout, const ViewFrame& frame, float pixelX, float pixelY,
                                    float tolerance) {
     std::optional<mapping::FixtureId> best;
     float bestArea = std::numeric_limits<float>::max();
     for (const mapping::Fixture& fixture : layout.fixtures()) {
-        const PixelRect r = toPixels(frame, worldBox(fixture));
+        const PixelRect r = toPixels(frame, mapping::worldBox(fixture));
         if (pixelX < r.left - tolerance || pixelX > r.right + tolerance || pixelY < r.top - tolerance ||
             pixelY > r.bottom + tolerance) {
             continue;
@@ -63,7 +58,7 @@ std::optional<mapping::FixtureId> fixtureAt(const mapping::Layout& layout, const
 std::vector<mapping::FixtureId> fixturesInRect(const mapping::Layout& layout, const ViewFrame& frame, const PixelRect& rect) {
     std::vector<mapping::FixtureId> out;
     for (const mapping::Fixture& fixture : layout.fixtures()) {
-        const PixelRect r = toPixels(frame, worldBox(fixture));
+        const PixelRect r = toPixels(frame, mapping::worldBox(fixture));
         if (r.right >= rect.left && r.left <= rect.right && r.bottom >= rect.top && r.top <= rect.bottom) {
             out.push_back(fixture.id);
         }

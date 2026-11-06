@@ -175,6 +175,9 @@ void FixtureForm::buildShapeFields(QFormLayout& layout, const mapping::FixtureSh
             [&](const mapping::PointsShape& p) {
                 layout.addRow(new QLabel{tr("<b>Punktwolke</b>: %1 Punkte, nur in der Datei änderbar")
                                              .arg(p.points.size())});
+            },
+            [&](const auto&) {  // Ring und Säule: Formular folgt mit dem neuen Stage-Config-Fenster
+                layout.addRow(new QLabel{tr("<b>Ring oder Säule</b>: Form vorerst nur in der Datei änderbar")});
             }},
         shape);
 }

@@ -61,11 +61,20 @@ struct StageRegion {
     float height{1.0F};
 };
 
+/// Ein Eintrag der Fixture-Bibliothek des Projekts: eine benannte Bauform (Matrix, Strip, Ring, Säule ...). Fixtures im
+/// Layout können sie über Fixture::type verwenden; ändert man die Bauform, folgen alle Exemplare.
+struct FixtureType {
+    std::string name;
+    mapping::FixtureShape shape;
+};
+
 struct Project {
     explicit Project(std::shared_ptr<const graph::INodeRegistry> registry)
         : graph{std::move(registry)} {}
 
     mapping::Layout layout;
+    /// Bibliothek der Bauformen (Datei: `fixturetype`-Blöcke vor den Fixtures). Namen sind eindeutig.
+    std::vector<FixtureType> types;
     mapping::NormalizeMode normalize{mapping::NormalizeMode::Stretch};
     /// Gruppen und Regionen als Ziele für Output-Nodes (NodeInstance::targets). Namen sind je Liste eindeutig.
     std::vector<FixtureGroup> groups;

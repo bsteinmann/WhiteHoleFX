@@ -342,13 +342,17 @@ msgstr "<b>3D grid</b>"
 msgid "<b>Matrix</b>"
 msgstr "<b>Matrix</b>"
 
-#: fixture_form.cpp:183
+#: fixture_form.cpp:186
 msgid "<b>Patch</b>"
 msgstr "<b>Patch</b>"
 
 #: fixture_form.cpp:176
 msgid "<b>Punktwolke</b>: %1 Punkte, nur in der Datei änderbar"
 msgstr "<b>Point cloud</b>: %1 points, editable only in the file"
+
+#: fixture_form.cpp:180
+msgid "<b>Ring oder Säule</b>: Form vorerst nur in der Datei änderbar"
+msgstr "<b>Ring or column</b>: shape can only be changed in the file for now"
 
 #: fixture_form.cpp:128
 msgid "<b>Strip</b>"
@@ -634,7 +638,7 @@ msgstr "Start the cue list: switches to live mode and shows cue 1"
 msgid "Cyan"
 msgstr "Cyan"
 
-#: add_fixture_dialog.cpp:178 fixture_form.cpp:215
+#: add_fixture_dialog.cpp:178 fixture_form.cpp:218
 msgid "DDP-Offset (Byte)"
 msgstr "DDP offset (bytes)"
 
@@ -910,7 +914,7 @@ msgstr "Select fixtures first (hold Ctrl or Shift for several)"
 msgid "Erste Achse = läuft am schnellsten entlang des Kabels"
 msgstr "First axis = runs fastest along the cable"
 
-#: add_fixture_dialog.cpp:177 fixture_form.cpp:214
+#: add_fixture_dialog.cpp:177 fixture_form.cpp:217
 msgid "Erster Kanal"
 msgstr "First channel"
 
@@ -942,7 +946,7 @@ msgstr "Colours and shapes of node inputs and outputs in a floating window"
 msgid "Farbige Punkte vor den Nodes in der Palette: was der Node liefert"
 msgstr "Colored dots in front of the nodes in the palette: what the node delivers"
 
-#: add_fixture_dialog.cpp:179 fixture_form.cpp:216 test_panel.cpp:39
+#: add_fixture_dialog.cpp:179 fixture_form.cpp:219 test_panel.cpp:39
 msgid "Farbreihenfolge"
 msgstr "Color order"
 
@@ -1022,7 +1026,7 @@ msgstr "GO  (Space)"
 msgid "GO (von Hand)"
 msgstr "GO (manual)"
 
-#: fixture_form.cpp:217
+#: fixture_form.cpp:220
 msgid "Gamma"
 msgstr "Gamma"
 
@@ -1098,7 +1102,7 @@ msgstr "Size"
 msgid "Grün"
 msgstr "Green"
 
-#: fixture_form.cpp:217
+#: fixture_form.cpp:220
 msgid "Helligkeit"
 msgstr "Brightness"
 
@@ -1630,7 +1634,7 @@ msgstr "Save project as"
 msgid "Projekt öffnen"
 msgstr "Open project"
 
-#: add_fixture_dialog.cpp:174 fixture_form.cpp:212
+#: add_fixture_dialog.cpp:174 fixture_form.cpp:215
 msgid "Protokoll"
 msgstr "Protocol"
 
@@ -1926,7 +1930,7 @@ msgstr "Rename …"
 msgid "Ungespeicherte Änderungen"
 msgstr "Unsaved changes"
 
-#: add_fixture_dialog.cpp:176 fixture_form.cpp:214
+#: add_fixture_dialog.cpp:176 fixture_form.cpp:217
 msgid "Universe"
 msgstr "Universe"
 
@@ -2126,7 +2130,7 @@ msgstr "Dragging rotates, the wheel zooms. The first LED on the cable is white; 
 msgid "Ziel +"
 msgstr "Destination +"
 
-#: add_fixture_dialog.cpp:175 fixture_form.cpp:213
+#: add_fixture_dialog.cpp:175 fixture_form.cpp:216
 msgid "Ziel Nr."
 msgstr "Destination no."
 
@@ -2182,7 +2186,7 @@ msgstr "Counter or choice"
 msgid "Zählrichtung"
 msgstr "Counting direction"
 
-#: fixture_form.cpp:184
+#: fixture_form.cpp:187
 msgid "an die Ausgabe schicken"
 msgstr "send to the output"
 

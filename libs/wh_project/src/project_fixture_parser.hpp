@@ -20,15 +20,19 @@ struct FixtureDraft {
     std::size_t line{0};
     std::string name;
     Vec3 origin;
+    Vec3 rotation;                 // Grad um x, y, z
+    std::string type;              // Name aus der Bibliothek (Fixture mit `type`), sonst leer
+    bool isType{false};            // Block `fixturetype` statt `fixture`
     std::optional<mapping::FixtureShape> shape;
     std::vector<Vec3> points;
     std::vector<output::FixturePatch> patches;
 };
 
-/// `fixture "Name" [at x y z]` (Reader steht hinter dem Schlüsselwort).
-FixtureDraft beginFixture(Reader& r);
+/// `fixture "Name" [at x y z] [rotate x y z] [type "Typ"]` oder, mit `isType`, `fixturetype "Name"` (Reader steht
+/// hinter dem Schlüsselwort).
+FixtureDraft beginFixture(Reader& r, bool isType = false);
 
-/// Eine Anweisung im Block (matrix, strip, grid, point, patch). Unbekannt: Fehler im Reader.
+/// Eine Anweisung im Block (matrix, strip, grid, ring, helix, point, patch). Unbekannt: Fehler im Reader.
 void fixtureStatement(const std::string& keyword, Reader& r, FixtureDraft& draft);
 
 /// `end`: legt das Fixture im Layout an und übernimmt die Patches.

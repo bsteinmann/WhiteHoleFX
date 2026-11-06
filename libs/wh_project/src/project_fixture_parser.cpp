@@ -1,6 +1,8 @@
 // project_fixture_parser.cpp: Matrix, Strip, Gitter, Punkte und Patches eines Fixtures.
 #include "project_fixture_parser.hpp"
 
+#include <algorithm>
+
 #include "project_names.hpp"
 #include "whitehole/project/project.hpp"
 
@@ -86,6 +88,50 @@ void grid(Reader& r, FixtureDraft& d) {
     }
 }
 
+void ring(Reader& r, FixtureDraft& d) {
+    mapping::RingShape s;
+    s.count = r.whole("LED-Zahl", kMaxDimension);
+    while (r.ok() && !r.atEnd()) {
+        const std::string key = r.word("Option");
+        if (key == "radius") {
+            s.radius = r.number("Radius");
+        } else if (key == "start") {
+            s.startAngle = r.number("Startwinkel");
+        } else if (key == "ccw") {
+            s.clockwise = false;
+        } else if (r.ok()) {
+            r.fail("Unbekannte Option \"" + key + "\" bei ring");
+        }
+    }
+    if (r.ok()) {
+        setShape(r, d, s);
+    }
+}
+
+void helix(Reader& r, FixtureDraft& d) {
+    mapping::HelixShape s;
+    s.count = r.whole("LED-Zahl", kMaxDimension);
+    while (r.ok() && !r.atEnd()) {
+        const std::string key = r.word("Option");
+        if (key == "radius") {
+            s.radius = r.number("Radius");
+        } else if (key == "height") {
+            s.height = r.number("Höhe");
+        } else if (key == "turns") {
+            s.turns = r.number("Windungen");
+        } else if (key == "start") {
+            s.startAngle = r.number("Startwinkel");
+        } else if (key == "ccw") {
+            s.clockwise = false;
+        } else if (r.ok()) {
+            r.fail("Unbekannte Option \"" + key + "\" bei helix");
+        }
+    }
+    if (r.ok()) {
+        setShape(r, d, s);
+    }
+}
+
 void point(Reader& r, FixtureDraft& d) {
     const Vec3 p = r.vec3("Punkt");
     r.expectEnd();
@@ -134,15 +180,22 @@ void patch(Reader& r, FixtureDraft& d) {
 
 }  // namespace
 
-FixtureDraft beginFixture(Reader& r) {
+FixtureDraft beginFixture(Reader& r, bool isType) {
     FixtureDraft d;
     d.line = r.line();
+    d.isType = isType;
     d.name = r.word("Name");
-    if (r.ok() && !r.atEnd()) {
-        if (r.word("at") != "at" && r.ok()) {
-            r.fail("Erwartet \"at\"");
+    while (r.ok() && !r.atEnd() && !isType) {
+        const std::string key = r.word("Option");
+        if (key == "at") {
+            d.origin = r.vec3("Ursprung");
+        } else if (key == "rotate") {
+            d.rotation = r.vec3("Drehung");
+        } else if (key == "type") {
+            d.type = r.word("Typname");
+        } else if (r.ok()) {
+            r.fail("Erwartet \"at\", \"rotate\" oder \"type\", nicht \"" + key + "\"");
         }
-        d.origin = r.vec3("Ursprung");
     }
     r.expectEnd();
     return d;
@@ -155,6 +208,10 @@ void fixtureStatement(const std::string& keyword, Reader& r, FixtureDraft& draft
         strip(r, draft);
     } else if (keyword == "grid") {
         grid(r, draft);
+    } else if (keyword == "ring") {
+        ring(r, draft);
+    } else if (keyword == "helix") {
+        helix(r, draft);
     } else if (keyword == "point") {
         point(r, draft);
     } else if (keyword == "patch") {
@@ -167,23 +224,58 @@ void fixtureStatement(const std::string& keyword, Reader& r, FixtureDraft& draft
 
 std::optional<Error> finishFixture(FixtureDraft& draft, Project& project) {
     const auto at = [&](const Error& e) {
-        return Error{e.code, "Zeile " + std::to_string(draft.line) + " (fixture \"" + draft.name +
-                                 "\"): " + e.message};
+        return Error{e.code, "Zeile " + std::to_string(draft.line) + " (" + (draft.isType ? "fixturetype" : "fixture") +
+                                 " \"" + draft.name + "\"): " + e.message};
     };
+    const bool hasShape = draft.shape.has_value() || !draft.points.empty();
+    if (draft.isType) {
+        for (const FixtureType& other : project.types) {
+            if (other.name == draft.name) {
+                return at(Error{ErrorCode::AlreadyExists, "Name ist schon vergeben"});
+            }
+        }
+        if (!hasShape) {
+            return at(Error{ErrorCode::InvalidArgument, "Es fehlt die Form (matrix, strip, grid, ring, helix oder point)"});
+        }
+        if (!draft.patches.empty()) {
+            return at(Error{ErrorCode::InvalidArgument, "Ein fixturetype hat keinen Patch"});
+        }
+        mapping::FixtureShape shape =
+            draft.shape ? std::move(*draft.shape) : mapping::FixtureShape{mapping::PointsShape{draft.points}};
+        if (const auto valid = mapping::validateShape(shape); !valid.ok()) {
+            return at(valid.error());
+        }
+        project.types.push_back(FixtureType{draft.name, std::move(shape)});
+        return std::nullopt;
+    }
     for (const auto& f : project.layout.fixtures()) {
         if (f.name == draft.name) {
             return at(Error{ErrorCode::AlreadyExists, "Name ist schon vergeben"});
         }
     }
-    if (!draft.shape && draft.points.empty()) {
-        return at(Error{ErrorCode::InvalidArgument, "Es fehlt die Form (matrix, strip, grid oder point)"});
+    mapping::FixtureShape shape;
+    if (!draft.type.empty()) {
+        if (hasShape) {
+            return at(Error{ErrorCode::InvalidArgument, "Mit \"type\" hat das Fixture keine eigene Form"});
+        }
+        const auto found = std::ranges::find(project.types, draft.type, &FixtureType::name);
+        if (found == project.types.end()) {
+            return at(Error{ErrorCode::NotFound, "Der Typ \"" + draft.type + "\" ist nicht definiert (fixturetype davor)"});
+        }
+        shape = found->shape;
+    } else if (!hasShape) {
+        return at(Error{ErrorCode::InvalidArgument, "Es fehlt die Form (matrix, strip, grid, ring, helix oder point)"});
+    } else {
+        shape = draft.shape ? std::move(*draft.shape) : mapping::FixtureShape{mapping::PointsShape{draft.points}};
     }
-    mapping::FixtureShape shape =
-        draft.shape ? std::move(*draft.shape) : mapping::FixtureShape{mapping::PointsShape{draft.points}};
     const auto id = project.layout.add(draft.name, draft.origin, std::move(shape));
     if (!id.ok()) {
         return at(id.error());
     }
+    if (const auto rotated = project.layout.rotate(id.value(), draft.rotation); !rotated.ok()) {
+        return at(rotated.error());
+    }
+    (void)project.layout.setType(id.value(), draft.type);
     for (output::FixturePatch p : draft.patches) {
         p.fixture = id.value();
         project.patches.push_back(p);

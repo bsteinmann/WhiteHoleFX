@@ -100,7 +100,7 @@ Die Nummern müssen der Reihe nach bei 0 beginnen. Port 0 oder weggelassen: Stan
 Protokolls (Art-Net 6454, sACN 5568, DDP 4048). `multicast` gilt nur für sACN
 (Gruppe `239.255.<Universe hoch>.<Universe tief>`). Nur IPv4-Zahlen, keine Hostnamen.
 
-### `fixture "<name>" [at x y z]` … `end`
+### `fixture "<name>" [at x y z] [rotate x y z] [type "<name>"]` … `end`
 
 Genau eine Form pro Fixture, beliebig viele Patches:
 
@@ -109,12 +109,23 @@ Genau eine Form pro Fixture, beliebig viele Patches:
 | `matrix <spalten> <zeilen> [pitch px py] [start <ecke>] [first rows\|columns] [serpentine]` | Ecke: `top-left`, `top-right`, `bottom-left`, `bottom-right` |
 | `strip <anzahl> from x y z to x y z` | gerader Strip |
 | `grid <nx> <ny> <nz> [pitch x y z] [order XYZ\|XZY\|YXZ\|YZX\|ZXY\|ZYX] [serpentine] [flipx] [flipy] [flipz]` | 3D-Gitter (Cube). `flipx/flipy/flipz`: Das Kabel beginnt am oberen Ende dieser Achse (Startecke); ohne sie bei x=0, y=0, z=0 (unten links hinten) |
+| `ring <anzahl> [radius r] [start winkel] [ccw]` | Ring (Kreis) in der x-y-Ebene; Mittelpunkt bei (r, r, 0); erste LED bei `start` (Grad, 90 = oben), danach im Uhrzeigersinn (`ccw`: dagegen) |
+| `helix <anzahl> [radius r] [height h] [turns n] [start winkel] [ccw]` | Säule: Spirale um die y-Achse von unten nach oben |
 | `point x y z` | eine LED einer Punktwolke, in Kabelreihenfolge; beliebig oft (aus CSV/JSON importierbar, siehe `docs/mapping.md`) |
 | `patch <artnet\|sacn\|ddp> destination <n> [universe u] [channel c] [offset o] [order RGB…] [gamma g] [brightness b]` | wohin das Fixture geht |
+
+`rotate x y z` dreht das ganze Fixture (Grad, um die Mitte seiner Box, Reihenfolge x, y, z). `type "Name"` verweist auf eine
+Bauform aus der Bibliothek (siehe unten); die Form steht dann dort und im Fixture selbst nicht.
 
 Koordinaten und Reihenfolge der LEDs: siehe [Mapping](mapping.md). Verteilung auf Universen
 und Grenzen (170 LEDs je Universe): siehe [Ausgabe](output.md). `offset` gilt nur für DDP,
 `universe` und `channel` nur für Art-Net und sACN.
+
+### `fixturetype "<name>"` … `end` (Bibliothek)
+
+Eine benannte Bauform mit genau einer Form (`matrix`, `strip`, `grid`, `ring`, `helix`, `point`), ohne Lage und ohne Patch. Sie
+steht vor den Fixtures, die sie mit `type "<name>"` verwenden. Ändert man die Bauform, folgen alle Exemplare; Lage, Drehung und
+Patch behält jedes Exemplar. Alte Programmversionen kennen diese Anweisungen nicht (das Format bleibt Version 1).
 
 ### `node <name> <typ>` … `end`
 

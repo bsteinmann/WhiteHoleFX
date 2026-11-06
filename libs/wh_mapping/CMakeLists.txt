@@ -5,6 +5,7 @@
 wh_add_library(wh_mapping
     SOURCES
         src/fixture.cpp
+        src/fixture_pose.cpp
         src/layout.cpp
         src/mini_json.cpp
         src/point_import.cpp

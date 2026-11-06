@@ -14,6 +14,8 @@ namespace {
 bool finite(float v) noexcept { return std::isfinite(v); }
 bool finite(const Vec3& v) noexcept { return finite(v.x) && finite(v.y) && finite(v.z); }
 
+constexpr float kDegrees = 3.14159265358979F / 180.0F;
+
 Error invalid(const std::string& message) { return Error{ErrorCode::InvalidArgument, message}; }
 
 /// Produkt mit Überlaufschutz: false, wenn es die Obergrenze überschreitet.
@@ -65,6 +67,27 @@ struct Validator {
         return {};
     }
 
+    Result<void> operator()(const RingShape& r) const {
+        if (r.count == 0U || r.count > kMaxLedsPerFixture) {
+            return invalid("Ein Ring braucht zwischen 1 und 4194304 LEDs");
+        }
+        if (!finite(r.radius) || r.radius <= 0.0F || r.radius > 1.0e6F || !finite(r.startAngle)) {
+            return invalid("Radius des Rings muss endlich und größer 0 sein, der Startwinkel eine Zahl");
+        }
+        return {};
+    }
+
+    Result<void> operator()(const HelixShape& h) const {
+        if (h.count == 0U || h.count > kMaxLedsPerFixture) {
+            return invalid("Eine Säule braucht zwischen 1 und 4194304 LEDs");
+        }
+        if (!finite(h.radius) || h.radius <= 0.0F || h.radius > 1.0e6F || !finite(h.height) || h.height <= 0.0F ||
+            h.height > 1.0e6F || !finite(h.turns) || h.turns < 0.0F || h.turns > 1.0e6F || !finite(h.startAngle)) {
+            return invalid("Radius und Höhe der Säule müssen endlich und größer 0 sein, die Windungen nicht negativ");
+        }
+        return {};
+    }
+
     Result<void> operator()(const PointsShape& p) const {
         if (p.points.empty()) {
             return invalid("Eine Punktwolke braucht mindestens einen Punkt");
@@ -90,6 +113,8 @@ struct Counter {
         return std::uint64_t{g.nx} * g.ny * g.nz;
     }
     std::uint64_t operator()(const PointsShape& p) const noexcept { return p.points.size(); }
+    std::uint64_t operator()(const RingShape& r) const noexcept { return r.count; }
+    std::uint64_t operator()(const HelixShape& h) const noexcept { return h.count; }
 };
 
 struct BoxOf {
@@ -107,6 +132,12 @@ struct BoxOf {
         return Box{Vec3{}, Vec3{static_cast<float>(g.nx) * g.pitch.x,
                                 static_cast<float>(g.ny) * g.pitch.y,
                                 static_cast<float>(g.nz) * g.pitch.z}};
+    }
+    Box operator()(const RingShape& r) const noexcept {
+        return Box{Vec3{}, Vec3{2.0F * r.radius, 2.0F * r.radius, 0.0F}};
+    }
+    Box operator()(const HelixShape& h) const noexcept {
+        return Box{Vec3{}, Vec3{2.0F * h.radius, h.height, 2.0F * h.radius}};
     }
     Box operator()(const PointsShape& p) const noexcept {
         Box box{p.points.front(), p.points.front()};
@@ -160,6 +191,30 @@ struct PositionsOf {
     }
 
     std::vector<Vec3> operator()(const PointsShape& p) const { return p.points; }
+
+    std::vector<Vec3> operator()(const RingShape& r) const {
+        std::vector<Vec3> out;
+        out.reserve(r.count);
+        const float direction = r.clockwise ? -1.0F : 1.0F;
+        for (std::uint32_t i = 0; i < r.count; ++i) {
+            const float angle = (r.startAngle + direction * 360.0F * static_cast<float>(i) / static_cast<float>(r.count)) *
+                                kDegrees;
+            out.push_back(Vec3{r.radius + r.radius * std::cos(angle), r.radius + r.radius * std::sin(angle), 0.0F});
+        }
+        return out;
+    }
+
+    std::vector<Vec3> operator()(const HelixShape& h) const {
+        std::vector<Vec3> out;
+        out.reserve(h.count);
+        const float direction = h.clockwise ? -1.0F : 1.0F;
+        for (std::uint32_t i = 0; i < h.count; ++i) {
+            const float t = (static_cast<float>(i) + 0.5F) / static_cast<float>(h.count);
+            const float angle = (h.startAngle + direction * 360.0F * h.turns * t) * kDegrees;
+            out.push_back(Vec3{h.radius + h.radius * std::cos(angle), h.height * t, h.radius + h.radius * std::sin(angle)});
+        }
+        return out;
+    }
 };
 
 }  // namespace
@@ -199,6 +254,23 @@ struct SpacingOf {
         const float found = smallest({g.nx > 1 ? g.pitch.x : 0.0F, g.ny > 1 ? g.pitch.y : 0.0F,
                                       g.nz > 1 ? g.pitch.z : 0.0F});
         return found > 0.0F ? found : smallest({g.pitch.x, g.pitch.y, g.pitch.z});
+    }
+    float operator()(const RingShape& r) const noexcept {
+        if (r.count < 2) {
+            return 0.0F;
+        }
+        return 2.0F * r.radius * std::sin(3.14159265358979F / static_cast<float>(r.count));
+    }
+    float operator()(const HelixShape& h) const noexcept {
+        if (h.count < 2) {
+            return 0.0F;
+        }
+        // Abstand zweier Nachbarn: Bogenstück auf dem Zylinder (Sehne) und Höhenschritt
+        const float n = static_cast<float>(h.count);
+        const float step = 360.0F * h.turns / n * kDegrees;
+        const float chord = 2.0F * h.radius * std::sin(std::min(step, 3.14159265358979F) / 2.0F);
+        const float rise = h.height / n;
+        return std::sqrt(chord * chord + rise * rise);
     }
     float operator()(const PointsShape& p) const noexcept {
         constexpr std::size_t kMaxPoints = 20000;

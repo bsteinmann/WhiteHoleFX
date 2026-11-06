@@ -22,6 +22,7 @@ wh_add_library(wh_runtime
         src/player_targets.cpp
         src/player_master.cpp
         src/player_layout.cpp
+        src/player_types.cpp
         src/player_live.cpp
         src/player_arrange.cpp
         src/player_paste.cpp

@@ -60,6 +60,7 @@ add_executable(wh_tests
     executor/sampling_render_stage_test.cpp
     executor/sampling_shader_test.cpp
     mapping/fixture_test.cpp
+    mapping/fixture_pose_test.cpp
     mapping/layout_test.cpp
     mapping/point_import_test.cpp
     mapping/region_edit_test.cpp
@@ -91,6 +92,7 @@ add_executable(wh_tests
     runtime/player_layout_test.cpp
     runtime/player_targets_test.cpp
     runtime/player_arrange_test.cpp
+    runtime/player_types_test.cpp
     runtime/dmx_usage_test.cpp
     runtime/node_catalog_test.cpp
     runtime/color_pick_test.cpp

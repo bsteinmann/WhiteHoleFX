@@ -45,6 +45,13 @@ void writeShape(std::ostream& out, const mapping::FixtureShape& shape) {
         }
         out << (g->wiring.flipX ? " flipx" : "") << (g->wiring.flipY ? " flipy" : "") << (g->wiring.flipZ ? " flipz" : "");
         out << "\n";
+    } else if (const auto* ring = std::get_if<mapping::RingShape>(&shape)) {
+        out << "  ring " << ring->count << " radius " << formatFloat(ring->radius) << " start "
+            << formatFloat(ring->startAngle) << (ring->clockwise ? "" : " ccw") << "\n";
+    } else if (const auto* helix = std::get_if<mapping::HelixShape>(&shape)) {
+        out << "  helix " << helix->count << " radius " << formatFloat(helix->radius) << " height "
+            << formatFloat(helix->height) << " turns " << formatFloat(helix->turns) << " start "
+            << formatFloat(helix->startAngle) << (helix->clockwise ? "" : " ccw") << "\n";
     } else if (const auto* p = std::get_if<mapping::PointsShape>(&shape)) {
         for (const Vec3& point : p->points) {
             out << "  point " << vec3(point) << "\n";
@@ -149,10 +156,25 @@ Result<std::string> writeProject(const Project& project) {
     }
     out << "\n";
 
+    for (const FixtureType& type : project.types) {
+        out << "fixturetype " << quoteWord(type.name) << "\n";
+        writeShape(out, type.shape);
+        out << "end\n\n";
+    }
+
     std::size_t patched = 0;
     for (const mapping::Fixture& fixture : project.layout.fixtures()) {
-        out << "fixture " << quoteWord(fixture.name) << " at " << vec3(fixture.origin) << "\n";
-        writeShape(out, fixture.shape);
+        out << "fixture " << quoteWord(fixture.name) << " at " << vec3(fixture.origin);
+        const Vec3& turn = fixture.rotation;
+        if (turn.x != 0.0F || turn.y != 0.0F || turn.z != 0.0F) {
+            out << " rotate " << vec3(turn);
+        }
+        if (!fixture.type.empty()) {
+            out << " type " << quoteWord(fixture.type) << "\n";  // die Form steht im fixturetype
+        } else {
+            out << "\n";
+            writeShape(out, fixture.shape);
+        }
         for (const output::FixturePatch& p : project.patches) {
             if (p.fixture == fixture.id) {
                 writePatch(out, p);
