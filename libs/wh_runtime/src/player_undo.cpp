@@ -3,6 +3,7 @@
 // Verfahren: Vor einer Änderung wird eine Kopie des ganzen Projekts auf den Undo-Stapel gelegt.
 // Das ist einfach und fehlerarm; ein Projekt ist klein (Fixtures sind Beschreibungen, keine LED-
 // Listen). Gleichartige Änderungen in Folge (Regler ziehen) teilen sich eine Kopie.
+#include "whitehole/project/output_target.hpp"
 #include "whitehole/runtime/player.hpp"
 
 #include "whitehole/output/packet_sink.hpp"
@@ -117,6 +118,8 @@ Result<void> Player::editProject(const std::string& key,
         return r;
     }
     map_ = std::move(*map);
+    // Output-Nodes mit Ziel folgen dem Layout (verschobene oder geänderte Fixtures ändern ihr Rechteck).
+    (void)project::applyOutputTargets(*project_, map_);
     finishEdit(std::move(before), key, true, true);
     modified_ = true;
     rebuildDirty_ = true;

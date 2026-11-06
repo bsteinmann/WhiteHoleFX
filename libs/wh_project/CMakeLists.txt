@@ -4,6 +4,8 @@ wh_add_library(wh_project
     SOURCES
         src/fixture_template.cpp
         src/project_cue.cpp
+        src/project_stage.cpp
+        src/output_target.cpp
         src/project_fixture_parser.cpp
         src/project_parser.cpp
         src/project_text.cpp

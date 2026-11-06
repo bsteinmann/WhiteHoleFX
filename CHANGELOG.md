@@ -1,5 +1,11 @@
 # Änderungen
 
+## 0.48.0
+
+- **Mehrere Outputs mit Ziel.** Ein Output-Node kann Fixtures, Gruppen von Fixtures oder benannte Regionen der Bühne als Ziel haben (Rechtsklick auf den Output-Node → „Ziel zuweisen“). Sein Rechteck wird aus dem Ziel berechnet und folgt dem Layout (Verschieben, Umbenennen, Rückgängig). So gibt es getrennte Effektketten je Fixture oder Gruppe; LEDs ohne Output bleiben dunkel, bei Überlappung gewinnt der spätere Output.
+- Im Layout der Knopf **Gruppen**: Gruppe aus gewählten Fixtures speichern, Region anlegen, beide löschen. Projektdatei: neue Zeilen `group`, `region` und `target` im node-Block.
+- Der Import von LED-Positionen heißt jetzt „LED-Positionen importieren (CSV/JSON) …“ (vorher „Punktwolke importieren“).
+
 ## 0.47.0
 
 - **Stage Config übersichtlicher.** Zusammengehörige Felder stehen nebeneinander (Spalten/Zeilen, Kabelstart/Richtung, Protokoll/Ziel, Universe/Kanal, Gamma/Helligkeit), Zahlenfelder sind schmal.

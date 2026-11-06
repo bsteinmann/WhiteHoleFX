@@ -180,6 +180,25 @@ Result<void> Graph::setPosition(NodeId id, Vec2 position) {
     return {};
 }
 
+Result<void> Graph::setTargets(NodeId id, std::vector<std::string> targets) {
+    const auto it = std::find_if(nodes_.begin(), nodes_.end(),
+                                 [id](const NodeInstance& node) { return node.id == id; });
+    if (it == nodes_.end()) {
+        return notFound("Node existiert nicht");
+    }
+    std::vector<std::string> unique;
+    for (std::string& target : targets) {
+        if (target.empty()) {
+            return Error{ErrorCode::InvalidArgument, "Ein Ziel darf nicht leer sein"};
+        }
+        if (std::find(unique.begin(), unique.end(), target) == unique.end()) {
+            unique.push_back(std::move(target));
+        }
+    }
+    it->targets = std::move(unique);
+    return {};
+}
+
 Result<void> Graph::setBypassed(NodeId id, bool bypassed) {
     const auto it = std::find_if(nodes_.begin(), nodes_.end(),
                                  [id](const NodeInstance& node) { return node.id == id; });

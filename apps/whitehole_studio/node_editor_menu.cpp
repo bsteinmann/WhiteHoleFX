@@ -63,6 +63,7 @@ void NodeEditor::contextMenuEvent(QContextMenuEvent* event) {
         connect(menu.addAction(tr("Kopieren\tStrg+C")), &QAction::triggered, this, [this]() { copySelection(); });
         connect(menu.addAction(tr("Duplizieren\tStrg+D")), &QAction::triggered, this,
                 [this]() { duplicateSelection(); });
+        addTargetMenu(menu, node->nodeId());
         if (presets_ != nullptr) {
             connect(menu.addAction(tr("Als Preset speichern …")), &QAction::triggered, this,
                     [this]() { savePresetInteractive(); });

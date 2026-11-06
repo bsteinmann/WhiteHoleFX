@@ -46,12 +46,30 @@ struct Look {
 
 inline constexpr double kMaxFadeSeconds = 600.0;
 
+/// Eine benannte Gruppe von Fixtures (Namen), z. B. "Bühne links". Ziel für Output-Nodes.
+struct FixtureGroup {
+    std::string name;
+    std::vector<std::string> fixtures;  // Namen der Fixtures im Layout
+};
+
+/// Ein benanntes Rechteck der Bühne (Anteile 0..1 der Leinwand, `top` zählt von oben wie beim Output-Node).
+struct StageRegion {
+    std::string name;
+    float left{0.0F};
+    float top{0.0F};
+    float width{1.0F};
+    float height{1.0F};
+};
+
 struct Project {
     explicit Project(std::shared_ptr<const graph::INodeRegistry> registry)
         : graph{std::move(registry)} {}
 
     mapping::Layout layout;
     mapping::NormalizeMode normalize{mapping::NormalizeMode::Stretch};
+    /// Gruppen und Regionen als Ziele für Output-Nodes (NodeInstance::targets). Namen sind je Liste eindeutig.
+    std::vector<FixtureGroup> groups;
+    std::vector<StageRegion> regions;
     std::vector<output::FixturePatch> patches;
 
     graph::Graph graph;

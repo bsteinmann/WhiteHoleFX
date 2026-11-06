@@ -9,6 +9,7 @@
 #include <variant>
 
 #include "project_cue.hpp"
+#include "project_stage.hpp"
 #include "project_fixture_parser.hpp"
 #include "project_names.hpp"
 #include "whitehole/project/project.hpp"
@@ -109,7 +110,8 @@ std::optional<Error> Parser::handleOutside(const Line& line) {
     Reader r{line, 0};
     const std::string key = r.word("Schlüsselwort");
     std::optional<Error> error;
-    if (look_ && (key == "settings" || key == "destination" || key == "fixture" || key == "cue")) {
+    if (look_ && (key == "settings" || key == "destination" || key == "fixture" || key == "cue" || key == "group" ||
+                  key == "region")) {
         r.fail("\"" + key + "\" gehört nicht in einen look-Block");
     } else if (key == "settings") {
         error = settings(r);
@@ -130,6 +132,22 @@ std::optional<Error> Parser::handleOutside(const Line& line) {
         error = output(r);
     } else if (key == "cue") {
         project_.cues.push_back(detail::parseCue(r));
+    } else if (key == "group") {
+        FixtureGroup group = detail::parseGroup(r);
+        for (const FixtureGroup& other : project_.groups) {
+            if (r.ok() && other.name == group.name) {
+                r.fail("Gruppe \"" + group.name + "\" gibt es schon", ErrorCode::AlreadyExists);
+            }
+        }
+        project_.groups.push_back(std::move(group));
+    } else if (key == "region") {
+        StageRegion region = detail::parseRegion(r);
+        for (const StageRegion& other : project_.regions) {
+            if (r.ok() && other.name == region.name) {
+                r.fail("Region \"" + region.name + "\" gibt es schon", ErrorCode::AlreadyExists);
+            }
+        }
+        project_.regions.push_back(std::move(region));
     } else if (key == "look") {
         error = beginLook(r, line.number);
     } else if (key == "endlook") {
@@ -232,6 +250,18 @@ std::optional<Error> Parser::handleNode(const Line& line) {
             return r.error();
         }
         const auto result = graph_->setPosition(node_, position);
+        if (!result.ok()) {
+            return withLine(r.line(), result.error());
+        }
+    } else if (key == "target") {
+        std::string entry = detail::parseTarget(r);
+        if (!r.ok()) {
+            return r.error();
+        }
+        const graph::NodeInstance* node = graph_->findNode(node_);
+        std::vector<std::string> targets = node != nullptr ? node->targets : std::vector<std::string>{};
+        targets.push_back(std::move(entry));
+        const auto result = graph_->setTargets(node_, std::move(targets));
         if (!result.ok()) {
             return withLine(r.line(), result.error());
         }

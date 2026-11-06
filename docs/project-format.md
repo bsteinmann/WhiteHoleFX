@@ -133,6 +133,18 @@ alte Dateien unverändert lesen.
 ersten Field-Eingang unverändert weiter; ohne verbundenen Field-Eingang (Generatoren) liefert er Transparent.
 Der Writer schreibt die Zeile nur für überbrückte Nodes. Ältere Programmversionen lehnen sie ab.
 
+### `group`, `region` und `target` (mehrere Outputs)
+
+```
+group "Bühne links" "Matrix 1" "Matrix 2"     # benannte Gruppe von Fixtures (mindestens eins)
+region Mitte 0.25 0.5 0.5 0.25                 # benanntes Rechteck: links oben breite höhe (Anteile 0..1, oben zählt von oben)
+node a wh.output.canvas
+  target fixture "Matrix 1"                    # im node-Block eines Output-Nodes; fixture, group oder region, beliebig oft
+end
+```
+
+Gruppen und Regionen stehen vor den Nodes und gelten für das ganze Projekt (nicht in look-Blöcken). Das Studio schreibt aus den `target`-Zeilen das Rechteck in `left`, `top`, `width`, `height` des Output-Nodes und hält es aktuell.
+
 ### `connect <node>.<ausgang> -> <node>.<eingang>` und `output <node>.<ausgang>`
 
 Verbindungen werden beim Lesen geprüft (Typen, Zyklen, Eingang schon belegt). `output` ist

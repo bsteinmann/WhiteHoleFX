@@ -74,23 +74,23 @@ msgstr ""
 msgid " s"
 msgstr ""
 
-#: stage_view.cpp:189
+#: stage_view.cpp:190
 msgid " · %1 Ziel %2 · Universe %3 · Kanal %4–%5"
 msgstr ""
 
-#: stage_view.cpp:186
+#: stage_view.cpp:187
 msgid " · DDP Ziel %1 · Byte %2–%3"
 msgstr ""
 
-#: stage_view.cpp:183
+#: stage_view.cpp:184
 msgid " · liegt hinter dem letzten Universe"
 msgstr ""
 
-#: stage_view.cpp:193
+#: stage_view.cpp:194
 msgid " · nicht gepatcht"
 msgstr ""
 
-#: layout_panel.cpp:251
+#: layout_panel.cpp:257
 msgid "%1  (%2 LEDs)"
 msgstr ""
 
@@ -126,7 +126,7 @@ msgstr ""
 msgid "%1 LEDs, angehalten"
 msgstr ""
 
-#: stage_view.cpp:176
+#: stage_view.cpp:177
 msgid "%1 · LED %2 von %3"
 msgstr ""
 
@@ -354,7 +354,7 @@ msgstr ""
 msgid "<b>WhiteHoleFX Studio</b> %1<br><br>Steuerung für LED-Matrizen, Cubes und Pixel mit einem Node-Editor.<br>Lizenz: PolyForm Shield 1.0.0<br><br><a href=\"%2\">%2</a>"
 msgstr ""
 
-#: layout_panel.cpp:178
+#: layout_panel.cpp:184
 msgid "Abstand"
 msgstr ""
 
@@ -366,7 +366,7 @@ msgstr ""
 msgid "Abstand x y z"
 msgstr ""
 
-#: layout_panel.cpp:177
+#: layout_panel.cpp:183
 msgid "Abstand zwischen den Fixtures beim Aneinanderreihen (0 = dicht an dicht)"
 msgstr ""
 
@@ -410,7 +410,7 @@ msgstr ""
 msgid "Als Preset speichern"
 msgstr ""
 
-#: node_editor_menu.cpp:67
+#: node_editor_menu.cpp:68
 msgid "Als Preset speichern …"
 msgstr ""
 
@@ -506,7 +506,7 @@ msgstr ""
 msgid "Aus-LEDs &unsichtbar"
 msgstr ""
 
-#: layout_panel.cpp:74
+#: layout_panel.cpp:80
 msgid "Ausgabe"
 msgstr ""
 
@@ -568,6 +568,10 @@ msgstr ""
 
 #: node_info_texts.cpp:95
 msgid "Blitze: Zufällige verzweigte Einschläge mit Nachglühen und Aufhellen. Häufigkeit, Breite und Verästelung einstellbar."
+msgstr ""
+
+#: layout_panel_groups.cpp:115
+msgid "Breite"
 msgstr ""
 
 #: layout_panel_add.cpp:40
@@ -826,7 +830,7 @@ msgstr ""
 msgid "Eine feste Zahl. Praktisch, um mehrere Parameter mit demselben Wert zu speisen."
 msgstr ""
 
-#: node_editor_menu.cpp:92
+#: node_editor_menu.cpp:93
 msgid "Einfügen\tStrg+V"
 msgstr ""
 
@@ -846,7 +850,7 @@ msgstr ""
 msgid "Ende x y z"
 msgstr ""
 
-#: layout_panel.cpp:51
+#: layout_panel.cpp:56
 msgid "Entfernen"
 msgstr ""
 
@@ -854,7 +858,7 @@ msgstr ""
 msgid "Erkennt den Takt der Musik und liefert Beat-Impuls, Pulse (klingt ab), Phase und Tempo (BPM). Das Tempo lässt sich auch fest vorgeben."
 msgstr ""
 
-#: layout_panel.cpp:187
+#: layout_panel.cpp:193
 msgid "Erst Fixtures wählen (Strg oder Umschalt halten für mehrere)"
 msgstr ""
 
@@ -922,7 +926,7 @@ msgstr ""
 msgid "Fixture hinzufügen"
 msgstr ""
 
-#: layout_panel.cpp:68
+#: layout_panel.cpp:74 node_editor_targets.cpp:51
 msgid "Fixtures"
 msgstr ""
 
@@ -946,7 +950,7 @@ msgstr ""
 msgid "Frei drehbare Ansicht: ziehen = drehen, Rechtsklick = verschieben, Rad = Zoom"
 msgstr ""
 
-#: stage_view.cpp:72
+#: stage_view.cpp:73
 msgid "Front"
 msgstr ""
 
@@ -998,11 +1002,15 @@ msgstr ""
 msgid "Gespeichert: %1"
 msgstr ""
 
-#: layout_panel.cpp:161
+#: layout_panel_groups.cpp:29
+msgid "Gewählte Fixtures als Gruppe speichern …"
+msgstr ""
+
+#: layout_panel.cpp:167
 msgid "Gewählte Fixtures senkrecht aufeinanderreihen (das untere bleibt stehen)"
 msgstr ""
 
-#: layout_panel.cpp:159
+#: layout_panel.cpp:165
 msgid "Gewählte Fixtures waagrecht aneinanderreihen (das linke bleibt stehen)"
 msgstr ""
 
@@ -1012,6 +1020,22 @@ msgstr ""
 
 #: node_info_texts.cpp:155
 msgid "Glättet einen Wert: Er folgt dem Eingang mit einer Zeitkonstante, statt zu springen."
+msgstr ""
+
+#: layout_panel_groups.cpp:35
+msgid "Gruppe löschen"
+msgstr ""
+
+#: layout_panel_groups.cpp:76
+msgid "Gruppe speichern"
+msgstr ""
+
+#: layout_panel.cpp:51 node_editor_targets.cpp:56
+msgid "Gruppen"
+msgstr ""
+
+#: layout_panel.cpp:52
+msgid "Gruppen von Fixtures und Regionen der Bühne: Ziele für Output-Nodes"
 msgstr ""
 
 #: fixture_form.cpp:120
@@ -1034,12 +1058,12 @@ msgstr ""
 msgid "Hinzufügen …"
 msgstr ""
 
-#: node_info_texts.cpp:141
-msgid "Hüllkurve (ADSR): Aus einem Schalter wird ein weicher Verlauf mit Attack, Decay, Sustain und Release. Auch als Einzelimpuls."
+#: layout_panel_groups.cpp:116
+msgid "Höhe"
 msgstr ""
 
-#: layout_panel.cpp:44
-msgid "Import …"
+#: node_info_texts.cpp:141
+msgid "Hüllkurve (ADSR): Aus einem Schalter wird ein weicher Verlauf mit Attack, Decay, Sustain und Release. Auch als Einzelimpuls."
 msgstr ""
 
 #: layout_panel_add.cpp:144
@@ -1054,7 +1078,7 @@ msgstr ""
 msgid "Kabel beginnt"
 msgstr ""
 
-#: stage_view.cpp:51
+#: stage_view.cpp:52
 msgid "Kabelweg mit Pfeilen, Start-LED und LED-Nummern ein- und ausblenden"
 msgstr ""
 
@@ -1082,20 +1106,28 @@ msgstr ""
 msgid "Kein Projekt"
 msgstr ""
 
-#: parameter_panel.cpp:45 stage_view.cpp:119
+#: parameter_panel.cpp:45 stage_view.cpp:120
 msgid "Kein Projekt geladen."
+msgstr ""
+
+#: node_editor_targets.cpp:68
+msgid "Kein Ziel (freies Rechteck)"
 msgstr ""
 
 #: settings_dialog.cpp:193
 msgid "Keine Aufnahmegeräte gefunden. Ein Audio-Interface anschließen und das Fenster neu öffnen."
 msgstr ""
 
-#: stage_view.cpp:52 stage_view.cpp:158
+#: stage_view.cpp:53 stage_view.cpp:159
 msgid "Klicke eine LED, um ihre Adresse zu sehen."
 msgstr ""
 
 #: node_editor_menu.cpp:63
 msgid "Kopieren\tStrg+C"
+msgstr ""
+
+#: main_window_stage.cpp:28
+msgid "LED-Positionen &importieren (CSV/JSON) …"
 msgstr ""
 
 #: layout_panel.cpp:45
@@ -1108,6 +1140,10 @@ msgstr ""
 
 #: layout_panel_add.cpp:138
 msgid "LED-Positionen importieren"
+msgstr ""
+
+#: layout_panel.cpp:44
+msgid "LED-Positionen …"
 msgstr ""
 
 #: add_fixture_dialog.cpp:122 fixture_form.cpp:136
@@ -1170,8 +1206,12 @@ msgstr ""
 msgid "Linien als Sinuswellen, die sich bewegen (Anzahl, Amplitude, Frequenz, Tempo, Phasenversatz)."
 msgstr ""
 
-#: layout_panel.cpp:153
+#: layout_panel.cpp:159
 msgid "Linke Kanten ausrichten"
+msgstr ""
+
+#: layout_panel_groups.cpp:113
+msgid "Links (Anteil der Leinwand)"
 msgstr ""
 
 #: main_window_controls.cpp:154
@@ -1306,6 +1346,14 @@ msgstr ""
 msgid "Name"
 msgstr ""
 
+#: layout_panel_groups.cpp:76
+msgid "Name der Gruppe"
+msgstr ""
+
+#: layout_panel_groups.cpp:100
+msgid "Name der Region"
+msgstr ""
+
 #: layout_panel_library.cpp:64
 msgid "Name der Vorlage"
 msgstr ""
@@ -1318,7 +1366,7 @@ msgstr ""
 msgid "Name des Presets:"
 msgstr ""
 
-#: layout_panel.cpp:159
+#: layout_panel.cpp:165
 msgid "Nebeneinander ↔"
 msgstr ""
 
@@ -1370,11 +1418,11 @@ msgstr ""
 msgid "Node hinzufügen"
 msgstr ""
 
-#: node_editor_menu.cpp:75
+#: node_editor_menu.cpp:76
 msgid "Node löschen"
 msgstr ""
 
-#: node_editor_menu.cpp:89
+#: node_editor_menu.cpp:90
 msgid "Node suchen …\tStrg+Leertaste"
 msgstr ""
 
@@ -1414,11 +1462,15 @@ msgstr ""
 msgid "Nächsten Cue auslösen (Leertaste)"
 msgstr ""
 
-#: stage_view.cpp:74
+#: stage_view.cpp:75
 msgid "Oben"
 msgstr ""
 
-#: layout_panel.cpp:156
+#: layout_panel_groups.cpp:114
+msgid "Oben (Anteil der Leinwand)"
+msgstr ""
+
+#: layout_panel.cpp:162
 msgid "Obere Kanten ausrichten"
 msgstr ""
 
@@ -1458,7 +1510,7 @@ msgstr ""
 msgid "Pegel eines Frequenzbereichs (Von–Bis in Hz) des Audio-Eingangs, geglättet mit Attack und Release. Gut für Bass- oder Höhen-Effekte. „Signal“ zeigt, ob Audio ankommt."
 msgstr ""
 
-#: stage_view.cpp:71
+#: stage_view.cpp:72
 msgid "Perspektive"
 msgstr ""
 
@@ -1522,10 +1574,6 @@ msgstr ""
 msgid "Punkte"
 msgstr ""
 
-#: main_window_stage.cpp:28
-msgid "Punktwolke &importieren …"
-msgstr ""
-
 #: output_form.cpp:54
 msgid "Quellname (sACN)"
 msgstr ""
@@ -1550,12 +1598,28 @@ msgstr ""
 msgid "Rechnet mit zwei Zahlen: Addieren, Subtrahieren, Multiplizieren, Dividieren, Minimum, Maximum und weitere."
 msgstr ""
 
-#: layout_panel.cpp:155
+#: layout_panel.cpp:161
 msgid "Rechte Kanten ausrichten"
 msgstr ""
 
-#: layout_panel.cpp:155
+#: layout_panel.cpp:161
 msgid "Rechts ⇥"
+msgstr ""
+
+#: layout_panel_groups.cpp:97
+msgid "Region anlegen"
+msgstr ""
+
+#: layout_panel_groups.cpp:32
+msgid "Region anlegen …"
+msgstr ""
+
+#: layout_panel_groups.cpp:46
+msgid "Region löschen"
+msgstr ""
+
+#: node_editor_targets.cpp:62
+msgid "Regionen"
 msgstr ""
 
 #: fixture_form.cpp:171
@@ -1582,7 +1646,7 @@ msgstr ""
 msgid "Schwingung (LFO): Sinus, Dreieck, Sägezahn oder Rechteck mit Frequenz, Phase und Wertebereich. Der Klassiker zum Bewegen von Parametern."
 msgstr ""
 
-#: stage_view.cpp:73
+#: stage_view.cpp:74
 msgid "Seite"
 msgstr ""
 
@@ -1590,7 +1654,7 @@ msgstr ""
 msgid "Seitenverhältnis halten (KeepAspect)"
 msgstr ""
 
-#: layout_panel.cpp:157
+#: layout_panel.cpp:163
 msgid "Senkrecht mittig ausrichten"
 msgstr ""
 
@@ -1770,11 +1834,11 @@ msgstr ""
 msgid "Universe %1 ab Kanal 1"
 msgstr ""
 
-#: layout_panel.cpp:158
+#: layout_panel.cpp:164
 msgid "Unten ⤓"
 msgstr ""
 
-#: layout_panel.cpp:158
+#: layout_panel.cpp:164
 msgid "Untere Kanten ausrichten"
 msgstr ""
 
@@ -1782,7 +1846,7 @@ msgstr ""
 msgid "Ursprung x y z"
 msgstr ""
 
-#: node_editor_menu.cpp:82
+#: node_editor_menu.cpp:83
 msgid "Verbindung trennen"
 msgstr ""
 
@@ -1798,7 +1862,7 @@ msgstr ""
 msgid "Vergröbert das Bild zu einem Raster aus Zellen (Cells X/Y/Z), wie große Pixel."
 msgstr ""
 
-#: stage_view.cpp:49
+#: stage_view.cpp:50
 msgid "Verkabelung"
 msgstr ""
 
@@ -1826,7 +1890,7 @@ msgstr ""
 msgid "WAV-Dateien (*.wav)"
 msgstr ""
 
-#: layout_panel.cpp:154
+#: layout_panel.cpp:160
 msgid "Waagrecht mittig ausrichten"
 msgstr ""
 
@@ -1886,6 +1950,10 @@ msgstr ""
 msgid "Wird durch eine Verbindung im Graphen gesteuert."
 msgstr ""
 
+#: layout_panel_groups.cpp:72
+msgid "Wähle zuerst Fixtures in der Liste."
+msgstr ""
+
 #: layout_panel_library.cpp:83
 msgid "Wähle zuerst ein Fixture in der Liste."
 msgstr ""
@@ -1930,7 +1998,7 @@ msgstr ""
 msgid "Zeit: %1 nach dem vorigen"
 msgstr ""
 
-#: stage_view.cpp:65
+#: stage_view.cpp:66
 msgid "Ziehen dreht, Rad zoomt. Die erste LED am Kabel ist weiß; x rot, y grün, z blau."
 msgstr ""
 
@@ -1940,6 +2008,10 @@ msgstr ""
 
 #: add_fixture_dialog.cpp:175 fixture_form.cpp:213
 msgid "Ziel Nr."
+msgstr ""
+
+#: node_editor_targets.cpp:30
+msgid "Ziel zuweisen"
 msgstr ""
 
 #: output_form.cpp:22
@@ -1970,7 +2042,7 @@ msgstr ""
 msgid "Zufällige Zellen, die auf- und abblenden (Fading Pixels), zwischen zwei Farben."
 msgstr ""
 
-#: layout_panel.cpp:203
+#: layout_panel.cpp:209
 msgid "Zum Aneinanderreihen mindestens zwei Fixtures wählen"
 msgstr ""
 
@@ -2094,15 +2166,15 @@ msgstr ""
 msgid "Überblendzeit:"
 msgstr ""
 
-#: node_editor_menu.cpp:71
+#: node_editor_menu.cpp:72
 msgid "Überbrücken\tB"
 msgstr ""
 
-#: node_editor_menu.cpp:71
+#: node_editor_menu.cpp:72
 msgid "Überbrückung aufheben\tB"
 msgstr ""
 
-#: layout_panel.cpp:161
+#: layout_panel.cpp:167
 msgid "Übereinander ↕"
 msgstr ""
 
@@ -2110,15 +2182,15 @@ msgstr ""
 msgid "…"
 msgstr ""
 
-#: layout_panel.cpp:154
+#: layout_panel.cpp:160
 msgid "↔ Mitte"
 msgstr ""
 
-#: layout_panel.cpp:157
+#: layout_panel.cpp:163
 msgid "↕ Mitte"
 msgstr ""
 
-#: layout_panel.cpp:153
+#: layout_panel.cpp:159
 msgid "⇤ Links"
 msgstr ""
 
@@ -2134,6 +2206,6 @@ msgstr ""
 msgid "⚠ %1"
 msgstr ""
 
-#: layout_panel.cpp:156
+#: layout_panel.cpp:162
 msgid "⤒ Oben"
 msgstr ""

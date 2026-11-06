@@ -10,6 +10,7 @@
 #include <variant>
 
 #include "project_cue.hpp"
+#include "project_stage.hpp"
 #include "project_names.hpp"
 #include "whitehole/project/project.hpp"
 
@@ -97,6 +98,7 @@ Result<void> writeGraph(std::ostream& out, const graph::Graph& graph, const std:
         if (node.bypassed) {
             out << "  bypass\n";
         }
+        detail::writeTargets(out, node.targets);
         const graph::NodeDescriptor* descriptor = graph.registry().find(node.typeId);
         if (descriptor != nullptr) {
             for (const graph::ParameterDescriptor& parameter : descriptor->parameters) {
@@ -159,6 +161,15 @@ Result<std::string> writeProject(const Project& project) {
         return Error{ErrorCode::InvalidArgument, "Ein Patch verweist auf ein Fixture, das nicht im Layout steht"};
     }
 
+    for (const FixtureGroup& group : project.groups) {
+        detail::writeGroup(out, group);
+    }
+    for (const StageRegion& region : project.regions) {
+        detail::writeRegion(out, region);
+    }
+    if (!project.groups.empty() || !project.regions.empty()) {
+        out << "\n";
+    }
     if (const Result<void> graph = writeGraph(out, project.graph, project.target, "Das Ziel (output)"); !graph.ok()) {
         return graph.error();
     }

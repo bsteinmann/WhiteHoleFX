@@ -166,6 +166,14 @@ public:
     /// Wählt den Field-Ausgang, der auf die LEDs abgetastet wird. Läuft das Projekt, wird es im
     /// nächsten step() neu aufgebaut (kurze Unterbrechung der Ausgabe).
     /// Fehler: NotFound (Node oder Port), IncompatiblePorts (kein Field-Ausgang).
+    /// Mehrere Outputs: Ziel eines Output-Nodes (Einträge "fixture:<Name>", "group:<Name>", "region:<Name>").
+    /// Das Rechteck des Nodes wird aus dem Ziel berechnet und folgt späteren Layout-Änderungen. Leer = freies Rechteck.
+    /// Fehler: NotFound, Unsupported (kein Output-Node). Ein Undo-Schritt.
+    Result<void> setOutputTargets(NodeId node, std::vector<std::string> targets);
+    /// Ersetzt alle Gruppen bzw. Regionen (Namen eindeutig). Fehler: InvalidArgument. Ein Undo-Schritt.
+    Result<void> setGroups(std::vector<project::FixtureGroup> groups);
+    Result<void> setRegions(std::vector<project::StageRegion> regions);
+
     Result<void> setTarget(const graph::PortRef& port);
 
     // --- Rückgängig / Wiederholen -----------------------------------------------------------------

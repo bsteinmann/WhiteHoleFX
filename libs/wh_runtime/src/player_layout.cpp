@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <cmath>
 
+#include "whitehole/project/output_target.hpp"
 #include "whitehole/runtime/player.hpp"
 
 namespace whitehole::runtime {
@@ -67,7 +68,18 @@ Result<void> Player::renameFixture(mapping::FixtureId id, std::string name) {
         if (const Result<void> ok = checkName(p, name, id); !ok.ok()) {
             return ok;
         }
-        return p.layout.rename(id, std::move(name));
+        std::string oldName;
+        for (const mapping::Fixture& fixture : p.layout.fixtures()) {
+            if (fixture.id == id) {
+                oldName = fixture.name;
+            }
+        }
+        const std::string newName = name;
+        if (const Result<void> r = p.layout.rename(id, std::move(name)); !r.ok()) {
+            return r;
+        }
+        project::renameFixtureRefs(p, oldName, newName);
+        return Result<void>{};
     });
 }
 

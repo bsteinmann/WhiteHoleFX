@@ -41,6 +41,10 @@ struct NodeInstance {
     /// Überbrückt: Der Node ist noch da, wirkt aber nicht. Er reicht seinen ersten Field-Eingang unverändert
     /// weiter; ohne verbundenen Field-Eingang (Generatoren) liefert er Transparent. Nur für Field-Nodes.
     bool bypassed{false};
+    /// Ziele eines Output-Nodes (mehrere Outputs): Einträge "fixture:<Name>", "group:<Name>" oder "region:<Name>".
+    /// Leer = der Output bespielt, was seine Parameter (Rechteck) sagen. Das Graph-Modell kennt die Bedeutung
+    /// nicht; sie legt das Projekt fest (project/output_target.hpp).
+    std::vector<std::string> targets;
 };
 
 class Graph {
@@ -73,6 +77,10 @@ public:
     /// Schaltet die Überbrückung eines Field-Nodes (siehe NodeInstance::bypassed).
     /// Fehler: NotFound, Unsupported (kein Field-Node, etwa ein CPU-Wert-Node).
     Result<void> setBypassed(NodeId id, bool bypassed);
+
+    /// Setzt die Ziele eines Nodes (siehe NodeInstance::targets); Duplikate werden entfernt, die Reihenfolge bleibt.
+    /// Fehler: NotFound, InvalidArgument (leerer Eintrag).
+    Result<void> setTargets(NodeId id, std::vector<std::string> targets);
 
     /// Lage im Node-Editor. Hat keinen Einfluss auf das Ergebnis des Graphen.
     /// Fehler: NotFound, InvalidArgument (NaN oder Unendlich).

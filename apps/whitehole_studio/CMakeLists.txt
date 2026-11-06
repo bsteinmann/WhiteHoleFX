@@ -15,6 +15,7 @@ add_executable(whitehole_studio
     layout_panel_add.cpp
     layout_panel_grid.cpp
     layout_panel_library.cpp
+    layout_panel_groups.cpp
     layout_panel.hpp
     main.cpp
     main_window.cpp
@@ -59,6 +60,7 @@ add_executable(whitehole_studio
     node_editor_exercise.cpp
     node_editor.hpp
     node_editor_menu.cpp
+    node_editor_targets.cpp
     node_editor_presets.cpp
     node_editor_search.cpp
     node_info.cpp

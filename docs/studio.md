@@ -110,6 +110,7 @@ stehen nicht im Node, sondern im Dock „Parameter“; beide benutzen dieselbe N
 | kopieren, einfügen, duplizieren | Strg+C, Strg+V (an der Mausposition), Strg+D; auch im Rechtsklick-Menü. Kabel zwischen den ausgewählten Nodes kommen mit, Kabel nach draußen nicht. Die Kopie ist danach ausgewählt, ein Schritt Rückgängig nimmt sie komplett zurück |
 | Ausgang wählen | Rechtsklick auf einen Field-Ausgang, „Als Ausgang setzen“; der Node ist dann orange umrandet |
 | Ausgangs-Node | Node „Output“ (Kategorie Output) einfügen: er wird automatisch zum Ausgang und hängt sich hinter den bisherigen. Mit Rechteck bespielt er nur einen Teil der Leinwand |
+| Mehrere Outputs mit Ziel | Rechtsklick auf einen Output-Node (oder seinen Ausgang), „Ziel zuweisen“: Fixtures, Gruppen und Regionen anhaken. Das Rechteck des Outputs ist dann das kleinste, das alle gewählten LEDs umschließt, und folgt dem Layout. Jeder Output hat seine eigene Kette am Eingang `source`; spätere Outputs liegen über früheren, LEDs ohne Output bleiben dunkel. Siehe „Mehrere Outputs“ |
 | überbrücken | Schalter (Kreis mit Strich) rechts im Kopf eines Field-Nodes, Taste B oder Rechtsklick → „Überbrücken“. Der Node bleibt im Graphen, reicht aber seinen ersten Field-Eingang unverändert durch (Generatoren: transparent); er erscheint abgeblendet mit gestrichelter Durchleitung. Mit mehreren ausgewählten Nodes schaltet B alle zugleich, ein Schritt Rückgängig |
 | Ansicht | Mausrad zoomt, mittlere Taste verschiebt, Taste F zeigt alles |
 
@@ -130,7 +131,7 @@ ziehen (Treffer auf Ports), verschieben, Kabel und Nodes wieder löschen.
 ## Layout-Editor
 
 Die Bühne wird einmal am Anfang eingerichtet und danach selten angefasst. Deshalb hat sie ein eigenes Menü **Stage Config**
-(zwischen Bearbeiten und Ansicht) mit: Fixture hinzufügen …, Punktwolke importieren …, Layout und Patch … (F4) und Testmodus ….
+(zwischen Bearbeiten und Ansicht) mit: Fixture hinzufügen …, LED-Positionen importieren (CSV/JSON) …, Layout und Patch … (F4) und Testmodus ….
 Layout, Testmodus und Ansicht liegen im eigenen Fenster **Stage Config**. Es ist kein Dock: es öffnet sich bei Bedarf, lässt sich auf
 einen zweiten Bildschirm ziehen und merkt sich Größe und Platz. Es ist nicht modal, die Vorschau im Hauptfenster bleibt
 bedienbar. Im Live-Modus ist das Menü gesperrt.
@@ -168,7 +169,7 @@ gewählte Fixture gibt es ein Formular:
 - Patch: Protokoll (Art-Net, sACN, DDP), Ziel, Universe, erster Kanal, DDP-Offset,
   Farbreihenfolge, Gamma, Helligkeit; „an die Ausgabe schicken“ schaltet den Patch ein und aus
 
-**Import von Positionen:** „Import …“ lädt LED-Positionen aus einer CSV- oder JSON-Datei als Punktwolke
+**Import von Positionen:** „LED-Positionen …“ lädt LED-Positionen aus einer CSV- oder JSON-Datei als Punktwolke
 (Format und Optionen: `docs/mapping.md`, Abschnitt „Import von Positionen“). Die Reihenfolge in der Datei
 ist die Reihenfolge am Kabel. Beispiel: `examples/daten/bogen.csv`.
 
@@ -260,6 +261,16 @@ Ein Klick (ohne Ziehen) auf eine LED markiert sie gelb und zeigt in der Zeile da
 
 Der Knopf **Vorlagen** speichert das gewählte Fixture als Vorlage (Form, Maße, Abstand, Verkabelung, Protokoll, Farbreihenfolge, Gamma, Helligkeit; ohne Universe und Kanal) und legt sie später mit einem Klick neu an, mit dem nächsten freien Universe. Die Vorlagen sind `.whfx`-Dateien im Ordner `fixtures` des Programmordners (unter Windows `%APPDATA%\WhiteHoleFX\WhiteHoleFX\fixtures`), also kopierbar und weitergebbar.
 
+### Mehrere Outputs
+
+Für getrennte Effektketten je Fixture, Gruppe oder Bühnenbereich legst du mehrere **Output**-Nodes an und weist jedem ein Ziel zu:
+
+1. Im Layout den Knopf **Gruppen**: „Gewählte Fixtures als Gruppe speichern …“ fasst Fixtures unter einem Namen zusammen; „Region anlegen …“ legt ein benanntes Rechteck der Bühne an (Anteile der Leinwand, oben zählt von oben).
+2. Im Node-Editor Rechtsklick auf den Output-Node → **Ziel zuweisen** und Fixtures, Gruppen oder Regionen anhaken (mehrere möglich). „Kein Ziel“ stellt das freie Rechteck aus den Parametern wieder her.
+3. Die eigene Kette an den Eingang `source` des Output-Nodes anschließen. Mit „Scale into area“ füllt der Effekt das Ziel, mit „Window“ bleibt er an seinem Platz auf der Bühne.
+
+Das Rechteck wird aus dem Ziel berechnet (umschließendes Rechteck der LEDs samt halber Zelle Rand) und in die Parameter `left`, `top`, `width`, `height` geschrieben; es folgt Verschieben, Umbenennen und Ändern der Fixtures, auch beim Rückgängigmachen. Überlappen zwei Ziele, gewinnt der später angelegte Output.
+
 ### Node-Palette
 
 Links im Dock „Nodes“ steht die Palette: alle verfügbaren Node-Typen nach Kategorien (Generators, Effects,
@@ -323,7 +334,7 @@ Strenge Eingänge** den strengen Modus ein; er wird mit dem Projekt gespeichert 
 | --- | --- |
 | Datei | Neu, Öffnen, Zuletzt geöffnet, Beispiele (in Untergruppen Einstieg, Effekte, Audio, 3D; siehe [Beispielprojekte](examples.md)); Speichern, Speichern unter; Neu laden (F5); Beenden |
 | Bearbeiten | Rückgängig, Wiederholen; Einstellungen … (Strg+Komma) |
-| Stage Config | Fixture hinzufügen …; Punktwolke importieren …; Layout und Patch … (F4); Testmodus … (die Seite „Ansicht“ liegt im selben Fenster) |
+| Stage Config | Fixture hinzufügen …; LED-Positionen importieren (CSV/JSON) …; Layout und Patch … (F4); Testmodus … (die Seite „Ansicht“ liegt im selben Fenster) |
 | Ansicht | Docks ein- und ausblenden; 2D/3D-Umschalter (Strg+1 bis 5); 3D-Darstellung (Aus-LEDs, Leuchten) |
 | Wiedergabe | Start/Stopp, Ausgabe senden; Blackout |
 | Live | Live-Modus (F9), Look speichern |

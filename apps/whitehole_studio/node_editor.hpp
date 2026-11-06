@@ -108,6 +108,8 @@ public:
     bool connectPorts(const graph::PortRef& from, const graph::PortRef& to);
     /// Löscht die ausgewählten Nodes und Kabel.
     void removeSelected();
+    /// Untermenü "Ziel zuweisen" für einen Output-Node (Fixtures, Gruppen, Regionen zum Anhaken).
+    void addTargetMenu(QMenu& menu, NodeId id);
     /// Wählt den Ausgang, der auf die LEDs abgetastet wird.
     bool setTarget(const graph::PortRef& port);
 

@@ -60,6 +60,11 @@ public:
     /// Fixture als Vorlage und legt ein Fixture aus einer Vorlage an.
     void fillLibraryMenu(QMenu* menu);
     void saveAsTemplate();
+
+    /// Gruppen und Regionen als Ziele für Output-Nodes: Menü füllen, Gruppe aus der Auswahl speichern, Region anlegen.
+    void fillGroupMenu(QMenu* menu);
+    void saveGroup();
+    void addRegion();
     void addFromTemplate(const project::FixtureTemplate& tpl);
 
     /// Alle in der Liste gewählten Fixtures (in Listenreihenfolge).
