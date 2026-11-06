@@ -247,6 +247,7 @@ private:
     TestPanel* testPanel_{nullptr};
     OutputPage* outputPage_{nullptr};        // Seite "Ausgabe" im Stage Config (Ziele und Patch)
     FixtureLibraryPage* fixturePage_{nullptr};  // Seite "Fixtures" im Stage Config (Bibliothek der Bauformen)
+    StageView* testView_{nullptr};  // Bühne mit den Farben des Testbilds im Reiter Test
     StageView* stageView_{nullptr};  // Seite "Ansicht" im Stage Config (die kleine Ansicht gehört dem LayoutPanel)
     StageSetupWindow* stageSetup_{nullptr};  // eigenes Fenster mit Layout und Testmodus
     QAction* stageSetupAction_{nullptr};     // "Layout und Patch" (F4)

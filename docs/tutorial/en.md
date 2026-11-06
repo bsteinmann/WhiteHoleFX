@@ -28,16 +28,18 @@ nothing can accidentally light up on someone else's rig.
 
 ## 3. Setting up the stage (Stage Config)
 
-If you are new, start with the hardware. Open **Stage Config → Layout and Patch …** (F4). The separate window has these pages:
+If you are new, start with the hardware. Open **Stage Config → Fixtures …**. The separate window has four tabs:
 
-- **Fixtures:** the list of all fixtures. **Add fixture …** opens a dialog where you enter the type (matrix, strip, 3D grid), the
-  size in x, y and z, the spacing, the position in space and the wiring: the start corner, whether the cable runs in a
-  serpentine, and which axis counts fastest. The small 3D view on top shows how it looks with every value you change. The first
-  LED on the cable is **white**, so you can recognize the start corner.
-- **Destinations (controllers):** the addresses of your controllers. An empty address means multicast.
-- **Test mode:** sends test patterns (color, sweep bar, color order, chase) straight to the LEDs to check wiring and patch
-  without an effect running. **Caution:** white lights up at full brightness; check the power supplies first.
-- **View:** the rig in space, rotatable, with its own color per fixture and an axis cross (x red, y green, z blue).
+- **Fixtures:** the library of fixture types. **New** creates a type (2D matrix, 3D matrix, circle, strip or column); you set the
+  size, spacing and wiring and see on the right at once how it looks. The first LED on the cable is **white**, so you can
+  recognize the start corner. The **Test** button runs a pattern over the shape.
+- **Layout (F4):** here you place instances of the types on the stage (**From type**), set the position and the **rotation about
+  all three axes**, and align them. Next to it you see the stage in space, rotatable, with an axis cross (x red, y green, z blue).
+- **Output:** the addresses of your controllers (destinations; an empty address means multicast) and the patch table: which
+  fixture sends to which universe. Every destination can be removed, and the columns can be moved.
+- **Test:** sends test patterns (color, sweep bar, color order, chase) across the whole stage to check wiring and patch without
+  an effect running; the stage next to it shows the pattern. **Caution:** white lights up at full brightness; check the power
+  supplies first.
 
 You create a cube as a **3D grid**, for example 8 × 8 × 8 LEDs.
 

@@ -22,7 +22,7 @@ QSettings settings() { return QSettings{QStringLiteral("WhiteHoleFX"), QStringLi
 }  // namespace
 
 StageSetupWindow::StageSetupWindow(FixtureLibraryPage* fixtures, LayoutPanel* layout, OutputPage* output, TestPanel* test,
-                                   StageView* view, QWidget* parent)
+                                   StageView* view, StageView* testView, QWidget* parent)
     : QWidget{parent, Qt::Window}, tabs_{new QTabWidget{this}} {
     setWindowTitle(tr("Stage Config"));
     auto* box = new QVBoxLayout{this};
@@ -37,7 +37,13 @@ StageSetupWindow::StageSetupWindow(FixtureLibraryPage* fixtures, LayoutPanel* la
     split->setSizes({400, 600});
     tabs_->addTab(split, tr("Layout"));
     tabs_->addTab(output, tr("Ausgabe"));
-    tabs_->addTab(test, tr("Test"));
+    auto* testSplit = new QSplitter{Qt::Horizontal};
+    testSplit->addWidget(test);
+    testSplit->addWidget(testView);
+    testSplit->setStretchFactor(0, 0);
+    testSplit->setStretchFactor(1, 1);
+    testSplit->setSizes({400, 600});
+    tabs_->addTab(testSplit, tr("Test"));
     resize(1000, 760);
 }
 

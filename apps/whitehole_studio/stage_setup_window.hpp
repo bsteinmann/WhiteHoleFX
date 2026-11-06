@@ -7,7 +7,7 @@
 // während die Vorschau im Hauptfenster sichtbar ist (kein modaler Dialog).
 //
 // Seiten: Fixtures (Bibliothek der Bauformen), Layout (Verteilen und Drehen, daneben die Bühnenansicht, siehe stage_view.hpp),
-// Ausgabe (Ziele und Patch) und Test.
+// Ausgabe (Ziele und Patch) und Test (Testbilder für die ganze Bühne, daneben die Bühne mit den Farben des Testbilds).
 // Das Fenster besitzt die Panels nur als Tabs; Verbindungen, Rückgängig und Speichern laufen
 // unverändert über das Hauptfenster.
 #pragma once
@@ -31,7 +31,7 @@ public:
     enum class Page { Fixtures, Layout, Output, Test };
 
     StageSetupWindow(FixtureLibraryPage* fixtures, LayoutPanel* layout, OutputPage* output, TestPanel* test, StageView* view,
-                     QWidget* parent);
+                     StageView* testView, QWidget* parent);
 
     /// Öffnet das Fenster (beim ersten Mal an der gemerkten Stelle) und holt es nach vorn.
     void open(Page which);

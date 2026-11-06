@@ -212,6 +212,10 @@ Die erste Seite im Fenster Stage Config (Menü Stage Config → Fixtures …) is
 
 Im Reiter Layout legst du Exemplare einer Bauform mit **Aus Bauform** an und stellst Lage (Ursprung x y z) und **Drehung x y z** (Grad, um die Mitte des Fixtures) im Formular ein. Das Feld **Bauform** wechselt die Bauform eines Fixtures oder löst es mit „(eigene Form)“ von der Bibliothek. Die Drehung wirkt in der Abtastung (Effekt), in der Vorschau und in der Stage-Ansicht.
 
+### Reiter Test: Testbilder über die ganze Bühne
+
+Rechts neben den Testbildern (siehe Abschnitt „Testmodus“) zeigt der Reiter Test die Bühne in 3D. Solange ein Testbild aktiv ist, hat jede LED dort die Farbe, die das Testbild ihr gibt (der Laufbalken wandert sichtbar über die Anlage, das Lauflicht folgt dem Kabel), unabhängig davon, ob „Ausgabe senden“ an ist. Ohne Testbild zeigt die Ansicht die Anlage mit Kabelwegen.
+
 ### Bedienung in der Vorschau
 
 Die Vorschau ist eine Arbeitsfläche für das Layout:

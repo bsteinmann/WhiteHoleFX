@@ -12,9 +12,11 @@
 // PreviewWidget, das Drehen, Verschieben und Zoomen schon kann.
 #pragma once
 
+#include <QElapsedTimer>
 #include <QImage>
 #include <QPointF>
 #include <QString>
+#include <QTimer>
 #include <QWidget>
 
 #include <optional>
@@ -44,6 +46,13 @@ public:
     void setSelection(std::vector<mapping::FixtureId> ids);
     /// Zeichnet neu, wenn die Ansicht sichtbar ist (sonst beim nächsten Anzeigen).
     void refresh();
+    /// Testansicht (Reiter Test): Ist ein Testbild aktiv, zeigt die Ansicht dessen Farben und lässt es laufen
+    /// (die Ausgabe kann dabei aus sein); sonst wie sonst auch die Anlage.
+    void setTestPreview(bool on);
+    /// Das Testbild wurde ein-, aus- oder umgeschaltet: Zeitzähler neu starten und neu zeichnen.
+    void testPatternChanged();
+    /// Wahr, wenn das zuletzt gezeichnete Bild die Farben eines Testbilds zeigt (für den Rauchtest).
+    [[nodiscard]] bool showsTestPattern() const noexcept { return drewTestPattern_; }
 
     [[nodiscard]] const preview::Camera3d& camera() const noexcept { return camera_; }
 
@@ -59,6 +68,7 @@ public:
 
 protected:
     void showEvent(QShowEvent* event) override;
+    void hideEvent(QHideEvent* event) override;
 
 private:
     /// Zeichnet jetzt, auch wenn das Widget nicht sichtbar ist. Wahr, wenn ein Bild entstanden ist.
@@ -78,6 +88,10 @@ private:
     std::optional<preview::PickedLed> picked_;
     preview::PreviewOptions imageOptions_;  // Größe und Rand des zuletzt gezeichneten Bildes
     bool showWiring_{true};
+    bool testPreview_{false};
+    bool drewTestPattern_{false};
+    QTimer testTimer_;
+    QElapsedTimer testClock_;
 };
 
 }  // namespace whitehole::studio

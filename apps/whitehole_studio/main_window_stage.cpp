@@ -21,6 +21,9 @@ namespace whitehole::studio {
 void MainWindow::buildStageConfig(QMenu* menu) {
     stageMenu_ = menu;
     stageView_ = new StageView{*player_, false};
+    testView_ = new StageView{*player_, false};
+    testView_->setTestPreview(true);
+    connect(testPanel_, &TestPanel::patternChanged, testView_, &StageView::testPatternChanged);
     fixturePage_ = new FixtureLibraryPage{*player_};
     connect(fixturePage_, &FixtureLibraryPage::edited, this, &MainWindow::onLayoutEdited);
     connect(fixturePage_, &FixtureLibraryPage::projectNeeded, this, [this]() { newProject(false); });
@@ -30,7 +33,7 @@ void MainWindow::buildStageConfig(QMenu* menu) {
     connect(outputPage_, &OutputPage::edited, this, &MainWindow::onLayoutEdited);
     connect(outputPage_, &OutputPage::failed, this,
             [this](const QString& message) { statusBar()->showMessage(message, 8000); });
-    stageSetup_ = new StageSetupWindow{fixturePage_, layoutPanel_, outputPage_, testPanel_, stageView_, this};
+    stageSetup_ = new StageSetupWindow{fixturePage_, layoutPanel_, outputPage_, testPanel_, stageView_, testView_, this};
     connect(layoutPanel_, &LayoutPanel::selectionChanged, this, &MainWindow::refreshStageViews);
 
     auto* addFixtureAction = new QAction{tr("Fixture &hinzufügen …"), this};
@@ -70,6 +73,7 @@ void MainWindow::refreshStageViews() {
     outputPage_->refresh();
     stageView_->setSelection(layoutPanel_->selectedIds());
     stageView_->refresh();
+    testView_->refresh();
     layoutPanel_->refreshView();
 }
 
@@ -98,6 +102,23 @@ QString MainWindow::exerciseStageSetup() {
     stageSetup_->open(StageSetupWindow::Page::Test);
     if (stageSetup_->page() != StageSetupWindow::Page::Test) {
         return QStringLiteral("Stage Config zeigt die Seite Test nicht");
+    }
+    // Testbild über die ganze Bühne: Die Testansicht zeigt dessen Farben, ohne Testbild die Anlage.
+    {
+        runtime::TestPattern pattern;
+        pattern.kind = runtime::TestPatternKind::Chase;
+        if (!player_->setTestPattern(pattern).ok()) {
+            return QStringLiteral("Test: Testbild lässt sich nicht einschalten");
+        }
+        testView_->testPatternChanged();
+        const bool shown = testView_->showsTestPattern();
+        player_->clearTestPattern();
+        testView_->testPatternChanged();
+        const bool gone = !testView_->showsTestPattern();
+        testPanel_->reset();
+        if (!shown || !gone) {
+            return QStringLiteral("Test: die Bühne im Reiter Test zeigt das Testbild nicht (oder zeigt es danach noch)");
+        }
     }
     stageSetup_->open(StageSetupWindow::Page::Output);
     if (stageSetup_->page() != StageSetupWindow::Page::Output) {

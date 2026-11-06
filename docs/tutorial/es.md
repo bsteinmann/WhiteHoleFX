@@ -28,18 +28,18 @@ ilumina entonces en rojo. Así nada puede encenderse por error en una instalaci�
 
 ## 3. Montar el escenario (Stage Config)
 
-Si empiezas de cero, empieza por el hardware. Abre **Stage Config → Disposición y patch …** (F4). La ventana aparte tiene estas
-páginas:
+Si empiezas de cero, empieza por el hardware. Abre **Stage Config → Fixtures …**. La ventana aparte tiene cuatro pestañas:
 
-- **Fixtures:** la lista de todos los fixtures. **Añadir fixture …** abre un diálogo donde indicas el tipo (matriz, strip,
-  cuadrícula 3D), el tamaño en x, y y z, la separación, la posición en el espacio y el cableado: la esquina de inicio, si el
-  cable va en serpentina y qué eje cuenta más rápido. La pequeña vista 3D de arriba muestra al instante cómo queda con cada
-  valor. El primer LED del cable es **blanco**, así reconoces la esquina de inicio.
-- **Destinos (controladores):** las direcciones de tus controladores. Una dirección vacía significa multicast.
-- **Modo de prueba:** envía imágenes de prueba (color, barra de barrido, orden de colores, secuencia) directamente a los LED para
-  comprobar cableado y patch sin que corra ningún efecto. **Atención:** el blanco se enciende a pleno brillo; revisa antes las
-  fuentes de alimentación.
-- **Vista:** la instalación en el espacio, giratoria, con un color propio por fixture y un eje de coordenadas (x rojo, y verde, z azul).
+- **Fixtures:** la biblioteca de tipos. **Nuevo** crea un tipo (matriz 2D, matriz 3D, círculo, strip o columna); ajustas tamaño,
+  separación y cableado y ves a la derecha al instante cómo queda. El primer LED del cable es **blanco**, así reconoces la esquina
+  de inicio. El botón **Prueba** hace correr un patrón sobre la forma.
+- **Layout (F4):** aquí colocas instancias de los tipos en el escenario (**Desde tipo**), ajustas la posición y el **giro sobre los
+  tres ejes** y las alineas. Al lado ves el escenario en el espacio, giratorio, con ejes (x rojo, y verde, z azul).
+- **Salida:** las direcciones de tus controladores (destinos; una dirección vacía significa multicast) y la tabla de patch: qué
+  fixture envía a qué universo. Cada destino se puede quitar y las columnas se pueden mover.
+- **Prueba:** envía imágenes de prueba (color, barra, orden de colores, secuencia) por todo el escenario para comprobar cableado y
+  patch sin ningún efecto en marcha; el escenario de al lado muestra la imagen de prueba. **Cuidado:** el blanco brilla a plena
+  potencia; comprueba antes las fuentes de alimentación.
 
 Un cubo se crea como **cuadrícula 3D**, por ejemplo de 8 × 8 × 8 LED.
 

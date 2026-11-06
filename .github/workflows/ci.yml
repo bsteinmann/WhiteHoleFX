@@ -178,7 +178,7 @@ jobs:
         # Compilerfehler zusätzlich als Annotation ausgeben, damit sie ohne Log-Download lesbar sind.
         run: |
           set +e
-          cmake --build build --parallel --target whitehole_studio 2>&1 | tee build.log
+          cmake --build build --parallel 3 --target whitehole_studio 2>&1 | tee build.log
           code=${PIPESTATUS[0]}
           if [ "$code" != "0" ]; then
             msg=$(grep -E "error|Error|undefined reference|fatal" -A3 build.log | head -60 | sed 's/%/%25/g' | awk '{printf "%s%%0A", $0}')

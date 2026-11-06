@@ -28,17 +28,18 @@ bouton devient alors rouge. Ainsi, rien ne peut s'allumer par erreur sur une ins
 
 ## 3. Installer la scène (Stage Config)
 
-Quand on débute, on commence par le matériel. Ouvrez **Stage Config → Disposition et patch …** (F4). La fenêtre séparée comporte
-ces pages :
+Quand on débute, on commence par le matériel. Ouvrez **Stage Config → Fixtures …**. La fenêtre séparée comporte quatre onglets :
 
-- **Fixtures :** la liste de tous les fixtures. **Ajouter un fixture …** ouvre une boîte de dialogue pour saisir le type
-  (matrice, strip, grille 3D), la taille en x, y et z, l'écart, la position dans l'espace et le câblage : le coin de départ, si
-  le câble suit un serpentin et quel axe compte le plus vite. La petite vue 3D en haut montre l'effet de chaque valeur. La
-  première LED du câble est **blanche**, ce qui permet de reconnaître le coin de départ.
-- **Destinations (contrôleurs) :** les adresses de vos contrôleurs. Une adresse vide signifie multicast.
-- **Mode test :** envoie des mires (couleur, barre de balayage, ordre des couleurs, chenillard) directement aux LED pour vérifier
-  câblage et patch sans effet en cours. **Attention :** le blanc s'allume à pleine luminosité ; vérifiez d'abord les alimentations.
-- **Vue :** l'installation dans l'espace, orientable, avec une couleur par fixture et un repère d'axes (x rouge, y vert, z bleu).
+- **Fixtures :** la bibliothèque des types. **Nouveau** crée un type (matrice 2D, matrice 3D, cercle, strip ou colonne) ; vous réglez
+  la taille, l’espacement et le câblage et voyez tout de suite à droite le résultat. La première LED du câble est **blanche**,
+  ce qui montre le coin de départ. Le bouton **Test** fait défiler un motif sur la forme.
+- **Layout (F4) :** vous placez ici des instances des types sur la scène (**Depuis un type**), réglez la position et la **rotation
+  autour des trois axes** et les alignez. À côté, la scène dans l’espace, orientable, avec un repère (x rouge, y vert, z bleu).
+- **Sortie :** les adresses de vos contrôleurs (destinations ; une adresse vide signifie multicast) et la table de patch : quel
+  fixture envoie sur quel univers. Chaque destination peut être supprimée, les colonnes peuvent être déplacées.
+- **Test :** envoie des images de test (couleur, barre, ordre des couleurs, chenillard) sur toute la scène pour vérifier câblage et
+  patch sans effet en cours ; la scène à côté montre l’image de test. **Attention :** le blanc brille à pleine puissance ;
+  vérifiez d’abord les alimentations.
 
 Un cube se crée comme **grille 3D**, par exemple 8 × 8 × 8 LED.
 

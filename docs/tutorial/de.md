@@ -30,18 +30,18 @@ leuchtet dann rot. So kann nichts versehentlich auf einer fremden Anlage leuchte
 
 ## 3. Die Bühne einrichten (Stage Config)
 
-Wer neu anfängt, beginnt mit der Hardware. Öffne **Stage Config → Layout und Patch …** (F4). Das eigene Fenster hat drei
-Seiten:
+Wer neu anfängt, beginnt mit der Hardware. Öffne **Stage Config → Fixtures …**. Das eigene Fenster hat vier Reiter:
 
-- **Fixtures:** Liste aller Fixtures. **Fixture hinzufügen …** öffnet einen Dialog, in dem du Typ (Matrix, Strip, 3D-Gitter),
-  Größe in x, y und z, Abstand, Lage im Raum und die Verkabelung einträgst: die Startecke, ob das Kabel serpentinenförmig
-  läuft und welche Achse am schnellsten zählt. Die kleine 3D-Ansicht oben zeigt dir bei jedem Wert sofort, wie es aussieht.
-  Die erste LED am Kabel ist **weiß**, so erkennst du die Startecke.
-- **Ziele (Controller):** die Adressen deiner Controller. Eine leere Adresse bedeutet Multicast.
-- **Testmodus:** schickt Testbilder (Farbe, Laufbalken, Farbreihenfolge, Lauflicht) direkt an die LEDs, um Verkabelung und
-  Patch zu prüfen, ohne dass ein Effekt laufen muss. **Achtung:** Weiß leuchtet mit voller Helligkeit; prüfe vorher die
-  Netzteile.
-- **Ansicht:** die Anlage im Raum, drehbar, mit eigener Farbe je Fixture und einem Achsenkreuz (x rot, y grün, z blau).
+- **Fixtures:** die Bibliothek der Bauformen. Mit **Neu** legst du eine Bauform an (2D-Matrix, 3D-Matrix, Kreis, Strip oder Säule),
+  stellst Größe, Abstand und Verkabelung ein und siehst rechts sofort, wie sie aussieht. Die erste LED am Kabel ist **weiß**, so
+  erkennst du die Startecke. Der Knopf **Test** lässt ein Muster über die Form laufen.
+- **Layout (F4):** Hier verteilst du Exemplare der Bauformen auf der Bühne (**Aus Bauform**), stellst Lage und **Drehung um alle
+  drei Achsen** ein und richtest sie aus. Die Bühne im Raum siehst du daneben, drehbar, mit Achsenkreuz (x rot, y grün, z blau).
+- **Ausgabe:** die Adressen deiner Controller (Ziele; eine leere Adresse bedeutet Multicast) und die Patch-Tabelle: welches
+  Fixture auf welches Universe sendet. Jedes Ziel lässt sich entfernen, die Spalten lassen sich verschieben.
+- **Test:** schickt Testbilder (Farbe, Laufbalken, Farbreihenfolge, Lauflicht) über die ganze Bühne, um Verkabelung und Patch zu
+  prüfen, ohne dass ein Effekt laufen muss; die Bühne daneben zeigt das Testbild. **Achtung:** Weiß leuchtet mit voller
+  Helligkeit; prüfe vorher die Netzteile.
 
 Einen Cube legst du als **3D-Gitter** an, zum Beispiel 8 × 8 × 8 LEDs.
 

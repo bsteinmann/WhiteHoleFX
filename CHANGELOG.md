@@ -1,5 +1,11 @@
 # Änderungen
 
+## 0.58.0
+
+- **Reiter Test mit Bühne.** Neben den Testbildern (Farbe, Auswahl, Laufbalken, Farbreihenfolge, Lauflicht) zeigt der Reiter Test die ganze Bühne in 3D mit den Farben des Testbilds und lässt es laufen, auch wenn „Ausgabe senden“ aus ist. Ohne Testbild zeigt sie die Anlage.
+- Tutorial (alle fünf Sprachen) und Studio-Handbuch beschreiben die vier Reiter Fixtures, Layout, Ausgabe, Test.
+- CI: Der Studio-Lauf unter Linux baut mit höchstens 3 Compilern gleichzeitig (der unbegrenzte Lauf wurde bei den vielen neuen Dateien vom Runner abgebrochen, „Exit code 143“).
+
 ## 0.57.0
 
 - **Stage Config hat vier Reiter: Fixtures, Layout, Ausgabe, Test.** Die Bühnenansicht liegt jetzt im Reiter Layout neben der Fixture-Liste (die eigene Seite „Ansicht“ und die kleine Ansicht entfallen). Neuer Reiter **Ausgabe** mit Zieltabelle und einer **Patch-Tabelle** (eine Zeile je Fixture: Senden, Protokoll, Ziel, Universe, Kanal, DDP-Offset, Farbreihenfolge, Gamma, Helligkeit). Der Patch steht nicht mehr im Fixture-Formular.

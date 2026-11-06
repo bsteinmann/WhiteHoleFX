@@ -8,6 +8,7 @@
 #include <QPainter>
 #include <QPolygonF>
 #include <QPushButton>
+#include <QHideEvent>
 #include <QShowEvent>
 #include <QVBoxLayout>
 
@@ -16,6 +17,7 @@
 #include <cstdint>
 
 #include "form_helpers.hpp"
+#include "whitehole/runtime/test_pattern.hpp"
 #include "preview_widget.hpp"
 #include "whitehole/output/led_address.hpp"
 #include "whitehole/project/project.hpp"
@@ -112,7 +114,33 @@ void StageView::refresh() {
 
 void StageView::showEvent(QShowEvent* event) {
     QWidget::showEvent(event);
+    if (testPreview_ && player_.testPattern() != nullptr) {
+        testTimer_.start();
+    }
     renderNow();
+}
+
+void StageView::hideEvent(QHideEvent* event) {
+    QWidget::hideEvent(event);
+    testTimer_.stop();  // unsichtbar wird nichts gezeichnet
+}
+
+void StageView::setTestPreview(bool on) {
+    testPreview_ = on;
+    testTimer_.setInterval(33);
+    disconnect(&testTimer_, nullptr, this, nullptr);
+    connect(&testTimer_, &QTimer::timeout, this, [this]() { renderNow(); });
+    testPatternChanged();
+}
+
+void StageView::testPatternChanged() {
+    testClock_.start();
+    if (testPreview_ && isVisible() && player_.testPattern() != nullptr) {
+        testTimer_.start();
+    } else {
+        testTimer_.stop();
+    }
+    refresh();
 }
 
 bool StageView::renderNow() {
@@ -124,7 +152,13 @@ bool StageView::renderNow() {
     options.width = static_cast<std::uint32_t>(std::clamp(view_->width(), 64, 4096));
     options.height = static_cast<std::uint32_t>(std::clamp(view_->height(), 64, 4096));
     imageOptions_ = options;
-    const auto image = player_.stageImage3d(camera_, options, selection_);
+    drewTestPattern_ = testPreview_ && player_.testPattern() != nullptr;
+    const auto image = drewTestPattern_
+                           ? preview::renderPreview3d(player_.ledMap(),
+                                                      runtime::renderTestPattern(*player_.testPattern(), player_.ledMap(),
+                                                                                 static_cast<double>(testClock_.elapsed()) / 1000.0),
+                                                      camera_, options)
+                           : player_.stageImage3d(camera_, options, selection_);
     if (!image.ok()) {
         view_->setMessage(fromStd(image.error().message));
         return false;

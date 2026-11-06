@@ -74,19 +74,19 @@ msgstr " changes/s"
 msgid " s"
 msgstr " s"
 
-#: stage_view.cpp:190
+#: stage_view.cpp:224
 msgid " · %1 Ziel %2 · Universe %3 · Kanal %4–%5"
 msgstr " · %1 target %2 · universe %3 · channel %4–%5"
 
-#: stage_view.cpp:187
+#: stage_view.cpp:221
 msgid " · DDP Ziel %1 · Byte %2–%3"
 msgstr " · DDP target %1 · byte %2–%3"
 
-#: stage_view.cpp:184
+#: stage_view.cpp:218
 msgid " · liegt hinter dem letzten Universe"
 msgstr " · lies beyond the last universe"
 
-#: stage_view.cpp:194
+#: stage_view.cpp:228
 msgid " · nicht gepatcht"
 msgstr " · not patched"
 
@@ -130,7 +130,7 @@ msgstr "%1 LEDs, frame %2 (dropped %3), packets %4, send errors %5"
 msgid "%1 LEDs, angehalten"
 msgstr "%1 LEDs, stopped"
 
-#: stage_view.cpp:177
+#: stage_view.cpp:211
 msgid "%1 · LED %2 von %3"
 msgstr "%1 · LED %2 of %3"
 
@@ -150,7 +150,7 @@ msgstr "&View"
 msgid "&Ausgabe senden"
 msgstr "Send &output"
 
-#: main_window_stage.cpp:44
+#: main_window_stage.cpp:47
 msgid "&Ausgabe …"
 msgstr "&Output …"
 
@@ -186,7 +186,7 @@ msgstr "&Settings …"
 msgid "&Fehler melden oder Idee vorschlagen …"
 msgstr "&Report a bug or suggest an idea …"
 
-#: main_window_stage.cpp:53
+#: main_window_stage.cpp:56
 msgid "&Fixtures …"
 msgstr "&Fixtures …"
 
@@ -194,7 +194,7 @@ msgstr "&Fixtures …"
 msgid "&Hilfe"
 msgstr "&Help"
 
-#: main_window_stage.cpp:40
+#: main_window_stage.cpp:43
 msgid "&Layout …"
 msgstr "&Layout …"
 
@@ -250,7 +250,7 @@ msgstr "&Stop"
 msgid "&Tastenkürzel …"
 msgstr "&Keyboard shortcuts …"
 
-#: main_window_stage.cpp:49
+#: main_window_stage.cpp:52
 msgid "&Testmodus …"
 msgstr "&Test mode …"
 
@@ -654,7 +654,7 @@ msgstr "Ready: %1 - press GO"
 msgid "Betrieb"
 msgstr "Operation"
 
-#: main_window_stage.cpp:54
+#: main_window_stage.cpp:57
 msgid "Bibliothek der Bauformen: Matrix, Kreis, Strip, Säule mit Vorschau und Test"
 msgstr "Library of fixture types: matrix, circle, strip, column with preview and test"
 
@@ -1106,7 +1106,7 @@ msgstr "Field"
 msgid "Fixture"
 msgstr "Fixture"
 
-#: main_window_stage.cpp:36
+#: main_window_stage.cpp:39
 msgid "Fixture &hinzufügen …"
 msgstr "&Add fixture …"
 
@@ -1122,7 +1122,7 @@ msgstr "Add fixture"
 msgid "Fixtures"
 msgstr "Fixtures"
 
-#: main_window_stage.cpp:42
+#: main_window_stage.cpp:45
 msgid "Fixtures auf der Bühne verteilen und drehen (eigenes Fenster)"
 msgstr "Place and rotate fixtures on the stage (own window)"
 
@@ -1142,7 +1142,7 @@ msgstr "Frame"
 msgid "Frei drehbare Ansicht: ziehen = drehen, Rechtsklick = verschieben, Rad = Zoom"
 msgstr "Freely rotatable view: drag = rotate, right-click = pan, wheel = zoom"
 
-#: stage_view.cpp:73
+#: stage_view.cpp:75
 msgid "Front"
 msgstr "Front"
 
@@ -1290,7 +1290,7 @@ msgstr "Cable starts"
 msgid "Kabel:"
 msgstr "Cable:"
 
-#: stage_view.cpp:52
+#: stage_view.cpp:54
 msgid "Kabelweg mit Pfeilen, Start-LED und LED-Nummern ein- und ausblenden"
 msgstr "Show or hide the cable path with arrows, start LED and LED numbers"
 
@@ -1318,7 +1318,7 @@ msgstr "No GPU adapter: %1"
 msgid "Kein Projekt"
 msgstr "No project"
 
-#: parameter_panel.cpp:104 stage_view.cpp:120
+#: parameter_panel.cpp:104 stage_view.cpp:148
 msgid "Kein Projekt geladen."
 msgstr "No project loaded."
 
@@ -1330,7 +1330,7 @@ msgstr "No target (free rectangle)"
 msgid "Keine Aufnahmegeräte gefunden. Ein Audio-Interface anschließen und das Fenster neu öffnen."
 msgstr "No capture devices found. Connect an audio interface and reopen the window."
 
-#: stage_view.cpp:53 stage_view.cpp:159
+#: stage_view.cpp:55 stage_view.cpp:193
 msgid "Klicke eine LED, um ihre Adresse zu sehen."
 msgstr "Click an LED to see its address."
 
@@ -1538,7 +1538,7 @@ msgstr "Matrix"
 msgid "Matrix (Fläche)"
 msgstr "Matrix (surface)"
 
-#: main_window_stage.cpp:37
+#: main_window_stage.cpp:40
 msgid "Matrix, Strip oder 3D-Gitter mit Größe x y z, Lage, Verkabelung und Patch anlegen"
 msgstr "Create a matrix, strip or 3D grid with size x y z, position, wiring and patch"
 
@@ -1702,7 +1702,7 @@ msgstr "Draw only lit LEDs: you can see through the cube"
 msgid "Nächsten Cue auslösen (Leertaste)"
 msgstr "Fire the next cue (space bar)"
 
-#: layout_panel_groups.cpp:188 stage_view.cpp:75
+#: layout_panel_groups.cpp:188 stage_view.cpp:77
 msgid "Oben"
 msgstr "Top"
 
@@ -1758,7 +1758,7 @@ msgstr "Pause between trigger and start of the crossfade"
 msgid "Pegel eines Frequenzbereichs (Von–Bis in Hz) des Audio-Eingangs, geglättet mit Attack und Release. Gut für Bass- oder Höhen-Effekte. „Signal“ zeigt, ob Audio ankommt."
 msgstr "Level of one frequency band (From–To in Hz) of the audio input, smoothed with attack and release. Good for bass or treble effects. \"Signal\" shows whether audio is arriving."
 
-#: stage_view.cpp:72
+#: stage_view.cpp:74
 msgid "Perspektive"
 msgstr "Perspective"
 
@@ -1926,7 +1926,7 @@ msgstr "A step sequence with up to eight values. Each switch-on of \"Advance\" m
 msgid "Schwingung (LFO): Sinus, Dreieck, Sägezahn oder Rechteck mit Frequenz, Phase und Wertebereich. Der Klassiker zum Bewegen von Parametern."
 msgstr "Oscillator (LFO): sine, triangle, saw or square with frequency, phase and value range. The classic for moving parameters."
 
-#: stage_view.cpp:74
+#: stage_view.cpp:76
 msgid "Seite"
 msgstr "Side"
 
@@ -2098,7 +2098,7 @@ msgstr "Speed"
 msgid "Tempo per Tippen: Jedes Einschalten von „Tap“ zählt als Schlag. Liefert Beat, Pulse, Phase und BPM, oder ein festes Tempo."
 msgstr "Tempo by tapping: each switch-on of \"Tap\" counts as a beat. Outputs beat, pulse, phase and BPM, or a fixed tempo."
 
-#: shape_preview.cpp:35 stage_setup_window.cpp:40
+#: shape_preview.cpp:35 stage_setup_window.cpp:46
 msgid "Test"
 msgstr "Test"
 
@@ -2110,7 +2110,7 @@ msgstr "Test pattern"
 msgid "Testbild für den Aufbau: x wird rot, y grün, z blau. So sieht man, welche Seite wo liegt und ob Verkabelung und Startecke stimmen."
 msgstr "Test image for the setup: x becomes red, y green, z blue, so you can see which side is where and whether cabling and start corner are right."
 
-#: main_window_stage.cpp:50
+#: main_window_stage.cpp:53
 msgid "Testbilder auf die LEDs schicken, um Verkabelung und Patch zu prüfen"
 msgstr "Send test patterns to the LEDs to check wiring and patch"
 
@@ -2182,7 +2182,7 @@ msgstr "Compares a value with a threshold (with hysteresis) and outputs yes/no p
 msgid "Vergröbert das Bild zu einem Raster aus Zellen (Cells X/Y/Z), wie große Pixel."
 msgstr "Coarsens the image into a grid of cells (Cells X/Y/Z), like big pixels."
 
-#: stage_view.cpp:50
+#: stage_view.cpp:52
 msgid "Verkabelung"
 msgstr "Wiring"
 
@@ -2346,7 +2346,7 @@ msgstr "Time trigger: wait"
 msgid "Zeit: %1 nach dem vorigen"
 msgstr "Time: %1 after the previous one"
 
-#: shape_preview.cpp:40 stage_view.cpp:66
+#: shape_preview.cpp:40 stage_view.cpp:68
 msgid "Ziehen dreht, Rad zoomt. Die erste LED am Kabel ist weiß; x rot, y grün, z blau."
 msgstr "Dragging rotates, the wheel zooms. The first LED on the cable is white; x red, y green, z blue."
 
@@ -2366,7 +2366,7 @@ msgstr "Assign target"
 msgid "Ziele (Controller)"
 msgstr "Destinations (controllers)"
 
-#: main_window_stage.cpp:45
+#: main_window_stage.cpp:48
 msgid "Ziele (Controller) und Patch: welches Fixture auf welches Universe sendet"
 msgstr "Destinations (controllers) and patch: which fixture sends to which universe"
 
