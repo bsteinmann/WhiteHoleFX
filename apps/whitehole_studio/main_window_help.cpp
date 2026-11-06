@@ -144,8 +144,13 @@ QString MainWindow::exerciseMenus() {
     for (const QAction* entry : help->actions()) {
         helpEntries += entry->isSeparator() ? 0 : 1;
     }
-    if (helpEntries != 6) {  // Tutorial, Dokumentation, Fehler melden, Sprache, Tastenkürzel, Über
-        return QStringLiteral("Menüleiste: das Hilfe-Menü hat nicht sechs Einträge");
+    showPortLegend();
+    if (portLegend_ == nullptr || portLegend_->typeRows() != 12) {
+        return QStringLiteral("Menüleiste: die Legende der Ports zeigt nicht alle zwölf Porttypen");
+    }
+    portLegend_->hide();
+    if (helpEntries != 7) {  // Tutorial, Dokumentation, Fehler melden, Sprache, Legende, Tastenkürzel, Über
+        return QStringLiteral("Menüleiste: das Hilfe-Menü hat nicht sieben Einträge");
     }
     // Die Kürzelliste kennt die wichtigsten Aktionen, und die Leistenschaltflächen nennen ihr Kürzel.
     const auto rows = shortcutList();
