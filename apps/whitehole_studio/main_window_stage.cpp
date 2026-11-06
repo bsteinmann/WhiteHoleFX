@@ -15,6 +15,7 @@
 #include "main_window.hpp"
 #include "stage_setup_window.hpp"
 #include "stage_view.hpp"
+#include "test_panel.hpp"
 
 namespace whitehole::studio {
 
