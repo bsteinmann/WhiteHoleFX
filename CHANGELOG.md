@@ -3,6 +3,8 @@
 ## 0.49.0
 
 - **Legende der Ports.** Hilfe → „Legende der Ports …“ öffnet ein schwebendes Fenster mit Farben und Formen aller Porttypen und ihrer Bedeutung (Ausgang gefüllt, Eingang als Ring, Ausgang des Projekts, überbrückt).
+- **Mehrere Output-Nodes sind immer alle aktiv.** Bisher lief nur der, an dem der Ausgang hing. Jetzt verkettet das Studio jeden Output mit dem vorigen (`behind`) und hält den Ausgang am letzten; auch beim Laden alter Projekte.
+- **Region-Dialog verständlich.** Prozentangaben statt 0 bis 1, Schnellwahl (Links, Rechts, Oben, Unten, Mitte) und eine kleine Bühnenvorschau mit dem Rechteck.
 - **Nodes ohne Parameter im Parameter-Dock.** Nodes wie Add fehlten dort bisher; sie erscheinen jetzt mit dem Hinweis „Dieser Node hat keine einstellbaren Parameter“.
 
 ## 0.48.0

@@ -598,7 +598,7 @@ msgstr ""
 msgid "Blitze: Zufällige verzweigte Einschläge mit Nachglühen und Aufhellen. Häufigkeit, Breite und Verästelung einstellbar."
 msgstr ""
 
-#: layout_panel_groups.cpp:115
+#: layout_panel_groups.cpp:194
 msgid "Breite"
 msgstr ""
 
@@ -850,6 +850,10 @@ msgstr ""
 msgid "Eine Kugel (Kreis) mit weichem Rand, Innen- und Außenfarbe. „Space“ wählt flach, Volumen oder automatisch nach Aufbau."
 msgstr ""
 
+#: layout_panel_groups.cpp:150
+msgid "Eine Region ist ein Rechteck der Bühne. Ein Output mit dieser Region als Ziel bespielt alle LEDs darin. Die Angaben sind Prozent der ganzen Bühne."
+msgstr ""
+
 #: node_info_texts.cpp:113
 msgid "Eine Scan-Linie, die über das Bild läuft. Position, Breite, Weichheit und Winkel einstellbar; mit „Position“ lässt sie sich steuern."
 msgstr ""
@@ -1054,7 +1058,7 @@ msgstr ""
 msgid "Gespeichert: %1"
 msgstr ""
 
-#: layout_panel_groups.cpp:29
+#: layout_panel_groups.cpp:35
 msgid "Gewählte Fixtures als Gruppe speichern …"
 msgstr ""
 
@@ -1074,11 +1078,11 @@ msgstr ""
 msgid "Glättet einen Wert: Er folgt dem Eingang mit einer Zeitkonstante, statt zu springen."
 msgstr ""
 
-#: layout_panel_groups.cpp:35
+#: layout_panel_groups.cpp:41
 msgid "Gruppe löschen"
 msgstr ""
 
-#: layout_panel_groups.cpp:76
+#: layout_panel_groups.cpp:82
 msgid "Gruppe speichern"
 msgstr ""
 
@@ -1110,7 +1114,7 @@ msgstr ""
 msgid "Hinzufügen …"
 msgstr ""
 
-#: layout_panel_groups.cpp:116
+#: layout_panel_groups.cpp:195
 msgid "Höhe"
 msgstr ""
 
@@ -1278,8 +1282,12 @@ msgstr ""
 msgid "Linke Kanten ausrichten"
 msgstr ""
 
-#: layout_panel_groups.cpp:113
-msgid "Links (Anteil der Leinwand)"
+#: layout_panel_groups.cpp:186
+msgid "Links"
+msgstr ""
+
+#: layout_panel_groups.cpp:192
+msgid "Links ab"
 msgstr ""
 
 #: main_window_controls.cpp:154
@@ -1406,6 +1414,10 @@ msgstr ""
 msgid "Mit aktuellem Effekt überschreiben"
 msgstr ""
 
+#: layout_panel_groups.cpp:190
+msgid "Mitte"
+msgstr ""
+
 #: add_fixture_dialog.cpp:172
 msgid "Modus"
 msgstr ""
@@ -1414,11 +1426,11 @@ msgstr ""
 msgid "Name"
 msgstr ""
 
-#: layout_panel_groups.cpp:76
+#: layout_panel_groups.cpp:82
 msgid "Name der Gruppe"
 msgstr ""
 
-#: layout_panel_groups.cpp:100
+#: layout_panel_groups.cpp:156
 msgid "Name der Region"
 msgstr ""
 
@@ -1530,12 +1542,12 @@ msgstr ""
 msgid "Nächsten Cue auslösen (Leertaste)"
 msgstr ""
 
-#: stage_view.cpp:75
+#: layout_panel_groups.cpp:188 stage_view.cpp:75
 msgid "Oben"
 msgstr ""
 
-#: layout_panel_groups.cpp:114
-msgid "Oben (Anteil der Leinwand)"
+#: layout_panel_groups.cpp:193
+msgid "Oben ab"
 msgstr ""
 
 #: layout_panel.cpp:162
@@ -1690,19 +1702,27 @@ msgstr ""
 msgid "Rechte Kanten ausrichten"
 msgstr ""
 
+#: layout_panel_groups.cpp:187
+msgid "Rechts"
+msgstr ""
+
 #: layout_panel.cpp:161
 msgid "Rechts ⇥"
 msgstr ""
 
-#: layout_panel_groups.cpp:97
+#: layout_panel_groups.cpp:155
+msgid "Region %1"
+msgstr ""
+
+#: layout_panel_groups.cpp:148
 msgid "Region anlegen"
 msgstr ""
 
-#: layout_panel_groups.cpp:32
+#: layout_panel_groups.cpp:38
 msgid "Region anlegen …"
 msgstr ""
 
-#: layout_panel_groups.cpp:46
+#: layout_panel_groups.cpp:52
 msgid "Region löschen"
 msgstr ""
 
@@ -1728,6 +1748,10 @@ msgstr ""
 
 #: port_legend.cpp:67
 msgid "Schalter"
+msgstr ""
+
+#: layout_panel_groups.cpp:191
+msgid "Schnellwahl"
 msgstr ""
 
 #: node_info_texts.cpp:153
@@ -1930,6 +1954,10 @@ msgstr ""
 msgid "Universe %1 ab Kanal 1"
 msgstr ""
 
+#: layout_panel_groups.cpp:189
+msgid "Unten"
+msgstr ""
+
 #: layout_panel.cpp:164
 msgid "Unten ⤓"
 msgstr ""
@@ -1972,6 +2000,10 @@ msgstr ""
 
 #: layout_panel.cpp:46
 msgid "Vorlagen"
+msgstr ""
+
+#: layout_panel_groups.cpp:196
+msgid "Vorschau"
 msgstr ""
 
 #: settings_dialog.cpp:145
@@ -2050,7 +2082,7 @@ msgstr ""
 msgid "Wird durch eine Verbindung im Graphen gesteuert."
 msgstr ""
 
-#: layout_panel_groups.cpp:72
+#: layout_panel_groups.cpp:78
 msgid "Wähle zuerst Fixtures in der Liste."
 msgstr ""
 

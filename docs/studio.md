@@ -269,11 +269,11 @@ Der Knopf **Vorlagen** speichert das gewählte Fixture als Vorlage (Form, Maße,
 
 Für getrennte Effektketten je Fixture, Gruppe oder Bühnenbereich legst du mehrere **Output**-Nodes an und weist jedem ein Ziel zu:
 
-1. Im Layout den Knopf **Gruppen**: „Gewählte Fixtures als Gruppe speichern …“ fasst Fixtures unter einem Namen zusammen; „Region anlegen …“ legt ein benanntes Rechteck der Bühne an (Anteile der Leinwand, oben zählt von oben).
+1. Im Layout den Knopf **Gruppen**: „Gewählte Fixtures als Gruppe speichern …“ fasst Fixtures unter einem Namen zusammen; „Region anlegen …“ öffnet einen Dialog: Name, Schnellwahl (Links, Rechts, Oben, Unten, Mitte) oder Angaben in Prozent der ganzen Bühne (links ab, oben ab, Breite, Höhe), dazu eine kleine Vorschau der Bühne mit dem Rechteck.
 2. Im Node-Editor Rechtsklick auf den Output-Node → **Ziel zuweisen** und Fixtures, Gruppen oder Regionen anhaken (mehrere möglich). „Kein Ziel“ stellt das freie Rechteck aus den Parametern wieder her.
 3. Die eigene Kette an den Eingang `source` des Output-Nodes anschließen. Mit „Scale into area“ füllt der Effekt das Ziel, mit „Window“ bleibt er an seinem Platz auf der Bühne.
 
-Das Rechteck wird aus dem Ziel berechnet (umschließendes Rechteck der LEDs samt halber Zelle Rand) und in die Parameter `left`, `top`, `width`, `height` geschrieben; es folgt Verschieben, Umbenennen und Ändern der Fixtures, auch beim Rückgängigmachen. Überlappen zwei Ziele, gewinnt der später angelegte Output.
+Das Rechteck wird aus dem Ziel berechnet (umschließendes Rechteck der LEDs samt halber Zelle Rand) und in die Parameter `left`, `top`, `width`, `height` geschrieben; es folgt Verschieben, Umbenennen und Ändern der Fixtures, auch beim Rückgängigmachen. Überlappen zwei Ziele, gewinnt der später angelegte Output. Alle Output-Nodes sind immer gleichzeitig aktiv: Das Studio verkettet jeden neuen Output über seinen Eingang `behind` mit dem vorigen und setzt den Ausgang des Projekts auf den letzten. Einen Output, den du nicht brauchst, löschst du.
 
 ### Node-Palette
 

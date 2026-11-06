@@ -33,6 +33,11 @@ void Player::finishEdit(std::optional<project::Project> before, const std::strin
         return;
     }
     redo_.clear();
+    // Mehrere Output-Nodes sind immer alle aktiv; die Verkettung gehört zum selben Undo-Schritt wie die Änderung.
+    if (project_ && project::chainOutputs(*project_)) {
+        graphDirty_ = true;
+        rebuildDirty_ = true;
+    }
     if (before) {
         undo_.push_back(Snapshot{std::move(*before), rebuild});
         if (undo_.size() > kMaxUndo) {

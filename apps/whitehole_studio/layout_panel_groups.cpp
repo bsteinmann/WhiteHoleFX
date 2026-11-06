@@ -4,14 +4,20 @@
 // Regionen sind benannte Rechtecke der Bühne; beide wählt man danach per Rechtsklick an einem Output-Node.
 #include <QDialog>
 #include <QDialogButtonBox>
-#include <QDoubleSpinBox>
 #include <QFormLayout>
+#include <QHBoxLayout>
+#include <QLabel>
+#include <QPainter>
+#include <QPen>
+#include <QPushButton>
+#include <QSpinBox>
 #include <QInputDialog>
 #include <QLineEdit>
 #include <QMenu>
 
 #include <algorithm>
 #include <string>
+#include <utility>
 #include <vector>
 
 #include "layout_panel.hpp"
@@ -88,6 +94,51 @@ void LayoutPanel::saveGroup() {
     }
 }
 
+namespace {
+
+/// Kleine Bühnenansicht für den Region-Dialog: die LEDs als Punkte, die Region als Rechteck. So sieht man sofort,
+/// was die Zahlen bedeuten. Koordinaten sind Anteile der Leinwand; oben zählt von oben.
+class RegionPreview : public QWidget {
+public:
+    RegionPreview(const mapping::LedMap& map, QWidget* parent) : QWidget{parent} {
+        setFixedSize(260, 150);
+        const std::size_t step = std::max<std::size_t>(1, map.unit.size() / 2000);  // höchstens ~2000 Punkte zeichnen
+        for (std::size_t i = 0; i < map.unit.size(); i += step) {
+            points_.emplace_back(map.unit[i].x, 1.0F - map.unit[i].y);
+        }
+    }
+
+    void setRegion(double left, double top, double width, double height) {
+        region_ = QRectF{left, top, width, height};
+        update();
+    }
+
+protected:
+    void paintEvent(QPaintEvent*) override {
+        QPainter painter{this};
+        painter.fillRect(rect(), QColor{24, 25, 30});
+        const QRectF stage = QRectF{rect()}.adjusted(6, 6, -6, -6);
+        painter.setPen(QPen{QColor{70, 74, 84}, 1.0});
+        painter.drawRect(stage);
+        painter.setPen(Qt::NoPen);
+        painter.setBrush(QColor{150, 200, 255});
+        for (const auto& [x, y] : points_) {
+            painter.drawEllipse(QPointF{stage.left() + x * stage.width(), stage.top() + y * stage.height()}, 1.6, 1.6);
+        }
+        const QRectF box{stage.left() + region_.left() * stage.width(), stage.top() + region_.top() * stage.height(),
+                         region_.width() * stage.width(), region_.height() * stage.height()};
+        painter.setPen(QPen{QColor{255, 220, 0}, 2.0});
+        painter.setBrush(QColor{255, 220, 0, 40});
+        painter.drawRect(box);
+    }
+
+private:
+    std::vector<std::pair<float, float>> points_;
+    QRectF region_{0.0, 0.0, 0.5, 1.0};
+};
+
+}  // namespace
+
 void LayoutPanel::addRegion() {
     const project::Project* project = player_.project();
     if (project == nullptr) {
@@ -96,24 +147,57 @@ void LayoutPanel::addRegion() {
     QDialog dialog{this};
     dialog.setWindowTitle(tr("Region anlegen"));
     auto* layout = new QFormLayout{&dialog};
-    auto* name = new QLineEdit;
+    auto* hint = new QLabel{tr("Eine Region ist ein Rechteck der Bühne. Ein Output mit dieser Region als Ziel bespielt "
+                               "alle LEDs darin. Die Angaben sind Prozent der ganzen Bühne."),
+                            &dialog};
+    hint->setWordWrap(true);
+    layout->addRow(hint);
+    auto* name = new QLineEdit{tr("Region %1").arg(project->regions.size() + 1)};
     layout->addRow(tr("Name der Region"), name);
-    const auto box = [&dialog](double value) {
-        auto* spin = new QDoubleSpinBox{&dialog};
-        spin->setRange(0.0, 1.0);
-        spin->setDecimals(3);
-        spin->setSingleStep(0.05);
+    const auto box = [&dialog](int value) {
+        auto* spin = new QSpinBox{&dialog};
+        spin->setRange(0, 100);
+        spin->setSuffix(QStringLiteral(" %"));
         spin->setValue(value);
         return spin;
     };
-    QDoubleSpinBox* left = box(0.0);
-    QDoubleSpinBox* top = box(0.0);
-    QDoubleSpinBox* width = box(0.5);
-    QDoubleSpinBox* height = box(0.5);
-    layout->addRow(tr("Links (Anteil der Leinwand)"), left);
-    layout->addRow(tr("Oben (Anteil der Leinwand)"), top);
+    QSpinBox* left = box(0);
+    QSpinBox* top = box(0);
+    QSpinBox* width = box(50);
+    QSpinBox* height = box(100);
+    auto* preview = new RegionPreview{player_.ledMap(), &dialog};
+    const auto refresh = [=]() {
+        preview->setRegion(left->value() / 100.0, top->value() / 100.0, width->value() / 100.0, height->value() / 100.0);
+    };
+    // Schnellwahl für die häufigen Fälle.
+    auto* quick = new QWidget{&dialog};
+    auto* quickRow = new QHBoxLayout{quick};
+    quickRow->setContentsMargins(0, 0, 0, 0);
+    const auto preset = [&](const QString& text, int l, int t, int w, int h) {
+        auto* button = new QPushButton{text, quick};
+        quickRow->addWidget(button);
+        connect(button, &QPushButton::clicked, &dialog, [=]() {
+            left->setValue(l);
+            top->setValue(t);
+            width->setValue(w);
+            height->setValue(h);
+        });
+    };
+    preset(tr("Links"), 0, 0, 50, 100);
+    preset(tr("Rechts"), 50, 0, 50, 100);
+    preset(tr("Oben"), 0, 0, 100, 50);
+    preset(tr("Unten"), 0, 50, 100, 50);
+    preset(tr("Mitte"), 25, 25, 50, 50);
+    layout->addRow(tr("Schnellwahl"), quick);
+    layout->addRow(tr("Links ab"), left);
+    layout->addRow(tr("Oben ab"), top);
     layout->addRow(tr("Breite"), width);
     layout->addRow(tr("Höhe"), height);
+    layout->addRow(tr("Vorschau"), preview);
+    for (QSpinBox* spin : {left, top, width, height}) {
+        connect(spin, &QSpinBox::valueChanged, &dialog, refresh);
+    }
+    refresh();
     auto* buttons = new QDialogButtonBox{QDialogButtonBox::Ok | QDialogButtonBox::Cancel};
     layout->addRow(buttons);
     connect(buttons, &QDialogButtonBox::accepted, &dialog, &QDialog::accept);
@@ -123,10 +207,10 @@ void LayoutPanel::addRegion() {
     }
     project::StageRegion region;
     region.name = name->text().trimmed().toUtf8().toStdString();
-    region.left = static_cast<float>(left->value());
-    region.top = static_cast<float>(top->value());
-    region.width = static_cast<float>(width->value());
-    region.height = static_cast<float>(height->value());
+    region.left = static_cast<float>(left->value()) / 100.0F;
+    region.top = static_cast<float>(top->value()) / 100.0F;
+    region.width = static_cast<float>(std::min(width->value(), 100 - left->value())) / 100.0F;
+    region.height = static_cast<float>(std::min(height->value(), 100 - top->value())) / 100.0F;
     std::vector<project::StageRegion> regions = project->regions;
     std::erase_if(regions, [&region](const project::StageRegion& r) { return r.name == region.name; });  // ersetzt
     regions.push_back(std::move(region));

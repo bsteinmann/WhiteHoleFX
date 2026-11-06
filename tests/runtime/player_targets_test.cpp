@@ -75,3 +75,43 @@ output a.out
     CHECK_FALSE(player.setGroups({project::FixtureGroup{"A", {}}}).ok());
     CHECK_FALSE(player.setRegions({project::StageRegion{"R", 0.5F, 0.0F, 0.9F, 1.0F}}).ok());
 }
+
+TEST_CASE("Zwei Output-Nodes sind gleichzeitig aktiv", "[runtime][target]") {
+    Rig rig;
+    REQUIRE(rig.player.loadText(R"(whitehole-project 1
+destination 0 10.0.0.5
+fixture "Links" at 0 0 0
+  matrix 4 4 pitch 1 1
+  patch artnet destination 0 universe 1
+end
+fixture "Rechts" at 10 0 0
+  matrix 4 4 pitch 1 1
+  patch artnet destination 0 universe 2
+end
+node g1 wh.generator.gradient
+end
+node o1 wh.output.canvas
+end
+connect g1.out -> o1.source
+output o1.out
+)").ok());
+    runtime::Player& player = rig.player;
+    const NodeId first = player.project()->graph.nodes()[1].id;
+    const Result<NodeId> second = player.addNode("wh.output.canvas", Vec2{0.0F, 100.0F});
+    REQUIRE(second.ok());
+    // Der Ausgang liegt beim neuen Output, und der erste hängt an dessen `behind`.
+    CHECK(player.project()->target->node == second.value());
+    const graph::Connection* behind = player.project()->graph.findInputConnection(second.value(), "behind");
+    REQUIRE(behind != nullptr);
+    CHECK(behind->from.node == first);
+
+    // Den Ausgang auf den ersten Output zu setzen, schaltet den zweiten nicht ab.
+    REQUIRE(player.setTarget(graph::PortRef{first, "out"}).ok());
+    CHECK(player.project()->target->node == second.value());
+
+    // Auch eine gelöste Verbindung wird wieder geschlossen (beide bleiben aktiv).
+    REQUIRE(player.disconnect(behind->id).ok());
+    const graph::Connection* again = player.project()->graph.findInputConnection(second.value(), "behind");
+    REQUIRE(again != nullptr);
+    CHECK(again->from.node == first);
+}

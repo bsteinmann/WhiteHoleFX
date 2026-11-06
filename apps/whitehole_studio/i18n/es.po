@@ -598,7 +598,7 @@ msgstr "Flash for hits: fills the image, a disc, a frame or a bar with \"Level\"
 msgid "Blitze: Zufällige verzweigte Einschläge mit Nachglühen und Aufhellen. Häufigkeit, Breite und Verästelung einstellbar."
 msgstr "Lightning: random branching strikes with afterglow and flash. Frequency, width and branching are adjustable."
 
-#: layout_panel_groups.cpp:115
+#: layout_panel_groups.cpp:194
 msgid "Breite"
 msgstr "Ancho"
 
@@ -850,6 +850,10 @@ msgstr "A color as a value, with hue shift, saturation and brightness. Feeds col
 msgid "Eine Kugel (Kreis) mit weichem Rand, Innen- und Außenfarbe. „Space“ wählt flach, Volumen oder automatisch nach Aufbau."
 msgstr "A sphere (circle) with a soft edge, inside and outside color. \"Space\" chooses flat, volume or automatic by layout."
 
+#: layout_panel_groups.cpp:150
+msgid "Eine Region ist ein Rechteck der Bühne. Ein Output mit dieser Region als Ziel bespielt alle LEDs darin. Die Angaben sind Prozent der ganzen Bühne."
+msgstr "Una región es un rectángulo del escenario. Una salida con esta región como destino controla todos los LED que contiene. Los valores son porcentajes de todo el escenario."
+
 #: node_info_texts.cpp:113
 msgid "Eine Scan-Linie, die über das Bild läuft. Position, Breite, Weichheit und Winkel einstellbar; mit „Position“ lässt sie sich steuern."
 msgstr "A scan line sweeping across the image. Position, width, softness and angle are adjustable; drive \"Position\" to move it."
@@ -1054,7 +1058,7 @@ msgstr "Overall loudness of the audio input as level and peak, linear or in dB, 
 msgid "Gespeichert: %1"
 msgstr "Guardado: %1"
 
-#: layout_panel_groups.cpp:29
+#: layout_panel_groups.cpp:35
 msgid "Gewählte Fixtures als Gruppe speichern …"
 msgstr "Guardar los fixtures elegidos como grupo …"
 
@@ -1074,11 +1078,11 @@ msgstr "Guardar el fixture elegido como plantilla …"
 msgid "Glättet einen Wert: Er folgt dem Eingang mit einer Zeitkonstante, statt zu springen."
 msgstr "Smooths a value: it follows the input with a time constant instead of jumping."
 
-#: layout_panel_groups.cpp:35
+#: layout_panel_groups.cpp:41
 msgid "Gruppe löschen"
 msgstr "Eliminar grupo"
 
-#: layout_panel_groups.cpp:76
+#: layout_panel_groups.cpp:82
 msgid "Gruppe speichern"
 msgstr "Guardar grupo"
 
@@ -1110,7 +1114,7 @@ msgstr "Añadir"
 msgid "Hinzufügen …"
 msgstr "Añadir …"
 
-#: layout_panel_groups.cpp:116
+#: layout_panel_groups.cpp:195
 msgid "Höhe"
 msgstr "Alto"
 
@@ -1278,9 +1282,13 @@ msgstr "Moving sine-wave lines (count, amplitude, frequency, speed, phase spread
 msgid "Linke Kanten ausrichten"
 msgstr "Alinear bordes izquierdos"
 
-#: layout_panel_groups.cpp:113
-msgid "Links (Anteil der Leinwand)"
-msgstr "Izquierda (parte del lienzo)"
+#: layout_panel_groups.cpp:186
+msgid "Links"
+msgstr "Izquierda"
+
+#: layout_panel_groups.cpp:192
+msgid "Links ab"
+msgstr "Borde izquierdo en"
 
 #: main_window_controls.cpp:154
 msgid "Liste leeren"
@@ -1406,6 +1414,10 @@ msgstr "Con GO (precarga)"
 msgid "Mit aktuellem Effekt überschreiben"
 msgstr "Sobrescribir con el efecto actual"
 
+#: layout_panel_groups.cpp:190
+msgid "Mitte"
+msgstr "Centro"
+
 #: add_fixture_dialog.cpp:172
 msgid "Modus"
 msgstr "Modo"
@@ -1414,11 +1426,11 @@ msgstr "Modo"
 msgid "Name"
 msgstr "Nombre"
 
-#: layout_panel_groups.cpp:76
+#: layout_panel_groups.cpp:82
 msgid "Name der Gruppe"
 msgstr "Nombre del grupo"
 
-#: layout_panel_groups.cpp:100
+#: layout_panel_groups.cpp:156
 msgid "Name der Region"
 msgstr "Nombre de la región"
 
@@ -1530,13 +1542,13 @@ msgstr "Dibujar solo los LED encendidos: se ve a través del cubo"
 msgid "Nächsten Cue auslösen (Leertaste)"
 msgstr "Disparar el siguiente cue (barra espaciadora)"
 
-#: stage_view.cpp:75
+#: layout_panel_groups.cpp:188 stage_view.cpp:75
 msgid "Oben"
 msgstr "Superior"
 
-#: layout_panel_groups.cpp:114
-msgid "Oben (Anteil der Leinwand)"
-msgstr "Arriba (parte del lienzo)"
+#: layout_panel_groups.cpp:193
+msgid "Oben ab"
+msgstr "Borde superior en"
 
 #: layout_panel.cpp:162
 msgid "Obere Kanten ausrichten"
@@ -1690,19 +1702,27 @@ msgstr "Calculates with two numbers: add, subtract, multiply, divide, minimum, m
 msgid "Rechte Kanten ausrichten"
 msgstr "Alinear bordes derechos"
 
+#: layout_panel_groups.cpp:187
+msgid "Rechts"
+msgstr "Derecha"
+
 #: layout_panel.cpp:161
 msgid "Rechts ⇥"
 msgstr "Derecha ⇥"
 
-#: layout_panel_groups.cpp:97
+#: layout_panel_groups.cpp:155
+msgid "Region %1"
+msgstr "Región %1"
+
+#: layout_panel_groups.cpp:148
 msgid "Region anlegen"
 msgstr "Crear región"
 
-#: layout_panel_groups.cpp:32
+#: layout_panel_groups.cpp:38
 msgid "Region anlegen …"
 msgstr "Crear región …"
 
-#: layout_panel_groups.cpp:46
+#: layout_panel_groups.cpp:52
 msgid "Region löschen"
 msgstr "Eliminar región"
 
@@ -1729,6 +1749,10 @@ msgstr "Rojo"
 #: port_legend.cpp:67
 msgid "Schalter"
 msgstr "Interruptor"
+
+#: layout_panel_groups.cpp:191
+msgid "Schnellwahl"
+msgstr "Selección rápida"
 
 #: node_info_texts.cpp:153
 msgid "Schrittfolge mit bis zu acht Werten. Jedes Einschalten von „Advance“ geht einen Schritt weiter (vorwärts, rückwärts, hin und her oder zufällig)."
@@ -1930,6 +1954,10 @@ msgstr "Universo"
 msgid "Universe %1 ab Kanal 1"
 msgstr "Universo %1 desde el canal 1"
 
+#: layout_panel_groups.cpp:189
+msgid "Unten"
+msgstr "Abajo"
+
 #: layout_panel.cpp:164
 msgid "Unten ⤓"
 msgstr "Abajo ⤓"
@@ -1973,6 +2001,10 @@ msgstr "Eliminar plantilla"
 #: layout_panel.cpp:46
 msgid "Vorlagen"
 msgstr "Plantillas"
+
+#: layout_panel_groups.cpp:196
+msgid "Vorschau"
+msgstr "Vista previa"
 
 #: settings_dialog.cpp:145
 msgid "WAV-Datei in Schleife:"
@@ -2050,7 +2082,7 @@ msgstr "Vortex: swirls the image around a center, strongest in the middle and fa
 msgid "Wird durch eine Verbindung im Graphen gesteuert."
 msgstr "Controlado por una conexión en el grafo."
 
-#: layout_panel_groups.cpp:72
+#: layout_panel_groups.cpp:78
 msgid "Wähle zuerst Fixtures in der Liste."
 msgstr "Elige primero fixtures de la lista."
 

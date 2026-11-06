@@ -186,4 +186,73 @@ void renameFixtureRefs(Project& project, const std::string& from, const std::str
     }
 }
 
+namespace {
+
+constexpr const char* kOutputType = "wh.output.canvas";
+
+/// Liegt `candidate` irgendwo vor `node` (über beliebig viele Kabel)? Hier: Hängt `previous` schon hinter `current`?
+bool isUpstream(const graph::Graph& graph, NodeId node, NodeId candidate) {
+    std::vector<NodeId> open{node};
+    std::vector<NodeId> seen;
+    while (!open.empty()) {
+        const NodeId current = open.back();
+        open.pop_back();
+        if (std::find(seen.begin(), seen.end(), current) != seen.end()) {
+            continue;
+        }
+        seen.push_back(current);
+        for (const graph::Connection& c : graph.connections()) {
+            if (c.to.node != current) {
+                continue;
+            }
+            if (c.from.node == candidate) {
+                return true;
+            }
+            open.push_back(c.from.node);
+        }
+    }
+    return false;
+}
+
+}  // namespace
+
+bool chainOutputs(graph::Graph& graph, std::optional<graph::PortRef>& target) {
+    std::vector<NodeId> outputs;
+    for (const graph::NodeInstance& node : graph.nodes()) {
+        if (node.typeId == kOutputType) {
+            outputs.push_back(node.id);
+        }
+    }
+    bool changed = false;
+    for (std::size_t k = 1; k < outputs.size(); ++k) {
+        const NodeId previous = outputs[k - 1];
+        const NodeId current = outputs[k];
+        if (graph.findInputConnection(current, "behind") != nullptr || isUpstream(graph, previous, current)) {
+            continue;
+        }
+        changed = graph.connect(graph::PortRef{previous, "out"}, graph::PortRef{current, "behind"}).ok() || changed;
+    }
+    if (outputs.size() >= 2 && target) {
+        const bool onOutput = std::find(outputs.begin(), outputs.end(), target->node) != outputs.end();
+        const graph::PortRef last{outputs.back(), "out"};
+        if (onOutput && !(*target == last)) {
+            target = last;
+            changed = true;
+        }
+    }
+    return changed;
+}
+
+bool chainOutputs(Project& project) {
+    bool changed = chainOutputs(project.graph, project.target);
+    for (Look& look : project.looks) {
+        std::optional<graph::PortRef> target = look.target;
+        if (chainOutputs(look.graph, target)) {
+            look.target = *target;
+            changed = true;
+        }
+    }
+    return changed;
+}
+
 }  // namespace whitehole::project
