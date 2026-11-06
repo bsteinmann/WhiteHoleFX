@@ -102,7 +102,7 @@ msgstr "%1  →  %2"
 msgid "%1 %"
 msgstr "%1 %"
 
-#: main_window_help.cpp:111
+#: main_window_help.cpp:126
 msgid "%1 (%2)"
 msgstr "%1 (%2)"
 
@@ -166,7 +166,7 @@ msgstr "&Blackout"
 msgid "&Datei"
 msgstr "&Archivo"
 
-#: main_window_help.cpp:32
+#: main_window_help.cpp:33
 msgid "&Dokumentation"
 msgstr "&Documentación"
 
@@ -174,7 +174,7 @@ msgstr "&Documentación"
 msgid "&Einstellungen …"
 msgstr "&Ajustes …"
 
-#: main_window_help.cpp:41
+#: main_window_help.cpp:42
 msgid "&Fehler melden oder Idee vorschlagen …"
 msgstr "&Informar de un error o sugerir una idea …"
 
@@ -185,6 +185,10 @@ msgstr "A&yuda"
 #: main_window_stage.cpp:32
 msgid "&Layout und Patch …"
 msgstr "&Disposición y patch …"
+
+#: main_window_help.cpp:50
+msgid "&Legende der Ports …"
+msgstr "&Leyenda de los puertos …"
 
 #: main_window_view3d.cpp:116
 msgid "&Leuchten (additiv)"
@@ -230,7 +234,7 @@ msgstr "&Iniciar"
 msgid "&Stopp"
 msgstr "&Detener"
 
-#: main_window_help.cpp:45
+#: main_window_help.cpp:46
 msgid "&Tastenkürzel …"
 msgstr "&Atajos de teclado …"
 
@@ -238,7 +242,7 @@ msgstr "&Atajos de teclado …"
 msgid "&Testmodus …"
 msgstr "Modo de &prueba …"
 
-#: main_window_help.cpp:37
+#: main_window_help.cpp:38
 msgid "&Tutorial …"
 msgstr "&Tutorial …"
 
@@ -258,7 +262,7 @@ msgstr "Abrir &reciente"
 msgid "&Öffnen …"
 msgstr "&Abrir …"
 
-#: main_window_help.cpp:49
+#: main_window_help.cpp:54
 msgid "&Über WhiteHoleFX"
 msgstr "&Acerca de WhiteHoleFX"
 
@@ -350,9 +354,13 @@ msgstr "<b>Nube de puntos</b>: %1 puntos, solo editable en el archivo"
 msgid "<b>Strip</b>"
 msgstr "<b>Strip</b>"
 
-#: main_window_help.cpp:95
+#: main_window_help.cpp:110
 msgid "<b>WhiteHoleFX Studio</b> %1<br><br>Steuerung für LED-Matrizen, Cubes und Pixel mit einem Node-Editor.<br>Lizenz: PolyForm Shield 1.0.0<br><br><a href=\"%2\">%2</a>"
 msgstr "<b>WhiteHoleFX Studio</b> %1<br><br>Control de matrices LED, cubos y píxeles con un editor de nodos.<br>Licencia: PolyForm Shield 1.0.0<br><br><a href=\"%2\">%2</a>"
+
+#: port_legend.cpp:92
+msgid "Abgeblendeter Node mit gestrichelter Durchleitung: überbrückt (Taste B)."
+msgstr "Nodo atenuado con paso discontinuo: puenteado (tecla B)."
 
 #: layout_panel.cpp:184
 msgid "Abstand"
@@ -394,7 +402,7 @@ msgstr "Todos los LED apagados; los paquetes siguen enviándose (Ctrl+B)"
 msgid "Alle Standardwerte zurücksetzen"
 msgstr "Restablecer todos los valores predeterminados"
 
-#: main_window_help.cpp:46
+#: main_window_help.cpp:47
 msgid "Alle Tastenkürzel in einer Liste"
 msgstr "Todos los atajos de teclado en una lista"
 
@@ -470,7 +478,15 @@ msgstr "Beat de audio"
 msgid "Audio-Eingang: %1"
 msgstr "Entrada de audio: %1"
 
-#: parameter_panel.cpp:100
+#: port_legend.cpp:72
+msgid "Audio-Spektrum"
+msgstr "Espectro de audio"
+
+#: port_legend.cpp:74
+msgid "Audio-Welle"
+msgstr "Onda de audio"
+
+#: parameter_panel.cpp:103
 msgid "Auf Standardwert zurücksetzen"
 msgstr "Restablecer al valor predeterminado"
 
@@ -509,6 +525,10 @@ msgstr "LED apagados &ocultos"
 #: layout_panel.cpp:80
 msgid "Ausgabe"
 msgstr "Salida"
+
+#: port_legend.cpp:56
+msgid "Ausgang (gefüllt, rechts am Node)"
+msgstr "Salida (rellena, a la derecha del nodo)"
 
 #: main_window_view3d.cpp:96
 msgid "Ausgeschaltete LEDs als sehr dunkle Punkte, nur als Orientierung"
@@ -549,6 +569,14 @@ msgstr "Listo: %1 - pulsa GO"
 #: main_window_actions.cpp:126
 msgid "Betrieb"
 msgstr "Funcionamiento"
+
+#: port_legend.cpp:64
+msgid "Bild als Textur (z. B. aus einer Datei)"
+msgstr "Imagen como textura (p. ej. de un archivo)"
+
+#: port_legend.cpp:63
+msgid "Bild auf der Bühne: eine Farbe für jede Position"
+msgstr "Imagen en el escenario: un color para cada posición"
 
 #: output_form.cpp:51
 msgid "Bildrate (fps)"
@@ -694,7 +722,7 @@ msgstr "El valor del canal de 0 a 255 ajusta el master de 0 a 100 %. Mientras ll
 msgid "Der Master kommt gerade vom DMX-Kanal (Einstellungen → DMX-Eingang)"
 msgstr "El master viene ahora del canal DMX (Ajustes → Entrada DMX)"
 
-#: main_window_help.cpp:34
+#: main_window_help.cpp:35
 msgid "Die Anleitung im Browser öffnen"
 msgstr "Abrir el manual en el navegador"
 
@@ -742,7 +770,7 @@ msgstr "The elapsed time in seconds, with speed factor and offset. For driving m
 msgid "Die Änderung wirkt sofort nach „OK“."
 msgstr "El cambio surte efecto inmediatamente tras «Aceptar»."
 
-#: main_window.cpp:179
+#: main_window.cpp:179 parameter_panel.cpp:63
 msgid "Dieser Node hat keine einstellbaren Parameter."
 msgstr "Este nodo no tiene parámetros ajustables."
 
@@ -790,6 +818,10 @@ msgstr "Tiempo de fundido propio:"
 msgid "Ein Bericht (.txt) und ein Speicherabbild (.dmp) liegen im Ordner:\n%1\n\nBitte schicke beide Dateien an den Entwickler. Das Speicherabbild enthält Teile des Arbeitsspeichers; gib es nur weiter, wenn du damit einverstanden bist."
 msgstr "Un informe (.txt) y un volcado de memoria (.dmp) están en la carpeta:\n%1\n\nEnvía ambos archivos al desarrollador. El volcado contiene partes de la memoria de trabajo; compártelo solo si estás de acuerdo."
 
+#: port_legend.cpp:90
+msgid "Ein Kabel lässt sich nur zwischen passenden Typen ziehen."
+msgstr "Un cable solo se puede tender entre tipos compatibles."
+
 #: live_panel.cpp:62
 msgid "Ein Klick lädt den Look nur vor. GO (Leertaste) startet dann die Überblendung."
 msgstr "Un clic solo precarga el look. GO (barra espaciadora) inicia entonces el fundido."
@@ -798,11 +830,15 @@ msgstr "Un clic solo precarga el look. GO (barra espaciadora) inicia entonces el
 msgid "Ein Look ist ein fertiger Effekt (vom Generator bis zum Ausgang). Speichere deine Effekte hier und rufe sie im Live-Modus mit einem Klick ab."
 msgstr "Un look es un efecto terminado (del generador a la salida). Guarda aquí tus efectos y llámalos en modo live con un clic."
 
+#: port_legend.cpp:54
+msgid "Ein- und Ausgang"
+msgstr "Entrada y salida"
+
 #: node_info_texts.cpp:83
 msgid "Eine Box (Rechteck oder Quader) mit weichem Rand. Innen- und Außenfarbe, Größe und Lage einstellbar. „Space“ wählt flach, Volumen oder automatisch nach Aufbau."
 msgstr "A box (rectangle or cuboid) with a soft edge. Inside and outside color, size and position are adjustable. \"Space\" chooses flat, volume or automatic by layout."
 
-#: main_window_help.cpp:38
+#: main_window_help.cpp:39
 msgid "Eine Einführung in die Bedienung, in der gewählten Sprache"
 msgstr "Una introducción al manejo, en el idioma elegido"
 
@@ -833,6 +869,10 @@ msgstr "A fixed number. Handy for feeding the same value to several parameters."
 #: node_editor_menu.cpp:93
 msgid "Einfügen\tStrg+V"
 msgstr "Pegar\tCtrl+V"
+
+#: port_legend.cpp:58
+msgid "Eingang (nur Ring, links am Node)"
+msgstr "Entrada (solo anillo, a la izquierda del nodo)"
 
 #: layout_panel_grid.cpp:38
 msgid "Einrasten"
@@ -890,9 +930,13 @@ msgstr "Fundido"
 msgid "Faktor auf alle Koordinaten, z. B. 0,1 für Millimeter in Zentimeter"
 msgstr "Factor para todas las coordenadas, p. ej. 0,1 para milímetros a centímetros"
 
-#: parameter_editors.cpp:92 test_panel.cpp:38 test_panel.cpp:72
+#: parameter_editors.cpp:92 port_legend.cpp:68 test_panel.cpp:38
 msgid "Farbe"
 msgstr "Color"
+
+#: main_window_help.cpp:51
+msgid "Farben und Formen der Node-Ein- und Ausgänge in einem schwebenden Fenster"
+msgstr "Colores y formas de las entradas y salidas de los nodos en una ventana flotante"
 
 #: main_window_actions.cpp:102
 msgid "Farbige Punkte vor den Nodes in der Palette: was der Node liefert"
@@ -917,6 +961,10 @@ msgstr "Restablecer la disposición de la &ventana"
 #: main_window_layout.cpp:63
 msgid "Fensteranordnung zurückgesetzt: Sie gilt ab dem nächsten Start."
 msgstr "Disposición de la ventana restablecida: se aplica en el próximo inicio."
+
+#: port_legend.cpp:63
+msgid "Field"
+msgstr "Field"
 
 #: main_window_stage.cpp:24
 msgid "Fixture &hinzufügen …"
@@ -977,6 +1025,10 @@ msgstr "GO (manual)"
 #: fixture_form.cpp:217
 msgid "Gamma"
 msgstr "Gamma"
+
+#: port_legend.cpp:66
+msgid "Ganzzahl"
+msgstr "Entero"
 
 #: main_window_file.cpp:82
 msgid "Geladen: %1"
@@ -1066,9 +1118,17 @@ msgstr "Alto"
 msgid "Hüllkurve (ADSR): Aus einem Schalter wird ein weicher Verlauf mit Attack, Decay, Sustain und Release. Auch als Einzelimpuls."
 msgstr "Envelope (ADSR): turns a switch into a smooth curve with attack, decay, sustain and release. Also as a one-shot."
 
+#: port_legend.cpp:64
+msgid "Image"
+msgstr "Imagen"
+
 #: layout_panel_add.cpp:144
 msgid "Import: %1"
 msgstr "Importación: %1"
+
+#: port_legend.cpp:71
+msgid "Impuls"
+msgstr "Pulso"
 
 #: look_panel.cpp:60
 msgid "In den Editor laden"
@@ -1170,6 +1230,10 @@ msgstr "Barra de barrido"
 msgid "Lauflicht"
 msgstr "Secuencia"
 
+#: port_legend.cpp:72
+msgid "Lautstärke je Frequenzband"
+msgstr "Volumen por banda de frecuencia"
+
 #: stage_setup_window.cpp:27
 msgid "Layout"
 msgstr "Disposición"
@@ -1177,6 +1241,10 @@ msgstr "Disposición"
 #: output_form.cpp:52
 msgid "Layout auf Würfel abbilden"
 msgstr "Proyectar la disposición sobre el cubo"
+
+#: port_legend.cpp:45
+msgid "Legende der Ports"
+msgstr "Leyenda de los puertos"
 
 #: node_info_texts.cpp:39
 msgid "Legt Bild B über Bild A. Der Modus bestimmt die Verrechnung (Addieren, Multiplizieren, Screen, Subtrahieren, Differenz …), „Amount“ blendet zwischen A und dem Ergebnis."
@@ -1478,6 +1546,10 @@ msgstr "Alinear bordes superiores"
 msgid "Ohne Häkchen beginnt das Kabel links, unten, hinten. x nach rechts, y nach oben, z zum Betrachter."
 msgstr "Sin marcar, el cable empieza a la izquierda, abajo, atrás. x hacia la derecha, y hacia arriba, z hacia el observador."
 
+#: port_legend.cpp:91
+msgid "Orange Umrandung am Node: sein Ausgang wird auf die LEDs abgetastet."
+msgstr "Contorno naranja en un nodo: su salida se muestrea sobre los LED."
+
 #: crash_notice.cpp:38
 msgid "Ordner öffnen"
 msgstr "Abrir carpeta"
@@ -1485,6 +1557,10 @@ msgstr "Abrir carpeta"
 #: main_window_actions.cpp:62
 msgid "Pakete (Art-Net, sACN, DDP) wirklich ins Netz schicken"
 msgstr "Enviar realmente los paquetes (Art-Net, sACN, DDP) a la red"
+
+#: port_legend.cpp:69
+msgid "Palette"
+msgstr "Paleta"
 
 #: main_window_actions.cpp:99
 msgid "Palette &farbig"
@@ -1522,6 +1598,10 @@ msgstr "Plasma: softly flowing, wobbling color fields. Scale, speed and depth ar
 msgid "Port (0 = Standard)"
 msgstr "Puerto (0 = predeterminado)"
 
+#: port_legend.cpp:60
+msgid "Porttypen: Farbe und Form"
+msgstr "Tipos de puerto: color y forma"
+
 #: add_fixture_dialog.cpp:57
 msgid "Position x y z"
 msgstr "Posición x y z"
@@ -1529,6 +1609,10 @@ msgstr "Posición x y z"
 #: layout_panel_add.cpp:139
 msgid "Positionen (*.csv *.txt *.tsv *.json);;Alle Dateien (*)"
 msgstr "Posiciones (*.csv *.txt *.tsv *.json);;Todos los archivos (*)"
+
+#: port_legend.cpp:73
+msgid "Positionen von Punkten im Raum"
+msgstr "Posiciones de puntos en el espacio"
 
 #: node_editor_presets.cpp:96
 msgid "Preset \"%1\" gelöscht."
@@ -1573,6 +1657,10 @@ msgstr "Protocolo"
 #: layout_panel_add.cpp:42
 msgid "Punkte"
 msgstr "Puntos"
+
+#: port_legend.cpp:73
+msgid "Punktwolke"
+msgstr "Nube de puntos"
 
 #: output_form.cpp:54
 msgid "Quellname (sACN)"
@@ -1637,6 +1725,10 @@ msgstr "Ring that travels outward from the center on a hit and fades. \"Age\" co
 #: test_panel.cpp:29
 msgid "Rot"
 msgstr "Rojo"
+
+#: port_legend.cpp:67
+msgid "Schalter"
+msgstr "Interruptor"
 
 #: node_info_texts.cpp:153
 msgid "Schrittfolge mit bis zu acht Werten. Jedes Einschalten von „Advance“ geht einen Schritt weiter (vorwärts, rückwärts, hin und her oder zufällig)."
@@ -1774,7 +1866,7 @@ msgstr "Pulse la tecla que debe disparar el cue"
 msgid "Tasten-Auslöser: Taste"
 msgstr "Disparador de tecla: tecla"
 
-#: main_window_help.cpp:88
+#: main_window_help.cpp:103
 msgid "Tastenkürzel"
 msgstr "Atajos de teclado"
 
@@ -1805,6 +1897,10 @@ msgstr "Modo de prueba"
 #: test_panel.cpp:91
 msgid "Testmodus beenden"
 msgstr "Terminar modo de prueba"
+
+#: port_legend.cpp:70
+msgid "Text"
+msgstr "Texto"
 
 #: node_info_texts.cpp:123
 msgid "Text als Laufschrift oder statisch. Tempo, Ausrichtung, Höhe und Farben einstellbar."
@@ -1906,6 +2002,10 @@ msgstr "Soft, merging balls (metaballs) that move around. Number, size and speed
 msgid "Weiches Rauschen (Value Noise) als Muster aus zwei Farben. Skalierung, Tempo, Dichte und Weichheit einstellbar."
 msgstr "Soft value noise as a pattern of two colors. Scale, speed, density and softness are adjustable."
 
+#: port_legend.cpp:84
+msgid "Weiteres"
+msgstr "Más"
+
 #: test_panel.cpp:29
 msgid "Weiß"
 msgstr "Blanco"
@@ -1946,7 +2046,7 @@ msgstr "Repeats the image as tiles (Tiles X/Y/Z), optionally mirroring every oth
 msgid "Wirbel: Dreht das Bild um einen Mittelpunkt, in der Mitte am stärksten, nach außen abklingend (Radius)."
 msgstr "Vortex: swirls the image around a center, strongest in the middle and fading outward (radius)."
 
-#: parameter_panel.cpp:107
+#: parameter_panel.cpp:110
 msgid "Wird durch eine Verbindung im Graphen gesteuert."
 msgstr "Controlado por una conexión en el grafo."
 
@@ -1961,6 +2061,14 @@ msgstr "Elige primero un fixture de la lista."
 #: settings_dialog.cpp:148
 msgid "Wählen …"
 msgstr "Elegir …"
+
+#: port_legend.cpp:65
+msgid "Zahl"
+msgstr "Número"
+
+#: port_legend.cpp:70
+msgid "Zeichen, z. B. für den Text-Node"
+msgstr "Caracteres, p. ej. para el nodo de texto"
 
 #: node_info_texts.cpp:33
 msgid "Zeichnet das Audio-Spektrum als Balken, von unten oder von der Mitte aus. „Spectrum“ kommt von „Audio Spectrum“."
@@ -2054,6 +2162,10 @@ msgstr "Volver al editor (Esc)"
 msgid "Zwischen Bearbeiten und Live-Betrieb wechseln (F9)"
 msgstr "Cambiar entre edición y funcionamiento live (F9)"
 
+#: port_legend.cpp:66
+msgid "Zähler oder Auswahl"
+msgstr "Contador o selección"
+
 #: add_fixture_dialog.cpp:150
 msgid "Zählrichtung"
 msgstr "Sentido de recuento"
@@ -2062,9 +2174,33 @@ msgstr "Sentido de recuento"
 msgid "an die Ausgabe schicken"
 msgstr "enviar a la salida"
 
+#: port_legend.cpp:67
+msgid "an oder aus"
+msgstr "encendido o apagado"
+
 #: add_fixture_dialog.cpp:52
 msgid "automatisch (Matrix 1, Cube 1 …)"
 msgstr "automático (Matriz 1, Cubo 1 …)"
+
+#: port_legend.cpp:74
+msgid "die Schwingung des Tons"
+msgstr "la oscilación del sonido"
+
+#: port_legend.cpp:69
+msgid "ein Farbverlauf aus mehreren Farben"
+msgstr "un degradado de varios colores"
+
+#: port_legend.cpp:65
+msgid "ein Zahlenwert, auch zeitlich veränderlich"
+msgstr "un valor numérico, puede variar con el tiempo"
+
+#: port_legend.cpp:71
+msgid "ein kurzer Auslöser, z. B. ein Beat oder Treffer"
+msgstr "un disparador breve, p. ej. un beat o golpe"
+
+#: port_legend.cpp:68
+msgid "eine einzelne Farbe"
+msgstr "un solo color"
 
 #: layout_panel_add.cpp:152
 msgid "kleinste Koordinate auf 0 schieben"
@@ -2142,11 +2278,11 @@ msgstr "z (profundidad)"
 msgid "Ändert die Farben eines Bildes: Farbton verschieben, Sättigung, Helligkeit, Gamma, Invertieren."
 msgstr "Adjusts the colors of an image: hue shift, saturation, brightness, gamma, invert."
 
-#: main_window_help.cpp:42
+#: main_window_help.cpp:43
 msgid "Öffnet GitHub: ein neues Issue anlegen"
 msgstr "Abre GitHub: crear una nueva incidencia"
 
-#: main_window_help.cpp:102
+#: main_window_help.cpp:117
 msgid "Über WhiteHoleFX"
 msgstr "Acerca de WhiteHoleFX"
 

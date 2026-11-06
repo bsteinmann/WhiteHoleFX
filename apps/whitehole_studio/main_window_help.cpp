@@ -17,6 +17,7 @@
 #include <utility>
 
 #include "main_window.hpp"
+#include "port_legend.hpp"
 
 namespace whitehole::studio {
 
@@ -46,6 +47,10 @@ void MainWindow::buildHelp(QMenu* help) {
     keys->setToolTip(tr("Alle Tastenkürzel in einer Liste"));
     connect(keys, &QAction::triggered, this, [this]() { showShortcuts(); });
 
+    auto* legend = new QAction{tr("&Legende der Ports …"), this};
+    legend->setToolTip(tr("Farben und Formen der Node-Ein- und Ausgänge in einem schwebenden Fenster"));
+    connect(legend, &QAction::triggered, this, [this]() { showPortLegend(); });
+
     auto* about = new QAction{tr("&Über WhiteHoleFX"), this};
     about->setMenuRole(QAction::NoRole);
     connect(about, &QAction::triggered, this, [this]() { showAbout(); });
@@ -55,8 +60,18 @@ void MainWindow::buildHelp(QMenu* help) {
     help->addAction(issue);
     help->addSeparator();
     buildLanguageMenu(help);
+    help->addAction(legend);
     help->addAction(keys);
     help->addAction(about);
+}
+
+void MainWindow::showPortLegend() {
+    if (portLegend_ == nullptr) {
+        portLegend_ = new PortLegend{this};
+    }
+    portLegend_->show();
+    portLegend_->raise();
+    portLegend_->activateWindow();
 }
 
 std::vector<std::pair<QString, QString>> MainWindow::shortcutList() const {

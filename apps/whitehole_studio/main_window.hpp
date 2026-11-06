@@ -37,6 +37,8 @@ class QToolBar;
 
 namespace whitehole::studio {
 
+class PortLegend;
+
 class LayoutPanel;
 class CuePanel;
 class LivePanel;
@@ -209,6 +211,9 @@ private:
     void showTutorial();
     [[nodiscard]] std::vector<std::pair<QString, QString>> shortcutList() const;  // (Kürzel, Name), nach Name
     void showShortcuts();
+    /// Schwebendes Fenster mit den Farben und Formen der Ports (port_legend.hpp); wird beim ersten Mal angelegt.
+    void showPortLegend();
+    PortLegend* portLegend_{nullptr};
     void showAbout();
     void addShortcutHints();  // hängt das Kürzel an Tooltips, die keins nennen
     void openSettings();

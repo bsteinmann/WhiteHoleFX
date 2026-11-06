@@ -1,5 +1,10 @@
 # Änderungen
 
+## 0.49.0
+
+- **Legende der Ports.** Hilfe → „Legende der Ports …“ öffnet ein schwebendes Fenster mit Farben und Formen aller Porttypen und ihrer Bedeutung (Ausgang gefüllt, Eingang als Ring, Ausgang des Projekts, überbrückt).
+- **Nodes ohne Parameter im Parameter-Dock.** Nodes wie Add fehlten dort bisher; sie erscheinen jetzt mit dem Hinweis „Dieser Node hat keine einstellbaren Parameter“.
+
 ## 0.48.0
 
 - **Mehrere Outputs mit Ziel.** Ein Output-Node kann Fixtures, Gruppen von Fixtures oder benannte Regionen der Bühne als Ziel haben (Rechtsklick auf den Output-Node → „Ziel zuweisen“). Sein Rechteck wird aus dem Ziel berechnet und folgt dem Layout (Verschieben, Umbenennen, Rückgängig). So gibt es getrennte Effektketten je Fixture oder Gruppe; LEDs ohne Output bleiben dunkel, bei Überlappung gewinnt der spätere Output.

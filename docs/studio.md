@@ -88,6 +88,10 @@ also Weiß ein, er wird nicht grau. Beim Senden und in der Vorschau gilt: Die Fa
 multipliziert, **transparent heißt LED aus**. Ein Hintergrund, über dem etwas liegt, scheint durch
 Transparent hindurch, sobald die Ebene darunter mit Mix oder Add dazugerechnet wird.
 
+### Legende der Ports
+
+**Hilfe → Legende der Ports …** öffnet ein schwebendes, verschiebbares Fenster. Es zeigt die zwölf Porttypen mit Farbe und Form (Kreis, Raute, Quadrat, Dreieck) und was sie bedeuten, dazu: Ausgang gefüllt, Eingang als Ring, orange Umrandung = Ausgang des Projekts, abgeblendet mit gestrichelter Durchleitung = überbrückt. Das Fenster bleibt offen, während du im Node-Editor arbeitest.
+
 ### Node anklicken
 
 Klickt man im Node-Editor einen Node an, springt das Dock „Parameter“ nach vorn, scrollt zu seinen

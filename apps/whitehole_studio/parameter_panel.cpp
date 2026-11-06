@@ -59,6 +59,9 @@ void ParameterPanel::rebuild(const std::vector<runtime::NodeInfo>& nodes) {
         auto* group = new QGroupBox{fromStd(node.title), content};
         auto* grid = new QGridLayout{group};
         int row = 0;
+        if (node.parameters.empty()) {
+            grid->addWidget(new QLabel{tr("Dieser Node hat keine einstellbaren Parameter."), group}, row++, 0);
+        }
         std::unordered_map<std::string, std::shared_ptr<Editor>> holders;
         const auto numberOf = [&node](const std::string& name) -> std::optional<double> {
             for (const runtime::ParameterInfo& p : node.parameters) {

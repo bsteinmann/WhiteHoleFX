@@ -245,7 +245,8 @@ std::vector<NodeInfo> Player::nodes() const {
     for (const graph::NodeInstance& node : g.nodes()) {
         const std::size_t index = ++seen[node.typeId];
         const graph::NodeDescriptor* descriptor = g.registry().find(node.typeId);
-        if (descriptor == nullptr || descriptor->parameters.empty()) {
+        // Auch Nodes ohne Parameter (z. B. Add) erscheinen: Das Dock zeigt dann einen Hinweis, statt sie zu verschweigen.
+        if (descriptor == nullptr) {
             continue;
         }
         NodeInfo info;
