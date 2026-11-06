@@ -1,7 +1,7 @@
 // main_window_stage.cpp: das Menü und das Fenster "Stage Config" im Hauptfenster (Kürzel, Live-Modus, Rauchtest).
 //
 // Warum eine eigene Datei: main_window.cpp ist an der 400-Zeilen-Grenze. Hier steht, wie das Fenster
-// geöffnet wird (Menü Stage Config, Layout und Patch = F4; Testmodus ist die zweite Seite) und dass der Live-Modus es
+// geöffnet wird (Menü Stage Config, Layout = F4; Fixtures, Ausgabe und Test sind weitere Seiten) und dass der Live-Modus es
 // schließt und danach wieder öffnet, falls es offen war.
 #include <QAction>
 #include <QKeySequence>
@@ -11,6 +11,7 @@
 #include "fixture_library_page.hpp"
 #include "layout_panel.hpp"
 #include "look_panel.hpp"
+#include "output_page.hpp"
 #include "main_window.hpp"
 #include "stage_setup_window.hpp"
 #include "stage_view.hpp"
@@ -25,16 +26,24 @@ void MainWindow::buildStageConfig(QMenu* menu) {
     connect(fixturePage_, &FixtureLibraryPage::projectNeeded, this, [this]() { newProject(false); });
     connect(fixturePage_, &FixtureLibraryPage::failed, this,
             [this](const QString& message) { statusBar()->showMessage(message, 8000); });
-    stageSetup_ = new StageSetupWindow{fixturePage_, layoutPanel_, testPanel_, stageView_, this};
+    outputPage_ = new OutputPage{*player_};
+    connect(outputPage_, &OutputPage::edited, this, &MainWindow::onLayoutEdited);
+    connect(outputPage_, &OutputPage::failed, this,
+            [this](const QString& message) { statusBar()->showMessage(message, 8000); });
+    stageSetup_ = new StageSetupWindow{fixturePage_, layoutPanel_, outputPage_, testPanel_, stageView_, this};
     connect(layoutPanel_, &LayoutPanel::selectionChanged, this, &MainWindow::refreshStageViews);
 
     auto* addFixtureAction = new QAction{tr("Fixture &hinzufügen …"), this};
     addFixtureAction->setToolTip(tr("Matrix, Strip oder 3D-Gitter mit Größe x y z, Lage, Verkabelung und Patch anlegen"));
     connect(addFixtureAction, &QAction::triggered, this, [this]() { layoutPanel_->addFromDialog(); });
 
-    stageSetupAction_ = new QAction{tr("&Layout und Patch …"), this};
+    stageSetupAction_ = new QAction{tr("&Layout …"), this};
     stageSetupAction_->setShortcut(QKeySequence{Qt::Key_F4});
-    stageSetupAction_->setToolTip(tr("Fixtures anordnen, Universen und Ziele einstellen (eigenes Fenster)"));
+    stageSetupAction_->setToolTip(tr("Fixtures auf der Bühne verteilen und drehen (eigenes Fenster)"));
+
+    auto* outputAction = new QAction{tr("&Ausgabe …"), this};
+    outputAction->setToolTip(tr("Ziele (Controller) und Patch: welches Fixture auf welches Universe sendet"));
+    connect(outputAction, &QAction::triggered, this, [this]() { stageSetup_->open(StageSetupWindow::Page::Output); });
     connect(stageSetupAction_, &QAction::triggered, this, [this]() { stageSetup_->open(StageSetupWindow::Page::Layout); });
 
     auto* testModeAction = new QAction{tr("&Testmodus …"), this};
@@ -49,6 +58,7 @@ void MainWindow::buildStageConfig(QMenu* menu) {
     menu->addAction(addFixtureAction);
     menu->addSeparator();
     menu->addAction(stageSetupAction_);
+    menu->addAction(outputAction);
     menu->addAction(testModeAction);
 }
 
@@ -57,6 +67,7 @@ void MainWindow::refreshStageViews() {
         return;
     }
     fixturePage_->refresh();
+    outputPage_->refresh();
     stageView_->setSelection(layoutPanel_->selectedIds());
     stageView_->refresh();
     layoutPanel_->refreshView();
@@ -64,7 +75,7 @@ void MainWindow::refreshStageViews() {
 
 QString MainWindow::exerciseStageSetup() {
     if (stageSetup_ == nullptr || stageSetup_->pageCount() != 4) {
-        return QStringLiteral("das Fenster Stage Config hat nicht die Seiten Fixtures, Layout, Testmodus und Ansicht");
+        return QStringLiteral("das Fenster Stage Config hat nicht die Seiten Fixtures, Layout, Ausgabe und Test");
     }
     if (const QString note = stageView_->exercise(); !note.isEmpty()) {
         return note;
@@ -86,11 +97,14 @@ QString MainWindow::exerciseStageSetup() {
     }
     stageSetup_->open(StageSetupWindow::Page::Test);
     if (stageSetup_->page() != StageSetupWindow::Page::Test) {
-        return QStringLiteral("Stage Config zeigt die Seite Testmodus nicht");
+        return QStringLiteral("Stage Config zeigt die Seite Test nicht");
     }
-    stageSetup_->open(StageSetupWindow::Page::View);
-    if (stageSetup_->page() != StageSetupWindow::Page::View) {
-        return QStringLiteral("Stage Config zeigt die Seite Ansicht nicht");
+    stageSetup_->open(StageSetupWindow::Page::Output);
+    if (stageSetup_->page() != StageSetupWindow::Page::Output) {
+        return QStringLiteral("Stage Config zeigt die Seite Ausgabe nicht");
+    }
+    if (const QString note = outputPage_->exercise(); !note.isEmpty()) {
+        return note;
     }
     // Der Live-Modus schließt das Fenster und stellt es danach wieder her. Er braucht einen Look.
     const bool addedLook = lookPanel_->lookCount() == 0;

@@ -24,17 +24,21 @@ OutputForm::OutputForm(runtime::Player& player, QWidget* parent) : QWidget{paren
     table_ = new QTableWidget{0, 2};
     table_->setHorizontalHeaderLabels({tr("Adresse (leer = Multicast)"), tr("Port (0 = Standard)")});
     table_->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
+    table_->horizontalHeader()->setSectionsMovable(true);  // Spalten per Ziehen an der Kopfzeile umordnen
+    table_->setSelectionBehavior(QAbstractItemView::SelectRows);
+    table_->setSelectionMode(QAbstractItemView::SingleSelection);
     table_->setMinimumHeight(120);
     destinationLayout->addWidget(table_);
     auto* buttons = new QHBoxLayout;
     auto* add = new QPushButton{tr("Ziel +")};
-    auto* remove = new QPushButton{tr("Letztes Ziel −")};
+    auto* remove = new QPushButton{tr("Gewähltes Ziel −")};
+    remove->setToolTip(tr("Entfernt das gewählte Ziel (ohne Auswahl das letzte). Benutzte Ziele bleiben stehen."));
     buttons->addWidget(add);
     buttons->addWidget(remove);
     buttons->addStretch();
     destinationLayout->addLayout(buttons);
     connect(add, &QPushButton::clicked, this, [this]() { addDestination(); });
-    connect(remove, &QPushButton::clicked, this, [this]() { removeLastDestination(); });
+    connect(remove, &QPushButton::clicked, this, [this]() { removeSelectedDestination(); });
     connect(table_, &QTableWidget::itemChanged, this, [this](QTableWidgetItem*) {
         if (!populating_) {
             applyDestinations();
@@ -74,6 +78,11 @@ void OutputForm::rebuild() {
                 table_->setItem(row, 1, new QTableWidgetItem{QString::number(d.port)});
             }
         }
+        QStringList numbers;  // Zielnummer wie im Patch: ab 0
+        for (int row = 0; row < table_->rowCount(); ++row) {
+            numbers.push_back(QString::number(row));
+        }
+        table_->setVerticalHeaderLabels(numbers);
     }
     if (project != nullptr) {
         const QSignalBlocker a{fps_};
@@ -133,13 +142,13 @@ void OutputForm::addDestination() {
     report(r);
 }
 
-void OutputForm::removeLastDestination() {
+void OutputForm::removeSelectedDestination() {
     if (player_.project() == nullptr || player_.project()->destinations.empty()) {
         return;
     }
-    std::vector<output::Destination> destinations = player_.project()->destinations;
-    destinations.pop_back();
-    const Result<void> r = player_.setDestinations(std::move(destinations));
+    const int row = table_->currentRow() >= 0 ? table_->currentRow()
+                                              : static_cast<int>(player_.project()->destinations.size()) - 1;
+    const Result<void> r = player_.removeDestination(static_cast<std::size_t>(row));
     if (r.ok()) {
         rebuild();
     }
@@ -177,7 +186,17 @@ QString OutputForm::exercise() {
     if (player_.project()->destinations.back().address != "192.168.0.101") {
         return QStringLiteral("Ausgabe: Adresse wurde nicht übernommen");
     }
-    removeLastDestination();
+    // Ein mittleres Ziel entfernen: das davor angelegte Ziel (192.168.0.100) soll bleiben, das gewählte verschwinden
+    addDestination();
+    table_->setCurrentCell(static_cast<int>(destinations), 0);
+    removeSelectedDestination();
+    if (player_.project()->destinations.size() != destinations + 1 ||
+        player_.project()->destinations.back().address != "192.168.0.100") {
+        return QStringLiteral("Ausgabe: das gewählte Ziel wurde nicht entfernt");
+    }
+    table_->clearSelection();
+    table_->setCurrentCell(-1, -1);
+    removeSelectedDestination();
     if (player_.project()->destinations.size() != destinations) {
         return QStringLiteral("Ausgabe: Ziel wurde nicht entfernt");
     }

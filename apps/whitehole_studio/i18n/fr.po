@@ -90,7 +90,7 @@ msgstr " · dépasse le dernier univers"
 msgid " · nicht gepatcht"
 msgstr " · non patchée"
 
-#: layout_panel.cpp:259
+#: layout_panel.cpp:247
 msgid "%1  (%2 LEDs)"
 msgstr "%1  (%2 LED)"
 
@@ -150,6 +150,10 @@ msgstr "&Affichage"
 msgid "&Ausgabe senden"
 msgstr "Envoyer la &sortie"
 
+#: main_window_stage.cpp:44
+msgid "&Ausgabe …"
+msgstr "&Sortie …"
+
 #: main_window_actions.cpp:80
 msgid "&Bearbeiten"
 msgstr "&Édition"
@@ -182,7 +186,7 @@ msgstr "&Réglages …"
 msgid "&Fehler melden oder Idee vorschlagen …"
 msgstr "&Signaler un bogue ou proposer une idée …"
 
-#: main_window_stage.cpp:44
+#: main_window_stage.cpp:53
 msgid "&Fixtures …"
 msgstr "&Fixtures …"
 
@@ -190,9 +194,9 @@ msgstr "&Fixtures …"
 msgid "&Hilfe"
 msgstr "&Aide"
 
-#: main_window_stage.cpp:35
-msgid "&Layout und Patch …"
-msgstr "&Disposition et patch …"
+#: main_window_stage.cpp:40
+msgid "&Layout …"
+msgstr "&Layout …"
 
 #: main_window_help.cpp:50
 msgid "&Legende der Ports …"
@@ -246,7 +250,7 @@ msgstr "&Arrêter"
 msgid "&Tastenkürzel …"
 msgstr "&Raccourcis clavier …"
 
-#: main_window_stage.cpp:40
+#: main_window_stage.cpp:49
 msgid "&Testmodus …"
 msgstr "Mode &test …"
 
@@ -278,7 +282,7 @@ msgstr "À &propos de WhiteHoleFX"
 msgid "(Schwarz)"
 msgstr "(Noir)"
 
-#: fixture_form.cpp:92
+#: fixture_form.cpp:79 patch_table.cpp:87
 msgid "(eigene Form)"
 msgstr "(forme propre)"
 
@@ -366,7 +370,7 @@ msgstr "3D : glisser = tourner · clic droit ou Maj+glisser = déplacer · molet
 msgid "<b>2D-Matrix</b>"
 msgstr "<b>Matrice 2D</b>"
 
-#: fixture_form.cpp:168
+#: fixture_form.cpp:154
 msgid "<b>3D-Gitter</b>"
 msgstr "<b>Grille 3D</b>"
 
@@ -382,23 +386,19 @@ msgstr "<b>Types de fixtures</b>"
 msgid "<b>Kreis</b>"
 msgstr "<b>Cercle</b>"
 
-#: fixture_form.cpp:131
+#: fixture_form.cpp:117
 msgid "<b>Matrix</b>"
 msgstr "<b>Matrice</b>"
 
-#: fixture_form.cpp:213
-msgid "<b>Patch</b>"
-msgstr "<b>Patch</b>"
-
-#: fixture_form.cpp:203 shape_form.cpp:52
+#: fixture_form.cpp:189 shape_form.cpp:52
 msgid "<b>Punktwolke</b>: %1 Punkte, nur in der Datei änderbar"
 msgstr "<b>Nuage de points</b> : %1 points, modifiable seulement dans le fichier"
 
-#: fixture_form.cpp:207
+#: fixture_form.cpp:193
 msgid "<b>Ring oder Säule</b>: Form vorerst nur in der Datei änderbar"
 msgstr "<b>Anneau ou colonne</b> : la forme n'est modifiable que dans le fichier pour l'instant"
 
-#: fixture_form.cpp:155 shape_form.cpp:91
+#: fixture_form.cpp:141 shape_form.cpp:91
 msgid "<b>Strip</b>"
 msgstr "<b>Strip</b>"
 
@@ -414,19 +414,19 @@ msgstr "<b>WhiteHoleFX Studio</b> %1<br><br>Pilotage de matrices LED, de cubes e
 msgid "Abgeblendeter Node mit gestrichelter Durchleitung: überbrückt (Taste B)."
 msgstr "Node estompé avec transmission en pointillés : contourné (touche B)."
 
-#: layout_panel.cpp:186
+#: layout_panel.cpp:174
 msgid "Abstand"
 msgstr "Écart"
 
-#: add_fixture_dialog.cpp:109 fixture_form.cpp:149 shape_form.cpp:84
+#: add_fixture_dialog.cpp:109 fixture_form.cpp:135 shape_form.cpp:84
 msgid "Abstand x y"
 msgstr "Écart x y"
 
-#: add_fixture_dialog.cpp:149 fixture_form.cpp:197 shape_form.cpp:134
+#: add_fixture_dialog.cpp:149 fixture_form.cpp:183 shape_form.cpp:134
 msgid "Abstand x y z"
 msgstr "Écart x y z"
 
-#: layout_panel.cpp:185
+#: layout_panel.cpp:173
 msgid "Abstand zwischen den Fixtures beim Aneinanderreihen (0 = dicht an dicht)"
 msgstr "Écart entre les fixtures lors de l'alignement (0 = bord à bord)"
 
@@ -490,11 +490,11 @@ msgstr "Activé : une entrée non connectée de Blend, Mix, Crossfade, Add ou Ma
 msgid "Anfang und Ende relativ zur Position; die erste LED sitzt am Anfang."
 msgstr "Début et fin relatifs à la position ; la première LED est au début."
 
-#: add_fixture_dialog.cpp:123 fixture_form.cpp:164 shape_form.cpp:100
+#: add_fixture_dialog.cpp:123 fixture_form.cpp:150 shape_form.cpp:100
 msgid "Anfang x y z"
 msgstr "Début x y z"
 
-#: main_window_view3d.cpp:47 stage_setup_window.cpp:32
+#: main_window_view3d.cpp:47
 msgid "Ansicht"
 msgstr "Affichage"
 
@@ -502,7 +502,7 @@ msgstr "Affichage"
 msgid "Ansicht von vorn: Fixtures verschieben, Bereich aufziehen"
 msgstr "Vue de face : déplacer les fixtures, tracer une zone"
 
-#: fixture_form.cpp:196 shape_form.cpp:133
+#: fixture_form.cpp:182 shape_form.cpp:133
 msgid "Anzahl x y z"
 msgstr "Nombre x y z"
 
@@ -562,7 +562,7 @@ msgstr "Impossible de lister les périphériques de capture : %1"
 msgid "Aus"
 msgstr "Désactivé"
 
-#: layout_panel.cpp:44
+#: layout_panel.cpp:42
 msgid "Aus Bauform"
 msgstr "Depuis un type"
 
@@ -582,7 +582,7 @@ msgstr "LED éteintes &atténuées"
 msgid "Aus-LEDs &unsichtbar"
 msgstr "LED éteintes &masquées"
 
-#: layout_panel.cpp:82
+#: stage_setup_window.cpp:39
 msgid "Ausgabe"
 msgstr "Sortie"
 
@@ -626,11 +626,11 @@ msgstr "Barre le long de y"
 msgid "Balken entlang z"
 msgstr "Barre le long de z"
 
-#: fixture_form.cpp:103
+#: fixture_form.cpp:90 patch_table.cpp:35
 msgid "Bauform"
 msgstr "Type de fixture"
 
-#: fixture_form.cpp:101
+#: fixture_form.cpp:88
 msgid "Bauform aus der Bibliothek (Stage Config → Fixtures). Änderungen an der Bauform gelten für alle Exemplare."
 msgstr "Type de la bibliothèque (Stage Config → Fixtures). Les modifications du type valent pour toutes les instances."
 
@@ -654,7 +654,7 @@ msgstr "Prêt : %1 - appuyer sur GO"
 msgid "Betrieb"
 msgstr "Fonctionnement"
 
-#: main_window_stage.cpp:45
+#: main_window_stage.cpp:54
 msgid "Bibliothek der Bauformen: Matrix, Kreis, Strip, Säule mit Vorschau und Test"
 msgstr "Bibliothèque de types : matrice, cercle, strip, colonne avec aperçu et test"
 
@@ -666,7 +666,7 @@ msgstr "Image comme texture (p. ex. d'un fichier)"
 msgid "Bild auf der Bühne: eine Farbe für jede Position"
 msgstr "Image sur la scène : une couleur pour chaque position"
 
-#: output_form.cpp:51
+#: output_form.cpp:55
 msgid "Bildrate (fps)"
 msgstr "Cadence (fps)"
 
@@ -718,7 +718,11 @@ msgstr "Démarrer la liste de cues : passe en mode live et affiche le cue 1"
 msgid "Cyan"
 msgstr "Cyan"
 
-#: add_fixture_dialog.cpp:178 fixture_form.cpp:245
+#: patch_table.cpp:36
+msgid "DDP-Offset"
+msgstr "Décalage DDP"
+
+#: add_fixture_dialog.cpp:178
 msgid "DDP-Offset (Byte)"
 msgstr "Décalage DDP (octets)"
 
@@ -754,7 +758,7 @@ msgstr "Entrée DMX : %1"
 msgid "DMX-Kanal"
 msgstr "Canal DMX"
 
-#: add_fixture_dialog.cpp:146 fixture_form.cpp:185 shape_form.cpp:122
+#: add_fixture_dialog.cpp:146 fixture_form.cpp:171 shape_form.cpp:122
 msgid "Das Kabel beginnt an dieser Seite statt an der gegenüberliegenden"
 msgstr "Le câble commence de ce côté plutôt que du côté opposé"
 
@@ -830,7 +834,7 @@ msgstr "Les nœuds DMX du projet lisent leurs valeurs dans les données reçues.
 msgid "Die Fixtures in der Layout-Liste; alle anderen bleiben dunkel."
 msgstr "Les fixtures de la liste de disposition ; tous les autres restent éteints."
 
-#: fixture_form.cpp:106
+#: fixture_form.cpp:93
 msgid "Die Form kommt aus der Bauform und wird im Reiter Fixtures geändert."
 msgstr "La forme vient du type et se modifie dans l'onglet Fixtures."
 
@@ -886,19 +890,19 @@ msgstr "Rotates the image in space around the center, about the X, Y and Z axes 
 msgid "Dreht das Bild um die Mitte (Winkel in Grad)."
 msgstr "Rotates the image around the center (angle in degrees)."
 
-#: fixture_form.cpp:87
+#: fixture_form.cpp:74
 msgid "Drehung um die x-Achse in Grad (um die Mitte des Fixtures)"
 msgstr "Rotation autour de l'axe x en degrés (autour du centre du fixture)"
 
-#: fixture_form.cpp:88
+#: fixture_form.cpp:75
 msgid "Drehung um die y-Achse in Grad"
 msgstr "Rotation autour de l'axe y en degrés"
 
-#: fixture_form.cpp:89
+#: fixture_form.cpp:76
 msgid "Drehung um die z-Achse in Grad"
 msgstr "Rotation autour de l'axe z en degrés"
 
-#: fixture_form.cpp:90
+#: fixture_form.cpp:77
 msgid "Drehung x y z (Grad)"
 msgstr "Rotation x y z (degrés)"
 
@@ -918,7 +922,7 @@ msgstr "Plane wave: stripes moving in one direction (frequency, speed, two color
 msgid "Effekte (2D)"
 msgstr "Effets (2D)"
 
-#: layout_panel.cpp:50
+#: layout_panel.cpp:48
 msgid "Eigene Fixture-Bibliothek: Fixtures als Vorlage speichern und wieder anlegen"
 msgstr "Votre bibliothèque de fixtures : enregistrer des fixtures comme modèles et les rajouter"
 
@@ -994,7 +998,7 @@ msgstr "Entrée (anneau seul, à gauche du node)"
 msgid "Einrasten"
 msgstr "Aimanter"
 
-#: main_window_settings.cpp:46 output_form.cpp:45 settings_dialog.cpp:57
+#: main_window_settings.cpp:46 output_form.cpp:49 settings_dialog.cpp:57
 msgid "Einstellungen"
 msgstr "Réglages"
 
@@ -1002,19 +1006,23 @@ msgstr "Réglages"
 msgid "Einstieg"
 msgstr "Premiers pas"
 
-#: add_fixture_dialog.cpp:124 fixture_form.cpp:165 shape_form.cpp:101
+#: add_fixture_dialog.cpp:124 fixture_form.cpp:151 shape_form.cpp:101
 msgid "Ende x y z"
 msgstr "Fin x y z"
 
-#: fixture_library_page.cpp:77 layout_panel.cpp:59
+#: fixture_library_page.cpp:77 layout_panel.cpp:57
 msgid "Entfernen"
 msgstr "Supprimer"
+
+#: output_form.cpp:35
+msgid "Entfernt das gewählte Ziel (ohne Auswahl das letzte). Benutzte Ziele bleiben stehen."
+msgstr "Supprime la destination choisie (la dernière sans sélection). Les destinations utilisées restent."
 
 #: node_info_texts.cpp:23
 msgid "Erkennt den Takt der Musik und liefert Beat-Impuls, Pulse (klingt ab), Phase und Tempo (BPM). Das Tempo lässt sich auch fest vorgeben."
 msgstr "Detects the beat of the music and outputs a beat trigger, a decaying pulse, phase and tempo (BPM). The tempo can also be fixed by hand."
 
-#: layout_panel.cpp:195
+#: layout_panel.cpp:183
 msgid "Erst Fixtures wählen (Strg oder Umschalt halten für mehrere)"
 msgstr "Sélectionnez d'abord des fixtures (Ctrl ou Maj pour plusieurs)"
 
@@ -1026,7 +1034,7 @@ msgstr "Premier axe = le plus rapide le long du câble"
 msgid "Erste LED bei (Grad)"
 msgstr "Première LED à (degrés)"
 
-#: add_fixture_dialog.cpp:177 fixture_form.cpp:244
+#: add_fixture_dialog.cpp:177 patch_table.cpp:36
 msgid "Erster Kanal"
 msgstr "Premier canal"
 
@@ -1046,7 +1054,7 @@ msgstr "Un look « %1 » existe déjà. L'écraser avec l'effet actuel ?"
 msgid "Es ist kein Projekt geladen. Mit Strg+N ein neues anlegen oder mit Strg+O eins öffnen."
 msgstr "Aucun projet n'est chargé. Créez-en un avec Ctrl+N ou ouvrez-en un avec Ctrl+O."
 
-#: layout_panel.cpp:45
+#: layout_panel.cpp:43
 msgid "Exemplar einer Bauform aus der Bibliothek (Stage Config → Fixtures) auf der Bühne anlegen"
 msgstr "Placer sur la scène une instance d’un type de la bibliothèque (Stage Config → Fixtures)"
 
@@ -1070,7 +1078,7 @@ msgstr "Séquence de couleurs R V B W"
 msgid "Farbige Punkte vor den Nodes in der Palette: was der Node liefert"
 msgstr "Points de couleur devant les nodes de la palette : ce que le node fournit"
 
-#: add_fixture_dialog.cpp:179 fixture_form.cpp:246 test_panel.cpp:39
+#: add_fixture_dialog.cpp:179 patch_table.cpp:36 test_panel.cpp:39
 msgid "Farbreihenfolge"
 msgstr "Ordre des couleurs"
 
@@ -1094,21 +1102,29 @@ msgstr "Disposition de la fenêtre réinitialisée : elle s'applique au prochain
 msgid "Field"
 msgstr "Field"
 
-#: main_window_stage.cpp:31
+#: patch_table.cpp:35
+msgid "Fixture"
+msgstr "Fixture"
+
+#: main_window_stage.cpp:36
 msgid "Fixture &hinzufügen …"
 msgstr "&Ajouter un fixture …"
+
+#: patch_table.cpp:100
+msgid "Fixture an die Ausgabe schicken"
+msgstr "Envoyer le fixture à la sortie"
 
 #: add_fixture_dialog.cpp:47
 msgid "Fixture hinzufügen"
 msgstr "Ajouter un fixture"
 
-#: layout_panel.cpp:76 node_editor_targets.cpp:51 stage_setup_window.cpp:29
+#: node_editor_targets.cpp:51 stage_setup_window.cpp:31
 msgid "Fixtures"
 msgstr "Fixtures"
 
-#: main_window_stage.cpp:37
-msgid "Fixtures anordnen, Universen und Ziele einstellen (eigenes Fenster)"
-msgstr "Disposer les fixtures, régler univers et destinations (fenêtre séparée)"
+#: main_window_stage.cpp:42
+msgid "Fixtures auf der Bühne verteilen und drehen (eigenes Fenster)"
+msgstr "Répartir et faire pivoter les fixtures sur la scène (fenêtre propre)"
 
 #: node_info_texts.cpp:91
 msgid "Flammen: Aufsteigendes, flackerndes Feuer mit einstellbarer Skalierung, Tempo und Flammenhöhe."
@@ -1150,7 +1166,7 @@ msgstr "GO  (barre d'espace)"
 msgid "GO (von Hand)"
 msgstr "GO (manuel)"
 
-#: fixture_form.cpp:247
+#: patch_table.cpp:36
 msgid "Gamma"
 msgstr "Gamma"
 
@@ -1186,17 +1202,21 @@ msgstr "Enregistré : %1"
 msgid "Gewählte Fixtures als Gruppe speichern …"
 msgstr "Enregistrer les fixtures choisies comme groupe …"
 
-#: layout_panel.cpp:169
+#: layout_panel.cpp:157
 msgid "Gewählte Fixtures senkrecht aufeinanderreihen (das untere bleibt stehen)"
 msgstr "Empiler les fixtures sélectionnées verticalement (la plus basse reste en place)"
 
-#: layout_panel.cpp:167
+#: layout_panel.cpp:155
 msgid "Gewählte Fixtures waagrecht aneinanderreihen (das linke bleibt stehen)"
 msgstr "Aligner les fixtures sélectionnées côte à côte (celle de gauche reste en place)"
 
 #: layout_panel_library.cpp:32
 msgid "Gewähltes Fixture als Vorlage speichern …"
 msgstr "Enregistrer la fixture choisie comme modèle …"
+
+#: output_form.cpp:34
+msgid "Gewähltes Ziel −"
+msgstr "Destination choisie −"
 
 #: node_info_texts.cpp:155
 msgid "Glättet einen Wert: Er folgt dem Eingang mit einer Zeitkonstante, statt zu springen."
@@ -1210,15 +1230,15 @@ msgstr "Supprimer le groupe"
 msgid "Gruppe speichern"
 msgstr "Enregistrer le groupe"
 
-#: layout_panel.cpp:54 node_editor_targets.cpp:56
+#: layout_panel.cpp:52 node_editor_targets.cpp:56
 msgid "Gruppen"
 msgstr "Groupes"
 
-#: layout_panel.cpp:55
+#: layout_panel.cpp:53
 msgid "Gruppen von Fixtures und Regionen der Bühne: Ziele für Output-Nodes"
 msgstr "Groupes de fixtures et régions de la scène : cibles pour les nodes de sortie"
 
-#: fixture_form.cpp:147 shape_form.cpp:83
+#: fixture_form.cpp:133 shape_form.cpp:83
 msgid "Größe"
 msgstr "Taille"
 
@@ -1226,7 +1246,7 @@ msgstr "Taille"
 msgid "Grün"
 msgstr "Vert"
 
-#: fixture_form.cpp:247
+#: patch_table.cpp:37
 msgid "Helligkeit"
 msgstr "Luminosité"
 
@@ -1234,7 +1254,7 @@ msgstr "Luminosité"
 msgid "Hinzufügen"
 msgstr "Ajouter"
 
-#: layout_panel.cpp:42
+#: layout_panel.cpp:40
 msgid "Hinzufügen …"
 msgstr "Ajouter …"
 
@@ -1262,7 +1282,7 @@ msgstr "Impulsion"
 msgid "In den Editor laden"
 msgstr "Charger dans l'éditeur"
 
-#: add_fixture_dialog.cpp:110 add_fixture_dialog.cpp:152 fixture_form.cpp:150
+#: add_fixture_dialog.cpp:110 add_fixture_dialog.cpp:152 fixture_form.cpp:136
 msgid "Kabel beginnt"
 msgstr "Le câble commence"
 
@@ -1286,7 +1306,7 @@ msgstr "Carte pour la réception :"
 msgid "Karte zum Senden:"
 msgstr "Carte pour l'envoi :"
 
-#: fixture_form.cpp:68
+#: fixture_form.cpp:55
 msgid "Kein Fixture ausgewählt."
 msgstr "Aucun fixture sélectionné."
 
@@ -1330,7 +1350,7 @@ msgstr "Cercle"
 msgid "Kreis 24"
 msgstr "Cercle 24"
 
-#: add_fixture_dialog.cpp:122 fixture_form.cpp:163 shape_form.cpp:99
+#: add_fixture_dialog.cpp:122 fixture_form.cpp:149 patch_table.cpp:35
 msgid "LEDs"
 msgstr "LED"
 
@@ -1362,11 +1382,11 @@ msgstr "Chenillard (ordre du câble)"
 msgid "Lautstärke je Frequenzband"
 msgstr "Volume par bande de fréquences"
 
-#: stage_setup_window.cpp:30
+#: layout_panel.cpp:74 stage_setup_window.cpp:38
 msgid "Layout"
 msgstr "Disposition"
 
-#: output_form.cpp:52
+#: output_form.cpp:56
 msgid "Layout auf Würfel abbilden"
 msgstr "Projeter la disposition sur le cube"
 
@@ -1381,10 +1401,6 @@ msgstr "Légende des ports"
 #: node_info_texts.cpp:39
 msgid "Legt Bild B über Bild A. Der Modus bestimmt die Verrechnung (Addieren, Multiplizieren, Screen, Subtrahieren, Differenz …), „Amount“ blendet zwischen A und dem Ergebnis."
 msgstr "Lays image B over image A. The mode sets how they combine (add, multiply, screen, subtract, difference ...); \"Amount\" fades between A and the result."
-
-#: output_form.cpp:31
-msgid "Letztes Ziel −"
-msgstr "Dernière destination −"
 
 #: main_window_view3d.cpp:119
 msgid "Leuchtende LEDs mit weichem Schein, Farben addieren sich; nichts verdeckt etwas"
@@ -1406,7 +1422,7 @@ msgstr "Linear gradient from color A to color B at an adjustable angle."
 msgid "Linien als Sinuswellen, die sich bewegen (Anzahl, Amplitude, Frequenz, Tempo, Phasenversatz)."
 msgstr "Moving sine-wave lines (count, amplitude, frequency, speed, phase spread)."
 
-#: layout_panel.cpp:161
+#: layout_panel.cpp:149
 msgid "Linke Kanten ausrichten"
 msgstr "Aligner les bords gauches"
 
@@ -1522,11 +1538,11 @@ msgstr "Matrice"
 msgid "Matrix (Fläche)"
 msgstr "Matrice (surface)"
 
-#: main_window_stage.cpp:32
+#: main_window_stage.cpp:37
 msgid "Matrix, Strip oder 3D-Gitter mit Größe x y z, Lage, Verkabelung und Patch anlegen"
 msgstr "Créer une matrice, un strip ou une grille 3D avec taille x y z, position, câblage et patch"
 
-#: layout_panel.cpp:43
+#: layout_panel.cpp:41
 msgid "Matrix, Strip oder 3D-Gitter mit Größe, Lage, Verkabelung und Patch anlegen"
 msgstr "Créer une matrice, un strip ou une grille 3D avec taille, position, câblage et patch"
 
@@ -1574,7 +1590,7 @@ msgstr "Nom du look :"
 msgid "Name des Presets:"
 msgstr "Nom du préréglage :"
 
-#: layout_panel.cpp:167
+#: layout_panel.cpp:155
 msgid "Nebeneinander ↔"
 msgstr "Côte à côte ↔"
 
@@ -1694,7 +1710,7 @@ msgstr "Dessus"
 msgid "Oben ab"
 msgstr "Bord supérieur à"
 
-#: layout_panel.cpp:164
+#: layout_panel.cpp:152
 msgid "Obere Kanten ausrichten"
 msgstr "Aligner les bords supérieurs"
 
@@ -1802,7 +1818,7 @@ msgstr "Enregistrer le projet sous"
 msgid "Projekt öffnen"
 msgstr "Ouvrir un projet"
 
-#: add_fixture_dialog.cpp:174 fixture_form.cpp:242
+#: add_fixture_dialog.cpp:174 patch_table.cpp:35
 msgid "Protokoll"
 msgstr "Protocole"
 
@@ -1814,7 +1830,7 @@ msgstr "Points"
 msgid "Punktwolke"
 msgstr "Nuage de points"
 
-#: output_form.cpp:54
+#: output_form.cpp:58
 msgid "Quellname (sACN)"
 msgstr "Nom de la source (sACN)"
 
@@ -1846,7 +1862,7 @@ msgstr "Converts a value from one range to another (In min/max to Out min/max), 
 msgid "Rechnet mit zwei Zahlen: Addieren, Subtrahieren, Multiplizieren, Dividieren, Minimum, Maximum und weitere."
 msgstr "Calculates with two numbers: add, subtract, multiply, divide, minimum, maximum and more."
 
-#: layout_panel.cpp:163
+#: layout_panel.cpp:151
 msgid "Rechte Kanten ausrichten"
 msgstr "Aligner les bords droits"
 
@@ -1854,7 +1870,7 @@ msgstr "Aligner les bords droits"
 msgid "Rechts"
 msgstr "Droite"
 
-#: layout_panel.cpp:163
+#: layout_panel.cpp:151
 msgid "Rechts ⇥"
 msgstr "Droite ⇥"
 
@@ -1878,7 +1894,7 @@ msgstr "Supprimer la région"
 msgid "Regionen"
 msgstr "Régions"
 
-#: fixture_form.cpp:198 shape_form.cpp:135
+#: fixture_form.cpp:184 shape_form.cpp:135
 msgid "Reihenfolge (schnellste zuerst)"
 msgstr "Ordre (le plus rapide d'abord)"
 
@@ -1914,15 +1930,19 @@ msgstr "Oscillator (LFO): sine, triangle, saw or square with frequency, phase an
 msgid "Seite"
 msgstr "Côté"
 
-#: output_form.cpp:48
+#: output_form.cpp:52
 msgid "Seitenverhältnis halten (KeepAspect)"
 msgstr "Conserver les proportions (KeepAspect)"
 
-#: layout_panel.cpp:165
+#: patch_table.cpp:35
+msgid "Senden"
+msgstr "Envoyer"
+
+#: layout_panel.cpp:153
 msgid "Senkrecht mittig ausrichten"
 msgstr "Centrer verticalement"
 
-#: fixture_form.cpp:138 fixture_form.cpp:176 shape_form.cpp:72
+#: fixture_form.cpp:124 fixture_form.cpp:162 shape_form.cpp:72
 msgid "Serpentine"
 msgstr "Serpentin"
 
@@ -1954,13 +1974,17 @@ msgstr "Durée du fondu vers ce look. 0 = changement brutal."
 msgid "Sonstige"
 msgstr "Autres"
 
-#: fixture_form.cpp:137 fixture_form.cpp:148 shape_form.cpp:71
+#: fixture_form.cpp:123 fixture_form.cpp:134 shape_form.cpp:71
 msgid "Spalten"
 msgstr "Colonnes"
 
 #: add_fixture_dialog.cpp:105
 msgid "Spalten (senkrecht)"
 msgstr "Colonnes (verticales)"
+
+#: patch_table.cpp:41
+msgid "Spalten lassen sich an der Kopfzeile verschieben"
+msgstr "Les colonnes se déplacent en faisant glisser l’en-tête"
 
 #: parameter_panel.cpp:79
 msgid "Spannt einen Wert von 0 bis 1 über den ganzen Bereich des Parameters"
@@ -1986,7 +2010,7 @@ msgstr "Mirrors the image along a line in x, y and/or z. With \"Use other half\"
 msgid "Sprache"
 msgstr "Langue"
 
-#: stage_setup_window.cpp:25
+#: stage_setup_window.cpp:27
 msgid "Stage Config"
 msgstr "Stage Config"
 
@@ -2074,7 +2098,7 @@ msgstr "Vitesse"
 msgid "Tempo per Tippen: Jedes Einschalten von „Tap“ zählt als Schlag. Liefert Beat, Pulse, Phase und BPM, oder ein festes Tempo."
 msgstr "Tempo by tapping: each switch-on of \"Tap\" counts as a beat. Outputs beat, pulse, phase and BPM, or a fixed tempo."
 
-#: shape_preview.cpp:35
+#: shape_preview.cpp:35 stage_setup_window.cpp:40
 msgid "Test"
 msgstr "Test"
 
@@ -2086,13 +2110,9 @@ msgstr "Mire"
 msgid "Testbild für den Aufbau: x wird rot, y grün, z blau. So sieht man, welche Seite wo liegt und ob Verkabelung und Startecke stimmen."
 msgstr "Test image for the setup: x becomes red, y green, z blue, so you can see which side is where and whether cabling and start corner are right."
 
-#: main_window_stage.cpp:41
+#: main_window_stage.cpp:50
 msgid "Testbilder auf die LEDs schicken, um Verkabelung und Patch zu prüfen"
 msgstr "Envoyer des mires aux LED pour vérifier le câblage et le patch"
-
-#: stage_setup_window.cpp:31
-msgid "Testmodus"
-msgstr "Mode test"
 
 #: test_panel.cpp:91
 msgid "Testmodus beenden"
@@ -2122,7 +2142,7 @@ msgstr "Renommer …"
 msgid "Ungespeicherte Änderungen"
 msgstr "Modifications non enregistrées"
 
-#: add_fixture_dialog.cpp:176 fixture_form.cpp:244
+#: add_fixture_dialog.cpp:176 patch_table.cpp:36
 msgid "Universe"
 msgstr "Univers"
 
@@ -2134,15 +2154,15 @@ msgstr "Univers %1 à partir du canal 1"
 msgid "Unten"
 msgstr "Bas"
 
-#: layout_panel.cpp:166
+#: layout_panel.cpp:154
 msgid "Unten ⤓"
 msgstr "Bas ⤓"
 
-#: layout_panel.cpp:166
+#: layout_panel.cpp:154
 msgid "Untere Kanten ausrichten"
 msgstr "Aligner les bords inférieurs"
 
-#: fixture_form.cpp:80
+#: fixture_form.cpp:67
 msgid "Ursprung x y z"
 msgstr "Origine x y z"
 
@@ -2174,7 +2194,7 @@ msgstr "Shifts the image in x, y and z. With \"Wrap around\" what leaves on one 
 msgid "Vorlage löschen"
 msgstr "Supprimer le modèle"
 
-#: layout_panel.cpp:49
+#: layout_panel.cpp:47
 msgid "Vorlagen"
 msgstr "Modèles"
 
@@ -2194,7 +2214,7 @@ msgstr "Choisir un fichier WAV"
 msgid "WAV-Dateien (*.wav)"
 msgstr "Fichiers WAV (*.wav)"
 
-#: layout_panel.cpp:162
+#: layout_panel.cpp:150
 msgid "Waagrecht mittig ausrichten"
 msgstr "Centrer horizontalement"
 
@@ -2306,7 +2326,7 @@ msgstr "Draws only the edges of the image (outline) in a chosen color."
 msgid "Zeigt das Bild nur in einem Ausschnitt (links, oben, Breite, Höhe, Tiefe) und füllt den Rest mit Transparent."
 msgstr "Shows the image only in a section (left, top, width, height, depth); the rest becomes transparent."
 
-#: fixture_form.cpp:137 fixture_form.cpp:148 shape_form.cpp:71
+#: fixture_form.cpp:123 fixture_form.cpp:134 shape_form.cpp:71
 msgid "Zeilen"
 msgstr "Lignes"
 
@@ -2330,11 +2350,11 @@ msgstr "Temps : %1 après le précédent"
 msgid "Ziehen dreht, Rad zoomt. Die erste LED am Kabel ist weiß; x rot, y grün, z blau."
 msgstr "Glisser fait tourner, la molette zoome. La première LED du câble est blanche ; x rouge, y vert, z bleu."
 
-#: output_form.cpp:30
+#: output_form.cpp:33
 msgid "Ziel +"
 msgstr "Destination +"
 
-#: add_fixture_dialog.cpp:175 fixture_form.cpp:243
+#: add_fixture_dialog.cpp:175 patch_table.cpp:35
 msgid "Ziel Nr."
 msgstr "Destination n°"
 
@@ -2346,6 +2366,10 @@ msgstr "Assigner une cible"
 msgid "Ziele (Controller)"
 msgstr "Destinations (contrôleurs)"
 
+#: main_window_stage.cpp:45
+msgid "Ziele (Controller) und Patch: welches Fixture auf welches Universe sendet"
+msgstr "Destinations (contrôleurs) et patch : quel fixture envoie sur quel univers"
+
 #: node_info_texts.cpp:67
 msgid "Zoomt das Bild um die Mitte: Faktor über 1 vergrößert, unter 1 verkleinert. „Factor Z“ zoomt die Tiefe getrennt."
 msgstr "Zooms the image around the center: a factor above 1 enlarges, below 1 shrinks. \"Factor Z\" zooms the depth separately."
@@ -2354,7 +2378,7 @@ msgstr "Zooms the image around the center: a factor above 1 enlarges, below 1 sh
 msgid "Zu Favoriten hinzufügen"
 msgstr "Ajouter aux favoris"
 
-#: add_fixture_dialog.cpp:111 fixture_form.cpp:151 shape_form.cpp:86
+#: add_fixture_dialog.cpp:111 fixture_form.cpp:137 shape_form.cpp:86
 msgid "Zuerst entlang"
 msgstr "D'abord le long de"
 
@@ -2370,7 +2394,7 @@ msgstr "Randomly lighting pixels, blinking or fading, between two colors."
 msgid "Zufällige Zellen, die auf- und abblenden (Fading Pixels), zwischen zwei Farben."
 msgstr "Random cells that fade in and out, between two colors."
 
-#: layout_panel.cpp:211
+#: layout_panel.cpp:199
 msgid "Zum Aneinanderreihen mindestens zwei Fixtures wählen"
 msgstr "Sélectionnez au moins deux fixtures à aligner"
 
@@ -2389,10 +2413,6 @@ msgstr "Compteur ou choix"
 #: add_fixture_dialog.cpp:150
 msgid "Zählrichtung"
 msgstr "Sens de comptage"
-
-#: fixture_form.cpp:214
-msgid "an die Ausgabe schicken"
-msgstr "envoyer à la sortie"
 
 #: port_legend.cpp:67
 msgid "an oder aus"
@@ -2426,19 +2446,19 @@ msgstr "une seule couleur"
 msgid "im Uhrzeigersinn"
 msgstr "dans le sens horaire"
 
-#: add_fixture_dialog.cpp:143 fixture_form.cpp:179 shape_form.cpp:116
+#: add_fixture_dialog.cpp:143 fixture_form.cpp:165 shape_form.cpp:116
 msgid "oben (y max)"
 msgstr "haut (y max)"
 
-#: add_fixture_dialog.cpp:104 fixture_form.cpp:135 shape_form.cpp:69
+#: add_fixture_dialog.cpp:104 fixture_form.cpp:121 shape_form.cpp:69
 msgid "oben links"
 msgstr "en haut à gauche"
 
-#: add_fixture_dialog.cpp:104 fixture_form.cpp:135 shape_form.cpp:69
+#: add_fixture_dialog.cpp:104 fixture_form.cpp:121 shape_form.cpp:69
 msgid "oben rechts"
 msgstr "en haut à droite"
 
-#: add_fixture_dialog.cpp:142 fixture_form.cpp:178 shape_form.cpp:115
+#: add_fixture_dialog.cpp:142 fixture_form.cpp:164 shape_form.cpp:115
 msgid "rechts (x max)"
 msgstr "droite (x max)"
 
@@ -2454,11 +2474,11 @@ msgstr "Recevoir sACN (E1.31)"
 msgid "sACN-Port (UDP):"
 msgstr "Port sACN (UDP) :"
 
-#: output_form.cpp:53
+#: output_form.cpp:57
 msgid "sACN-Priorität"
 msgstr "Priorité sACN"
 
-#: output_form.cpp:48
+#: output_form.cpp:52
 msgid "strecken (Stretch)"
 msgstr "étirer (Stretch)"
 
@@ -2466,15 +2486,15 @@ msgstr "étirer (Stretch)"
 msgid "unbenannt"
 msgstr "sans titre"
 
-#: add_fixture_dialog.cpp:104 fixture_form.cpp:135 shape_form.cpp:69
+#: add_fixture_dialog.cpp:104 fixture_form.cpp:121 shape_form.cpp:69
 msgid "unten links"
 msgstr "en bas à gauche"
 
-#: add_fixture_dialog.cpp:104 fixture_form.cpp:135 shape_form.cpp:69
+#: add_fixture_dialog.cpp:104 fixture_form.cpp:121 shape_form.cpp:69
 msgid "unten rechts"
 msgstr "en bas à droite"
 
-#: add_fixture_dialog.cpp:144 fixture_form.cpp:180 shape_form.cpp:117
+#: add_fixture_dialog.cpp:144 fixture_form.cpp:166 shape_form.cpp:117
 msgid "vorn (z max)"
 msgstr "avant (z max)"
 
@@ -2526,7 +2546,7 @@ msgstr "Contourner\tB"
 msgid "Überbrückung aufheben\tB"
 msgstr "Réactiver\tB"
 
-#: layout_panel.cpp:169
+#: layout_panel.cpp:157
 msgid "Übereinander ↕"
 msgstr "Empilées ↕"
 
@@ -2534,15 +2554,15 @@ msgstr "Empilées ↕"
 msgid "…"
 msgstr "…"
 
-#: layout_panel.cpp:162
+#: layout_panel.cpp:150
 msgid "↔ Mitte"
 msgstr "↔ Centre"
 
-#: layout_panel.cpp:165
+#: layout_panel.cpp:153
 msgid "↕ Mitte"
 msgstr "↕ Centre"
 
-#: layout_panel.cpp:161
+#: layout_panel.cpp:149
 msgid "⇤ Links"
 msgstr "⇤ Gauche"
 
@@ -2558,6 +2578,6 @@ msgstr "▼ vers le bas"
 msgid "⚠ %1"
 msgstr "⚠ %1"
 
-#: layout_panel.cpp:164
+#: layout_panel.cpp:152
 msgid "⤒ Oben"
 msgstr "⤒ Haut"

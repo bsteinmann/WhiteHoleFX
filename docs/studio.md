@@ -139,17 +139,18 @@ ziehen (Treffer auf Ports), verschieben, Kabel und Nodes wieder löschen.
 ## Layout-Editor
 
 Die Bühne wird einmal am Anfang eingerichtet und danach selten angefasst. Deshalb hat sie ein eigenes Menü **Stage Config**
-(zwischen Bearbeiten und Ansicht) mit: Fixture hinzufügen …, LED-Positionen importieren (CSV/JSON) …, Layout und Patch … (F4) und Testmodus ….
-Layout, Testmodus und Ansicht liegen im eigenen Fenster **Stage Config**. Es ist kein Dock: es öffnet sich bei Bedarf, lässt sich auf
+(zwischen Bearbeiten und Ansicht) mit: Fixtures …, Fixture hinzufügen …, Layout … (F4), Ausgabe … und Testmodus ….
+Alles liegt im eigenen Fenster **Stage Config** mit vier Reitern: **Fixtures** (Bibliothek der Bauformen), **Layout** (Verteilen und
+Drehen, daneben die Bühne), **Ausgabe** (Ziele und Patch) und **Test**. Es ist kein Dock: es öffnet sich bei Bedarf, lässt sich auf
 einen zweiten Bildschirm ziehen und merkt sich Größe und Platz. Es ist nicht modal, die Vorschau im Hauptfenster bleibt
 bedienbar. Im Live-Modus ist das Menü gesperrt.
 
-**Bühnenansicht:** Die Seite „Ansicht“ zeigt die Anlage im Raum, drehbar wie die 3D-Vorschau (Ziehen = drehen, Rad = Zoom,
+**Bühnenansicht:** Rechts neben der Fixture-Liste im Reiter Layout sieht man die Anlage im Raum, drehbar wie die 3D-Vorschau (Ziehen = drehen, Rad = Zoom,
 Doppelklick = zurück) mit Knöpfen für Perspektive, Front, Seite und Oben. Jedes Fixture hat einen eigenen Farbton und wird
 entlang des Kabels heller; die **erste LED am Kabel ist weiß**, so erkennst du Anfang und Richtung des Strangs. Rahmen und
 Achsenkreuz (x rot, y grün, z blau, an der Ecke mit den kleinsten Werten) helfen beim Ausrichten. Gewählte Fixtures bleiben
-kräftig, die übrigen werden dunkel. Dieselbe Ansicht gibt es klein oben im Tab „Fixtures“, neben dem Formular: Wert ändern,
-sofort sehen. Beide zeigen nur die Anlage, nicht den laufenden Effekt, und aktualisieren sich bei jeder Änderung.
+kräftig, die übrigen werden dunkel. Wert im Formular ändern, sofort sehen: Die Ansicht zeigt nur die Anlage, nicht den laufenden
+Effekt, und aktualisiert sich bei jeder Änderung.
 
 Die Seite „Layout“ hat drei Teile.
 
@@ -169,13 +170,11 @@ Die Seite „Layout“ hat drei Teile.
 hinsetzt; ohne eigene Angabe bekommt es das erste freie Universe (Art-Net, Ziel 0, 170 LEDs je Universe). Für das
 gewählte Fixture gibt es ein Formular:
 
-- Name und Ursprung (x y z)
-- Matrix: Spalten, Zeilen, Abstand, Ecke des Kabelanfangs, Laufrichtung, Serpentine
-- Strip: LED-Zahl, Anfang, Ende
-- 3D-Gitter: Anzahl je Achse, Abstand, Achsenreihenfolge, Serpentine, Startecke (rechts/oben/vorn)
-- Punktwolken lassen sich nur in der Datei ändern
-- Patch: Protokoll (Art-Net, sACN, DDP), Ziel, Universe, erster Kanal, DDP-Offset,
-  Farbreihenfolge, Gamma, Helligkeit; „an die Ausgabe schicken“ schaltet den Patch ein und aus
+- Name, Ursprung (x y z), Drehung (x y z in Grad) und Bauform
+- Bei eigener Form (nicht aus der Bibliothek): Matrix (Spalten, Zeilen, Abstand, Ecke des Kabelanfangs, Laufrichtung,
+  Serpentine), Strip (LED-Zahl, Anfang, Ende) oder 3D-Gitter (Anzahl je Achse, Abstand, Achsenreihenfolge, Serpentine,
+  Startecke). Ring, Säule und Punktwolken ändert man in der Bibliothek bzw. in der Datei.
+- Der Patch steht nicht mehr hier, sondern im Reiter Ausgabe.
 
 **Import von Positionen:** In der Oberfläche vorerst entfernt (kommt mit dem neuen Stage-Config-Fenster zurück). Punktwolken
 lassen sich weiter in der Projektdatei beschreiben und laden (Format: `docs/mapping.md`, Abschnitt „Import von Positionen“).
@@ -190,9 +189,13 @@ kräftiger; bei kleinem Zoom wird es gröber). „Einrasten“ lässt beim Ziehe
 Fixtures auf dem Raster einrasten, die Weite stellt man daneben ein (0,1 bis 10). Mit gedrückter Alt-Taste zieht man
 ohne Einrasten. Die Einstellungen gelten für das Studio und bleiben erhalten.
 
-**Ausgabe:** Tabelle der Ziele (Adresse, Port; leere Adresse = Multicast, Port 0 = Standard) mit
-„Ziel +“ und „Letztes Ziel −“, darunter Bildrate, Abbildung auf den Würfel (Stretch oder
-KeepAspect), sACN-Priorität und Quellname.
+**Ausgabe (eigener Reiter):** Oben die Tabelle der Ziele (Adresse, Port; leere Adresse = Multicast, Port 0 = Standard; die
+Nummer links ist die Zielnummer aus dem Patch) mit „Ziel +“ und „Gewähltes Ziel −“. Jedes Ziel lässt sich entfernen, nicht nur das letzte:
+Fixtures auf höheren Zielen rücken mit ihrer Nummer nach; ein Ziel, auf das noch ein Fixture sendet, bleibt stehen und die Statuszeile
+nennt das Fixture. Darunter Bildrate, Abbildung auf den Würfel (Stretch oder KeepAspect), sACN-Priorität und Quellname. Unten steht
+die **Patch-Tabelle**, eine Zeile je Fixture: Senden an/aus, Protokoll (Art-Net, sACN, DDP), Ziel, Universe, erster Kanal,
+DDP-Offset, Farbreihenfolge, Gamma, Helligkeit. Die Spalten lassen sich an der Kopfzeile verschieben (auch bei der Zieltabelle);
+die Reihenfolge der Patch-Tabelle wird gemerkt.
 
 Zahlenfelder übernehmen einen Wert bei Enter, Pfeiltasten oder Fokuswechsel. Jede Änderung wird
 samt Ausgabeplan geprüft. Passt etwas nicht (Universe schon belegt, Ziel gibt es nicht, ungültiges
@@ -349,7 +352,7 @@ Strenge Eingänge** den strengen Modus ein; er wird mit dem Projekt gespeichert 
 | --- | --- |
 | Datei | Neu, Öffnen, Zuletzt geöffnet, Beispiele (in Untergruppen Einstieg, Effekte, Audio, 3D; siehe [Beispielprojekte](examples.md)); Speichern, Speichern unter; Neu laden (F5); Beenden |
 | Bearbeiten | Rückgängig, Wiederholen; Einstellungen … (Strg+Komma) |
-| Stage Config | Fixture hinzufügen …; LED-Positionen importieren (CSV/JSON) …; Layout und Patch … (F4); Testmodus … (die Seite „Ansicht“ liegt im selben Fenster) |
+| Stage Config | Fixtures …; Fixture hinzufügen …; Layout … (F4); Ausgabe …; Testmodus … (alles im selben Fenster) |
 | Ansicht | Docks ein- und ausblenden; 2D/3D-Umschalter (Strg+1 bis 5); 3D-Darstellung (Aus-LEDs, Leuchten) |
 | Wiedergabe | Start/Stopp, Ausgabe senden; Blackout |
 | Live | Live-Modus (F9), Look speichern |

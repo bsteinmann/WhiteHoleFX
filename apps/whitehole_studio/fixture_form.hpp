@@ -1,6 +1,6 @@
-// fixture_form.hpp: Formular für ein Fixture (Name, Lage, Form, Verkabelung, Patch).
+// fixture_form.hpp: Formular für ein Fixture (Name, Lage, Drehung, Bauform, Form, Verkabelung).
 //
-// Zeigt Lage, Drehung (3 Achsen) und Bauform; bei eigener Form (Matrix, Strip, 3D-Gitter) auch deren Felder; Punktwolken lassen sich nur
+// Zeigt Name, Lage, Drehung (3 Achsen) und Bauform; bei eigener Form (Matrix, Strip, 3D-Gitter) auch deren Felder; Punktwolken lassen sich nur
 // in der Datei ändern. Jede Änderung geht über den Player, der danach den Ausgabeplan prüft. Wird
 // sie abgelehnt (Universe belegt, Maß ungültig), meldet `failed` den Grund und das Formular springt
 // auf den gespeicherten Wert zurück.
@@ -29,7 +29,7 @@ public:
     void showFixture(mapping::FixtureId id);
     [[nodiscard]] mapping::FixtureId current() const noexcept { return id_; }
 
-    /// Rauchtest für die CI: ändert Ursprung, Größe und Patch des angezeigten Fixtures über die
+    /// Rauchtest für die CI: ändert Ursprung und Größe des angezeigten Fixtures über die
     /// Felder. Leer bei Erfolg, sonst der gescheiterte Schritt.
     QString exercise();
     /// Rauchtest für ein Fixture aus einer Bauform: dreht um die Achsen y und z und löst es von der Bauform. Leer bei Erfolg.
@@ -66,22 +66,10 @@ private:
         QCheckBox* flipX{nullptr};  // Startecke des Kabels: am oberen Ende der Achse beginnen
         QCheckBox* flipY{nullptr};
         QCheckBox* flipZ{nullptr};
-        // Patch
-        QCheckBox* patched{nullptr};
-        QComboBox* protocol{nullptr};
-        QSpinBox* destination{nullptr};
-        QSpinBox* universe{nullptr};
-        QSpinBox* channel{nullptr};
-        QSpinBox* ddpOffset{nullptr};
-        QComboBox* colorOrder{nullptr};
-        QDoubleSpinBox* gamma{nullptr};
-        QDoubleSpinBox* brightness{nullptr};
     };
 
     void build();
     void buildShapeFields(QFormLayout& layout, const mapping::FixtureShape& shape);
-    void buildPatchFields(QFormLayout& layout, const output::FixturePatch* patch);
-    void updatePatchEnabled();
     void report(const Result<void>& result, bool rebuildAfter = false);
 
     void applyName();
@@ -89,11 +77,8 @@ private:
     void applyRotation();
     void applyType();
     void applyShape();
-    void applyPatch();
-    void togglePatch(bool on);
 
     [[nodiscard]] mapping::FixtureShape readShape(const mapping::FixtureShape& current) const;
-    [[nodiscard]] const output::FixturePatch* patchOf(mapping::FixtureId id) const;
 
     runtime::Player& player_;
     mapping::FixtureId id_;

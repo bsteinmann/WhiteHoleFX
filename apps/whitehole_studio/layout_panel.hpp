@@ -1,7 +1,8 @@
-// layout_panel.hpp: Dock zum Bearbeiten von Fixtures, Patches, Zielen und Einstellungen.
+// layout_panel.hpp: Seite "Layout" im Stage Config: Fixtures auf der Bühne verteilen, drehen und ausrichten.
 //
-// Zwei Seiten: "Fixtures" (Liste, Hinzufügen per Dialog/Entfernen, Ausrichten, Formular zum gewählten
-// Fixture) und "Ausgabe" (Ziele und Einstellungen). Die Liste erlaubt mehrere Fixtures; dieselbe
+// Liste der Fixtures (Hinzufügen per Dialog oder aus einer Bauform, Entfernen, Ausrichten) und das Formular zum
+// gewählten Fixture (Lage, Drehung um x y z, Bauform). Patch und Ziele stehen auf der Seite Ausgabe (OutputPage), die große
+// Bühnenansicht daneben im Fenster. Die Liste erlaubt mehrere Fixtures; dieselbe
 // Auswahl zeigt die Vorschau (PreviewController). Das Panel hält keinen eigenen Zustand; alles geht
 // über den Player, der jede Änderung samt Ausgabeplan prüft.
 #pragma once
@@ -14,7 +15,6 @@
 
 #include "add_fixture_dialog.hpp"
 #include "fixture_form.hpp"
-#include "output_form.hpp"
 #include "stage_view.hpp"
 #include "whitehole/mapping/point_import.hpp"
 #include "whitehole/project/fixture_template.hpp"
@@ -75,7 +75,7 @@ public:
     void setSelectedIds(const std::vector<mapping::FixtureId>& ids);
     /// Liest das Fixture-Formular neu (nach Ziehen in der Vorschau), ohne die Auswahl zu ändern.
     void refreshValues();
-    /// Zeichnet die kleine Bühnenansicht neu (nach Änderungen am Layout) und gibt ihr die aktuelle Auswahl.
+    /// Bleibt für die Aufrufer erhalten (die Bühnenansicht liegt im Fenster und wird vom Hauptfenster gezeichnet).
     void refreshView();
     /// Richtet die gewählten Fixtures aus bzw. reiht sie aneinander (Abstand aus `packGap_`).
     void align(runtime::Player::Align mode);
@@ -114,12 +114,10 @@ private:
     runtime::Player& player_;
     QListWidget* list_{nullptr};
     FixtureForm* fixture_{nullptr};
-    OutputForm* output_{nullptr};
     QCheckBox* showGrid_{nullptr};
     QCheckBox* snap_{nullptr};
     QComboBox* gridStep_{nullptr};
     QDoubleSpinBox* packGap_{nullptr};  // Abstand für "Nebeneinander"/"Übereinander"
-    StageView* miniView_{nullptr};  // kleine Bühnenansicht über der Liste
 };
 
 }  // namespace whitehole::studio

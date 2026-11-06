@@ -1,7 +1,7 @@
 // output_form.hpp: Ziele (Adressen der Controller) und Projekteinstellungen.
 //
-// Ziele sind die Zeilen einer Tabelle (Adresse, Port); ihre Nummer ist die Zeilennummer und wird in
-// den Patches der Fixtures benutzt. Eine leere Adresse heißt Multicast (nur sACN). Port 0 heißt
+// Ziele sind die Zeilen einer Tabelle (Adresse, Port; Spalten verschiebbar); ihre Nummer steht links
+// und wird in den Patches der Fixtures benutzt. Jedes Ziel lässt sich entfernen. Eine leere Adresse heißt Multicast (nur sACN). Port 0 heißt
 // Standardport des Protokolls. Darunter stehen Bildrate, Normalisierung, sACN-Priorität und
 // Quellname. Wie beim Fixture-Formular prüft der Player jede Änderung; bei einer Ablehnung meldet
 // `failed` den Grund und die Anzeige springt zurück.
@@ -28,9 +28,11 @@ public:
     void rebuild();
 
     void addDestination();
-    void removeLastDestination();
+    /// Entfernt das gewählte Ziel (beliebig, nicht nur das letzte). Ohne Auswahl das letzte. Fixtures auf höheren Zielen
+    /// rücken mit; wird das Ziel noch benutzt, bleibt es und `failed` nennt das Fixture.
+    void removeSelectedDestination();
 
-    /// Rauchtest für die CI: Bildrate ändern, Ziel anlegen und wieder entfernen. Leer bei Erfolg.
+    /// Rauchtest für die CI: Bildrate ändern, Ziele anlegen, ein mittleres und das letzte entfernen. Leer bei Erfolg.
     QString exercise();
 
 Q_SIGNALS:

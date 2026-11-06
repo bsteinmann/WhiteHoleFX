@@ -3,11 +3,13 @@
 
 #include <QHideEvent>
 #include <QSettings>
+#include <QSplitter>
 #include <QTabWidget>
 #include <QVBoxLayout>
 
 #include "fixture_library_page.hpp"
 #include "layout_panel.hpp"
+#include "output_page.hpp"
 #include "stage_view.hpp"
 #include "test_panel.hpp"
 
@@ -19,17 +21,23 @@ QSettings settings() { return QSettings{QStringLiteral("WhiteHoleFX"), QStringLi
 
 }  // namespace
 
-StageSetupWindow::StageSetupWindow(FixtureLibraryPage* fixtures, LayoutPanel* layout, TestPanel* test, StageView* view,
-                                   QWidget* parent)
+StageSetupWindow::StageSetupWindow(FixtureLibraryPage* fixtures, LayoutPanel* layout, OutputPage* output, TestPanel* test,
+                                   StageView* view, QWidget* parent)
     : QWidget{parent, Qt::Window}, tabs_{new QTabWidget{this}} {
     setWindowTitle(tr("Stage Config"));
     auto* box = new QVBoxLayout{this};
     box->setContentsMargins(0, 0, 0, 0);
     box->addWidget(tabs_);
     tabs_->addTab(fixtures, tr("Fixtures"));
-    tabs_->addTab(layout, tr("Layout"));
-    tabs_->addTab(test, tr("Testmodus"));
-    tabs_->addTab(view, tr("Ansicht"));
+    auto* split = new QSplitter{Qt::Horizontal};  // links Liste und Formular, rechts die Bühne im Raum
+    split->addWidget(layout);
+    split->addWidget(view);
+    split->setStretchFactor(0, 0);
+    split->setStretchFactor(1, 1);
+    split->setSizes({400, 600});
+    tabs_->addTab(split, tr("Layout"));
+    tabs_->addTab(output, tr("Ausgabe"));
+    tabs_->addTab(test, tr("Test"));
     resize(1000, 760);
 }
 
@@ -47,8 +55,8 @@ void StageSetupWindow::open(Page which) {
 StageSetupWindow::Page StageSetupWindow::page() const {
     switch (tabs_->currentIndex()) {
         case 1: return Page::Layout;
-        case 2: return Page::Test;
-        case 3: return Page::View;
+        case 2: return Page::Output;
+        case 3: return Page::Test;
         default: return Page::Fixtures;
     }
 }

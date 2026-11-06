@@ -159,3 +159,46 @@ TEST_CASE("Datei: Bauform ohne Definition und alte Dateien", "[player][types]") 
     CHECK(rig.player.fixtureTypes().empty());
     CHECK(rig.fixture("A")->rotation == Vec3{});
 }
+
+TEST_CASE("Ziele: ein mittleres Ziel entfernen, höhere Patches rücken nach", "[player][destinations]") {
+    Rig rig;
+    REQUIRE(rig.player.setDestinations({output::Destination{"10.0.0.5", 0}, output::Destination{"10.0.0.6", 0},
+                                        output::Destination{"10.0.0.7", 0}}).ok());
+    const auto basis = rig.fixture("Basis")->id;
+    // Basis sendet auf Ziel 0; zwei weitere Fixtures auf 1 und 2
+    REQUIRE(rig.player.addFixtureType("Kachel", matrix(2, 2)).ok());
+    output::FixturePatch one;
+    one.destination = 1;
+    one.universe = 0;
+    output::FixturePatch two;
+    two.destination = 2;
+    two.universe = 0;
+    REQUIRE(rig.player.addFixtureOfType("B", "Kachel", Vec3{10.0F, 0.0F, 0.0F}, Vec3{}, one).ok());
+    REQUIRE(rig.player.addFixtureOfType("C", "Kachel", Vec3{20.0F, 0.0F, 0.0F}, Vec3{}, two).ok());
+
+    const auto before = rig.player.project()->destinations.size();
+    // Ziel 1 wird noch von B benutzt: nichts ändert sich
+    const auto refused = rig.player.removeDestination(1);
+    REQUIRE_FALSE(refused.ok());
+    CHECK(refused.error().message.find("B") != std::string::npos);
+    CHECK(rig.player.project()->destinations.size() == before);
+
+    // B auf Ziel 0 umpatchen (anderes Universe), dann Ziel 1 entfernen: C rückt von 2 auf 1
+    one.destination = 0;
+    one.universe = 5;
+    REQUIRE(rig.player.setPatch(rig.fixture("B")->id, one).ok());
+    REQUIRE(rig.player.removeDestination(1).ok());
+    CHECK(rig.player.project()->destinations.size() == before - 1);
+    CHECK(rig.player.project()->destinations[1].address == "10.0.0.7");
+    for (const output::FixturePatch& patch : rig.player.project()->patches) {
+        if (patch.fixture == rig.fixture("C")->id) {
+            CHECK(patch.destination == 1);
+        }
+        if (patch.fixture == basis) {
+            CHECK(patch.destination == 0);
+        }
+    }
+    REQUIRE(rig.player.undo().ok());
+    CHECK(rig.player.project()->destinations.size() == before);
+    CHECK(rig.player.removeDestination(99).error().code == ErrorCode::NotFound);
+}

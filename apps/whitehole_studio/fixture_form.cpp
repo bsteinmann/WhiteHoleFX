@@ -32,19 +32,6 @@ FixtureForm::FixtureForm(runtime::Player& player, QWidget* parent) : QWidget{par
     outer_->setContentsMargins(0, 0, 0, 0);
 }
 
-const output::FixturePatch* FixtureForm::patchOf(mapping::FixtureId id) const {
-    const project::Project* project = player_.project();
-    if (project == nullptr) {
-        return nullptr;
-    }
-    for (const output::FixturePatch& patch : project->patches) {
-        if (patch.fixture == id) {
-            return &patch;
-        }
-    }
-    return nullptr;
-}
-
 void FixtureForm::showFixture(mapping::FixtureId id) {
     id_ = id;
     build();
@@ -107,7 +94,6 @@ void FixtureForm::build() {
     } else {
         buildShapeFields(*layout, fixture->shape);
     }
-    buildPatchFields(*layout, patchOf(id_));
 }
 
 void FixtureForm::buildShapeFields(QFormLayout& layout, const mapping::FixtureShape& shape) {
@@ -209,58 +195,6 @@ void FixtureForm::buildShapeFields(QFormLayout& layout, const mapping::FixtureSh
         shape);
 }
 
-void FixtureForm::buildPatchFields(QFormLayout& layout, const output::FixturePatch* patch) {
-    layout.addRow(new QLabel{tr("<b>Patch</b>")});
-    c_.patched = new QCheckBox{tr("an die Ausgabe schicken")};
-    c_.patched->setChecked(patch != nullptr);
-    connect(c_.patched, &QCheckBox::toggled, this, [this](bool on) { togglePatch(on); });
-    layout.addRow(QString{}, c_.patched);
-
-    const output::FixturePatch shown = patch != nullptr ? *patch : output::FixturePatch{};
-    c_.protocol = combo({QStringLiteral("Art-Net"), QStringLiteral("sACN"), QStringLiteral("DDP")},
-                        static_cast<int>(shown.protocol));
-    c_.destination = intBox(static_cast<int>(shown.destination), 0, 255);
-    c_.universe = intBox(static_cast<int>(shown.universe), 0, 63999);
-    c_.channel = intBox(static_cast<int>(shown.channel), 1, 510);
-    c_.ddpOffset = intBox(static_cast<int>(shown.ddpOffset), 0, 2000000000);
-    c_.colorOrder = combo({QStringLiteral("RGB"), QStringLiteral("RBG"), QStringLiteral("GRB"),
-                           QStringLiteral("GBR"), QStringLiteral("BRG"), QStringLiteral("BGR")},
-                          static_cast<int>(shown.color.order));
-    c_.gamma = doubleBox(shown.color.gamma, 0.1, 10.0, 0.1, 2);
-    c_.brightness = doubleBox(shown.color.brightness, 0.0, 1.0, 0.05, 2);
-    connect(c_.protocol, qOverload<int>(&QComboBox::currentIndexChanged), this, [this](int) {
-        updatePatchEnabled();
-        applyPatch();
-    });
-    for (QSpinBox* box : {c_.destination, c_.universe, c_.channel, c_.ddpOffset}) {
-        connect(box, qOverload<int>(&QSpinBox::valueChanged), this, [this](int) { applyPatch(); });
-    }
-    connect(c_.colorOrder, qOverload<int>(&QComboBox::currentIndexChanged), this, [this](int) { applyPatch(); });
-    for (QDoubleSpinBox* box : {c_.gamma, c_.brightness}) {
-        connect(box, qOverload<double>(&QDoubleSpinBox::valueChanged), this, [this](double) { applyPatch(); });
-    }
-    layout.addRow(tr("Protokoll"),
-                  form::labeledRow({{QString{}, c_.protocol}, {tr("Ziel Nr."), c_.destination}}));
-    layout.addRow(tr("Universe"), form::labeledRow({{QString{}, c_.universe}, {tr("Erster Kanal"), c_.channel}}));
-    layout.addRow(tr("DDP-Offset (Byte)"), form::labeledRow({{QString{}, c_.ddpOffset}}));
-    layout.addRow(tr("Farbreihenfolge"), form::labeledRow({{QString{}, c_.colorOrder}}));
-    layout.addRow(tr("Gamma"), form::labeledRow({{QString{}, c_.gamma}, {tr("Helligkeit"), c_.brightness}}));
-    updatePatchEnabled();
-}
-
-void FixtureForm::updatePatchEnabled() {
-    const bool on = c_.patched->isChecked();
-    const bool ddp = c_.protocol->currentIndex() == static_cast<int>(output::Protocol::Ddp);
-    c_.protocol->setEnabled(on);
-    c_.destination->setEnabled(on);
-    c_.universe->setEnabled(on && !ddp);
-    c_.channel->setEnabled(on && !ddp);
-    c_.ddpOffset->setEnabled(on && ddp);
-    c_.colorOrder->setEnabled(on);
-    c_.gamma->setEnabled(on);
-    c_.brightness->setEnabled(on);
-}
-
 void FixtureForm::report(const Result<void>& result, bool rebuildAfter) {
     if (result.ok()) {
         Q_EMIT edited();
@@ -339,34 +273,6 @@ mapping::FixtureShape FixtureForm::readShape(const mapping::FixtureShape& curren
         return g;
     }
     return current;
-}
-
-void FixtureForm::togglePatch(bool on) {
-    if (!on) {
-        report(player_.setPatch(id_, std::nullopt), true);
-        return;
-    }
-    const mapping::Fixture* fixture = player_.project()->layout.find(id_);
-    if (fixture == nullptr) {
-        return;
-    }
-    report(player_.setPatch(id_, player_.suggestPatch(mapping::ledCount(fixture->shape))), true);
-}
-
-void FixtureForm::applyPatch() {
-    if (c_.patched == nullptr || !c_.patched->isChecked()) {
-        return;
-    }
-    output::FixturePatch patch;
-    patch.protocol = static_cast<output::Protocol>(c_.protocol->currentIndex());
-    patch.destination = static_cast<std::uint32_t>(c_.destination->value());
-    patch.universe = static_cast<std::uint16_t>(c_.universe->value());
-    patch.channel = static_cast<std::uint16_t>(c_.channel->value());
-    patch.ddpOffset = static_cast<std::uint32_t>(c_.ddpOffset->value());
-    patch.color.order = static_cast<output::ColorOrder>(c_.colorOrder->currentIndex());
-    patch.color.gamma = static_cast<float>(c_.gamma->value());
-    patch.color.brightness = static_cast<float>(c_.brightness->value());
-    report(player_.setPatch(id_, patch));
 }
 
 }  // namespace whitehole::studio

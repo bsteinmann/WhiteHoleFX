@@ -8,6 +8,7 @@
 #include <QMenu>
 #include <QPushButton>
 #include <QScrollArea>
+#include <QTabBar>
 #include <QSignalBlocker>
 #include <QVBoxLayout>
 
@@ -29,9 +30,6 @@ constexpr int kIdRole = Qt::UserRole;
 LayoutPanel::LayoutPanel(runtime::Player& player, QWidget* parent) : QTabWidget{parent}, player_{player} {
     auto* page = new QWidget;
     auto* pageLayout = new QVBoxLayout{page};
-
-    miniView_ = new StageView{player_, true};
-    pageLayout->addWidget(miniView_);
 
     list_ = new QListWidget;
     list_->setMaximumHeight(140);
@@ -73,17 +71,11 @@ LayoutPanel::LayoutPanel(runtime::Player& player, QWidget* parent) : QTabWidget{
     scroll->setWidgetResizable(true);
     scroll->setWidget(fixture_);
     pageLayout->addWidget(scroll, 1);
-    addTab(page, tr("Fixtures"));
-
-    output_ = new OutputForm{player_};
-    auto* outputScroll = new QScrollArea;
-    outputScroll->setWidgetResizable(true);
-    outputScroll->setWidget(output_);
-    addTab(outputScroll, tr("Ausgabe"));
+    addTab(page, tr("Layout"));
+    tabBar()->hide();  // nur noch eine Seite: Ausgabe und Testmodus sind eigene Seiten im Fenster Stage Config
 
     connect(list_, &QListWidget::currentRowChanged, this, [this](int) { fixture_->showFixture(selectedId()); });
     connect(list_, &QListWidget::itemSelectionChanged, this, [this]() {
-        miniView_->setSelection(selectedIds());
         Q_EMIT selectionChanged();
     });
     connect(fixture_, &FixtureForm::edited, this, [this]() {
@@ -91,8 +83,6 @@ LayoutPanel::LayoutPanel(runtime::Player& player, QWidget* parent) : QTabWidget{
         Q_EMIT edited();
     });
     connect(fixture_, &FixtureForm::failed, this, &LayoutPanel::failed);
-    connect(output_, &OutputForm::edited, this, &LayoutPanel::edited);
-    connect(output_, &OutputForm::failed, this, &LayoutPanel::failed);
 }
 
 mapping::FixtureId LayoutPanel::selectedId() const {
@@ -102,7 +92,6 @@ mapping::FixtureId LayoutPanel::selectedId() const {
 
 void LayoutPanel::rebuild() {
     fillList(selectedId());
-    output_->rebuild();
 }
 
 std::vector<mapping::FixtureId> LayoutPanel::selectedIds() const {
@@ -139,8 +128,7 @@ void LayoutPanel::setSelectedIds(const std::vector<mapping::FixtureId>& ids) {
 }
 
 void LayoutPanel::refreshView() {
-    miniView_->setSelection(selectedIds());
-    miniView_->refresh();
+    // Die Bühnenansicht liegt im Fenster Stage Config und folgt der Auswahl über MainWindow::refreshStageViews.
 }
 
 void LayoutPanel::refreshValues() {
@@ -321,9 +309,6 @@ QString LayoutPanel::exercise() {
             .arg(list_->count());
     }
     if (const QString note = fixture_->exercise(); !note.isEmpty()) {
-        return note;
-    }
-    if (const QString note = output_->exercise(); !note.isEmpty()) {
         return note;
     }
     removeSelected();

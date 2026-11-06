@@ -10,7 +10,7 @@ namespace whitehole::studio {
 
 QString FixtureForm::exercise() {
     const mapping::Fixture* fixture = player_.project() != nullptr ? player_.project()->layout.find(id_) : nullptr;
-    if (fixture == nullptr || c_.origin.x == nullptr || c_.count == nullptr || c_.patched == nullptr) {
+    if (fixture == nullptr || c_.origin.x == nullptr || c_.count == nullptr) {
         return QStringLiteral("Formular: kein Strip angezeigt");
     }
     // Ursprung ändern, wie es ein Mensch im Zahlenfeld täte
@@ -25,12 +25,6 @@ QString FixtureForm::exercise() {
     c_.count->setValue(c_.count->value() + 10);
     if (player_.status().ledCount != before + 10) {
         return QStringLiteral("Formular: LED-Zahl %1 statt %2").arg(player_.status().ledCount).arg(before + 10);
-    }
-    // Farbreihenfolge im Patch ändern
-    c_.colorOrder->setCurrentIndex(2);
-    const output::FixturePatch* patch = patchOf(id_);
-    if (patch == nullptr || patch->color.order != output::ColorOrder::GRB) {
-        return QStringLiteral("Formular: Farbreihenfolge wurde nicht übernommen");
     }
     return {};
 }

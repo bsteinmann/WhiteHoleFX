@@ -1,5 +1,11 @@
 # Änderungen
 
+## 0.57.0
+
+- **Stage Config hat vier Reiter: Fixtures, Layout, Ausgabe, Test.** Die Bühnenansicht liegt jetzt im Reiter Layout neben der Fixture-Liste (die eigene Seite „Ansicht“ und die kleine Ansicht entfallen). Neuer Reiter **Ausgabe** mit Zieltabelle und einer **Patch-Tabelle** (eine Zeile je Fixture: Senden, Protokoll, Ziel, Universe, Kanal, DDP-Offset, Farbreihenfolge, Gamma, Helligkeit). Der Patch steht nicht mehr im Fixture-Formular.
+- **Jedes Ziel lässt sich entfernen**, nicht nur das letzte (`Player::removeDestination`). Fixtures auf höheren Zielen rücken mit ihrer Nummer nach; ein noch benutztes Ziel bleibt stehen, die Meldung nennt das Fixture.
+- **Spalten der Tabellen sind verschiebbar** (Ziele und Patch); die Reihenfolge der Patch-Tabelle wird gemerkt. Menü Stage Config: Fixtures …, Fixture hinzufügen …, Layout … (F4), Ausgabe …, Testmodus ….
+
 ## 0.56.0
 
 - **Fixtures im Layout: Bauform und Drehung.** Im Formular eines Fixtures (Stage Config → Layout) gibt es jetzt **Drehung x y z** in Grad (um die Mitte des Fixtures; Ring, Säule, Matrix, Strip, Cube) und die Auswahl **Bauform** aus der Bibliothek. Fixtures aus einer Bauform zeigen keine eigenen Formfelder mehr (die Form ändert man im Reiter Fixtures für alle Exemplare zugleich); „(eigene Form)“ löst ein Fixture von der Bibliothek, seine Form bleibt. Neuer Knopf **Aus Bauform** legt ein Exemplar samt Patchvorschlag an. Das Verteilen der Exemplare auf der Bühne (Verschieben, Ausrichten, 3D-Ansicht) geht wie bisher.

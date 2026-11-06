@@ -262,6 +262,10 @@ public:
     Result<void> setPatch(mapping::FixtureId id, std::optional<output::FixturePatch> patch);
     /// Ersetzt die Zielliste. Ein Patch darf nur auf vorhandene Ziele zeigen.
     Result<void> setDestinations(std::vector<output::Destination> destinations);
+    /// Entfernt das Ziel mit dieser Nummer (nicht nur das letzte). Fixtures auf höheren Zielen rücken mit ihrer Nummer
+    /// nach. Wird das Ziel noch von einem Fixture benutzt, geschieht nichts und die Meldung nennt dieses Fixture.
+    /// Fehler: NotFound (keine solche Nummer), InvalidArgument (Ziel in Benutzung).
+    Result<void> removeDestination(std::size_t index);
 
     /// Ein Patch mit dem ersten freien Universe hinter allen Art-Net/sACN-Patches auf Ziel 0
     /// (Art-Net, Reihenfolge RGB). `leds` ist die Zahl der LEDs des neuen Fixtures; der Vorschlag

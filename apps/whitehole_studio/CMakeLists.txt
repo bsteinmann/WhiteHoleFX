@@ -15,6 +15,10 @@ add_executable(whitehole_studio
     layout_panel.cpp
     scroll_behavior.cpp
     layout_panel_add.cpp
+    output_page.cpp
+    output_page.hpp
+    patch_table.cpp
+    patch_table.hpp
     layout_panel_types.cpp
     layout_panel_grid.cpp
     layout_panel_library.cpp
