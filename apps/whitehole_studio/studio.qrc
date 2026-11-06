@@ -5,9 +5,11 @@
         <file alias="i18n/en.po">i18n/en.po</file>
         <file alias="i18n/fr.po">i18n/fr.po</file>
         <file alias="i18n/es.po">i18n/es.po</file>
+        <file alias="i18n/uk.po">i18n/uk.po</file>
         <file alias="tutorial/de.md">../../docs/tutorial/de.md</file>
         <file alias="tutorial/en.md">../../docs/tutorial/en.md</file>
         <file alias="tutorial/fr.md">../../docs/tutorial/fr.md</file>
         <file alias="tutorial/es.md">../../docs/tutorial/es.md</file>
+        <file alias="tutorial/uk.md">../../docs/tutorial/uk.md</file>
     </qresource>
 </RCC>

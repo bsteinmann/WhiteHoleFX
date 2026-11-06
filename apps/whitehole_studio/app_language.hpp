@@ -1,4 +1,4 @@
-// app_language.hpp: die Sprache der Oberfläche (Deutsch, Englisch, Französisch, Spanisch).
+// app_language.hpp: die Sprache der Oberfläche (Deutsch, Englisch, Französisch, Spanisch, Ukrainisch).
 //
 // Warum es das gibt: Die Texte stehen deutsch im Quelltext (tr("…")). Für die anderen Sprachen hängt hier ein
 // QTranslator, der die eingebetteten .po-Kataloge (apps/whitehole_studio/i18n/) liest, ohne lupdate/lrelease. Welche
@@ -12,7 +12,7 @@
 
 namespace whitehole::studio {
 
-/// Gespeicherte Wahl ("de", "en", "fr", "es") oder leer.
+/// Gespeicherte Wahl ("de", "en", "fr", "es", "uk") oder leer.
 [[nodiscard]] QString storedLanguage();
 void storeLanguage(const QString& code);
 

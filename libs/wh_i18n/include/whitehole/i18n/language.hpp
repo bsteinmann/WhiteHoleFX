@@ -1,7 +1,7 @@
 // language.hpp: die Sprachen der Oberfläche und die Wahl der Startsprache.
 //
 // Warum es das gibt: Welche Sprachen es gibt, soll an einer Stelle stehen (Menü, Einstellungen, Kataloge,
-// Tests). Quelltext und Standard sind Deutsch; Englisch, Französisch und Spanisch kommen aus Katalogen.
+// Tests). Quelltext und Standard sind Deutsch; Englisch, Französisch, Spanisch und Ukrainisch kommen aus Katalogen.
 #pragma once
 
 #include <array>
@@ -11,15 +11,16 @@
 namespace whitehole::i18n {
 
 struct Language {
-    std::string_view code;        // "de", "en", "fr", "es"
+    std::string_view code;        // "de", "en", "fr", "es", "uk"
     std::string_view nativeName;  // im eigenen Namen, damit man seine Sprache auch erkennt, wenn man die Oberfläche nicht lesen kann
 };
 
-inline constexpr std::array<Language, 4> kLanguages{{
+inline constexpr std::array<Language, 5> kLanguages{{
     {"de", "Deutsch"},
     {"en", "English"},
     {"fr", "Français"},
     {"es", "Español"},
+    {"uk", "Українська"},
 }};
 
 inline constexpr std::string_view kSourceLanguage = "de";  // die Sprache der Texte im Quelltext

@@ -1,5 +1,9 @@
 # Änderungen
 
+## 0.51.0
+
+- **Ukrainisch als Sprache.** Oberfläche (alle Menüs, Dialoge und Hinweise) und eingebautes Tutorial gibt es jetzt auch auf Ukrainisch (Hilfe → Sprache / Language → Українська; `--lang uk`). Namen von Nodes, Parametern und Ports bleiben englisch.
+
 ## 0.50.1
 
 - Alte Projekte: Die frühere automatische `behind`-Kette zwischen Output-Nodes wird beim Laden entfernt (zur Sicherheit auch beim Übersetzen aufgetrennt). Vorher riss dort ein Output ohne Quelle alle nachfolgenden mit ab.

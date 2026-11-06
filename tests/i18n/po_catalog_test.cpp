@@ -155,17 +155,18 @@ TEST_CASE("Sprachen: Gebietsschema wird auf eine bekannte Sprache abgebildet", "
     CHECK(i18n::languageFromLocale("en_US") == "en");
     CHECK(i18n::languageFromLocale("C") == "en");
     CHECK(i18n::languageFromLocale("") == "en");
+    CHECK(i18n::languageFromLocale("uk_UA.UTF-8") == "uk");
     CHECK(i18n::languageFromLocale("ja_JP") == "en");
     CHECK(i18n::isKnownLanguage("fr"));
     CHECK_FALSE(i18n::isKnownLanguage("it"));
-    CHECK(i18n::kLanguages.size() == 4);
+    CHECK(i18n::kLanguages.size() == 5);
 }
 
-TEST_CASE("Kataloge: en, fr und es sind vollständig und haben dieselben Platzhalter", "[i18n]") {
+TEST_CASE("Kataloge: en, fr, es und uk sind vollständig und haben dieselben Platzhalter", "[i18n]") {
     const auto pot = PoCatalog::parse(readFile(i18nDir() / "messages.pot"));
     REQUIRE(pot.ok());
     REQUIRE(pot.value().sources().size() > 300);
-    for (const char* lang : {"en", "fr", "es"}) {
+    for (const char* lang : {"en", "fr", "es", "uk"}) {
         INFO(lang);
         const auto catalog = PoCatalog::parse(readFile(i18nDir() / (std::string{lang} + ".po")));
         REQUIRE(catalog.ok());

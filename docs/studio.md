@@ -342,7 +342,7 @@ Strenge Eingänge** den strengen Modus ein; er wird mit dem Projekt gespeichert 
 | Ansicht | Docks ein- und ausblenden; 2D/3D-Umschalter (Strg+1 bis 5); 3D-Darstellung (Aus-LEDs, Leuchten) |
 | Wiedergabe | Start/Stopp, Ausgabe senden; Blackout |
 | Live | Live-Modus (F9), Look speichern |
-| Hilfe | Tutorial (eingebaut, in der gewählten Sprache), Dokumentation (F1, öffnet die Anleitung im Browser), Sprache / Language (Deutsch, English, Français, Español; gilt nach einem Neustart, den das Programm anbietet), Fehler melden oder Idee vorschlagen (öffnet ein neues Issue auf GitHub), Tastenkürzel (Liste aller Kürzel, direkt aus den Aktionen gelesen), Über WhiteHoleFX (Version, Lizenz) |
+| Hilfe | Tutorial (eingebaut, in der gewählten Sprache), Dokumentation (F1, öffnet die Anleitung im Browser), Sprache / Language (Deutsch, English, Français, Español, Українська; gilt nach einem Neustart, den das Programm anbietet), Fehler melden oder Idee vorschlagen (öffnet ein neues Issue auf GitHub), Tastenkürzel (Liste aller Kürzel, direkt aus den Aktionen gelesen), Über WhiteHoleFX (Version, Lizenz) |
 
 ## Looks und Live-Betrieb
 

@@ -19,7 +19,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 SRC = ROOT / "apps" / "whitehole_studio"
 I18N = SRC / "i18n"
-LANGS = ["en", "fr", "es"]
+LANGS = ["en", "fr", "es", "uk"]
 
 STRING = r'"(?:[^"\\\n]|\\.)*"'
 CALL = re.compile(r'(?<![A-Za-z0-9_])(?:QT_TR_NOOP|tr)\s*\(\s*')

@@ -77,7 +77,7 @@ QString MainWindow::exerciseLanguage() {
     const QString before = currentLanguage();
     const QString german = tr("&Datei");
     QString problem;
-    for (const QString& code : {QStringLiteral("en"), QStringLiteral("fr"), QStringLiteral("es")}) {
+    for (const QString& code : {QStringLiteral("en"), QStringLiteral("fr"), QStringLiteral("es"), QStringLiteral("uk")}) {
         if (!installLanguage(code) || currentLanguage() != code) {
             problem = QStringLiteral("Sprache %1: Katalog lässt sich nicht laden").arg(code);
             break;
