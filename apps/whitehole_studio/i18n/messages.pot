@@ -10,7 +10,7 @@ msgstr ""
 msgid "\nRechtsklick: Favorit umschalten"
 msgstr ""
 
-#: main_window.cpp:279
+#: main_window.cpp:284
 msgid "   |   AUSGABE AN"
 msgstr ""
 
@@ -22,11 +22,11 @@ msgstr ""
 msgid "   |   Audio: %1"
 msgstr ""
 
-#: main_window.cpp:279
+#: main_window.cpp:284
 msgid "   |   Ausgabe aus (%1 Pakete nicht gesendet)"
 msgstr ""
 
-#: main_window.cpp:269
+#: main_window.cpp:274
 msgid "   |   BLACKOUT"
 msgstr ""
 
@@ -38,15 +38,15 @@ msgstr ""
 msgid "   |   DMX-Nodes im Projekt, Eingang aus (Einstellungen)"
 msgstr ""
 
-#: main_window.cpp:274
+#: main_window.cpp:279
 msgid "   |   EINGANG FEHLT – LEDs aus"
 msgstr ""
 
-#: main_window.cpp:271
+#: main_window.cpp:276
 msgid "   |   Master %1 %"
 msgstr ""
 
-#: main_window.cpp:266
+#: main_window.cpp:271
 msgid "   |   TESTMODUS"
 msgstr ""
 
@@ -118,11 +118,11 @@ msgstr ""
 msgid "%1 LEDs · Größe %2 × %3 × %4 · %5 Kanäle (RGB), rund %6 Universe(s)"
 msgstr ""
 
-#: main_window.cpp:255
+#: main_window.cpp:260
 msgid "%1 LEDs, Frame %2 (verworfen %3), Pakete %4, Sendefehler %5"
 msgstr ""
 
-#: main_window.cpp:253
+#: main_window.cpp:258
 msgid "%1 LEDs, angehalten"
 msgstr ""
 
@@ -226,11 +226,11 @@ msgstr ""
 msgid "&Stage Config"
 msgstr ""
 
-#: main_window.cpp:142 main_window_actions.cpp:55
+#: main_window.cpp:147 main_window_actions.cpp:55
 msgid "&Start"
 msgstr ""
 
-#: main_window.cpp:142
+#: main_window.cpp:147
 msgid "&Stopp"
 msgstr ""
 
@@ -426,6 +426,10 @@ msgstr ""
 msgid "Als Vorlage speichern"
 msgstr ""
 
+#: parameter_panel.cpp:76
+msgid "An Bereich anpassen"
+msgstr ""
+
 #: main_window_actions.cpp:86
 msgid "An: Ein nicht angeschlossener Eingang von Blend, Mix, Crossfade, Add oder Mask lässt die LEDs ausgehen. Aus: Er gilt als durchsichtiges Schwarz."
 msgstr ""
@@ -486,7 +490,7 @@ msgstr ""
 msgid "Audio-Welle"
 msgstr ""
 
-#: parameter_panel.cpp:103
+#: parameter_panel.cpp:160
 msgid "Auf Standardwert zurücksetzen"
 msgstr ""
 
@@ -670,7 +674,7 @@ msgstr ""
 msgid "Das Kabel beginnt an dieser Seite statt an der gegenüberliegenden"
 msgstr ""
 
-#: main_window.cpp:202
+#: main_window.cpp:207
 msgid "Das Projekt wurde geändert. Änderungen verwerfen?"
 msgstr ""
 
@@ -770,7 +774,7 @@ msgstr ""
 msgid "Die Änderung wirkt sofort nach „OK“."
 msgstr ""
 
-#: main_window.cpp:179 parameter_panel.cpp:63
+#: main_window.cpp:184 parameter_panel.cpp:120
 msgid "Dieser Node hat keine einstellbaren Parameter."
 msgstr ""
 
@@ -778,7 +782,7 @@ msgstr ""
 msgid "Dieses Programm wurde ohne GPU-Backend gebaut (-DWHITEHOLEFX_WEBGPU=ON); es zeigt nur das Layout."
 msgstr ""
 
-#: parameter_panel.cpp:56
+#: parameter_panel.cpp:113
 msgid "Dieses Projekt hat keine einstellbaren Parameter."
 msgstr ""
 
@@ -994,7 +998,7 @@ msgstr ""
 msgid "Form"
 msgstr ""
 
-#: main_window.cpp:327
+#: main_window.cpp:332
 msgid "Frame"
 msgstr ""
 
@@ -1142,6 +1146,10 @@ msgstr ""
 msgid "Kabel beginnt"
 msgstr ""
 
+#: parameter_panel.cpp:49
+msgid "Kabel:"
+msgstr ""
+
 #: stage_view.cpp:52
 msgid "Kabelweg mit Pfeilen, Start-LED und LED-Nummern ein- und ausblenden"
 msgstr ""
@@ -1166,11 +1174,11 @@ msgstr ""
 msgid "Kein GPU-Adapter: %1"
 msgstr ""
 
-#: main_window.cpp:251
+#: main_window.cpp:256
 msgid "Kein Projekt"
 msgstr ""
 
-#: parameter_panel.cpp:45 stage_view.cpp:120
+#: parameter_panel.cpp:102 stage_view.cpp:120
 msgid "Kein Projekt geladen."
 msgstr ""
 
@@ -1222,7 +1230,7 @@ msgstr ""
 msgid "LEDs x y z"
 msgstr ""
 
-#: main_window.cpp:263
+#: main_window.cpp:268
 msgid "LIVE   |   "
 msgstr ""
 
@@ -1478,7 +1486,7 @@ msgstr ""
 msgid "Neues Projekt (Strg+N)"
 msgstr ""
 
-#: main_window.cpp:124
+#: main_window.cpp:129
 msgid "Neues Projekt (Strg+N), Projekt öffnen (Strg+O) oder eine .whfx-Datei hierher ziehen.\n\n%1"
 msgstr ""
 
@@ -1578,7 +1586,7 @@ msgstr ""
 msgid "Palette &farbig"
 msgstr ""
 
-#: main_window.cpp:88
+#: main_window.cpp:93
 msgid "Parameter"
 msgstr ""
 
@@ -1790,6 +1798,14 @@ msgstr ""
 msgid "Sich ausbreitende Formen (Kreis, Quadrat, Raute) von einem Mittelpunkt aus, mit Abstand, Tempo und Ausblenden."
 msgstr ""
 
+#: parameter_panel.cpp:47
+msgid "Skalierung am Kabel: Wert × Faktor + Offset, danach begrenzt auf den Bereich des Parameters. So steuert ein Wert von 0 bis 1 zum Beispiel einen Winkel von 0 bis 360."
+msgstr ""
+
+#: parameter_panel.cpp:88
+msgid "Skalierung zurücksetzen (× 1, + 0)"
+msgstr ""
+
 #: look_panel.cpp:53
 msgid "So lange dauert das Überblenden zu diesem Look. 0 = hartes Umschalten."
 msgstr ""
@@ -1804,6 +1820,10 @@ msgstr ""
 
 #: add_fixture_dialog.cpp:105
 msgid "Spalten (senkrecht)"
+msgstr ""
+
+#: parameter_panel.cpp:77
+msgid "Spannt einen Wert von 0 bis 1 über den ganzen Bereich des Parameters"
 msgstr ""
 
 #: main_window_file.cpp:135 main_window_file.cpp:155
@@ -1834,7 +1854,7 @@ msgstr ""
 msgid "Standardgerät des Systems"
 msgstr ""
 
-#: cue_panel.cpp:67 cue_panel.cpp:144 main_window.cpp:297
+#: cue_panel.cpp:67 cue_panel.cpp:144 main_window.cpp:302
 msgid "Start"
 msgstr ""
 
@@ -1942,7 +1962,7 @@ msgstr ""
 msgid "Umbenennen …"
 msgstr ""
 
-#: main_window.cpp:201
+#: main_window.cpp:206
 msgid "Ungespeicherte Änderungen"
 msgstr ""
 
@@ -2050,11 +2070,11 @@ msgstr ""
 msgid "Wellenringe wie Wassertropfen: Ringe breiten sich von zufälligen Punkten aus (Tropfen pro Sekunde, Tempo, Ringbreite)."
 msgstr ""
 
-#: main_window.cpp:116 main_window.cpp:155
+#: main_window.cpp:121 main_window.cpp:160
 msgid "WhiteHoleFX"
 msgstr ""
 
-#: main_window.cpp:159
+#: main_window.cpp:164
 msgid "WhiteHoleFX – %1%2"
 msgstr ""
 
@@ -2078,7 +2098,7 @@ msgstr ""
 msgid "Wirbel: Dreht das Bild um einen Mittelpunkt, in der Mitte am stärksten, nach außen abklingend (Radius)."
 msgstr ""
 
-#: parameter_panel.cpp:110
+#: parameter_panel.cpp:167
 msgid "Wird durch eine Verbindung im Graphen gesteuert."
 msgstr ""
 
@@ -2274,7 +2294,7 @@ msgstr ""
 msgid "strecken (Stretch)"
 msgstr ""
 
-#: main_window.cpp:158
+#: main_window.cpp:163
 msgid "unbenannt"
 msgstr ""
 

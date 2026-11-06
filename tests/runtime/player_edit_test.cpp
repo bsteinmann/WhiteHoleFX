@@ -7,6 +7,9 @@
 #include "fake_gpu_device.hpp"
 #include "recording_sink.hpp"
 #include "whitehole/nodes/builtin_library.hpp"
+#include "whitehole/runtime/connection_scale.hpp"
+#include "whitehole/runtime/node_clipboard.hpp"
+#include "whitehole/project/project.hpp"
 #include "whitehole/runtime/gated_sink.hpp"
 #include "whitehole/runtime/player.hpp"
 
@@ -438,4 +441,95 @@ TEST_CASE("Player: Laden leert die Listen, Speichern nicht", "[player][undo]") {
     CHECK_FALSE(rig.player.canUndo());
     CHECK_FALSE(rig.player.canRedo());
     std::filesystem::remove(path);
+}
+
+TEST_CASE("Skalierung am Kabel: Player, Undo, Datei und Vorschlag", "[player][scale]") {
+    Rig rig;
+    const NodeId lfo = rig.id("wh.value.lfo");
+    const NodeId rot = rig.id("wh.transform.rotate");
+    const Result<ConnectionId> wire = rig.player.connect(graph::PortRef{lfo, "out"}, graph::PortRef{rot, "angle"});
+    REQUIRE(wire.ok());
+
+    // Die Parameterliste zeigt Verbindung und Skalierung; der Vorschlag für einen Winkel ist 360.
+    const auto angleInfo = [&]() {
+        for (const auto& node : rig.player.nodes()) {
+            if (node.id == rot) {
+                for (const auto& parameter : node.parameters) {
+                    if (parameter.key == "angle") {
+                        return parameter;
+                    }
+                }
+            }
+        }
+        FAIL("angle fehlt");
+        return runtime::ParameterInfo{};
+    };
+    CHECK(angleInfo().driven);
+    CHECK(angleInfo().connection == wire.value());
+    CHECK(angleInfo().scale == 1.0);
+    const auto suggestion = runtime::suggestConnectionScale(angleInfo());
+    REQUIRE(suggestion.has_value());
+    CHECK(suggestion->first == 360.0);
+    CHECK(suggestion->second == 0.0);
+
+    // Mehrere Änderungen derselben Verbindung sind ein Undo-Schritt.
+    REQUIRE(rig.player.setConnectionScale(wire.value(), 90.0, 0.0).ok());
+    REQUIRE(rig.player.setConnectionScale(wire.value(), 360.0, -180.0).ok());
+    CHECK(angleInfo().scale == 360.0);
+    CHECK(angleInfo().offset == -180.0);
+    CHECK_FALSE(rig.player.setConnectionScale(wire.value(), 1.0e30, 0.0).ok());
+    CHECK_FALSE(rig.player.setConnectionScale(ConnectionId{12345}, 1.0, 0.0).ok());
+
+    // Die Datei merkt sich die Skalierung.
+    const auto text = project::writeProject(*rig.player.project());
+    REQUIRE(text.ok());
+    CHECK(text.value().find(".angle scale 360 offset -180\n") != std::string::npos);
+    Rig other;
+    REQUIRE(other.player.loadText(text.value()).ok());
+    const graph::Connection* loaded = nullptr;
+    for (const auto& c : other.player.project()->graph.connections()) {
+        if (c.to.portKey == "angle") {
+            loaded = &c;
+        }
+    }
+    REQUIRE(loaded != nullptr);
+    CHECK(loaded->scale == 360.0);
+    CHECK(loaded->offset == -180.0);
+
+    // Kopieren und Einfügen nimmt sie mit.
+    const std::vector<NodeId> both{lfo, rot};
+    const auto pasted = rig.player.pasteNodes(runtime::copyNodes(rig.player.project()->graph, both), Vec2{0.0F, 200.0F});
+    REQUIRE(pasted.ok());
+    int scaled = 0;
+    for (const auto& c : rig.player.project()->graph.connections()) {
+        scaled += c.isScaled() ? 1 : 0;
+    }
+    CHECK(scaled == 2);
+
+    REQUIRE(rig.player.undo().ok());  // Einfügen
+    REQUIRE(rig.player.undo().ok());  // beide Skalierungen zusammen
+    CHECK(angleInfo().scale == 1.0);
+    CHECK(angleInfo().offset == 0.0);
+}
+
+TEST_CASE("Skalierung am Kabel: Vorschlag aus dem Bereich des Parameters", "[player][scale]") {
+    runtime::ParameterInfo ranged;
+    ranged.key = "amount";
+    ranged.value = 0.5;
+    ranged.minValue = 2.0;
+    ranged.maxValue = 10.0;
+    const auto fit = runtime::suggestConnectionScale(ranged);
+    REQUIRE(fit.has_value());
+    CHECK(fit->first == 8.0);
+    CHECK(fit->second == 2.0);
+
+    runtime::ParameterInfo open;  // weder Bereich noch Winkel
+    open.key = "speed";
+    open.value = 1.0;
+    CHECK_FALSE(runtime::suggestConnectionScale(open).has_value());
+
+    runtime::ParameterInfo flag;
+    flag.key = "angle";
+    flag.value = true;
+    CHECK_FALSE(runtime::suggestConnectionScale(flag).has_value());
 }

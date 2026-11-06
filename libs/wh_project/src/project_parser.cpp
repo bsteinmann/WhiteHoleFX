@@ -348,12 +348,32 @@ std::optional<Error> Parser::connect(Reader& r) {
         r.fail("Erwartet \"->\"");
     }
     const auto to = portRef(r, "Eingang");
+    double scale = 1.0;
+    double offset = 0.0;
+    while (r.ok() && !r.atEnd()) {
+        const std::string option = r.word("Option");
+        if (option == "scale") {
+            scale = r.numberD("Faktor");
+        } else if (option == "offset") {
+            offset = r.numberD("Offset");
+        } else if (r.ok()) {
+            r.fail("Unbekannte Option \"" + option + "\" (erlaubt: scale, offset)");
+        }
+    }
     r.expectEnd();
     if (!r.ok()) {
         return r.error();
     }
     const auto result = graph_->connect(*from, *to);
-    return result.ok() ? std::nullopt : std::optional<Error>{withLine(r.line(), result.error())};
+    if (!result.ok()) {
+        return withLine(r.line(), result.error());
+    }
+    if (scale != 1.0 || offset != 0.0) {
+        if (const auto set = graph_->setConnectionScale(result.value(), scale, offset); !set.ok()) {
+            return withLine(r.line(), set.error());
+        }
+    }
+    return std::nullopt;
 }
 
 std::optional<Error> Parser::output(Reader& r) {

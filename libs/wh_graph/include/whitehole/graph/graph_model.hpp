@@ -26,10 +26,20 @@ struct PortRef {
     bool operator==(const PortRef&) const = default;
 };
 
+/// Obergrenze für Faktor und Offset einer Verbindung (verhindert Überläufe im Parameterpuffer).
+inline constexpr double kMaxConnectionScale = 1.0e9;
+
 struct Connection {
     ConnectionId id;
     PortRef from;  // Ausgang
     PortRef to;    // Eingang
+    /// Skalierung am Kabel: Landet ein Zahlenwert in einem Zahlenparameter, wird er als `wert * scale + offset`
+    /// übergeben (vor dem Begrenzen auf den Bereich des Parameters). 1 und 0 lassen den Wert unverändert.
+    /// So steuert ein Wert von 0 bis 1 etwa einen Winkel von 0 bis 360 Grad.
+    double scale{1.0};
+    double offset{0.0};
+
+    [[nodiscard]] bool isScaled() const noexcept { return scale != 1.0 || offset != 0.0; }
 };
 
 struct NodeInstance {
@@ -66,6 +76,10 @@ public:
     [[nodiscard]] Result<ConnectionId> connect(const PortRef& from, const PortRef& to);
 
     Result<void> disconnect(ConnectionId id);
+
+    /// Setzt Faktor und Offset einer Verbindung (siehe Connection::scale). Beide müssen endlich sein und
+    /// betragsmäßig höchstens kMaxConnectionScale. Fehler: NotFound, InvalidArgument.
+    Result<void> setConnectionScale(ConnectionId id, double scale, double offset);
 
     /// Der Wert muss denselben Typ haben wie der Standardwert des Parameters.
     /// Zahlen werden auf [minValue, maxValue] begrenzt; NaN und Unendlich

@@ -85,6 +85,11 @@ MainWindow::MainWindow(gpu::IGpuDevice* device, const QString& deviceNote, QWidg
             }
             return stored.value();
         });
+    parameters_->setScaleHandler([this](ConnectionId connection, double scale, double offset) {
+        if (const Result<void> set = player_->setConnectionScale(connection, scale, offset); !set.ok()) {
+            statusBar()->showMessage(fromStd(set.error().message), 8000);
+        }
+    });
     dock_ = new QDockWidget{tr("Parameter"), this};
     dock_->setWidget(parameters_);
     addDockWidget(Qt::RightDockWidgetArea, dock_);

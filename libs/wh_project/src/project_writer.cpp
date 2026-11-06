@@ -113,7 +113,11 @@ Result<void> writeGraph(std::ostream& out, const graph::Graph& graph, const std:
 
     for (const graph::Connection& c : graph.connections()) {
         out << "connect " << names.at(c.from.node.value()) << "." << c.from.portKey << " -> "
-            << names.at(c.to.node.value()) << "." << c.to.portKey << "\n";
+            << names.at(c.to.node.value()) << "." << c.to.portKey;
+        if (c.isScaled()) {
+            out << " scale " << formatDouble(c.scale) << " offset " << formatDouble(c.offset);
+        }
+        out << "\n";
     }
     if (target) {
         const auto it = names.find(target->node.value());

@@ -42,7 +42,11 @@ public:
 
     explicit ParameterPanel(QWidget* parent = nullptr);
 
+    /// Skalierung am Kabel geändert: Verbindung, Faktor, Offset.
+    using ScaleHandler = std::function<void(ConnectionId, double, double)>;
+
     void setChangeHandler(ChangeHandler handler) { handler_ = std::move(handler); }
+    void setScaleHandler(ScaleHandler handler) { scaleHandler_ = std::move(handler); }
     /// Baut die Regler neu auf (nach dem Laden eines Projekts).
     void rebuild(const std::vector<runtime::NodeInfo>& nodes);
 
@@ -55,7 +59,10 @@ public:
     [[nodiscard]] QSize sizeHint() const override { return {340, 520}; }
 
 private:
+    QWidget* makeScaleRow(const runtime::ParameterInfo& info, QWidget* parent);
+
     ChangeHandler handler_;
+    ScaleHandler scaleHandler_;
     std::unordered_map<std::uint64_t, QPointer<QGroupBox>> groups_;
     std::optional<NodeId> shown_;
 };

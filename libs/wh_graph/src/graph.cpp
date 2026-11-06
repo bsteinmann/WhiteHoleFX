@@ -140,6 +140,21 @@ Result<void> Graph::disconnect(ConnectionId id) {
     return {};
 }
 
+Result<void> Graph::setConnectionScale(ConnectionId id, double scale, double offset) {
+    if (!std::isfinite(scale) || !std::isfinite(offset) || std::fabs(scale) > kMaxConnectionScale ||
+        std::fabs(offset) > kMaxConnectionScale) {
+        return Error{ErrorCode::InvalidArgument, "Faktor und Offset müssen endliche Zahlen bis 1e9 sein"};
+    }
+    for (Connection& connection : connections_) {
+        if (connection.id == id) {
+            connection.scale = scale;
+            connection.offset = offset;
+            return {};
+        }
+    }
+    return notFound("Verbindung existiert nicht");
+}
+
 Result<void> Graph::setParameter(NodeId id, std::string_view key, ParameterValue value) {
     const auto it = std::find_if(nodes_.begin(), nodes_.end(),
                                  [id](const NodeInstance& node) { return node.id == id; });

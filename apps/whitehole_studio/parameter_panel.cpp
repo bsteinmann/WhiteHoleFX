@@ -30,6 +30,7 @@
 #include <variant>
 
 #include "parameter_editors.hpp"
+#include "whitehole/runtime/connection_scale.hpp"
 
 namespace whitehole::studio {
 
@@ -38,6 +39,62 @@ namespace {
 QString fromStd(const std::string& text) { return QString::fromUtf8(text.data(), static_cast<qsizetype>(text.size())); }
 
 }  // namespace
+
+QWidget* ParameterPanel::makeScaleRow(const runtime::ParameterInfo& info, QWidget* parent) {
+    auto* row = new QWidget{parent};
+    auto* layout = new QHBoxLayout{row};
+    layout->setContentsMargins(12, 0, 0, 0);
+    const QString help = tr("Skalierung am Kabel: Wert × Faktor + Offset, danach begrenzt auf den Bereich des Parameters. "
+                            "So steuert ein Wert von 0 bis 1 zum Beispiel einen Winkel von 0 bis 360.");
+    auto* title = new QLabel{tr("Kabel:"), row};
+    auto* factor = new QDoubleSpinBox{row};
+    factor->setRange(-graph::kMaxConnectionScale, graph::kMaxConnectionScale);
+    factor->setDecimals(4);
+    factor->setPrefix(QStringLiteral("× "));
+    factor->setValue(info.scale);
+    auto* offset = new QDoubleSpinBox{row};
+    offset->setRange(-graph::kMaxConnectionScale, graph::kMaxConnectionScale);
+    offset->setDecimals(4);
+    offset->setPrefix(QStringLiteral("+ "));
+    offset->setValue(info.offset);
+    for (QWidget* widget : {static_cast<QWidget*>(title), static_cast<QWidget*>(factor), static_cast<QWidget*>(offset)}) {
+        widget->setToolTip(help);
+    }
+    layout->addWidget(title);
+    layout->addWidget(factor);
+    layout->addWidget(offset);
+    const ConnectionId connection = info.connection;
+    const auto apply = [this, connection, factor, offset]() {
+        if (scaleHandler_) {
+            scaleHandler_(connection, factor->value(), offset->value());
+        }
+    };
+    QObject::connect(factor, &QDoubleSpinBox::editingFinished, row, apply);
+    QObject::connect(offset, &QDoubleSpinBox::editingFinished, row, apply);
+    if (const auto suggestion = runtime::suggestConnectionScale(info)) {
+        auto* fit = new QToolButton{row};
+        fit->setText(tr("An Bereich anpassen"));
+        fit->setToolTip(tr("Spannt einen Wert von 0 bis 1 über den ganzen Bereich des Parameters"));
+        const auto [fitFactor, fitOffset] = *suggestion;
+        QObject::connect(fit, &QToolButton::clicked, row, [factor, offset, fitFactor, fitOffset, apply]() {
+            factor->setValue(fitFactor);
+            offset->setValue(fitOffset);
+            apply();
+        });
+        layout->addWidget(fit);
+    }
+    auto* reset = new QToolButton{row};
+    reset->setText(QStringLiteral("↺"));
+    reset->setToolTip(tr("Skalierung zurücksetzen (× 1, + 0)"));
+    QObject::connect(reset, &QToolButton::clicked, row, [factor, offset, apply]() {
+        factor->setValue(1.0);
+        offset->setValue(0.0);
+        apply();
+    });
+    layout->addWidget(reset);
+    layout->addStretch(1);
+    return row;
+}
 
 ParameterPanel::ParameterPanel(QWidget* parent) : QScrollArea{parent} {
     setWidgetResizable(true);
@@ -114,6 +171,10 @@ void ParameterPanel::rebuild(const std::vector<runtime::NodeInfo>& nodes) {
             grid->addWidget(holder->widget, row, 1);
             grid->addWidget(reset, row, 2);
             ++row;
+            if (info.driven && (info.value.index() == 1 || info.value.index() == 2)) {
+                grid->addWidget(makeScaleRow(info, group), row, 0, 1, 3);
+                ++row;
+            }
         }
         // "<name>Min" und "<name>Max" stellen den Bereich des Schiebereglers von "<name>" ein.
         for (const runtime::ParameterInfo& info : node.parameters) {

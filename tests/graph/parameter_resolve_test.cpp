@@ -233,3 +233,47 @@ TEST_CASE("resolveParameter: gespeicherter Wert oder Wert der verbundenen Quelle
         CHECK(std::get<ColorRgba>(*resolveParameter(graph, node, param(graph, "tint"), &lookup)).g == 1.0F);
     }
 }
+
+TEST_CASE("Skalierung am Kabel: Wert * Faktor + Offset vor dem Begrenzen") {
+    const auto registry = makeRegistry();
+    Graph graph{registry};
+    const NodeId target = graph.addNode("pr.target", Vec2{}).value();
+    const NodeId source = graph.addNode("pr.src", Vec2{}).value();
+    const NodeInstance& node = *graph.findNode(target);
+    FakeValueLookup lookup;
+    lookup.set(source, "num", 0.5);
+    const ConnectionId wire = graph.connect({source, "num"}, {target, "gain"}).value();
+    const ParameterDescriptor& gain = param(graph, "gain");  // Bereich 0 bis 1
+
+    SECTION("Standard 1 und 0 ändern nichts") {
+        CHECK(std::get<double>(*resolveParameter(graph, node, gain, &lookup)) == 0.5);
+        CHECK_FALSE(graph.connections().front().isScaled());
+    }
+    SECTION("Faktor und Offset wirken, das Ergebnis wird begrenzt") {
+        REQUIRE(graph.setConnectionScale(wire, 1.5, -0.25).ok());
+        CHECK(std::get<double>(*resolveParameter(graph, node, gain, &lookup)) == 0.5);  // 0,5 * 1,5 - 0,25
+        lookup.set(source, "num", 1.0);
+        CHECK(std::get<double>(*resolveParameter(graph, node, gain, &lookup)) == 1.0);  // 1,25 -> begrenzt
+        REQUIRE(graph.setConnectionScale(wire, -1.0, 0.0).ok());
+        CHECK(std::get<double>(*resolveParameter(graph, node, gain, &lookup)) == 0.0);  // -1 -> begrenzt
+    }
+    SECTION("Ganzzahlen und Integer-Parameter werden skaliert") {
+        const ConnectionId intWire = graph.connect({source, "int"}, {target, "count"}).value();
+        lookup.set(source, "int", std::int64_t{3});
+        REQUIRE(graph.setConnectionScale(intWire, 2.0, 1.0).ok());
+        CHECK(std::get<std::int64_t>(*resolveParameter(graph, node, param(graph, "count"), &lookup)) == 7);
+    }
+    SECTION("Farben und Schalter bleiben unberührt") {
+        const ConnectionId flagWire = graph.connect({source, "flag"}, {target, "on"}).value();
+        lookup.set(source, "flag", true);
+        REQUIRE(graph.setConnectionScale(flagWire, 5.0, 5.0).ok());
+        CHECK(std::get<bool>(*resolveParameter(graph, node, param(graph, "on"), &lookup)));
+    }
+    SECTION("ungültige Werte werden abgelehnt") {
+        CHECK_FALSE(graph.setConnectionScale(wire, kNaN, 0.0).ok());
+        CHECK_FALSE(graph.setConnectionScale(wire, 1.0, kInf).ok());
+        CHECK_FALSE(graph.setConnectionScale(wire, 1.0e12, 0.0).ok());
+        CHECK(graph.setConnectionScale(ConnectionId{999}, 1.0, 0.0).error().code == ErrorCode::NotFound);
+        CHECK_FALSE(graph.connections().front().isScaled());
+    }
+}

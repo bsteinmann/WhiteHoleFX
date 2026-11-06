@@ -31,6 +31,8 @@ struct ClipboardWire {
     std::string fromPort;
     std::size_t to{0};
     std::string toPort;
+    double scale{1.0};   // Skalierung am Kabel (Connection::scale)
+    double offset{0.0};
 };
 
 struct NodeClipboard {

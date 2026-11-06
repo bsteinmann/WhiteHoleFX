@@ -10,6 +10,7 @@ wh_add_library(wh_runtime
         src/led_info.cpp
         src/live_decks.cpp
         src/live_look.cpp
+        src/connection_scale.cpp
         src/node_clipboard.cpp
         src/node_defaults.cpp
         src/node_preset.cpp

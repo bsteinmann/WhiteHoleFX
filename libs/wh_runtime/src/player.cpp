@@ -267,7 +267,12 @@ std::vector<NodeInfo> Player::nodes() const {
             parameter.minValue = p.minValue;
             parameter.maxValue = p.maxValue;
             parameter.choices = p.choices;
-            parameter.driven = g.findInputConnection(node.id, p.key) != nullptr;
+            if (const graph::Connection* wire = g.findInputConnection(node.id, p.key)) {
+                parameter.driven = true;
+                parameter.connection = wire->id;
+                parameter.scale = wire->scale;
+                parameter.offset = wire->offset;
+            }
             info.parameters.push_back(std::move(parameter));
         }
         result.push_back(std::move(info));

@@ -75,6 +75,10 @@ struct ParameterInfo {
     /// Ein Eingang mit demselben Schlüssel ist verbunden: Der Wert kommt aus dem Graphen, ein
     /// Regler hätte keine Wirkung.
     bool driven{false};
+    /// Bei `driven`: die Verbindung samt Skalierung am Kabel (graph::Connection::scale, offset).
+    ConnectionId connection{};
+    double scale{1.0};
+    double offset{0.0};
 };
 
 struct NodeInfo {
@@ -155,6 +159,9 @@ public:
     /// die neue, bleibt die alte erhalten. Fehler wie Graph::connect (ohne AlreadyExists).
     Result<ConnectionId> connect(const graph::PortRef& from, const graph::PortRef& to);
     Result<void> disconnect(ConnectionId connection);
+    /// Skalierung am Kabel (siehe graph::Connection::scale): Faktor und Offset einer Verbindung. Mehrere Änderungen
+    /// derselben Verbindung hintereinander (Regler ziehen) sind ein Schritt Rückgängig.
+    Result<void> setConnectionScale(ConnectionId connection, double scale, double offset);
     /// Lage im Editor; ändert den Effekt nicht.
     Result<void> moveNode(NodeId node, Vec2 position);
 

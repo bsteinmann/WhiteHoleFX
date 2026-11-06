@@ -39,7 +39,7 @@ NodeClipboard copyNodes(const graph::Graph& graph, std::span<const NodeId> selec
         const auto from = index.find(c.from.node.value());
         const auto to = index.find(c.to.node.value());
         if (from != index.end() && to != index.end()) {
-            clip.wires.push_back(ClipboardWire{from->second, c.from.portKey, to->second, c.to.portKey});
+            clip.wires.push_back(ClipboardWire{from->second, c.from.portKey, to->second, c.to.portKey, c.scale, c.offset});
         }
     }
     return clip;
@@ -68,6 +68,11 @@ Result<std::vector<NodeId>> applyClipboard(graph::Graph& graph, const NodeClipbo
                                              graph::PortRef{ids[wire.to], wire.toPort});
         if (!connected.ok()) {
             return connected.error();
+        }
+        if (wire.scale != 1.0 || wire.offset != 0.0) {
+            if (const auto scaled = graph.setConnectionScale(connected.value(), wire.scale, wire.offset); !scaled.ok()) {
+                return scaled.error();
+            }
         }
     }
     return ids;

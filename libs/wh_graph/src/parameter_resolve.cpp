@@ -131,9 +131,18 @@ std::optional<ParameterValue> resolveParameter(const Graph& graph, const NodeIns
     if (values != nullptr) {
         const Connection* connection = graph.findInputConnection(node.id, parameter.key);
         if (connection != nullptr) {
-            const std::optional<ParameterValue> delivered =
+            std::optional<ParameterValue> delivered =
                 values->value(connection->from.node, connection->from.portKey);
             if (delivered.has_value()) {
+                // Skalierung am Kabel: nur für Zahlen in Zahlenparametern (nicht für Farben, Schalter, Trigger).
+                if (connection->isScaled() && (std::holds_alternative<double>(parameter.defaultValue) ||
+                                               std::holds_alternative<std::int64_t>(parameter.defaultValue))) {
+                    if (const auto* real = std::get_if<double>(&*delivered)) {
+                        delivered = ParameterValue{*real * connection->scale + connection->offset};
+                    } else if (const auto* integer = std::get_if<std::int64_t>(&*delivered)) {
+                        delivered = ParameterValue{static_cast<double>(*integer) * connection->scale + connection->offset};
+                    }
+                }
                 if (std::optional<ParameterValue> converted = convertForParameter(*delivered, parameter);
                     converted.has_value()) {
                     return converted;

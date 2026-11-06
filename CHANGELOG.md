@@ -1,5 +1,9 @@
 # Änderungen
 
+## 0.52.0
+
+- **Skalierung am Kabel.** Eine Verbindung kann ihren Wert umrechnen: `Wert × Faktor + Offset`, danach begrenzt auf den Bereich des Parameters. Im Parameter-Dock erscheint unter jedem gesteuerten Zahlenparameter eine Zeile „Kabel:“ mit Faktor und Offset; „An Bereich anpassen“ spannt einen Wert von 0 bis 1 über den ganzen Bereich (Winkel ohne Bereich: 0 bis 360), ↺ setzt zurück. Gespeichert wird `connect a.out -> b.angle scale 360 offset 0` (nur wenn nicht 1 und 0); Kopieren, Einfügen, Presets und Rückgängig nehmen die Skalierung mit. Ohne Angaben ändert sich nichts.
+
 ## 0.51.0
 
 - **Ukrainisch als Sprache.** Oberfläche (alle Menüs, Dialoge und Hinweise) und eingebautes Tutorial gibt es jetzt auch auf Ukrainisch (Hilfe → Sprache / Language → Українська; `--lang uk`). Namen von Nodes, Parametern und Ports bleiben englisch.

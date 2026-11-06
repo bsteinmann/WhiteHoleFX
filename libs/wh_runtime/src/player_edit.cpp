@@ -245,6 +245,20 @@ Result<void> Player::disconnect(ConnectionId connection) {
     return r;
 }
 
+Result<void> Player::setConnectionScale(ConnectionId connection, double scale, double offset) {
+    if (!project_) {
+        return noProject();
+    }
+    auto before = beginEdit("scale:" + std::to_string(connection.value()));
+    const Result<void> r = project_->graph.setConnectionScale(connection, scale, offset);
+    finishEdit(std::move(before), "scale:" + std::to_string(connection.value()), r.ok());
+    if (r.ok()) {
+        modified_ = true;
+        graphDirty_ = true;
+    }
+    return r;
+}
+
 Result<void> Player::moveNode(NodeId node, Vec2 position) {
     if (!project_) {
         return noProject();

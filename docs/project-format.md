@@ -150,6 +150,12 @@ Gruppen und Regionen stehen vor den Nodes und gelten für das ganze Projekt (nic
 Verbindungen werden beim Lesen geprüft (Typen, Zyklen, Eingang schon belegt). `output` ist
 Pflicht zum Rendern, nicht zum Prüfen.
 
+Optional folgt die **Skalierung am Kabel**: `connect lfo.out -> rot.angle scale 360 offset 0`. Ein Zahlenwert, der in einen
+Zahlenparameter (Zahl oder Ganzzahl) läuft, wird als `Wert * scale + offset` übergeben und danach auf den Bereich des Parameters
+begrenzt. Ohne die Angaben gilt `scale 1 offset 0`; die Zeile wird dann auch nicht geschrieben. Beide Zahlen sind endlich und
+betragsmäßig höchstens 1e9. Farben, Schalter und Trigger ignorieren die Skalierung. Ältere Programme lehnen Dateien mit
+`scale`/`offset` ab.
+
 ### `look "<name>" fade <sekunden>` ... `endlook`
 
 Ein gespeicherter Effekt (siehe [Looks und Live-Betrieb](studio.md)). Zwischen `look` und `endlook` stehen

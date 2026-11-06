@@ -63,7 +63,11 @@ Das Dock „Parameter“ (Menü Ansicht) listet jeden Node mit seinen Parametern
   (mit Alpha-Regler; gespeichert wird der Wert so, wie man ihn auf dem Bildschirm sieht, siehe „Helligkeit“). Das Kästchen „Transparent“ setzt
   Alpha auf 0, die Farbe bleibt gemerkt; abhaken stellt Alpha 1 her (siehe „Transparenz“)
 - ↺ setzt auf den Standardwert zurück
-- Parameter, die von einem anderen Node gesteuert werden (z. B. ein LFO), sind ausgegraut
+- Parameter, die von einem anderen Node gesteuert werden (z. B. ein LFO), sind ausgegraut. Bei Zahlen steht darunter die
+  **Skalierung am Kabel**: `× Faktor` und `+ Offset` rechnen den ankommenden Wert um (Wert × Faktor + Offset, danach auf den
+  Bereich des Parameters begrenzt). Der Knopf „An Bereich anpassen“ spannt einen Wert von 0 bis 1 über den ganzen Bereich des
+  Parameters (bei Winkeln ohne festen Bereich: 0 bis 360); ↺ stellt × 1, + 0 wieder her. So lässt sich zum Beispiel ein Kick-Puls
+  von 0 bis 1 auf den Winkel eines Kaleidoskops legen
 
 Änderungen wirken im nächsten Frame. Werte werden auf den erlaubten Bereich begrenzt.
 „Speichern“ (Strg+S) und „Speichern unter“ (Strg+Umschalt+S) schreiben die Projektdatei neu. Achtung: Der Writer erzeugt die
