@@ -50,11 +50,13 @@ QWidget* ParameterPanel::makeScaleRow(const runtime::ParameterInfo& info, QWidge
     auto* factor = new QDoubleSpinBox{row};
     factor->setRange(-graph::kMaxConnectionScale, graph::kMaxConnectionScale);
     factor->setDecimals(4);
+    factor->setKeyboardTracking(false);  // übernimmt erst bei Enter (Issue #22)
     factor->setPrefix(QStringLiteral("× "));
     factor->setValue(info.scale);
     auto* offset = new QDoubleSpinBox{row};
     offset->setRange(-graph::kMaxConnectionScale, graph::kMaxConnectionScale);
     offset->setDecimals(4);
+    offset->setKeyboardTracking(false);
     offset->setPrefix(QStringLiteral("+ "));
     offset->setValue(info.offset);
     for (QWidget* widget : {static_cast<QWidget*>(title), static_cast<QWidget*>(factor), static_cast<QWidget*>(offset)}) {
