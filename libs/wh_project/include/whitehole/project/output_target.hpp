@@ -41,4 +41,8 @@ std::vector<std::string> applyOutputTargets(Project& project, const mapping::Led
 /// Benennt ein Fixture in allen Gruppen und Output-Zielen (Hauptgraph und Looks) um, damit die Verweise gültig bleiben.
 void renameFixtureRefs(Project& project, const std::string& from, const std::string& to);
 
+/// Entfernt die alte automatische Kette (Output.out -> Output.behind) aus Hauptgraph und Looks, damit Outputs
+/// unabhängig sind (die Engine fasst sie selbst zusammen). Wahr bei einer Änderung.
+bool stripOutputChains(Project& project);
+
 }  // namespace whitehole::project

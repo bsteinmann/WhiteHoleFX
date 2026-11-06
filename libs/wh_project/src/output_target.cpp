@@ -186,4 +186,33 @@ void renameFixtureRefs(Project& project, const std::string& from, const std::str
     }
 }
 
+namespace {
+
+bool stripChains(graph::Graph& g) {
+    std::vector<ConnectionId> legacy;
+    for (const graph::Connection& c : g.connections()) {
+        const graph::NodeInstance* from = g.findNode(c.from.node);
+        const graph::NodeInstance* to = g.findNode(c.to.node);
+        if (from != nullptr && to != nullptr && from->typeId == "wh.output.canvas" &&
+            to->typeId == "wh.output.canvas" && c.to.portKey == "behind") {
+            legacy.push_back(c.id);
+        }
+    }
+    bool changed = false;
+    for (const ConnectionId id : legacy) {
+        changed = g.disconnect(id).ok() || changed;
+    }
+    return changed;
+}
+
+}  // namespace
+
+bool stripOutputChains(Project& project) {
+    bool changed = stripChains(project.graph);
+    for (Look& look : project.looks) {
+        changed = stripChains(look.graph) || changed;
+    }
+    return changed;
+}
+
 }  // namespace whitehole::project

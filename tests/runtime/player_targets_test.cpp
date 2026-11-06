@@ -151,3 +151,39 @@ output o2.out
     REQUIRE(fallback.has_value());
     CHECK(fallback->target.node == rig.player.project()->graph.nodes()[3].id);
 }
+
+TEST_CASE("Alte behind-Ketten werden aufgetrennt: ein leerer Output reißt die anderen nicht mit", "[runtime][target]") {
+    Rig rig;
+    REQUIRE(rig.player.loadText(R"(whitehole-project 1
+destination 0 10.0.0.5
+fixture "Links" at 0 0 0
+  matrix 4 4 pitch 1 1
+  patch artnet destination 0 universe 1
+end
+node g1 wh.generator.gradient
+end
+node g2 wh.generator.gradient
+end
+node o1 wh.output.canvas
+end
+node o2 wh.output.canvas
+end
+connect g1.out -> o1.source
+connect g2.out -> o2.source
+connect o1.out -> o2.behind
+output o2.out
+)").ok());
+    const graph::Graph& g = rig.player.project()->graph;
+    CHECK(g.connections().size() == 2);  // die alte Kette ist beim Laden verschwunden
+    const NodeId o1 = g.nodes()[2].id;
+    const NodeId o2 = g.nodes()[3].id;
+    const auto both = graph::mergeOutputs(g, *rig.player.project()->target);
+    REQUIRE(both.has_value());
+    CHECK(both->graph.findInputConnection(o2, "behind") == nullptr);
+    CHECK(both->graph.findNode(both->target.node)->typeId == "wh.blend.add");
+
+    // o1 verliert seine Quelle: o2 läuft allein weiter.
+    REQUIRE(rig.player.disconnect(g.findInputConnection(o1, "source")->id).ok());
+    CHECK_FALSE(graph::mergeOutputs(rig.player.project()->graph, *rig.player.project()->target).has_value());
+    CHECK(rig.player.project()->graph.findInputConnection(o2, "behind") == nullptr);
+}

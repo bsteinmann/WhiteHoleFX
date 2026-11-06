@@ -39,25 +39,46 @@ std::optional<MergedOutputs> mergeOutputs(const Graph& graph, const PortRef& tar
     if (targetNode == nullptr || targetNode->typeId != kOutputNodeType) {
         return std::nullopt;
     }
+    // Alte Dateien: Die frühere automatische Kette (Output.out -> Output.behind) wird auf der Kopie aufgetrennt,
+    // sonst risse ein leerer Output seine Nachfolger mit.
+    Graph work = graph;
+    bool stripped = false;
+    std::vector<ConnectionId> legacy;
+    for (const Connection& c : work.connections()) {
+        const NodeInstance* from = work.findNode(c.from.node);
+        const NodeInstance* to = work.findNode(c.to.node);
+        if (from != nullptr && to != nullptr && from->typeId == kOutputNodeType && to->typeId == kOutputNodeType &&
+            c.to.portKey == "behind") {
+            legacy.push_back(c.id);
+        }
+    }
+    for (const ConnectionId id : legacy) {
+        stripped = work.disconnect(id).ok() || stripped;
+    }
+
     std::vector<NodeId> outputs;
-    for (const NodeInstance& node : graph.nodes()) {
-        if (node.typeId == kOutputNodeType && graph.findInputConnection(node.id, "source") != nullptr) {
+    for (const NodeInstance& node : work.nodes()) {
+        if (node.typeId == kOutputNodeType && work.findInputConnection(node.id, "source") != nullptr) {
             outputs.push_back(node.id);
         }
     }
-    // Wer schon hinter einem anderen Output hängt (alte Dateien mit `behind`-Kette), steckt dort bereits drin.
+    // Hängt ein Output über Effekte hinter einem anderen, steckt er dort bereits drin.
     std::vector<NodeId> independent;
     for (const NodeId id : outputs) {
-        const bool covered = std::ranges::any_of(outputs, [&](NodeId other) { return other != id && isUpstream(graph, other, id); });
+        const bool covered = std::ranges::any_of(outputs, [&](NodeId other) { return other != id && isUpstream(work, other, id); });
         if (!covered) {
             independent.push_back(id);
         }
     }
-    if (independent.empty() || (independent.size() < 2 && graph.findInputConnection(target.node, "source") != nullptr)) {
-        return std::nullopt;  // nur ein Output (oder keiner mit Effekt): nichts zusammenzufassen
+    const bool targetHasSource = work.findInputConnection(target.node, "source") != nullptr;
+    if (independent.empty() || (independent.size() < 2 && targetHasSource)) {
+        if (!stripped) {
+            return std::nullopt;  // nur ein Output (oder keiner mit Effekt): nichts zusammenzufassen
+        }
+        return MergedOutputs{std::move(work), target};
     }
 
-    MergedOutputs merged{graph, target};
+    MergedOutputs merged{std::move(work), target};
     PortRef sum{independent.front(), "out"};
     for (std::size_t k = 1; k < independent.size(); ++k) {
         const Result<NodeId> add = merged.graph.addNode("wh.blend.add", Vec2{});
