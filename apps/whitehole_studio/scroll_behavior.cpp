@@ -5,6 +5,7 @@
 #include <QAbstractSpinBox>
 #include <QApplication>
 #include <QComboBox>
+#include <QCoreApplication>
 #include <QEvent>
 #include <QPointF>
 #include <QScrollBar>
@@ -33,9 +34,17 @@ public:
 
     bool eventFilter(QObject* watched, QEvent* event) override {
         if (event->type() == QEvent::Wheel && isValueWidget(watched)) {
-            // Als "nicht behandelt" zurückgeben und trotzdem den Wert verschonen: Qt reicht ein abgelehntes
-            // Mausrad-Ereignis an das Elternwidget weiter, dort scrollt die Fläche.
-            event->ignore();
+            // Der Wert bleibt unberührt. Das Ereignis geht stattdessen an das Elternwidget (Qt reicht es von dort
+            // weiter nach oben, bis eine Fläche scrollt). Ein Anwendungsfilter fängt das Ereignis vor Qts eigener
+            // Weitergabe ab, deshalb schicken wir es selbst weiter.
+            auto* wheel = static_cast<QWheelEvent*>(event);
+            if (auto* widget = qobject_cast<QWidget*>(watched); widget != nullptr && widget->parentWidget() != nullptr) {
+                QWidget* parent = widget->parentWidget();
+                QWheelEvent forwarded{parent->mapFromGlobal(wheel->globalPosition()), wheel->globalPosition(),
+                                      wheel->pixelDelta(), wheel->angleDelta(), wheel->buttons(), wheel->modifiers(),
+                                      wheel->phase(), wheel->inverted(), wheel->source()};
+                QCoreApplication::sendEvent(parent, &forwarded);
+            }
             return true;
         }
         return QObject::eventFilter(watched, event);
