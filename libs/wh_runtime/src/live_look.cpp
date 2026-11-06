@@ -5,6 +5,7 @@
 #include <cmath>
 #include <unordered_set>
 
+#include "whitehole/graph/output_merge.hpp"
 #include "whitehole/runtime/node_clipboard.hpp"
 
 namespace whitehole::runtime {
@@ -38,8 +39,14 @@ Result<project::Look> captureLook(const graph::Graph& graph, const graph::PortRe
     }
 
     // Rückwärts über die Kabel: alles, was den Ausgang speist
+    // Parallele Outputs gehören alle zum Look, nicht nur der als Ausgang gewählte.
     std::unordered_set<std::uint64_t> keep{target.node.value()};
     std::vector<NodeId> open{target.node};
+    for (const graph::NodeInstance& node : graph.nodes()) {
+        if (node.typeId == graph::kOutputNodeType && keep.insert(node.id.value()).second) {
+            open.push_back(node.id);
+        }
+    }
     while (!open.empty()) {
         const NodeId current = open.back();
         open.pop_back();

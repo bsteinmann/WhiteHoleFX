@@ -1,5 +1,10 @@
 # Änderungen
 
+## 0.50.0
+
+- **Mehrere Outputs laufen echt parallel (unsichtbarer Adder).** Die gespeicherte Verkettung der Output-Nodes (`behind`) entfällt. Stattdessen fasst die Engine beim Übersetzen alle Output-Nodes mit angeschlossener `source` selbst über versteckte Add-Nodes zusammen; im Projekt und im Editor erscheint davon nichts. Nimmt man einer Kette den Generator weg, bleiben die anderen Outputs unberührt; ein frischer Output ohne Effekt bleibt dunkel. Überlappen sich zwei Ziele, addieren sich die Bilder (statt „später gewinnt“). Alte Dateien mit `behind`-Kette laufen unverändert weiter. Looks nehmen alle Outputs mit.
+- Wird der Ausgang des Projekts gelöscht und war ein Output, rückt er auf einen anderen Output.
+
 ## 0.49.1
 
 - Die automatische Verkettung der Output-Nodes wird nicht mehr als Kabel gezeichnet: Mehrere Outputs wirken im Editor unabhängig voneinander, bleiben aber alle aktiv.

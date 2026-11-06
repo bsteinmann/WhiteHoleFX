@@ -57,7 +57,6 @@ Result<void> Player::adopt(project::Project project, std::string path) {
     map_ = std::move(parts.value().map);
     applyLayoutIfMissing(project.graph);
     project_.emplace(std::move(project));
-    (void)project::chainOutputs(*project_);
     (void)project::applyOutputTargets(*project_, map_);
     path_ = std::move(path);
     stepError_.reset();

@@ -293,7 +293,7 @@ TEST_CASE("Scan Line, Outline, Ripples und Fire", "[gpu_device][nodes]") {
 TEST_CASE("Ausgang: zwei Ausgänge mit getrennten Rechtecken legen sich nebeneinander (Eingang Behind)", "[gpu_device][nodes]") {
     REQUIRE_DEVICE();
     Lab lab;
-    // Links rot, rechts blau; der zweite Ausgang hängt mit `behind` am ersten und löscht ihn nicht.
+    // Links rot, rechts blau; der zweite Ausgang hängt mit `behind` am ersten und löscht ihn nicht (manuelle Kette bleibt möglich).
     const NodeId left = lab.add("wh.output.canvas");
     lab.set(left, "width", 0.5);
     lab.connect(solid(lab, 1.0F, 0.0F, 0.0F), "out", left, "source");

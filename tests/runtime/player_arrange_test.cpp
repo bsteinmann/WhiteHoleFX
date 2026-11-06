@@ -170,7 +170,7 @@ TEST_CASE("Region-Node: Rechteck setzen ist ein Undo-Schritt", "[player][region]
     CHECK_FALSE(rig.player.setRegionRect(region, mapping::Region{std::numeric_limits<float>::quiet_NaN(), 0, 1, 1}).ok());
 }
 
-TEST_CASE("Ausgangs-Node: wird zum Ausgang, hängt sich hinter den bisherigen, Rückgängig stellt her", "[player][output]") {
+TEST_CASE("Ausgangs-Node: wird zum Ausgang, übernimmt das Bild eines Nicht-Output-Ausgangs, Rückgängig stellt her", "[player][output]") {
     Rig rig;
     const graph::PortRef before = *rig.player.project()->target;
     const auto added = rig.player.addNode("wh.output.canvas", Vec2{0.0F, 0.0F});
@@ -179,12 +179,10 @@ TEST_CASE("Ausgangs-Node: wird zum Ausgang, hängt sich hinter den bisherigen, R
 
     REQUIRE(rig.player.project()->target.has_value());
     CHECK(*rig.player.project()->target == graph::PortRef{output, "out"});
+    CHECK(rig.player.project()->graph.findInputConnection(output, "behind") == nullptr);  // Outputs laufen parallel
     const auto* wire = rig.player.project()->graph.findInputConnection(output, "source");
-    REQUIRE(wire != nullptr);
+    REQUIRE(wire != nullptr);  // der bisherige Ausgang (kein Output) speist den neuen
     CHECK(wire->from == before);
-    const auto* behind = rig.player.project()->graph.findInputConnection(output, "behind");
-    REQUIRE(behind != nullptr);  // der bisherige Ausgang bleibt außerhalb des neuen Rechtecks sichtbar
-    CHECK(behind->from == before);
 
     REQUIRE(rig.player.setRegionRect(output, mapping::Region{0.0F, 0.0F, 0.5F, 1.0F}).ok());
     REQUIRE(rig.player.undo().ok());  // Rechteck

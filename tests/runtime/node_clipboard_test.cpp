@@ -174,10 +174,7 @@ TEST_CASE("Zwischenablage: ein eingefügter Ausgangs-Node wird zum Ausgang und l
     const NodeId copy = pasted.value().front();
     REQUIRE(rig.player.project()->target.has_value());
     CHECK(*rig.player.project()->target == graph::PortRef{copy, "out"});  // "kein Ausgang" darf nicht vorkommen
-    const auto* behind = rig.player.project()->graph.findInputConnection(copy, "behind");
-    REQUIRE(behind != nullptr);
-    CHECK(behind->from == before);
-    CHECK(rig.player.project()->graph.findInputConnection(copy, "source") != nullptr);
+    CHECK(rig.player.project()->graph.findInputConnection(copy, "behind") == nullptr);  // keine Kette zwischen Outputs
 
     REQUIRE(rig.player.undo().ok());  // der Ausgang kehrt mit dem Einfügen zurück
     CHECK(*rig.player.project()->target == before);

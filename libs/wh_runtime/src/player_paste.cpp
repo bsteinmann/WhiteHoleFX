@@ -44,13 +44,9 @@ Result<std::vector<NodeId>> Player::pasteNodes(const NodeClipboard& clipboard, V
     // Ein eingefügter Ausgangs-Node (Preset, Kopie) soll wie ein neu angelegter wirken: Er wird zum Ausgang des
     // Projekts und legt sich über den bisherigen. Ohne das meldet das Projekt "kein Ausgang", obwohl ein Output da ist.
     if (const std::optional<NodeId> output = pastedOutput(project_->graph, ids.value())) {
-        if (project_->target) {
-            if (project_->graph.findInputConnection(*output, "source") == nullptr) {
-                (void)project_->graph.connect(*project_->target, graph::PortRef{*output, "source"});
-            }
-            if (project_->graph.findInputConnection(*output, "behind") == nullptr) {
-                (void)project_->graph.connect(*project_->target, graph::PortRef{*output, "behind"});
-            }
+        if (project_->target && project_->graph.findNode(project_->target->node)->typeId != "wh.output.canvas" &&
+            project_->graph.findInputConnection(*output, "source") == nullptr) {
+            (void)project_->graph.connect(*project_->target, graph::PortRef{*output, "source"});
         }
         project_->target = graph::PortRef{*output, "out"};
         rebuildDirty_ = true;

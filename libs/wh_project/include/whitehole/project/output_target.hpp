@@ -41,11 +41,4 @@ std::vector<std::string> applyOutputTargets(Project& project, const mapping::Led
 /// Benennt ein Fixture in allen Gruppen und Output-Zielen (Hauptgraph und Looks) um, damit die Verweise gültig bleiben.
 void renameFixtureRefs(Project& project, const std::string& from, const std::string& to);
 
-/// Hält alle Output-Nodes eines Graphen aktiv: Jeder spätere Output bekommt den vorigen an `behind` (falls der Eingang
-/// frei ist und der vorige nicht schon davor hängt), und der Ausgang des Graphen ist der letzte Output, wenn er bisher an
-/// einem Output hing. So spielen mehrere Outputs gleichzeitig, der spätere liegt über dem früheren. Wahr bei einer Änderung.
-bool chainOutputs(graph::Graph& graph, std::optional<graph::PortRef>& target);
-/// Wie chainOutputs für den Hauptgraphen und alle Looks des Projekts. Wahr bei einer Änderung.
-bool chainOutputs(Project& project);
-
 }  // namespace whitehole::project

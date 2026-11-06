@@ -10,6 +10,8 @@
 #include <utility>
 #include <vector>
 
+#include "whitehole/graph/output_merge.hpp"
+
 namespace whitehole::executor {
 
 FieldPass::FieldPass(gpu::IGpuDevice& device, const compiler::ISnippetLibrary& snippets,
@@ -110,7 +112,12 @@ Result<void> FieldPass::setGraph(const graph::Graph& graph) {
         return error;
     };
 
-    Result<compiler::CompiledField> compiled = compiler::compileField(graph, snippets_, target_);
+    // Mehrere Output-Nodes werden hier unsichtbar über Add-Nodes zusammengefasst (siehe output_merge.hpp).
+    std::optional<graph::MergedOutputs> merged = graph::mergeOutputs(graph, target_);
+    const graph::Graph& effective = merged ? merged->graph : graph;
+    const graph::PortRef& effectiveTarget = merged ? merged->target : target_;
+
+    Result<compiler::CompiledField> compiled = compiler::compileField(effective, snippets_, effectiveTarget);
     if (!compiled.ok()) {
         return fail(compiled.error());
     }
@@ -123,7 +130,7 @@ Result<void> FieldPass::setGraph(const graph::Graph& graph) {
     }
 
     layout_ = compiled.value().layout;
-    graph_ = graph;
+    graph_ = effective;
     graphError_.reset();
     return {};
 }
@@ -132,7 +139,12 @@ Result<void> FieldPass::setParameters(const graph::Graph& graph) {
     if (!ready()) {
         return setGraph(graph);
     }
-    graph_ = graph;
+    // Die Parameter hängen an den Node-Nummern; die Adder von setGraph müssen also auch hier wieder dazukommen.
+    if (std::optional<graph::MergedOutputs> merged = graph::mergeOutputs(graph, target_)) {
+        graph_ = std::move(merged->graph);
+    } else {
+        graph_ = graph;
+    }
     return {};
 }
 

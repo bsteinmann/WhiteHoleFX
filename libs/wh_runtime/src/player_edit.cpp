@@ -146,13 +146,11 @@ Result<NodeId> Player::addNode(std::string_view typeId, Vec2 position) {
         }
     }
     if (id.ok() && typeId == "wh.output.canvas") {
-        // Ein neuer Ausgangs-Node wird zum Ausgang des Projekts und legt sich über den bisherigen: Dessen Bild
-        // kommt an `behind` (so bleibt er außerhalb des neuen Rechtecks sichtbar) und zunächst auch an `source`
-        // (damit der Graph sofort gültig ist; man schließt dort den eigenen Effekt an). Die Eingänge eines neuen
-        // Nodes sind frei, die Verbindungen gelingen immer.
-        if (project_->target) {
+        // Ein neuer Ausgangs-Node läuft parallel zu den anderen (Engine fasst alle unsichtbar zusammen, siehe
+        // graph::mergeOutputs); es werden keine Kabel gesetzt. Ohne eigenen Effekt bleibt er dunkel.
+        // Hing der bisherige Ausgang an keinem Output (altes Projekt), speist er den neuen: so bleibt das Bild erhalten.
+        if (project_->target && project_->graph.findNode(project_->target->node)->typeId != "wh.output.canvas") {
             (void)project_->graph.connect(*project_->target, graph::PortRef{id.value(), "source"});
-            (void)project_->graph.connect(*project_->target, graph::PortRef{id.value(), "behind"});
         }
         project_->target = graph::PortRef{id.value(), "out"};
         rebuildDirty_ = true;
@@ -175,6 +173,14 @@ Result<void> Player::removeNode(NodeId node) {
     std::optional<graph::PortRef> upstream;
     if (wasTarget) {
         upstream = upstreamFieldOutput(project_->graph, node);
+        if (!upstream && project_->graph.findNode(node)->typeId == "wh.output.canvas") {
+            // Ein Output ohne Quelle: Der Ausgang geht auf einen anderen Output (sie laufen ja parallel).
+            for (const graph::NodeInstance& other : project_->graph.nodes()) {
+                if (other.id != node && other.typeId == "wh.output.canvas") {
+                    upstream = graph::PortRef{other.id, "out"};
+                }
+            }
+        }
     }
     // Aus A -> X -> B wird beim Löschen von X ein A -> B (siehe bridgesAround). Fehlschläge (Typ, Zyklus) sind kein Fehler.
     const std::vector<Bridge> bridges = bridgesAround(project_->graph, node);
