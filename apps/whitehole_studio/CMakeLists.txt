@@ -94,6 +94,12 @@ add_executable(whitehole_studio
     settings_dialog.hpp
     preview_widget.cpp
     preview_widget.hpp
+    fixture_library_page.cpp
+    fixture_library_page.hpp
+    shape_form.cpp
+    shape_form.hpp
+    shape_preview.cpp
+    shape_preview.hpp
     stage_setup_window.cpp
     stage_view.cpp
     stage_view.hpp

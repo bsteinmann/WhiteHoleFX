@@ -6,6 +6,7 @@
 #include <QTabWidget>
 #include <QVBoxLayout>
 
+#include "fixture_library_page.hpp"
 #include "layout_panel.hpp"
 #include "stage_view.hpp"
 #include "test_panel.hpp"
@@ -18,16 +19,18 @@ QSettings settings() { return QSettings{QStringLiteral("WhiteHoleFX"), QStringLi
 
 }  // namespace
 
-StageSetupWindow::StageSetupWindow(LayoutPanel* layout, TestPanel* test, StageView* view, QWidget* parent)
+StageSetupWindow::StageSetupWindow(FixtureLibraryPage* fixtures, LayoutPanel* layout, TestPanel* test, StageView* view,
+                                   QWidget* parent)
     : QWidget{parent, Qt::Window}, tabs_{new QTabWidget{this}} {
     setWindowTitle(tr("Stage Config"));
     auto* box = new QVBoxLayout{this};
     box->setContentsMargins(0, 0, 0, 0);
     box->addWidget(tabs_);
+    tabs_->addTab(fixtures, tr("Fixtures"));
     tabs_->addTab(layout, tr("Layout"));
     tabs_->addTab(test, tr("Testmodus"));
     tabs_->addTab(view, tr("Ansicht"));
-    resize(560, 760);
+    resize(1000, 760);
 }
 
 void StageSetupWindow::open(Page which) {
@@ -35,7 +38,7 @@ void StageSetupWindow::open(Page which) {
         restored_ = true;
         restoreGeometry(settings().value(QStringLiteral("stageSetup/geometry")).toByteArray());
     }
-    tabs_->setCurrentIndex(which == Page::View ? 2 : (which == Page::Test ? 1 : 0));
+    tabs_->setCurrentIndex(static_cast<int>(which));
     show();
     raise();
     activateWindow();
@@ -43,9 +46,10 @@ void StageSetupWindow::open(Page which) {
 
 StageSetupWindow::Page StageSetupWindow::page() const {
     switch (tabs_->currentIndex()) {
-        case 1: return Page::Test;
-        case 2: return Page::View;
-        default: return Page::Layout;
+        case 1: return Page::Layout;
+        case 2: return Page::Test;
+        case 3: return Page::View;
+        default: return Page::Fixtures;
     }
 }
 

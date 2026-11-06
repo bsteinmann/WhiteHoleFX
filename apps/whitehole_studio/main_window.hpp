@@ -48,6 +48,7 @@ class NodePalette;
 class ParameterPanel;
 class PreviewController;
 class PreviewWidget;
+class FixtureLibraryPage;
 class StageSetupWindow;
 class StageView;
 class TestPanel;
@@ -243,6 +244,7 @@ private:
     QDockWidget* editorDock_{nullptr};
     LayoutPanel* layoutPanel_{nullptr};
     TestPanel* testPanel_{nullptr};
+    FixtureLibraryPage* fixturePage_{nullptr};  // Seite "Fixtures" im Stage Config (Bibliothek der Bauformen)
     StageView* stageView_{nullptr};  // Seite "Ansicht" im Stage Config (die kleine Ansicht gehört dem LayoutPanel)
     StageSetupWindow* stageSetup_{nullptr};  // eigenes Fenster mit Layout und Testmodus
     QAction* stageSetupAction_{nullptr};     // "Layout und Patch" (F4)

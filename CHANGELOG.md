@@ -1,5 +1,9 @@
 # Änderungen
 
+## 0.55.0
+
+- **Stage Config: neue Seite „Fixtures“ (Bibliothek der Bauformen).** Bauformen anlegen (2D-Matrix, 3D-Matrix, Kreis, Strip, Säule), Maße und Verkabelung einstellen, Vorschau in 3D und ein Test-Knopf, der ein Muster über die Form laufen lässt (Lauflicht, Balken x/y/z, Farbfolge). Ändern wirkt auf alle Exemplare im Layout. Neues Menü Stage Config → Fixtures …; das Fenster ist breiter. Die Seiten Layout (Verteilen und Drehen), Ausgabe und Test werden in 0.56 und 0.57 neu gebaut.
+
 ## 0.54.0
 
 - **Datenmodell für das neue Stage-Config-Fenster.** Neue Formen **Ring** (`ring`) und **Säule** (`helix`), **Drehung** von Fixtures um drei Achsen (`rotate x y z`) und eine **Fixture-Bibliothek** im Projekt (`fixturetype "Name"` … `end`, Verwendung mit `type "Name"`). Ändert man eine Bauform, folgen alle Exemplare. Abtastung und Vorschau berücksichtigen die Drehung. Die Bedienung im Studio folgt mit den nächsten Versionen; bestehende Projekte laden unverändert.

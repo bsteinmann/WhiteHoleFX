@@ -6,7 +6,9 @@
 #include <QAction>
 #include <QKeySequence>
 #include <QMenu>
+#include <QStatusBar>
 
+#include "fixture_library_page.hpp"
 #include "layout_panel.hpp"
 #include "look_panel.hpp"
 #include "main_window.hpp"
@@ -18,7 +20,12 @@ namespace whitehole::studio {
 void MainWindow::buildStageConfig(QMenu* menu) {
     stageMenu_ = menu;
     stageView_ = new StageView{*player_, false};
-    stageSetup_ = new StageSetupWindow{layoutPanel_, testPanel_, stageView_, this};
+    fixturePage_ = new FixtureLibraryPage{*player_};
+    connect(fixturePage_, &FixtureLibraryPage::edited, this, &MainWindow::onLayoutEdited);
+    connect(fixturePage_, &FixtureLibraryPage::projectNeeded, this, [this]() { newProject(false); });
+    connect(fixturePage_, &FixtureLibraryPage::failed, this,
+            [this](const QString& message) { statusBar()->showMessage(message, 8000); });
+    stageSetup_ = new StageSetupWindow{fixturePage_, layoutPanel_, testPanel_, stageView_, this};
     connect(layoutPanel_, &LayoutPanel::selectionChanged, this, &MainWindow::refreshStageViews);
 
     auto* addFixtureAction = new QAction{tr("Fixture &hinzufügen …"), this};
@@ -34,6 +41,11 @@ void MainWindow::buildStageConfig(QMenu* menu) {
     testModeAction->setToolTip(tr("Testbilder auf die LEDs schicken, um Verkabelung und Patch zu prüfen"));
     connect(testModeAction, &QAction::triggered, this, [this]() { stageSetup_->open(StageSetupWindow::Page::Test); });
 
+    auto* fixturesAction = new QAction{tr("&Fixtures …"), this};
+    fixturesAction->setToolTip(tr("Bibliothek der Bauformen: Matrix, Kreis, Strip, Säule mit Vorschau und Test"));
+    connect(fixturesAction, &QAction::triggered, this, [this]() { stageSetup_->open(StageSetupWindow::Page::Fixtures); });
+
+    menu->addAction(fixturesAction);
     menu->addAction(addFixtureAction);
     menu->addSeparator();
     menu->addAction(stageSetupAction_);
@@ -44,21 +56,30 @@ void MainWindow::refreshStageViews() {
     if (stageView_ == nullptr) {
         return;
     }
+    fixturePage_->refresh();
     stageView_->setSelection(layoutPanel_->selectedIds());
     stageView_->refresh();
     layoutPanel_->refreshView();
 }
 
 QString MainWindow::exerciseStageSetup() {
-    if (stageSetup_ == nullptr || stageSetup_->pageCount() != 3) {
-        return QStringLiteral("das Fenster Stage Config hat nicht die Seiten Layout, Testmodus und Ansicht");
+    if (stageSetup_ == nullptr || stageSetup_->pageCount() != 4) {
+        return QStringLiteral("das Fenster Stage Config hat nicht die Seiten Fixtures, Layout, Testmodus und Ansicht");
     }
     if (const QString note = stageView_->exercise(); !note.isEmpty()) {
+        return note;
+    }
+    if (const QString note = fixturePage_->exercise(); !note.isEmpty()) {
         return note;
     }
     if (stageSetup_->isVisible()) {
         return QStringLiteral("Stage Config ist schon offen");
     }
+    stageSetup_->open(StageSetupWindow::Page::Fixtures);
+    if (!stageSetup_->isVisible() || stageSetup_->page() != StageSetupWindow::Page::Fixtures) {
+        return QStringLiteral("Stage Config zeigt die Seite Fixtures nicht");
+    }
+    stageSetup_->hide();
     stageSetupAction_->trigger();
     if (!stageSetup_->isVisible() || stageSetup_->page() != StageSetupWindow::Page::Layout || !stageSetup_->isWindow()) {
         return QStringLiteral("Stage Config öffnet sich nicht als eigenes Fenster");
