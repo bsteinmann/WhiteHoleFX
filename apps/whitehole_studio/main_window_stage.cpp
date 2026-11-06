@@ -25,10 +25,6 @@ void MainWindow::buildStageConfig(QMenu* menu) {
     addFixtureAction->setToolTip(tr("Matrix, Strip oder 3D-Gitter mit Größe x y z, Lage, Verkabelung und Patch anlegen"));
     connect(addFixtureAction, &QAction::triggered, this, [this]() { layoutPanel_->addFromDialog(); });
 
-    auto* importPointsAction = new QAction{tr("LED-Positionen &importieren (CSV/JSON) …"), this};
-    importPointsAction->setToolTip(tr("LED-Positionen aus einer CSV- oder JSON-Datei laden"));
-    connect(importPointsAction, &QAction::triggered, this, [this]() { layoutPanel_->importPoints(); });
-
     stageSetupAction_ = new QAction{tr("&Layout und Patch …"), this};
     stageSetupAction_->setShortcut(QKeySequence{Qt::Key_F4});
     stageSetupAction_->setToolTip(tr("Fixtures anordnen, Universen und Ziele einstellen (eigenes Fenster)"));
@@ -39,7 +35,6 @@ void MainWindow::buildStageConfig(QMenu* menu) {
     connect(testModeAction, &QAction::triggered, this, [this]() { stageSetup_->open(StageSetupWindow::Page::Test); });
 
     menu->addAction(addFixtureAction);
-    menu->addAction(importPointsAction);
     menu->addSeparator();
     menu->addAction(stageSetupAction_);
     menu->addAction(testModeAction);

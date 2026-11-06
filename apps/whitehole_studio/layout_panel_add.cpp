@@ -133,42 +133,6 @@ bool LayoutPanel::importPointsFile(const QString& path, const mapping::ImportOpt
     return list_->count() > before;
 }
 
-void LayoutPanel::importPoints() {
-    const QString path = QFileDialog::getOpenFileName(
-        this, tr("LED-Positionen importieren"), QString{},
-        tr("Positionen (*.csv *.txt *.tsv *.json);;Alle Dateien (*)"));
-    if (path.isEmpty()) {
-        return;
-    }
-    QDialog dialog{this};
-    dialog.setWindowTitle(tr("Import: %1").arg(QDir::toNativeSeparators(path)));
-    auto* form = new QFormLayout{&dialog};
-    auto* scale = new QDoubleSpinBox;
-    scale->setDecimals(4);
-    scale->setRange(0.0001, 10000.0);
-    scale->setValue(1.0);
-    scale->setToolTip(tr("Faktor auf alle Koordinaten, z. B. 0,1 für Millimeter in Zentimeter"));
-    auto* flipY = new QCheckBox{tr("y spiegeln (y zeigt in der Datei nach unten)")};
-    auto* toOrigin = new QCheckBox{tr("kleinste Koordinate auf 0 schieben")};
-    toOrigin->setChecked(true);
-    form->addRow(tr("Maßstab"), scale);
-    form->addRow(QString{}, flipY);
-    form->addRow(QString{}, toOrigin);
-    form->addRow(new QLabel{tr("Die Reihenfolge in der Datei ist die Reihenfolge am Datenkabel.")});
-    auto* buttons = new QDialogButtonBox{QDialogButtonBox::Ok | QDialogButtonBox::Cancel};
-    form->addRow(buttons);
-    connect(buttons, &QDialogButtonBox::accepted, &dialog, &QDialog::accept);
-    connect(buttons, &QDialogButtonBox::rejected, &dialog, &QDialog::reject);
-    if (dialog.exec() != QDialog::Accepted) {
-        return;
-    }
-    mapping::ImportOptions options;
-    options.scale = static_cast<float>(scale->value());
-    options.flipY = flipY->isChecked();
-    options.toOrigin = toOrigin->isChecked();
-    importPointsFile(path, options);
-}
-
 QString LayoutPanel::exerciseImport() {
     // Eine Punktwolke aus einer CSV-Datei: 5 Punkte, y gespiegelt; sie muss als Fixture erscheinen.
     const auto file = std::filesystem::temp_directory_path() / "whfx_exercise_points.csv";

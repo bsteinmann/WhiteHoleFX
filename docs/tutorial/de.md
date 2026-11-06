@@ -43,8 +43,7 @@ Seiten:
   Netzteile.
 - **Ansicht:** die Anlage im Raum, drehbar, mit eigener Farbe je Fixture und einem Achsenkreuz (x rot, y grün, z blau).
 
-Einen Cube legst du als **3D-Gitter** an, zum Beispiel 8 × 8 × 8 LEDs. Für Strips, die zu einer Säule gewickelt sind, nimmst du
-eine **Punktwolke**: **Stage Config → Punktwolke importieren …** liest die LED-Positionen aus einer CSV- oder JSON-Datei.
+Einen Cube legst du als **3D-Gitter** an, zum Beispiel 8 × 8 × 8 LEDs.
 
 Tipp: Öffne **Datei → Beispiele → 3D → ausrichtung**. Jede LED zeigt ihre Lage als Farbe (Rot = x, Grün = y, Blau = z). Stimmt
 das Bild nicht mit deinem Aufbau überein, änderst du Startecke und Reihenfolge im Fixture.

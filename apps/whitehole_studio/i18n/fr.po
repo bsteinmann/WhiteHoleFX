@@ -90,7 +90,7 @@ msgstr " · dépasse le dernier univers"
 msgid " · nicht gepatcht"
 msgstr " · non patchée"
 
-#: layout_panel.cpp:257
+#: layout_panel.cpp:253
 msgid "%1  (%2 LEDs)"
 msgstr "%1  (%2 LED)"
 
@@ -182,7 +182,7 @@ msgstr "&Signaler un bogue ou proposer une idée …"
 msgid "&Hilfe"
 msgstr "&Aide"
 
-#: main_window_stage.cpp:32
+#: main_window_stage.cpp:28
 msgid "&Layout und Patch …"
 msgstr "&Disposition et patch …"
 
@@ -238,7 +238,7 @@ msgstr "&Arrêter"
 msgid "&Tastenkürzel …"
 msgstr "&Raccourcis clavier …"
 
-#: main_window_stage.cpp:37
+#: main_window_stage.cpp:33
 msgid "&Testmodus …"
 msgstr "Mode &test …"
 
@@ -362,7 +362,7 @@ msgstr "<b>WhiteHoleFX Studio</b> %1<br><br>Pilotage de matrices LED, de cubes e
 msgid "Abgeblendeter Node mit gestrichelter Durchleitung: überbrückt (Taste B)."
 msgstr "Node estompé avec transmission en pointillés : contourné (touche B)."
 
-#: layout_panel.cpp:184
+#: layout_panel.cpp:180
 msgid "Abstand"
 msgstr "Écart"
 
@@ -374,7 +374,7 @@ msgstr "Écart x y"
 msgid "Abstand x y z"
 msgstr "Écart x y z"
 
-#: layout_panel.cpp:183
+#: layout_panel.cpp:179
 msgid "Abstand zwischen den Fixtures beim Aneinanderreihen (0 = dicht an dicht)"
 msgstr "Écart entre les fixtures lors de l'alignement (0 = bord à bord)"
 
@@ -426,7 +426,7 @@ msgstr "Enregistrer comme préréglage …"
 msgid "Als Vorlage speichern"
 msgstr "Enregistrer comme modèle"
 
-#: parameter_panel.cpp:76
+#: parameter_panel.cpp:78
 msgid "An Bereich anpassen"
 msgstr "Adapter à la plage"
 
@@ -490,7 +490,7 @@ msgstr "Spectre audio"
 msgid "Audio-Welle"
 msgstr "Onde audio"
 
-#: parameter_panel.cpp:160
+#: parameter_panel.cpp:162
 msgid "Auf Standardwert zurücksetzen"
 msgstr "Rétablir la valeur par défaut"
 
@@ -526,7 +526,7 @@ msgstr "LED éteintes &atténuées"
 msgid "Aus-LEDs &unsichtbar"
 msgstr "LED éteintes &masquées"
 
-#: layout_panel.cpp:80
+#: layout_panel.cpp:76
 msgid "Ausgabe"
 msgstr "Sortie"
 
@@ -754,10 +754,6 @@ msgstr "The brightness of the mask decides how much of the content is visible. \
 msgid "Die Quelle speist die Audio-Nodes (Pegel, Frequenzband, Beat, Spektrum)."
 msgstr "La source alimente les nœuds audio (niveau, bande de fréquences, beat, spectre)."
 
-#: layout_panel_add.cpp:157
-msgid "Die Reihenfolge in der Datei ist die Reihenfolge am Datenkabel."
-msgstr "L'ordre dans le fichier est l'ordre le long du câble de données."
-
 #: main_window_language.cpp:50
 msgid "Die Sprache wechselt beim nächsten Start."
 msgstr "La langue changera au prochain démarrage."
@@ -774,15 +770,15 @@ msgstr "The elapsed time in seconds, with speed factor and offset. For driving m
 msgid "Die Änderung wirkt sofort nach „OK“."
 msgstr "La modification prend effet immédiatement après « OK »."
 
-#: main_window.cpp:184 parameter_panel.cpp:120
+#: main_window.cpp:184 parameter_panel.cpp:122
 msgid "Dieser Node hat keine einstellbaren Parameter."
 msgstr "Ce nœud n'a pas de paramètres réglables."
 
-#: main.cpp:104
+#: main.cpp:106
 msgid "Dieses Programm wurde ohne GPU-Backend gebaut (-DWHITEHOLEFX_WEBGPU=ON); es zeigt nur das Layout."
 msgstr "Ce programme a été compilé sans le backend GPU (-DWHITEHOLEFX_WEBGPU=ON) ; il n'affiche que la disposition."
 
-#: parameter_panel.cpp:113
+#: parameter_panel.cpp:115
 msgid "Dieses Projekt hat keine einstellbaren Parameter."
 msgstr "Ce projet n'a pas de paramètres réglables."
 
@@ -810,7 +806,7 @@ msgstr "Plane wave: stripes moving in one direction (frequency, speed, two color
 msgid "Effekte (2D)"
 msgstr "Effets (2D)"
 
-#: layout_panel.cpp:47
+#: layout_panel.cpp:45
 msgid "Eigene Fixture-Bibliothek: Fixtures als Vorlage speichern und wieder anlegen"
 msgstr "Votre bibliothèque de fixtures : enregistrer des fixtures comme modèles et les rajouter"
 
@@ -898,7 +894,7 @@ msgstr "Premiers pas"
 msgid "Ende x y z"
 msgstr "Fin x y z"
 
-#: layout_panel.cpp:56
+#: layout_panel.cpp:54
 msgid "Entfernen"
 msgstr "Supprimer"
 
@@ -906,7 +902,7 @@ msgstr "Supprimer"
 msgid "Erkennt den Takt der Musik und liefert Beat-Impuls, Pulse (klingt ab), Phase und Tempo (BPM). Das Tempo lässt sich auch fest vorgeben."
 msgstr "Detects the beat of the music and outputs a beat trigger, a decaying pulse, phase and tempo (BPM). The tempo can also be fixed by hand."
 
-#: layout_panel.cpp:193
+#: layout_panel.cpp:189
 msgid "Erst Fixtures wählen (Strg oder Umschalt halten für mehrere)"
 msgstr "Sélectionnez d'abord des fixtures (Ctrl ou Maj pour plusieurs)"
 
@@ -933,10 +929,6 @@ msgstr "Aucun projet n'est chargé. Créez-en un avec Ctrl+N ou ouvrez-en un ave
 #: cue_dialog.cpp:81 cue_panel.cpp:53
 msgid "Fade"
 msgstr "Fondu"
-
-#: layout_panel_add.cpp:150
-msgid "Faktor auf alle Koordinaten, z. B. 0,1 für Millimeter in Zentimeter"
-msgstr "Facteur appliqué à toutes les coordonnées, p. ex. 0,1 pour des millimètres en centimètres"
 
 #: parameter_editors.cpp:92 port_legend.cpp:68 test_panel.cpp:38
 msgid "Farbe"
@@ -982,11 +974,11 @@ msgstr "&Ajouter un fixture …"
 msgid "Fixture hinzufügen"
 msgstr "Ajouter un fixture"
 
-#: layout_panel.cpp:74 node_editor_targets.cpp:51
+#: layout_panel.cpp:70 node_editor_targets.cpp:51
 msgid "Fixtures"
 msgstr "Fixtures"
 
-#: main_window_stage.cpp:34
+#: main_window_stage.cpp:30
 msgid "Fixtures anordnen, Universen und Ziele einstellen (eigenes Fenster)"
 msgstr "Disposer les fixtures, régler univers et destinations (fenêtre séparée)"
 
@@ -1066,11 +1058,11 @@ msgstr "Enregistré : %1"
 msgid "Gewählte Fixtures als Gruppe speichern …"
 msgstr "Enregistrer les fixtures choisies comme groupe …"
 
-#: layout_panel.cpp:167
+#: layout_panel.cpp:163
 msgid "Gewählte Fixtures senkrecht aufeinanderreihen (das untere bleibt stehen)"
 msgstr "Empiler les fixtures sélectionnées verticalement (la plus basse reste en place)"
 
-#: layout_panel.cpp:165
+#: layout_panel.cpp:161
 msgid "Gewählte Fixtures waagrecht aneinanderreihen (das linke bleibt stehen)"
 msgstr "Aligner les fixtures sélectionnées côte à côte (celle de gauche reste en place)"
 
@@ -1090,11 +1082,11 @@ msgstr "Supprimer le groupe"
 msgid "Gruppe speichern"
 msgstr "Enregistrer le groupe"
 
-#: layout_panel.cpp:51 node_editor_targets.cpp:56
+#: layout_panel.cpp:49 node_editor_targets.cpp:56
 msgid "Gruppen"
 msgstr "Groupes"
 
-#: layout_panel.cpp:52
+#: layout_panel.cpp:50
 msgid "Gruppen von Fixtures und Regionen der Bühne: Ziele für Output-Nodes"
 msgstr "Groupes de fixtures et régions de la scène : cibles pour les nodes de sortie"
 
@@ -1129,10 +1121,6 @@ msgstr "Envelope (ADSR): turns a switch into a smooth curve with attack, decay, 
 #: port_legend.cpp:64
 msgid "Image"
 msgstr "Image"
-
-#: layout_panel_add.cpp:144
-msgid "Import: %1"
-msgstr "Importation : %1"
 
 #: port_legend.cpp:71
 msgid "Impuls"
@@ -1170,7 +1158,7 @@ msgstr "Carte pour l'envoi :"
 msgid "Kein Fixture ausgewählt."
 msgstr "Aucun fixture sélectionné."
 
-#: main.cpp:101
+#: main.cpp:103
 msgid "Kein GPU-Adapter: %1"
 msgstr "Aucun adaptateur GPU : %1"
 
@@ -1178,7 +1166,7 @@ msgstr "Aucun adaptateur GPU : %1"
 msgid "Kein Projekt"
 msgstr "Aucun projet"
 
-#: parameter_panel.cpp:102 stage_view.cpp:120
+#: parameter_panel.cpp:104 stage_view.cpp:120
 msgid "Kein Projekt geladen."
 msgstr "Aucun projet chargé."
 
@@ -1197,26 +1185,6 @@ msgstr "Cliquez sur une LED pour voir son adresse."
 #: node_editor_menu.cpp:63
 msgid "Kopieren\tStrg+C"
 msgstr "Copier\tCtrl+C"
-
-#: main_window_stage.cpp:28
-msgid "LED-Positionen &importieren (CSV/JSON) …"
-msgstr "&Importer des positions de LED (CSV/JSON) …"
-
-#: layout_panel.cpp:45
-msgid "LED-Positionen aus einer CSV- oder JSON-Datei als Punktwolke laden"
-msgstr "Charger les positions des LED depuis un fichier CSV ou JSON comme nuage de points"
-
-#: main_window_stage.cpp:29
-msgid "LED-Positionen aus einer CSV- oder JSON-Datei laden"
-msgstr "Charger les positions des LED depuis un fichier CSV ou JSON"
-
-#: layout_panel_add.cpp:138
-msgid "LED-Positionen importieren"
-msgstr "Importer les positions des LED"
-
-#: layout_panel.cpp:44
-msgid "LED-Positionen …"
-msgstr "Positions de LED …"
 
 #: add_fixture_dialog.cpp:122 fixture_form.cpp:136
 msgid "LEDs"
@@ -1286,7 +1254,7 @@ msgstr "Linear gradient from color A to color B at an adjustable angle."
 msgid "Linien als Sinuswellen, die sich bewegen (Anzahl, Amplitude, Frequenz, Tempo, Phasenversatz)."
 msgstr "Moving sine-wave lines (count, amplitude, frequency, speed, phase spread)."
 
-#: layout_panel.cpp:159
+#: layout_panel.cpp:155
 msgid "Linke Kanten ausrichten"
 msgstr "Aligner les bords gauches"
 
@@ -1406,10 +1374,6 @@ msgstr "Créer une matrice, un strip ou une grille 3D avec taille x y z, positio
 msgid "Matrix, Strip oder 3D-Gitter mit Größe, Lage, Verkabelung und Patch anlegen"
 msgstr "Créer une matrice, un strip ou une grille 3D avec taille, position, câblage et patch"
 
-#: layout_panel_add.cpp:154
-msgid "Maßstab"
-msgstr "Échelle"
-
 #: node_info_texts.cpp:47
 msgid "Mischt zwei Bilder: 0 zeigt nur A, 1 nur B, dazwischen eine Überblendung."
 msgstr "Mixes two images: 0 shows only A, 1 only B, in between a crossfade."
@@ -1454,7 +1418,7 @@ msgstr "Nom du look :"
 msgid "Name des Presets:"
 msgstr "Nom du préréglage :"
 
-#: layout_panel.cpp:165
+#: layout_panel.cpp:161
 msgid "Nebeneinander ↔"
 msgstr "Côte à côte ↔"
 
@@ -1558,7 +1522,7 @@ msgstr "Dessus"
 msgid "Oben ab"
 msgstr "Bord supérieur à"
 
-#: layout_panel.cpp:162
+#: layout_panel.cpp:158
 msgid "Obere Kanten ausrichten"
 msgstr "Aligner les bords supérieurs"
 
@@ -1625,10 +1589,6 @@ msgstr "Types de ports : couleur et forme"
 #: add_fixture_dialog.cpp:57
 msgid "Position x y z"
 msgstr "Position x y z"
-
-#: layout_panel_add.cpp:139
-msgid "Positionen (*.csv *.txt *.tsv *.json);;Alle Dateien (*)"
-msgstr "Positions (*.csv *.txt *.tsv *.json);;Tous les fichiers (*)"
 
 #: port_legend.cpp:73
 msgid "Positionen von Punkten im Raum"
@@ -1706,7 +1666,7 @@ msgstr "Converts a value from one range to another (In min/max to Out min/max), 
 msgid "Rechnet mit zwei Zahlen: Addieren, Subtrahieren, Multiplizieren, Dividieren, Minimum, Maximum und weitere."
 msgstr "Calculates with two numbers: add, subtract, multiply, divide, minimum, maximum and more."
 
-#: layout_panel.cpp:161
+#: layout_panel.cpp:157
 msgid "Rechte Kanten ausrichten"
 msgstr "Aligner les bords droits"
 
@@ -1714,7 +1674,7 @@ msgstr "Aligner les bords droits"
 msgid "Rechts"
 msgstr "Droite"
 
-#: layout_panel.cpp:161
+#: layout_panel.cpp:157
 msgid "Rechts ⇥"
 msgstr "Droite ⇥"
 
@@ -1778,7 +1738,7 @@ msgstr "Côté"
 msgid "Seitenverhältnis halten (KeepAspect)"
 msgstr "Conserver les proportions (KeepAspect)"
 
-#: layout_panel.cpp:163
+#: layout_panel.cpp:159
 msgid "Senkrecht mittig ausrichten"
 msgstr "Centrer verticalement"
 
@@ -1802,7 +1762,7 @@ msgstr "Expanding shapes (circle, square, diamond) from a center, with spacing, 
 msgid "Skalierung am Kabel: Wert × Faktor + Offset, danach begrenzt auf den Bereich des Parameters. So steuert ein Wert von 0 bis 1 zum Beispiel einen Winkel von 0 bis 360."
 msgstr "Mise à l'échelle sur le câble : valeur × facteur + décalage, puis limitée à la plage du paramètre. Ainsi, une valeur de 0 à 1 peut par exemple piloter un angle de 0 à 360."
 
-#: parameter_panel.cpp:88
+#: parameter_panel.cpp:90
 msgid "Skalierung zurücksetzen (× 1, + 0)"
 msgstr "Réinitialiser l'échelle (× 1, + 0)"
 
@@ -1822,7 +1782,7 @@ msgstr "Colonnes"
 msgid "Spalten (senkrecht)"
 msgstr "Colonnes (verticales)"
 
-#: parameter_panel.cpp:77
+#: parameter_panel.cpp:79
 msgid "Spannt einen Wert von 0 bis 1 über den ganzen Bereich des Parameters"
 msgstr "Étend une valeur de 0 à 1 sur toute la plage du paramètre"
 
@@ -1930,7 +1890,7 @@ msgstr "Mire"
 msgid "Testbild für den Aufbau: x wird rot, y grün, z blau. So sieht man, welche Seite wo liegt und ob Verkabelung und Startecke stimmen."
 msgstr "Test image for the setup: x becomes red, y green, z blue, so you can see which side is where and whether cabling and start corner are right."
 
-#: main_window_stage.cpp:38
+#: main_window_stage.cpp:34
 msgid "Testbilder auf die LEDs schicken, um Verkabelung und Patch zu prüfen"
 msgstr "Envoyer des mires aux LED pour vérifier le câblage et le patch"
 
@@ -1978,11 +1938,11 @@ msgstr "Univers %1 à partir du canal 1"
 msgid "Unten"
 msgstr "Bas"
 
-#: layout_panel.cpp:164
+#: layout_panel.cpp:160
 msgid "Unten ⤓"
 msgstr "Bas ⤓"
 
-#: layout_panel.cpp:164
+#: layout_panel.cpp:160
 msgid "Untere Kanten ausrichten"
 msgstr "Aligner les bords inférieurs"
 
@@ -2018,7 +1978,7 @@ msgstr "Shifts the image in x, y and z. With \"Wrap around\" what leaves on one 
 msgid "Vorlage löschen"
 msgstr "Supprimer le modèle"
 
-#: layout_panel.cpp:46
+#: layout_panel.cpp:44
 msgid "Vorlagen"
 msgstr "Modèles"
 
@@ -2038,7 +1998,7 @@ msgstr "Choisir un fichier WAV"
 msgid "WAV-Dateien (*.wav)"
 msgstr "Fichiers WAV (*.wav)"
 
-#: layout_panel.cpp:160
+#: layout_panel.cpp:156
 msgid "Waagrecht mittig ausrichten"
 msgstr "Centrer horizontalement"
 
@@ -2098,7 +2058,7 @@ msgstr "Repeats the image as tiles (Tiles X/Y/Z), optionally mirroring every oth
 msgid "Wirbel: Dreht das Bild um einen Mittelpunkt, in der Mitte am stärksten, nach außen abklingend (Radius)."
 msgstr "Vortex: swirls the image around a center, strongest in the middle and fading outward (radius)."
 
-#: parameter_panel.cpp:167
+#: parameter_panel.cpp:169
 msgid "Wird durch eine Verbindung im Graphen gesteuert."
 msgstr "Piloté par une connexion dans le graphe."
 
@@ -2202,7 +2162,7 @@ msgstr "Randomly lighting pixels, blinking or fading, between two colors."
 msgid "Zufällige Zellen, die auf- und abblenden (Fading Pixels), zwischen zwei Farben."
 msgstr "Random cells that fade in and out, between two colors."
 
-#: layout_panel.cpp:209
+#: layout_panel.cpp:205
 msgid "Zum Aneinanderreihen mindestens zwei Fixtures wählen"
 msgstr "Sélectionnez au moins deux fixtures à aligner"
 
@@ -2253,10 +2213,6 @@ msgstr "un déclencheur bref, p. ex. un beat ou un coup"
 #: port_legend.cpp:68
 msgid "eine einzelne Farbe"
 msgstr "une seule couleur"
-
-#: layout_panel_add.cpp:152
-msgid "kleinste Koordinate auf 0 schieben"
-msgstr "décaler la plus petite coordonnée à 0"
 
 #: add_fixture_dialog.cpp:143 fixture_form.cpp:152
 msgid "oben (y max)"
@@ -2318,10 +2274,6 @@ msgstr "x (gauche → droite)"
 msgid "y (unten → oben)"
 msgstr "y (bas → haut)"
 
-#: layout_panel_add.cpp:151
-msgid "y spiegeln (y zeigt in der Datei nach unten)"
-msgstr "inverser y (y pointe vers le bas dans le fichier)"
-
 #: test_panel.cpp:75
 msgid "z (Tiefe)"
 msgstr "z (profondeur)"
@@ -2362,7 +2314,7 @@ msgstr "Contourner\tB"
 msgid "Überbrückung aufheben\tB"
 msgstr "Réactiver\tB"
 
-#: layout_panel.cpp:167
+#: layout_panel.cpp:163
 msgid "Übereinander ↕"
 msgstr "Empilées ↕"
 
@@ -2370,15 +2322,15 @@ msgstr "Empilées ↕"
 msgid "…"
 msgstr "…"
 
-#: layout_panel.cpp:160
+#: layout_panel.cpp:156
 msgid "↔ Mitte"
 msgstr "↔ Centre"
 
-#: layout_panel.cpp:163
+#: layout_panel.cpp:159
 msgid "↕ Mitte"
 msgstr "↕ Centre"
 
-#: layout_panel.cpp:159
+#: layout_panel.cpp:155
 msgid "⇤ Links"
 msgstr "⇤ Gauche"
 
@@ -2394,6 +2346,6 @@ msgstr "▼ vers le bas"
 msgid "⚠ %1"
 msgstr "⚠ %1"
 
-#: layout_panel.cpp:162
+#: layout_panel.cpp:158
 msgid "⤒ Oben"
 msgstr "⤒ Haut"

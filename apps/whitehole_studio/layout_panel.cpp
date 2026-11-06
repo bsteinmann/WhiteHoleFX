@@ -41,8 +41,6 @@ LayoutPanel::LayoutPanel(runtime::Player& player, QWidget* parent) : QTabWidget{
     auto* buttons = new QHBoxLayout;
     auto* addButton = new QPushButton{tr("Hinzufügen …")};
     addButton->setToolTip(tr("Matrix, Strip oder 3D-Gitter mit Größe, Lage, Verkabelung und Patch anlegen"));
-    auto* importButton = new QPushButton{tr("LED-Positionen …")};
-    importButton->setToolTip(tr("LED-Positionen aus einer CSV- oder JSON-Datei als Punktwolke laden"));
     auto* libraryButton = new QPushButton{tr("Vorlagen")};
     libraryButton->setToolTip(tr("Eigene Fixture-Bibliothek: Fixtures als Vorlage speichern und wieder anlegen"));
     auto* libraryMenu = new QMenu{libraryButton};
@@ -57,11 +55,9 @@ LayoutPanel::LayoutPanel(runtime::Player& player, QWidget* parent) : QTabWidget{
     buttons->addWidget(addButton);
     buttons->addWidget(libraryButton);
     buttons->addWidget(groupButton);
-    buttons->addWidget(importButton);
     buttons->addWidget(removeButton);
     pageLayout->addLayout(buttons);
     connect(addButton, &QPushButton::clicked, this, [this]() { addFromDialog(); });
-    connect(importButton, &QPushButton::clicked, this, [this]() { importPoints(); });
     connect(removeButton, &QPushButton::clicked, this, [this]() { removeSelected(); });
 
     pageLayout->addWidget(buildArrangeBar());

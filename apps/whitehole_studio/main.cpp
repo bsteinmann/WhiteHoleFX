@@ -22,6 +22,7 @@
 #include "main_window.hpp"
 #include "crash_notice.hpp"
 #include "stall_event_filter.hpp"
+#include "scroll_behavior.hpp"
 #include "stall_watchdog.hpp"
 
 #ifdef WH_STUDIO_HAVE_GPU
@@ -37,6 +38,7 @@ int main(int argc, char** argv) {
     QApplication::setApplicationName(QStringLiteral("WhiteHoleFX"));
     QApplication::setApplicationVersion(QStringLiteral(WH_VERSION));
     QGuiApplication::setDesktopFileName(QStringLiteral("whitehole-studio"));  // passt zum Starter (.desktop)
+    whitehole::studio::installScrollBehavior(app);  // Mausrad ändert keine Werte, deutliche Scrollbalken
 
     // Issue #26: Bei Freeze (Hauptschleife steht über 2 s) oder Absturz den Aufrufstapel ausgeben, auf stderr und in
     // <Cache>/stack.txt. Den Herzschlag liefert ein Timer im Hauptthread.

@@ -165,7 +165,7 @@ Die Seite „Layout“ hat drei Teile.
 - **Patch:** automatisch (nächstes freies Universe), manuell (Protokoll, Ziel, Universe, erster Kanal, Farbreihenfolge) oder
   nicht senden.
 
-**Fixtures:** Liste mit „Hinzufügen …“, „Import …“ und „Entfernen“. Ein Fixture aus dem Dialog landet dort, wo der Dialog es
+**Fixtures:** Liste mit „Hinzufügen …“ und „Entfernen“. Ein Fixture aus dem Dialog landet dort, wo der Dialog es
 hinsetzt; ohne eigene Angabe bekommt es das erste freie Universe (Art-Net, Ziel 0, 170 LEDs je Universe). Für das
 gewählte Fixture gibt es ein Formular:
 
@@ -177,9 +177,8 @@ gewählte Fixture gibt es ein Formular:
 - Patch: Protokoll (Art-Net, sACN, DDP), Ziel, Universe, erster Kanal, DDP-Offset,
   Farbreihenfolge, Gamma, Helligkeit; „an die Ausgabe schicken“ schaltet den Patch ein und aus
 
-**Import von Positionen:** „LED-Positionen …“ lädt LED-Positionen aus einer CSV- oder JSON-Datei als Punktwolke
-(Format und Optionen: `docs/mapping.md`, Abschnitt „Import von Positionen“). Die Reihenfolge in der Datei
-ist die Reihenfolge am Kabel. Beispiel: `examples/daten/bogen.csv`.
+**Import von Positionen:** In der Oberfläche vorerst entfernt (kommt mit dem neuen Stage-Config-Fenster zurück). Punktwolken
+lassen sich weiter in der Projektdatei beschreiben und laden (Format: `docs/mapping.md`, Abschnitt „Import von Positionen“).
 
 **Mehrere Fixtures:** Die Liste erlaubt mehrere Einträge (Strg oder Umschalt). Die Knöpfe unter der
 Liste richten die gewählten Fixtures aus (links, rechts, oben, unten, waagrecht oder senkrecht

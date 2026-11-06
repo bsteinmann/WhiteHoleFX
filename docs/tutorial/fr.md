@@ -40,8 +40,7 @@ ces pages :
   câblage et patch sans effet en cours. **Attention :** le blanc s'allume à pleine luminosité ; vérifiez d'abord les alimentations.
 - **Vue :** l'installation dans l'espace, orientable, avec une couleur par fixture et un repère d'axes (x rouge, y vert, z bleu).
 
-Un cube se crée comme **grille 3D**, par exemple 8 × 8 × 8 LED. Pour des strips enroulés autour d'une colonne, utilisez un
-**nuage de points** : **Stage Config → Importer un nuage de points …** lit les positions des LED dans un fichier CSV ou JSON.
+Un cube se crée comme **grille 3D**, par exemple 8 × 8 × 8 LED.
 
 Astuce : ouvrez **Fichier → Exemples → 3D → ausrichtung**. Chaque LED montre sa position sous forme de couleur (rouge = x, vert =
 y, bleu = z). Si l'image ne correspond pas à votre montage, modifiez le coin de départ et l'ordre dans le fixture.

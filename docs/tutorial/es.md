@@ -41,8 +41,7 @@ páginas:
   fuentes de alimentación.
 - **Vista:** la instalación en el espacio, giratoria, con un color propio por fixture y un eje de coordenadas (x rojo, y verde, z azul).
 
-Un cubo se crea como **cuadrícula 3D**, por ejemplo de 8 × 8 × 8 LED. Para strips enrollados en una columna usa una **nube de
-puntos**: **Stage Config → Importar nube de puntos …** lee las posiciones de los LED desde un archivo CSV o JSON.
+Un cubo se crea como **cuadrícula 3D**, por ejemplo de 8 × 8 × 8 LED.
 
 Consejo: abre **Archivo → Ejemplos → 3D → ausrichtung**. Cada LED muestra su posición como color (rojo = x, verde = y, azul = z).
 Si la imagen no coincide con tu montaje, cambia la esquina de inicio y el orden en el fixture.

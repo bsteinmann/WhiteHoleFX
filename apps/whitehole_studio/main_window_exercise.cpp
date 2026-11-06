@@ -17,6 +17,7 @@
 #include "main_window.hpp"
 #include "node_editor.hpp"
 #include "parameter_panel.hpp"
+#include "scroll_behavior.hpp"
 
 namespace whitehole::studio {
 
@@ -62,7 +63,10 @@ int MainWindow::exerciseParameters() {
 }
 
 QString MainWindow::exerciseEditor() {
-    QString ok = editor_->exercise();
+    QString ok = scrollBehaviorProblem();
+    if (ok.isEmpty()) {
+        ok = editor_->exercise();
+    }
     if (ok.isEmpty()) {
         ok = layoutPanel_->exercise();
     }

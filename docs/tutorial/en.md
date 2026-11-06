@@ -39,8 +39,7 @@ If you are new, start with the hardware. Open **Stage Config → Layout and Patc
   without an effect running. **Caution:** white lights up at full brightness; check the power supplies first.
 - **View:** the rig in space, rotatable, with its own color per fixture and an axis cross (x red, y green, z blue).
 
-You create a cube as a **3D grid**, for example 8 × 8 × 8 LEDs. For strips wound around a column use a **point cloud**:
-**Stage Config → Import point cloud …** reads the LED positions from a CSV or JSON file.
+You create a cube as a **3D grid**, for example 8 × 8 × 8 LEDs.
 
 Tip: open **File → Examples → 3D → ausrichtung**. Every LED shows its position as a color (red = x, green = y, blue = z). If the
 picture does not match your build, change the start corner and the order in the fixture.

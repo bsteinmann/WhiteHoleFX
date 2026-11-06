@@ -50,8 +50,6 @@ public:
     void addFromDialog();
     /// Legt ein Fixture so an, wie der Dialog es beschreibt. Ohne Projekt entsteht zuerst ein neues.
     void addFixture(const NewFixture& fixture);
-    /// Fragt nach einer CSV-/JSON-Datei mit LED-Positionen und legt daraus ein Punktwolken-Fixture an.
-    void importPoints();
     /// Wie importPoints, aber mit gegebener Datei und ohne Dialog. Wahr, wenn ein Fixture entstanden ist.
     bool importPointsFile(const QString& path, const mapping::ImportOptions& options);
     void removeSelected();
