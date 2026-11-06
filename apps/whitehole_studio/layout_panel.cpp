@@ -41,6 +41,11 @@ LayoutPanel::LayoutPanel(runtime::Player& player, QWidget* parent) : QTabWidget{
     auto* buttons = new QHBoxLayout;
     auto* addButton = new QPushButton{tr("Hinzufügen …")};
     addButton->setToolTip(tr("Matrix, Strip oder 3D-Gitter mit Größe, Lage, Verkabelung und Patch anlegen"));
+    auto* typeButton = new QPushButton{tr("Aus Bauform")};
+    typeButton->setToolTip(tr("Exemplar einer Bauform aus der Bibliothek (Stage Config → Fixtures) auf der Bühne anlegen"));
+    auto* typeMenu = new QMenu{typeButton};
+    typeButton->setMenu(typeMenu);
+    connect(typeMenu, &QMenu::aboutToShow, this, [this, typeMenu]() { fillTypeMenu(typeMenu); });
     auto* libraryButton = new QPushButton{tr("Vorlagen")};
     libraryButton->setToolTip(tr("Eigene Fixture-Bibliothek: Fixtures als Vorlage speichern und wieder anlegen"));
     auto* libraryMenu = new QMenu{libraryButton};
@@ -53,6 +58,7 @@ LayoutPanel::LayoutPanel(runtime::Player& player, QWidget* parent) : QTabWidget{
     connect(groupMenu, &QMenu::aboutToShow, this, [this, groupMenu]() { fillGroupMenu(groupMenu); });
     auto* removeButton = new QPushButton{tr("Entfernen")};
     buttons->addWidget(addButton);
+    buttons->addWidget(typeButton);
     buttons->addWidget(libraryButton);
     buttons->addWidget(groupButton);
     buttons->addWidget(removeButton);
@@ -328,6 +334,9 @@ QString LayoutPanel::exercise() {
         return note;
     }
     if (const QString note = exerciseAddDialog(); !note.isEmpty()) {
+        return note;
+    }
+    if (const QString note = exerciseTypes(); !note.isEmpty()) {
         return note;
     }
     return exerciseArrange();

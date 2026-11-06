@@ -79,7 +79,34 @@ void FixtureForm::build() {
     }
     layout->addRow(tr("Ursprung x y z"), c_.origin.widget());
 
-    buildShapeFields(*layout, fixture->shape);
+    c_.rotation = form::vec3Boxes(fixture->rotation, -360.0, 360.0, 5.0);
+    for (QDoubleSpinBox* box : {c_.rotation.x, c_.rotation.y, c_.rotation.z}) {
+        box->setDecimals(1);
+        connect(box, qOverload<double>(&QDoubleSpinBox::valueChanged), this, [this](double) { applyRotation(); });
+    }
+    c_.rotation.x->setToolTip(tr("Drehung um die x-Achse in Grad (um die Mitte des Fixtures)"));
+    c_.rotation.y->setToolTip(tr("Drehung um die y-Achse in Grad"));
+    c_.rotation.z->setToolTip(tr("Drehung um die z-Achse in Grad"));
+    layout->addRow(tr("Drehung x y z (Grad)"), c_.rotation.widget());
+
+    QStringList typeNames{tr("(eigene Form)")};
+    int typeIndex = 0;
+    for (const project::FixtureType& type : player_.fixtureTypes()) {
+        typeNames.push_back(fromStd(type.name));
+        if (type.name == fixture->type) {
+            typeIndex = static_cast<int>(typeNames.size()) - 1;
+        }
+    }
+    c_.type = combo(typeNames, typeIndex);
+    c_.type->setToolTip(tr("Bauform aus der Bibliothek (Stage Config → Fixtures). Änderungen an der Bauform gelten für alle Exemplare."));
+    connect(c_.type, qOverload<int>(&QComboBox::currentIndexChanged), this, [this](int) { applyType(); });
+    layout->addRow(tr("Bauform"), form::labeledRow({{QString{}, c_.type}}));
+
+    if (!fixture->type.empty()) {
+        layout->addRow(new QLabel{tr("Die Form kommt aus der Bauform und wird im Reiter Fixtures geändert.")});
+    } else {
+        buildShapeFields(*layout, fixture->shape);
+    }
     buildPatchFields(*layout, patchOf(id_));
 }
 
@@ -261,6 +288,18 @@ void FixtureForm::applyName() {
 
 void FixtureForm::applyOrigin() { report(player_.moveFixture(id_, c_.origin.value())); }
 
+void FixtureForm::applyRotation() { report(player_.setFixtureRotation(id_, c_.rotation.value())); }
+
+void FixtureForm::applyType() {
+    const int index = c_.type->currentIndex();
+    const std::string name = index <= 0 ? std::string{} : c_.type->currentText().toUtf8().toStdString();
+    const mapping::Fixture* fixture = player_.project()->layout.find(id_);
+    if (fixture == nullptr || fixture->type == name) {
+        return;
+    }
+    report(player_.assignFixtureType(id_, name), true);
+}
+
 void FixtureForm::applyShape() {
     const mapping::Fixture* fixture = player_.project()->layout.find(id_);
     if (fixture != nullptr) {
@@ -328,33 +367,6 @@ void FixtureForm::applyPatch() {
     patch.color.gamma = static_cast<float>(c_.gamma->value());
     patch.color.brightness = static_cast<float>(c_.brightness->value());
     report(player_.setPatch(id_, patch));
-}
-
-QString FixtureForm::exercise() {
-    const mapping::Fixture* fixture = player_.project() != nullptr ? player_.project()->layout.find(id_) : nullptr;
-    if (fixture == nullptr || c_.origin.x == nullptr || c_.count == nullptr || c_.patched == nullptr) {
-        return QStringLiteral("Formular: kein Strip angezeigt");
-    }
-    // Ursprung ändern, wie es ein Mensch im Zahlenfeld täte
-    const double x0 = fixture->origin.x;
-    c_.origin.x->setValue(x0 + 5.0);
-    fixture = player_.project()->layout.find(id_);
-    if (fixture == nullptr || std::abs(static_cast<double>(fixture->origin.x) - (x0 + 5.0)) > 1.0e-3) {
-        return QStringLiteral("Formular: Ursprung wurde nicht übernommen");
-    }
-    // Größe ändern: die Zahl der LEDs ändert sich mit
-    const std::uint32_t before = player_.status().ledCount;
-    c_.count->setValue(c_.count->value() + 10);
-    if (player_.status().ledCount != before + 10) {
-        return QStringLiteral("Formular: LED-Zahl %1 statt %2").arg(player_.status().ledCount).arg(before + 10);
-    }
-    // Farbreihenfolge im Patch ändern
-    c_.colorOrder->setCurrentIndex(2);
-    const output::FixturePatch* patch = patchOf(id_);
-    if (patch == nullptr || patch->color.order != output::ColorOrder::GRB) {
-        return QStringLiteral("Formular: Farbreihenfolge wurde nicht übernommen");
-    }
-    return {};
 }
 
 }  // namespace whitehole::studio

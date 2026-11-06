@@ -205,6 +205,10 @@ Unterbrechung). Alle Schritte lassen sich zurücknehmen.
 
 Die erste Seite im Fenster Stage Config (Menü Stage Config → Fixtures …) ist die **Bibliothek**: Hier beschreibst du eine Bauform einmal, im Reiter Layout verteilst du sie dann beliebig oft. Links stehen die Bauformen des Projekts, mit **Neu** legst du eine an: 2D-Matrix, 3D-Matrix, Kreis, Strip oder Säule (Spirale um eine senkrechte Achse). In der Mitte stellst du Name, Größe, Abstände und Verkabelung ein; die Vorschau rechts zeigt die Form sofort, die erste LED am Kabel ist weiß. Der Knopf **Test** lässt ein Muster nur über diese Form laufen (Lauflicht in Kabelreihenfolge, Balken entlang x, y oder z, Farbfolge); gesendet wird dabei nichts. Ändert man eine Bauform, folgen alle Exemplare im Layout. Entfernt man sie, behalten die Exemplare ihre Form als eigene. Alles ist rückgängig zu machen und steht in der Projektdatei (`fixturetype`, siehe [Projektformat](project-format.md)).
 
+### Layout: Exemplare verteilen und drehen
+
+Im Reiter Layout legst du Exemplare einer Bauform mit **Aus Bauform** an und stellst Lage (Ursprung x y z) und **Drehung x y z** (Grad, um die Mitte des Fixtures) im Formular ein. Das Feld **Bauform** wechselt die Bauform eines Fixtures oder löst es mit „(eigene Form)“ von der Bibliothek. Die Drehung wirkt in der Abtastung (Effekt), in der Vorschau und in der Stage-Ansicht.
+
 ### Bedienung in der Vorschau
 
 Die Vorschau ist eine Arbeitsfläche für das Layout:

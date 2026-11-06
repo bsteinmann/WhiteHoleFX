@@ -1,6 +1,6 @@
 // fixture_form.hpp: Formular für ein Fixture (Name, Lage, Form, Verkabelung, Patch).
 //
-// Zeigt je nach Form (Matrix, Strip, 3D-Gitter) die passenden Felder; Punktwolken lassen sich nur
+// Zeigt Lage, Drehung (3 Achsen) und Bauform; bei eigener Form (Matrix, Strip, 3D-Gitter) auch deren Felder; Punktwolken lassen sich nur
 // in der Datei ändern. Jede Änderung geht über den Player, der danach den Ausgabeplan prüft. Wird
 // sie abgelehnt (Universe belegt, Maß ungültig), meldet `failed` den Grund und das Formular springt
 // auf den gespeicherten Wert zurück.
@@ -32,6 +32,8 @@ public:
     /// Rauchtest für die CI: ändert Ursprung, Größe und Patch des angezeigten Fixtures über die
     /// Felder. Leer bei Erfolg, sonst der gescheiterte Schritt.
     QString exercise();
+    /// Rauchtest für ein Fixture aus einer Bauform: dreht um die Achsen y und z und löst es von der Bauform. Leer bei Erfolg.
+    QString exerciseTyped();
 
 Q_SIGNALS:
     void edited();
@@ -41,6 +43,8 @@ private:
     struct Controls {
         QLineEdit* name{nullptr};
         form::Vec3Boxes origin;
+        form::Vec3Boxes rotation;  // Drehung in Grad um x, y, z
+        QComboBox* type{nullptr};  // Bauform aus der Bibliothek; erster Eintrag = eigene Form
         // Matrix
         QSpinBox* columns{nullptr};
         QSpinBox* rows{nullptr};
@@ -82,6 +86,8 @@ private:
 
     void applyName();
     void applyOrigin();
+    void applyRotation();
+    void applyType();
     void applyShape();
     void applyPatch();
     void togglePatch(bool on);

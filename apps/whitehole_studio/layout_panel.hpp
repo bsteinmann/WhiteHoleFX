@@ -65,6 +65,10 @@ public:
     void addRegion();
     void addFromTemplate(const project::FixtureTemplate& tpl);
 
+    /// Bauformen aus der Bibliothek (Stage Config → Fixtures): Menü füllen und ein Exemplar mit Patch auf der Bühne anlegen.
+    void fillTypeMenu(QMenu* menu);
+    bool addFromType(const QString& typeName);
+
     /// Alle in der Liste gewählten Fixtures (in Listenreihenfolge).
     [[nodiscard]] std::vector<mapping::FixtureId> selectedIds() const;
     /// Wählt genau diese Fixtures (ohne `selectionChanged` auszulösen); das erste zeigt das Formular.
@@ -99,6 +103,7 @@ private:
     QString exerciseArrange();
     QString exerciseImport();
     QString exerciseAddDialog();
+    QString exerciseTypes();
     void fillList(mapping::FixtureId select);
     void refreshTexts();
     void addFixture(const QString& baseName, mapping::FixtureShape shape);

@@ -1,5 +1,9 @@
 # Änderungen
 
+## 0.56.0
+
+- **Fixtures im Layout: Bauform und Drehung.** Im Formular eines Fixtures (Stage Config → Layout) gibt es jetzt **Drehung x y z** in Grad (um die Mitte des Fixtures; Ring, Säule, Matrix, Strip, Cube) und die Auswahl **Bauform** aus der Bibliothek. Fixtures aus einer Bauform zeigen keine eigenen Formfelder mehr (die Form ändert man im Reiter Fixtures für alle Exemplare zugleich); „(eigene Form)“ löst ein Fixture von der Bibliothek, seine Form bleibt. Neuer Knopf **Aus Bauform** legt ein Exemplar samt Patchvorschlag an. Das Verteilen der Exemplare auf der Bühne (Verschieben, Ausrichten, 3D-Ansicht) geht wie bisher.
+
 ## 0.55.0
 
 - **Stage Config: neue Seite „Fixtures“ (Bibliothek der Bauformen).** Bauformen anlegen (2D-Matrix, 3D-Matrix, Kreis, Strip, Säule), Maße und Verkabelung einstellen, Vorschau in 3D und ein Test-Knopf, der ein Muster über die Form laufen lässt (Lauflicht, Balken x/y/z, Farbfolge). Ändern wirkt auf alle Exemplare im Layout. Neues Menü Stage Config → Fixtures …; das Fenster ist breiter. Die Seiten Layout (Verteilen und Drehen), Ausgabe und Test werden in 0.56 und 0.57 neu gebaut.
