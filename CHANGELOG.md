@@ -1,5 +1,9 @@
 # Änderungen
 
+## 0.49.1
+
+- Die automatische Verkettung der Output-Nodes wird nicht mehr als Kabel gezeichnet: Mehrere Outputs wirken im Editor unabhängig voneinander, bleiben aber alle aktiv.
+
 ## 0.49.0
 
 - **Legende der Ports.** Hilfe → „Legende der Ports …“ öffnet ein schwebendes Fenster mit Farben und Formen aller Porttypen und ihrer Bedeutung (Ausgang gefüllt, Eingang als Ring, Ausgang des Projekts, überbrückt).

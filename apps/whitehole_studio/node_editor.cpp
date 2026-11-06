@@ -157,6 +157,14 @@ void NodeEditor::buildScene() {
         if (from == nullptr || to == nullptr || port == nullptr) {
             continue;
         }
+        // Die automatische Verkettung der Output-Nodes (Ausgang → behind) bleibt im Graphen, wird aber nicht als
+        // Kabel gezeichnet: Für dich sind die Outputs unabhängig, der Stapel ist ein Implementierungsdetail.
+        const graph::NodeInstance* fromNode = g.findNode(c.from.node);
+        const graph::NodeInstance* toNode = g.findNode(c.to.node);
+        if (fromNode != nullptr && toNode != nullptr && fromNode->typeId == "wh.output.canvas" &&
+            toNode->typeId == "wh.output.canvas" && c.to.portKey == "behind") {
+            continue;
+        }
         auto* wire = new WireItem{c.id, from, c.from.portKey, to, c.to.portKey, port->type};
         scene_.addItem(wire);
         wires_.push_back(wire);
