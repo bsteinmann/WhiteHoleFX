@@ -80,6 +80,7 @@ add_executable(wh_tests
     preview/view3d_test.cpp
     preview/wiring_test.cpp
     project/project_test.cpp
+    project/project_library_test.cpp
     project/cue_test.cpp
     project/fixture_template_test.cpp
     project/output_target_test.cpp

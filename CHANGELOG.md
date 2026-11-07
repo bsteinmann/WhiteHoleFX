@@ -1,5 +1,9 @@
 # Änderungen
 
+## 0.59.0
+
+- **Benutzerbibliothek für Bauformen.** Bauformen aus dem Reiter Fixtures bleiben jetzt über neue Programmversionen und neue Projekte erhalten: Das Studio spiegelt jede Änderung (anlegen, ändern, umbenennen, duplizieren, entfernen) in `fixture-library.whfx` im Benutzerverzeichnis (Linux `~/.local/share/WhiteHoleFX`, Windows `%APPDATA%\WhiteHoleFX`). Neue Projekte beginnen mit diesen Bauformen; der Knopf **Aus Benutzerbibliothek ergänzen** holt fehlende in ein geöffnetes Projekt. Die Datei wird atomar geschrieben; ist sie defekt, bleibt sie unangetastet und es gibt eine Meldung. Die Projektdatei bleibt eigenständig (die Bauformen stehen weiter darin). Neu in `wh_project`: `writeFixtureLibrary`, `parseFixtureLibrary`.
+
 ## 0.58.1
 
 - **Ausgabe: Port-Spalte sichtbar.** In der Zieltabelle sind jetzt beide Spalten (Adresse, Port) in der Breite ziehbar und verschiebbar; die Port-Spalte war vorher nur ein schmaler Streifen.

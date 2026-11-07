@@ -127,6 +127,10 @@ Eine benannte Bauform mit genau einer Form (`matrix`, `strip`, `grid`, `ring`, `
 steht vor den Fixtures, die sie mit `type "<name>"` verwenden. Ändert man die Bauform, folgen alle Exemplare; Lage, Drehung und
 Patch behält jedes Exemplar. Alte Programmversionen kennen diese Anweisungen nicht (das Format bleibt Version 1).
 
+Die **Benutzerbibliothek** des Studios (`fixture-library.whfx` im Benutzerverzeichnis, siehe [Studio](studio.md)) ist eine
+solche Datei ohne Fixtures und Nodes: Kopfzeile `whitehole-project 1`, Kommentare und nur `fixturetype`-Blöcke. Ein neues
+Projekt bekommt ihre Blöcke vor seinen Fixtures.
+
 ### `node <name> <typ>` … `end`
 
 `<name>` ist frei wählbar (ohne Punkt) und gilt nur in dieser Datei. Innerhalb des Blocks setzt

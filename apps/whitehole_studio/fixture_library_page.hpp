@@ -5,7 +5,9 @@
 // Strip, Säule), stellt ihre Maße und Verkabelung ein und sieht rechts, wie sie aussehen; der Knopf "Test" lässt ein
 // Muster darüber laufen. Ändert man eine Bauform, folgen alle Exemplare im Layout (Player::replaceFixtureType).
 //
-// Die Seite hält keinen Zustand; alles liegt im Projekt und geht über den Player (Rückgängig inklusive).
+// Die Seite hält keinen Zustand; alles liegt im Projekt und geht über den Player (Rückgängig inklusive). Zusätzlich
+// wird jede Änderung in die Benutzerbibliothek (user_library.hpp) gespiegelt, damit angelegte Bauformen auch neue
+// Projekte und neue Programmversionen überleben.
 #pragma once
 
 #include <QString>
@@ -45,6 +47,8 @@ public:
     void removeSelected();
     void duplicateSelected();
     void renameSelected(const QString& newName);
+    /// Holt Bauformen der Benutzerbibliothek, die dem Projekt fehlen (gleichnamige bleiben unberührt). Gibt die Zahl der neuen zurück.
+    int importFromUserLibrary();
 
     /// Rauchtest für die CI: jede Art anlegen, Maße ändern, umbenennen, vervielfältigen, entfernen. Leer bei Erfolg.
     QString exercise();
@@ -63,6 +67,10 @@ private:
     void showSelected();
     void applyShape(const mapping::FixtureShape& shape);
     void report(const Result<void>& result);
+    /// Spiegelt die Bauform (oder ihr Entfernen/Umbenennen) in die Benutzerbibliothek auf der Festplatte.
+    void mirrorToUserLibrary(const QString& name);
+    void mirrorRemoval(const QString& name);
+    void mirrorRename(const QString& from, const QString& to);
     [[nodiscard]] QString uniqueName(const QString& base) const;
 
     runtime::Player& player_;
@@ -74,6 +82,7 @@ private:
     QPushButton* addButton_;
     QPushButton* duplicate_;
     QPushButton* remove_;
+    QPushButton* import_;
     bool dirty_{false};    // Projekt hat sich geändert, während die Seite unsichtbar war
     bool editing_{false};  // wir ändern gerade selbst: rebuild() fasst die Felder nicht an
 };

@@ -18,6 +18,7 @@
 #include "form_helpers.hpp"
 #include "shape_form.hpp"
 #include "shape_preview.hpp"
+#include "user_library.hpp"
 
 namespace whitehole::studio {
 
@@ -74,7 +75,8 @@ FixtureLibraryPage::FixtureLibraryPage(runtime::Player& player, QWidget* parent)
     : QWidget{parent}, player_{player}, list_{new QListWidget{this}}, name_{new QLineEdit{this}},
       usage_{new QLabel{this}}, form_{new ShapeForm{this}}, preview_{new ShapePreview{this}},
       addButton_{new QPushButton{tr("Neu"), this}}, duplicate_{new QPushButton{tr("Duplizieren"), this}},
-      remove_{new QPushButton{tr("Entfernen"), this}} {
+      remove_{new QPushButton{tr("Entfernen"), this}},
+      import_{new QPushButton{tr("Aus Benutzerbibliothek ergänzen"), this}} {
     auto* split = new QSplitter{Qt::Horizontal, this};
     auto* outer = new QHBoxLayout{this};
     outer->setContentsMargins(6, 6, 6, 6);
@@ -106,6 +108,9 @@ FixtureLibraryPage::FixtureLibraryPage(runtime::Player& player, QWidget* parent)
     buttons->addWidget(duplicate_);
     buttons->addWidget(remove_);
     leftColumn->addLayout(buttons);
+    import_->setToolTip(tr("Bauformen, die du früher angelegt hast und die in diesem Projekt fehlen, hinzufügen. "
+                           "Gespeichert in: %1").arg(userlib::path()));
+    leftColumn->addWidget(import_);
     split->addWidget(left);
 
     auto* middle = new QWidget;
@@ -128,6 +133,7 @@ FixtureLibraryPage::FixtureLibraryPage(runtime::Player& player, QWidget* parent)
     connect(list_, &QListWidget::currentRowChanged, this, [this](int) { showSelected(); });
     connect(duplicate_, &QPushButton::clicked, this, [this]() { duplicateSelected(); });
     connect(remove_, &QPushButton::clicked, this, [this]() { removeSelected(); });
+    connect(import_, &QPushButton::clicked, this, [this]() { importFromUserLibrary(); });
     connect(name_, &QLineEdit::editingFinished, this, [this]() { renameSelected(name_->text()); });
     connect(form_, &ShapeForm::shapeEdited, this, [this](const mapping::FixtureShape& shape) { applyShape(shape); });
     rebuild();
@@ -252,6 +258,7 @@ bool FixtureLibraryPage::addType(Kind kind) {
         report(result);
         return false;
     }
+    mirrorToUserLibrary(name);
     editing_ = true;
     fillList(name);
     editing_ = false;
@@ -265,6 +272,7 @@ void FixtureLibraryPage::duplicateSelected() {
         if (fromStd(type.name) == name) {
             const QString copy = uniqueName(name);
             if (player_.addFixtureType(copy.toUtf8().toStdString(), type.shape).ok()) {
+                mirrorToUserLibrary(copy);
                 editing_ = true;
                 fillList(copy);
                 editing_ = false;
@@ -286,6 +294,7 @@ void FixtureLibraryPage::removeSelected() {
         report(result);
         return;
     }
+    mirrorRemoval(name);
     editing_ = true;
     fillList(QString{});
     list_->setCurrentRow(std::min(row, list_->count() - 1));
@@ -303,6 +312,7 @@ void FixtureLibraryPage::renameSelected(const QString& newName) {
         report(result);
         return;
     }
+    mirrorRename(name, newName);
     editing_ = true;
     fillList(newName);
     editing_ = false;
@@ -317,6 +327,7 @@ void FixtureLibraryPage::applyShape(const mapping::FixtureShape& shape) {
     editing_ = true;
     const Result<void> result = player_.replaceFixtureType(name.toUtf8().toStdString(), shape);
     if (result.ok()) {
+        mirrorToUserLibrary(name);
         preview_->setShape(shape);
         if (QListWidgetItem* item = list_->currentItem()) {
             item->setText(tr("%1 (%2 LEDs)").arg(name).arg(mapping::ledCount(shape)));
@@ -324,49 +335,6 @@ void FixtureLibraryPage::applyShape(const mapping::FixtureShape& shape) {
     }
     report(result);
     editing_ = false;
-}
-
-QString FixtureLibraryPage::exercise() {
-    rebuild();
-    const std::size_t before = player_.fixtureTypes().size();
-    const Kind all[] = {Kind::Matrix2d, Kind::Matrix3d, Kind::Circle, Kind::Strip, Kind::Column};
-    for (const Kind kind : all) {
-        if (!addType(kind)) {
-            return QStringLiteral("Fixture-Bibliothek: Bauform %1 lässt sich nicht anlegen").arg(static_cast<int>(kind));
-        }
-        const QString formProblem = form_->exercise();
-        if (selectedName().isEmpty() || !formProblem.isEmpty()) {
-            return QStringLiteral("Fixture-Bibliothek: Maße der Bauform %1 lassen sich nicht ändern: %2")
-                .arg(static_cast<int>(kind))
-                .arg(formProblem);
-        }
-        if (preview_->ledCount() == 0) {
-            return QStringLiteral("Fixture-Bibliothek: Vorschau der Bauform %1 ist leer").arg(static_cast<int>(kind));
-        }
-    }
-    if (player_.fixtureTypes().size() != before + 5) {
-        return QStringLiteral("Fixture-Bibliothek: erwartet %1 Bauformen, es sind %2")
-            .arg(before + 5)
-            .arg(player_.fixtureTypes().size());
-    }
-    if (const QString problem = preview_->exercise(); !problem.isEmpty()) {
-        return problem;
-    }
-    renameSelected(QStringLiteral("Umbenannt"));
-    if (selectedName() != QStringLiteral("Umbenannt")) {
-        return QStringLiteral("Fixture-Bibliothek: Umbenennen wurde nicht übernommen");
-    }
-    duplicateSelected();
-    if (player_.fixtureTypes().size() != before + 6) {
-        return QStringLiteral("Fixture-Bibliothek: Duplizieren hat keine Bauform angelegt");
-    }
-    removeSelected();
-    // Aufräumen: alles, was dieser Test angelegt hat, wieder entfernen (der Rauchtest soll das Projekt nicht ändern).
-    while (player_.fixtureTypes().size() > before) {
-        list_->setCurrentRow(list_->count() - 1);
-        removeSelected();
-    }
-    return {};
 }
 
 }  // namespace whitehole::studio

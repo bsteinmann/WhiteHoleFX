@@ -114,6 +114,16 @@ void applyStrictInputs(Project& project, bool strict);
 /// Nodename ohne Zeichen nicht).
 [[nodiscard]] Result<std::string> writeProject(const Project& project);
 
+/// Die `fixturetype`-Blöcke der Bauformen als Text (ohne Kopfzeile), so wie `writeProject` sie schreibt.
+[[nodiscard]] std::string writeFixtureTypes(const std::vector<FixtureType>& types);
+
+/// Benutzerbibliothek der Bauformen als eigene Datei: Kopfzeile plus `fixturetype`-Blöcke. Sie überlebt neue Programm-
+/// versionen und gilt für alle Projekte; ein neues Projekt bekommt ihre Bauformen mit.
+[[nodiscard]] std::string writeFixtureLibrary(const std::vector<FixtureType>& types);
+/// Liest eine solche Datei. Fehler wie bei parseProject (zum Beispiel neuere Syntax, die dieses Programm nicht kennt).
+[[nodiscard]] Result<std::vector<FixtureType>> parseFixtureLibrary(std::string_view text,
+                                                                   std::shared_ptr<const graph::INodeRegistry> registry);
+
 /// Hilfen für den Runner.
 [[nodiscard]] Result<std::string> readTextFile(const std::string& path);
 /// Schreibt die Datei neu (ersetzt vorhandenen Inhalt). Fehler: IoError.

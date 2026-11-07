@@ -138,6 +138,16 @@ Result<void> writeGraph(std::ostream& out, const graph::Graph& graph, const std:
 
 }  // namespace
 
+std::string writeFixtureTypes(const std::vector<FixtureType>& types) {
+    std::ostringstream out;
+    for (const FixtureType& type : types) {
+        out << "fixturetype " << quoteWord(type.name) << "\n";
+        writeShape(out, type.shape);
+        out << "end\n\n";
+    }
+    return out.str();
+}
+
 Result<std::string> writeProject(const Project& project) {
     std::ostringstream out;
     out << "whitehole-project " << kFormatVersion << "\n\n";
