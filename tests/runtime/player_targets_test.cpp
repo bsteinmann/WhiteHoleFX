@@ -2,6 +2,7 @@
 #include <catch2/catch_test_macros.hpp>
 
 #include <cmath>
+#include <filesystem>
 #include <string>
 
 #include "fake_gpu_device.hpp"
@@ -186,4 +187,18 @@ output o2.out
     REQUIRE(rig.player.disconnect(g.findInputConnection(o1, "source")->id).ok());
     CHECK_FALSE(graph::mergeOutputs(rig.player.project()->graph, *rig.player.project()->target).has_value());
     CHECK(rig.player.project()->graph.findInputConnection(o2, "behind") == nullptr);
+}
+
+TEST_CASE("Beispiel zwei-ausgaenge.whfx: beide Outputs werden unsichtbar addiert", "[runtime][target]") {
+    Rig rig;
+    const auto path = std::filesystem::path{__FILE__}.parent_path().parent_path().parent_path() / "examples" / "einstieg" / "zwei-ausgaenge.whfx";
+    const auto text = project::readTextFile(path.string());
+    REQUIRE(text.ok());
+    REQUIRE(rig.player.loadText(text.value()).ok());
+    const project::Project& p = *rig.player.project();
+    REQUIRE(p.target.has_value());
+    const auto merged = graph::mergeOutputs(p.graph, *p.target);
+    REQUIRE(merged.has_value());
+    // Original: 2 Output-Nodes; zusammengeführt kommt ein Adder dazu
+    CHECK(merged->graph.nodes().size() == p.graph.nodes().size() + 1);
 }

@@ -154,7 +154,7 @@ node a wh.output.canvas
 end
 ```
 
-Gruppen und Regionen stehen vor den Nodes und gelten für das ganze Projekt (nicht in look-Blöcken). Das Studio schreibt aus den `target`-Zeilen das Rechteck in `left`, `top`, `width`, `height` des Output-Nodes und hält es aktuell.
+Gruppen und Regionen stehen vor den Nodes und gelten für das ganze Projekt (nicht in look-Blöcken). Ein vollständiges Beispiel: [`examples/einstieg/zwei-ausgaenge.whfx`](../examples/einstieg/zwei-ausgaenge.whfx). Das Studio schreibt aus den `target`-Zeilen das Rechteck in `left`, `top`, `width`, `height` des Output-Nodes und hält es aktuell.
 
 ### `connect <node>.<ausgang> -> <node>.<eingang>` und `output <node>.<ausgang>`
 

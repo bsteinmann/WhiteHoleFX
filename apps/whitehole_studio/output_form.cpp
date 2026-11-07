@@ -23,7 +23,11 @@ OutputForm::OutputForm(runtime::Player& player, QWidget* parent) : QWidget{paren
     auto* destinationLayout = new QVBoxLayout{destinations};
     table_ = new QTableWidget{0, 2};
     table_->setHorizontalHeaderLabels({tr("Adresse (leer = Multicast)"), tr("Port (0 = Standard)")});
-    table_->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
+    // Beide Spalten per Ziehen in der Breite änderbar; die Port-Spalte war bei "Stretch" nur ein schmaler Streifen.
+    table_->horizontalHeader()->setSectionResizeMode(QHeaderView::Interactive);
+    table_->horizontalHeader()->setStretchLastSection(true);
+    table_->setColumnWidth(0, 260);
+    table_->setColumnWidth(1, 180);
     table_->horizontalHeader()->setSectionsMovable(true);  // Spalten per Ziehen an der Kopfzeile umordnen
     table_->setSelectionBehavior(QAbstractItemView::SelectRows);
     table_->setSelectionMode(QAbstractItemView::SingleSelection);

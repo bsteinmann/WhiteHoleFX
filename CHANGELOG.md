@@ -1,5 +1,10 @@
 # Änderungen
 
+## 0.58.1
+
+- **Ausgabe: Port-Spalte sichtbar.** In der Zieltabelle sind jetzt beide Spalten (Adresse, Port) in der Breite ziehbar und verschiebbar; die Port-Spalte war vorher nur ein schmaler Streifen.
+- **Neues Beispiel `examples/einstieg/zwei-ausgaenge.whfx`:** zwei Output-Nodes parallel, jeder mit eigenem Ziel (`target fixture`), unsichtbar addiert. Die bisherigen Beispiele haben nur einen Output im Hauptgraphen (`looks`/`cuelist`: je Look ein eigener Graph mit einem Output), deshalb zeigte keines mehrere Outputs.
+
 ## 0.58.0
 
 - **Reiter Test mit Bühne.** Neben den Testbildern (Farbe, Auswahl, Laufbalken, Farbreihenfolge, Lauflicht) zeigt der Reiter Test die ganze Bühne in 3D mit den Farben des Testbilds und lässt es laufen, auch wenn „Ausgabe senden“ aus ist. Ohne Testbild zeigt sie die Anlage.
