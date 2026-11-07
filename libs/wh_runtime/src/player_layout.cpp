@@ -7,6 +7,7 @@
 #include <cmath>
 
 #include "whitehole/project/output_target.hpp"
+#include "whitehole/output/patch_protocol.hpp"
 #include "whitehole/runtime/player.hpp"
 
 namespace whitehole::runtime {
@@ -44,6 +45,9 @@ Result<mapping::FixtureId> Player::addFixture(std::string name, const Vec3& orig
         if (patch) {
             patch->fixture = created;
             p.patches.push_back(*patch);
+            if (const Result<int> aligned = project::alignPatches(p); !aligned.ok()) {
+                return aligned.error();
+            }
         }
         return {};
     });
@@ -102,6 +106,10 @@ Result<void> Player::setPatch(mapping::FixtureId id, std::optional<output::Fixtu
         if (patch) {
             patch->fixture = id;
             p.patches.push_back(*patch);
+            // Das Protokoll gehört zum Controller: zieht das Fixture auf einen anderen, folgt der Patch ihm.
+            if (const Result<int> aligned = project::alignPatches(p); !aligned.ok()) {
+                return aligned.error();
+            }
         }
         return {};
     });
@@ -113,8 +121,15 @@ Result<void> Player::setDestinations(std::vector<output::Destination> destinatio
             if (!d.address.empty() && !output::isIpv4(d.address)) {
                 return invalid("\"" + d.address + "\" ist keine IPv4-Adresse");
             }
+            if (d.address.empty() && d.protocol != output::Protocol::Sacn) {
+                return invalid("Ohne Adresse (Multicast) geht nur sACN; für Art-Net und DDP eine IPv4-Adresse eintragen");
+            }
         }
         p.destinations = std::move(destinations);
+        // Ein Controller mit neuem Protokoll nimmt seine Patches mit (Art-Net <-> sACN: Universe +-1).
+        if (const Result<int> aligned = project::alignPatches(p); !aligned.ok()) {
+            return aligned.error();
+        }
         return {};
     });
 }
@@ -122,7 +137,11 @@ Result<void> Player::setDestinations(std::vector<output::Destination> destinatio
 output::FixturePatch Player::suggestPatch(std::uint64_t leds) const {
     (void)leds;  // die Größe des neuen Fixtures bestimmt nur, was hinter ihm frei ist
     output::FixturePatch patch;
-    std::uint64_t next = 0;
+    // Der Vorschlag folgt dem Protokoll von Controller 0 (der neue Patch landet dort).
+    if (project_ && !project_->destinations.empty()) {
+        patch.protocol = project_->destinations[0].protocol;
+    }
+    std::uint64_t next = output::firstUniverse(patch.protocol);
     if (project_) {
         for (const output::FixturePatch& existing : project_->patches) {
             if (existing.protocol == output::Protocol::Ddp || existing.destination != 0) {
@@ -133,7 +152,8 @@ output::FixturePatch Player::suggestPatch(std::uint64_t leds) const {
             next = std::max<std::uint64_t>(next, existing.universe + (count + 169) / 170);
         }
     }
-    patch.universe = static_cast<std::uint16_t>(std::min<std::uint64_t>(next, 32767));
+    patch.universe = static_cast<std::uint16_t>(
+        std::min<std::uint64_t>(next, std::max<std::uint16_t>(output::lastUniverse(patch.protocol), output::firstUniverse(patch.protocol))));
     return patch;
 }
 

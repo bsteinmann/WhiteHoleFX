@@ -41,6 +41,8 @@ public:
     Reader(const Line& line, std::size_t first) : line_{line}, next_{first} {}
 
     [[nodiscard]] bool atEnd() const noexcept { return next_ >= line_.words.size(); }
+    /// Das nächste Wort, ohne es zu lesen (leer am Zeilenende).
+    [[nodiscard]] std::string_view peek() const noexcept { return atEnd() ? std::string_view{} : std::string_view{line_.words[next_]}; }
     [[nodiscard]] bool ok() const noexcept { return !error_.has_value(); }
     [[nodiscard]] const Error& error() const { return *error_; }
     [[nodiscard]] std::size_t line() const noexcept { return line_.number; }

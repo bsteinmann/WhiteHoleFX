@@ -1,13 +1,15 @@
 // output_form.hpp: Ziele (Adressen der Controller) und Projekteinstellungen.
 //
-// Ziele sind die Zeilen einer Tabelle (Adresse, Port; Spalten verschiebbar); ihre Nummer steht links
-// und wird in den Patches der Fixtures benutzt. Jedes Ziel lässt sich entfernen. Eine leere Adresse heißt Multicast (nur sACN). Port 0 heißt
-// Standardport des Protokolls. Darunter stehen Bildrate, Normalisierung, sACN-Priorität und
+// Controller sind die Zeilen einer Tabelle (Name, Protokoll, Adresse, Port; Spalten verschiebbar); ihre Nummer steht links
+// und wird in den Patches der Fixtures benutzt. Das Protokoll (Art-Net, sACN, DDP) gehört zum Controller; wechselt es,
+// ziehen die Patches mit (Player::setDestinations). Jeder Controller lässt sich entfernen. Eine leere Adresse heißt Multicast (nur sACN). Ein leerer Port heißt
+// Standardport des Protokolls. Darunter stehen Bildrate, Normalisierung und (nur mit einem sACN-Controller) sACN-Priorität und
 // Quellname. Wie beim Fixture-Formular prüft der Player jede Änderung; bei einer Ablehnung meldet
 // `failed` den Grund und die Anzeige springt zurück.
 #pragma once
 
 #include <QDoubleSpinBox>
+#include <QFormLayout>
 #include <QLineEdit>
 #include <QString>
 #include <QTableWidget>
@@ -38,8 +40,13 @@ public:
 Q_SIGNALS:
     void edited();
     void failed(const QString& message);
+    /// Eine Meldung ohne Fehler (zum Beispiel: Universe wurden beim Protokollwechsel verschoben).
+    void notice(const QString& message);
 
 private:
+    enum Column { Name, Protocol, Address, Port, Count };
+
+    void updateSacnVisibility();
     void applyDestinations();
     void applySettings();
     void report(const Result<void>& result);
@@ -50,6 +57,7 @@ private:
     QComboBox* normalize_{nullptr};
     QSpinBox* priority_{nullptr};
     QLineEdit* sourceName_{nullptr};
+    QFormLayout* sacnLayout_{nullptr};
     bool populating_{false};
 };
 

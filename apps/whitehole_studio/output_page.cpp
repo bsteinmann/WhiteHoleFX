@@ -38,6 +38,7 @@ OutputPage::OutputPage(runtime::Player& player, QWidget* parent)
     });
     connect(patches_, &PatchTable::edited, this, forwardEdit);
     connect(form_, &OutputForm::failed, this, &OutputPage::failed);
+    connect(form_, &OutputForm::notice, this, &OutputPage::notice);
     connect(patches_, &PatchTable::failed, this, &OutputPage::failed);
     rebuild();
 }

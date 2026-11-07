@@ -9,6 +9,7 @@
 #include <variant>
 
 #include "project_cue.hpp"
+#include "project_destinations.hpp"
 #include "project_stage.hpp"
 #include "project_fixture_parser.hpp"
 #include "project_names.hpp"
@@ -56,6 +57,7 @@ private:
     std::optional<graph::PortRef>* target_;
     std::optional<Look> look_;
     std::optional<graph::PortRef> lookTarget_;
+    std::vector<bool> explicitProtocol_;  // je Ziel: steht "protocol" in der Datei? (sonst aus den Patches abgeleitet)
     std::unordered_map<std::string, NodeId> mainNodes_;  // Nodenamen des Projekts, solange ein look-Block läuft
     State state_{State::Outside};
     bool headerSeen_{false};
@@ -203,12 +205,26 @@ void Parser::destination(Reader& r) {
         }
         d.address = address;
     }
-    if (r.ok() && !r.atEnd()) {
+    // Der Port steht als Zahl gleich hinter der Adresse (wie schon immer); danach folgen Schlüsselwörter.
+    const std::string_view next = r.peek();
+    if (r.ok() && !next.empty() && next.find_first_not_of("0123456789") == std::string_view::npos) {
         d.port = static_cast<std::uint16_t>(r.whole("Port", 65535));
     }
-    r.expectEnd();
+    bool explicitProtocol = false;
+    while (r.ok() && !r.atEnd()) {
+        const std::string key = r.word("Option");
+        if (key == "protocol") {
+            d.protocol = detail::readName(r, detail::kProtocols, "Protokoll");
+            explicitProtocol = true;
+        } else if (key == "name") {
+            d.name = r.word("Name");
+        } else if (r.ok()) {
+            r.fail("Unbekannte Option \"" + key + "\" bei destination");
+        }
+    }
     if (r.ok()) {
         project_.destinations.push_back(std::move(d));
+        explicitProtocol_.push_back(explicitProtocol);
     }
 }
 
@@ -474,6 +490,9 @@ Result<Project> Parser::finish() {
     }
     if (const Result<void> cues = detail::checkCues(project_.cues, project_.looks); !cues.ok()) {
         return cues.error();
+    }
+    if (const Result<void> resolved = detail::resolveDestinationProtocols(project_, explicitProtocol_); !resolved.ok()) {
+        return resolved.error();
     }
     applyStrictInputs(project_, project_.strictInputs);
     return std::move(project_);

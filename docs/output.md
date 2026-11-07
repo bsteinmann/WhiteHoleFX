@@ -46,10 +46,10 @@ Startkanal (1..510), Farbeinstellungen. Regeln:
 - Alle Fehler (unbekanntes Fixture, doppelter Patch, Überlappung, Universe außerhalb
   des Bereichs) fallen beim Erstellen des Plans auf, nicht im laufenden Betrieb.
 
-## Ziele
+## Ziele (Controller)
 
-`OutputConfig::destinations[n]` gibt Adresse und Port für Ziel `n` an (Port 0 = Standard
-des Protokolls). Adressen müssen IPv4-Zahlen sein; Rechnernamen werden bewusst nicht
+`OutputConfig::destinations[n]` gibt Adresse, Port und **Protokoll** für Ziel `n` an (Port 0 = Standard
+des Protokolls; der Patch folgt dem Protokoll seines Ziels, siehe `output/patch_protocol.hpp`). Adressen müssen IPv4-Zahlen sein; Rechnernamen werden bewusst nicht
 aufgelöst, weil eine DNS-Anfrage mitten im Frame den Ausgabe-Thread blockieren würde.
 Bei sACN bedeutet eine leere Adresse Multicast an `239.255.<Universe>`; Art-Net und DDP
 brauchen eine Adresse (Broadcast-Adressen funktionieren).

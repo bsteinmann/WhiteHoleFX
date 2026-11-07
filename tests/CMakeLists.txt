@@ -70,6 +70,7 @@ add_executable(wh_tests
     output/ddp_test.cpp
     output/output_pipeline_test.cpp
     output/output_plan_test.cpp
+    output/patch_protocol_test.cpp
     output/output_worker_test.cpp
     output/sacn_test.cpp
     output/udp_sender_test.cpp
@@ -81,6 +82,7 @@ add_executable(wh_tests
     preview/wiring_test.cpp
     project/project_test.cpp
     project/project_library_test.cpp
+    project/project_destinations_test.cpp
     project/cue_test.cpp
     project/fixture_template_test.cpp
     project/output_target_test.cpp

@@ -13,6 +13,7 @@ wh_add_library(wh_output
         src/led_address.cpp
         src/output_pipeline.cpp
         src/output_plan.cpp
+        src/patch_protocol.cpp
         src/output_worker.cpp
         src/sacn.cpp
         src/udp_sender.cpp

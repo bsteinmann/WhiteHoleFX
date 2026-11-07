@@ -1,5 +1,12 @@
 # Änderungen
 
+## 0.61.0
+
+- **Das Protokoll gehört zum Controller.** Im Reiter Ausgabe wählst du Art-Net, sACN oder DDP in der Controller-Tabelle (neue Spalten Name und Protokoll), nicht mehr je Fixture. Die Patch-Tabelle wählt den Controller und zeigt das Protokoll nur an; **Universe und Erster Kanal** sind bei Art-Net und sACN aktiv, der **DDP-Offset** nur bei DDP. Die Universe-Spalte nennt die Zählweise (**Art-Net ab 0, sACN ab 1**) und begrenzt den Bereich je Protokoll. sACN-Priorität und Quellname erscheinen nur, wenn ein Controller sACN spricht.
+- **Protokollwechsel verschiebt das Universe.** Wechselt ein Controller zwischen Art-Net und sACN (oder ein Fixture auf einen Controller mit anderem Protokoll), wird die Universe-Nummer der Patches um 1 verschoben, damit das „gleiche“ Universe gemeint bleibt. Die Statuszeile nennt es, Rückgängig nimmt es zurück.
+- **Dateiformat:** `destination <n> <adresse|multicast> [port] [protocol artnet|sacn|ddp] [name "…"]`. Ältere Dateien laden wie bisher: jeder Controller bekommt das Protokoll seiner Patches, bei gemischten Protokollen auf einer Adresse entstehen zusätzliche Controller. Neue Dateien lassen sich in Programmen vor 0.61 nicht öffnen.
+- **Fix: falscher „Stillstand“-Bericht beim Speichern.** Der Wächter hielt den offenen Windows-Dialog „Speichern unter“ (oder „Öffnen“) nach fünf Sekunden für ein Einfrieren und schrieb einen Bericht. Während dieser Dialoge ist der Wächter jetzt angehalten.
+
 ## 0.60.0
 
 - **Neue Gruppe „Generators 1D“ für Strips.** Sechs Generatoren, die mit einer Koordinate entlang einer wählbaren Achse (`axis` X/Y/Z) rechnen: **Comet** (Lauflicht mit Schweif, auch Ping-pong), **Pulse Waves**, **Strip Gradient** (drei Farben, durchlaufend), **Meteors** (bis zu acht), **Sparkle** (Funkeln, `cells` = LED-Zahl) und **Level Bar** (Pegelbalken, `level` per Kabel, zum Beispiel von „Audio Level“). Sie laufen auf jedem Fixture, das in der Achsenrichtung ausgedehnt ist.

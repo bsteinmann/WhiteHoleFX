@@ -156,6 +156,9 @@ Result<mapping::FixtureId> Player::addFixtureOfType(std::string name, const std:
         if (patch) {
             patch->fixture = created;
             p.patches.push_back(*patch);
+            if (const Result<int> aligned = project::alignPatches(p); !aligned.ok()) {
+                return aligned.error();
+            }
         }
         return {};
     });

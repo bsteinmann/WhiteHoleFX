@@ -114,6 +114,11 @@ void applyStrictInputs(Project& project, bool strict);
 /// Nodename ohne Zeichen nicht).
 [[nodiscard]] Result<std::string> writeProject(const Project& project);
 
+/// Stellt alle Patches auf das Protokoll ihres Controllers um (Art-Net <-> sACN verschiebt das Universe um 1, siehe
+/// output/patch_protocol.hpp). Liefert die Zahl der umgestellten Patches. Bei einem Fehler bleibt `project` teilweise
+/// verändert; der Aufrufer arbeitet auf einer Kopie (Player::editProject tut das).
+[[nodiscard]] Result<int> alignPatches(Project& project);
+
 /// Die `fixturetype`-Blöcke der Bauformen als Text (ohne Kopfzeile), so wie `writeProject` sie schreibt.
 [[nodiscard]] std::string writeFixtureTypes(const std::vector<FixtureType>& types);
 

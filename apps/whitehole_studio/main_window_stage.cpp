@@ -34,6 +34,8 @@ void MainWindow::buildStageConfig(QMenu* menu) {
     connect(outputPage_, &OutputPage::edited, this, &MainWindow::onLayoutEdited);
     connect(outputPage_, &OutputPage::failed, this,
             [this](const QString& message) { statusBar()->showMessage(message, 8000); });
+    connect(outputPage_, &OutputPage::notice, this,
+            [this](const QString& message) { statusBar()->showMessage(message, 12000); });
     stageSetup_ = new StageSetupWindow{fixturePage_, layoutPanel_, outputPage_, testPanel_, stageView_, testView_, this};
     connect(layoutPanel_, &LayoutPanel::selectionChanged, this, &MainWindow::refreshStageViews);
 

@@ -65,9 +65,9 @@ whitehole-project 1
 
 settings fps 40 normalize stretch sacn-priority 100 source-name "WhiteHoleFX"
 
-destination 0 192.168.1.50            # Nummer, IPv4 oder "multicast", optional Port
-destination 1 multicast
-destination 2 10.0.0.7 6455
+destination 0 192.168.1.50 protocol artnet name "Wand"   # Nummer, IPv4 oder "multicast", optional Port
+destination 1 multicast protocol sacn
+destination 2 10.0.0.7 6455 protocol ddp
 
 fixture "Panel links" at 0 0 0        # "at x y z" ist optional (Standard 0 0 0)
   matrix 16 8 pitch 1 1 start top-left first rows serpentine
@@ -94,11 +94,19 @@ output b.out                          # dieser Ausgang wird auf die LEDs abgetas
 | `source-name <text>` | Name der sACN-Quelle; aus ihm wird auch die stabile Sender-ID abgeleitet | WhiteHoleFX |
 | `strict-inputs on\|off` | `on`: ein unverbundener Eingang von Blend, Mix, Crossfade, Add oder Mask ist ein Fehler (LEDs aus); `off`: er gilt als durchsichtiges Schwarz | off |
 
-### `destination <nummer> <adresse|multicast> [port]`
+### `destination <nummer> <adresse|multicast> [port] [protocol artnet|sacn|ddp] [name "<name>"]`
 
 Die Nummern müssen der Reihe nach bei 0 beginnen. Port 0 oder weggelassen: Standardport des
 Protokolls (Art-Net 6454, sACN 5568, DDP 4048). `multicast` gilt nur für sACN
 (Gruppe `239.255.<Universe hoch>.<Universe tief>`). Nur IPv4-Zahlen, keine Hostnamen.
+
+Das **Protokoll gehört zum Controller** (seit 0.61). Jede `patch`-Zeile eines Fixtures muss dazu passen; die Zeile nennt es
+weiterhin (`patch sacn destination 1 …`), damit ältere Programme die Datei lesen können. In **Dateien ohne `protocol`** (älter als
+0.61) bekommt jeder Controller das Protokoll seiner Patches; benutzen Patches mit verschiedenen Protokollen dieselbe
+Nummer, entsteht für jedes weitere Protokoll ein zusätzlicher Controller mit derselben Adresse (hinten angehängt, die Patches ziehen
+um). Ein Controller ohne Patch ist Art-Net, bei Adresse `multicast` sACN. Steht `protocol` in der Datei und ein Patch nennt ein
+anderes, ist das ein Fehler mit dem Namen des Fixtures. Art-Net zählt Universen ab 0 (bis 32767), sACN ab 1 (bis 63999); die Zahl in
+`universe` ist immer die des Protokolls. Das Studio verschiebt sie beim Protokollwechsel eines Controllers um 1.
 
 ### `fixture "<name>" [at x y z] [rotate x y z] [type "<name>"]` … `end`
 

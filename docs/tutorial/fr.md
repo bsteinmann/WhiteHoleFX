@@ -35,8 +35,8 @@ Quand on débute, on commence par le matériel. Ouvrez **Stage Config → Fixtur
   ce qui montre le coin de départ. Le bouton **Test** fait défiler un motif sur la forme.
 - **Layout (F4) :** vous placez ici des instances des types sur la scène (**Depuis un type**), réglez la position et la **rotation
   autour des trois axes** et les alignez. À côté, la scène dans l’espace, orientable, avec un repère (x rouge, y vert, z bleu).
-- **Sortie :** les adresses de vos contrôleurs (destinations ; une adresse vide signifie multicast) et la table de patch : quel
-  fixture envoie sur quel univers. Chaque destination peut être supprimée, les colonnes peuvent être déplacées.
+- **Sortie :** vos contrôleurs avec protocole (Art-Net, sACN, DDP) et adresse (une adresse vide signifie multicast, sACN uniquement) et la table de patch : quel
+  fixture envoie sur quel univers. Chaque contrôleur peut être supprimé, les colonnes peuvent être déplacées.
 - **Test :** envoie des images de test (couleur, barre, ordre des couleurs, chenillard) sur toute la scène pour vérifier câblage et
   patch sans effet en cours ; la scène à côté montre l’image de test. **Attention :** le blanc brille à pleine puissance ;
   vérifiez d’abord les alimentations.
@@ -110,7 +110,7 @@ et les projets de toutes les langues soient compatibles.
 
 ## 10. En cas de problème
 
-- **Pas de lumière sur les LED :** « Envoyer la sortie » est-il activé ? L'adresse du contrôleur sous Destinations est-elle correcte ?
+- **Pas de lumière sur les LED :** « Envoyer la sortie » est-il activé ? Le protocole et l'adresse du contrôleur sous Sortie sont-ils corrects ?
   Le mode test aide-t-il ?
 - **Mauvaises couleurs :** changez l'ordre des couleurs dans le patch (RGB, GRB …) ou lancez « Ordre des couleurs » en mode test.
 - **Image à l'envers ou en miroir :** modifiez le coin de départ et les options `flip` du fixture.

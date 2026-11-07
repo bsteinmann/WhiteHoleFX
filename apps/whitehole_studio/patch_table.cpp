@@ -12,6 +12,7 @@
 #include <algorithm>
 
 #include "form_helpers.hpp"
+#include "whitehole/output/patch_protocol.hpp"
 
 namespace whitehole::studio {
 
@@ -20,6 +21,16 @@ using form::fromStd;
 namespace {
 
 constexpr int kIdRole = Qt::UserRole;
+constexpr int kProtocolRole = Qt::UserRole + 1;
+
+QString protocolName(output::Protocol protocol) {
+    switch (protocol) {
+        case output::Protocol::ArtNet: return QStringLiteral("Art-Net");
+        case output::Protocol::Sacn: return QStringLiteral("sACN");
+        case output::Protocol::Ddp: return QStringLiteral("DDP");
+    }
+    return {};
+}
 
 QSettings settings() { return QSettings{QStringLiteral("WhiteHoleFX"), QStringLiteral("WhiteHoleFX")}; }
 
@@ -32,9 +43,14 @@ QTableWidgetItem* readOnly(const QString& text) {
 }  // namespace
 
 PatchTable::PatchTable(runtime::Player& player, QWidget* parent) : QTableWidget{0, Count, parent}, player_{player} {
-    setHorizontalHeaderLabels({tr("Fixture"), tr("Bauform"), tr("LEDs"), tr("Senden"), tr("Protokoll"), tr("Ziel Nr."),
-                               tr("Universe"), tr("Erster Kanal"), tr("DDP-Offset"), tr("Farbreihenfolge"), tr("Gamma"),
-                               tr("Helligkeit")});
+    setHorizontalHeaderLabels({tr("Fixture"), tr("Bauform"), tr("LEDs"), tr("Senden"), tr("Controller"), tr("Protokoll"),
+                               tr("Universe (Art-Net ab 0, sACN ab 1)"), tr("Erster Kanal"), tr("DDP-Offset"),
+                               tr("Farbreihenfolge"), tr("Gamma"), tr("Helligkeit")});
+    horizontalHeaderItem(Destination)->setToolTip(tr("Der Controller bestimmt das Protokoll. Wechselst du auf einen "
+                                                     "Controller mit anderem Protokoll, wird die Universe-Nummer "
+                                                     "zwischen Art-Net und sACN um 1 verschoben."));
+    horizontalHeaderItem(Universe)->setToolTip(tr("Art-Net zählt Universen ab 0 (bis 32767), sACN ab 1 (bis 63999). "
+                                                  "Bei DDP gibt es keine Universen."));
     horizontalHeader()->setSectionsMovable(true);  // Spalten per Ziehen an der Kopfzeile umordnen
     horizontalHeader()->setStretchLastSection(false);
     horizontalHeader()->setSectionResizeMode(QHeaderView::Interactive);
@@ -43,7 +59,7 @@ PatchTable::PatchTable(runtime::Player& player, QWidget* parent) : QTableWidget{
     setSelectionBehavior(QAbstractItemView::SelectRows);
     setEditTriggers(QAbstractItemView::NoEditTriggers);
     setMinimumHeight(160);
-    const QByteArray saved = settings().value(QStringLiteral("stageSetup/patchHeader")).toByteArray();
+    const QByteArray saved = settings().value(QStringLiteral("stageSetup/patchHeader2")).toByteArray();
     if (!saved.isEmpty()) {
         horizontalHeader()->restoreState(saved);
     }
@@ -53,7 +69,7 @@ PatchTable::PatchTable(runtime::Player& player, QWidget* parent) : QTableWidget{
 
 void PatchTable::saveHeader() const {
     if (!populating_) {
-        settings().setValue(QStringLiteral("stageSetup/patchHeader"), horizontalHeader()->saveState());
+        settings().setValue(QStringLiteral("stageSetup/patchHeader2"), horizontalHeader()->saveState());
     }
 }
 
@@ -101,10 +117,24 @@ void PatchTable::rebuild() {
             connect(send, &QCheckBox::toggled, this, [this, id](bool on) { toggle(id, on); });
             setCellWidget(row, Send, send);
 
-            auto* protocol = form::combo({QStringLiteral("Art-Net"), QStringLiteral("sACN"), QStringLiteral("DDP")},
-                                         static_cast<int>(shown.protocol));
-            auto* destination = form::intBox(static_cast<int>(shown.destination), 0, 255);
-            auto* universe = form::intBox(static_cast<int>(shown.universe), 0, 63999);
+            // Controller zur Auswahl: "0 – Wand (Art-Net)"; das Protokoll folgt dem Controller.
+            QStringList controllers;
+            for (std::size_t i = 0; i < project->destinations.size(); ++i) {
+                const output::Destination& d = project->destinations[i];
+                const QString label = d.name.empty() ? (d.address.empty() ? tr("Multicast") : fromStd(d.address)) : fromStd(d.name);
+                controllers << QStringLiteral("%1 – %2 (%3)").arg(i).arg(label, protocolName(d.protocol));
+            }
+            auto* destination = form::combo(controllers, std::min<int>(static_cast<int>(shown.destination),
+                                                                       std::max<int>(0, static_cast<int>(controllers.size()) - 1)));
+            destination->setEnabled(!controllers.isEmpty());
+            const output::Protocol shownProtocol = shown.destination < project->destinations.size()
+                                                       ? project->destinations[shown.destination].protocol
+                                                       : shown.protocol;
+            auto* protocolItem = readOnly(protocolName(shownProtocol));
+            protocolItem->setData(kProtocolRole, static_cast<int>(shownProtocol));
+            setItem(row, Protocol, protocolItem);
+            auto* universe = form::intBox(static_cast<int>(shown.universe), output::firstUniverse(shownProtocol),
+                                          std::max<int>(output::lastUniverse(shownProtocol), output::firstUniverse(shownProtocol)));
             auto* channel = form::intBox(static_cast<int>(shown.channel), 1, 510);
             auto* offset = form::intBox(static_cast<int>(shown.ddpOffset), 0, 2000000000);
             auto* order = form::combo({QStringLiteral("RGB"), QStringLiteral("RBG"), QStringLiteral("GRB"),
@@ -112,7 +142,6 @@ void PatchTable::rebuild() {
                                       static_cast<int>(shown.color.order));
             auto* gamma = form::doubleBox(shown.color.gamma, 0.1, 10.0, 0.1, 2);
             auto* brightness = form::doubleBox(shown.color.brightness, 0.0, 1.0, 0.05, 2);
-            setCellWidget(row, Protocol, protocol);
             setCellWidget(row, Destination, destination);
             setCellWidget(row, Universe, universe);
             setCellWidget(row, Channel, channel);
@@ -120,13 +149,10 @@ void PatchTable::rebuild() {
             setCellWidget(row, Order, order);
             setCellWidget(row, Gamma, gamma);
             setCellWidget(row, Brightness, brightness);
-            for (QComboBox* box : {protocol, order}) {
-                connect(box, qOverload<int>(&QComboBox::currentIndexChanged), this, [this, id](int) {
-                    updateEnabled(rowOf(id));
-                    commit(id);
-                });
-            }
-            for (QSpinBox* box : {destination, universe, channel, offset}) {
+            // Anderer Controller: das Protokoll (und damit die Universe-Nummer) kann sich ändern, die Zeile wird neu gelesen.
+            connect(destination, qOverload<int>(&QComboBox::currentIndexChanged), this, [this, id](int) { commit(id, true); });
+            connect(order, qOverload<int>(&QComboBox::currentIndexChanged), this, [this, id](int) { commit(id); });
+            for (QSpinBox* box : {universe, channel, offset}) {
                 connect(box, qOverload<int>(&QSpinBox::valueChanged), this, [this, id](int) { commit(id); });
             }
             for (QDoubleSpinBox* box : {gamma, brightness}) {
@@ -139,20 +165,26 @@ void PatchTable::rebuild() {
     populating_ = false;
 }
 
+output::Protocol PatchTable::protocolAt(int row) const {
+    const QTableWidgetItem* item = this->item(row, Protocol);
+    return item != nullptr ? static_cast<output::Protocol>(item->data(kProtocolRole).toInt()) : output::Protocol::ArtNet;
+}
+
 void PatchTable::updateEnabled(int row) {
     if (row < 0) {
         return;
     }
     const auto* send = qobject_cast<QCheckBox*>(cellWidget(row, Send));
-    const auto* protocol = qobject_cast<QComboBox*>(cellWidget(row, Protocol));
-    if (send == nullptr || protocol == nullptr) {
+    if (send == nullptr) {
         return;
     }
     const bool on = send->isChecked();
-    const bool ddp = protocol->currentIndex() == static_cast<int>(output::Protocol::Ddp);
-    for (const int column : {Protocol, Destination, Order, Gamma, Brightness}) {
+    const bool ddp = protocolAt(row) == output::Protocol::Ddp;
+    for (const int column : {Order, Gamma, Brightness}) {
         cellWidget(row, column)->setEnabled(on);
     }
+    cellWidget(row, Destination)->setEnabled(on && qobject_cast<QComboBox*>(cellWidget(row, Destination))->count() > 0);
+    // Universe und Kanal gibt es bei Art-Net und sACN, den Offset nur bei DDP.
     for (const int column : {Universe, Channel}) {
         cellWidget(row, column)->setEnabled(on && !ddp);
     }
@@ -185,7 +217,7 @@ void PatchTable::toggle(mapping::FixtureId id, bool on) {
     }
 }
 
-void PatchTable::commit(mapping::FixtureId id) {
+void PatchTable::commit(mapping::FixtureId id, bool rebuildAfter) {
     const int row = rowOf(id);
     if (populating_ || row < 0 || !qobject_cast<QCheckBox*>(cellWidget(row, Send))->isChecked()) {
         return;
@@ -193,15 +225,16 @@ void PatchTable::commit(mapping::FixtureId id) {
     const auto spin = [&](int column) { return qobject_cast<QSpinBox*>(cellWidget(row, column))->value(); };
     const auto dbl = [&](int column) { return qobject_cast<QDoubleSpinBox*>(cellWidget(row, column))->value(); };
     output::FixturePatch patch;
-    patch.protocol = static_cast<output::Protocol>(qobject_cast<QComboBox*>(cellWidget(row, Protocol))->currentIndex());
-    patch.destination = static_cast<std::uint32_t>(spin(Destination));
+    // Das Protokoll der Zeile ist noch das alte; der Player stellt den Patch auf das des gewählten Controllers um.
+    patch.protocol = protocolAt(row);
+    patch.destination = static_cast<std::uint32_t>(std::max(0, qobject_cast<QComboBox*>(cellWidget(row, Destination))->currentIndex()));
     patch.universe = static_cast<std::uint16_t>(spin(Universe));
     patch.channel = static_cast<std::uint16_t>(spin(Channel));
     patch.ddpOffset = static_cast<std::uint32_t>(spin(DdpOffset));
     patch.color.order = static_cast<output::ColorOrder>(qobject_cast<QComboBox*>(cellWidget(row, Order))->currentIndex());
     patch.color.gamma = static_cast<float>(dbl(Gamma));
     patch.color.brightness = static_cast<float>(dbl(Brightness));
-    report(player_.setPatch(id, patch), false);
+    report(player_.setPatch(id, patch), rebuildAfter);
 }
 
 QString PatchTable::exercise() {
@@ -243,6 +276,43 @@ QString PatchTable::exercise() {
     if (patchOf() == nullptr || patchOf()->color.order != output::ColorOrder::RGB) {
         return QStringLiteral("Patch-Tabelle: Farbreihenfolge nach dem Verschieben nicht übernommen");
     }
+
+    // Auf einen Controller mit anderem Protokoll umpatchen: der Patch folgt ihm (Art-Net -> sACN: Universe + 1), die
+    // Zelle "Universe" bleibt aktiv, der DDP-Offset grau. Danach alles zurück.
+    const std::vector<output::Destination> destinationsBefore = player_.project()->destinations;
+    const output::Protocol protocolBefore = patchOf()->protocol;
+    const std::uint32_t destinationBefore = patchOf()->destination;
+    const std::uint16_t universeBefore = patchOf()->universe;
+    std::vector<output::Destination> withExtra = destinationsBefore;
+    const output::Protocol other = protocolBefore == output::Protocol::Sacn ? output::Protocol::ArtNet : output::Protocol::Sacn;
+    withExtra.emplace_back("10.9.9.9", 0, other);
+    if (!player_.setDestinations(withExtra).ok()) {
+        return QStringLiteral("Patch-Tabelle: zweiter Controller lässt sich nicht anlegen");
+    }
+    rebuild();
+    row = rowOf(id);
+    qobject_cast<QComboBox*>(cellWidget(row, Destination))->setCurrentIndex(static_cast<int>(destinationsBefore.size()));
+    if (patchOf() == nullptr || patchOf()->protocol != other || patchOf()->destination != destinationsBefore.size()) {
+        return QStringLiteral("Patch-Tabelle: der Patch folgt dem Protokoll des neuen Controllers nicht");
+    }
+    const int expectedShift = (protocolBefore == output::Protocol::ArtNet && other == output::Protocol::Sacn)   ? 1
+                              : (protocolBefore == output::Protocol::Sacn && other == output::Protocol::ArtNet) ? -1
+                                                                                                                : 0;
+    if (static_cast<int>(patchOf()->universe) != static_cast<int>(universeBefore) + expectedShift &&
+        protocolBefore != output::Protocol::Ddp) {
+        return QStringLiteral("Patch-Tabelle: Universe wurde beim Protokollwechsel nicht verschoben");
+    }
+    rebuild();
+    row = rowOf(id);
+    qobject_cast<QComboBox*>(cellWidget(row, Destination))->setCurrentIndex(static_cast<int>(destinationBefore));
+    if (patchOf() == nullptr || patchOf()->protocol != protocolBefore ||
+        (protocolBefore != output::Protocol::Ddp && patchOf()->universe != universeBefore)) {
+        return QStringLiteral("Patch-Tabelle: Rückweg des Protokollwechsels stellt Universe nicht wieder her");
+    }
+    if (!player_.setDestinations(destinationsBefore).ok()) {
+        return QStringLiteral("Patch-Tabelle: zweiter Controller lässt sich nicht entfernen");
+    }
+    rebuild();
     return {};
 }
 

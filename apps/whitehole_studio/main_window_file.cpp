@@ -8,6 +8,7 @@
 
 #include "main_window.hpp"
 #include "node_editor.hpp"
+#include "stall_watchdog.hpp"
 #include "layout_panel.hpp"
 #include "parameter_panel.hpp"
 #include "preview_widget.hpp"
@@ -111,8 +112,12 @@ void MainWindow::onNew() { newProject(true); }
 
 void MainWindow::onOpen() {
     const QString start = player_->status().path.empty() ? QString{} : toQString(player_->status().path);
-    const QString path = QFileDialog::getOpenFileName(this, tr("Projekt öffnen"), start,
-                                                      tr("WhiteHoleFX-Projekte (*.whfx);;Alle Dateien (*)"));
+    QString path;
+    {
+        const StallPause pause;  // der Windows-Dialog hat eine eigene Nachrichtenschleife (siehe stall_watchdog.hpp)
+        path = QFileDialog::getOpenFileName(this, tr("Projekt öffnen"), start,
+                                            tr("WhiteHoleFX-Projekte (*.whfx);;Alle Dateien (*)"));
+    }
     if (!path.isEmpty()) {
         openPath(path);
     }
@@ -147,8 +152,12 @@ void MainWindow::onSave() {
 
 void MainWindow::onSaveAs() {
     const QString start = player_->status().path.empty() ? QString{} : toQString(player_->status().path);
-    QString path = QFileDialog::getSaveFileName(this, tr("Projekt speichern unter"), start,
-                                                tr("WhiteHoleFX-Projekte (*.whfx)"));
+    QString path;
+    {
+        const StallPause pause;
+        path = QFileDialog::getSaveFileName(this, tr("Projekt speichern unter"), start,
+                                            tr("WhiteHoleFX-Projekte (*.whfx)"));
+    }
     if (path.isEmpty()) {
         return;
     }

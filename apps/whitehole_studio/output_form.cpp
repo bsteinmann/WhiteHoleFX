@@ -3,6 +3,7 @@
 
 #include <QFormLayout>
 #include <QGroupBox>
+#include <QComboBox>
 #include <QHBoxLayout>
 #include <QHeaderView>
 #include <QPushButton>
@@ -19,24 +20,29 @@ using form::fromStd;
 OutputForm::OutputForm(runtime::Player& player, QWidget* parent) : QWidget{parent}, player_{player} {
     auto* outer = new QVBoxLayout{this};
 
-    auto* destinations = new QGroupBox{tr("Ziele (Controller)")};
+    auto* destinations = new QGroupBox{tr("Controller")};
     auto* destinationLayout = new QVBoxLayout{destinations};
-    table_ = new QTableWidget{0, 2};
-    table_->setHorizontalHeaderLabels({tr("Adresse (leer = Multicast)"), tr("Port (0 = Standard)")});
-    // Beide Spalten per Ziehen in der Breite änderbar; die Port-Spalte war bei "Stretch" nur ein schmaler Streifen.
+    table_ = new QTableWidget{0, Count};
+    table_->setHorizontalHeaderLabels(
+        {tr("Name"), tr("Protokoll"), tr("Adresse (leer = Multicast, nur sACN)"), tr("Port (leer = Standard)")});
+    table_->horizontalHeader()->setToolTip(
+        tr("Das Protokoll gehört zum Controller. Standardports: Art-Net 6454, sACN 5568, DDP 4048."));
+    // Alle Spalten per Ziehen in der Breite änderbar; die Port-Spalte war bei "Stretch" nur ein schmaler Streifen.
     table_->horizontalHeader()->setSectionResizeMode(QHeaderView::Interactive);
     table_->horizontalHeader()->setStretchLastSection(true);
-    table_->setColumnWidth(0, 260);
-    table_->setColumnWidth(1, 180);
+    table_->setColumnWidth(Name, 160);
+    table_->setColumnWidth(Protocol, 110);
+    table_->setColumnWidth(Address, 240);
+    table_->setColumnWidth(Port, 160);
     table_->horizontalHeader()->setSectionsMovable(true);  // Spalten per Ziehen an der Kopfzeile umordnen
     table_->setSelectionBehavior(QAbstractItemView::SelectRows);
     table_->setSelectionMode(QAbstractItemView::SingleSelection);
     table_->setMinimumHeight(120);
     destinationLayout->addWidget(table_);
     auto* buttons = new QHBoxLayout;
-    auto* add = new QPushButton{tr("Ziel +")};
-    auto* remove = new QPushButton{tr("Gewähltes Ziel −")};
-    remove->setToolTip(tr("Entfernt das gewählte Ziel (ohne Auswahl das letzte). Benutzte Ziele bleiben stehen."));
+    auto* add = new QPushButton{tr("Controller +")};
+    auto* remove = new QPushButton{tr("Gewählten Controller −")};
+    remove->setToolTip(tr("Entfernt den gewählten Controller (ohne Auswahl den letzten). Benutzte Controller bleiben stehen."));
     buttons->addWidget(add);
     buttons->addWidget(remove);
     buttons->addStretch();
@@ -56,6 +62,7 @@ OutputForm::OutputForm(runtime::Player& player, QWidget* parent) : QWidget{paren
     normalize_ = form::combo({tr("strecken (Stretch)"), tr("Seitenverhältnis halten (KeepAspect)")}, 0);
     priority_ = form::intBox(100, 0, 200);
     sourceName_ = new QLineEdit;
+    sacnLayout_ = settingsLayout;
     settingsLayout->addRow(tr("Bildrate (fps)"), fps_);
     settingsLayout->addRow(tr("Layout auf Würfel abbilden"), normalize_);
     settingsLayout->addRow(tr("sACN-Priorität"), priority_);
@@ -78,8 +85,17 @@ void OutputForm::rebuild() {
             for (const output::Destination& d : project->destinations) {
                 const int row = table_->rowCount();
                 table_->insertRow(row);
-                table_->setItem(row, 0, new QTableWidgetItem{fromStd(d.address)});
-                table_->setItem(row, 1, new QTableWidgetItem{QString::number(d.port)});
+                table_->setItem(row, Name, new QTableWidgetItem{fromStd(d.name)});
+                auto* protocol = form::combo({QStringLiteral("Art-Net"), QStringLiteral("sACN"), QStringLiteral("DDP")},
+                                             static_cast<int>(d.protocol));
+                connect(protocol, qOverload<int>(&QComboBox::currentIndexChanged), this, [this](int) {
+                    if (!populating_) {
+                        applyDestinations();
+                    }
+                });
+                table_->setCellWidget(row, Protocol, protocol);
+                table_->setItem(row, Address, new QTableWidgetItem{fromStd(d.address)});
+                table_->setItem(row, Port, new QTableWidgetItem{d.port == 0 ? QString{} : QString::number(d.port)});
             }
         }
         QStringList numbers;  // Zielnummer wie im Patch: ab 0
@@ -99,6 +115,23 @@ void OutputForm::rebuild() {
         sourceName_->setText(fromStd(project->sourceName));
     }
     populating_ = false;
+    updateSacnVisibility();
+}
+
+void OutputForm::updateSacnVisibility() {
+    // Priorität und Quellname gelten nur für sACN: ohne sACN-Controller weg damit.
+    bool any = false;
+    if (const project::Project* project = player_.project()) {
+        for (const output::Destination& d : project->destinations) {
+            any = any || d.protocol == output::Protocol::Sacn;
+        }
+    }
+    for (QWidget* field : {static_cast<QWidget*>(priority_), static_cast<QWidget*>(sourceName_)}) {
+        field->setVisible(any);
+        if (QWidget* label = sacnLayout_->labelForField(field)) {
+            label->setVisible(any);
+        }
+    }
 }
 
 void OutputForm::report(const Result<void>& result) {
@@ -114,12 +147,19 @@ void OutputForm::applyDestinations() {
     std::vector<output::Destination> destinations;
     for (int row = 0; row < table_->rowCount(); ++row) {
         output::Destination d;
-        if (const QTableWidgetItem* address = table_->item(row, 0)) {
+        if (const QTableWidgetItem* name = table_->item(row, Name)) {
+            d.name = name->text().trimmed().toUtf8().toStdString();
+        }
+        if (const auto* protocol = qobject_cast<QComboBox*>(table_->cellWidget(row, Protocol))) {
+            d.protocol = static_cast<output::Protocol>(protocol->currentIndex());
+        }
+        if (const QTableWidgetItem* address = table_->item(row, Address)) {
             d.address = address->text().trimmed().toUtf8().toStdString();
         }
         bool ok = true;
-        const QTableWidgetItem* port = table_->item(row, 1);
-        const int value = port != nullptr ? port->text().trimmed().toInt(&ok) : 0;
+        const QTableWidgetItem* port = table_->item(row, Port);
+        const QString portText = port != nullptr ? port->text().trimmed() : QString{};
+        const int value = portText.isEmpty() ? 0 : portText.toInt(&ok);
         if (!ok || value < 0 || value > 65535) {
             report(Error{ErrorCode::InvalidArgument,
                          "Zeile " + std::to_string(row + 1) + ": Der Port muss eine Zahl von 0 bis 65535 sein"});
@@ -128,7 +168,37 @@ void OutputForm::applyDestinations() {
         d.port = static_cast<std::uint16_t>(value);
         destinations.push_back(std::move(d));
     }
-    report(player_.setDestinations(std::move(destinations)));
+    // Merken, was ein Protokollwechsel mit den Patches macht, um es in der Statuszeile zu sagen.
+    QStringList notes;
+    if (const project::Project* project = player_.project()) {
+        for (std::size_t i = 0; i < destinations.size() && i < project->destinations.size(); ++i) {
+            const output::Protocol from = project->destinations[i].protocol;
+            const output::Protocol to = destinations[i].protocol;
+            if (from == to) {
+                continue;
+            }
+            int patched = 0;
+            for (const output::FixturePatch& patch : project->patches) {
+                patched += patch.destination == i ? 1 : 0;
+            }
+            const bool artnetSacn = (from == output::Protocol::ArtNet && to == output::Protocol::Sacn) ||
+                                    (from == output::Protocol::Sacn && to == output::Protocol::ArtNet);
+            if (patched > 0 && artnetSacn) {
+                notes << tr("Controller %1: Universe von %2 Patch(es) um %3 verschoben (Art-Net zählt ab 0, sACN ab 1).")
+                             .arg(i)
+                             .arg(patched)
+                             .arg(to == output::Protocol::Sacn ? QStringLiteral("+1") : QStringLiteral("−1"));
+            }
+        }
+    }
+    const Result<void> result = player_.setDestinations(std::move(destinations));
+    report(result);
+    if (result.ok()) {
+        updateSacnVisibility();
+        if (!notes.isEmpty()) {
+            Q_EMIT notice(notes.join(QLatin1Char(' ')));
+        }
+    }
 }
 
 void OutputForm::addDestination() {
@@ -186,13 +256,33 @@ QString OutputForm::exercise() {
         return QStringLiteral("Ausgabe: Ziel wurde nicht angelegt");
     }
     // Adresse in der Tabelle ändern, wie es ein Mensch täte
-    table_->item(static_cast<int>(destinations), 0)->setText(QStringLiteral("192.168.0.101"));
+    table_->item(static_cast<int>(destinations), Address)->setText(QStringLiteral("192.168.0.101"));
     if (player_.project()->destinations.back().address != "192.168.0.101") {
         return QStringLiteral("Ausgabe: Adresse wurde nicht übernommen");
     }
+    // Protokoll des neuen Controllers wechseln: sACN zeigt Priorität und Quellname, Art-Net blendet sie wieder aus
+    {
+        auto* protocol = qobject_cast<QComboBox*>(table_->cellWidget(static_cast<int>(destinations), Protocol));
+        if (protocol == nullptr) {
+            return QStringLiteral("Ausgabe: keine Protokoll-Auswahl in der Tabelle");
+        }
+        protocol->setCurrentIndex(static_cast<int>(output::Protocol::Sacn));
+        if (player_.project()->destinations.back().protocol != output::Protocol::Sacn) {
+            return QStringLiteral("Ausgabe: Protokoll wurde nicht übernommen");
+        }
+        if (priority_->isHidden()) {
+            return QStringLiteral("Ausgabe: sACN-Priorität bleibt trotz sACN-Controller verborgen");
+        }
+        qobject_cast<QComboBox*>(table_->cellWidget(static_cast<int>(destinations), Protocol))
+            ->setCurrentIndex(static_cast<int>(output::Protocol::ArtNet));
+        table_->item(static_cast<int>(destinations), Name)->setText(QStringLiteral("Test"));
+        if (player_.project()->destinations.back().name != "Test") {
+            return QStringLiteral("Ausgabe: Name wurde nicht übernommen");
+        }
+    }
     // Ein mittleres Ziel entfernen: das davor angelegte Ziel (192.168.0.100) soll bleiben, das gewählte verschwinden
     addDestination();
-    table_->setCurrentCell(static_cast<int>(destinations), 0);
+    table_->setCurrentCell(static_cast<int>(destinations), Address);
     removeSelectedDestination();
     if (player_.project()->destinations.size() != destinations + 1 ||
         player_.project()->destinations.back().address != "192.168.0.100") {

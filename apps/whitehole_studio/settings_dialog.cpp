@@ -1,5 +1,6 @@
 // settings_dialog.cpp: Umsetzung zu settings_dialog.hpp. Das Fenster "Einstellungen" mit den Seiten Netzwerk, DMX-Eingang, Audio und Node-Standardwerte.
 #include "settings_dialog.hpp"
+#include "stall_watchdog.hpp"
 
 #include <QCheckBox>
 #include <QComboBox>
@@ -198,7 +199,11 @@ QWidget* SettingsDialog::buildAudioPage(const AppSettings& current) {
 }
 
 void SettingsDialog::chooseWav() {
-    const QString path = QFileDialog::getOpenFileName(this, tr("WAV-Datei wählen"), QString{}, tr("WAV-Dateien (*.wav)"));
+    QString path;
+    {
+        const StallPause pause;  // siehe stall_watchdog.hpp
+        path = QFileDialog::getOpenFileName(this, tr("WAV-Datei wählen"), QString{}, tr("WAV-Dateien (*.wav)"));
+    }
     if (!path.isEmpty()) {
         audioPath_->setText(path);
         audioFile_->setChecked(true);

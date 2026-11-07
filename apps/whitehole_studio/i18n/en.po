@@ -110,11 +110,11 @@ msgstr "%1 (%2 LEDs)"
 msgid "%1 (%2)"
 msgstr "%1 (%2)"
 
-#: settings_dialog.cpp:156
+#: settings_dialog.cpp:157
 msgid "%1 (Standard)"
 msgstr "%1 (default)"
 
-#: settings_dialog.cpp:45 settings_dialog.cpp:160
+#: settings_dialog.cpp:46 settings_dialog.cpp:161
 msgid "%1 (nicht gefunden)"
 msgstr "%1 (not found)"
 
@@ -150,7 +150,7 @@ msgstr "&View"
 msgid "&Ausgabe senden"
 msgstr "Send &output"
 
-#: main_window_stage.cpp:48
+#: main_window_stage.cpp:50
 msgid "&Ausgabe …"
 msgstr "&Output …"
 
@@ -186,7 +186,7 @@ msgstr "&Settings …"
 msgid "&Fehler melden oder Idee vorschlagen …"
 msgstr "&Report a bug or suggest an idea …"
 
-#: main_window_stage.cpp:57
+#: main_window_stage.cpp:59
 msgid "&Fixtures …"
 msgstr "&Fixtures …"
 
@@ -194,7 +194,7 @@ msgstr "&Fixtures …"
 msgid "&Hilfe"
 msgstr "&Help"
 
-#: main_window_stage.cpp:44
+#: main_window_stage.cpp:46
 msgid "&Layout …"
 msgstr "&Layout …"
 
@@ -250,7 +250,7 @@ msgstr "&Stop"
 msgid "&Tastenkürzel …"
 msgstr "&Keyboard shortcuts …"
 
-#: main_window_stage.cpp:53
+#: main_window_stage.cpp:55
 msgid "&Testmodus …"
 msgstr "&Test mode …"
 
@@ -282,7 +282,7 @@ msgstr "&About WhiteHoleFX"
 msgid "(Schwarz)"
 msgstr "(Black)"
 
-#: fixture_form.cpp:79 patch_table.cpp:87
+#: fixture_form.cpp:79 patch_table.cpp:103
 msgid "(eigene Form)"
 msgstr "(own shape)"
 
@@ -438,9 +438,9 @@ msgstr "Crash last time"
 msgid "Addiert zwei Bilder: Das Licht summiert sich wie bei zwei Scheinwerfern."
 msgstr "Adds two images: the light sums up like two spotlights."
 
-#: output_form.cpp:25
-msgid "Adresse (leer = Multicast)"
-msgstr "Address (empty = multicast)"
+#: output_form.cpp:27
+msgid "Adresse (leer = Multicast, nur sACN)"
+msgstr "Address (empty = multicast, sACN only)"
 
 #: look_panel.cpp:38
 msgid "Aktuellen Effekt als Look speichern …"
@@ -510,19 +510,23 @@ msgstr "Count x y z"
 msgid "Art-Net"
 msgstr "Art-Net"
 
-#: settings_dialog.cpp:96
+#: settings_dialog.cpp:97
 msgid "Art-Net empfangen"
 msgstr "Receive Art-Net"
 
-#: settings_dialog.cpp:81
+#: patch_table.cpp:52
+msgid "Art-Net zählt Universen ab 0 (bis 32767), sACN ab 1 (bis 63999). Bei DDP gibt es keine Universen."
+msgstr "Art-Net counts universes from 0 (up to 32767), sACN from 1 (up to 63999). DDP has no universes."
+
+#: settings_dialog.cpp:82
 msgid "Art-Net, sACN und DDP gehen über diese Karte hinaus. Bei „Automatisch“ entscheidet die Routingtabelle des Systems, bei mehreren Karten oft die falsche. Eine Karte auswählen, wenn die Lichtanlage an einem zweiten Netzwerkanschluss hängt."
 msgstr "Art-Net, sACN and DDP leave through this card. With “Automatic” the system's routing table decides, which is often wrong with several cards. Pick a card if the lighting rig is on a second network port."
 
-#: settings_dialog.cpp:108
+#: settings_dialog.cpp:109
 msgid "Art-Net-Port (UDP):"
 msgstr "Art-Net port (UDP):"
 
-#: main_window_actions.cpp:160 settings_dialog.cpp:61
+#: main_window_actions.cpp:160 settings_dialog.cpp:62
 msgid "Audio"
 msgstr "Audio"
 
@@ -554,11 +558,11 @@ msgstr "Reset to the library value"
 msgid "Auf die Fläche ziehen: Node hinzufügen.\nNode hierher ziehen: entfernen."
 msgstr "Drag onto the canvas: add a node.\nDrag a node here: remove it."
 
-#: settings_dialog.cpp:191
+#: settings_dialog.cpp:192
 msgid "Aufnahmegeräte lassen sich nicht auflisten: %1"
 msgstr "Cannot list capture devices: %1"
 
-#: settings_dialog.cpp:142 test_panel.cpp:38
+#: settings_dialog.cpp:143 test_panel.cpp:38
 msgid "Aus"
 msgstr "Off"
 
@@ -610,7 +614,7 @@ msgstr "Trigger"
 msgid "Auswahl hervorheben"
 msgstr "Highlight selection"
 
-#: settings_dialog.cpp:39
+#: settings_dialog.cpp:40
 msgid "Automatisch (das System wählt)"
 msgstr "Automatic (the system chooses)"
 
@@ -634,7 +638,7 @@ msgstr "Bar along y"
 msgid "Balken entlang z"
 msgstr "Bar along z"
 
-#: fixture_form.cpp:90 patch_table.cpp:35
+#: fixture_form.cpp:90 patch_table.cpp:46
 msgid "Bauform"
 msgstr "Fixture type"
 
@@ -678,7 +682,7 @@ msgstr "Ready: %1 - press GO"
 msgid "Betrieb"
 msgstr "Operation"
 
-#: main_window_stage.cpp:58
+#: main_window_stage.cpp:60
 msgid "Bibliothek der Bauformen: Matrix, Kreis, Strip, Säule mit Vorschau und Test"
 msgstr "Library of fixture types: matrix, circle, strip, column with preview and test"
 
@@ -690,7 +694,7 @@ msgstr "Image as a texture (e.g. from a file)"
 msgid "Bild auf der Bühne: eine Farbe für jede Position"
 msgstr "Image on the stage: a colour for every position"
 
-#: output_form.cpp:59
+#: output_form.cpp:66
 msgid "Bildrate (fps)"
 msgstr "Frame rate (fps)"
 
@@ -722,6 +726,18 @@ msgstr "Width"
 msgid "Bänder aus Licht laufen die gewählte Achse entlang. „Frequency“ ist die Zahl der Wellen über die Länge, „Sharpness“ macht aus der weichen Welle schmale Pulse. Für Strips."
 msgstr "Bands of light run along the chosen axis. “Frequency” is the number of waves along the length, “Sharpness” turns the soft wave into narrow pulses. For strips."
 
+#: output_form.cpp:23 patch_table.cpp:46
+msgid "Controller"
+msgstr "Controller"
+
+#: output_form.cpp:187
+msgid "Controller %1: Universe von %2 Patch(es) um %3 verschoben (Art-Net zählt ab 0, sACN ab 1)."
+msgstr "Controller %1: universe of %2 patch(es) shifted by %3 (Art-Net counts from 0, sACN from 1)."
+
+#: output_form.cpp:43
+msgid "Controller +"
+msgstr "Controller +"
+
 #: layout_panel_add.cpp:40
 msgid "Cube"
 msgstr "Cube"
@@ -750,7 +766,7 @@ msgstr "Start the cue list: switches to live mode and shows cue 1"
 msgid "Cyan"
 msgstr "Cyan"
 
-#: patch_table.cpp:36
+#: patch_table.cpp:47
 msgid "DDP-Offset"
 msgstr "DDP offset"
 
@@ -778,7 +794,7 @@ msgstr "DMX trigger: threshold (1 to 255)"
 msgid "DMX-Auslöser: Universe"
 msgstr "DMX trigger: universe"
 
-#: settings_dialog.cpp:60
+#: settings_dialog.cpp:61
 msgid "DMX-Eingang"
 msgstr "DMX input"
 
@@ -797,6 +813,10 @@ msgstr "The cable starts on this side instead of the opposite one"
 #: main_window.cpp:207
 msgid "Das Projekt wurde geändert. Änderungen verwerfen?"
 msgstr "The project has been modified. Discard changes?"
+
+#: output_form.cpp:29
+msgid "Das Protokoll gehört zum Controller. Standardports: Art-Net 6454, sACN 5568, DDP 4048."
+msgstr "The protocol belongs to the controller. Default ports: Art-Net 6454, sACN 5568, DDP 4048."
 
 #: crash_notice.cpp:33
 msgid "Das Studio ist beim letzten Mal abgestürzt."
@@ -834,11 +854,15 @@ msgstr "Put the current effect into the list as a look (Ctrl+L)"
 msgid "Der Ausgang: Was hier ankommt, wird auf die LEDs gesendet. Mit „Mode“ in einen Bereich skalieren oder als Fenster ausschneiden, plus Helligkeit."
 msgstr "The output: whatever arrives here is sent to the LEDs. \"Mode\" scales into an area or cuts a window; plus brightness."
 
+#: patch_table.cpp:49
+msgid "Der Controller bestimmt das Protokoll. Wechselst du auf einen Controller mit anderem Protokoll, wird die Universe-Nummer zwischen Art-Net und sACN um 1 verschoben."
+msgstr "The controller decides the protocol. If you switch to a controller with a different protocol, the universe number is shifted by 1 between Art-Net and sACN."
+
 #: cue_dialog.cpp:68
 msgid "Der Cue löst aus, wenn der Kanalwert auf diese Zahl oder darüber steigt"
 msgstr "The cue fires when the channel value rises to this number or above"
 
-#: settings_dialog.cpp:128
+#: settings_dialog.cpp:129
 msgid "Der Kanalwert 0 bis 255 setzt den Master auf 0 bis 100 %. Solange Pakete kommen, folgt der Master-Regler dem Pult; bleibt das Signal weg, hält der Master seinen Wert. Der Empfang oben muss für das gewählte Protokoll eingeschaltet sein."
 msgstr "The channel value 0 to 255 sets the master to 0 to 100 %. While packets arrive, the master slider follows the console; if the signal stops, the master keeps its value. Reception above must be enabled for the chosen protocol."
 
@@ -858,7 +882,7 @@ msgstr "The cue list is empty. Create cues first (Cue list dock)."
 msgid "Die Cuelist läuft und schaltet die Looks selbst. Erst in der Cuelist auf Stopp drücken."
 msgstr "The cue list is running and switches the looks itself. Press Stop in the cue list first."
 
-#: settings_dialog.cpp:132
+#: settings_dialog.cpp:133
 msgid "Die DMX-Nodes im Projekt lesen ihre Werte aus dem Empfang. Standard-Ports sind 6454 (Art-Net) und 5568 (sACN); nur ändern, wenn ein anderes Programm sie belegt. Nach der Installation ist der Empfang aus; unter Windows fragt die Firewall beim ersten Einschalten nach."
 msgstr "The DMX nodes in the project read their values from the received data. Default ports are 6454 (Art-Net) and 5568 (sACN); only change them if another program uses them. Reception is off after installation; on Windows the firewall asks the first time you switch it on."
 
@@ -874,7 +898,7 @@ msgstr "The shape comes from the fixture type and is changed in the Fixtures tab
 msgid "Die Helligkeit der Maske bestimmt, wie viel vom Inhalt zu sehen ist. „Shape“ macht daraus eine harte Form, „Intensity“ behält Verläufe."
 msgstr "The brightness of the mask decides how much of the content is visible. \"Shape\" makes a hard-edged form, \"Intensity\" keeps fades."
 
-#: settings_dialog.cpp:195
+#: settings_dialog.cpp:196
 msgid "Die Quelle speist die Audio-Nodes (Pegel, Frequenzband, Beat, Spektrum)."
 msgstr "The source feeds the audio nodes (level, frequency band, beat, spectrum)."
 
@@ -894,7 +918,7 @@ msgstr "The new language applies after WhiteHoleFX restarts. Restart now?\n(Unsa
 msgid "Die vergangene Zeit in Sekunden, mit Tempo-Faktor und Versatz. Zum Antreiben von Bewegungen."
 msgstr "The elapsed time in seconds, with speed factor and offset. For driving motion."
 
-#: settings_dialog.cpp:89
+#: settings_dialog.cpp:90
 msgid "Die Änderung wirkt sofort nach „OK“."
 msgstr "The change takes effect immediately after “OK”."
 
@@ -1042,7 +1066,7 @@ msgstr "Connect input to new node"
 msgid "Einrasten"
 msgstr "Snap"
 
-#: main_window_settings.cpp:46 output_form.cpp:53 settings_dialog.cpp:57
+#: main_window_settings.cpp:46 output_form.cpp:59 settings_dialog.cpp:58
 msgid "Einstellungen"
 msgstr "Settings"
 
@@ -1058,9 +1082,9 @@ msgstr "End x y z"
 msgid "Entfernen"
 msgstr "Remove"
 
-#: output_form.cpp:39
-msgid "Entfernt das gewählte Ziel (ohne Auswahl das letzte). Benutzte Ziele bleiben stehen."
-msgstr "Removes the selected destination (the last one if none is selected). Destinations in use stay."
+#: output_form.cpp:45
+msgid "Entfernt den gewählten Controller (ohne Auswahl den letzten). Benutzte Controller bleiben stehen."
+msgstr "Removes the selected controller (the last one if none is selected). Controllers in use stay."
 
 #: node_info_texts.cpp:23
 msgid "Erkennt den Takt der Musik und liefert Beat-Impuls, Pulse (klingt ab), Phase und Tempo (BPM). Das Tempo lässt sich auch fest vorgeben."
@@ -1078,7 +1102,7 @@ msgstr "First axis = runs fastest along the cable"
 msgid "Erste LED bei (Grad)"
 msgstr "First LED at (degrees)"
 
-#: add_fixture_dialog.cpp:177 patch_table.cpp:36
+#: add_fixture_dialog.cpp:177 patch_table.cpp:47
 msgid "Erster Kanal"
 msgstr "First channel"
 
@@ -1122,7 +1146,7 @@ msgstr "Colour sequence R G B W"
 msgid "Farbige Punkte vor den Nodes in der Palette: was der Node liefert"
 msgstr "Colored dots in front of the nodes in the palette: what the node delivers"
 
-#: add_fixture_dialog.cpp:179 patch_table.cpp:36 test_panel.cpp:39
+#: add_fixture_dialog.cpp:179 patch_table.cpp:48 test_panel.cpp:39
 msgid "Farbreihenfolge"
 msgstr "Color order"
 
@@ -1146,15 +1170,15 @@ msgstr "Window layout reset: it applies from the next start."
 msgid "Field"
 msgstr "Field"
 
-#: patch_table.cpp:35
+#: patch_table.cpp:46
 msgid "Fixture"
 msgstr "Fixture"
 
-#: main_window_stage.cpp:40
+#: main_window_stage.cpp:42
 msgid "Fixture &hinzufügen …"
 msgstr "&Add fixture …"
 
-#: patch_table.cpp:100
+#: patch_table.cpp:116
 msgid "Fixture an die Ausgabe schicken"
 msgstr "Send fixture to the output"
 
@@ -1166,7 +1190,7 @@ msgstr "Add fixture"
 msgid "Fixtures"
 msgstr "Fixtures"
 
-#: main_window_stage.cpp:46
+#: main_window_stage.cpp:48
 msgid "Fixtures auf der Bühne verteilen und drehen (eigenes Fenster)"
 msgstr "Place and rotate fixtures on the stage (own window)"
 
@@ -1214,7 +1238,7 @@ msgstr "GO  (Space)"
 msgid "GO (von Hand)"
 msgstr "GO (manual)"
 
-#: patch_table.cpp:36
+#: patch_table.cpp:48
 msgid "Gamma"
 msgstr "Gamma"
 
@@ -1222,7 +1246,7 @@ msgstr "Gamma"
 msgid "Ganzzahl"
 msgstr "Integer"
 
-#: main_window_file.cpp:83
+#: main_window_file.cpp:84
 msgid "Geladen: %1"
 msgstr "Loaded: %1"
 
@@ -1230,7 +1254,7 @@ msgstr "Loaded: %1"
 msgid "Gelb"
 msgstr "Yellow"
 
-#: settings_dialog.cpp:144
+#: settings_dialog.cpp:145
 msgid "Gerät:"
 msgstr "Device:"
 
@@ -1242,7 +1266,7 @@ msgstr "Overall brightness (affects preview and output, not saved in the project
 msgid "Gesamtlautstärke des Audio-Eingangs als Pegel und Spitze, linear oder in dB, auf Wunsch mit automatischer Verstärkung. Einzelne Schläge (Kick, Snare, Hi-Hat) erkennt „Kick / Snare / Hat“."
 msgstr "Overall loudness of the audio input as level and peak, linear or in dB, optionally with automatic gain. Single hits (kick, snare, hi-hat) are detected by “Kick / Snare / Hat”."
 
-#: main_window_file.cpp:144 main_window_file.cpp:165
+#: main_window_file.cpp:149 main_window_file.cpp:174
 msgid "Gespeichert: %1"
 msgstr "Saved: %1"
 
@@ -1258,13 +1282,13 @@ msgstr "Stack the selected fixtures vertically (the lowest one stays)"
 msgid "Gewählte Fixtures waagrecht aneinanderreihen (das linke bleibt stehen)"
 msgstr "Line up the selected fixtures horizontally (the leftmost one stays)"
 
+#: output_form.cpp:44
+msgid "Gewählten Controller −"
+msgstr "Remove selected controller −"
+
 #: layout_panel_library.cpp:32
 msgid "Gewähltes Fixture als Vorlage speichern …"
 msgstr "Save selected fixture as template …"
-
-#: output_form.cpp:38
-msgid "Gewähltes Ziel −"
-msgstr "Selected destination −"
 
 #: node_info_texts.cpp:167
 msgid "Glättet einen Wert: Er folgt dem Eingang mit einer Zeitkonstante, statt zu springen."
@@ -1294,7 +1318,7 @@ msgstr "Size"
 msgid "Grün"
 msgstr "Green"
 
-#: patch_table.cpp:37
+#: patch_table.cpp:48
 msgid "Helligkeit"
 msgstr "Brightness"
 
@@ -1346,11 +1370,11 @@ msgstr "Show or hide the cable path with arrows, start LED and LED numbers"
 msgid "Kaleidoskop: Spiegelt einen Ausschnitt um einen Mittelpunkt zu einem Muster mit mehreren Segmenten."
 msgstr "Kaleidoscope: mirrors a slice around a center into a pattern with several segments."
 
-#: settings_dialog.cpp:85
+#: settings_dialog.cpp:86
 msgid "Karte zum Empfangen:"
 msgstr "Card for receiving:"
 
-#: settings_dialog.cpp:80
+#: settings_dialog.cpp:81
 msgid "Karte zum Senden:"
 msgstr "Card for sending:"
 
@@ -1374,7 +1398,7 @@ msgstr "No project loaded."
 msgid "Kein Ziel (freies Rechteck)"
 msgstr "No target (free rectangle)"
 
-#: settings_dialog.cpp:193
+#: settings_dialog.cpp:194
 msgid "Keine Aufnahmegeräte gefunden. Ein Audio-Interface anschließen und das Fenster neu öffnen."
 msgstr "No capture devices found. Connect an audio interface and reopen the window."
 
@@ -1398,7 +1422,7 @@ msgstr "Circle"
 msgid "Kreis 24"
 msgstr "Circle 24"
 
-#: add_fixture_dialog.cpp:122 fixture_form.cpp:149 patch_table.cpp:35
+#: add_fixture_dialog.cpp:122 fixture_form.cpp:149 patch_table.cpp:46
 msgid "LEDs"
 msgstr "LEDs"
 
@@ -1434,7 +1458,7 @@ msgstr "Loudness per frequency band"
 msgid "Layout"
 msgstr "Layout"
 
-#: output_form.cpp:60
+#: output_form.cpp:67
 msgid "Layout auf Würfel abbilden"
 msgstr "Map layout onto cube"
 
@@ -1566,19 +1590,19 @@ msgstr "Magenta"
 msgid "Manuell"
 msgstr "Manual"
 
-#: settings_dialog.cpp:112
+#: settings_dialog.cpp:113
 msgid "Master-Helligkeit über einen DMX-Kanal steuern"
 msgstr "Control master brightness with a DMX channel"
 
-#: settings_dialog.cpp:127
+#: settings_dialog.cpp:128
 msgid "Master: Kanal (1 bis 512):"
 msgstr "Master: channel (1 to 512):"
 
-#: settings_dialog.cpp:125
+#: settings_dialog.cpp:126
 msgid "Master: Protokoll:"
 msgstr "Master: protocol:"
 
-#: settings_dialog.cpp:126
+#: settings_dialog.cpp:127
 msgid "Master: Universe:"
 msgstr "Master: universe:"
 
@@ -1590,7 +1614,7 @@ msgstr "Matrix"
 msgid "Matrix (Fläche)"
 msgstr "Matrix (surface)"
 
-#: main_window_stage.cpp:41
+#: main_window_stage.cpp:43
 msgid "Matrix, Strip oder 3D-Gitter mit Größe x y z, Lage, Verkabelung und Patch anlegen"
 msgstr "Create a matrix, strip or 3D grid with size x y z, position, wiring and patch"
 
@@ -1617,6 +1641,10 @@ msgstr "Centre"
 #: add_fixture_dialog.cpp:172
 msgid "Modus"
 msgstr "Mode"
+
+#: patch_table.cpp:124
+msgid "Multicast"
+msgstr "Multicast"
 
 #: add_fixture_dialog.cpp:55 cue_dialog.cpp:34 cue_panel.cpp:53
 msgid "Name"
@@ -1646,7 +1674,7 @@ msgstr "Name of the preset:"
 msgid "Nebeneinander ↔"
 msgstr "Side by side ↔"
 
-#: settings_dialog.cpp:59
+#: settings_dialog.cpp:60
 msgid "Netzwerk"
 msgstr "Network"
 
@@ -1674,7 +1702,7 @@ msgstr "New nodes start with these values instead of the library's. Existing nod
 msgid "Neuer Name:"
 msgstr "New name:"
 
-#: main_window_file.cpp:99
+#: main_window_file.cpp:100
 msgid "Neues Projekt"
 msgstr "New project"
 
@@ -1686,7 +1714,7 @@ msgstr "New project (Ctrl+N)"
 msgid "Neues Projekt (Strg+N), Projekt öffnen (Strg+O) oder eine .whfx-Datei hierher ziehen.\n\n%1"
 msgstr "New project (Ctrl+N), open a project (Ctrl+O) or drag a .whfx file here.\n\n%1"
 
-#: main_window_file.cpp:103
+#: main_window_file.cpp:104
 msgid "Neues Projekt. Mit Strg+S speichern."
 msgstr "New project. Save with Ctrl+S."
 
@@ -1722,7 +1750,7 @@ msgstr "Search node …\tCtrl+Space"
 msgid "Node suchen … (Pfeiltasten, Enter)"
 msgstr "Search node … (arrow keys, Enter)"
 
-#: settings_dialog.cpp:63
+#: settings_dialog.cpp:64
 msgid "Node-Standardwerte"
 msgstr "Node defaults"
 
@@ -1826,9 +1854,9 @@ msgstr "Perspective"
 msgid "Plasma: Weich ineinanderfließende, wabernde Farbflächen. Skalierung, Tempo und Tiefe einstellbar."
 msgstr "Plasma: softly flowing, wobbling color fields. Scale, speed and depth are adjustable."
 
-#: output_form.cpp:25
-msgid "Port (0 = Standard)"
-msgstr "Port (0 = default)"
+#: output_form.cpp:27
+msgid "Port (leer = Standard)"
+msgstr "Port (empty = default)"
 
 #: port_legend.cpp:60
 msgid "Porttypen: Farbe und Form"
@@ -1866,19 +1894,19 @@ msgstr "Replace preset"
 msgid "Preset löschen"
 msgstr "Delete preset"
 
-#: main_window_file.cpp:75
+#: main_window_file.cpp:76
 msgid "Projekt laden"
 msgstr "Load project"
 
-#: main_window_file.cpp:150
+#: main_window_file.cpp:158
 msgid "Projekt speichern unter"
 msgstr "Save project as"
 
-#: main_window_file.cpp:114
+#: main_window_file.cpp:118
 msgid "Projekt öffnen"
 msgstr "Open project"
 
-#: add_fixture_dialog.cpp:174 patch_table.cpp:35
+#: add_fixture_dialog.cpp:174 output_form.cpp:27 patch_table.cpp:46
 msgid "Protokoll"
 msgstr "Protocol"
 
@@ -1890,7 +1918,7 @@ msgstr "Points"
 msgid "Punktwolke"
 msgstr "Point cloud"
 
-#: output_form.cpp:62
+#: output_form.cpp:69
 msgid "Quellname (sACN)"
 msgstr "Source name (sACN)"
 
@@ -1990,11 +2018,11 @@ msgstr "Oscillator (LFO): sine, triangle, saw or square with frequency, phase an
 msgid "Seite"
 msgstr "Side"
 
-#: output_form.cpp:56
+#: output_form.cpp:62
 msgid "Seitenverhältnis halten (KeepAspect)"
 msgstr "Keep aspect ratio (KeepAspect)"
 
-#: patch_table.cpp:35
+#: patch_table.cpp:46
 msgid "Senden"
 msgstr "Send"
 
@@ -2042,7 +2070,7 @@ msgstr "Columns"
 msgid "Spalten (senkrecht)"
 msgstr "Columns (vertical)"
 
-#: patch_table.cpp:41
+#: patch_table.cpp:57
 msgid "Spalten lassen sich an der Kopfzeile verschieben"
 msgstr "Columns can be moved by dragging the header"
 
@@ -2050,7 +2078,7 @@ msgstr "Columns can be moved by dragging the header"
 msgid "Spannt einen Wert von 0 bis 1 über den ganzen Bereich des Parameters"
 msgstr "Stretches a value from 0 to 1 over the parameter's whole range"
 
-#: main_window_file.cpp:140 main_window_file.cpp:160
+#: main_window_file.cpp:145 main_window_file.cpp:169
 msgid "Speichern"
 msgstr "Save"
 
@@ -2074,7 +2102,7 @@ msgstr "Language"
 msgid "Stage Config"
 msgstr "Stage Config"
 
-#: settings_dialog.cpp:143
+#: settings_dialog.cpp:144
 msgid "Standardgerät des Systems"
 msgstr "System default device"
 
@@ -2170,7 +2198,7 @@ msgstr "Test pattern"
 msgid "Testbild für den Aufbau: x wird rot, y grün, z blau. So sieht man, welche Seite wo liegt und ob Verkabelung und Startecke stimmen."
 msgstr "Test image for the setup: x becomes red, y green, z blue, so you can see which side is where and whether cabling and start corner are right."
 
-#: main_window_stage.cpp:54
+#: main_window_stage.cpp:56
 msgid "Testbilder auf die LEDs schicken, um Verkabelung und Patch zu prüfen"
 msgstr "Send test patterns to the LEDs to check wiring and patch"
 
@@ -2202,13 +2230,17 @@ msgstr "Rename …"
 msgid "Ungespeicherte Änderungen"
 msgstr "Unsaved changes"
 
-#: add_fixture_dialog.cpp:176 patch_table.cpp:36
+#: add_fixture_dialog.cpp:176
 msgid "Universe"
 msgstr "Universe"
 
 #: add_fixture_dialog.cpp:284
 msgid "Universe %1 ab Kanal 1"
 msgstr "Universe %1 from channel 1"
+
+#: patch_table.cpp:47
+msgid "Universe (Art-Net ab 0, sACN ab 1)"
+msgstr "Universe (Art-Net from 0, sACN from 1)"
 
 #: layout_panel_groups.cpp:189
 msgid "Unten"
@@ -2266,15 +2298,15 @@ msgstr "Templates"
 msgid "Vorschau"
 msgstr "Preview"
 
-#: settings_dialog.cpp:145
+#: settings_dialog.cpp:146
 msgid "WAV-Datei in Schleife:"
 msgstr "WAV file in a loop:"
 
-#: settings_dialog.cpp:201
+#: settings_dialog.cpp:205
 msgid "WAV-Datei wählen"
 msgstr "Choose WAV file"
 
-#: settings_dialog.cpp:201
+#: settings_dialog.cpp:205
 msgid "WAV-Dateien (*.wav)"
 msgstr "WAV files (*.wav)"
 
@@ -2318,11 +2350,11 @@ msgstr "WhiteHoleFX"
 msgid "WhiteHoleFX – %1%2"
 msgstr "WhiteHoleFX – %1%2"
 
-#: main_window_file.cpp:151
+#: main_window_file.cpp:159
 msgid "WhiteHoleFX-Projekte (*.whfx)"
 msgstr "WhiteHoleFX projects (*.whfx)"
 
-#: main_window_file.cpp:115
+#: main_window_file.cpp:119
 msgid "WhiteHoleFX-Projekte (*.whfx);;Alle Dateien (*)"
 msgstr "WhiteHoleFX projects (*.whfx);;All files (*)"
 
@@ -2362,7 +2394,7 @@ msgstr "Select fixtures in the list first."
 msgid "Wähle zuerst ein Fixture in der Liste."
 msgstr "Select a fixture in the list first."
 
-#: settings_dialog.cpp:148
+#: settings_dialog.cpp:149
 msgid "Wählen …"
 msgstr "Choose …"
 
@@ -2414,11 +2446,7 @@ msgstr "Time: %1 after the previous one"
 msgid "Ziehen dreht, Rad zoomt. Die erste LED am Kabel ist weiß; x rot, y grün, z blau."
 msgstr "Dragging rotates, the wheel zooms. The first LED on the cable is white; x red, y green, z blue."
 
-#: output_form.cpp:37
-msgid "Ziel +"
-msgstr "Destination +"
-
-#: add_fixture_dialog.cpp:175 patch_table.cpp:35
+#: add_fixture_dialog.cpp:175
 msgid "Ziel Nr."
 msgstr "Destination no."
 
@@ -2426,11 +2454,7 @@ msgstr "Destination no."
 msgid "Ziel zuweisen"
 msgstr "Assign target"
 
-#: output_form.cpp:22
-msgid "Ziele (Controller)"
-msgstr "Destinations (controllers)"
-
-#: main_window_stage.cpp:49
+#: main_window_stage.cpp:51
 msgid "Ziele (Controller) und Patch: welches Fixture auf welches Universe sendet"
 msgstr "Destinations (controllers) and patch: which fixture sends to which universe"
 
@@ -2530,19 +2554,19 @@ msgstr "right (x max)"
 msgid "sACN"
 msgstr "sACN"
 
-#: settings_dialog.cpp:97
+#: settings_dialog.cpp:98
 msgid "sACN (E1.31) empfangen"
 msgstr "Receive sACN (E1.31)"
 
-#: settings_dialog.cpp:110
+#: settings_dialog.cpp:111
 msgid "sACN-Port (UDP):"
 msgstr "sACN port (UDP):"
 
-#: output_form.cpp:61
+#: output_form.cpp:68
 msgid "sACN-Priorität"
 msgstr "sACN priority"
 
-#: output_form.cpp:56
+#: output_form.cpp:62
 msgid "strecken (Stretch)"
 msgstr "stretch (Stretch)"
 
@@ -2586,7 +2610,7 @@ msgstr "Opens GitHub: create a new issue"
 msgid "Über WhiteHoleFX"
 msgstr "About WhiteHoleFX"
 
-#: settings_dialog.cpp:86
+#: settings_dialog.cpp:87
 msgid "Über diese Karte tritt der sACN-Empfang den Multicast-Gruppen bei. Art-Net-Broadcast und Unicast-Pakete kommen weiterhin von jeder Karte an."
 msgstr "sACN reception joins the multicast groups on this card. Art-Net broadcast and unicast packets still arrive on every card."
 

@@ -38,6 +38,7 @@
 #include <optional>
 #include <span>
 #include <string>
+#include <utility>
 #include <vector>
 
 #include "whitehole/core/result.hpp"
@@ -53,6 +54,12 @@ inline constexpr std::size_t kInputBytesPerLed = sizeof(ColorRgba);
 struct Destination {
     std::string address;       // IPv4-Zahl; bei sACN leer = Multicast
     std::uint16_t port{0};     // 0 = Standardport des Protokolls
+    Protocol protocol{Protocol::ArtNet};  // das Protokoll gehört zum Controller; die Patches darauf folgen ihm
+    std::string name;          // frei wählbar, nur zur Anzeige (und als Name in der Controller-Bibliothek)
+
+    Destination() = default;
+    Destination(std::string addressIn, std::uint16_t portIn, Protocol protocolIn = Protocol::ArtNet, std::string nameIn = {})
+        : address{std::move(addressIn)}, port{portIn}, protocol{protocolIn}, name{std::move(nameIn)} {}
 };
 
 struct OutputConfig {

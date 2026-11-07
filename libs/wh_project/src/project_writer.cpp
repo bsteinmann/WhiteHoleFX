@@ -162,6 +162,10 @@ Result<std::string> writeProject(const Project& project) {
         if (d.port != 0) {
             out << " " << d.port;
         }
+        out << " protocol " << nameOf(detail::kProtocols, d.protocol);
+        if (!d.name.empty()) {
+            out << " name " << quoteWord(d.name);
+        }
         out << "\n";
     }
     out << "\n";

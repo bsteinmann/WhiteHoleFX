@@ -1,5 +1,9 @@
 // patch_table.hpp: Tabelle aller Fixtures mit ihrem Patch (Protokoll, Ziel, Universe, Kanal, Farbreihenfolge ...).
 //
+// Das Protokoll steht nicht hier, sondern beim Controller: die Spalte "Controller" wählt ihn, die Spalte Protokoll zeigt
+// nur, was er spricht. Universe und Erster Kanal gelten bei Art-Net und sACN (Art-Net zählt ab 0, sACN ab 1), der DDP-Offset
+// nur bei DDP; die jeweils anderen Zellen sind grau.
+//
 // Warum es diese Datei gibt: Beim Einrichten der Ausgabe will man alle Fixtures auf einen Blick sehen und patchen:
 // welches Fixture sendet wohin, wo überlappen sich Universen. Früher stand der Patch im Formular des einzelnen Fixtures;
 // jetzt gehört er zur Ausgabe. Jede Zeile ist ein Fixture, jede Zelle ein Feld; eine Änderung geht über den Player,
@@ -31,14 +35,17 @@ Q_SIGNALS:
     void failed(const QString& message);
 
 private:
-    enum Column { Name, Type, Leds, Send, Protocol, Destination, Universe, Channel, DdpOffset, Order, Gamma, Brightness, Count };
+    // Protocol ist nur eine Anzeige: das Protokoll gehört zum Controller (Spalte Destination), nicht zum Fixture.
+    enum Column { Name, Type, Leds, Send, Destination, Protocol, Universe, Channel, DdpOffset, Order, Gamma, Brightness, Count };
 
-    void commit(mapping::FixtureId id);
+    void commit(mapping::FixtureId id, bool rebuildAfter = false);
     void toggle(mapping::FixtureId id, bool on);
     void report(const Result<void>& result, bool rebuildAfter);
     [[nodiscard]] int rowOf(mapping::FixtureId id) const;
     [[nodiscard]] mapping::FixtureId idAt(int row) const;
     void updateEnabled(int row);
+    /// Das Protokoll, das die Zeile gerade anzeigt (kommt vom Controller; im Item der Spalte Protocol gemerkt).
+    [[nodiscard]] output::Protocol protocolAt(int row) const;
     void saveHeader() const;
 
     runtime::Player& player_;

@@ -190,13 +190,20 @@ kräftiger; bei kleinem Zoom wird es gröber). „Einrasten“ lässt beim Ziehe
 Fixtures auf dem Raster einrasten, die Weite stellt man daneben ein (0,1 bis 10). Mit gedrückter Alt-Taste zieht man
 ohne Einrasten. Die Einstellungen gelten für das Studio und bleiben erhalten.
 
-**Ausgabe (eigener Reiter):** Oben die Tabelle der Ziele (Adresse, Port; leere Adresse = Multicast, Port 0 = Standard; die
-Nummer links ist die Zielnummer aus dem Patch) mit „Ziel +“ und „Gewähltes Ziel −“. Jedes Ziel lässt sich entfernen, nicht nur das letzte:
-Fixtures auf höheren Zielen rücken mit ihrer Nummer nach; ein Ziel, auf das noch ein Fixture sendet, bleibt stehen und die Statuszeile
-nennt das Fixture. Darunter Bildrate, Abbildung auf den Würfel (Stretch oder KeepAspect), sACN-Priorität und Quellname. Unten steht
-die **Patch-Tabelle**, eine Zeile je Fixture: Senden an/aus, Protokoll (Art-Net, sACN, DDP), Ziel, Universe, erster Kanal,
-DDP-Offset, Farbreihenfolge, Gamma, Helligkeit. Die Spalten lassen sich an der Kopfzeile verschieben (auch bei der Zieltabelle);
-die Reihenfolge der Patch-Tabelle wird gemerkt.
+**Ausgabe (eigener Reiter):** Oben die Tabelle der **Controller** (Name, **Protokoll**, Adresse, Port; leere Adresse = Multicast,
+nur sACN; leerer Port = Standardport des Protokolls; die Nummer links ist die Controllernummer aus dem Patch) mit „Controller +“
+und „Gewählten Controller −“. Das **Protokoll (Art-Net, sACN, DDP) gehört zum Controller**, nicht zum Fixture. Wechselt ein Controller
+zwischen Art-Net und sACN, ziehen seine Patches mit: **Art-Net zählt Universen ab 0, sACN ab 1**, deshalb wird die Universe-Nummer
+der Patches um 1 verschoben (Art-Net 0 wird zu sACN 1 und umgekehrt), damit das „gleiche“ Universe gemeint bleibt; die Statuszeile sagt
+es, und Rückgängig nimmt es zurück. Dasselbe passiert, wenn du ein Fixture auf einen Controller mit anderem Protokoll umpatchst. Ein
+Gerät, das du mit zwei Protokollen ansprechen willst, bekommt zwei Controller mit derselben Adresse. Jeder Controller lässt sich
+entfernen, nicht nur der letzte: Fixtures auf höheren Controllern rücken mit ihrer Nummer nach; ein Controller, auf den noch ein
+Fixture sendet, bleibt stehen und die Statuszeile nennt das Fixture. Darunter Bildrate und Abbildung auf den Würfel (Stretch oder
+KeepAspect); **sACN-Priorität und Quellname** erscheinen nur, wenn mindestens ein Controller sACN spricht. Unten steht die
+**Patch-Tabelle**, eine Zeile je Fixture: Senden an/aus, Controller (Auswahl), Protokoll (nur Anzeige, kommt vom Controller),
+Universe, erster Kanal, DDP-Offset, Farbreihenfolge, Gamma, Helligkeit. Nur was zum Protokoll des Controllers gehört, ist aktiv:
+Universe und erster Kanal bei Art-Net und sACN (Bereich 0 bis 32767 bzw. 1 bis 63999), der DDP-Offset bei DDP. Die Spalten lassen
+sich an der Kopfzeile verschieben (auch bei der Controller-Tabelle); die Reihenfolge der Patch-Tabelle wird gemerkt.
 
 Zahlenfelder übernehmen einen Wert bei Enter, Pfeiltasten oder Fokuswechsel. Jede Änderung wird
 samt Ausgabeplan geprüft. Passt etwas nicht (Universe schon belegt, Ziel gibt es nicht, ungültiges

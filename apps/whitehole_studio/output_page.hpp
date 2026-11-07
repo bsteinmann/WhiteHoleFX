@@ -32,6 +32,8 @@ public:
 Q_SIGNALS:
     void edited();
     void failed(const QString& message);
+    /// Hinweis ohne Fehler (zum Beispiel verschobene Universe beim Protokollwechsel) für die Statuszeile.
+    void notice(const QString& message);
 
 protected:
     void showEvent(QShowEvent* event) override;

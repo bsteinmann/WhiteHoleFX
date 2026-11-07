@@ -10,6 +10,7 @@ wh_add_library(wh_project
         src/project_parser.cpp
         src/project_text.cpp
         src/project_writer.cpp
+        src/project_destinations.cpp
         src/project_library.cpp
     PUBLIC_DEPS
         wh_core

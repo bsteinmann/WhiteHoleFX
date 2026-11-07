@@ -202,3 +202,51 @@ TEST_CASE("Ziele: ein mittleres Ziel entfernen, höhere Patches rücken nach", "
     CHECK(rig.player.project()->destinations.size() == before);
     CHECK(rig.player.removeDestination(99).error().code == ErrorCode::NotFound);
 }
+
+TEST_CASE("Controller: Protokollwechsel nimmt die Patches mit (Universe +-1) und lässt sich zurücknehmen", "[player][destinations]") {
+    Rig rig;
+    REQUIRE(rig.player.addFixtureType("Kachel", matrix(2, 2)).ok());
+    output::FixturePatch patch;
+    patch.universe = 4;
+    REQUIRE(rig.player.addFixtureOfType("B", "Kachel", Vec3{10.0F, 0.0F, 0.0F}, Vec3{}, patch).ok());
+    const auto patchOf = [&](const char* name) {
+        for (const output::FixturePatch& p : rig.player.project()->patches) {
+            if (p.fixture == rig.fixture(name)->id) {
+                return p;
+            }
+        }
+        return output::FixturePatch{};
+    };
+    CHECK(patchOf("B").universe == 4);
+
+    auto destinations = rig.player.project()->destinations;
+    destinations[0].protocol = output::Protocol::Sacn;
+    REQUIRE(rig.player.setDestinations(destinations).ok());
+    CHECK(patchOf("B").protocol == output::Protocol::Sacn);
+    CHECK(patchOf("B").universe == 5);
+
+    REQUIRE(rig.player.undo().ok());
+    CHECK(patchOf("B").protocol == output::Protocol::ArtNet);
+    CHECK(patchOf("B").universe == 4);
+}
+
+TEST_CASE("Controller: ein Fixture auf einen Controller mit anderem Protokoll umpatchen", "[player][destinations]") {
+    Rig rig;
+    output::Destination second{"10.0.0.6", 0};
+    second.protocol = output::Protocol::Sacn;
+    auto destinations = rig.player.project()->destinations;
+    destinations.push_back(second);
+    REQUIRE(rig.player.setDestinations(destinations).ok());
+    REQUIRE(rig.player.addFixtureType("Kachel", matrix(2, 2)).ok());
+    output::FixturePatch patch;
+    patch.universe = 2;
+    REQUIRE(rig.player.addFixtureOfType("B", "Kachel", Vec3{10.0F, 0.0F, 0.0F}, Vec3{}, patch).ok());
+    patch.destination = 1;  // der Patch behält Art-Net, der Controller spricht sACN: der Player zieht ihn nach
+    REQUIRE(rig.player.setPatch(rig.fixture("B")->id, patch).ok());
+    for (const output::FixturePatch& p : rig.player.project()->patches) {
+        if (p.fixture == rig.fixture("B")->id) {
+            CHECK(p.protocol == output::Protocol::Sacn);
+            CHECK(p.universe == 3);
+        }
+    }
+}

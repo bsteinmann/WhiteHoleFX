@@ -155,7 +155,7 @@ void watchLoop() {
     std::array<std::uint64_t, kSlots> counts{};
     for (;;) {
         std::this_thread::sleep_for(std::chrono::milliseconds(kPollMs));
-        const long long idle = nowMs() - g_beatMs.load();
+        const long long idle = stallPauseCount().load() > 0 ? 0 : nowMs() - g_beatMs.load();
         if (idle > kStallMs && !reported) {
             reported = true;
             secondDone = false;

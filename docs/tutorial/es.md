@@ -35,7 +35,7 @@ Si empiezas de cero, empieza por el hardware. Abre **Stage Config → Fixtures �
   de inicio. El botón **Prueba** hace correr un patrón sobre la forma.
 - **Layout (F4):** aquí colocas instancias de los tipos en el escenario (**Desde tipo**), ajustas la posición y el **giro sobre los
   tres ejes** y las alineas. Al lado ves el escenario en el espacio, giratorio, con ejes (x rojo, y verde, z azul).
-- **Salida:** las direcciones de tus controladores (destinos; una dirección vacía significa multicast) y la tabla de patch: qué
+- **Salida:** tus controladores con protocolo (Art-Net, sACN, DDP) y dirección (una dirección vacía significa multicast, solo sACN) y la tabla de patch: qué
   fixture envía a qué universo. Cada destino se puede quitar y las columnas se pueden mover.
 - **Prueba:** envía imágenes de prueba (color, barra, orden de colores, secuencia) por todo el escenario para comprobar cableado y
   patch sin ningún efecto en marcha; el escenario de al lado muestra la imagen de prueba. **Cuidado:** el blanco brilla a plena
@@ -110,7 +110,7 @@ proyectos de todos los idiomas encajen entre sí.
 
 ## 10. Cuando algo no funciona
 
-- **No hay luz en los LED:** ¿está activado **Enviar salida**? ¿Es correcta la dirección del controlador en Destinos? ¿Ayuda el
+- **No hay luz en los LED:** ¿está activado **Enviar salida**? ¿Son correctos el protocolo y la dirección del controlador en Salida? ¿Ayuda el
   modo de prueba?
 - **Colores incorrectos:** cambia el orden de colores en el patch (RGB, GRB …) o ejecuta «Orden de colores» en el modo de prueba.
 - **Imagen del revés o en espejo:** cambia la esquina de inicio y las opciones `flip` del fixture.

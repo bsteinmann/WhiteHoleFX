@@ -37,8 +37,8 @@ Wer neu anfängt, beginnt mit der Hardware. Öffne **Stage Config → Fixtures �
   erkennst du die Startecke. Der Knopf **Test** lässt ein Muster über die Form laufen.
 - **Layout (F4):** Hier verteilst du Exemplare der Bauformen auf der Bühne (**Aus Bauform**), stellst Lage und **Drehung um alle
   drei Achsen** ein und richtest sie aus. Die Bühne im Raum siehst du daneben, drehbar, mit Achsenkreuz (x rot, y grün, z blau).
-- **Ausgabe:** die Adressen deiner Controller (Ziele; eine leere Adresse bedeutet Multicast) und die Patch-Tabelle: welches
-  Fixture auf welches Universe sendet. Jedes Ziel lässt sich entfernen, die Spalten lassen sich verschieben.
+- **Ausgabe:** die Controller mit Protokoll (Art-Net, sACN, DDP) und Adresse (eine leere Adresse bedeutet Multicast, nur sACN) und die Patch-Tabelle: welches
+  Fixture auf welches Universe sendet. Jeder Controller lässt sich entfernen, die Spalten lassen sich verschieben.
 - **Test:** schickt Testbilder (Farbe, Laufbalken, Farbreihenfolge, Lauflicht) über die ganze Bühne, um Verkabelung und Patch zu
   prüfen, ohne dass ein Effekt laufen muss; die Bühne daneben zeigt das Testbild. **Achtung:** Weiß leuchtet mit voller
   Helligkeit; prüfe vorher die Netzteile.
@@ -114,7 +114,7 @@ Anleitungen und Projekte in allen Sprachen zusammenpassen.
 
 ## 10. Wenn etwas nicht klappt
 
-- **Kein Licht auf den LEDs:** Ist **Ausgabe senden** an? Stimmt die Controller-Adresse unter Ziele? Hilft der Testmodus?
+- **Kein Licht auf den LEDs:** Ist **Ausgabe senden** an? Stimmen Protokoll und Adresse des Controllers unter Ausgabe? Hilft der Testmodus?
 - **Falsche Farben:** Farbreihenfolge im Patch (RGB, GRB …) ändern, oder im Testmodus „Farbreihenfolge“ laufen lassen.
 - **Bild steht Kopf oder ist gespiegelt:** Startecke und `flip`-Optionen im Fixture ändern.
 - **Ruckeln:** Bildrate verringern oder das Fenster verkleinern; bei Live-Wechseln „Mit GO“ vorladen.

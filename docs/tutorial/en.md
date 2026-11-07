@@ -35,8 +35,8 @@ If you are new, start with the hardware. Open **Stage Config → Fixtures …**.
   recognize the start corner. The **Test** button runs a pattern over the shape.
 - **Layout (F4):** here you place instances of the types on the stage (**From type**), set the position and the **rotation about
   all three axes**, and align them. Next to it you see the stage in space, rotatable, with an axis cross (x red, y green, z blue).
-- **Output:** the addresses of your controllers (destinations; an empty address means multicast) and the patch table: which
-  fixture sends to which universe. Every destination can be removed, and the columns can be moved.
+- **Output:** your controllers with protocol (Art-Net, sACN, DDP) and address (an empty address means multicast, sACN only) and the patch table: which
+  fixture sends to which universe. Every controller can be removed, and the columns can be moved.
 - **Test:** sends test patterns (color, sweep bar, color order, chase) across the whole stage to check wiring and patch without
   an effect running; the stage next to it shows the pattern. **Caution:** white lights up at full brightness; check the power
   supplies first.
@@ -108,7 +108,7 @@ languages fit together.
 
 ## 10. When something does not work
 
-- **No light on the LEDs:** is **Send output** on? Is the controller address under Destinations right? Does test mode help?
+- **No light on the LEDs:** is **Send output** on? Are protocol and address of the controller under Output right? Does test mode help?
 - **Wrong colors:** change the color order in the patch (RGB, GRB …), or run "Color order" in test mode.
 - **Picture upside down or mirrored:** change the start corner and the `flip` options in the fixture.
 - **Stuttering:** lower the frame rate or shrink the window; for live changes preload with "With GO".

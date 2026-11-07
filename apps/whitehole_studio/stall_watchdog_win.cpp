@@ -311,7 +311,7 @@ void watchLoop() {
     bool reported = false;
     for (;;) {
         Sleep(static_cast<DWORD>(kPollMs));
-        const ULONGLONG idle = GetTickCount64() - g_beatMs.load();
+        const ULONGLONG idle = stallPauseCount().load() > 0 ? 0 : GetTickCount64() - g_beatMs.load();
         if (idle > kStallMs && !reported && !g_crashing.load() && g_beatSeen.load()) {
             reported = true;
             prepareSymbols();  // vor dem Anhalten des Hauptthreads, damit danach nichts mehr auf seine Sperren warten kann

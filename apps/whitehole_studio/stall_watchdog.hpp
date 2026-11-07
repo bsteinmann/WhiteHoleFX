@@ -10,6 +10,8 @@
 // Unter Windows setzt stall_watchdog_win.cpp dieselbe Schnittstelle um (Textbericht und Minidump in <Cache>/crash/).
 #pragma once
 
+#include <atomic>
+
 namespace whitehole::studio {
 
 /// Installiert die Signalbehandlung und startet den Wächter-Thread. Aufruf vom Hauptthread, einmal.
@@ -18,6 +20,27 @@ bool startStallWatchdog(const char* logPath);
 
 /// "Der Hauptthread lebt": regelmäßig vom Hauptthread aufrufen (Studio: alle 100 ms per Timer).
 void stallHeartbeat();
+
+/// Zähler der laufenden Pausen (siehe StallPause); der Wächter meldet keinen Stillstand, solange er über 0 steht.
+inline std::atomic<int>& stallPauseCount() {
+    static std::atomic<int> count{0};
+    return count;
+}
+
+/// Hält den Wächter an, solange der Hauptthread bewusst wartet. Warum: Die Datei-Dialoge von Windows (Speichern
+/// unter, Öffnen) laufen mit eigener Nachrichtenschleife; der Herzschlag-Timer von Qt tickt währenddessen nicht, und
+/// wer den Dialog länger als fünf Sekunden offen lässt, bekam einen falschen "Stillstand"-Bericht. Auf den Stack legen,
+/// bevor der Dialog aufgeht: `const StallPause pause;`.
+class StallPause {
+public:
+    StallPause() { ++stallPauseCount(); }
+    ~StallPause() {
+        stallHeartbeat();  // die Zeit im Dialog zählt nicht als Schweigen
+        --stallPauseCount();
+    }
+    StallPause(const StallPause&) = delete;
+    StallPause& operator=(const StallPause&) = delete;
+};
 
 /// Zählt ein Ereignis für die Auswertung bei einem Stillstand: `name` ist ein Klassenname mit statischer
 /// Lebensdauer (QMetaObject::className), `type` der Ereignistyp. Steht der Hauptthread, zeigt der Wächter,
