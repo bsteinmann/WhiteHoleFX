@@ -176,8 +176,10 @@ QString StageView::exerciseGizmo() {
     setGizmoEnabled(true);
     setPreset(preview::ViewPreset::Perspective);
     setSelection({id});
-    if (!renderNow() || !gizmo_) {
-        return QStringLiteral("Bühnenansicht: der Achsen-Griff erscheint nicht");
+    const bool rendered = renderNow();
+    if (!rendered || !gizmo_) {
+        return QStringLiteral("Bühnenansicht: der Achsen-Griff erscheint nicht (Bild %1, aktiv %2, Auswahl %3, Bildgröße %4x%5)")
+            .arg(rendered).arg(gizmoEnabled_).arg(selection_.size()).arg(imageOptions_.width).arg(imageOptions_.height);
     }
     // Leer gewählt: kein Griff
     setSelection({});
