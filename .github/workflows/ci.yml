@@ -380,7 +380,7 @@ jobs:
           -DCMAKE_CXX_COMPILER=g++-12 -DCMAKE_C_COMPILER=gcc-12 -DWHITEHOLEFX_BUILD_STUDIO=ON -DWHITEHOLEFX_WEBGPU=ON -DWHITEHOLEFX_BUILD_TESTS=OFF
           -DWGPU_NATIVE_ROOT="$PWD/third_party/wgpu-native"
       - name: Bauen
-        run: cmake --build build --parallel
+        run: cmake --build build --parallel 3
       - name: Starter und Dateityp prüfen
         run: |
           desktop-file-validate packaging/linux/whitehole-studio.desktop

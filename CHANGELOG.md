@@ -3,6 +3,7 @@
 ## 0.62.0
 
 - **Controller-Bibliothek.** Wie bei den Bauformen lassen sich Controller (Name, Protokoll, Adresse, Port) im Reiter Ausgabe speichern und in jedem Projekt wieder holen: **In Bibliothek speichern** legt den gewählten Controller unter seinem Namen ab (ohne Namen fragt das Studio danach; gleicher Name ersetzt den alten Eintrag), **Aus Bibliothek +** fügt einen gespeicherten Controller als neuen Controller ein, **Aus Bibliothek löschen** entfernt einen Eintrag aus der Bibliothek (das Projekt bleibt unverändert). Die Datei heißt `controller-library.whfx` und liegt neben `fixture-library.whfx` im Benutzerverzeichnis; die Umgebungsvariable `WHITEHOLEFX_CONTROLLER_LIBRARY` ersetzt den Pfad. Neu in `wh_project`: `writeControllerLibrary`, `parseControllerLibrary`.
+- **CI:** Der Paketbau (.deb) kompiliert mit höchstens drei Aufträgen gleichzeitig, weil der Runner bei unbegrenzter Parallelität im Speicher ausging.
 
 ## 0.61.0
 
