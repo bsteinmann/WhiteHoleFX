@@ -4,6 +4,7 @@
 // der Benutzerbibliothek und räumt auf. Das ist länger als die Seite selbst und soll sie nicht aufblähen.
 #include <QByteArray>
 #include <QDir>
+#include <QListWidget>
 #include <QTemporaryDir>
 
 #include "fixture_library_page.hpp"
