@@ -278,6 +278,10 @@ msgstr "&Abrir …"
 msgid "&Über WhiteHoleFX"
 msgstr "&Acerca de WhiteHoleFX"
 
+#: output_form_library.cpp:109
+msgid "(Bibliothek ist leer)"
+msgstr "(la biblioteca está vacía)"
+
 #: cue_dialog.cpp:37 cue_panel.cpp:119
 msgid "(Schwarz)"
 msgstr "(Negro)"
@@ -438,7 +442,7 @@ msgstr "Cierre inesperado la última vez"
 msgid "Addiert zwei Bilder: Das Licht summiert sich wie bei zwei Scheinwerfern."
 msgstr "Adds two images: the light sums up like two spotlights."
 
-#: output_form.cpp:27
+#: output_form.cpp:30
 msgid "Adresse (leer = Multicast, nur sACN)"
 msgstr "Dirección (vacía = multicast, solo sACN)"
 
@@ -574,6 +578,14 @@ msgstr "Desde tipo"
 msgid "Aus Benutzerbibliothek ergänzen"
 msgstr "Añadir de la biblioteca de usuario"
 
+#: output_form.cpp:52
+msgid "Aus Bibliothek +"
+msgstr "Desde la biblioteca +"
+
+#: output_form.cpp:54
+msgid "Aus Bibliothek löschen"
+msgstr "Eliminar de la biblioteca"
+
 #: node_palette.cpp:328
 msgid "Aus Favoriten entfernen"
 msgstr "Quitar de favoritos"
@@ -662,15 +674,15 @@ msgstr "Editar …"
 msgid "Beim Ziehen rastet die linke untere Ecke der Fixtures am Raster ein (Alt gedrückt: ohne Einrasten)"
 msgstr "Al arrastrar, la esquina inferior izquierda de los fixtures se ajusta a la cuadrícula (con Alt: sin ajustar)"
 
-#: user_library.cpp:52
+#: user_controller_library.cpp:56 user_library.cpp:52
 msgid "Benutzerbibliothek lässt sich nicht lesen: %1"
 msgstr "No se puede leer la biblioteca de usuario: %1"
 
-#: user_library.cpp:26
+#: user_controller_library.cpp:30 user_library.cpp:26
 msgid "Benutzerbibliothek lässt sich nicht schreiben: %1"
 msgstr "No se puede escribir la biblioteca de usuario: %1"
 
-#: user_library.cpp:30
+#: user_controller_library.cpp:34 user_library.cpp:30
 msgid "Benutzerbibliothek lässt sich nicht speichern: %1"
 msgstr "No se puede guardar la biblioteca de usuario: %1"
 
@@ -694,7 +706,7 @@ msgstr "Imagen como textura (p. ej. de un archivo)"
 msgid "Bild auf der Bühne: eine Farbe für jede Position"
 msgstr "Imagen en el escenario: un color para cada posición"
 
-#: output_form.cpp:66
+#: output_form.cpp:89
 msgid "Bildrate (fps)"
 msgstr "Velocidad de fotogramas (fps)"
 
@@ -726,17 +738,21 @@ msgstr "Ancho"
 msgid "Bänder aus Licht laufen die gewählte Achse entlang. „Frequency“ ist die Zahl der Wellen über die Länge, „Sharpness“ macht aus der weichen Welle schmale Pulse. Für Strips."
 msgstr "Bandas de luz recorren el eje elegido. «Frequency» es el número de ondas a lo largo, «Sharpness» convierte la onda suave en pulsos estrechos. Para tiras."
 
-#: output_form.cpp:23 patch_table.cpp:46
+#: output_form.cpp:26 patch_table.cpp:46
 msgid "Controller"
 msgstr "Controlador"
 
-#: output_form.cpp:187
+#: output_form.cpp:210
 msgid "Controller %1: Universe von %2 Patch(es) um %3 verschoben (Art-Net zählt ab 0, sACN ab 1)."
 msgstr "Controlador %1: universo de %2 patch(es) desplazado %3 (Art-Net cuenta desde 0, sACN desde 1)."
 
-#: output_form.cpp:43
+#: output_form.cpp:46
 msgid "Controller +"
 msgstr "Controlador +"
+
+#: output_form_library.cpp:82
+msgid "Controller „%1“ in der Bibliothek gespeichert."
+msgstr "Controlador «%1» guardado en la biblioteca."
 
 #: layout_panel_add.cpp:40
 msgid "Cube"
@@ -814,7 +830,7 @@ msgstr "El cable empieza en este lado en vez del opuesto"
 msgid "Das Projekt wurde geändert. Änderungen verwerfen?"
 msgstr "El proyecto se ha modificado. ¿Descartar los cambios?"
 
-#: output_form.cpp:29
+#: output_form.cpp:32
 msgid "Das Protokoll gehört zum Controller. Standardports: Art-Net 6454, sACN 5568, DDP 4048."
 msgstr "El protocolo pertenece al controlador. Puertos predeterminados: Art-Net 6454, sACN 5568, DDP 4048."
 
@@ -857,6 +873,10 @@ msgstr "The output: whatever arrives here is sent to the LEDs. \"Mode\" scales i
 #: patch_table.cpp:49
 msgid "Der Controller bestimmt das Protokoll. Wechselst du auf einen Controller mit anderem Protokoll, wird die Universe-Nummer zwischen Art-Net und sACN um 1 verschoben."
 msgstr "El controlador determina el protocolo. Si cambias a un controlador con otro protocolo, el número de universo se desplaza 1 entre Art-Net y sACN."
+
+#: user_controller_library.cpp:65
+msgid "Der Controller braucht einen Namen, um gespeichert zu werden"
+msgstr "El controlador necesita un nombre para guardarse"
 
 #: cue_dialog.cpp:68
 msgid "Der Cue löst aus, wenn der Kanalwert auf diese Zahl oder darüber steigt"
@@ -1050,6 +1070,10 @@ msgstr "A single solid color. The simplest generator, good as a background or fo
 msgid "Eine feste Zahl. Praktisch, um mehrere Parameter mit demselben Wert zu speisen."
 msgstr "A fixed number. Handy for feeding the same value to several parameters."
 
+#: output_form.cpp:55
+msgid "Einen gespeicherten Controller als neuen Controller in dieses Projekt holen"
+msgstr "Añadir un controlador guardado a este proyecto como controlador nuevo"
+
 #: node_editor_menu.cpp:96
 msgid "Einfügen\tStrg+V"
 msgstr "Pegar\tCtrl+V"
@@ -1066,7 +1090,7 @@ msgstr "Conectar la entrada con un nodo nuevo"
 msgid "Einrasten"
 msgstr "Ajustar"
 
-#: main_window_settings.cpp:46 output_form.cpp:59 settings_dialog.cpp:58
+#: main_window_settings.cpp:46 output_form.cpp:82 settings_dialog.cpp:58
 msgid "Einstellungen"
 msgstr "Ajustes"
 
@@ -1082,9 +1106,13 @@ msgstr "Fin x y z"
 msgid "Entfernen"
 msgstr "Quitar"
 
-#: output_form.cpp:45
+#: output_form.cpp:48
 msgid "Entfernt den gewählten Controller (ohne Auswahl den letzten). Benutzte Controller bleiben stehen."
 msgstr "Elimina el controlador seleccionado (el último si no hay selección). Los controladores en uso se quedan."
+
+#: output_form.cpp:59
+msgid "Entfernt einen Controller aus der Bibliothek (das Projekt bleibt unverändert)"
+msgstr "Elimina un controlador de la biblioteca (el proyecto no cambia)"
 
 #: node_info_texts.cpp:23
 msgid "Erkennt den Takt der Musik und liefert Beat-Impuls, Pulse (klingt ab), Phase und Tempo (BPM). Das Tempo lässt sich auch fest vorgeben."
@@ -1282,7 +1310,7 @@ msgstr "Apilar los fixtures seleccionados en vertical (el más bajo se queda)"
 msgid "Gewählte Fixtures waagrecht aneinanderreihen (das linke bleibt stehen)"
 msgstr "Colocar los fixtures seleccionados uno junto a otro (el de la izquierda se queda)"
 
-#: output_form.cpp:44
+#: output_form.cpp:47
 msgid "Gewählten Controller −"
 msgstr "Quitar controlador elegido −"
 
@@ -1349,6 +1377,10 @@ msgstr "Imagen"
 #: port_legend.cpp:71
 msgid "Impuls"
 msgstr "Pulso"
+
+#: output_form.cpp:53 output_form_library.cpp:68
+msgid "In Bibliothek speichern"
+msgstr "Guardar en la biblioteca"
 
 #: look_panel.cpp:60
 msgid "In den Editor laden"
@@ -1458,7 +1490,7 @@ msgstr "Volumen por banda de frecuencia"
 msgid "Layout"
 msgstr "Disposición"
 
-#: output_form.cpp:67
+#: output_form.cpp:90
 msgid "Layout auf Würfel abbilden"
 msgstr "Proyectar la disposición sobre el cubo"
 
@@ -1642,7 +1674,7 @@ msgstr "Centro"
 msgid "Modus"
 msgstr "Modo"
 
-#: patch_table.cpp:124
+#: output_form_library.cpp:113 patch_table.cpp:124
 msgid "Multicast"
 msgstr "Multicast"
 
@@ -1661,6 +1693,10 @@ msgstr "Nombre de la región"
 #: layout_panel_library.cpp:64
 msgid "Name der Vorlage"
 msgstr "Nombre de la plantilla"
+
+#: output_form_library.cpp:68
+msgid "Name des Controllers:"
+msgstr "Nombre del controlador:"
 
 #: look_panel.cpp:239
 msgid "Name des Looks:"
@@ -1802,7 +1838,7 @@ msgstr "Sin marcar, el cable empieza a la izquierda, abajo, atrás. x hacia la d
 msgid "Orange Umrandung am Node: sein Ausgang wird auf die LEDs abgetastet."
 msgstr "Contorno naranja en un nodo: su salida se muestrea sobre los LED."
 
-#: user_library.cpp:22
+#: user_controller_library.cpp:26 user_library.cpp:22
 msgid "Ordner der Benutzerbibliothek lässt sich nicht anlegen: %1"
 msgstr "No se puede crear la carpeta de la biblioteca de usuario: %1"
 
@@ -1854,7 +1890,7 @@ msgstr "Perspectiva"
 msgid "Plasma: Weich ineinanderfließende, wabernde Farbflächen. Skalierung, Tempo und Tiefe einstellbar."
 msgstr "Plasma: softly flowing, wobbling color fields. Scale, speed and depth are adjustable."
 
-#: output_form.cpp:27
+#: output_form.cpp:30
 msgid "Port (leer = Standard)"
 msgstr "Puerto (vacío = predeterminado)"
 
@@ -1906,7 +1942,7 @@ msgstr "Guardar proyecto como"
 msgid "Projekt öffnen"
 msgstr "Abrir proyecto"
 
-#: add_fixture_dialog.cpp:174 output_form.cpp:27 patch_table.cpp:46
+#: add_fixture_dialog.cpp:174 output_form.cpp:30 patch_table.cpp:46
 msgid "Protokoll"
 msgstr "Protocolo"
 
@@ -1918,7 +1954,7 @@ msgstr "Puntos"
 msgid "Punktwolke"
 msgstr "Nube de puntos"
 
-#: output_form.cpp:69
+#: output_form.cpp:92
 msgid "Quellname (sACN)"
 msgstr "Nombre de la fuente (sACN)"
 
@@ -2018,7 +2054,7 @@ msgstr "Oscillator (LFO): sine, triangle, saw or square with frequency, phase an
 msgid "Seite"
 msgstr "Lateral"
 
-#: output_form.cpp:62
+#: output_form.cpp:85
 msgid "Seitenverhältnis halten (KeepAspect)"
 msgstr "Mantener proporción (KeepAspect)"
 
@@ -2085,6 +2121,10 @@ msgstr "Guardar"
 #: main_window_actions.cpp:40
 msgid "Speichern &unter …"
 msgstr "Guardar &como …"
+
+#: output_form.cpp:56
+msgid "Speichert den gewählten Controller unter seinem Namen in der Bibliothek (Benutzerverzeichnis), damit du ihn in anderen Projekten wieder holen kannst. Gespeichert in: %1"
+msgstr "Guarda el controlador elegido con su nombre en la biblioteca (carpeta de usuario) para recuperarlo en otros proyectos. Guardado en: %1"
 
 #: node_info_texts.cpp:19
 msgid "Spektrum (32 Bänder) des Audio-Eingangs. Wird an „Spectrum Bars“ angeschlossen."
@@ -2394,6 +2434,10 @@ msgstr "Elige primero fixtures de la lista."
 msgid "Wähle zuerst ein Fixture in der Liste."
 msgstr "Elige primero un fixture de la lista."
 
+#: output_form_library.cpp:62
+msgid "Wähle zuerst einen Controller in der Tabelle."
+msgstr "Elige primero un controlador en la tabla."
+
 #: settings_dialog.cpp:149
 msgid "Wählen …"
 msgstr "Elegir …"
@@ -2562,11 +2606,11 @@ msgstr "Recibir sACN (E1.31)"
 msgid "sACN-Port (UDP):"
 msgstr "Puerto sACN (UDP):"
 
-#: output_form.cpp:68
+#: output_form.cpp:91
 msgid "sACN-Priorität"
 msgstr "Prioridad sACN"
 
-#: output_form.cpp:62
+#: output_form.cpp:85
 msgid "strecken (Stretch)"
 msgstr "estirar (Stretch)"
 

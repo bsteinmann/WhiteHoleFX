@@ -278,6 +278,10 @@ msgstr "&Ouvrir …"
 msgid "&Über WhiteHoleFX"
 msgstr "À &propos de WhiteHoleFX"
 
+#: output_form_library.cpp:109
+msgid "(Bibliothek ist leer)"
+msgstr "(la bibliothèque est vide)"
+
 #: cue_dialog.cpp:37 cue_panel.cpp:119
 msgid "(Schwarz)"
 msgstr "(Noir)"
@@ -438,7 +442,7 @@ msgstr "Plantage la dernière fois"
 msgid "Addiert zwei Bilder: Das Licht summiert sich wie bei zwei Scheinwerfern."
 msgstr "Adds two images: the light sums up like two spotlights."
 
-#: output_form.cpp:27
+#: output_form.cpp:30
 msgid "Adresse (leer = Multicast, nur sACN)"
 msgstr "Adresse (vide = multicast, sACN uniquement)"
 
@@ -574,6 +578,14 @@ msgstr "Depuis un type"
 msgid "Aus Benutzerbibliothek ergänzen"
 msgstr "Ajouter depuis la bibliothèque utilisateur"
 
+#: output_form.cpp:52
+msgid "Aus Bibliothek +"
+msgstr "Depuis la bibliothèque +"
+
+#: output_form.cpp:54
+msgid "Aus Bibliothek löschen"
+msgstr "Supprimer de la bibliothèque"
+
 #: node_palette.cpp:328
 msgid "Aus Favoriten entfernen"
 msgstr "Retirer des favoris"
@@ -662,15 +674,15 @@ msgstr "Modifier …"
 msgid "Beim Ziehen rastet die linke untere Ecke der Fixtures am Raster ein (Alt gedrückt: ohne Einrasten)"
 msgstr "Pendant le glissement, le coin inférieur gauche des fixtures s'aimante à la grille (Alt maintenu : sans aimantation)"
 
-#: user_library.cpp:52
+#: user_controller_library.cpp:56 user_library.cpp:52
 msgid "Benutzerbibliothek lässt sich nicht lesen: %1"
 msgstr "Impossible de lire la bibliothèque utilisateur : %1"
 
-#: user_library.cpp:26
+#: user_controller_library.cpp:30 user_library.cpp:26
 msgid "Benutzerbibliothek lässt sich nicht schreiben: %1"
 msgstr "Impossible d'écrire la bibliothèque utilisateur : %1"
 
-#: user_library.cpp:30
+#: user_controller_library.cpp:34 user_library.cpp:30
 msgid "Benutzerbibliothek lässt sich nicht speichern: %1"
 msgstr "Impossible d'enregistrer la bibliothèque utilisateur : %1"
 
@@ -694,7 +706,7 @@ msgstr "Image comme texture (p. ex. d'un fichier)"
 msgid "Bild auf der Bühne: eine Farbe für jede Position"
 msgstr "Image sur la scène : une couleur pour chaque position"
 
-#: output_form.cpp:66
+#: output_form.cpp:89
 msgid "Bildrate (fps)"
 msgstr "Cadence (fps)"
 
@@ -726,17 +738,21 @@ msgstr "Largeur"
 msgid "Bänder aus Licht laufen die gewählte Achse entlang. „Frequency“ ist die Zahl der Wellen über die Länge, „Sharpness“ macht aus der weichen Welle schmale Pulse. Für Strips."
 msgstr "Des bandes de lumière parcourent l'axe choisi. « Frequency » est le nombre d'ondes sur la longueur, « Sharpness » transforme l'onde douce en impulsions étroites. Pour les strips."
 
-#: output_form.cpp:23 patch_table.cpp:46
+#: output_form.cpp:26 patch_table.cpp:46
 msgid "Controller"
 msgstr "Contrôleur"
 
-#: output_form.cpp:187
+#: output_form.cpp:210
 msgid "Controller %1: Universe von %2 Patch(es) um %3 verschoben (Art-Net zählt ab 0, sACN ab 1)."
 msgstr "Contrôleur %1 : univers de %2 patch(s) décalé de %3 (Art-Net compte à partir de 0, sACN à partir de 1)."
 
-#: output_form.cpp:43
+#: output_form.cpp:46
 msgid "Controller +"
 msgstr "Contrôleur +"
+
+#: output_form_library.cpp:82
+msgid "Controller „%1“ in der Bibliothek gespeichert."
+msgstr "Contrôleur « %1 » enregistré dans la bibliothèque."
 
 #: layout_panel_add.cpp:40
 msgid "Cube"
@@ -814,7 +830,7 @@ msgstr "Le câble commence de ce côté plutôt que du côté opposé"
 msgid "Das Projekt wurde geändert. Änderungen verwerfen?"
 msgstr "Le projet a été modifié. Abandonner les modifications ?"
 
-#: output_form.cpp:29
+#: output_form.cpp:32
 msgid "Das Protokoll gehört zum Controller. Standardports: Art-Net 6454, sACN 5568, DDP 4048."
 msgstr "Le protocole appartient au contrôleur. Ports par défaut : Art-Net 6454, sACN 5568, DDP 4048."
 
@@ -857,6 +873,10 @@ msgstr "The output: whatever arrives here is sent to the LEDs. \"Mode\" scales i
 #: patch_table.cpp:49
 msgid "Der Controller bestimmt das Protokoll. Wechselst du auf einen Controller mit anderem Protokoll, wird die Universe-Nummer zwischen Art-Net und sACN um 1 verschoben."
 msgstr "Le contrôleur détermine le protocole. Si vous passez à un contrôleur avec un autre protocole, le numéro d'univers est décalé de 1 entre Art-Net et sACN."
+
+#: user_controller_library.cpp:65
+msgid "Der Controller braucht einen Namen, um gespeichert zu werden"
+msgstr "Le contrôleur a besoin d'un nom pour être enregistré"
 
 #: cue_dialog.cpp:68
 msgid "Der Cue löst aus, wenn der Kanalwert auf diese Zahl oder darüber steigt"
@@ -1050,6 +1070,10 @@ msgstr "A single solid color. The simplest generator, good as a background or fo
 msgid "Eine feste Zahl. Praktisch, um mehrere Parameter mit demselben Wert zu speisen."
 msgstr "A fixed number. Handy for feeding the same value to several parameters."
 
+#: output_form.cpp:55
+msgid "Einen gespeicherten Controller als neuen Controller in dieses Projekt holen"
+msgstr "Ajouter un contrôleur enregistré à ce projet comme nouveau contrôleur"
+
 #: node_editor_menu.cpp:96
 msgid "Einfügen\tStrg+V"
 msgstr "Coller\tCtrl+V"
@@ -1066,7 +1090,7 @@ msgstr "Relier l'entrée à un nouveau node"
 msgid "Einrasten"
 msgstr "Aimanter"
 
-#: main_window_settings.cpp:46 output_form.cpp:59 settings_dialog.cpp:58
+#: main_window_settings.cpp:46 output_form.cpp:82 settings_dialog.cpp:58
 msgid "Einstellungen"
 msgstr "Réglages"
 
@@ -1082,9 +1106,13 @@ msgstr "Fin x y z"
 msgid "Entfernen"
 msgstr "Supprimer"
 
-#: output_form.cpp:45
+#: output_form.cpp:48
 msgid "Entfernt den gewählten Controller (ohne Auswahl den letzten). Benutzte Controller bleiben stehen."
 msgstr "Supprime le contrôleur sélectionné (le dernier sans sélection). Les contrôleurs utilisés restent."
+
+#: output_form.cpp:59
+msgid "Entfernt einen Controller aus der Bibliothek (das Projekt bleibt unverändert)"
+msgstr "Retire un contrôleur de la bibliothèque (le projet reste inchangé)"
 
 #: node_info_texts.cpp:23
 msgid "Erkennt den Takt der Musik und liefert Beat-Impuls, Pulse (klingt ab), Phase und Tempo (BPM). Das Tempo lässt sich auch fest vorgeben."
@@ -1282,7 +1310,7 @@ msgstr "Empiler les fixtures sélectionnées verticalement (la plus basse reste 
 msgid "Gewählte Fixtures waagrecht aneinanderreihen (das linke bleibt stehen)"
 msgstr "Aligner les fixtures sélectionnées côte à côte (celle de gauche reste en place)"
 
-#: output_form.cpp:44
+#: output_form.cpp:47
 msgid "Gewählten Controller −"
 msgstr "Supprimer le contrôleur choisi −"
 
@@ -1349,6 +1377,10 @@ msgstr "Image"
 #: port_legend.cpp:71
 msgid "Impuls"
 msgstr "Impulsion"
+
+#: output_form.cpp:53 output_form_library.cpp:68
+msgid "In Bibliothek speichern"
+msgstr "Enregistrer dans la bibliothèque"
 
 #: look_panel.cpp:60
 msgid "In den Editor laden"
@@ -1458,7 +1490,7 @@ msgstr "Volume par bande de fréquences"
 msgid "Layout"
 msgstr "Disposition"
 
-#: output_form.cpp:67
+#: output_form.cpp:90
 msgid "Layout auf Würfel abbilden"
 msgstr "Projeter la disposition sur le cube"
 
@@ -1642,7 +1674,7 @@ msgstr "Centre"
 msgid "Modus"
 msgstr "Mode"
 
-#: patch_table.cpp:124
+#: output_form_library.cpp:113 patch_table.cpp:124
 msgid "Multicast"
 msgstr "Multicast"
 
@@ -1661,6 +1693,10 @@ msgstr "Nom de la région"
 #: layout_panel_library.cpp:64
 msgid "Name der Vorlage"
 msgstr "Nom du modèle"
+
+#: output_form_library.cpp:68
+msgid "Name des Controllers:"
+msgstr "Nom du contrôleur :"
 
 #: look_panel.cpp:239
 msgid "Name des Looks:"
@@ -1802,7 +1838,7 @@ msgstr "Sans coche, le câble commence à gauche, en bas, à l'arrière. x vers 
 msgid "Orange Umrandung am Node: sein Ausgang wird auf die LEDs abgetastet."
 msgstr "Contour orange sur un node : sa sortie est échantillonnée sur les LED."
 
-#: user_library.cpp:22
+#: user_controller_library.cpp:26 user_library.cpp:22
 msgid "Ordner der Benutzerbibliothek lässt sich nicht anlegen: %1"
 msgstr "Impossible de créer le dossier de la bibliothèque utilisateur : %1"
 
@@ -1854,7 +1890,7 @@ msgstr "Perspective"
 msgid "Plasma: Weich ineinanderfließende, wabernde Farbflächen. Skalierung, Tempo und Tiefe einstellbar."
 msgstr "Plasma: softly flowing, wobbling color fields. Scale, speed and depth are adjustable."
 
-#: output_form.cpp:27
+#: output_form.cpp:30
 msgid "Port (leer = Standard)"
 msgstr "Port (vide = par défaut)"
 
@@ -1906,7 +1942,7 @@ msgstr "Enregistrer le projet sous"
 msgid "Projekt öffnen"
 msgstr "Ouvrir un projet"
 
-#: add_fixture_dialog.cpp:174 output_form.cpp:27 patch_table.cpp:46
+#: add_fixture_dialog.cpp:174 output_form.cpp:30 patch_table.cpp:46
 msgid "Protokoll"
 msgstr "Protocole"
 
@@ -1918,7 +1954,7 @@ msgstr "Points"
 msgid "Punktwolke"
 msgstr "Nuage de points"
 
-#: output_form.cpp:69
+#: output_form.cpp:92
 msgid "Quellname (sACN)"
 msgstr "Nom de la source (sACN)"
 
@@ -2018,7 +2054,7 @@ msgstr "Oscillator (LFO): sine, triangle, saw or square with frequency, phase an
 msgid "Seite"
 msgstr "Côté"
 
-#: output_form.cpp:62
+#: output_form.cpp:85
 msgid "Seitenverhältnis halten (KeepAspect)"
 msgstr "Conserver les proportions (KeepAspect)"
 
@@ -2085,6 +2121,10 @@ msgstr "Enregistrer"
 #: main_window_actions.cpp:40
 msgid "Speichern &unter …"
 msgstr "Enregistrer &sous …"
+
+#: output_form.cpp:56
+msgid "Speichert den gewählten Controller unter seinem Namen in der Bibliothek (Benutzerverzeichnis), damit du ihn in anderen Projekten wieder holen kannst. Gespeichert in: %1"
+msgstr "Enregistre le contrôleur choisi sous son nom dans la bibliothèque (dossier utilisateur) pour le retrouver dans d'autres projets. Enregistré dans : %1"
 
 #: node_info_texts.cpp:19
 msgid "Spektrum (32 Bänder) des Audio-Eingangs. Wird an „Spectrum Bars“ angeschlossen."
@@ -2394,6 +2434,10 @@ msgstr "Choisissez d'abord des fixtures dans la liste."
 msgid "Wähle zuerst ein Fixture in der Liste."
 msgstr "Choisissez d'abord une fixture dans la liste."
 
+#: output_form_library.cpp:62
+msgid "Wähle zuerst einen Controller in der Tabelle."
+msgstr "Choisissez d'abord un contrôleur dans le tableau."
+
 #: settings_dialog.cpp:149
 msgid "Wählen …"
 msgstr "Choisir …"
@@ -2562,11 +2606,11 @@ msgstr "Recevoir sACN (E1.31)"
 msgid "sACN-Port (UDP):"
 msgstr "Port sACN (UDP) :"
 
-#: output_form.cpp:68
+#: output_form.cpp:91
 msgid "sACN-Priorität"
 msgstr "Priorité sACN"
 
-#: output_form.cpp:62
+#: output_form.cpp:85
 msgid "strecken (Stretch)"
 msgstr "étirer (Stretch)"
 

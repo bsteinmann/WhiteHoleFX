@@ -148,16 +148,10 @@ std::string writeFixtureTypes(const std::vector<FixtureType>& types) {
     return out.str();
 }
 
-Result<std::string> writeProject(const Project& project) {
+std::string writeDestinations(const std::vector<output::Destination>& destinations) {
     std::ostringstream out;
-    out << "whitehole-project " << kFormatVersion << "\n\n";
-    out << "settings fps " << formatDouble(project.framesPerSecond) << " normalize "
-        << nameOf(detail::kNormalizeModes, project.normalize) << " sacn-priority "
-        << static_cast<unsigned>(project.sacnPriority) << " source-name " << quoteWord(project.sourceName)
-        << (project.strictInputs ? " strict-inputs on" : "") << "\n\n";
-
-    for (std::size_t i = 0; i < project.destinations.size(); ++i) {
-        const output::Destination& d = project.destinations[i];
+    for (std::size_t i = 0; i < destinations.size(); ++i) {
+        const output::Destination& d = destinations[i];
         out << "destination " << i << " " << (d.address.empty() ? "multicast" : d.address);
         if (d.port != 0) {
             out << " " << d.port;
@@ -168,6 +162,18 @@ Result<std::string> writeProject(const Project& project) {
         }
         out << "\n";
     }
+    return out.str();
+}
+
+Result<std::string> writeProject(const Project& project) {
+    std::ostringstream out;
+    out << "whitehole-project " << kFormatVersion << "\n\n";
+    out << "settings fps " << formatDouble(project.framesPerSecond) << " normalize "
+        << nameOf(detail::kNormalizeModes, project.normalize) << " sacn-priority "
+        << static_cast<unsigned>(project.sacnPriority) << " source-name " << quoteWord(project.sourceName)
+        << (project.strictInputs ? " strict-inputs on" : "") << "\n\n";
+
+    out << writeDestinations(project.destinations);
     out << "\n";
 
     for (const FixtureType& type : project.types) {

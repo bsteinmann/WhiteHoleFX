@@ -1,5 +1,9 @@
 # Änderungen
 
+## 0.62.0
+
+- **Controller-Bibliothek.** Wie bei den Bauformen lassen sich Controller (Name, Protokoll, Adresse, Port) im Reiter Ausgabe speichern und in jedem Projekt wieder holen: **In Bibliothek speichern** legt den gewählten Controller unter seinem Namen ab (ohne Namen fragt das Studio danach; gleicher Name ersetzt den alten Eintrag), **Aus Bibliothek +** fügt einen gespeicherten Controller als neuen Controller ein, **Aus Bibliothek löschen** entfernt einen Eintrag aus der Bibliothek (das Projekt bleibt unverändert). Die Datei heißt `controller-library.whfx` und liegt neben `fixture-library.whfx` im Benutzerverzeichnis; die Umgebungsvariable `WHITEHOLEFX_CONTROLLER_LIBRARY` ersetzt den Pfad. Neu in `wh_project`: `writeControllerLibrary`, `parseControllerLibrary`.
+
 ## 0.61.0
 
 - **Das Protokoll gehört zum Controller.** Im Reiter Ausgabe wählst du Art-Net, sACN oder DDP in der Controller-Tabelle (neue Spalten Name und Protokoll), nicht mehr je Fixture. Die Patch-Tabelle wählt den Controller und zeigt das Protokoll nur an; **Universe und Erster Kanal** sind bei Art-Net und sACN aktiv, der **DDP-Offset** nur bei DDP. Die Universe-Spalte nennt die Zählweise (**Art-Net ab 0, sACN ab 1**) und begrenzt den Bereich je Protokoll. sACN-Priorität und Quellname erscheinen nur, wenn ein Controller sACN spricht.

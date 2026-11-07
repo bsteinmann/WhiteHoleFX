@@ -278,6 +278,10 @@ msgstr "&Відкрити …"
 msgid "&Über WhiteHoleFX"
 msgstr "&Про WhiteHoleFX"
 
+#: output_form_library.cpp:109
+msgid "(Bibliothek ist leer)"
+msgstr "(бібліотека порожня)"
+
 #: cue_dialog.cpp:37 cue_panel.cpp:119
 msgid "(Schwarz)"
 msgstr "(Чорний)"
@@ -438,7 +442,7 @@ msgstr "Збій минулого разу"
 msgid "Addiert zwei Bilder: Das Licht summiert sich wie bei zwei Scheinwerfern."
 msgstr "Додає два зображення: світло складається, як у двох прожекторів."
 
-#: output_form.cpp:27
+#: output_form.cpp:30
 msgid "Adresse (leer = Multicast, nur sACN)"
 msgstr "Адреса (порожня = multicast, лише sACN)"
 
@@ -574,6 +578,14 @@ msgstr "Із типу"
 msgid "Aus Benutzerbibliothek ergänzen"
 msgstr "Додати з бібліотеки користувача"
 
+#: output_form.cpp:52
+msgid "Aus Bibliothek +"
+msgstr "З бібліотеки +"
+
+#: output_form.cpp:54
+msgid "Aus Bibliothek löschen"
+msgstr "Видалити з бібліотеки"
+
 #: node_palette.cpp:328
 msgid "Aus Favoriten entfernen"
 msgstr "Прибрати з обраного"
@@ -662,15 +674,15 @@ msgstr "Редагувати …"
 msgid "Beim Ziehen rastet die linke untere Ecke der Fixtures am Raster ein (Alt gedrückt: ohne Einrasten)"
 msgstr "Під час перетягування лівий нижній кут фікстур прилипає до сітки (з Alt: без прилипання)"
 
-#: user_library.cpp:52
+#: user_controller_library.cpp:56 user_library.cpp:52
 msgid "Benutzerbibliothek lässt sich nicht lesen: %1"
 msgstr "Не вдається прочитати бібліотеку користувача: %1"
 
-#: user_library.cpp:26
+#: user_controller_library.cpp:30 user_library.cpp:26
 msgid "Benutzerbibliothek lässt sich nicht schreiben: %1"
 msgstr "Не вдається записати бібліотеку користувача: %1"
 
-#: user_library.cpp:30
+#: user_controller_library.cpp:34 user_library.cpp:30
 msgid "Benutzerbibliothek lässt sich nicht speichern: %1"
 msgstr "Не вдається зберегти бібліотеку користувача: %1"
 
@@ -694,7 +706,7 @@ msgstr "Зображення як текстура (наприклад, із ф�
 msgid "Bild auf der Bühne: eine Farbe für jede Position"
 msgstr "Зображення на сцені: один колір для кожної позиції"
 
-#: output_form.cpp:66
+#: output_form.cpp:89
 msgid "Bildrate (fps)"
 msgstr "Частота кадрів (fps)"
 
@@ -726,17 +738,21 @@ msgstr "Ширина"
 msgid "Bänder aus Licht laufen die gewählte Achse entlang. „Frequency“ ist die Zahl der Wellen über die Länge, „Sharpness“ macht aus der weichen Welle schmale Pulse. Für Strips."
 msgstr "Смуги світла біжать уздовж вибраної осі. «Frequency» — кількість хвиль на довжині, «Sharpness» перетворює м’яку хвилю на вузькі імпульси. Для стрічок."
 
-#: output_form.cpp:23 patch_table.cpp:46
+#: output_form.cpp:26 patch_table.cpp:46
 msgid "Controller"
 msgstr "Контролер"
 
-#: output_form.cpp:187
+#: output_form.cpp:210
 msgid "Controller %1: Universe von %2 Patch(es) um %3 verschoben (Art-Net zählt ab 0, sACN ab 1)."
 msgstr "Контролер %1: універс у %2 патч(ів) зсунуто на %3 (Art-Net рахує з 0, sACN з 1)."
 
-#: output_form.cpp:43
+#: output_form.cpp:46
 msgid "Controller +"
 msgstr "Контролер +"
+
+#: output_form_library.cpp:82
+msgid "Controller „%1“ in der Bibliothek gespeichert."
+msgstr "Контролер «%1» збережено в бібліотеці."
 
 #: layout_panel_add.cpp:40
 msgid "Cube"
@@ -814,7 +830,7 @@ msgstr "Кабель починається з цього боку, а не з �
 msgid "Das Projekt wurde geändert. Änderungen verwerfen?"
 msgstr "Проєкт змінено. Відкинути зміни?"
 
-#: output_form.cpp:29
+#: output_form.cpp:32
 msgid "Das Protokoll gehört zum Controller. Standardports: Art-Net 6454, sACN 5568, DDP 4048."
 msgstr "Протокол належить контролеру. Типові порти: Art-Net 6454, sACN 5568, DDP 4048."
 
@@ -857,6 +873,10 @@ msgstr "Вихід: усе, що сюди надходить, надсилаєт
 #: patch_table.cpp:49
 msgid "Der Controller bestimmt das Protokoll. Wechselst du auf einen Controller mit anderem Protokoll, wird die Universe-Nummer zwischen Art-Net und sACN um 1 verschoben."
 msgstr "Контролер визначає протокол. Якщо перейти на контролер з іншим протоколом, номер універсу зсувається на 1 між Art-Net і sACN."
+
+#: user_controller_library.cpp:65
+msgid "Der Controller braucht einen Namen, um gespeichert zu werden"
+msgstr "Контролеру потрібна назва, щоб його зберегти"
 
 #: cue_dialog.cpp:68
 msgid "Der Cue löst aus, wenn der Kanalwert auf diese Zahl oder darüber steigt"
@@ -1050,6 +1070,10 @@ msgstr "Однокольорова поверхня. Найпростіший г
 msgid "Eine feste Zahl. Praktisch, um mehrere Parameter mit demselben Wert zu speisen."
 msgstr "Фіксоване число. Зручно, щоб живити кілька параметрів одним значенням."
 
+#: output_form.cpp:55
+msgid "Einen gespeicherten Controller als neuen Controller in dieses Projekt holen"
+msgstr "Додати збережений контролер до цього проєкту як новий контролер"
+
 #: node_editor_menu.cpp:96
 msgid "Einfügen\tStrg+V"
 msgstr "Вставити\tCtrl+V"
@@ -1066,7 +1090,7 @@ msgstr "З’єднати вхід із новим нодом"
 msgid "Einrasten"
 msgstr "Прилипання"
 
-#: main_window_settings.cpp:46 output_form.cpp:59 settings_dialog.cpp:58
+#: main_window_settings.cpp:46 output_form.cpp:82 settings_dialog.cpp:58
 msgid "Einstellungen"
 msgstr "Налаштування"
 
@@ -1082,9 +1106,13 @@ msgstr "Кінець x y z"
 msgid "Entfernen"
 msgstr "Прибрати"
 
-#: output_form.cpp:45
+#: output_form.cpp:48
 msgid "Entfernt den gewählten Controller (ohne Auswahl den letzten). Benutzte Controller bleiben stehen."
 msgstr "Видаляє вибраний контролер (останній, якщо нічого не вибрано). Використані контролери залишаються."
+
+#: output_form.cpp:59
+msgid "Entfernt einen Controller aus der Bibliothek (das Projekt bleibt unverändert)"
+msgstr "Видаляє контролер з бібліотеки (проєкт не змінюється)"
 
 #: node_info_texts.cpp:23
 msgid "Erkennt den Takt der Musik und liefert Beat-Impuls, Pulse (klingt ab), Phase und Tempo (BPM). Das Tempo lässt sich auch fest vorgeben."
@@ -1282,7 +1310,7 @@ msgstr "Розмістити вибрані фікстури одну на од�
 msgid "Gewählte Fixtures waagrecht aneinanderreihen (das linke bleibt stehen)"
 msgstr "Розмістити вибрані фікстури в ряд по горизонталі (ліва лишається на місці)"
 
-#: output_form.cpp:44
+#: output_form.cpp:47
 msgid "Gewählten Controller −"
 msgstr "Видалити вибраний контролер −"
 
@@ -1349,6 +1377,10 @@ msgstr "Image"
 #: port_legend.cpp:71
 msgid "Impuls"
 msgstr "Імпульс"
+
+#: output_form.cpp:53 output_form_library.cpp:68
+msgid "In Bibliothek speichern"
+msgstr "Зберегти в бібліотеці"
 
 #: look_panel.cpp:60
 msgid "In den Editor laden"
@@ -1458,7 +1490,7 @@ msgstr "Гучність за смугами частот"
 msgid "Layout"
 msgstr "Layout"
 
-#: output_form.cpp:67
+#: output_form.cpp:90
 msgid "Layout auf Würfel abbilden"
 msgstr "Відобразити Layout на куб"
 
@@ -1642,7 +1674,7 @@ msgstr "Центр"
 msgid "Modus"
 msgstr "Режим"
 
-#: patch_table.cpp:124
+#: output_form_library.cpp:113 patch_table.cpp:124
 msgid "Multicast"
 msgstr "Multicast"
 
@@ -1661,6 +1693,10 @@ msgstr "Назва регіону"
 #: layout_panel_library.cpp:64
 msgid "Name der Vorlage"
 msgstr "Назва шаблону"
+
+#: output_form_library.cpp:68
+msgid "Name des Controllers:"
+msgstr "Назва контролера:"
 
 #: look_panel.cpp:239
 msgid "Name des Looks:"
@@ -1802,7 +1838,7 @@ msgstr "Без позначки кабель починається лівору
 msgid "Orange Umrandung am Node: sein Ausgang wird auf die LEDs abgetastet."
 msgstr "Помаранчева рамка на ноді: її вихід зчитується на LED."
 
-#: user_library.cpp:22
+#: user_controller_library.cpp:26 user_library.cpp:22
 msgid "Ordner der Benutzerbibliothek lässt sich nicht anlegen: %1"
 msgstr "Не вдається створити теку бібліотеки користувача: %1"
 
@@ -1854,7 +1890,7 @@ msgstr "Перспектива"
 msgid "Plasma: Weich ineinanderfließende, wabernde Farbflächen. Skalierung, Tempo und Tiefe einstellbar."
 msgstr "Плазма: м'яко перетікаючі, хвилясті кольорові плями. Масштаб, темп і глибина налаштовуються."
 
-#: output_form.cpp:27
+#: output_form.cpp:30
 msgid "Port (leer = Standard)"
 msgstr "Порт (порожній = типовий)"
 
@@ -1906,7 +1942,7 @@ msgstr "Зберегти проєкт як"
 msgid "Projekt öffnen"
 msgstr "Відкрити проєкт"
 
-#: add_fixture_dialog.cpp:174 output_form.cpp:27 patch_table.cpp:46
+#: add_fixture_dialog.cpp:174 output_form.cpp:30 patch_table.cpp:46
 msgid "Protokoll"
 msgstr "Протокол"
 
@@ -1918,7 +1954,7 @@ msgstr "Точки"
 msgid "Punktwolke"
 msgstr "Хмара точок"
 
-#: output_form.cpp:69
+#: output_form.cpp:92
 msgid "Quellname (sACN)"
 msgstr "Назва джерела (sACN)"
 
@@ -2018,7 +2054,7 @@ msgstr "Коливання (LFO): синус, трикутник, пилка а�
 msgid "Seite"
 msgstr "Бік"
 
-#: output_form.cpp:62
+#: output_form.cpp:85
 msgid "Seitenverhältnis halten (KeepAspect)"
 msgstr "Зберігати пропорції (KeepAspect)"
 
@@ -2085,6 +2121,10 @@ msgstr "Зберегти"
 #: main_window_actions.cpp:40
 msgid "Speichern &unter …"
 msgstr "Зберегти &як …"
+
+#: output_form.cpp:56
+msgid "Speichert den gewählten Controller unter seinem Namen in der Bibliothek (Benutzerverzeichnis), damit du ihn in anderen Projekten wieder holen kannst. Gespeichert in: %1"
+msgstr "Зберігає вибраний контролер під його назвою в бібліотеці (папка користувача), щоб ви могли знову взяти його в інших проєктах. Збережено в: %1"
 
 #: node_info_texts.cpp:19
 msgid "Spektrum (32 Bänder) des Audio-Eingangs. Wird an „Spectrum Bars“ angeschlossen."
@@ -2394,6 +2434,10 @@ msgstr "Спершу оберіть фікстури у списку."
 msgid "Wähle zuerst ein Fixture in der Liste."
 msgstr "Спершу оберіть фікстуру у списку."
 
+#: output_form_library.cpp:62
+msgid "Wähle zuerst einen Controller in der Tabelle."
+msgstr "Спершу виберіть контролер у таблиці."
+
 #: settings_dialog.cpp:149
 msgid "Wählen …"
 msgstr "Обрати …"
@@ -2562,11 +2606,11 @@ msgstr "Приймати sACN (E1.31)"
 msgid "sACN-Port (UDP):"
 msgstr "Порт sACN (UDP):"
 
-#: output_form.cpp:68
+#: output_form.cpp:91
 msgid "sACN-Priorität"
 msgstr "Пріоритет sACN"
 
-#: output_form.cpp:62
+#: output_form.cpp:85
 msgid "strecken (Stretch)"
 msgstr "розтягнути (Stretch)"
 

@@ -18,6 +18,8 @@
 #include "form_helpers.hpp"
 #include "whitehole/runtime/player.hpp"
 
+class QMenu;
+
 namespace whitehole::studio {
 
 class OutputForm : public QWidget {
@@ -46,6 +48,11 @@ Q_SIGNALS:
 private:
     enum Column { Name, Protocol, Address, Port, Count };
 
+    /// Bibliothek der Controller (output_form_library.cpp): in einem Ordner des Benutzers gespeichert, in jedem Projekt nutzbar.
+    void saveSelectedToLibrary();
+    void addFromLibrary(const output::Destination& controller);
+    void fillLibraryMenu(QMenu* menu, bool adding);
+    QString exerciseLibrary();
     void updateSacnVisibility();
     void applyDestinations();
     void applySettings();
@@ -58,6 +65,8 @@ private:
     QSpinBox* priority_{nullptr};
     QLineEdit* sourceName_{nullptr};
     QFormLayout* sacnLayout_{nullptr};
+    QMenu* addMenu_{nullptr};
+    QMenu* deleteMenu_{nullptr};
     bool populating_{false};
 };
 

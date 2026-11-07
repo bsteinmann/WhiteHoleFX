@@ -11,6 +11,7 @@
 // als eine fremde Bibliothek überschreiben.
 //
 // Der Pfad lässt sich mit der Umgebungsvariable WHITEHOLEFX_FIXTURE_LIBRARY ersetzen (Tests).
+// Dieselbe Datei-Logik gilt für die Controller-Bibliothek weiter unten.
 #pragma once
 
 #include <QString>
@@ -20,6 +21,7 @@
 
 #include "whitehole/core/result.hpp"
 #include "whitehole/graph/node_registry.hpp"
+#include "whitehole/output/output_pipeline.hpp"
 #include "whitehole/project/project.hpp"
 
 namespace whitehole::studio::userlib {
@@ -42,5 +44,16 @@ namespace whitehole::studio::userlib {
 /// Gibt `projectText` unverändert zurück, wenn es keine Datei gibt oder sie leer ist. Die Prüfung, ob das Ergebnis
 /// gültig ist, macht der Aufrufer beim Laden (und fällt sonst auf den Originaltext zurück).
 [[nodiscard]] QString withLibraryTypes(const QString& projectText);
+
+// --- Controller -----------------------------------------------------------------------------------------------
+// Gleiche Idee für Controller (Name, Protokoll, Adresse, Port): Datei controller-library.whfx im selben Ordner, Pfad
+// ersetzbar mit WHITEHOLEFX_CONTROLLER_LIBRARY. Jeder Eintrag hat einen eindeutigen Namen.
+
+[[nodiscard]] QString controllerPath();
+[[nodiscard]] Result<std::vector<output::Destination>> loadControllers(std::shared_ptr<const graph::INodeRegistry> registry);
+/// Legt den Controller unter seinem Namen an oder ersetzt den gleichnamigen. Fehler: Name leer.
+[[nodiscard]] Result<void> upsertController(std::shared_ptr<const graph::INodeRegistry> registry,
+                                            const output::Destination& controller);
+[[nodiscard]] Result<void> removeController(std::shared_ptr<const graph::INodeRegistry> registry, const std::string& name);
 
 }  // namespace whitehole::studio::userlib

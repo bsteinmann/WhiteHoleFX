@@ -139,6 +139,8 @@ Die **Benutzerbibliothek** des Studios (`fixture-library.whfx` im Benutzerverzei
 solche Datei ohne Fixtures und Nodes: Kopfzeile `whitehole-project 1`, Kommentare und nur `fixturetype`-Blöcke. Ein neues
 Projekt bekommt ihre Blöcke vor seinen Fixtures.
 
+Die **Controller-Bibliothek** (`controller-library.whfx`, gleicher Ordner) hat dasselbe Format, enthält aber nur `destination`-Zeilen mit `name`; die Namen müssen eindeutig sein.
+
 ### `node <name> <typ>` … `end`
 
 `<name>` ist frei wählbar (ohne Punkt) und gilt nur in dieser Datei. Innerhalb des Blocks setzt

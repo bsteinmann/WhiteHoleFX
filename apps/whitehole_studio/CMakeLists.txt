@@ -81,6 +81,7 @@ add_executable(whitehole_studio
     node_search.hpp
     node_items.hpp
     output_form.cpp
+    output_form_library.cpp
     output_form.hpp
     parameter_editors.cpp
     parameter_editors.hpp
@@ -104,6 +105,7 @@ add_executable(whitehole_studio
     fixture_library_exercise.cpp
     fixture_library_page.cpp
     fixture_library_user.cpp
+    user_controller_library.cpp
     user_library.cpp
     user_library.hpp
     fixture_library_page.hpp

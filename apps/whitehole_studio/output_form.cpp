@@ -5,6 +5,7 @@
 #include <QGroupBox>
 #include <QComboBox>
 #include <QHBoxLayout>
+#include <QMenu>
 #include <QHeaderView>
 #include <QPushButton>
 #include <QSignalBlocker>
@@ -12,6 +13,8 @@
 #include <QVBoxLayout>
 
 #include <cmath>
+
+#include "user_library.hpp"
 
 namespace whitehole::studio {
 
@@ -45,6 +48,26 @@ OutputForm::OutputForm(runtime::Player& player, QWidget* parent) : QWidget{paren
     remove->setToolTip(tr("Entfernt den gewählten Controller (ohne Auswahl den letzten). Benutzte Controller bleiben stehen."));
     buttons->addWidget(add);
     buttons->addWidget(remove);
+    // Bibliothek: gespeicherte Controller (Name, Protokoll, Adresse, Port) in jedem Projekt wiederverwenden
+    auto* fromLibrary = new QPushButton{tr("Aus Bibliothek +")};
+    auto* toLibrary = new QPushButton{tr("In Bibliothek speichern")};
+    auto* deleteFromLibrary = new QPushButton{tr("Aus Bibliothek löschen")};
+    fromLibrary->setToolTip(tr("Einen gespeicherten Controller als neuen Controller in dieses Projekt holen"));
+    toLibrary->setToolTip(tr("Speichert den gewählten Controller unter seinem Namen in der Bibliothek (Benutzerverzeichnis), "
+                             "damit du ihn in anderen Projekten wieder holen kannst. Gespeichert in: %1")
+                              .arg(userlib::controllerPath()));
+    deleteFromLibrary->setToolTip(tr("Entfernt einen Controller aus der Bibliothek (das Projekt bleibt unverändert)"));
+    addMenu_ = new QMenu{fromLibrary};
+    deleteMenu_ = new QMenu{deleteFromLibrary};
+    fromLibrary->setMenu(addMenu_);
+    deleteFromLibrary->setMenu(deleteMenu_);
+    connect(addMenu_, &QMenu::aboutToShow, this, [this]() { fillLibraryMenu(addMenu_, true); });
+    connect(deleteMenu_, &QMenu::aboutToShow, this, [this]() { fillLibraryMenu(deleteMenu_, false); });
+    connect(toLibrary, &QPushButton::clicked, this, [this]() { saveSelectedToLibrary(); });
+    buttons->addSpacing(16);
+    buttons->addWidget(fromLibrary);
+    buttons->addWidget(toLibrary);
+    buttons->addWidget(deleteFromLibrary);
     buttons->addStretch();
     destinationLayout->addLayout(buttons);
     connect(add, &QPushButton::clicked, this, [this]() { addDestination(); });
@@ -294,7 +317,7 @@ QString OutputForm::exercise() {
     if (player_.project()->destinations.size() != destinations) {
         return QStringLiteral("Ausgabe: Ziel wurde nicht entfernt");
     }
-    return {};
+    return exerciseLibrary();
 }
 
 }  // namespace whitehole::studio

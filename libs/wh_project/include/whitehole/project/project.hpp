@@ -114,6 +114,15 @@ void applyStrictInputs(Project& project, bool strict);
 /// Nodename ohne Zeichen nicht).
 [[nodiscard]] Result<std::string> writeProject(const Project& project);
 
+/// Die `destination`-Zeilen der Controller als Text (ohne Kopfzeile), so wie `writeProject` sie schreibt.
+[[nodiscard]] std::string writeDestinations(const std::vector<output::Destination>& destinations);
+
+/// Benutzerbibliothek der Controller (Name, Protokoll, Adresse, Port): eine Datei mit `destination`-Zeilen, jede mit
+/// `name`. Fehler: Controller ohne Namen oder mit doppeltem Namen, sonst wie parseProject.
+[[nodiscard]] std::string writeControllerLibrary(const std::vector<output::Destination>& controllers);
+[[nodiscard]] Result<std::vector<output::Destination>> parseControllerLibrary(
+    std::string_view text, std::shared_ptr<const graph::INodeRegistry> registry);
+
 /// Stellt alle Patches auf das Protokoll ihres Controllers um (Art-Net <-> sACN verschiebt das Universe um 1, siehe
 /// output/patch_protocol.hpp). Liefert die Zahl der umgestellten Patches. Bei einem Fehler bleibt `project` teilweise
 /// verändert; der Aufrufer arbeitet auf einer Kopie (Player::editProject tut das).

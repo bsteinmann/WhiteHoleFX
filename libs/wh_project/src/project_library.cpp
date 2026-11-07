@@ -24,4 +24,29 @@ Result<std::vector<FixtureType>> parseFixtureLibrary(std::string_view text,
     return std::move(parsed.value().types);
 }
 
+std::string writeControllerLibrary(const std::vector<output::Destination>& controllers) {
+    return "whitehole-project 1\n# Benutzerbibliothek der Controller (WhiteHoleFX). Wird vom Studio gepflegt.\n\n" +
+           writeDestinations(controllers);
+}
+
+Result<std::vector<output::Destination>> parseControllerLibrary(std::string_view text,
+                                                                 std::shared_ptr<const graph::INodeRegistry> registry) {
+    Result<Project> parsed = parseProject(text, std::move(registry));
+    if (!parsed.ok()) {
+        return parsed.error();
+    }
+    std::vector<output::Destination> controllers = std::move(parsed.value().destinations);
+    for (std::size_t i = 0; i < controllers.size(); ++i) {
+        if (controllers[i].name.empty()) {
+            return Error{ErrorCode::InvalidArgument, "Controller " + std::to_string(i) + " in der Bibliothek hat keinen Namen"};
+        }
+        for (std::size_t j = 0; j < i; ++j) {
+            if (controllers[j].name == controllers[i].name) {
+                return Error{ErrorCode::AlreadyExists, "Der Name \"" + controllers[i].name + "\" steht in der Bibliothek zweimal"};
+            }
+        }
+    }
+    return controllers;
+}
+
 }  // namespace whitehole::project
