@@ -168,7 +168,7 @@ QString OutputForm::exerciseLibrary() {
     }
 
     // Aus der Bibliothek holen: ein weiterer Controller mit denselben Werten
-    fillLibraryMenu(addMenu_, true);
+    fillLibraryMenu(addMenu_, LibraryAction::Add);
     if (addMenu_->actions().size() != 1 || !addMenu_->actions()[0]->isEnabled()) {
         return QStringLiteral("Ausgabe: Bibliotheksmenü zeigt den gespeicherten Controller nicht");
     }
@@ -192,7 +192,7 @@ QString OutputForm::exerciseLibrary() {
     }
 
     // Aus der Bibliothek löschen
-    fillLibraryMenu(deleteMenu_, false);
+    fillLibraryMenu(deleteMenu_, LibraryAction::Remove);
     if (deleteMenu_->actions().size() != 1) {
         return QStringLiteral("Ausgabe: Lösch-Menü der Bibliothek ist leer");
     }
