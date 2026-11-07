@@ -278,7 +278,7 @@ msgstr "&Open …"
 msgid "&Über WhiteHoleFX"
 msgstr "&About WhiteHoleFX"
 
-#: output_form_library.cpp:109
+#: output_form_library.cpp:129
 msgid "(Bibliothek ist leer)"
 msgstr "(library is empty)"
 
@@ -562,6 +562,10 @@ msgstr "Reset to the library value"
 msgid "Auf die Fläche ziehen: Node hinzufügen.\nNode hierher ziehen: entfernen."
 msgstr "Drag onto the canvas: add a node.\nDrag a node here: remove it."
 
+#: output_form.cpp:54
+msgid "Auf gewählten anwenden"
+msgstr "Apply to selected"
+
 #: settings_dialog.cpp:192
 msgid "Aufnahmegeräte lassen sich nicht auflisten: %1"
 msgstr "Cannot list capture devices: %1"
@@ -582,7 +586,7 @@ msgstr "Add from user library"
 msgid "Aus Bibliothek +"
 msgstr "From library +"
 
-#: output_form.cpp:54
+#: output_form.cpp:57
 msgid "Aus Bibliothek löschen"
 msgstr "Delete from library"
 
@@ -706,7 +710,7 @@ msgstr "Image as a texture (e.g. from a file)"
 msgid "Bild auf der Bühne: eine Farbe für jede Position"
 msgstr "Image on the stage: a colour for every position"
 
-#: output_form.cpp:89
+#: output_form.cpp:96
 msgid "Bildrate (fps)"
 msgstr "Frame rate (fps)"
 
@@ -742,7 +746,7 @@ msgstr "Bands of light run along the chosen axis. “Frequency” is the number 
 msgid "Controller"
 msgstr "Controller"
 
-#: output_form.cpp:210
+#: output_form.cpp:217
 msgid "Controller %1: Universe von %2 Patch(es) um %3 verschoben (Art-Net zählt ab 0, sACN ab 1)."
 msgstr "Controller %1: universe of %2 patch(es) shifted by %3 (Art-Net counts from 0, sACN from 1)."
 
@@ -1070,7 +1074,7 @@ msgstr "A single solid color. The simplest generator, good as a background or fo
 msgid "Eine feste Zahl. Praktisch, um mehrere Parameter mit demselben Wert zu speisen."
 msgstr "A fixed number. Handy for feeding the same value to several parameters."
 
-#: output_form.cpp:55
+#: output_form.cpp:58
 msgid "Einen gespeicherten Controller als neuen Controller in dieses Projekt holen"
 msgstr "Add a stored controller to this project as a new controller"
 
@@ -1090,7 +1094,7 @@ msgstr "Connect input to new node"
 msgid "Einrasten"
 msgstr "Snap"
 
-#: main_window_settings.cpp:46 output_form.cpp:82 settings_dialog.cpp:58
+#: main_window_settings.cpp:46 output_form.cpp:89 settings_dialog.cpp:58
 msgid "Einstellungen"
 msgstr "Settings"
 
@@ -1110,7 +1114,7 @@ msgstr "Remove"
 msgid "Entfernt den gewählten Controller (ohne Auswahl den letzten). Benutzte Controller bleiben stehen."
 msgstr "Removes the selected controller (the last one if none is selected). Controllers in use stay."
 
-#: output_form.cpp:59
+#: output_form.cpp:62
 msgid "Entfernt einen Controller aus der Bibliothek (das Projekt bleibt unverändert)"
 msgstr "Removes a controller from the library (the project stays unchanged)"
 
@@ -1490,7 +1494,7 @@ msgstr "Loudness per frequency band"
 msgid "Layout"
 msgstr "Layout"
 
-#: output_form.cpp:90
+#: output_form.cpp:97
 msgid "Layout auf Würfel abbilden"
 msgstr "Map layout onto cube"
 
@@ -1674,7 +1678,7 @@ msgstr "Centre"
 msgid "Modus"
 msgstr "Mode"
 
-#: output_form_library.cpp:113 patch_table.cpp:124
+#: output_form_library.cpp:133 patch_table.cpp:124
 msgid "Multicast"
 msgstr "Multicast"
 
@@ -1954,7 +1958,7 @@ msgstr "Points"
 msgid "Punktwolke"
 msgstr "Point cloud"
 
-#: output_form.cpp:92
+#: output_form.cpp:99
 msgid "Quellname (sACN)"
 msgstr "Source name (sACN)"
 
@@ -2054,7 +2058,7 @@ msgstr "Oscillator (LFO): sine, triangle, saw or square with frequency, phase an
 msgid "Seite"
 msgstr "Side"
 
-#: output_form.cpp:85
+#: output_form.cpp:92
 msgid "Seitenverhältnis halten (KeepAspect)"
 msgstr "Keep aspect ratio (KeepAspect)"
 
@@ -2122,7 +2126,7 @@ msgstr "Save"
 msgid "Speichern &unter …"
 msgstr "Save &as …"
 
-#: output_form.cpp:56
+#: output_form.cpp:59
 msgid "Speichert den gewählten Controller unter seinem Namen in der Bibliothek (Benutzerverzeichnis), damit du ihn in anderen Projekten wieder holen kannst. Gespeichert in: %1"
 msgstr "Saves the selected controller under its name in the library (user folder) so you can fetch it again in other projects. Stored in: %1"
 
@@ -2434,7 +2438,7 @@ msgstr "Select fixtures in the list first."
 msgid "Wähle zuerst ein Fixture in der Liste."
 msgstr "Select a fixture in the list first."
 
-#: output_form_library.cpp:62
+#: output_form_library.cpp:62 output_form_library.cpp:104
 msgid "Wähle zuerst einen Controller in der Tabelle."
 msgstr "Select a controller in the table first."
 
@@ -2606,11 +2610,11 @@ msgstr "Receive sACN (E1.31)"
 msgid "sACN-Port (UDP):"
 msgstr "sACN port (UDP):"
 
-#: output_form.cpp:91
+#: output_form.cpp:98
 msgid "sACN-Priorität"
 msgstr "sACN priority"
 
-#: output_form.cpp:85
+#: output_form.cpp:92
 msgid "strecken (Stretch)"
 msgstr "stretch (Stretch)"
 
@@ -2681,6 +2685,10 @@ msgstr "Remove bypass\tB"
 #: layout_panel.cpp:157
 msgid "Übereinander ↕"
 msgstr "Stacked ↕"
+
+#: output_form.cpp:55
+msgid "Überschreibt Name, Protokoll, Adresse und Port des gewählten Controllers mit einem gespeicherten Eintrag. Die Patches bleiben auf dem Controller (dasselbe Gerät, andere Einstellungen)."
+msgstr "Overwrites name, protocol, address and port of the selected controller with a stored entry. The patches stay on the controller (same device, different settings)."
 
 #: app_language.hpp:3
 msgid "…"

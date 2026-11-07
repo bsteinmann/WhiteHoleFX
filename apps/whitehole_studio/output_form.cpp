@@ -51,6 +51,9 @@ OutputForm::OutputForm(runtime::Player& player, QWidget* parent) : QWidget{paren
     // Bibliothek: gespeicherte Controller (Name, Protokoll, Adresse, Port) in jedem Projekt wiederverwenden
     auto* fromLibrary = new QPushButton{tr("Aus Bibliothek +")};
     auto* toLibrary = new QPushButton{tr("In Bibliothek speichern")};
+    auto* applyFromLibraryButton = new QPushButton{tr("Auf gewählten anwenden")};
+    applyFromLibraryButton->setToolTip(tr("Überschreibt Name, Protokoll, Adresse und Port des gewählten Controllers mit einem "
+                                          "gespeicherten Eintrag. Die Patches bleiben auf dem Controller (dasselbe Gerät, andere Einstellungen)."));
     auto* deleteFromLibrary = new QPushButton{tr("Aus Bibliothek löschen")};
     fromLibrary->setToolTip(tr("Einen gespeicherten Controller als neuen Controller in dieses Projekt holen"));
     toLibrary->setToolTip(tr("Speichert den gewählten Controller unter seinem Namen in der Bibliothek (Benutzerverzeichnis), "
@@ -58,14 +61,18 @@ OutputForm::OutputForm(runtime::Player& player, QWidget* parent) : QWidget{paren
                               .arg(userlib::controllerPath()));
     deleteFromLibrary->setToolTip(tr("Entfernt einen Controller aus der Bibliothek (das Projekt bleibt unverändert)"));
     addMenu_ = new QMenu{fromLibrary};
+    applyMenu_ = new QMenu{applyFromLibraryButton};
+    applyFromLibraryButton->setMenu(applyMenu_);
+    connect(applyMenu_, &QMenu::aboutToShow, this, [this]() { fillLibraryMenu(applyMenu_, LibraryAction::Apply); });
     deleteMenu_ = new QMenu{deleteFromLibrary};
     fromLibrary->setMenu(addMenu_);
     deleteFromLibrary->setMenu(deleteMenu_);
-    connect(addMenu_, &QMenu::aboutToShow, this, [this]() { fillLibraryMenu(addMenu_, true); });
-    connect(deleteMenu_, &QMenu::aboutToShow, this, [this]() { fillLibraryMenu(deleteMenu_, false); });
+    connect(addMenu_, &QMenu::aboutToShow, this, [this]() { fillLibraryMenu(addMenu_, LibraryAction::Add); });
+    connect(deleteMenu_, &QMenu::aboutToShow, this, [this]() { fillLibraryMenu(deleteMenu_, LibraryAction::Remove); });
     connect(toLibrary, &QPushButton::clicked, this, [this]() { saveSelectedToLibrary(); });
     buttons->addSpacing(16);
     buttons->addWidget(fromLibrary);
+    buttons->addWidget(applyFromLibraryButton);
     buttons->addWidget(toLibrary);
     buttons->addWidget(deleteFromLibrary);
     buttons->addStretch();

@@ -51,7 +51,9 @@ private:
     /// Bibliothek der Controller (output_form_library.cpp): in einem Ordner des Benutzers gespeichert, in jedem Projekt nutzbar.
     void saveSelectedToLibrary();
     void addFromLibrary(const output::Destination& controller);
-    void fillLibraryMenu(QMenu* menu, bool adding);
+    enum class LibraryAction { Add, Apply, Remove };
+    void applyFromLibrary(const output::Destination& controller);
+    void fillLibraryMenu(QMenu* menu, LibraryAction action);
     QString exerciseLibrary();
     void updateSacnVisibility();
     void applyDestinations();
@@ -66,6 +68,7 @@ private:
     QLineEdit* sourceName_{nullptr};
     QFormLayout* sacnLayout_{nullptr};
     QMenu* addMenu_{nullptr};
+    QMenu* applyMenu_{nullptr};
     QMenu* deleteMenu_{nullptr};
     bool populating_{false};
 };

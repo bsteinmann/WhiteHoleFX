@@ -278,7 +278,7 @@ msgstr "&Abrir …"
 msgid "&Über WhiteHoleFX"
 msgstr "&Acerca de WhiteHoleFX"
 
-#: output_form_library.cpp:109
+#: output_form_library.cpp:129
 msgid "(Bibliothek ist leer)"
 msgstr "(la biblioteca está vacía)"
 
@@ -562,6 +562,10 @@ msgstr "Restablecer al valor de la biblioteca"
 msgid "Auf die Fläche ziehen: Node hinzufügen.\nNode hierher ziehen: entfernen."
 msgstr "Arrastra al lienzo: añadir un nodo.\nArrastra un nodo aquí: eliminarlo."
 
+#: output_form.cpp:54
+msgid "Auf gewählten anwenden"
+msgstr "Aplicar al seleccionado"
+
 #: settings_dialog.cpp:192
 msgid "Aufnahmegeräte lassen sich nicht auflisten: %1"
 msgstr "No se pueden listar los dispositivos de captura: %1"
@@ -582,7 +586,7 @@ msgstr "Añadir de la biblioteca de usuario"
 msgid "Aus Bibliothek +"
 msgstr "Desde la biblioteca +"
 
-#: output_form.cpp:54
+#: output_form.cpp:57
 msgid "Aus Bibliothek löschen"
 msgstr "Eliminar de la biblioteca"
 
@@ -706,7 +710,7 @@ msgstr "Imagen como textura (p. ej. de un archivo)"
 msgid "Bild auf der Bühne: eine Farbe für jede Position"
 msgstr "Imagen en el escenario: un color para cada posición"
 
-#: output_form.cpp:89
+#: output_form.cpp:96
 msgid "Bildrate (fps)"
 msgstr "Velocidad de fotogramas (fps)"
 
@@ -742,7 +746,7 @@ msgstr "Bandas de luz recorren el eje elegido. «Frequency» es el número de on
 msgid "Controller"
 msgstr "Controlador"
 
-#: output_form.cpp:210
+#: output_form.cpp:217
 msgid "Controller %1: Universe von %2 Patch(es) um %3 verschoben (Art-Net zählt ab 0, sACN ab 1)."
 msgstr "Controlador %1: universo de %2 patch(es) desplazado %3 (Art-Net cuenta desde 0, sACN desde 1)."
 
@@ -1070,7 +1074,7 @@ msgstr "A single solid color. The simplest generator, good as a background or fo
 msgid "Eine feste Zahl. Praktisch, um mehrere Parameter mit demselben Wert zu speisen."
 msgstr "A fixed number. Handy for feeding the same value to several parameters."
 
-#: output_form.cpp:55
+#: output_form.cpp:58
 msgid "Einen gespeicherten Controller als neuen Controller in dieses Projekt holen"
 msgstr "Añadir un controlador guardado a este proyecto como controlador nuevo"
 
@@ -1090,7 +1094,7 @@ msgstr "Conectar la entrada con un nodo nuevo"
 msgid "Einrasten"
 msgstr "Ajustar"
 
-#: main_window_settings.cpp:46 output_form.cpp:82 settings_dialog.cpp:58
+#: main_window_settings.cpp:46 output_form.cpp:89 settings_dialog.cpp:58
 msgid "Einstellungen"
 msgstr "Ajustes"
 
@@ -1110,7 +1114,7 @@ msgstr "Quitar"
 msgid "Entfernt den gewählten Controller (ohne Auswahl den letzten). Benutzte Controller bleiben stehen."
 msgstr "Elimina el controlador seleccionado (el último si no hay selección). Los controladores en uso se quedan."
 
-#: output_form.cpp:59
+#: output_form.cpp:62
 msgid "Entfernt einen Controller aus der Bibliothek (das Projekt bleibt unverändert)"
 msgstr "Elimina un controlador de la biblioteca (el proyecto no cambia)"
 
@@ -1490,7 +1494,7 @@ msgstr "Volumen por banda de frecuencia"
 msgid "Layout"
 msgstr "Disposición"
 
-#: output_form.cpp:90
+#: output_form.cpp:97
 msgid "Layout auf Würfel abbilden"
 msgstr "Proyectar la disposición sobre el cubo"
 
@@ -1674,7 +1678,7 @@ msgstr "Centro"
 msgid "Modus"
 msgstr "Modo"
 
-#: output_form_library.cpp:113 patch_table.cpp:124
+#: output_form_library.cpp:133 patch_table.cpp:124
 msgid "Multicast"
 msgstr "Multicast"
 
@@ -1954,7 +1958,7 @@ msgstr "Puntos"
 msgid "Punktwolke"
 msgstr "Nube de puntos"
 
-#: output_form.cpp:92
+#: output_form.cpp:99
 msgid "Quellname (sACN)"
 msgstr "Nombre de la fuente (sACN)"
 
@@ -2054,7 +2058,7 @@ msgstr "Oscillator (LFO): sine, triangle, saw or square with frequency, phase an
 msgid "Seite"
 msgstr "Lateral"
 
-#: output_form.cpp:85
+#: output_form.cpp:92
 msgid "Seitenverhältnis halten (KeepAspect)"
 msgstr "Mantener proporción (KeepAspect)"
 
@@ -2122,7 +2126,7 @@ msgstr "Guardar"
 msgid "Speichern &unter …"
 msgstr "Guardar &como …"
 
-#: output_form.cpp:56
+#: output_form.cpp:59
 msgid "Speichert den gewählten Controller unter seinem Namen in der Bibliothek (Benutzerverzeichnis), damit du ihn in anderen Projekten wieder holen kannst. Gespeichert in: %1"
 msgstr "Guarda el controlador elegido con su nombre en la biblioteca (carpeta de usuario) para recuperarlo en otros proyectos. Guardado en: %1"
 
@@ -2434,7 +2438,7 @@ msgstr "Elige primero fixtures de la lista."
 msgid "Wähle zuerst ein Fixture in der Liste."
 msgstr "Elige primero un fixture de la lista."
 
-#: output_form_library.cpp:62
+#: output_form_library.cpp:62 output_form_library.cpp:104
 msgid "Wähle zuerst einen Controller in der Tabelle."
 msgstr "Elige primero un controlador en la tabla."
 
@@ -2606,11 +2610,11 @@ msgstr "Recibir sACN (E1.31)"
 msgid "sACN-Port (UDP):"
 msgstr "Puerto sACN (UDP):"
 
-#: output_form.cpp:91
+#: output_form.cpp:98
 msgid "sACN-Priorität"
 msgstr "Prioridad sACN"
 
-#: output_form.cpp:85
+#: output_form.cpp:92
 msgid "strecken (Stretch)"
 msgstr "estirar (Stretch)"
 
@@ -2681,6 +2685,10 @@ msgstr "Quitar el puenteo\tB"
 #: layout_panel.cpp:157
 msgid "Übereinander ↕"
 msgstr "Apilados ↕"
+
+#: output_form.cpp:55
+msgid "Überschreibt Name, Protokoll, Adresse und Port des gewählten Controllers mit einem gespeicherten Eintrag. Die Patches bleiben auf dem Controller (dasselbe Gerät, andere Einstellungen)."
+msgstr "Sobrescribe nombre, protocolo, dirección y puerto del controlador elegido con una entrada guardada. Los parches permanecen en el controlador (mismo dispositivo, otros ajustes)."
 
 #: app_language.hpp:3
 msgid "…"

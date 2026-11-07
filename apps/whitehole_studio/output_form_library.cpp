@@ -95,7 +95,27 @@ void OutputForm::addFromLibrary(const output::Destination& controller) {
     report(r);
 }
 
-void OutputForm::fillLibraryMenu(QMenu* menu, bool adding) {
+void OutputForm::applyFromLibrary(const output::Destination& controller) {
+    if (player_.project() == nullptr) {
+        return;
+    }
+    const int row = table_->currentRow();
+    if (row < 0 || static_cast<std::size_t>(row) >= player_.project()->destinations.size()) {
+        Q_EMIT failed(tr("Wähle zuerst einen Controller in der Tabelle."));
+        return;
+    }
+    // Gleiche Nummer, neue Einstellungen: die Patches bleiben, setDestinations schiebt bei Protokollwechsel das Universe.
+    std::vector<output::Destination> destinations = player_.project()->destinations;
+    destinations[static_cast<std::size_t>(row)] = controller;
+    const Result<void> r = player_.setDestinations(std::move(destinations));
+    if (r.ok()) {
+        rebuild();
+        table_->setCurrentCell(row, Address);
+    }
+    report(r);
+}
+
+void OutputForm::fillLibraryMenu(QMenu* menu, LibraryAction mode) {
     menu->clear();
     if (player_.project() == nullptr) {
         return;
@@ -112,11 +132,13 @@ void OutputForm::fillLibraryMenu(QMenu* menu, bool adding) {
     for (const output::Destination& controller : controllers.value()) {
         const QString where = controller.address.empty() ? tr("Multicast") : fromStd(controller.address);
         const QString text = QStringLiteral("%1 – %2 %3").arg(fromStd(controller.name), protocolText(controller.protocol), where);
-        QAction* action = menu->addAction(text);
-        if (adding) {
-            connect(action, &QAction::triggered, this, [this, controller]() { addFromLibrary(controller); });
+        QAction* entry = menu->addAction(text);
+        if (mode == LibraryAction::Add) {
+            connect(entry, &QAction::triggered, this, [this, controller]() { addFromLibrary(controller); });
+        } else if (mode == LibraryAction::Apply) {
+            connect(entry, &QAction::triggered, this, [this, controller]() { applyFromLibrary(controller); });
         } else {
-            connect(action, &QAction::triggered, this, [this, controller]() {
+            connect(entry, &QAction::triggered, this, [this, controller]() {
                 const Result<void> removed = userlib::removeController(player_.project()->graph.registryPtr(), controller.name);
                 if (!removed.ok()) {
                     Q_EMIT failed(fromStd(removed.error().message));
@@ -154,6 +176,19 @@ QString OutputForm::exerciseLibrary() {
     if (player_.project()->destinations.size() != before + 2 || player_.project()->destinations.back().name != "Bibliothek-Test" ||
         player_.project()->destinations.back().address != "192.168.0.77") {
         return QStringLiteral("Ausgabe: Controller aus der Bibliothek wurde nicht übernommen");
+    }
+
+    // Auf den gewählten anwenden: der erste Controller bekommt die Werte, die Zeilenzahl bleibt
+    table_->item(row, Address)->setText(QStringLiteral("192.168.0.99"));
+    table_->setCurrentCell(row, Address);
+    fillLibraryMenu(applyMenu_, LibraryAction::Apply);
+    if (applyMenu_->actions().size() != 1) {
+        return QStringLiteral("Ausgabe: Anwenden-Menü der Bibliothek ist leer");
+    }
+    applyMenu_->actions()[0]->trigger();
+    if (player_.project()->destinations.size() != before + 2 ||
+        player_.project()->destinations[static_cast<std::size_t>(row)].address != "192.168.0.77") {
+        return QStringLiteral("Ausgabe: Anwenden aus der Bibliothek hat den Controller nicht überschrieben");
     }
 
     // Aus der Bibliothek löschen

@@ -278,7 +278,7 @@ msgstr ""
 msgid "&Über WhiteHoleFX"
 msgstr ""
 
-#: output_form_library.cpp:109
+#: output_form_library.cpp:129
 msgid "(Bibliothek ist leer)"
 msgstr ""
 
@@ -562,6 +562,10 @@ msgstr ""
 msgid "Auf die Fläche ziehen: Node hinzufügen.\nNode hierher ziehen: entfernen."
 msgstr ""
 
+#: output_form.cpp:54
+msgid "Auf gewählten anwenden"
+msgstr ""
+
 #: settings_dialog.cpp:192
 msgid "Aufnahmegeräte lassen sich nicht auflisten: %1"
 msgstr ""
@@ -582,7 +586,7 @@ msgstr ""
 msgid "Aus Bibliothek +"
 msgstr ""
 
-#: output_form.cpp:54
+#: output_form.cpp:57
 msgid "Aus Bibliothek löschen"
 msgstr ""
 
@@ -706,7 +710,7 @@ msgstr ""
 msgid "Bild auf der Bühne: eine Farbe für jede Position"
 msgstr ""
 
-#: output_form.cpp:89
+#: output_form.cpp:96
 msgid "Bildrate (fps)"
 msgstr ""
 
@@ -742,7 +746,7 @@ msgstr ""
 msgid "Controller"
 msgstr ""
 
-#: output_form.cpp:210
+#: output_form.cpp:217
 msgid "Controller %1: Universe von %2 Patch(es) um %3 verschoben (Art-Net zählt ab 0, sACN ab 1)."
 msgstr ""
 
@@ -1070,7 +1074,7 @@ msgstr ""
 msgid "Eine feste Zahl. Praktisch, um mehrere Parameter mit demselben Wert zu speisen."
 msgstr ""
 
-#: output_form.cpp:55
+#: output_form.cpp:58
 msgid "Einen gespeicherten Controller als neuen Controller in dieses Projekt holen"
 msgstr ""
 
@@ -1090,7 +1094,7 @@ msgstr ""
 msgid "Einrasten"
 msgstr ""
 
-#: main_window_settings.cpp:46 output_form.cpp:82 settings_dialog.cpp:58
+#: main_window_settings.cpp:46 output_form.cpp:89 settings_dialog.cpp:58
 msgid "Einstellungen"
 msgstr ""
 
@@ -1110,7 +1114,7 @@ msgstr ""
 msgid "Entfernt den gewählten Controller (ohne Auswahl den letzten). Benutzte Controller bleiben stehen."
 msgstr ""
 
-#: output_form.cpp:59
+#: output_form.cpp:62
 msgid "Entfernt einen Controller aus der Bibliothek (das Projekt bleibt unverändert)"
 msgstr ""
 
@@ -1490,7 +1494,7 @@ msgstr ""
 msgid "Layout"
 msgstr ""
 
-#: output_form.cpp:90
+#: output_form.cpp:97
 msgid "Layout auf Würfel abbilden"
 msgstr ""
 
@@ -1674,7 +1678,7 @@ msgstr ""
 msgid "Modus"
 msgstr ""
 
-#: output_form_library.cpp:113 patch_table.cpp:124
+#: output_form_library.cpp:133 patch_table.cpp:124
 msgid "Multicast"
 msgstr ""
 
@@ -1954,7 +1958,7 @@ msgstr ""
 msgid "Punktwolke"
 msgstr ""
 
-#: output_form.cpp:92
+#: output_form.cpp:99
 msgid "Quellname (sACN)"
 msgstr ""
 
@@ -2054,7 +2058,7 @@ msgstr ""
 msgid "Seite"
 msgstr ""
 
-#: output_form.cpp:85
+#: output_form.cpp:92
 msgid "Seitenverhältnis halten (KeepAspect)"
 msgstr ""
 
@@ -2122,7 +2126,7 @@ msgstr ""
 msgid "Speichern &unter …"
 msgstr ""
 
-#: output_form.cpp:56
+#: output_form.cpp:59
 msgid "Speichert den gewählten Controller unter seinem Namen in der Bibliothek (Benutzerverzeichnis), damit du ihn in anderen Projekten wieder holen kannst. Gespeichert in: %1"
 msgstr ""
 
@@ -2434,7 +2438,7 @@ msgstr ""
 msgid "Wähle zuerst ein Fixture in der Liste."
 msgstr ""
 
-#: output_form_library.cpp:62
+#: output_form_library.cpp:62 output_form_library.cpp:104
 msgid "Wähle zuerst einen Controller in der Tabelle."
 msgstr ""
 
@@ -2606,11 +2610,11 @@ msgstr ""
 msgid "sACN-Port (UDP):"
 msgstr ""
 
-#: output_form.cpp:91
+#: output_form.cpp:98
 msgid "sACN-Priorität"
 msgstr ""
 
-#: output_form.cpp:85
+#: output_form.cpp:92
 msgid "strecken (Stretch)"
 msgstr ""
 
@@ -2680,6 +2684,10 @@ msgstr ""
 
 #: layout_panel.cpp:157
 msgid "Übereinander ↕"
+msgstr ""
+
+#: output_form.cpp:55
+msgid "Überschreibt Name, Protokoll, Adresse und Port des gewählten Controllers mit einem gespeicherten Eintrag. Die Patches bleiben auf dem Controller (dasselbe Gerät, andere Einstellungen)."
 msgstr ""
 
 #: app_language.hpp:3

@@ -278,7 +278,7 @@ msgstr "&Відкрити …"
 msgid "&Über WhiteHoleFX"
 msgstr "&Про WhiteHoleFX"
 
-#: output_form_library.cpp:109
+#: output_form_library.cpp:129
 msgid "(Bibliothek ist leer)"
 msgstr "(бібліотека порожня)"
 
@@ -562,6 +562,10 @@ msgstr "Повернути значення з бібліотеки"
 msgid "Auf die Fläche ziehen: Node hinzufügen.\nNode hierher ziehen: entfernen."
 msgstr "Перетягніть на поле: додати ноду.\nПеретягніть ноду сюди: видалити."
 
+#: output_form.cpp:54
+msgid "Auf gewählten anwenden"
+msgstr "Застосувати до вибраного"
+
 #: settings_dialog.cpp:192
 msgid "Aufnahmegeräte lassen sich nicht auflisten: %1"
 msgstr "Не вдалося отримати список пристроїв запису: %1"
@@ -582,7 +586,7 @@ msgstr "Додати з бібліотеки користувача"
 msgid "Aus Bibliothek +"
 msgstr "З бібліотеки +"
 
-#: output_form.cpp:54
+#: output_form.cpp:57
 msgid "Aus Bibliothek löschen"
 msgstr "Видалити з бібліотеки"
 
@@ -706,7 +710,7 @@ msgstr "Зображення як текстура (наприклад, із ф�
 msgid "Bild auf der Bühne: eine Farbe für jede Position"
 msgstr "Зображення на сцені: один колір для кожної позиції"
 
-#: output_form.cpp:89
+#: output_form.cpp:96
 msgid "Bildrate (fps)"
 msgstr "Частота кадрів (fps)"
 
@@ -742,7 +746,7 @@ msgstr "Смуги світла біжать уздовж вибраної ос�
 msgid "Controller"
 msgstr "Контролер"
 
-#: output_form.cpp:210
+#: output_form.cpp:217
 msgid "Controller %1: Universe von %2 Patch(es) um %3 verschoben (Art-Net zählt ab 0, sACN ab 1)."
 msgstr "Контролер %1: універс у %2 патч(ів) зсунуто на %3 (Art-Net рахує з 0, sACN з 1)."
 
@@ -1070,7 +1074,7 @@ msgstr "Однокольорова поверхня. Найпростіший г
 msgid "Eine feste Zahl. Praktisch, um mehrere Parameter mit demselben Wert zu speisen."
 msgstr "Фіксоване число. Зручно, щоб живити кілька параметрів одним значенням."
 
-#: output_form.cpp:55
+#: output_form.cpp:58
 msgid "Einen gespeicherten Controller als neuen Controller in dieses Projekt holen"
 msgstr "Додати збережений контролер до цього проєкту як новий контролер"
 
@@ -1090,7 +1094,7 @@ msgstr "З’єднати вхід із новим нодом"
 msgid "Einrasten"
 msgstr "Прилипання"
 
-#: main_window_settings.cpp:46 output_form.cpp:82 settings_dialog.cpp:58
+#: main_window_settings.cpp:46 output_form.cpp:89 settings_dialog.cpp:58
 msgid "Einstellungen"
 msgstr "Налаштування"
 
@@ -1110,7 +1114,7 @@ msgstr "Прибрати"
 msgid "Entfernt den gewählten Controller (ohne Auswahl den letzten). Benutzte Controller bleiben stehen."
 msgstr "Видаляє вибраний контролер (останній, якщо нічого не вибрано). Використані контролери залишаються."
 
-#: output_form.cpp:59
+#: output_form.cpp:62
 msgid "Entfernt einen Controller aus der Bibliothek (das Projekt bleibt unverändert)"
 msgstr "Видаляє контролер з бібліотеки (проєкт не змінюється)"
 
@@ -1490,7 +1494,7 @@ msgstr "Гучність за смугами частот"
 msgid "Layout"
 msgstr "Layout"
 
-#: output_form.cpp:90
+#: output_form.cpp:97
 msgid "Layout auf Würfel abbilden"
 msgstr "Відобразити Layout на куб"
 
@@ -1674,7 +1678,7 @@ msgstr "Центр"
 msgid "Modus"
 msgstr "Режим"
 
-#: output_form_library.cpp:113 patch_table.cpp:124
+#: output_form_library.cpp:133 patch_table.cpp:124
 msgid "Multicast"
 msgstr "Multicast"
 
@@ -1954,7 +1958,7 @@ msgstr "Точки"
 msgid "Punktwolke"
 msgstr "Хмара точок"
 
-#: output_form.cpp:92
+#: output_form.cpp:99
 msgid "Quellname (sACN)"
 msgstr "Назва джерела (sACN)"
 
@@ -2054,7 +2058,7 @@ msgstr "Коливання (LFO): синус, трикутник, пилка а�
 msgid "Seite"
 msgstr "Бік"
 
-#: output_form.cpp:85
+#: output_form.cpp:92
 msgid "Seitenverhältnis halten (KeepAspect)"
 msgstr "Зберігати пропорції (KeepAspect)"
 
@@ -2122,7 +2126,7 @@ msgstr "Зберегти"
 msgid "Speichern &unter …"
 msgstr "Зберегти &як …"
 
-#: output_form.cpp:56
+#: output_form.cpp:59
 msgid "Speichert den gewählten Controller unter seinem Namen in der Bibliothek (Benutzerverzeichnis), damit du ihn in anderen Projekten wieder holen kannst. Gespeichert in: %1"
 msgstr "Зберігає вибраний контролер під його назвою в бібліотеці (папка користувача), щоб ви могли знову взяти його в інших проєктах. Збережено в: %1"
 
@@ -2434,7 +2438,7 @@ msgstr "Спершу оберіть фікстури у списку."
 msgid "Wähle zuerst ein Fixture in der Liste."
 msgstr "Спершу оберіть фікстуру у списку."
 
-#: output_form_library.cpp:62
+#: output_form_library.cpp:62 output_form_library.cpp:104
 msgid "Wähle zuerst einen Controller in der Tabelle."
 msgstr "Спершу виберіть контролер у таблиці."
 
@@ -2606,11 +2610,11 @@ msgstr "Приймати sACN (E1.31)"
 msgid "sACN-Port (UDP):"
 msgstr "Порт sACN (UDP):"
 
-#: output_form.cpp:91
+#: output_form.cpp:98
 msgid "sACN-Priorität"
 msgstr "Пріоритет sACN"
 
-#: output_form.cpp:85
+#: output_form.cpp:92
 msgid "strecken (Stretch)"
 msgstr "розтягнути (Stretch)"
 
@@ -2681,6 +2685,10 @@ msgstr "Скасувати обхід\tB"
 #: layout_panel.cpp:157
 msgid "Übereinander ↕"
 msgstr "Одне над одним ↕"
+
+#: output_form.cpp:55
+msgid "Überschreibt Name, Protokoll, Adresse und Port des gewählten Controllers mit einem gespeicherten Eintrag. Die Patches bleiben auf dem Controller (dasselbe Gerät, andere Einstellungen)."
+msgstr "Перезаписує назву, протокол, адресу й порт вибраного контролера збереженим записом. Патчі залишаються на контролері (той самий пристрій, інші налаштування)."
 
 #: app_language.hpp:3
 msgid "…"
