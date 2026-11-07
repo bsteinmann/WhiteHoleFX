@@ -82,3 +82,11 @@ TEST_CASE("Gizmo: Einrasten", "[preview][gizmo]") {
     CHECK(snapDistance(-0.76F, 0.1F) == Approx(-0.8F));
     CHECK(snapDistance(0.34F, 0.0F) == Approx(0.34F));
 }
+
+TEST_CASE("Gizmo: bei sehr kleinem Bild verkürzt sich der Pfeil, statt zu verschwinden", "[preview][gizmo]") {
+    const mapping::LedMap map = boxMap();
+    const Projector projector{cameraFor(ViewPreset::Perspective), boundsOf(map), 100, 64, 24};
+    const auto gizmo = gizmoFor(projector, {0.0F, 0.0F, 0.0F});
+    REQUIRE(gizmo.has_value());
+    CHECK(gizmoAxisPixels(*gizmo, 0) > 0.0F);
+}

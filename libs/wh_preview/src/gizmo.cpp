@@ -19,22 +19,31 @@ std::optional<GizmoGeometry> gizmoFor(const Projector& projector, const Vec3& an
     if (!origin || origin->pixelsPerUnit <= 0.0F || lengthPixels <= 0.0F) {
         return std::nullopt;
     }
-    GizmoGeometry gizmo;
-    gizmo.originX = origin->x;
-    gizmo.originY = origin->y;
-    gizmo.worldLength = lengthPixels / origin->pixelsPerUnit;
-    for (int axis = 0; axis < 3; ++axis) {
-        const Vec3 direction = axisVector(axis);
-        const Vec3 tip{anchor.x + direction.x * gizmo.worldLength, anchor.y + direction.y * gizmo.worldLength,
-                       anchor.z + direction.z * gizmo.worldLength};
-        const std::optional<ScreenPoint> projected = projector.project(tip);
-        if (!projected) {
-            return std::nullopt;
+    // Ist das Bild sehr klein (oder das Fixture nah an der Kamera), reicht ein Pfeil in Wunschlänge bis hinter die
+    // Kamera: dann Schritt für Schritt kürzer versuchen.
+    for (int attempt = 0; attempt < 8; ++attempt, lengthPixels *= 0.5F) {
+        GizmoGeometry gizmo;
+        gizmo.originX = origin->x;
+        gizmo.originY = origin->y;
+        gizmo.worldLength = lengthPixels / origin->pixelsPerUnit;
+        bool visible = true;
+        for (int axis = 0; axis < 3 && visible; ++axis) {
+            const Vec3 direction = axisVector(axis);
+            const Vec3 tip{anchor.x + direction.x * gizmo.worldLength, anchor.y + direction.y * gizmo.worldLength,
+                           anchor.z + direction.z * gizmo.worldLength};
+            const std::optional<ScreenPoint> projected = projector.project(tip);
+            if (!projected) {
+                visible = false;
+                break;
+            }
+            gizmo.tipX[static_cast<std::size_t>(axis)] = projected->x;
+            gizmo.tipY[static_cast<std::size_t>(axis)] = projected->y;
         }
-        gizmo.tipX[static_cast<std::size_t>(axis)] = projected->x;
-        gizmo.tipY[static_cast<std::size_t>(axis)] = projected->y;
+        if (visible) {
+            return gizmo;
+        }
     }
-    return gizmo;
+    return std::nullopt;
 }
 
 float gizmoAxisPixels(const GizmoGeometry& gizmo, int axis) noexcept {

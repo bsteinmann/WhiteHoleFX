@@ -49,7 +49,10 @@ void StageView::updateGizmo() {
     }
     const preview::Projector projector{camera_, preview::boundsOf(player_.ledMap()), imageOptions_.width,
                                        imageOptions_.height, imageOptions_.margin};
-    gizmo_ = preview::gizmoFor(projector, fixture->origin);
+    // In kleinen Bildern kürzer, damit die Pfeile nicht das ganze Bild füllen (und greifbar bleiben).
+    const float shortSide = static_cast<float>(std::min(imageOptions_.width, imageOptions_.height));
+    const float length = std::clamp(shortSide * 0.3F, preview::kGizmoMinPixels * 1.5F, preview::kGizmoLengthPixels);
+    gizmo_ = preview::gizmoFor(projector, fixture->origin, length);
 }
 
 std::optional<int> StageView::gizmoAxisAt(QPointF position) const {
