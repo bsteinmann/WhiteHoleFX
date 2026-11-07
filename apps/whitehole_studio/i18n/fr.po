@@ -458,7 +458,7 @@ msgstr "Réinitialiser toutes les valeurs par défaut"
 msgid "Alle Tastenkürzel in einer Liste"
 msgstr "Tous les raccourcis clavier dans une liste"
 
-#: parameter_editors.cpp:307
+#: parameter_editors.cpp:311
 msgid "Alpha 0: an dieser Stelle bleibt die LED aus (die Farbe bleibt gemerkt)."
 msgstr "Alpha 0 : la LED reste éteinte ici (la couleur est conservée)."
 
@@ -870,6 +870,10 @@ msgstr "La source alimente les nœuds audio (niveau, bande de fréquences, beat,
 msgid "Die Sprache wechselt beim nächsten Start."
 msgstr "La langue changera au prochain démarrage."
 
+#: parameter_editors.cpp:214
+msgid "Die Zahl vor dem Namen ist der gespeicherte Wert."
+msgstr "Le nombre devant le nom est la valeur enregistrée."
+
 #: main_window_language.cpp:47
 msgid "Die neue Sprache gilt nach einem Neustart von WhiteHoleFX. Jetzt neu starten?\n(Nicht gespeicherte Änderungen werden vorher abgefragt.)"
 msgstr "La nouvelle langue s'applique après le redémarrage de WhiteHoleFX. Redémarrer maintenant ?\n(Les modifications non enregistrées seront d'abord proposées à l'enregistrement.)"
@@ -1194,7 +1198,7 @@ msgstr "Gamma"
 msgid "Ganzzahl"
 msgstr "Entier"
 
-#: main_window_file.cpp:82
+#: main_window_file.cpp:83
 msgid "Geladen: %1"
 msgstr "Chargé : %1"
 
@@ -1211,10 +1215,10 @@ msgid "Gesamthelligkeit (wirkt auf Vorschau und Ausgabe, nicht im Projekt gespei
 msgstr "Luminosité globale (agit sur l'aperçu et la sortie, non enregistrée dans le projet)"
 
 #: node_info_texts.cpp:17
-msgid "Gesamtlautstärke des Audio-Eingangs als Pegel und Spitze, linear oder in dB, auf Wunsch mit automatischer Verstärkung."
-msgstr "Overall loudness of the audio input as level and peak, linear or in dB, optionally with automatic gain."
+msgid "Gesamtlautstärke des Audio-Eingangs als Pegel und Spitze, linear oder in dB, auf Wunsch mit automatischer Verstärkung. Einzelne Schläge (Kick, Snare, Hi-Hat) erkennt „Kick / Snare / Hat“."
+msgstr "Volume global de l'entrée audio en niveau et crête, linéaire ou en dB, avec gain automatique au choix. Les coups isolés (grosse caisse, caisse claire, charleston) sont détectés par « Kick / Snare / Hat »."
 
-#: main_window_file.cpp:143 main_window_file.cpp:164
+#: main_window_file.cpp:144 main_window_file.cpp:165
 msgid "Gespeichert: %1"
 msgstr "Enregistré : %1"
 
@@ -1466,6 +1470,10 @@ msgstr "Live"
 msgid "Live-Modus starten  ▶"
 msgstr "Démarrer le mode live  ▶"
 
+#: network_interfaces.cpp:30
+msgid "Localhost"
+msgstr "Localhost"
+
 #: cue_dialog.cpp:46 cue_panel.cpp:53
 msgid "Look"
 msgstr "Look"
@@ -1515,8 +1523,8 @@ msgid "Löschen"
 msgstr "Supprimer"
 
 #: node_info_texts.cpp:25
-msgid "Löst bei jedem Kick, jeder Snare oder Hi-Hat aus (Instrument wählbar) und liefert Treffer, Pulse (klingt ab) und Stärke. Die Schwelle folgt der Lautstärke, auch leise Schläge werden erkannt."
-msgstr "Fires on every kick, snare or hi-hat (instrument selectable) and provides hit, pulse (decays) and strength. The threshold follows the loudness, so quiet hits are detected too."
+msgid "Löst bei jedem Kick, jeder Snare oder Hi-Hat aus (Instrument wählbar) und liefert Treffer, Pulse (klingt ab), Stärke und „Age“. Für einzelne Schläge; die Gesamtlautstärke liefert „Audio Level“, den Takt „Beat“. Die Schwelle folgt der Lautstärke, auch leise Schläge werden erkannt."
+msgstr "Se déclenche à chaque grosse caisse, caisse claire ou charleston (instrument au choix) et fournit coup, pulse (décroît), force et « Age ». Pour les coups isolés ; le volume global vient de « Audio Level », le tempo de « Beat ». Le seuil suit le volume, même les coups faibles sont détectés."
 
 #: node_info_texts.cpp:43
 msgid "Macht Schwarz durchsichtig (die Deckkraft folgt der Helligkeit). So lässt sich das Bild danach mit Blend oder Add über etwas anderes legen."
@@ -1642,7 +1650,7 @@ msgstr "Les nouveaux nœuds démarrent avec ces valeurs au lieu de celles de la 
 msgid "Neuer Name:"
 msgstr "Nouveau nom :"
 
-#: main_window_file.cpp:98
+#: main_window_file.cpp:99
 msgid "Neues Projekt"
 msgstr "Nouveau projet"
 
@@ -1654,7 +1662,7 @@ msgstr "Nouveau projet (Ctrl+N)"
 msgid "Neues Projekt (Strg+N), Projekt öffnen (Strg+O) oder eine .whfx-Datei hierher ziehen.\n\n%1"
 msgstr "Nouveau projet (Ctrl+N), ouvrir un projet (Ctrl+O) ou glisser un fichier .whfx ici.\n\n%1"
 
-#: main_window_file.cpp:102
+#: main_window_file.cpp:103
 msgid "Neues Projekt. Mit Strg+S speichern."
 msgstr "Nouveau projet. Enregistrer avec Ctrl+S."
 
@@ -1830,15 +1838,15 @@ msgstr "Remplacer le préréglage"
 msgid "Preset löschen"
 msgstr "Supprimer le préréglage"
 
-#: main_window_file.cpp:74
+#: main_window_file.cpp:75
 msgid "Projekt laden"
 msgstr "Charger un projet"
 
-#: main_window_file.cpp:149
+#: main_window_file.cpp:150
 msgid "Projekt speichern unter"
 msgstr "Enregistrer le projet sous"
 
-#: main_window_file.cpp:113
+#: main_window_file.cpp:114
 msgid "Projekt öffnen"
 msgstr "Ouvrir un projet"
 
@@ -2014,7 +2022,7 @@ msgstr "Les colonnes se déplacent en faisant glisser l’en-tête"
 msgid "Spannt einen Wert von 0 bis 1 über den ganzen Bereich des Parameters"
 msgstr "Étend une valeur de 0 à 1 sur toute la plage du paramètre"
 
-#: main_window_file.cpp:139 main_window_file.cpp:159
+#: main_window_file.cpp:140 main_window_file.cpp:160
 msgid "Speichern"
 msgstr "Enregistrer"
 
@@ -2278,11 +2286,11 @@ msgstr "WhiteHoleFX"
 msgid "WhiteHoleFX – %1%2"
 msgstr "WhiteHoleFX – %1%2"
 
-#: main_window_file.cpp:150
+#: main_window_file.cpp:151
 msgid "WhiteHoleFX-Projekte (*.whfx)"
 msgstr "Projets WhiteHoleFX (*.whfx)"
 
-#: main_window_file.cpp:114
+#: main_window_file.cpp:115
 msgid "WhiteHoleFX-Projekte (*.whfx);;Alle Dateien (*)"
 msgstr "Projets WhiteHoleFX (*.whfx);;Tous les fichiers (*)"
 

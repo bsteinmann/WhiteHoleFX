@@ -205,9 +205,13 @@ Editor numberEditor(const runtime::ParameterInfo& info, const Commit& commit, QW
 
 Editor choiceEditor(const runtime::ParameterInfo& info, const Commit& commit, QWidget* parent) {
     auto* combo = new QComboBox{parent};
+    // Mit Nummer davor: der gespeicherte Wert ist der Index (Projektdatei `set shape 1`, Verbindung mit einer Zahl),
+    // und so sieht man, welche Zahl zu welchem Eintrag gehört.
+    int number = 0;
     for (const std::string& label : info.choices) {
-        combo->addItem(QString::fromStdString(label));
+        combo->addItem(QStringLiteral("%1 – %2").arg(number++).arg(QString::fromStdString(label)));
     }
+    combo->setToolTip(QObject::tr("Die Zahl vor dem Namen ist der gespeicherte Wert."));
     QObject::connect(combo, &QComboBox::activated, combo,
                      [=](int index) { commit(static_cast<std::int64_t>(index)); });
     Editor editor;

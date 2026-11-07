@@ -18,7 +18,7 @@ struct NetworkCard {
     [[nodiscard]] QString label() const;
 };
 
-/// Aktive Karten mit mindestens einer IPv4-Adresse (ohne Loopback), je Adresse ein Eintrag.
+/// Aktive Karten mit mindestens einer IPv4-Adresse, je Adresse ein Eintrag; zuletzt immer „Localhost“ (127.0.0.1).
 [[nodiscard]] QList<NetworkCard> networkCards();
 
 }  // namespace whitehole::studio

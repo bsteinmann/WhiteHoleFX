@@ -458,7 +458,7 @@ msgstr "Скинути всі стандартні значення"
 msgid "Alle Tastenkürzel in einer Liste"
 msgstr "Усі скорочення клавіш одним списком"
 
-#: parameter_editors.cpp:307
+#: parameter_editors.cpp:311
 msgid "Alpha 0: an dieser Stelle bleibt die LED aus (die Farbe bleibt gemerkt)."
 msgstr "Альфа 0: у цьому місці LED лишається вимкненим (колір запам'ятовується)."
 
@@ -870,6 +870,10 @@ msgstr "Джерело живить аудіо-ноди (рівень, смуг�
 msgid "Die Sprache wechselt beim nächsten Start."
 msgstr "Мова зміниться під час наступного запуску."
 
+#: parameter_editors.cpp:214
+msgid "Die Zahl vor dem Namen ist der gespeicherte Wert."
+msgstr "Число перед назвою — це збережене значення."
+
 #: main_window_language.cpp:47
 msgid "Die neue Sprache gilt nach einem Neustart von WhiteHoleFX. Jetzt neu starten?\n(Nicht gespeicherte Änderungen werden vorher abgefragt.)"
 msgstr "Нова мова діятиме після перезапуску WhiteHoleFX. Перезапустити зараз?\n(Про незбережені зміни буде запитано заздалегідь.)"
@@ -1194,7 +1198,7 @@ msgstr "Gamma"
 msgid "Ganzzahl"
 msgstr "Ціле число"
 
-#: main_window_file.cpp:82
+#: main_window_file.cpp:83
 msgid "Geladen: %1"
 msgstr "Завантажено: %1"
 
@@ -1211,10 +1215,10 @@ msgid "Gesamthelligkeit (wirkt auf Vorschau und Ausgabe, nicht im Projekt gespei
 msgstr "Загальна яскравість (діє на попередній перегляд і вивід, у проєкті не зберігається)"
 
 #: node_info_texts.cpp:17
-msgid "Gesamtlautstärke des Audio-Eingangs als Pegel und Spitze, linear oder in dB, auf Wunsch mit automatischer Verstärkung."
-msgstr "Загальна гучність аудіовходу як рівень і пік, лінійно або в дБ, за бажанням з автоматичним підсиленням."
+msgid "Gesamtlautstärke des Audio-Eingangs als Pegel und Spitze, linear oder in dB, auf Wunsch mit automatischer Verstärkung. Einzelne Schläge (Kick, Snare, Hi-Hat) erkennt „Kick / Snare / Hat“."
+msgstr "Загальна гучність аудіовходу як рівень і пік, лінійно або в дБ, за бажанням з автоматичним підсиленням. Окремі удари (кік, снейр, хай-хет) визначає «Kick / Snare / Hat»."
 
-#: main_window_file.cpp:143 main_window_file.cpp:164
+#: main_window_file.cpp:144 main_window_file.cpp:165
 msgid "Gespeichert: %1"
 msgstr "Збережено: %1"
 
@@ -1466,6 +1470,10 @@ msgstr "Live"
 msgid "Live-Modus starten  ▶"
 msgstr "Запустити режим Live  ▶"
 
+#: network_interfaces.cpp:30
+msgid "Localhost"
+msgstr "Localhost"
+
 #: cue_dialog.cpp:46 cue_panel.cpp:53
 msgid "Look"
 msgstr "Look"
@@ -1515,8 +1523,8 @@ msgid "Löschen"
 msgstr "Видалити"
 
 #: node_info_texts.cpp:25
-msgid "Löst bei jedem Kick, jeder Snare oder Hi-Hat aus (Instrument wählbar) und liefert Treffer, Pulse (klingt ab) und Stärke. Die Schwelle folgt der Lautstärke, auch leise Schläge werden erkannt."
-msgstr "Спрацьовує на кожен кік, снейр чи хай-хет (інструмент на вибір) і дає удар, Pulse (згасає) та силу. Поріг слідує за гучністю, тож розпізнаються й тихі удари."
+msgid "Löst bei jedem Kick, jeder Snare oder Hi-Hat aus (Instrument wählbar) und liefert Treffer, Pulse (klingt ab), Stärke und „Age“. Für einzelne Schläge; die Gesamtlautstärke liefert „Audio Level“, den Takt „Beat“. Die Schwelle folgt der Lautstärke, auch leise Schläge werden erkannt."
+msgstr "Спрацьовує на кожен кік, снейр чи хай-хет (інструмент на вибір) і видає удар, пульс (згасає), силу та «Age». Для окремих ударів; загальну гучність дає «Audio Level», темп — «Beat». Поріг залежить від гучності, тож тихі удари теж помічаються."
 
 #: node_info_texts.cpp:43
 msgid "Macht Schwarz durchsichtig (die Deckkraft folgt der Helligkeit). So lässt sich das Bild danach mit Blend oder Add über etwas anderes legen."
@@ -1642,7 +1650,7 @@ msgstr "Нові ноди починаються з цих значень, а н
 msgid "Neuer Name:"
 msgstr "Нова назва:"
 
-#: main_window_file.cpp:98
+#: main_window_file.cpp:99
 msgid "Neues Projekt"
 msgstr "Новий проєкт"
 
@@ -1654,7 +1662,7 @@ msgstr "Новий проєкт (Ctrl+N)"
 msgid "Neues Projekt (Strg+N), Projekt öffnen (Strg+O) oder eine .whfx-Datei hierher ziehen.\n\n%1"
 msgstr "Новий проєкт (Ctrl+N), відкрити проєкт (Ctrl+O) або перетягніть сюди файл .whfx.\n\n%1"
 
-#: main_window_file.cpp:102
+#: main_window_file.cpp:103
 msgid "Neues Projekt. Mit Strg+S speichern."
 msgstr "Новий проєкт. Зберегти — Ctrl+S."
 
@@ -1830,15 +1838,15 @@ msgstr "Замінити пресет"
 msgid "Preset löschen"
 msgstr "Видалити пресет"
 
-#: main_window_file.cpp:74
+#: main_window_file.cpp:75
 msgid "Projekt laden"
 msgstr "Завантажити проєкт"
 
-#: main_window_file.cpp:149
+#: main_window_file.cpp:150
 msgid "Projekt speichern unter"
 msgstr "Зберегти проєкт як"
 
-#: main_window_file.cpp:113
+#: main_window_file.cpp:114
 msgid "Projekt öffnen"
 msgstr "Відкрити проєкт"
 
@@ -2014,7 +2022,7 @@ msgstr "Стовпці можна переміщувати перетягува�
 msgid "Spannt einen Wert von 0 bis 1 über den ganzen Bereich des Parameters"
 msgstr "Розтягує значення від 0 до 1 на весь діапазон параметра"
 
-#: main_window_file.cpp:139 main_window_file.cpp:159
+#: main_window_file.cpp:140 main_window_file.cpp:160
 msgid "Speichern"
 msgstr "Зберегти"
 
@@ -2278,11 +2286,11 @@ msgstr "WhiteHoleFX"
 msgid "WhiteHoleFX – %1%2"
 msgstr "WhiteHoleFX – %1%2"
 
-#: main_window_file.cpp:150
+#: main_window_file.cpp:151
 msgid "WhiteHoleFX-Projekte (*.whfx)"
 msgstr "Проєкти WhiteHoleFX (*.whfx)"
 
-#: main_window_file.cpp:114
+#: main_window_file.cpp:115
 msgid "WhiteHoleFX-Projekte (*.whfx);;Alle Dateien (*)"
 msgstr "Проєкти WhiteHoleFX (*.whfx);;Усі файли (*)"
 

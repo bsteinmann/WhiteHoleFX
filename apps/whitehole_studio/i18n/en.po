@@ -458,7 +458,7 @@ msgstr "Reset all defaults"
 msgid "Alle Tastenkürzel in einer Liste"
 msgstr "All keyboard shortcuts in one list"
 
-#: parameter_editors.cpp:307
+#: parameter_editors.cpp:311
 msgid "Alpha 0: an dieser Stelle bleibt die LED aus (die Farbe bleibt gemerkt)."
 msgstr "Alpha 0: the LED stays off here (the color is remembered)."
 
@@ -870,6 +870,10 @@ msgstr "The source feeds the audio nodes (level, frequency band, beat, spectrum)
 msgid "Die Sprache wechselt beim nächsten Start."
 msgstr "The language changes at the next start."
 
+#: parameter_editors.cpp:214
+msgid "Die Zahl vor dem Namen ist der gespeicherte Wert."
+msgstr "The number before the name is the stored value."
+
 #: main_window_language.cpp:47
 msgid "Die neue Sprache gilt nach einem Neustart von WhiteHoleFX. Jetzt neu starten?\n(Nicht gespeicherte Änderungen werden vorher abgefragt.)"
 msgstr "The new language applies after WhiteHoleFX restarts. Restart now?\n(Unsaved changes will be asked about first.)"
@@ -1194,7 +1198,7 @@ msgstr "Gamma"
 msgid "Ganzzahl"
 msgstr "Integer"
 
-#: main_window_file.cpp:82
+#: main_window_file.cpp:83
 msgid "Geladen: %1"
 msgstr "Loaded: %1"
 
@@ -1211,10 +1215,10 @@ msgid "Gesamthelligkeit (wirkt auf Vorschau und Ausgabe, nicht im Projekt gespei
 msgstr "Overall brightness (affects preview and output, not saved in the project)"
 
 #: node_info_texts.cpp:17
-msgid "Gesamtlautstärke des Audio-Eingangs als Pegel und Spitze, linear oder in dB, auf Wunsch mit automatischer Verstärkung."
-msgstr "Overall loudness of the audio input as level and peak, linear or in dB, optionally with automatic gain."
+msgid "Gesamtlautstärke des Audio-Eingangs als Pegel und Spitze, linear oder in dB, auf Wunsch mit automatischer Verstärkung. Einzelne Schläge (Kick, Snare, Hi-Hat) erkennt „Kick / Snare / Hat“."
+msgstr "Overall loudness of the audio input as level and peak, linear or in dB, optionally with automatic gain. Single hits (kick, snare, hi-hat) are detected by “Kick / Snare / Hat”."
 
-#: main_window_file.cpp:143 main_window_file.cpp:164
+#: main_window_file.cpp:144 main_window_file.cpp:165
 msgid "Gespeichert: %1"
 msgstr "Saved: %1"
 
@@ -1466,6 +1470,10 @@ msgstr "Live"
 msgid "Live-Modus starten  ▶"
 msgstr "Start live mode  ▶"
 
+#: network_interfaces.cpp:30
+msgid "Localhost"
+msgstr "Localhost"
+
 #: cue_dialog.cpp:46 cue_panel.cpp:53
 msgid "Look"
 msgstr "Look"
@@ -1515,8 +1523,8 @@ msgid "Löschen"
 msgstr "Delete"
 
 #: node_info_texts.cpp:25
-msgid "Löst bei jedem Kick, jeder Snare oder Hi-Hat aus (Instrument wählbar) und liefert Treffer, Pulse (klingt ab) und Stärke. Die Schwelle folgt der Lautstärke, auch leise Schläge werden erkannt."
-msgstr "Fires on every kick, snare or hi-hat (instrument selectable) and provides hit, pulse (decays) and strength. The threshold follows the loudness, so quiet hits are detected too."
+msgid "Löst bei jedem Kick, jeder Snare oder Hi-Hat aus (Instrument wählbar) und liefert Treffer, Pulse (klingt ab), Stärke und „Age“. Für einzelne Schläge; die Gesamtlautstärke liefert „Audio Level“, den Takt „Beat“. Die Schwelle folgt der Lautstärke, auch leise Schläge werden erkannt."
+msgstr "Fires on every kick, snare or hi-hat (instrument selectable) and provides hit, pulse (decays), strength and “Age”. For single hits; overall loudness comes from “Audio Level”, the tempo from “Beat”. The threshold follows the loudness, so quiet hits are detected too."
 
 #: node_info_texts.cpp:43
 msgid "Macht Schwarz durchsichtig (die Deckkraft folgt der Helligkeit). So lässt sich das Bild danach mit Blend oder Add über etwas anderes legen."
@@ -1642,7 +1650,7 @@ msgstr "New nodes start with these values instead of the library's. Existing nod
 msgid "Neuer Name:"
 msgstr "New name:"
 
-#: main_window_file.cpp:98
+#: main_window_file.cpp:99
 msgid "Neues Projekt"
 msgstr "New project"
 
@@ -1654,7 +1662,7 @@ msgstr "New project (Ctrl+N)"
 msgid "Neues Projekt (Strg+N), Projekt öffnen (Strg+O) oder eine .whfx-Datei hierher ziehen.\n\n%1"
 msgstr "New project (Ctrl+N), open a project (Ctrl+O) or drag a .whfx file here.\n\n%1"
 
-#: main_window_file.cpp:102
+#: main_window_file.cpp:103
 msgid "Neues Projekt. Mit Strg+S speichern."
 msgstr "New project. Save with Ctrl+S."
 
@@ -1830,15 +1838,15 @@ msgstr "Replace preset"
 msgid "Preset löschen"
 msgstr "Delete preset"
 
-#: main_window_file.cpp:74
+#: main_window_file.cpp:75
 msgid "Projekt laden"
 msgstr "Load project"
 
-#: main_window_file.cpp:149
+#: main_window_file.cpp:150
 msgid "Projekt speichern unter"
 msgstr "Save project as"
 
-#: main_window_file.cpp:113
+#: main_window_file.cpp:114
 msgid "Projekt öffnen"
 msgstr "Open project"
 
@@ -2014,7 +2022,7 @@ msgstr "Columns can be moved by dragging the header"
 msgid "Spannt einen Wert von 0 bis 1 über den ganzen Bereich des Parameters"
 msgstr "Stretches a value from 0 to 1 over the parameter's whole range"
 
-#: main_window_file.cpp:139 main_window_file.cpp:159
+#: main_window_file.cpp:140 main_window_file.cpp:160
 msgid "Speichern"
 msgstr "Save"
 
@@ -2278,11 +2286,11 @@ msgstr "WhiteHoleFX"
 msgid "WhiteHoleFX – %1%2"
 msgstr "WhiteHoleFX – %1%2"
 
-#: main_window_file.cpp:150
+#: main_window_file.cpp:151
 msgid "WhiteHoleFX-Projekte (*.whfx)"
 msgstr "WhiteHoleFX projects (*.whfx)"
 
-#: main_window_file.cpp:114
+#: main_window_file.cpp:115
 msgid "WhiteHoleFX-Projekte (*.whfx);;Alle Dateien (*)"
 msgstr "WhiteHoleFX projects (*.whfx);;All files (*)"
 

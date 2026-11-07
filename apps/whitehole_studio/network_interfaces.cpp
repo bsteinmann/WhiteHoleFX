@@ -5,6 +5,7 @@
 #include <QHostAddress>
 #include <QNetworkAddressEntry>
 #include <QNetworkInterface>
+#include <QObject>
 
 namespace whitehole::studio {
 
@@ -24,6 +25,9 @@ QList<NetworkCard> networkCards() {
             }
         }
     }
+    // Localhost zuletzt und immer: zum Testen auf demselben Rechner (Issue #35), auch wenn das System die
+    // Loopback-Karte nicht als laufend meldet.
+    cards.append(NetworkCard{QObject::tr("Localhost"), QStringLiteral("127.0.0.1")});
     return cards;
 }
 

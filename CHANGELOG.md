@@ -1,5 +1,11 @@
 # Änderungen
 
+## 0.59.1
+
+- **Localhost in der Netzwerkkarten-Auswahl (#35).** Einstellungen → Netzwerk bietet zum Senden und Empfangen jetzt auch „Localhost“ (127.0.0.1) an, zum Testen auf demselben Rechner.
+- **Auswahlfelder zeigen die Zahl.** Bei Parametern mit Liste (zum Beispiel die Form bei „Expanding Shapes“) steht vor jedem Eintrag der gespeicherte Wert („0 – Circle“, „1 – Square“ …). Das ist die Zahl, die in der Projektdatei steht.
+- **Audio-Nodes besser einzuordnen.** Die Beschreibungen von „Kick / Snare / Hat“ und „Audio Level“ sagen, wann man welchen nimmt (Einzelschläge, Gesamtlautstärke, Takt). Die Nodes bleiben getrennt: Kick / Snare / Hat hat eigene Ausgänge (Treffer, Pulse, Age) und eine eigene Schwelle.
+
 ## 0.59.0
 
 - **Benutzerbibliothek für Bauformen.** Bauformen aus dem Reiter Fixtures bleiben jetzt über neue Programmversionen und neue Projekte erhalten: Das Studio spiegelt jede Änderung (anlegen, ändern, umbenennen, duplizieren, entfernen) in `fixture-library.whfx` im Benutzerverzeichnis (Linux `~/.local/share/WhiteHoleFX`, Windows `%APPDATA%\WhiteHoleFX`). Neue Projekte beginnen mit diesen Bauformen; der Knopf **Aus Benutzerbibliothek ergänzen** holt fehlende in ein geöffnetes Projekt. Die Datei wird atomar geschrieben; ist sie defekt, bleibt sie unangetastet und es gibt eine Meldung. Die Projektdatei bleibt eigenständig (die Bauformen stehen weiter darin). Neu in `wh_project`: `writeFixtureLibrary`, `parseFixtureLibrary`.

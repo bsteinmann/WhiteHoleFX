@@ -482,7 +482,7 @@ zum Projekt. Die Wahl wird beim Nutzer gespeichert und beim nächsten Start wied
 - **Netzwerk:** die Karte zum **Senden** (Art-Net, sACN, DDP gehen darüber hinaus; „Automatisch“ überlässt es der
   Routingtabelle des Systems, was bei zwei Anschlüssen oft die falsche Karte ist) und die Karte zum **Empfangen**
   (über sie tritt sACN den Multicast-Gruppen bei; Art-Net-Broadcast und Unicast kommen weiterhin von jeder Karte an).
-  Die Liste zeigt die aktiven Karten mit ihrer IPv4-Adresse. Eine gemerkte Karte, die es gerade nicht gibt (Kabel
+  Die Liste zeigt die aktiven Karten mit ihrer IPv4-Adresse und zuletzt „Localhost“ (127.0.0.1), um auf demselben Rechner zu testen (Sender und Empfänger im selben Programm oder eine zweite Anwendung). Eine gemerkte Karte, die es gerade nicht gibt (Kabel
   gezogen, neue DHCP-Adresse), bleibt als „(nicht gefunden)“ stehen; das Senden läuft dann automatisch weiter und die
   Statuszeile meldet es.
 - **DMX-Eingang:** Art-Net und sACN einzeln einschalten, dazu die Ports (Standard 6454 und 5568).
