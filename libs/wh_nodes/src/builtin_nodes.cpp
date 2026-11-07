@@ -15,6 +15,7 @@ std::vector<compiler::NodeDefinition> builtinNodeDefinitions() {
                    std::make_move_iterator(group.end()));
     };
     append(detail::generatorNodes());
+    append(detail::generators1dNodes());
     append(detail::shapeNodes());
     append(detail::sparkNodes());
     append(detail::textNodes());

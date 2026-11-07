@@ -55,6 +55,9 @@ void NodeEditor::contextMenuEvent(QContextMenuEvent* event) {
         QAction* action = menu.addAction(tr("Als Ausgang setzen (output)"));
         connect(action, &QAction::triggered, this, [this, port]() { setTarget(port); });
     }
+    if (hit.port != nullptr) {
+        buildConnectMenu(menu, hit);
+    }
     if (node != nullptr) {
         if (!node->isSelected()) {
             scene()->clearSelection();

@@ -125,6 +125,11 @@ QString NodeEditor::exercise() {
         return QStringLiteral("Kabel löschen: %1 Verbindungen, erwartet %2").arg(player_.project()->graph.connections().size()).arg(wiresBefore);
     }
 
+    // Rechtsklick auf einen Port: passende Nodes anbieten, anlegen, verbinden.
+    if (const QString problem = exerciseConnectMenu(); !problem.isEmpty()) {
+        return problem;
+    }
+
     // Einrasten beim Ziehen aus der Palette: auf ein Kabel (dazwischen), auf einen Node (links davor, rechts dahinter).
     if (const QString problem = exerciseDocking(*source, *sink); !problem.isEmpty()) {
         return problem;

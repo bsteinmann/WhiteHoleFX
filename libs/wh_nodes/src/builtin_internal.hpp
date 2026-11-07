@@ -190,6 +190,7 @@ values::KernelFactory kernelFactory() {
 }
 
 std::vector<compiler::NodeDefinition> generatorNodes();
+std::vector<compiler::NodeDefinition> generators1dNodes();
 std::vector<compiler::NodeDefinition> shapeNodes();  // Metaballs, Starfield, Fading Pixels, Expanding Shapes, Sine Lines
 std::vector<compiler::NodeDefinition> sparkNodes();  // Lightning, Particles
 std::vector<compiler::NodeDefinition> textNodes();   // Text / Laufschrift

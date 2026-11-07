@@ -190,6 +190,12 @@ private:
     void cancelWire();
 
     void buildAddMenu(QMenu& menu, const QPointF& scenePos);
+    /// Rechtsklick auf einen Port: Untermenü mit Nodes, die einen passenden Port haben (node_editor_connect.cpp).
+    void buildConnectMenu(QMenu& menu, const Hit& hit);
+    /// Legt einen Node vom Typ `typeId` neben dem Node von `port` an und verbindet `port` mit seinem Port `newPortKey`.
+    bool connectNewNode(const graph::PortRef& port, bool portIsOutput, const std::string& typeId, const std::string& newPortKey);
+    /// Teil von exercise(): prüft das Port-Menü (Ausgang und Eingang). Leer = in Ordnung.
+    QString exerciseConnectMenu();
     /// Untermenüs "Preset einfügen" und "Preset löschen" (nur mit Preset-Ordner).
     void buildPresetMenus(QMenu& menu, const QPointF& scenePos);
     /// Suchfeld zum Hinzufügen eines Nodes an `scenePos`.

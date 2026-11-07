@@ -470,7 +470,7 @@ msgstr ""
 msgid "Als Preset speichern"
 msgstr ""
 
-#: node_editor_menu.cpp:68
+#: node_editor_menu.cpp:71
 msgid "Als Preset speichern …"
 msgstr ""
 
@@ -594,6 +594,10 @@ msgstr ""
 msgid "Ausgang (gefüllt, rechts am Node)"
 msgstr ""
 
+#: node_editor_connect.cpp:86
+msgid "Ausgang verbinden mit neuem Node"
+msgstr ""
+
 #: main_window_view3d.cpp:96
 msgid "Ausgeschaltete LEDs als sehr dunkle Punkte, nur als Orientierung"
 msgstr ""
@@ -690,6 +694,10 @@ msgstr ""
 msgid "Bildrate (fps)"
 msgstr ""
 
+#: node_info_texts.cpp:119
+msgid "Bis zu acht Kometen gleichzeitig, jeder mit eigener Geschwindigkeit und eigenem Startpunkt. „Count“ ist die Zahl, „Tail length“ die Länge des Schweifs. Für Strips."
+msgstr ""
+
 #: test_panel.cpp:30
 msgid "Blau"
 msgstr ""
@@ -708,6 +716,10 @@ msgstr ""
 
 #: layout_panel_groups.cpp:194
 msgid "Breite"
+msgstr ""
+
+#: node_info_texts.cpp:115
+msgid "Bänder aus Licht laufen die gewählte Achse entlang. „Frequency“ ist die Zahl der Wellen über die Länge, „Sharpness“ macht aus der weichen Welle schmale Pulse. Für Strips."
 msgstr ""
 
 #: layout_panel_add.cpp:40
@@ -818,7 +830,7 @@ msgstr ""
 msgid "Den aktuellen Effekt als Look in die Liste legen (Strg+L)"
 msgstr ""
 
-#: node_info_texts.cpp:131
+#: node_info_texts.cpp:143
 msgid "Der Ausgang: Was hier ankommt, wird auf die LEDs gesendet. Mit „Mode“ in einen Bereich skalieren oder als Fenster ausschneiden, plus Helligkeit."
 msgstr ""
 
@@ -878,7 +890,7 @@ msgstr ""
 msgid "Die neue Sprache gilt nach einem Neustart von WhiteHoleFX. Jetzt neu starten?\n(Nicht gespeicherte Änderungen werden vorher abgefragt.)"
 msgstr ""
 
-#: node_info_texts.cpp:157
+#: node_info_texts.cpp:169
 msgid "Die vergangene Zeit in Sekunden, mit Tempo-Faktor und Versatz. Zum Antreiben von Bewegungen."
 msgstr ""
 
@@ -934,7 +946,7 @@ msgstr ""
 msgid "Duplizieren"
 msgstr ""
 
-#: node_editor_menu.cpp:64
+#: node_editor_menu.cpp:67
 msgid "Duplizieren\tStrg+D"
 msgstr ""
 
@@ -966,6 +978,10 @@ msgstr ""
 msgid "Ein Klick lädt den Look nur vor. GO (Leertaste) startet dann die Überblendung."
 msgstr ""
 
+#: node_info_texts.cpp:113
+msgid "Ein Kopf läuft die gewählte Achse entlang, dahinter ein verblassender Schweif. „Speed“ sind Durchläufe pro Sekunde (negativ = rückwärts), „Ping-pong“ lässt ihn an den Enden umkehren. Für Strips."
+msgstr ""
+
 #: look_panel.cpp:32
 msgid "Ein Look ist ein fertiger Effekt (vom Generator bis zum Ausgang). Speichere deine Effekte hier und rufe sie im Live-Modus mit einem Klick ab."
 msgstr ""
@@ -982,11 +998,11 @@ msgstr ""
 msgid "Eine Einführung in die Bedienung, in der gewählten Sprache"
 msgstr ""
 
-#: node_info_texts.cpp:135
+#: node_info_texts.cpp:147
 msgid "Eine Farbe als Wert, mit Farbton-Verschiebung, Sättigung und Helligkeit. Speist Farb-Eingänge anderer Nodes."
 msgstr ""
 
-#: node_info_texts.cpp:119
+#: node_info_texts.cpp:131
 msgid "Eine Kugel (Kreis) mit weichem Rand, Innen- und Außenfarbe. „Space“ wählt flach, Volumen oder automatisch nach Aufbau."
 msgstr ""
 
@@ -994,7 +1010,7 @@ msgstr ""
 msgid "Eine Region ist ein Rechteck der Bühne. Ein Output mit dieser Region als Ziel bespielt alle LEDs darin. Die Angaben sind Prozent der ganzen Bühne."
 msgstr ""
 
-#: node_info_texts.cpp:113
+#: node_info_texts.cpp:125
 msgid "Eine Scan-Linie, die über das Bild läuft. Position, Breite, Weichheit und Winkel einstellbar; mit „Position“ lässt sie sich steuern."
 msgstr ""
 
@@ -1002,20 +1018,24 @@ msgstr ""
 msgid "Eine Spirale (Helix) aus einer oder mehreren Strähnen, die sich um eine senkrechte Achse dreht. Für 3D-Aufbauten."
 msgstr ""
 
-#: node_info_texts.cpp:117
+#: node_info_texts.cpp:129
 msgid "Eine einfarbige Fläche. Der einfachste Generator, gut als Hintergrund oder Test."
 msgstr ""
 
-#: node_info_texts.cpp:149
+#: node_info_texts.cpp:161
 msgid "Eine feste Zahl. Praktisch, um mehrere Parameter mit demselben Wert zu speisen."
 msgstr ""
 
-#: node_editor_menu.cpp:93
+#: node_editor_menu.cpp:96
 msgid "Einfügen\tStrg+V"
 msgstr ""
 
 #: port_legend.cpp:58
 msgid "Eingang (nur Ring, links am Node)"
+msgstr ""
+
+#: node_editor_connect.cpp:86
+msgid "Eingang verbinden mit neuem Node"
 msgstr ""
 
 #: layout_panel_grid.cpp:38
@@ -1106,7 +1126,7 @@ msgstr ""
 msgid "Farbreihenfolge"
 msgstr ""
 
-#: node_info_texts.cpp:137
+#: node_info_texts.cpp:149
 msgid "Farbverlauf aus bis zu vier Farben. „Position“ wählt die Stelle, oder er läuft von selbst im eingestellten Tempo."
 msgstr ""
 
@@ -1168,6 +1188,10 @@ msgstr ""
 
 #: stage_view.cpp:75
 msgid "Front"
+msgstr ""
+
+#: node_info_texts.cpp:121
+msgid "Funkeln: Einzelne Zellen blitzen auf und klingen ab, jede in eigenem Takt. „Cells“ stellt man auf die LED-Zahl, „Density“ bestimmt, wie viele Zellen funkeln. Für Strips."
 msgstr ""
 
 #: node_info_texts.cpp:51
@@ -1242,7 +1266,7 @@ msgstr ""
 msgid "Gewähltes Ziel −"
 msgstr ""
 
-#: node_info_texts.cpp:155
+#: node_info_texts.cpp:167
 msgid "Glättet einen Wert: Er folgt dem Eingang mit einer Zeitkonstante, statt zu springen."
 msgstr ""
 
@@ -1286,7 +1310,7 @@ msgstr ""
 msgid "Höhe"
 msgstr ""
 
-#: node_info_texts.cpp:141
+#: node_info_texts.cpp:153
 msgid "Hüllkurve (ADSR): Aus einem Schalter wird ein weicher Verlauf mit Attack, Decay, Sustain und Release. Auch als Einzelimpuls."
 msgstr ""
 
@@ -1362,7 +1386,7 @@ msgstr ""
 msgid "Kopie der gewählten Bauform anlegen"
 msgstr ""
 
-#: node_editor_menu.cpp:63
+#: node_editor_menu.cpp:66
 msgid "Kopieren\tStrg+C"
 msgstr ""
 
@@ -1430,11 +1454,11 @@ msgstr ""
 msgid "Leuchtende LEDs mit weichem Schein, Farben addieren sich; nichts verdeckt etwas"
 msgstr ""
 
-#: node_info_texts.cpp:129
+#: node_info_texts.cpp:141
 msgid "Liest drei oder vier DMX-Kanäle (Art-Net oder sACN) als Farbe, wahlweise RGB oder RGB mit Dimmer."
 msgstr ""
 
-#: node_info_texts.cpp:127
+#: node_info_texts.cpp:139
 msgid "Liest einen DMX-Kanal (Art-Net oder sACN) als Zahl. Mit Umrechnung auf einen Bereich, 16-Bit-Betrieb und Verhalten bei Signalverlust."
 msgstr ""
 
@@ -1442,7 +1466,7 @@ msgstr ""
 msgid "Linearer Farbverlauf von Farbe A nach Farbe B in einem einstellbaren Winkel."
 msgstr ""
 
-#: node_info_texts.cpp:115
+#: node_info_texts.cpp:127
 msgid "Linien als Sinuswellen, die sich bewegen (Anzahl, Amplitude, Frequenz, Tempo, Phasenversatz)."
 msgstr ""
 
@@ -1686,11 +1710,11 @@ msgstr ""
 msgid "Node hinzufügen"
 msgstr ""
 
-#: node_editor_menu.cpp:76
+#: node_editor_menu.cpp:79
 msgid "Node löschen"
 msgstr ""
 
-#: node_editor_menu.cpp:90
+#: node_editor_menu.cpp:93
 msgid "Node suchen …\tStrg+Leertaste"
 msgstr ""
 
@@ -1790,6 +1814,10 @@ msgstr ""
 msgid "Pegel eines Frequenzbereichs (Von–Bis in Hz) des Audio-Eingangs, geglättet mit Attack und Release. Gut für Bass- oder Höhen-Effekte. „Signal“ zeigt, ob Audio ankommt."
 msgstr ""
 
+#: node_info_texts.cpp:123
+msgid "Pegelbalken: füllt die gewählte Achse bis „Level“ (0 bis 1), unten „Color low“, oben „Color high“. „Level“ lässt sich mit „Audio Level“ oder einem LFO steuern. Für Strips."
+msgstr ""
+
 #: stage_view.cpp:74
 msgid "Perspektive"
 msgstr ""
@@ -1886,11 +1914,11 @@ msgstr ""
 msgid "Rasterweite in Layout-Einheiten"
 msgstr ""
 
-#: node_info_texts.cpp:145
+#: node_info_texts.cpp:157
 msgid "Rechnet einen Wert von einem Bereich in einen anderen um (In min/max auf Out min/max), auf Wunsch begrenzt."
 msgstr ""
 
-#: node_info_texts.cpp:147
+#: node_info_texts.cpp:159
 msgid "Rechnet mit zwei Zahlen: Addieren, Subtrahieren, Multiplizieren, Dividieren, Minimum, Maximum und weitere."
 msgstr ""
 
@@ -1950,11 +1978,11 @@ msgstr ""
 msgid "Schnellwahl"
 msgstr ""
 
-#: node_info_texts.cpp:153
+#: node_info_texts.cpp:165
 msgid "Schrittfolge mit bis zu acht Werten. Jedes Einschalten von „Advance“ geht einen Schritt weiter (vorwärts, rückwärts, hin und her oder zufällig)."
 msgstr ""
 
-#: node_info_texts.cpp:143
+#: node_info_texts.cpp:155
 msgid "Schwingung (LFO): Sinus, Dreieck, Sägezahn oder Rechteck mit Frequenz, Phase und Wertebereich. Der Klassiker zum Bewegen von Parametern."
 msgstr ""
 
@@ -2058,7 +2086,7 @@ msgstr ""
 msgid "Statt der Zeit, die beim Look gespeichert ist"
 msgstr ""
 
-#: node_info_texts.cpp:121
+#: node_info_texts.cpp:133
 msgid "Sternenhimmel: Funkelnde Sterne mit einstellbarer Dichte, Größe und Funkeltempo, auf Wunsch langsam abwärts driftend."
 msgstr ""
 
@@ -2098,7 +2126,7 @@ msgstr ""
 msgid "TESTMODUS: %1"
 msgstr ""
 
-#: node_info_texts.cpp:133
+#: node_info_texts.cpp:145
 msgid "Taktgeber: Liefert im eingestellten Tempo (BPM) Impulse, Phase und Zähler. Läuft ohne Audio."
 msgstr ""
 
@@ -2154,7 +2182,7 @@ msgstr ""
 msgid "Text"
 msgstr ""
 
-#: node_info_texts.cpp:123
+#: node_info_texts.cpp:135
 msgid "Text als Laufschrift oder statisch. Tempo, Ausrichtung, Höhe und Farben einstellbar."
 msgstr ""
 
@@ -2198,7 +2226,7 @@ msgstr ""
 msgid "Ursprung x y z"
 msgstr ""
 
-#: node_editor_menu.cpp:83
+#: node_editor_menu.cpp:86
 msgid "Verbindung trennen"
 msgstr ""
 
@@ -2206,7 +2234,7 @@ msgstr ""
 msgid "Verdreht das Bild entlang einer Achse, je weiter weg, desto stärker (Winkel pro Einheit)."
 msgstr ""
 
-#: node_info_texts.cpp:139
+#: node_info_texts.cpp:151
 msgid "Vergleicht einen Wert mit einer Schwelle (mit Hysterese) und liefert Ja/Nein sowie Impulse beim Überschreiten und Unterschreiten."
 msgstr ""
 
@@ -2216,6 +2244,10 @@ msgstr ""
 
 #: stage_view.cpp:52
 msgid "Verkabelung"
+msgstr ""
+
+#: node_info_texts.cpp:117
+msgid "Verlauf über drei Farben (A → B → C → A) entlang der gewählten Achse, mehrfach wiederholbar und auf Wunsch durchlaufend. Für Strips."
 msgstr ""
 
 #: node_info_texts.cpp:69
@@ -2258,7 +2290,7 @@ msgstr ""
 msgid "Weiche, ineinanderfließende Kugeln (Metaballs), die sich bewegen. Anzahl, Größe und Tempo einstellbar."
 msgstr ""
 
-#: node_info_texts.cpp:125
+#: node_info_texts.cpp:137
 msgid "Weiches Rauschen (Value Noise) als Muster aus zwei Farben. Skalierung, Tempo, Dichte und Weichheit einstellbar."
 msgstr ""
 
@@ -2414,7 +2446,7 @@ msgstr ""
 msgid "Zuerst entlang"
 msgstr ""
 
-#: node_info_texts.cpp:151
+#: node_info_texts.cpp:163
 msgid "Zufallswert, der sich im eingestellten Takt ändert, auf Wunsch weich überblendet. Mit Seed wiederholbar."
 msgstr ""
 
@@ -2570,11 +2602,11 @@ msgstr ""
 msgid "Überblendzeit:"
 msgstr ""
 
-#: node_editor_menu.cpp:72
+#: node_editor_menu.cpp:75
 msgid "Überbrücken\tB"
 msgstr ""
 
-#: node_editor_menu.cpp:72
+#: node_editor_menu.cpp:75
 msgid "Überbrückung aufheben\tB"
 msgstr ""
 

@@ -1,5 +1,10 @@
 # Änderungen
 
+## 0.60.0
+
+- **Neue Gruppe „Generators 1D“ für Strips.** Sechs Generatoren, die mit einer Koordinate entlang einer wählbaren Achse (`axis` X/Y/Z) rechnen: **Comet** (Lauflicht mit Schweif, auch Ping-pong), **Pulse Waves**, **Strip Gradient** (drei Farben, durchlaufend), **Meteors** (bis zu acht), **Sparkle** (Funkeln, `cells` = LED-Zahl) und **Level Bar** (Pegelbalken, `level` per Kabel, zum Beispiel von „Audio Level“). Sie laufen auf jedem Fixture, das in der Achsenrichtung ausgedehnt ist.
+- **Rechtsklick auf einen Ein- oder Ausgang** im Node-Editor zeigt Nodes mit passendem Port; der gewählte Node entsteht daneben und wird sofort verbunden (wie beim Rechtsklick auf freie Fläche, nur mit passender Auswahl).
+
 ## 0.59.1
 
 - **Localhost in der Netzwerkkarten-Auswahl (#35).** Einstellungen → Netzwerk bietet zum Senden und Empfangen jetzt auch „Localhost“ (127.0.0.1) an, zum Testen auf demselben Rechner.

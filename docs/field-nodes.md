@@ -38,6 +38,12 @@ beliebigen Koordinaten abtastet.
 | `wh.generator.rain` | „Digital Rain“: fallende Pixel mit Spur (Spalten, Tempo, Spurlänge, Dichte, Kopf-/Spurfarbe); die Spur ist durchsichtig und lässt sich über andere Effekte legen. Im Cube fallen Säulen in x/z | 3D |
 | `wh.generator.solid` | Fläche in einer Farbe (zum Einfärben mit Mask/Blend oder als Blitzfläche) | beliebig |
 | `wh.generator.scan` | Scan-Linie / Knight Rider: ein Streifen quer zur Richtung `angle` an der Stelle `position` (0..1), Breite und Weichheit einstellbar; die Position mit einem Dreieck-LFO steuern lässt ihn hin- und herlaufen. Der Rest ist durchsichtig; mit `elevation` wird aus dem Streifen eine Scheibe, die durch den Würfel läuft | 2D, 3D |
+| `wh.generator1d.comet` | Gruppe **Generators 1D** (für Strips; alle mit Auswahl `axis` X/Y/Z): Komet mit verblassendem Schweif, `speed` in Durchläufen pro Sekunde (negativ rückwärts), `length`, `bounce` (Ping-pong), Farbe | 1D (jede Achse) |
+| `wh.generator1d.pulses` | Pulswellen: `frequency` Wellen über die Länge, `speed`, `sharpness` (weich bis schmale Pulse), zwei Farben | 1D |
+| `wh.generator1d.gradient` | „Strip Gradient“: Verlauf A → B → C → A, `repeat` Mal über die Länge, `speed` zum Durchlaufen | 1D |
+| `wh.generator1d.meteors` | Bis zu acht Kometen (`count`) mit eigener Geschwindigkeit und eigenem Startpunkt | 1D |
+| `wh.generator1d.sparkle` | Funkeln: `cells` Zellen (zum Beispiel die LED-Zahl), `density` Anteil, der aufblitzt, `speed` | 1D |
+| `wh.generator1d.levelbar` | Pegelbalken: füllt die Achse bis `level` (0..1, per Kabel steuerbar, etwa von „Audio Level“), `flip`, Farben unten/oben | 1D |
 | `wh.generator.ripples` | Wellenringe wie Regentropfen im Wasser (Tropfen pro Sekunde, Ausbreitung, Ringbreite, Farbe), ohne Zustand, durchsichtig außerhalb der Ringe; `space` *Auto* (Standard; flach auf 2D-Matrizen, räumlich bei räumlichem Aufbau) oder *Volume* lässt die Tropfen an Zufallsstellen im Raum fallen und als Kugelschalen wachsen | 2D, 3D |
 | `wh.generator.fire` | Feuer: nach oben wanderndes Rauschen mit Hitzeverlauf von unten nach oben, Palette Schwarz–Rot–Gelb–Weiß; `depth` lässt das Rauschen auch in z variieren | 2D, 3D |
 | `wh.generator.metaballs` | Metaballs: 1–6 weiche Kugeln wandern auf eigenen Bahnen und fließen ineinander, wenn sie sich nähern (Anzahl, Größe, Tempo, Randweichheit, Hintergrund- und Blobfarbe); `space` *Volume* gibt jeder Kugel eine z-Bahn | 2D, 3D |

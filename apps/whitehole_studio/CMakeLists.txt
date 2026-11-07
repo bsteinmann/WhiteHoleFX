@@ -66,6 +66,7 @@ add_executable(whitehole_studio
     node_editor_edit.cpp
     node_editor_exercise.cpp
     node_editor.hpp
+    node_editor_connect.cpp
     node_editor_menu.cpp
     node_editor_targets.cpp
     port_legend.cpp
