@@ -149,7 +149,7 @@ bedienbar. Im Live-Modus ist das Menü gesperrt.
 **Bühnenansicht:** Rechts neben der Fixture-Liste im Reiter Layout sieht man die Anlage im Raum, drehbar wie die 3D-Vorschau (Ziehen = drehen, Rad = Zoom,
 Doppelklick = zurück) mit Knöpfen für Perspektive, Front, Seite und Oben. Jedes Fixture hat einen eigenen Farbton und wird
 entlang des Kabels heller; die **erste LED am Kabel ist weiß**, so erkennst du Anfang und Richtung des Strangs. Rahmen und
-Achsenkreuz (x rot, y grün, z blau, an der Ecke mit den kleinsten Werten) helfen beim Ausrichten. Gewählte Fixtures bleiben
+Achsenkreuz (x rot, y grün, z blau, an der Ecke mit den kleinsten Werten) helfen beim Ausrichten. **Verschieben mit der Maus:** Am ersten gewählten Fixture stehen drei Pfeile (x rot, y grün, z blau, am Ursprung des Fixtures). Fasst du einen Pfeil und ziehst, wandern alle gewählten Fixtures entlang dieser Achse, in 0,1er-Schritten (Alt gedrückt: ohne Einrasten). Zeigt eine Achse fast auf die Kamera zu (zum Beispiel z von vorn), ist ihr Pfeil nur angedeutet und nicht greifbar; dreh die Ansicht oder nimm Seite oder Oben. Alles ist mit Strg+Z rückgängig zu machen. Gewählte Fixtures bleiben
 kräftig, die übrigen werden dunkel. Wert im Formular ändern, sofort sehen: Die Ansicht zeigt nur die Anlage, nicht den laufenden
 Effekt, und aktualisiert sich bei jeder Änderung.
 

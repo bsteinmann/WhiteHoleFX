@@ -60,13 +60,25 @@ StageView::StageView(runtime::Player& player, bool compact, QWidget* parent)
         column->addLayout(bar);
         connect(wiringCheck_, &QCheckBox::toggled, this, [this](bool on) { setWiringVisible(on); });
         connect(view_, &PreviewWidget::clicked, this, [this](QPointF position) { pickAt(position); });
-        view_->setPaintHook([this](QPainter& painter) { paintWiring(painter); });
+        view_->setPaintHook([this](QPainter& painter) {
+            paintWiring(painter);
+            paintGizmo(painter);
+        });
+        view_->setGrabTest([this](QPointF position) { return gizmoGrab(position); });
+        connect(view_, &PreviewWidget::grabDragged, this,
+                [this](QPointF position, Qt::KeyboardModifiers modifiers) { gizmoDrag(position, modifiers); });
+        connect(view_, &PreviewWidget::grabReleased, this, [this](QPointF) { gizmoRelease(); });
+        connect(view_, &PreviewWidget::grabHover, this, [this](QPointF position) { gizmoHover(position); });
     }
     if (compact) {
         setMinimumHeight(200);
         setMaximumHeight(280);
         view_->setToolTip(tr("Ziehen dreht, Rad zoomt. Die erste LED am Kabel ist weiß; x rot, y grün, z blau."));
+        gizmoEnabled_ = false;
     } else {
+        gizmoEnabled_ = true;
+        view_->setToolTip(tr("Ziehen dreht, Rad zoomt. Am gewählten Fixture: einen Pfeil (x rot, y grün, z blau) ziehen verschiebt es entlang "
+                             "dieser Achse in 0,1er-Schritten (Alt: ohne Einrasten)."));
         auto* row = new QHBoxLayout;
         const struct {
             const char* text;
@@ -170,6 +182,7 @@ bool StageView::renderNow() {
     wires_ = preview::projectWiring(player_.ledMap(), camera_, options.width, options.height, options.margin, {});
     view_->setMessage(QString{});
     view_->setImage(last_);
+    updateGizmo();
     return true;
 }
 
@@ -339,7 +352,7 @@ QString StageView::exercise() {
     if (camera_.pitchDegrees != 90.0F || !camera_.showAxes || !renderNow()) {
         return QStringLiteral("Bühnenansicht: die Draufsicht lässt sich nicht einstellen");
     }
-    return {};
+    return exerciseGizmo();
 }
 
 }  // namespace whitehole::studio

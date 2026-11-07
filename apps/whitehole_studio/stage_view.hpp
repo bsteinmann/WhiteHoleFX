@@ -20,9 +20,11 @@
 #include <QWidget>
 
 #include <optional>
+#include <utility>
 #include <vector>
 
 #include "whitehole/mapping/fixture.hpp"
+#include "whitehole/preview/gizmo.hpp"
 #include "whitehole/preview/view3d.hpp"
 #include "whitehole/preview/wiring.hpp"
 #include "whitehole/runtime/player.hpp"
@@ -63,8 +65,19 @@ public:
     void setWiringVisible(bool on);
     [[nodiscard]] QString infoText() const;
 
+    /// Achsen-Griff am ersten gewählten Fixture (Pfeile x rot, y grün, z blau): ziehen verschiebt alle gewählten Fixtures
+    /// entlang der Achse. Nur in der großen Ansicht und nicht im Testbild. Aus mit false.
+    void setGizmoEnabled(bool on);
+    /// Der Pfeil der Achse `axis` (0 x, 1 y, 2 z) im Widget als Anfang und Spitze; leer ohne Griff (für den Rauchtest).
+    [[nodiscard]] std::optional<std::pair<QPointF, QPointF>> gizmoAxisInWidget(int axis) const;
     /// Rauchtest für die CI: zeichnet, dreht, wechselt die feste Ansicht. Leer bei Erfolg.
     QString exercise();
+
+Q_SIGNALS:
+    /// Der Griff hat Fixtures verschoben (das Projekt hat sich geändert): Layout-Liste und Vorschau nachziehen.
+    void fixturesMoved();
+    /// Der Griff konnte nicht verschieben (Meldung für die Statuszeile).
+    void failed(const QString& message);
 
 protected:
     void showEvent(QShowEvent* event) override;
@@ -77,6 +90,16 @@ private:
     void paintWiring(QPainter& painter) const;
     [[nodiscard]] QString describeLed(const preview::PickedLed& picked) const;
 
+    // Achsen-Griff (stage_view_gizmo.cpp)
+    void updateGizmo();
+    void paintGizmo(QPainter& painter) const;
+    bool gizmoGrab(QPointF position);
+    void gizmoDrag(QPointF position, Qt::KeyboardModifiers modifiers);
+    void gizmoRelease();
+    void gizmoHover(QPointF position);
+    [[nodiscard]] std::optional<int> gizmoAxisAt(QPointF position) const;
+    QString exerciseGizmo();
+
     runtime::Player& player_;
     PreviewWidget* view_;
     preview::Camera3d camera_;
@@ -87,6 +110,13 @@ private:
     std::vector<preview::WirePath> wires_;  // Kabelwege aller Fixtures im zuletzt gezeichneten Bild
     std::optional<preview::PickedLed> picked_;
     preview::PreviewOptions imageOptions_;  // Größe und Rand des zuletzt gezeichneten Bildes
+    bool gizmoEnabled_{false};
+    std::optional<preview::GizmoGeometry> gizmo_;  // in Bildpunkten des zuletzt gezeichneten Bildes
+    int gizmoActive_{-1};                          // gerade gezogene Achse, sonst -1
+    int gizmoHover_{-1};                           // Achse unter der Maus, sonst -1
+    QPointF gizmoLast_;
+    float gizmoRaw_{0.0F};                         // bisher gezogene Strecke ohne Einrasten (Welteinheiten)
+    float gizmoApplied_{0.0F};                     // davon schon verschoben (eingerastet)
     bool showWiring_{true};
     bool testPreview_{false};
     bool drewTestPattern_{false};

@@ -74,19 +74,19 @@ msgstr " змін/с"
 msgid " s"
 msgstr " с"
 
-#: stage_view.cpp:224
+#: stage_view.cpp:237
 msgid " · %1 Ziel %2 · Universe %3 · Kanal %4–%5"
 msgstr " · %1 ціль %2 · Universe %3 · Канал %4–%5"
 
-#: stage_view.cpp:221
+#: stage_view.cpp:234
 msgid " · DDP Ziel %1 · Byte %2–%3"
 msgstr " · DDP ціль %1 · Байт %2–%3"
 
-#: stage_view.cpp:218
+#: stage_view.cpp:231
 msgid " · liegt hinter dem letzten Universe"
 msgstr " · лежить за останнім universe"
 
-#: stage_view.cpp:228
+#: stage_view.cpp:241
 msgid " · nicht gepatcht"
 msgstr " · не пропатчено"
 
@@ -130,7 +130,7 @@ msgstr "%1 LED, кадр %2 (відкинуто %3), пакети %4, помил
 msgid "%1 LEDs, angehalten"
 msgstr "%1 LED, зупинено"
 
-#: stage_view.cpp:211
+#: stage_view.cpp:224
 msgid "%1 · LED %2 von %3"
 msgstr "%1 · LED %2 із %3"
 
@@ -150,7 +150,7 @@ msgstr "&Вигляд"
 msgid "&Ausgabe senden"
 msgstr "&Надсилати вивід"
 
-#: main_window_stage.cpp:50
+#: main_window_stage.cpp:52
 msgid "&Ausgabe …"
 msgstr "&Вивід …"
 
@@ -186,7 +186,7 @@ msgstr "&Налаштування …"
 msgid "&Fehler melden oder Idee vorschlagen …"
 msgstr "&Повідомити про помилку або запропонувати ідею …"
 
-#: main_window_stage.cpp:59
+#: main_window_stage.cpp:61
 msgid "&Fixtures …"
 msgstr "&Фікстури …"
 
@@ -194,7 +194,7 @@ msgstr "&Фікстури …"
 msgid "&Hilfe"
 msgstr "&Довідка"
 
-#: main_window_stage.cpp:46
+#: main_window_stage.cpp:48
 msgid "&Layout …"
 msgstr "&Розкладка …"
 
@@ -250,7 +250,7 @@ msgstr "&Стоп"
 msgid "&Tastenkürzel …"
 msgstr "&Скорочення клавіш …"
 
-#: main_window_stage.cpp:55
+#: main_window_stage.cpp:57
 msgid "&Testmodus …"
 msgstr "&Тестовий режим …"
 
@@ -698,7 +698,7 @@ msgstr "Готово: %1 - натисніть GO"
 msgid "Betrieb"
 msgstr "Робота"
 
-#: main_window_stage.cpp:60
+#: main_window_stage.cpp:62
 msgid "Bibliothek der Bauformen: Matrix, Kreis, Strip, Säule mit Vorschau und Test"
 msgstr "Бібліотека типів: матриця, коло, стрип, колона з попереднім переглядом і тестом"
 
@@ -1206,7 +1206,7 @@ msgstr "Field"
 msgid "Fixture"
 msgstr "Фікстура"
 
-#: main_window_stage.cpp:42
+#: main_window_stage.cpp:44
 msgid "Fixture &hinzufügen …"
 msgstr "&Додати фікстуру …"
 
@@ -1222,7 +1222,7 @@ msgstr "Додати фікстуру"
 msgid "Fixtures"
 msgstr "Фікстури"
 
-#: main_window_stage.cpp:48
+#: main_window_stage.cpp:50
 msgid "Fixtures auf der Bühne verteilen und drehen (eigenes Fenster)"
 msgstr "Розміщувати й обертати фікстури на сцені (окреме вікно)"
 
@@ -1242,7 +1242,7 @@ msgstr "Frame"
 msgid "Frei drehbare Ansicht: ziehen = drehen, Rechtsklick = verschieben, Rad = Zoom"
 msgstr "Вільно обертовий вигляд: тягнути = обертати, правий клік = переміщувати, колесо = масштаб"
 
-#: stage_view.cpp:75
+#: stage_view.cpp:87
 msgid "Front"
 msgstr "Спереду"
 
@@ -1426,7 +1426,7 @@ msgstr "Немає GPU-адаптера: %1"
 msgid "Kein Projekt"
 msgstr "Немає проєкту"
 
-#: parameter_panel.cpp:104 stage_view.cpp:148
+#: parameter_panel.cpp:104 stage_view.cpp:160
 msgid "Kein Projekt geladen."
 msgstr "Проєкт не завантажено."
 
@@ -1438,7 +1438,7 @@ msgstr "Без цілі (вільний прямокутник)"
 msgid "Keine Aufnahmegeräte gefunden. Ein Audio-Interface anschließen und das Fenster neu öffnen."
 msgstr "Пристроїв запису не знайдено. Підключіть аудіоінтерфейс і знову відкрийте вікно."
 
-#: stage_view.cpp:55 stage_view.cpp:193
+#: stage_view.cpp:55 stage_view.cpp:206
 msgid "Klicke eine LED, um ihre Adresse zu sehen."
 msgstr "Клацніть LED, щоб побачити його адресу."
 
@@ -1650,7 +1650,7 @@ msgstr "Матриця"
 msgid "Matrix (Fläche)"
 msgstr "Матриця (поверхня)"
 
-#: main_window_stage.cpp:43
+#: main_window_stage.cpp:45
 msgid "Matrix, Strip oder 3D-Gitter mit Größe x y z, Lage, Verkabelung und Patch anlegen"
 msgstr "Створити матрицю, стрічку або 3D-сітку з розміром x y z, положенням, підключенням і Patch"
 
@@ -1822,7 +1822,7 @@ msgstr "Малювати лише світні LED: крізь куб видно
 msgid "Nächsten Cue auslösen (Leertaste)"
 msgstr "Запустити наступний Cue (пробіл)"
 
-#: layout_panel_groups.cpp:188 stage_view.cpp:77
+#: layout_panel_groups.cpp:188 stage_view.cpp:89
 msgid "Oben"
 msgstr "Угорі"
 
@@ -1886,7 +1886,7 @@ msgstr "Рівень діапазону частот (Від–До в Гц) а�
 msgid "Pegelbalken: füllt die gewählte Achse bis „Level“ (0 bis 1), unten „Color low“, oben „Color high“. „Level“ lässt sich mit „Audio Level“ oder einem LFO steuern. Für Strips."
 msgstr "Індикатор рівня: заповнює вибрану вісь до «Level» (від 0 до 1), унизу «Color low», угорі «Color high». «Level» можна керувати через «Audio Level» або LFO. Для стрічок."
 
-#: stage_view.cpp:74
+#: stage_view.cpp:86
 msgid "Perspektive"
 msgstr "Перспектива"
 
@@ -2054,7 +2054,7 @@ msgstr "Послідовність до восьми значень. Кожне 
 msgid "Schwingung (LFO): Sinus, Dreieck, Sägezahn oder Rechteck mit Frequenz, Phase und Wertebereich. Der Klassiker zum Bewegen von Parametern."
 msgstr "Коливання (LFO): синус, трикутник, пилка або прямокутник із частотою, фазою та діапазоном значень. Класика для руху параметрів."
 
-#: stage_view.cpp:76
+#: stage_view.cpp:88
 msgid "Seite"
 msgstr "Бік"
 
@@ -2242,7 +2242,7 @@ msgstr "Тестове зображення"
 msgid "Testbild für den Aufbau: x wird rot, y grün, z blau. So sieht man, welche Seite wo liegt und ob Verkabelung und Startecke stimmen."
 msgstr "Тестове зображення для монтажу: x стає червоним, y зеленим, z синім. Так видно, де яка сторона і чи правильні підключення та стартовий кут."
 
-#: main_window_stage.cpp:56
+#: main_window_stage.cpp:58
 msgid "Testbilder auf die LEDs schicken, um Verkabelung und Patch zu prüfen"
 msgstr "Надсилати тестові зображення на LED, щоб перевірити підключення й Patch"
 
@@ -2490,7 +2490,11 @@ msgstr "Тригер за часом: очікування"
 msgid "Zeit: %1 nach dem vorigen"
 msgstr "Час: %1 після попереднього"
 
-#: shape_preview.cpp:40 stage_view.cpp:68
+#: stage_view.cpp:80
+msgid "Ziehen dreht, Rad zoomt. Am gewählten Fixture: einen Pfeil (x rot, y grün, z blau) ziehen verschiebt es entlang dieser Achse in 0,1er-Schritten (Alt: ohne Einrasten)."
+msgstr "Перетягування обертає, колесо масштабує. На вибраному фікстурі перетягування стрілки (x червона, y зелена, z синя) пересуває його вздовж осі кроками по 0,1 (Alt: без прив'язки)."
+
+#: shape_preview.cpp:40 stage_view.cpp:76
 msgid "Ziehen dreht, Rad zoomt. Die erste LED am Kabel ist weiß; x rot, y grün, z blau."
 msgstr "Тягнення обертає, колесо масштабує. Перший LED на кабелі білий; x червоний, y зелений, z синій."
 
@@ -2502,7 +2506,7 @@ msgstr "Ціль №"
 msgid "Ziel zuweisen"
 msgstr "Призначити ціль"
 
-#: main_window_stage.cpp:51
+#: main_window_stage.cpp:53
 msgid "Ziele (Controller) und Patch: welches Fixture auf welches Universe sendet"
 msgstr "Призначення (контролери) і патч: яка фікстура на який універс надсилає"
 

@@ -1,5 +1,9 @@
 # Änderungen
 
+## 0.63.0
+
+- **Achsen-Griff in der Bühnenansicht (Reiter Layout).** Am ersten gewählten Fixture erscheinen drei Pfeile (x rot, y grün, z blau). Pfeil fassen und ziehen verschiebt alle gewählten Fixtures entlang der Achse, wie bei Slicern; Einrasten auf 0,1 (Alt: aus). Achsen, die zur Kamera zeigen, sind nur angedeutet. Das Drehen mit Ringen folgt als nächster Schritt. Neu in `wh_preview`: `gizmo.hpp` (Geometrie, Treffer, Zugweite; getestet).
+
 ## 0.62.1
 
 - **Controller-Bibliothek: „Auf gewählten anwenden".** Überschreibt Name, Protokoll, Adresse und Port des gewählten Controllers mit einem gespeicherten Eintrag. Damit betreibst du dasselbe Gerät mit anderen Einstellungen (zum Beispiel Art-Net oder sACN) und lädst sie per Klick; die Patches bleiben auf dem Controller, bei Protokollwechsel verschiebt sich das Universe wie gewohnt.

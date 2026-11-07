@@ -24,6 +24,8 @@ void MainWindow::buildStageConfig(QMenu* menu) {
     stageView_ = new StageView{*player_, false};
     testView_ = new StageView{*player_, false};
     testView_->setTestPreview(true);
+    connect(stageView_, &StageView::fixturesMoved, this, &MainWindow::onLayoutEdited);
+    connect(stageView_, &StageView::failed, this, [this](const QString& message) { statusBar()->showMessage(message, 8000); });
     connect(testPanel_, &TestPanel::patternChanged, testView_, &StageView::testPatternChanged);
     fixturePage_ = new FixtureLibraryPage{*player_};
     connect(fixturePage_, &FixtureLibraryPage::edited, this, &MainWindow::onLayoutEdited);

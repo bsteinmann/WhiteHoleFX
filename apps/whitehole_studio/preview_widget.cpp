@@ -134,6 +134,11 @@ void PreviewWidget::mousePressEvent(QMouseEvent* event) {
         dragModifiers_ = event->modifiers();
         lastPosition_ = event->position();
         pressPosition_ = event->position();
+        if (event->button() == Qt::LeftButton && grabTest_ && grabTest_(event->position())) {
+            grabbing_ = true;
+            dragButton_ = Qt::NoButton;
+            Q_EMIT grabPressed(event->position(), event->modifiers());
+        }
         return;
     }
     if (event->button() != Qt::LeftButton) {
@@ -147,6 +152,13 @@ void PreviewWidget::mousePressEvent(QMouseEvent* event) {
 
 void PreviewWidget::mouseMoveEvent(QMouseEvent* event) {
     if (view3d_) {
+        if (grabbing_) {
+            Q_EMIT grabDragged(event->position(), event->modifiers());
+            return;
+        }
+        if (dragButton_ == Qt::NoButton && grabTest_) {
+            Q_EMIT grabHover(event->position());
+        }
         if (dragButton_ != Qt::NoButton) {
             const QPointF delta = event->position() - lastPosition_;
             lastPosition_ = event->position();
@@ -175,6 +187,11 @@ void PreviewWidget::leaveEvent(QEvent* event) {
 
 void PreviewWidget::mouseReleaseEvent(QMouseEvent* event) {
     if (view3d_) {
+        if (grabbing_ && event->button() == Qt::LeftButton) {
+            grabbing_ = false;
+            Q_EMIT grabReleased(event->position());
+            return;
+        }
         const bool click = dragButton_ == Qt::LeftButton && !dragModifiers_.testFlag(Qt::ShiftModifier) &&
                            (event->position() - pressPosition_).manhattanLength() < 4.0;
         dragButton_ = Qt::NoButton;
@@ -229,6 +246,11 @@ void PreviewWidget::setView3d(bool on) {
     dragging_ = false;
     dragButton_ = Qt::NoButton;
     update();
+}
+
+void PreviewWidget::setGrabTest(std::function<bool(QPointF)> test) {
+    grabTest_ = std::move(test);
+    grabbing_ = false;
 }
 
 void PreviewWidget::setPaintHook(std::function<void(QPainter&)> hook) {

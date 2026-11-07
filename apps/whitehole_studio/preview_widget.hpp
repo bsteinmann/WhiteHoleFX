@@ -48,6 +48,10 @@ public:
     void setOverlay(const PreviewOverlay& overlay);
     /// Zusätzliche Zeichnung über dem Bild (z. B. Kabelweg in der Stage Config); wird bei jedem Neuzeichnen gerufen.
     void setPaintHook(std::function<void(QPainter&)> hook);
+    /// 3D-Ansicht: Greifer. Beim Linksklick fragt das Widget zuerst `test(Position)`; sagt es ja, gehört die Maus dem Greifer
+    /// (grabPressed / grabDragged / grabReleased) statt der Kamera. Ohne Taste meldet `grabHover` die Mausposition,
+    /// damit der Greifer sich hervorheben kann. Leere Funktion: aus.
+    void setGrabTest(std::function<bool(QPointF)> test);
     /// Auffälliger Hinweis oben rechts (z. B. "TESTMODUS"); leer = keiner.
     void setBanner(const QString& banner);
 
@@ -79,6 +83,11 @@ Q_SIGNALS:
     /// Die Maus bewegt sich über der Vorschau (ohne gedrückte Taste); `hoverEnded`, wenn sie sie verlässt.
     void hovered(QPointF position);
     void hoverEnded();
+    /// 3D-Ansicht mit Greifer (setGrabTest): gegriffen, gezogen, losgelassen (Punkte im Widget; `modifiers` beim Drücken).
+    void grabPressed(QPointF position, Qt::KeyboardModifiers modifiers);
+    void grabDragged(QPointF position, Qt::KeyboardModifiers modifiers);
+    void grabReleased(QPointF position);
+    void grabHover(QPointF position);
     /// Die Kamera der 3D-Ansicht hat sich durch Maus oder Tasten geändert (nicht durch setCamera).
     void cameraChanged(const whitehole::preview::Camera3d& camera);
 
@@ -100,6 +109,8 @@ private:
     PreviewOverlay overlay_;
     bool dragging_{false};
     bool view3d_{false};
+    bool grabbing_{false};
+    std::function<bool(QPointF)> grabTest_;
     preview::Camera3d camera_;
     Qt::MouseButton dragButton_{Qt::NoButton};  // 3D: welche Taste gerade zieht
     Qt::KeyboardModifiers dragModifiers_;
