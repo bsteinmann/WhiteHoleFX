@@ -53,7 +53,7 @@ public:
     [[nodiscard]] static Result evaluate(const QByteArray& json, const core::Version& current);
     [[nodiscard]] static core::Version currentVersion();
 
-signals:
+Q_SIGNALS:
     void finished(const UpdateChecker::Result& result);
 
 private:

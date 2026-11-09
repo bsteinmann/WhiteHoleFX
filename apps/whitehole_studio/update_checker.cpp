@@ -74,7 +74,7 @@ void UpdateChecker::onReply() {
     } else {
         result = evaluate(reply->read(kMaxAnswerBytes), currentVersion());
     }
-    emit finished(result);
+    Q_EMIT finished(result);
 }
 
 UpdateChecker::Result UpdateChecker::evaluate(const QByteArray& json, const core::Version& current) {
