@@ -89,6 +89,7 @@ Jeder Parameter hat wie üblich einen Modulations-Eingang. Rezepte:
   lässt einen dünnen Rahmen blitzen. Beispiel: `examples/audio/techno.whfx`.
 - **Phrasen zählen:** `Kick.beat` → `Sequencer.advance` (Schritte 4 oder 8, Wert 1 nur auf Schritt 1): `hit` kommt
   dann nur auf der „Eins“ und kann einen Cue, Strobe oder einen Farbwechsel auslösen.
+- **Strobe nur auf Ansage (Strobe Gate):** `Kick / Snare / Hat` (Instrument *Hi-Hat*) → `pulse` an `Strobe Gate.gate`, davor der Effekt als `source`: Es blitzt nur bei Hi-Hat-Treffern bzw. solange der Wert über `threshold` liegt. Dasselbe mit einem Fader oder einer DMX-Taste als Gate.
 - **Blitz im Takt:** `Beat.pulse` → `Color Adjust.brightness` eines Effekts.
 - **Bass lässt es wachsen:** `Audio Band` (40–150 Hz) → `Scale.factor`.
 - **Farbwechsel im Takt:** `Beat.phase` → `Color Ramp.position` (mit `loop`).

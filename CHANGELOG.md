@@ -1,5 +1,9 @@
 # Änderungen
 
+## 0.69.0
+
+- **Neuer Node Strobe Gate (#121).** Wie Strobe, aber nur solange `Gate` den Schwellwert `Threshold` erreicht, zum Beispiel der Puls einer Hi-Hat-Erkennung, ein Fader oder eine DMX-Taste; darunter geht das Bild unverändert durch. Rezept in `docs/audio.md`. Test auf der GPU (Software-Adapter) und im Katalogtest. „Beat Counter“ entfällt: Phrasen zählt der Sequencer (Rezept „Phrasen zählen“).
+
 ## 0.68.0
 
 - **Layout: Einrasten an anderen Fixtures (#117).** Beim Ziehen rasten Kanten und Mitten der gezogenen Fixtures an Kanten und Mitten der übrigen ein (6 Bildpunkte Reichweite, hat Vorrang vor dem Raster), violette Hilfslinien zeigen woran. Neuer Schalter „An Fixtures“ neben „Einrasten“ (Alt: ohne). Rechnung getestet: `preview/fixture_snap.hpp`; der Rauchtest zieht ein Fixture neben einen Nachbarn.

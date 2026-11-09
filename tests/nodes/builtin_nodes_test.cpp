@@ -57,7 +57,7 @@ TEST_CASE("Built-ins: alle Nodes werden samt Snippet beziehungsweise Kernel regi
         "wh.transform.rotate",   "wh.transform.mirror", "wh.transform.scale",
         "wh.transform.rotate3d", "wh.transform.region", "wh.transform.symmetry", "wh.blend.mix",
         "wh.blend.blend", "wh.blend.crossfade", "wh.blend.mask", "wh.blend.key", "wh.modifier.coloradjust",
-        "wh.modifier.strobe", "wh.modifier.outline", "wh.output.canvas", "wh.transform.slide", "wh.transform.tile",
+        "wh.modifier.strobe", "wh.modifier.strobegate", "wh.modifier.outline", "wh.output.canvas", "wh.transform.slide", "wh.transform.tile",
         "wh.transform.pixelate", "wh.generator.solid", "wh.generator.scan", "wh.generator.ripples", "wh.generator.fire",
         "wh.blend.add", "wh.generator.metaballs", "wh.generator.starfield", "wh.generator.fading",
         "wh.generator.shapes", "wh.generator.sinelines", "wh.generator.spectrum", "wh.generator.randompixels",

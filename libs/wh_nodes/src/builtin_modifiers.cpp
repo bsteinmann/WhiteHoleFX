@@ -47,6 +47,21 @@ if (phase >= duty) {
 }
 return vec4<f32>(c.rgb, c.a * env);)wgsl";
 
+// Strobe Gate: wie Strobe, aber nur solange `gate` den Schwellwert `threshold` erreicht (zum Beispiel der Puls einer
+// Kick- oder Hi-Hat-Erkennung, ein Fader oder eine DMX-Taste). Darunter geht das Bild unverändert durch.
+constexpr const char* kStrobeGateBody = R"wgsl(let c = @in(source, p);
+let phase = fract(@time * @param(rate));
+let duty = clamp(@param(duty), 0.0, 1.0);
+var env = 1.0;
+if (phase >= duty) {
+    env = clamp(1.0 - (phase - duty) / max(@param(fade), 0.0001), 0.0, 1.0);
+}
+var open = 0.0;
+if (@param(gate) >= @param(threshold)) {
+    open = 1.0;
+}
+return vec4<f32>(c.rgb, c.a * mix(1.0, env, open));)wgsl";
+
 // Umriss: Wo das Bild dunkel ist, aber in der Nähe (Abstand `width`, in acht Richtungen geprüft) etwas
 // Helles liegt, wird die Randfarbe gezeichnet. So bekommt Text oder eine Form einen Rand.
 constexpr const char* kOutlineBody = R"wgsl(let c = @in(source, p);
@@ -138,6 +153,14 @@ std::vector<compiler::NodeDefinition> modifierNodes() {
                               {number("rate", "Rate (Hz)", 4.0, 0.05, 60.0), number("duty", "On time (of period)", 0.3, 0.0, 1.0),
                                number("fade", "Fade out (of period)", 0.0, 0.0, 1.0)},
                               kStrobeBody));
+
+    nodes.push_back(fieldNode("wh.modifier.strobegate", "Strobe Gate", "Effects",
+                              {fieldInput("source", "Source"), fieldOutput()},
+                              {number("gate", "Gate (strobes at or above threshold)", 0.0, 0.0, 1.0),
+                               number("threshold", "Threshold", 0.5, 0.0, 1.0), number("rate", "Rate (Hz)", 12.0, 0.05, 60.0),
+                               number("duty", "On time (of period)", 0.3, 0.0, 1.0),
+                               number("fade", "Fade out (of period)", 0.0, 0.0, 1.0)},
+                              kStrobeGateBody));
 
     nodes.push_back(fieldNode("wh.modifier.outline", "Outline", "Effects",
                               {fieldInput("source", "Source"), fieldOutput()},

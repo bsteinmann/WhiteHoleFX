@@ -69,6 +69,9 @@ std::span<const NodeInfoEntry> nodeInfoEntries() {
      QT_TR_NOOP("Verschiebt das Bild in x, y und z. Mit „Wrap around“ kommt, was hinten hinausläuft, vorne wieder herein.")},
     {"wh.modifier.strobe",
      QT_TR_NOOP("Lässt das Bild blitzen: Rate in Hz, Anteil der Leuchtzeit und optionales Ausblenden.")},
+    {"wh.modifier.strobegate",
+     QT_TR_NOOP("Wie Strobe, blitzt aber nur, solange „Gate“ den Schwellwert erreicht, zum Beispiel der Puls einer Kick- oder "
+                "Hi-Hat-Erkennung. Darunter geht das Bild unverändert durch.")},
     {"wh.transform.symmetry",
      QT_TR_NOOP("Macht das Bild symmetrisch: Eine Hälfte (untere oder obere) wird an der gewählten Achse gespiegelt.")},
     {"wh.transform.tile",

@@ -190,6 +190,25 @@ TEST_CASE("Strobe: leuchtet nur in der Einschaltphase", "[gpu_device][nodes]") {
     CHECK(closeTo(render(*device, lab, strobe, 2, 2, 0.75).at(0, 0)[3], 0.5F));
 }
 
+TEST_CASE("Strobe Gate: blitzt nur, solange das Tor offen ist", "[gpu_device][nodes]") {
+    REQUIRE_DEVICE();
+    Lab lab;
+    const NodeId white = solid(lab, 1.0F, 1.0F, 1.0F);
+    const NodeId gate = lab.add("wh.modifier.strobegate");
+    lab.set(gate, "rate", 1.0);
+    lab.set(gate, "duty", 0.5);
+    lab.set(gate, "fade", 0.0);
+    lab.set(gate, "threshold", 0.5);
+    lab.connect(white, "out", gate, "source");
+    lab.set(gate, "gate", 0.0);  // zu: in der Dunkelphase (t = 0,75) bleibt es hell
+    CHECK(closeTo(render(*device, lab, gate, 2, 2, 0.75).at(0, 0)[3], 1.0F));
+    lab.set(gate, "gate", 1.0);  // offen: wie Strobe
+    CHECK(closeTo(render(*device, lab, gate, 2, 2, 0.25).at(0, 0)[3], 1.0F));
+    CHECK(closeTo(render(*device, lab, gate, 2, 2, 0.75).at(0, 0)[3], 0.0F));
+    lab.set(gate, "gate", 0.4);  // knapp unter der Schwelle: noch zu
+    CHECK(closeTo(render(*device, lab, gate, 2, 2, 0.75).at(0, 0)[3], 1.0F));
+}
+
 TEST_CASE("Slide, Tile und Pixelate bewegen die Abtastkoordinate", "[gpu_device][nodes]") {
     REQUIRE_DEVICE();
     {  // Slide um 0,25 nach rechts: links davon ist es durchsichtig
