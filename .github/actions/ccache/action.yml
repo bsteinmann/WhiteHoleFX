@@ -1,0 +1,39 @@
+name: ccache einrichten
+description: Installiert ccache, stellt den Compiler-Cache wieder her und schaltet ihn für CMake ein.
+
+# Warum es diese Datei gibt: Fünf Linux-Jobs bauen dieselben Quelldateien mit jeweils eigener
+# Konfiguration. Ohne Cache wird bei jedem Push alles neu übersetzt. Mit ccache werden nur
+# geänderte Dateien übersetzt. Die Treffer gelten je Job (Compiler und Flags sind Teil des
+# Schlüssels von ccache), darum ist der Cache nur nach `name` getrennt. Die Ergebnisse sind
+# bitgleich zu einem Lauf ohne Cache; Warnungen und Fehler kommen aus dem Cache unverändert.
+
+inputs:
+  name:
+    description: Kurzname des Jobs (trennt die Caches der Jobs voneinander).
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: ccache installieren
+      shell: bash
+      run: |
+        command -v ccache >/dev/null && exit 0
+        sudo apt-get install -y --no-install-recommends ccache \
+          || { sudo apt-get update && sudo apt-get install -y --no-install-recommends ccache; }
+    - name: Cache wiederherstellen
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/ccache
+        key: ccache-${{ inputs.name }}-${{ github.sha }}
+        restore-keys: ccache-${{ inputs.name }}-
+    - name: CMake auf ccache umstellen
+      shell: bash
+      run: |
+        {
+          echo "CMAKE_C_COMPILER_LAUNCHER=ccache"
+          echo "CMAKE_CXX_COMPILER_LAUNCHER=ccache"
+          echo "CCACHE_MAXSIZE=300M"
+          echo "CCACHE_COMPRESS=1"
+        } >> "$GITHUB_ENV"
+        ccache --zero-stats

@@ -20,6 +20,9 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v5
+      - uses: ./.github/actions/ccache
+        with:
+          name: gcc
       - name: Übersetzungen vollständig? (Texte der Oberfläche gegen die Kataloge)
         run: python3 scripts/i18n.py check
       - name: Konfigurieren
@@ -30,7 +33,7 @@ jobs:
       - name: Bauen
         run: cmake --build build --parallel 3
       - name: Testen
-        run: ctest --test-dir build --output-on-failure
+        run: ctest --test-dir build --output-on-failure --parallel 4
 
   clang:
     name: Clang (Fehler hier brechen den Lauf nicht ab)
@@ -38,12 +41,15 @@ jobs:
     continue-on-error: true
     steps:
       - uses: actions/checkout@v5
+      - uses: ./.github/actions/ccache
+        with:
+          name: clang
       - name: Konfigurieren
         run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER=clang++
       - name: Bauen
         run: cmake --build build --parallel
       - name: Testen
-        run: ctest --test-dir build --output-on-failure
+        run: ctest --test-dir build --output-on-failure --parallel 4
 
   gpu:
     name: GPU-Backend (wgpu-native + Software-Vulkan, experimentell)
@@ -51,13 +57,15 @@ jobs:
     continue-on-error: true
     steps:
       - uses: actions/checkout@v5
+      - uses: ./.github/actions/ccache
+        with:
+          name: gpu
       - name: Software-Vulkan installieren (lavapipe)
         run: |
           sudo apt-get update
           sudo apt-get install -y mesa-vulkan-drivers libvulkan1 vulkan-tools unzip
           vulkaninfo --summary || true
-      - name: wgpu-native laden (Header und Bibliothek aus demselben Paket, Version gepinnt)
-        run: scripts/fetch-wgpu-native.sh
+      - uses: ./.github/actions/wgpu-native
       - name: Konfigurieren
         run: >
           cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
@@ -136,8 +144,7 @@ jobs:
     continue-on-error: true
     steps:
       - uses: actions/checkout@v5
-      - name: wgpu-native laden (Header und Bibliothek aus demselben Paket, Version gepinnt)
-        run: ./scripts/fetch-wgpu-native.ps1
+      - uses: ./.github/actions/wgpu-native
       - name: Konfigurieren
         run: cmake -S . -B build -DWHITEHOLEFX_WEBGPU=ON "-DWGPU_NATIVE_ROOT=$PWD/third_party/wgpu-native"
       - name: Bauen
@@ -163,13 +170,15 @@ jobs:
     continue-on-error: true
     steps:
       - uses: actions/checkout@v5
+      - uses: ./.github/actions/ccache
+        with:
+          name: studio
       - name: Qt, Software-Vulkan und Schriften installieren
         run: |
           sudo apt-get update
           sudo apt-get install -y qt6-base-dev libgl1-mesa-dev libxkbcommon-dev fonts-dejavu-core \
             mesa-vulkan-drivers libvulkan1 vulkan-tools unzip gdb
-      - name: wgpu-native laden
-        run: scripts/fetch-wgpu-native.sh
+      - uses: ./.github/actions/wgpu-native
       - name: Konfigurieren
         run: >
           cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
@@ -243,12 +252,18 @@ jobs:
       QT_VERSION: "6.8.3"
     steps:
       - uses: actions/checkout@v5
+      - name: Qt-Cache wiederherstellen
+        id: qt
+        uses: actions/cache@v4
+        with:
+          path: C:\Qt
+          key: qt-${{ runner.os }}-${{ env.QT_VERSION }}-msvc2022_64
       - name: Qt installieren (aqtinstall)
+        if: steps.qt.outputs.cache-hit != 'true'
         run: |
           python -m pip install aqtinstall
           python -m aqt install-qt windows desktop $env:QT_VERSION win64_msvc2022_64 --outputdir C:\Qt
-      - name: wgpu-native laden
-        run: ./scripts/fetch-wgpu-native.ps1
+      - uses: ./.github/actions/wgpu-native
       - name: Konfigurieren
         run: >
           cmake -S . -B build -DWHITEHOLEFX_BUILD_STUDIO=ON -DWHITEHOLEFX_WEBGPU=ON
@@ -367,13 +382,15 @@ jobs:
     continue-on-error: true
     steps:
       - uses: actions/checkout@v5
+      - uses: ./.github/actions/ccache
+        with:
+          name: linux-package
       - name: Bauwerkzeuge, Qt und desktop-file-utils installieren
         run: |
           sudo apt-get update
           sudo apt-get install -y g++-12 qt6-base-dev libgl1-mesa-dev libxkbcommon-dev dpkg-dev \
             desktop-file-utils shared-mime-info libxml2-utils unzip curl
-      - name: wgpu-native laden
-        run: scripts/fetch-wgpu-native.sh
+      - uses: ./.github/actions/wgpu-native
       - name: Konfigurieren (Release, Präfix /usr)
         run: >
           cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr

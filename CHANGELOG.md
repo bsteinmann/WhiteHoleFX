@@ -1,5 +1,9 @@
 # Änderungen
 
+## Unveröffentlicht
+
+- **CI schneller (gleiche Jobs, gleiche Tests).** ccache auf den Linux-Jobs, Cache für wgpu-native und Qt (Windows), `/MP` für MSVC, `ctest --parallel 4` in den Jobs gcc und clang. Gemeinsame Schritte stehen in `.github/actions/ccache` und `.github/actions/wgpu-native`.
+
 ## 0.64.0
 
 - **Echte Säule.** Neben der Spirale (bisher „Säule“, jetzt „Spirale (Säule)“) gibt es die Bauform **Säule (Ringe)**: Ringe mit je n LEDs übereinander, das Kabel läuft Ring für Ring von unten nach oben, auf Wunsch jeder zweite Ring rückwärts (Serpentine). Dateisyntax `cylinder <leds-je-ring> <ringe> [radius] [height] [start] [ccw] [straight]`; neu in `wh_mapping`: `CylinderShape`.

@@ -5,7 +5,9 @@
 # Module mit Quelldateien) dieses Target selbst ein.
 add_library(wh_warnings INTERFACE)
 if(MSVC)
-    target_compile_options(wh_warnings INTERFACE /W4 /permissive-)
+    # /MP: cl.exe übersetzt die Dateien eines Ziels parallel (MSBuild parallelisiert sonst nur
+    # zwischen Zielen; das große Testziel würde Datei für Datei gebaut).
+    target_compile_options(wh_warnings INTERFACE /W4 /permissive- /MP)
     if(WHITEHOLEFX_WARNINGS_AS_ERRORS)
         target_compile_options(wh_warnings INTERFACE /WX)
     endif()

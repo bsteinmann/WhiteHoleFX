@@ -1,0 +1,25 @@
+name: wgpu-native bereitstellen
+description: Lädt wgpu-native (gepinnte Version) nur, wenn es nicht schon im Cache liegt.
+
+# Warum es diese Datei gibt: Fünf Jobs brauchten denselben Download mit denselben zwei Skripten.
+# Der Cache-Schlüssel enthält die Versionsdatei und beide Skripte; ändert sich eines davon,
+# wird neu geladen. Bei einem Treffer entfällt der Download (und damit der Ausfall bei einem
+# Netzproblem von GitHub).
+
+runs:
+  using: composite
+  steps:
+    - name: Cache wiederherstellen
+      id: cache
+      uses: actions/cache@v4
+      with:
+        path: third_party/wgpu-native
+        key: wgpu-native-${{ runner.os }}-${{ hashFiles('scripts/wgpu-native-version.txt', 'scripts/fetch-wgpu-native.sh', 'scripts/fetch-wgpu-native.ps1') }}
+    - name: Laden (Header und Bibliothek aus demselben Paket, Version gepinnt)
+      if: steps.cache.outputs.cache-hit != 'true' && runner.os != 'Windows'
+      shell: bash
+      run: scripts/fetch-wgpu-native.sh
+    - name: Laden (Header und Bibliothek aus demselben Paket, Version gepinnt)
+      if: steps.cache.outputs.cache-hit != 'true' && runner.os == 'Windows'
+      shell: pwsh
+      run: ./scripts/fetch-wgpu-native.ps1
