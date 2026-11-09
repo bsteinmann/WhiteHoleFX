@@ -2,6 +2,9 @@
      scripts/i18n.py) und das Tutorial in vier Sprachen (Quelle: docs/tutorial/). -->
 <RCC>
     <qresource prefix="/">
+        <file alias="icons/app-256.png">icons/app-256.png</file>
+        <file alias="icons/app-64.png">icons/app-64.png</file>
+        <file alias="icons/app-32.png">icons/app-32.png</file>
         <file alias="i18n/en.po">i18n/en.po</file>
         <file alias="i18n/fr.po">i18n/fr.po</file>
         <file alias="i18n/es.po">i18n/es.po</file>

@@ -9,6 +9,7 @@
 #include <QApplication>
 #include <QCommandLineParser>
 #include <QDir>
+#include <QIcon>
 #include <QPixmap>
 #include <QStandardPaths>
 #include <QThread>
@@ -23,6 +24,7 @@
 #include "crash_notice.hpp"
 #include "stall_event_filter.hpp"
 #include "scroll_behavior.hpp"
+#include "splash.hpp"
 #include "stall_watchdog.hpp"
 
 #ifdef WH_STUDIO_HAVE_GPU
@@ -38,6 +40,13 @@ int main(int argc, char** argv) {
     QApplication::setApplicationName(QStringLiteral("WhiteHoleFX"));
     QApplication::setApplicationVersion(QStringLiteral(WH_VERSION));
     QGuiApplication::setDesktopFileName(QStringLiteral("whitehole-studio"));  // passt zum Starter (.desktop)
+    {   // Fenstersymbol (Taskleiste, Titelleiste, Alt-Tab); unter Windows trägt die .exe es zusätzlich selbst (whitehole_studio.rc)
+        QIcon icon;
+        for (const char* size : {"256", "64", "32"}) {
+            icon.addFile(QStringLiteral(":/icons/app-%1.png").arg(QLatin1String{size}));
+        }
+        app.setWindowIcon(icon);
+    }
     whitehole::studio::installScrollBehavior(app);  // Mausrad ändert keine Werte, deutliche Scrollbalken
 
     // Issue #26: Bei Freeze (Hauptschleife steht über 2 s) oder Absturz den Aufrufstapel ausgeben, auf stderr und in
@@ -68,8 +77,9 @@ int main(int argc, char** argv) {
     const QCommandLineOption langOption{QStringLiteral("lang"), QStringLiteral("Sprache der Oberfläche: de, en, fr oder es"), QStringLiteral("code")};
     const QCommandLineOption ctrlNOption{QStringLiteral("ctrl-n"), QStringLiteral("gleich nach dem Start Strg+N (Neu) auslösen (Prüfung für Issue #26)")};
     const QCommandLineOption hangTestOption{QStringLiteral("hang-test"), QStringLiteral("Selbsttest des Wächters: den Hauptthread 4 s anhalten")};
+    const QCommandLineOption noSplashOption{QStringLiteral("no-splash"), QStringLiteral("keinen Startbildschirm zeigen")};
     const QCommandLineOption crashTestOption{QStringLiteral("crash-test"), QStringLiteral("Selbsttest des Absturzberichts: stürzt absichtlich ab")};
-    parser.addOptions({runOption, softwareOption, grabOption, framesOption, exerciseOption, langOption, ctrlNOption, hangTestOption, crashTestOption});
+    parser.addOptions({runOption, softwareOption, grabOption, framesOption, exerciseOption, langOption, ctrlNOption, hangTestOption, crashTestOption, noSplashOption});
     parser.process(app);
 
     // Sprache vor dem ersten Fenster setzen. Die Rauchtests (--grab) prüfen deutsche Texte und laufen deshalb
@@ -82,8 +92,20 @@ int main(int argc, char** argv) {
         std::fprintf(stderr, "Sprache %s lässt sich nicht laden, es bleibt bei Deutsch.\n", language.toUtf8().constData());
     }
 
+    // Startbildschirm, solange GPU und Fenster entstehen. Nicht bei den Rauchtests der CI und nicht auf Wunsch.
+    std::unique_ptr<studio::StartSplash> splash;
+    if (!grabbing && !parser.isSet(crashTestOption) && !parser.isSet(hangTestOption) && !parser.isSet(ctrlNOption) &&
+        !parser.isSet(noSplashOption) && !qEnvironmentVariableIsSet("WHITEHOLEFX_NO_SPLASH")) {
+        splash = std::make_unique<studio::StartSplash>(QStringLiteral(WH_VERSION));
+        splash->show();
+        splash->step(QObject::tr("Starte …"));
+    }
+
     std::unique_ptr<gpu::IGpuDevice> device;
     QString note;
+    if (splash) {
+        splash->step(QObject::tr("GPU wird vorbereitet …"));
+    }
 #ifdef WH_STUDIO_HAVE_GPU
     gpu::WebGpuOptions gpuOptions;
     gpuOptions.forceFallbackAdapter = parser.isSet(softwareOption);
@@ -106,12 +128,18 @@ int main(int argc, char** argv) {
     note = QObject::tr("Dieses Programm wurde ohne GPU-Backend gebaut (-DWHITEHOLEFX_WEBGPU=ON); es zeigt nur das Layout.");
 #endif
 
+    if (splash) {
+        splash->step(QObject::tr("Oberfläche wird aufgebaut …"));
+    }
     studio::MainWindow window{device.get(), note};
     window.resize(1100, 680);
     if (!grabbing) {
         window.restoreWindowLayout();  // Issue #27; --grab bleibt unabhängig von gespeicherten Einstellungen
     }
     window.show();
+    if (splash) {
+        splash->finish(&window);
+    }
     if (!grabbing && !parser.isSet(crashTestOption)) {
         studio::showCrashNotice(&window, studio::takePendingCrashReport(cacheDir));  // Absturz beim letzten Mal?
         window.startupUpdateCheck();  // nur nach Zustimmung des Nutzers (Frage beim ersten Start)
@@ -208,7 +236,9 @@ int main(int argc, char** argv) {
         std::printf("Update-Prüfung: %s\n", update.isEmpty() ? "ok" : "FEHLER");
         const QString paramView = update.isEmpty() ? window.exerciseParameterView() : QString{};
         std::printf("Parameterfenster: %s\n", paramView.isEmpty() ? "ok" : "FEHLER");
-        for (const QString& failure : {selection, created, transparency, controls, dmx, audio, palette, live, settingsResult, stage, view3d, menus, cues, languages, update, paramView}) {
+        const QString splashResult = paramView.isEmpty() ? studio::splashProblem() : QString{};
+        std::printf("Startbild: %s\n", splashResult.isEmpty() ? "ok" : "FEHLER");
+        for (const QString& failure : {selection, created, transparency, controls, dmx, audio, palette, live, settingsResult, stage, view3d, menus, cues, languages, update, paramView, splashResult}) {
             if (!failure.isEmpty()) {
                 std::fprintf(stderr, "Rauchtest fehlgeschlagen: %s\n", failure.toUtf8().constData());
                 return 1;

@@ -1,5 +1,9 @@
 # Änderungen
 
+## 0.70.0
+
+- **Programmsymbol für Windows und Startbildschirm.** Die `.exe` trägt jetzt das Symbol (wie das Linux-Paket), das Studio setzt es zusätzlich als Fenstersymbol. Beim Start zeigt ein Startbildschirm Logo, Version und den aktuellen Schritt; abschaltbar mit `--no-splash` oder `WHITEHOLEFX_NO_SPLASH=1`. Das Symbol erzeugt `scripts/make_icons.py` aus der SVG-Vorlage. Der Rauchtest prüft das Startbild und die eingebetteten Symbole.
+
 ## 0.69.0
 
 - **Neuer Node Strobe Gate (#121).** Wie Strobe, aber nur solange `Gate` den Schwellwert `Threshold` erreicht, zum Beispiel der Puls einer Hi-Hat-Erkennung, ein Fader oder eine DMX-Taste; darunter geht das Bild unverändert durch. Rezept in `docs/audio.md`. Test auf der GPU (Software-Adapter) und im Katalogtest. „Beat Counter“ entfällt: Phrasen zählt der Sequencer (Rezept „Phrasen zählen“).

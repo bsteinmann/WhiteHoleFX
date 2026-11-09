@@ -1,0 +1,5 @@
+// whitehole_studio.rc: Windows-Ressourcen der .exe (Programmsymbol im Explorer, in der Taskleiste und im Alt-Tab-Fenster).
+//
+// Warum es diese Datei gibt: Windows nimmt das Symbol einer .exe aus deren Ressourcen, nicht aus dem Quelltext von Qt.
+// Das .ico (mehrere Größen von 16 bis 256) erzeugt scripts/make_icons.py aus der Vorlage des Linux-Symbols.
+IDI_ICON1 ICON "../../packaging/windows/whiteholefx.ico"

@@ -587,3 +587,9 @@ Stürzt das Studio ab oder reagiert es länger als einige Sekunden nicht, schrei
 - **Beim Start** meldet sich das Programm nur in der Statusleiste und nur, wenn es etwas Neues gibt. Fehler (kein Netz) bleiben dort still; die manuelle Prüfung zeigt sie an.
 - **Abschalten für Vorführ- und Testrechner:** Umgebungsvariable `WHITEHOLEFX_NO_UPDATE_CHECK=1` verhindert Frage und Anfrage beim Start. Die Rauchtests (`--grab`) fragen nie.
 - **Sicherheit:** Der Link zum Release wird nur geöffnet, wenn er mit `https://github.com/` beginnt. Vorabversionen und Entwürfe werden ignoriert, die Antwort ist auf 1 MiB begrenzt, die Zeitgrenze liegt bei 10 s.
+
+## Programmsymbol und Startbildschirm
+
+- **Symbol:** Das Programm hat dasselbe Symbol (Leuchtring mit sechs blauen Punkten) unter Linux und Windows. Unter Windows steckt es in der `.exe` (Explorer, Taskleiste, Alt-Tab); in beiden Systemen setzt das Studio es zusätzlich als Fenstersymbol. Quelle ist `packaging/linux/whiteholefx.svg`; `python3 scripts/make_icons.py` erzeugt daraus die `.ico` und die eingebetteten PNGs (nur nötig, wenn das Symbol geändert wird).
+- **Startbildschirm:** Beim Start zeigt ein kleines Fenster mit Logo, Version und dem aktuellen Schritt („GPU wird vorbereitet …“), bis das Hauptfenster steht. Es folgt der gewählten Sprache. Abschalten: Startoption `--no-splash` oder Umgebungsvariable `WHITEHOLEFX_NO_SPLASH=1`. Die Rauchtests der CI (`--grab` usw.) zeigen ihn nie.
+

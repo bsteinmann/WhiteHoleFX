@@ -1002,7 +1002,7 @@ msgstr "Cette forme est invalide."
 msgid "Dieser Node hat keine einstellbaren Parameter."
 msgstr "Ce nœud n'a pas de paramètres réglables."
 
-#: main.cpp:106
+#: main.cpp:128
 msgid "Dieses Programm wurde ohne GPU-Backend gebaut (-DWHITEHOLEFX_WEBGPU=ON); es zeigt nur das Layout."
 msgstr "Ce programme a été compilé sans le backend GPU (-DWHITEHOLEFX_WEBGPU=ON) ; il n'affiche que la disposition."
 
@@ -1334,6 +1334,10 @@ msgstr "GO  (barre d'espace)"
 msgid "GO (von Hand)"
 msgstr "GO (manuel)"
 
+#: main.cpp:107
+msgid "GPU wird vorbereitet …"
+msgstr "Préparation du GPU …"
+
 #: patch_table.cpp:48
 msgid "Gamma"
 msgstr "Gamma"
@@ -1518,7 +1522,7 @@ msgstr "Carte pour l'envoi :"
 msgid "Kein Fixture ausgewählt."
 msgstr "Aucun fixture sélectionné."
 
-#: main.cpp:103
+#: main.cpp:125
 msgid "Kein GPU-Adapter: %1"
 msgstr "Aucun adaptateur GPU : %1"
 
@@ -1561,6 +1565,10 @@ msgstr "Cercle"
 #: fixture_library_page.cpp:46
 msgid "Kreis 24"
 msgstr "Cercle 24"
+
+#: splash.cpp:59
+msgid "LED-Steuerung für Matrizen, Cubes und Pixelinstallationen"
+msgstr "Contrôle LED pour matrices, cubes et installations de pixels"
 
 #: add_fixture_dialog.cpp:122 fixture_form.cpp:149 patch_table.cpp:46
 msgid "LEDs"
@@ -1966,6 +1974,10 @@ msgstr "Bord supérieur à"
 msgid "Obere Kanten ausrichten"
 msgstr "Aligner les bords supérieurs"
 
+#: main.cpp:132
+msgid "Oberfläche wird aufgebaut …"
+msgstr "Construction de l'interface …"
+
 #: add_fixture_dialog.cpp:153
 msgid "Ohne Häkchen beginnt das Kabel links, unten, hinten. x nach rechts, y nach oben, z zum Betrachter."
 msgstr "Sans coche, le câble commence à gauche, en bas, à l'arrière. x vers la droite, y vers le haut, z vers l'observateur."
@@ -2318,6 +2330,10 @@ msgstr "Périphérique par défaut du système"
 msgid "Start"
 msgstr "Démarrer"
 
+#: main.cpp:101
+msgid "Starte …"
+msgstr "Démarrage …"
+
 #: live_panel.cpp:64
 msgid "Statt der Zeit, die beim Look gespeichert ist"
 msgstr "Au lieu de la durée enregistrée avec le look"
@@ -2505,6 +2521,10 @@ msgstr "Dégradé sur trois couleurs (A → B → C → A) le long de l'axe choi
 #: node_info_texts.cpp:69
 msgid "Verschiebt das Bild in x, y und z. Mit „Wrap around“ kommt, was hinten hinausläuft, vorne wieder herein."
 msgstr "Shifts the image in x, y and z. With \"Wrap around\" what leaves on one side re-enters on the other."
+
+#: splash.cpp:56
+msgid "Version %1"
+msgstr "Version %1"
 
 #: main_window_update.cpp:72
 msgid "Version %1 ist verfügbar (installiert: %2)."

@@ -5,7 +5,10 @@
 find_package(Qt6 REQUIRED COMPONENTS Widgets Network)
 
 set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTORCC ON)  # studio.qrc: Übersetzungskataloge und Tutorial
+set(CMAKE_AUTORCC ON)  # studio.qrc: Übersetzungskataloge, Tutorial und Programmsymbol
+if(WIN32)
+    enable_language(RC)  # für whitehole_studio.rc (Programmsymbol der .exe)
+endif()
 
 add_executable(whitehole_studio
     fixture_form.cpp
@@ -120,6 +123,8 @@ add_executable(whitehole_studio
     stage_view.cpp
     stage_view_gizmo.cpp
     stage_view_rings.cpp
+    splash.cpp
+    splash.hpp
     stage_view.hpp
     stage_setup_window.hpp
     test_panel.cpp
@@ -151,6 +156,8 @@ if(UNIX AND NOT APPLE)
 endif()
 if(WIN32)
     set_target_properties(whitehole_studio PROPERTIES WIN32_EXECUTABLE ON)
+    # Programmsymbol der .exe (whitehole_studio.rc bindet packaging/windows/whiteholefx.ico ein).
+    target_sources(whitehole_studio PRIVATE whitehole_studio.rc)
     # Absturzbericht (stall_watchdog_win.cpp): Minidump und Aufrufstapel über dbghelp.
     target_link_libraries(whitehole_studio PRIVATE dbghelp)
 endif()

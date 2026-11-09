@@ -1002,7 +1002,7 @@ msgstr "Ця форма недійсна."
 msgid "Dieser Node hat keine einstellbaren Parameter."
 msgstr "Ця нода не має параметрів для налаштування."
 
-#: main.cpp:106
+#: main.cpp:128
 msgid "Dieses Programm wurde ohne GPU-Backend gebaut (-DWHITEHOLEFX_WEBGPU=ON); es zeigt nur das Layout."
 msgstr "Цю програму зібрано без GPU-бекенду (-DWHITEHOLEFX_WEBGPU=ON); вона показує лише Layout."
 
@@ -1334,6 +1334,10 @@ msgstr "GO  (пробіл)"
 msgid "GO (von Hand)"
 msgstr "GO (вручну)"
 
+#: main.cpp:107
+msgid "GPU wird vorbereitet …"
+msgstr "Підготовка GPU …"
+
 #: patch_table.cpp:48
 msgid "Gamma"
 msgstr "Gamma"
@@ -1518,7 +1522,7 @@ msgstr "Карта для надсилання:"
 msgid "Kein Fixture ausgewählt."
 msgstr "Фікстуру не вибрано."
 
-#: main.cpp:103
+#: main.cpp:125
 msgid "Kein GPU-Adapter: %1"
 msgstr "Немає GPU-адаптера: %1"
 
@@ -1561,6 +1565,10 @@ msgstr "Коло"
 #: fixture_library_page.cpp:46
 msgid "Kreis 24"
 msgstr "Коло 24"
+
+#: splash.cpp:59
+msgid "LED-Steuerung für Matrizen, Cubes und Pixelinstallationen"
+msgstr "Керування LED-матрицями, кубами та піксельними інсталяціями"
 
 #: add_fixture_dialog.cpp:122 fixture_form.cpp:149 patch_table.cpp:46
 msgid "LEDs"
@@ -1966,6 +1974,10 @@ msgstr "Вгору від"
 msgid "Obere Kanten ausrichten"
 msgstr "Вирівняти верхні краї"
 
+#: main.cpp:132
+msgid "Oberfläche wird aufgebaut …"
+msgstr "Створення інтерфейсу …"
+
 #: add_fixture_dialog.cpp:153
 msgid "Ohne Häkchen beginnt das Kabel links, unten, hinten. x nach rechts, y nach oben, z zum Betrachter."
 msgstr "Без позначки кабель починається ліворуч, знизу, ззаду. x праворуч, y вгору, z до глядача."
@@ -2318,6 +2330,10 @@ msgstr "Пристрій системи за замовчуванням"
 msgid "Start"
 msgstr "Старт"
 
+#: main.cpp:101
+msgid "Starte …"
+msgstr "Запуск …"
+
 #: live_panel.cpp:64
 msgid "Statt der Zeit, die beim Look gespeichert ist"
 msgstr "Замість часу, що збережений у Look"
@@ -2505,6 +2521,10 @@ msgstr "Градієнт із трьох кольорів (A → B → C → A) 
 #: node_info_texts.cpp:69
 msgid "Verschiebt das Bild in x, y und z. Mit „Wrap around“ kommt, was hinten hinausläuft, vorne wieder herein."
 msgstr "Зсуває зображення по x, y та z. З «Wrap around» те, що виходить ззаду, входить спереду."
+
+#: splash.cpp:56
+msgid "Version %1"
+msgstr "Версія %1"
 
 #: main_window_update.cpp:72
 msgid "Version %1 ist verfügbar (installiert: %2)."
