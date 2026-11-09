@@ -119,6 +119,7 @@ Anleitungen und Projekte in allen Sprachen zusammenpassen.
 - **Bild steht Kopf oder ist gespiegelt:** Startecke und `flip`-Optionen im Fixture ändern.
 - **Ruckeln:** Bildrate verringern oder das Fenster verkleinern; bei Live-Wechseln „Mit GO“ vorladen.
 - **Etwas anderes:** **Hilfe → Fehler melden oder Idee vorschlagen …** öffnet GitHub.
+- **Neue Version?** **Hilfe → Auf Updates prüfen …** fragt bei GitHub nach der neuesten Version. Beim ersten Start fragt das Programm einmal, ob es das auch automatisch tun darf; ohne dein „Ja“ geht nie eine Anfrage hinaus.
 
 Weiter geht es in den ausführlichen Dokumenten im Ordner `docs/`: Oberfläche, Projektdatei, Field-Nodes, Mapping, Ausgabe,
 Audio und Value-Graph.

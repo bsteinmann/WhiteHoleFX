@@ -114,6 +114,7 @@ int main(int argc, char** argv) {
     window.show();
     if (!grabbing && !parser.isSet(crashTestOption)) {
         studio::showCrashNotice(&window, studio::takePendingCrashReport(cacheDir));  // Absturz beim letzten Mal?
+        window.startupUpdateCheck();  // nur nach Zustimmung des Nutzers (Frage beim ersten Start)
     }
 
     const QStringList args = parser.positionalArguments();
@@ -203,7 +204,9 @@ int main(int argc, char** argv) {
         std::printf("Cuelist: %s\n", cues.isEmpty() ? "ok" : "FEHLER");
         const QString languages = cues.isEmpty() ? window.exerciseLanguage() : QString{};
         std::printf("Sprachen/Tutorial: %s\n", languages.isEmpty() ? "ok" : "FEHLER");
-        for (const QString& failure : {selection, created, transparency, controls, dmx, audio, palette, live, settingsResult, stage, view3d, menus, cues, languages}) {
+        const QString update = languages.isEmpty() ? window.exerciseUpdate() : QString{};
+        std::printf("Update-Prüfung: %s\n", update.isEmpty() ? "ok" : "FEHLER");
+        for (const QString& failure : {selection, created, transparency, controls, dmx, audio, palette, live, settingsResult, stage, view3d, menus, cues, languages, update}) {
             if (!failure.isEmpty()) {
                 std::fprintf(stderr, "Rauchtest fehlgeschlagen: %s\n", failure.toUtf8().constData());
                 return 1;

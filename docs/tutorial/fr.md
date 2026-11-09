@@ -116,6 +116,7 @@ et les projets de toutes les langues soient compatibles.
 - **Image à l'envers ou en miroir :** modifiez le coin de départ et les options `flip` du fixture.
 - **Saccades :** réduisez la cadence ou la taille de la fenêtre ; pour les changements en live, préchargez avec « Avec GO ».
 - **Autre chose :** **Aide → Signaler un bogue ou proposer une idée …** ouvre GitHub.
+- **Nouvelle version ?** **Aide → Rechercher des mises à jour …** demande à GitHub la dernière version. Au premier démarrage, le programme demande une fois s'il peut le faire automatiquement ; sans votre « Oui », aucune requête n'est jamais envoyée.
 
 Pour aller plus loin, lisez les documents détaillés du dossier `docs/` : interface, fichier de projet, nœuds de champ, mapping,
 sortie, audio et graphe de valeurs.

@@ -17,6 +17,7 @@
 #include <vector>
 
 #include "app_settings.hpp"
+#include "update_checker.hpp"
 #include "whitehole/audio/audio_input.hpp"
 #include "whitehole/input/dmx_receiver.hpp"
 #include "whitehole/nodes/builtin_library.hpp"
@@ -116,6 +117,10 @@ public:
     /// Rauchtest: Reihenfolge der Menüs, Hilfe-Menü, Kürzelliste, Tooltips, roter Senden-Knopf.
     QString exerciseMenus();
     QString exerciseLanguage();
+    /// Rauchtest: Update-Prüfung ohne Netzwerk (Bewertung einer Antwort, Menüeintrag).
+    QString exerciseUpdate();
+    /// Beim Start: ggf. einmal um Erlaubnis fragen, dann nach einer neueren Version suchen (main_window_update.cpp).
+    void startupUpdateCheck();
     /// Rauchtest: Umschalter 2D/3D, Orbit mit der Maus, Zoom, feste Ansichten.
     QString exerciseView3d();
     /// Live-Modus ein- und ausschalten (F9). Eintritt scheitert ohne Looks.
@@ -208,6 +213,12 @@ private:
     void buildSettings(QMenu* editMenu);
     /// Hilfe-Menü und Kürzelliste (main_window_help.cpp).
     void buildHelp(QMenu* help);
+    void buildUpdateActions(QMenu* help);
+    void checkForUpdates(bool userInitiated);
+    void showUpdateResult(const UpdateChecker::Result& result, bool userInitiated);
+    UpdateChecker* updateChecker_{nullptr};
+    QAction* autoUpdateAction_{nullptr};
+    bool updateUserInitiated_{false};
     void buildLanguageMenu(QMenu* help);
     void chooseLanguage(const QString& code);
     void showTutorial();

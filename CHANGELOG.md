@@ -1,7 +1,8 @@
 # Änderungen
 
-## Unveröffentlicht
+## 0.65.0
 
+- **Update-Benachrichtigung.** Hilfe → **Auf Updates prüfen …** fragt bei GitHub nach dem neuesten Release und bietet die Seite zum Öffnen an. Beim ersten Start fragt das Programm einmal, ob es das beim Start selbst tun darf („Hilfe → Beim Start nach Updates suchen“ ändert die Wahl); ohne Zustimmung geht nie eine Anfrage hinaus. Gesendet werden nur Programmname und Version. Es wird nichts heruntergeladen oder installiert. Die Prüfung läuft im Hintergrund (Zeitgrenze 10 s); Links außerhalb von github.com, Entwürfe und Vorabversionen werden verworfen. Kern und Tests: `core/update_check.hpp`. Siehe docs/studio.md.
 - **CI schneller (gleiche Jobs, gleiche Tests).** ccache auf den Linux-Jobs, Cache für wgpu-native und Qt (Windows), `/MP` für MSVC, `ctest --parallel 4` in den Jobs gcc und clang. Gemeinsame Schritte stehen in `.github/actions/ccache` und `.github/actions/wgpu-native`.
 
 ## 0.64.0

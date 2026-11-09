@@ -102,11 +102,11 @@ msgstr "%1  →  %2"
 msgid "%1 %"
 msgstr "%1 %"
 
-#: fixture_library_page.cpp:220 fixture_library_page.cpp:369 fixture_library_user.cpp:45
+#: fixture_library_page.cpp:220 fixture_library_page.cpp:369 fixture_library_user.cpp:49
 msgid "%1 (%2 LEDs)"
 msgstr "%1 (%2 LED)"
 
-#: main_window_help.cpp:126
+#: main_window_help.cpp:128
 msgid "%1 (%2)"
 msgstr "%1 (%2)"
 
@@ -418,7 +418,7 @@ msgstr "<b>Strip</b>"
 msgid "<b>Säule</b> (Ringe übereinander)"
 msgstr "<b>Colonne</b> (anneaux superposés)"
 
-#: main_window_help.cpp:110
+#: main_window_help.cpp:112
 msgid "<b>WhiteHoleFX Studio</b> %1<br><br>Steuerung für LED-Matrizen, Cubes und Pixel mit einem Node-Editor.<br>Lizenz: PolyForm Shield 1.0.0<br><br><a href=\"%2\">%2</a>"
 msgstr "<b>WhiteHoleFX Studio</b> %1<br><br>Pilotage de matrices LED, de cubes et de pixels avec un éditeur de nœuds.<br>Licence : PolyForm Shield 1.0.0<br><br><a href=\"%2\">%2</a>"
 
@@ -562,6 +562,10 @@ msgstr "Spectre audio"
 msgid "Audio-Welle"
 msgstr "Onde audio"
 
+#: main_window_update.cpp:30
+msgid "Auf &Updates prüfen …"
+msgstr "Rechercher des &mises à jour …"
+
 #: parameter_panel.cpp:162
 msgid "Auf Standardwert zurücksetzen"
 msgstr "Rétablir la valeur par défaut"
@@ -674,13 +678,21 @@ msgstr "Type de la bibliothèque (Stage Config → Fixtures). Les modifications 
 msgid "Bauform entfernen. Fixtures im Layout behalten ihre Form als eigene."
 msgstr "Supprimer le type. Les fixtures du layout gardent leur forme comme forme propre."
 
-#: fixture_library_user.cpp:105
+#: fixture_library_user.cpp:109
 msgid "Bauform „%1“ in der Bibliothek gespeichert."
 msgstr "Forme « %1 » enregistrée dans la bibliothèque."
 
 #: cue_panel.cpp:64
 msgid "Bearbeiten …"
 msgstr "Modifier …"
+
+#: main_window_update.cpp:37
+msgid "Beim Programmstart einmal bei GitHub nachsehen, ob es eine neuere Version gibt"
+msgstr "Consulter GitHub une fois au démarrage pour voir s'il existe une version plus récente"
+
+#: main_window_update.cpp:34
+msgid "Beim Start nach Updates &suchen"
+msgstr "Rechercher les mises à jour au &démarrage"
 
 #: layout_panel_grid.cpp:39
 msgid "Beim Ziehen rastet die linke untere Ecke der Fixtures am Raster ein (Alt gedrückt: ohne Einrasten)"
@@ -834,6 +846,10 @@ msgstr "Entrée DMX : %1"
 msgid "DMX-Kanal"
 msgstr "Canal DMX"
 
+#: main_window_update.cpp:91
+msgid "Dabei wird nur die öffentliche Seite des neuesten Releases abgefragt. Gesendet werden Programmname und Versionsnummer (und, wie bei jedem Netzwerkzugriff, deine IP-Adresse), nichts über dich oder deine Projekte. Es wird nichts installiert. Du kannst das jederzeit im Menü Hilfe ändern."
+msgstr "Seule la page publique de la dernière version est demandée. Sont transmis : le nom du programme et le numéro de version (et, comme pour tout accès réseau, votre adresse IP), rien sur vous ni sur vos projets. Rien n'est installé. Vous pouvez modifier ce réglage à tout moment dans le menu Aide."
+
 #: add_fixture_dialog.cpp:146 fixture_form.cpp:171 shape_form.cpp:123
 msgid "Das Kabel beginnt an dieser Seite statt an der gegenüberliegenden"
 msgstr "Le câble commence de ce côté plutôt que du côté opposé"
@@ -906,6 +922,10 @@ msgstr "Le master vient actuellement du canal DMX (Réglages → Entrée DMX)"
 msgid "Die Anleitung im Browser öffnen"
 msgstr "Ouvrir le manuel dans le navigateur"
 
+#: update_checker.cpp:84
+msgid "Die Antwort von GitHub war nicht lesbar."
+msgstr "La réponse de GitHub n'a pas pu être lue."
+
 #: main_window_cues.cpp:27
 msgid "Die Cuelist ist leer. Erst Cues anlegen (Dock „Cuelist“)."
 msgstr "La liste de cues est vide. Créez d’abord des cues (panneau Liste de cues)."
@@ -929,6 +949,10 @@ msgstr "La forme vient du type et se modifie dans l'onglet Fixtures."
 #: node_info_texts.cpp:45
 msgid "Die Helligkeit der Maske bestimmt, wie viel vom Inhalt zu sehen ist. „Shape“ macht daraus eine harte Form, „Intensity“ behält Verläufe."
 msgstr "The brightness of the mask decides how much of the content is visible. \"Shape\" makes a hard-edged form, \"Intensity\" keeps fades."
+
+#: main_window_update.cpp:66
+msgid "Die Prüfung ist fehlgeschlagen:\n%1"
+msgstr "La vérification a échoué :\n%1"
 
 #: settings_dialog.cpp:196
 msgid "Die Quelle speist die Audio-Nodes (Pegel, Frequenzband, Beat, Spektrum)."
@@ -997,6 +1021,10 @@ msgstr "Rotation autour de l'axe z en degrés"
 #: fixture_form.cpp:77
 msgid "Drehung x y z (Grad)"
 msgstr "Rotation x y z (degrés)"
+
+#: main_window_update.cpp:69
+msgid "Du hast die neueste Version (%1)."
+msgstr "Vous avez la dernière version (%1)."
 
 #: fixture_library_page.cpp:81
 msgid "Duplizieren"
@@ -1242,6 +1270,10 @@ msgstr "Flames: rising, flickering fire with adjustable scale, speed and flame h
 msgid "Form"
 msgstr "Forme"
 
+#: main_window_update.cpp:31
+msgid "Fragt bei GitHub nach der neuesten Version (nur die Versionsnummer, nichts wird installiert)"
+msgstr "Demande à GitHub la dernière version (uniquement le numéro de version ; rien n'est installé)"
+
 #: main_window.cpp:332
 msgid "Frame"
 msgstr "Image"
@@ -1310,7 +1342,7 @@ msgstr "Luminosité globale (agit sur l'aperçu et la sortie, non enregistrée d
 msgid "Gesamtlautstärke des Audio-Eingangs als Pegel und Spitze, linear oder in dB, auf Wunsch mit automatischer Verstärkung. Einzelne Schläge (Kick, Snare, Hi-Hat) erkennt „Kick / Snare / Hat“."
 msgstr "Volume global de l'entrée audio en niveau et crête, linéaire ou en dB, avec gain automatique au choix. Les coups isolés (grosse caisse, caisse claire, charleston) sont détectés par « Kick / Snare / Hat »."
 
-#: fixture_library_user.cpp:83
+#: fixture_library_user.cpp:87
 msgid "Gespeichert in der Bibliothek. „In Show übernehmen“ (oder Doppelklick) holt sie in diese Show."
 msgstr "Enregistré dans la bibliothèque. « Reprendre dans le spectacle » (ou double-clic) l'ajoute à ce spectacle."
 
@@ -1418,9 +1450,13 @@ msgstr "Reprendre dans le spectacle"
 msgid "In den Editor laden"
 msgstr "Charger dans l'éditeur"
 
-#: fixture_library_user.cpp:129
+#: fixture_library_user.cpp:133
 msgid "In dieser Show gibt es schon eine Bauform „%1“."
 msgstr "Ce spectacle a déjà une forme « %1 »."
+
+#: main_window_update.cpp:95
+msgid "Ja, beim Start suchen"
+msgstr "Oui, vérifier au démarrage"
 
 #: add_fixture_dialog.cpp:110 add_fixture_dialog.cpp:152 fixture_form.cpp:136
 msgid "Kabel beginnt"
@@ -1718,6 +1754,10 @@ msgstr "Mode"
 msgid "Multicast"
 msgstr "Multicast"
 
+#: main_window_update.cpp:88
+msgid "Nach Updates suchen?"
+msgstr "Rechercher des mises à jour ?"
+
 #: add_fixture_dialog.cpp:55 cue_dialog.cpp:35 cue_panel.cpp:53
 msgid "Name"
 msgstr "Nom"
@@ -1750,6 +1790,10 @@ msgstr "Nom du préréglage :"
 msgid "Nebeneinander ↔"
 msgstr "Côte à côte ↔"
 
+#: main_window_update.cpp:96
+msgid "Nein"
+msgstr "Non"
+
 #: settings_dialog.cpp:60
 msgid "Netzwerk"
 msgstr "Réseau"
@@ -1773,6 +1817,10 @@ msgstr "Créer un nouveau type"
 #: node_defaults_page.cpp:36
 msgid "Neue Nodes starten mit diesen Werten statt mit denen der Bibliothek. Bestehende Nodes und geladene Projekte ändern sich nicht. Fett markierte Typen haben eigene Werte."
 msgstr "Les nouveaux nœuds démarrent avec ces valeurs au lieu de celles de la bibliothèque. Les nœuds existants et les projets chargés ne changent pas. Les types en gras ont leurs propres valeurs."
+
+#: main_window_update.cpp:60
+msgid "Neue Version %1 verfügbar – Hilfe > Auf Updates prüfen …"
+msgstr "Nouvelle version %1 disponible – Aide > Rechercher des mises à jour …"
 
 #: look_panel.cpp:271
 msgid "Neuer Name:"
@@ -2110,6 +2158,10 @@ msgstr "Oscillator (LFO): sine, triangle, saw or square with frequency, phase an
 msgid "Seite"
 msgstr "Côté"
 
+#: main_window_update.cpp:73
+msgid "Seite öffnen"
+msgstr "Ouvrir la page"
+
 #: output_form.cpp:92
 msgid "Seitenverhältnis halten (KeepAspect)"
 msgstr "Conserver les proportions (KeepAspect)"
@@ -2153,6 +2205,10 @@ msgstr "Réinitialiser l'échelle (× 1, + 0)"
 #: look_panel.cpp:53
 msgid "So lange dauert das Überblenden zu diesem Look. 0 = hartes Umschalten."
 msgstr "Durée du fondu vers ce look. 0 = changement brutal."
+
+#: main_window_update.cpp:89
+msgid "Soll WhiteHoleFX beim Start bei GitHub nachsehen, ob es eine neuere Version gibt?"
+msgstr "WhiteHoleFX doit-il consulter GitHub au démarrage pour voir s'il existe une version plus récente ?"
 
 #: node_palette.cpp:226
 msgid "Sonstige"
@@ -2254,6 +2310,10 @@ msgstr "Strip (ligne)"
 msgid "Strip 30"
 msgstr "Strip 30"
 
+#: main_window_update.cpp:51
+msgid "Suche nach Updates …"
+msgstr "Recherche de mises à jour …"
+
 #: fixture_library_page.cpp:103
 msgid "Säule (Ringe)"
 msgstr "Colonne (anneaux)"
@@ -2286,7 +2346,7 @@ msgstr "Appuyez sur la touche qui doit déclencher le cue"
 msgid "Tasten-Auslöser: Taste"
 msgstr "Déclencheur touche : touche"
 
-#: main_window_help.cpp:103
+#: main_window_help.cpp:105
 msgid "Tastenkürzel"
 msgstr "Raccourcis clavier"
 
@@ -2366,6 +2426,10 @@ msgstr "Bas ⤓"
 msgid "Untere Kanten ausrichten"
 msgstr "Aligner les bords inférieurs"
 
+#: main_window_update.cpp:66 main_window_update.cpp:68 main_window_update.cpp:71
+msgid "Update-Prüfung"
+msgstr "Vérification des mises à jour"
+
 #: fixture_form.cpp:67
 msgid "Ursprung x y z"
 msgstr "Origine x y z"
@@ -2397,6 +2461,10 @@ msgstr "Dégradé sur trois couleurs (A → B → C → A) le long de l'axe choi
 #: node_info_texts.cpp:69
 msgid "Verschiebt das Bild in x, y und z. Mit „Wrap around“ kommt, was hinten hinausläuft, vorne wieder herein."
 msgstr "Shifts the image in x, y and z. With \"Wrap around\" what leaves on one side re-enters on the other."
+
+#: main_window_update.cpp:72
+msgid "Version %1 ist verfügbar (installiert: %2)."
+msgstr "La version %1 est disponible (installée : %2)."
 
 #: layout_panel_library.cpp:44
 msgid "Vorlage löschen"
@@ -2510,7 +2578,7 @@ msgstr "Choisissez d'abord des fixtures dans la liste."
 msgid "Wähle zuerst ein Fixture in der Liste."
 msgstr "Choisissez d'abord une fixture dans la liste."
 
-#: fixture_library_user.cpp:93
+#: fixture_library_user.cpp:97
 msgid "Wähle zuerst eine Bauform in der Liste „Fixtures“."
 msgstr "Choisissez d'abord une forme dans la liste « Fixtures »."
 
@@ -2734,7 +2802,7 @@ msgstr "Adjusts the colors of an image: hue shift, saturation, brightness, gamma
 msgid "Öffnet GitHub: ein neues Issue anlegen"
 msgstr "Ouvre GitHub : créer un nouveau ticket"
 
-#: main_window_help.cpp:117
+#: main_window_help.cpp:119
 msgid "Über WhiteHoleFX"
 msgstr "À propos de WhiteHoleFX"
 

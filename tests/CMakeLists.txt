@@ -12,6 +12,7 @@ add_executable(wh_tests
     core/core_types_test.cpp
     core/hash_test.cpp
     core/utf8_test.cpp
+    core/update_check_test.cpp
     graph/graph_test.cpp
     graph/graph_topology_test.cpp
     graph/node_registry_test.cpp

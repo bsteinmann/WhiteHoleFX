@@ -371,7 +371,7 @@ Strenge Eingänge** den strengen Modus ein; er wird mit dem Projekt gespeichert 
 | Ansicht | Docks ein- und ausblenden; 2D/3D-Umschalter (Strg+1 bis 5); 3D-Darstellung (Aus-LEDs, Leuchten) |
 | Wiedergabe | Start/Stopp, Ausgabe senden; Blackout |
 | Live | Live-Modus (F9), Look speichern |
-| Hilfe | Tutorial (eingebaut, in der gewählten Sprache), Dokumentation (F1, öffnet die Anleitung im Browser), Sprache / Language (Deutsch, English, Français, Español, Українська; gilt nach einem Neustart, den das Programm anbietet), Fehler melden oder Idee vorschlagen (öffnet ein neues Issue auf GitHub), Tastenkürzel (Liste aller Kürzel, direkt aus den Aktionen gelesen), Über WhiteHoleFX (Version, Lizenz) |
+| Hilfe | Tutorial (eingebaut, in der gewählten Sprache), Dokumentation (F1, öffnet die Anleitung im Browser), Sprache / Language (Deutsch, English, Français, Español, Українська; gilt nach einem Neustart, den das Programm anbietet), Fehler melden oder Idee vorschlagen (öffnet ein neues Issue auf GitHub), Auf Updates prüfen … und „Beim Start nach Updates suchen“ (siehe unten), Tastenkürzel (Liste aller Kürzel, direkt aus den Aktionen gelesen), Über WhiteHoleFX (Version, Lizenz) |
 
 ## Looks und Live-Betrieb
 
@@ -569,3 +569,13 @@ Stürzt das Studio ab oder reagiert es länger als einige Sekunden nicht, schrei
 - **Linux:** der Aufrufstapel steht auf stderr und in `stack.txt` im Cache-Ordner.
 - Das Speicherabbild enthält Teile des Arbeitsspeichers. Es bleibt auf dem Rechner, bis du es selbst weitergibst.
 - Ausschalten: Umgebungsvariable `WHITEHOLEFX_NO_WATCHDOG=1`. Selbsttest: `whitehole_studio --crash-test`.
+
+## Update-Benachrichtigung
+
+**Hilfe → Auf Updates prüfen …** fragt bei GitHub nach dem neuesten Release (`GET https://api.github.com/repos/bsteinmann/WhiteHoleFX/releases/latest`) und vergleicht dessen Versionsnummer mit der installierten. Ist eine neuere Version da, öffnet **Seite öffnen** die Release-Seite im Browser. Das Programm lädt nichts herunter und installiert nichts.
+
+- **Einwilligung:** Beim ersten Start fragt das Programm einmal, ob es beim Start selbst nachsehen darf. Ohne „Ja“ geht nie von allein eine Anfrage hinaus. Die Wahl steht im Menü **Hilfe → Beim Start nach Updates suchen** und lässt sich dort jederzeit ändern. Gespeichert wird sie beim Nutzer (QSettings, Schlüssel `update/autoCheck`).
+- **Was gesendet wird:** Programmname und Versionsnummer im User-Agent (`WhiteHoleFX/0.65.0`), dazu, wie bei jedem Netzwerkzugriff, die IP-Adresse. Nichts über Projekte oder Rechner.
+- **Beim Start** meldet sich das Programm nur in der Statusleiste und nur, wenn es etwas Neues gibt. Fehler (kein Netz) bleiben dort still; die manuelle Prüfung zeigt sie an.
+- **Abschalten für Vorführ- und Testrechner:** Umgebungsvariable `WHITEHOLEFX_NO_UPDATE_CHECK=1` verhindert Frage und Anfrage beim Start. Die Rauchtests (`--grab`) fragen nie.
+- **Sicherheit:** Der Link zum Release wird nur geöffnet, wenn er mit `https://github.com/` beginnt. Vorabversionen und Entwürfe werden ignoriert, die Antwort ist auf 1 MiB begrenzt, die Zeitgrenze liegt bei 10 s.

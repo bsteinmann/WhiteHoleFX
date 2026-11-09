@@ -34,6 +34,9 @@ add_executable(whitehole_studio
     main_window_editor.cpp
     main_window_live.cpp
     main_window_help.cpp
+    main_window_update.cpp
+    update_checker.cpp
+    update_checker.hpp
     main_window_language.cpp
     main_window_layout.cpp
     app_language.cpp

@@ -59,6 +59,8 @@ void MainWindow::buildHelp(QMenu* help) {
     help->addAction(docs);
     help->addAction(issue);
     help->addSeparator();
+    buildUpdateActions(help);
+    help->addSeparator();
     buildLanguageMenu(help);
     help->addAction(legend);
     help->addAction(keys);
@@ -149,8 +151,8 @@ QString MainWindow::exerciseMenus() {
         return QStringLiteral("Menüleiste: die Legende der Ports zeigt nicht alle zwölf Porttypen");
     }
     portLegend_->hide();
-    if (helpEntries != 7) {  // Tutorial, Dokumentation, Fehler melden, Sprache, Legende, Tastenkürzel, Über
-        return QStringLiteral("Menüleiste: das Hilfe-Menü hat nicht sieben Einträge");
+    if (helpEntries != 9) {  // Tutorial, Dokumentation, Fehler melden, Updates prüfen, Beim Start suchen, Sprache, Legende, Tastenkürzel, Über
+        return QStringLiteral("Menüleiste: das Hilfe-Menü hat nicht neun Einträge");
     }
     // Die Kürzelliste kennt die wichtigsten Aktionen, und die Leistenschaltflächen nennen ihr Kürzel.
     const auto rows = shortcutList();

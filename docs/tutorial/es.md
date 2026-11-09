@@ -116,6 +116,7 @@ proyectos de todos los idiomas encajen entre sí.
 - **Imagen del revés o en espejo:** cambia la esquina de inicio y las opciones `flip` del fixture.
 - **Tirones:** baja la velocidad de fotogramas o reduce la ventana; en cambios en directo, precarga con «Con GO».
 - **Cualquier otra cosa:** **Ayuda → Informar de un error o sugerir una idea …** abre GitHub.
+- **¿Nueva versión?** **Ayuda → Buscar actualizaciones …** pregunta a GitHub por la última versión. En el primer inicio el programa pregunta una vez si puede hacerlo automáticamente; sin tu «Sí» nunca se envía ninguna solicitud.
 
 Para saber más, lee los documentos detallados de la carpeta `docs/`: interfaz, archivo de proyecto, nodos de campo, mapping,
 salida, audio y grafo de valores.

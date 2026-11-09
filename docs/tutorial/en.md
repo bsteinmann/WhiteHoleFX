@@ -113,6 +113,7 @@ languages fit together.
 - **Picture upside down or mirrored:** change the start corner and the `flip` options in the fixture.
 - **Stuttering:** lower the frame rate or shrink the window; for live changes preload with "With GO".
 - **Anything else:** **Help → Report a bug or suggest an idea …** opens GitHub.
+- **New version?** **Help → Check for Updates …** asks GitHub for the latest version. On first start the program asks once whether it may do this automatically; without your "Yes" no request is ever sent.
 
 For more, read the detailed documents in the `docs/` folder: user interface, project file, field nodes, mapping, output, audio
 and value graph.
