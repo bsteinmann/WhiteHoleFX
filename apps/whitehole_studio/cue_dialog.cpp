@@ -8,6 +8,7 @@
 #include <QKeySequenceEdit>
 #include <QLabel>
 #include <QLineEdit>
+#include <QPlainTextEdit>
 #include <QSpinBox>
 #include <QVBoxLayout>
 
@@ -32,6 +33,12 @@ CueDialog::CueDialog(const project::Cue& cue, const std::vector<project::Look>& 
 
     name_ = new QLineEdit{form::fromStd(cue.name)};
     form->addRow(tr("Name"), name_);
+
+    note_ = new QPlainTextEdit{form::fromStd(cue.note)};
+    note_->setPlaceholderText(tr("Notiz zum Cue (zum Beispiel Regieanweisung)"));
+    note_->setToolTip(tr("Freie Notiz zu diesem Cue; sie steht in der Cuelist und wird mit dem Projekt gespeichert"));
+    note_->setFixedHeight(note_->fontMetrics().lineSpacing() * 4);
+    form->addRow(tr("Notiz"), note_);
 
     look_ = new QComboBox;
     look_->addItem(tr("(Schwarz)"), QString{});
@@ -101,6 +108,7 @@ void CueDialog::updateEnabled() {
 project::Cue CueDialog::cue() const {
     project::Cue result;
     result.name = name_->text().toUtf8().toStdString();
+    result.note = note_->toPlainText().toUtf8().toStdString();
     result.look = look_->currentData().toString().toUtf8().toStdString();
     result.trigger = static_cast<project::CueTrigger>(std::clamp(trigger_->currentIndex(), 0, kTriggerCount - 1));
     result.time = time_->value();

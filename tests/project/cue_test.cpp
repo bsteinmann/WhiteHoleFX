@@ -92,6 +92,7 @@ cue name "Mit Leerzeichen" look "Bunte Welle" trigger key "Strg+1" delay 1.25 fa
 cue look Nebel trigger dmx artnet 0 512 threshold 1
 cue trigger time 3.5
 cue trigger audio fade 0
+cue name "Mit Notiz" note "Zeile eins\nZeile \"zwei\"" trigger go
 )",
                                               lib.registry);
     REQUIRE(parsed.ok());
@@ -100,7 +101,8 @@ cue trigger audio fade 0
     const auto again = project::parseProject(text.value(), lib.registry);
     REQUIRE(again.ok());
     CHECK(again.value().cues == parsed.value().cues);
-    CHECK(again.value().cues.size() == 4);
+    CHECK(again.value().cues.size() == 5);
+    CHECK(again.value().cues[4].note == "Zeile eins\nZeile \"zwei\"");
     // Ein Projekt ohne Cues schreibt keine Cue-Zeile
     const auto plain = project::parseProject(kHead, lib.registry);
     REQUIRE(plain.ok());

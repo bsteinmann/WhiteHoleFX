@@ -1,5 +1,13 @@
 # Änderungen
 
+## 0.64.0
+
+- **Echte Säule.** Neben der Spirale (bisher „Säule“, jetzt „Spirale (Säule)“) gibt es die Bauform **Säule (Ringe)**: Ringe mit je n LEDs übereinander, das Kabel läuft Ring für Ring von unten nach oben, auf Wunsch jeder zweite Ring rückwärts (Serpentine). Dateisyntax `cylinder <leds-je-ring> <ringe> [radius] [height] [start] [ccw] [straight]`; neu in `wh_mapping`: `CylinderShape`.
+- **Fixtures: zwei Listen.** Im Fenster Fixtures stehen oben die **Fixtures dieser Show** und darunter die **Gespeicherten Fixtures** (die Benutzerbibliothek). Die zweite Liste ist auch ohne geladenes Projekt da. **In Bibliothek speichern**, **In Show übernehmen** (Doppelklick), **Alle übernehmen** und **Aus Bibliothek löschen** verbinden sie bewusst; nichts wird mehr heimlich gespiegelt oder in neue Projekte kopiert. Neue Projekte beginnen ohne Bauformen.
+- **Cuelist: Notizen.** Jeder Cue hat ein Notizfeld (Dialog „Cue bearbeiten“, Spalte „Notiz“ in der Liste, Dateiangabe `note`).
+- **Menü:** Die doppelte Leiste „Datei“ (Neu, Öffnen, Speichern neben Start/Ausgabe senden) ist weg; die Einträge gibt es nur im Menü Datei. Im Live-Modus sind Neu, Öffnen, Zuletzt geöffnet und Beispiele dort gesperrt.
+- **Windows: Drag & Drop aus der Palette.** Nach dem Ablegen eines Nodes blieb der Node-Editor leer, bis man zoomte. Der Sichtbereich bleibt jetzt beim Neuaufbau an seiner Stelle, und das Bild wird nach dem Drag neu gezeichnet. (Konnte nur ohne Windows geprüft werden: bitte mit dem Windows-Paket testen.)
+
 ## 0.63.0
 
 - **Achsen-Griff in der Bühnenansicht (Reiter Layout).** Am ersten gewählten Fixture erscheinen drei Pfeile (x rot, y grün, z blau). Pfeil fassen und ziehen verschiebt alle gewählten Fixtures entlang der Achse, wie bei Slicern; Einrasten auf 0,1 (Alt: aus). Achsen, die zur Kamera zeigen, sind nur angedeutet. Das Drehen mit Ringen folgt als nächster Schritt. Neu in `wh_preview`: `gizmo.hpp` (Geometrie, Treffer, Zugweite; getestet).

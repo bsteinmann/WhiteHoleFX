@@ -3,7 +3,7 @@
 // Warum eine eigene Datei: project_parser.cpp und project_writer.cpp sind schon am Limit der Dateigröße, und die
 // Cue-Zeile hat eine eigene kleine Grammatik. Beide Richtungen stehen hier nebeneinander, damit sie zusammenpassen.
 //
-//   cue [name "Name"] [look "Look"] [trigger go|time <s>|key <Taste>|dmx artnet|sacn <universe> <kanal>|audio]
+//   cue [name "Name"] [note "Notiz"] [look "Look"] [trigger go|time <s>|key <Taste>|dmx artnet|sacn <universe> <kanal>|audio]
 //       [threshold <1..255>] [delay <s>] [fade <s>]
 // Die Einstellungen dürfen in beliebiger Reihenfolge stehen. Ohne look blendet der Cue nach Schwarz.
 #pragma once

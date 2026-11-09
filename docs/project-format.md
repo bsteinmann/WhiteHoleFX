@@ -118,7 +118,8 @@ Genau eine Form pro Fixture, beliebig viele Patches:
 | `strip <anzahl> from x y z to x y z` | gerader Strip |
 | `grid <nx> <ny> <nz> [pitch x y z] [order XYZ\|XZY\|YXZ\|YZX\|ZXY\|ZYX] [serpentine] [flipx] [flipy] [flipz]` | 3D-Gitter (Cube). `flipx/flipy/flipz`: Das Kabel beginnt am oberen Ende dieser Achse (Startecke); ohne sie bei x=0, y=0, z=0 (unten links hinten) |
 | `ring <anzahl> [radius r] [start winkel] [ccw]` | Ring (Kreis) in der x-y-Ebene; Mittelpunkt bei (r, r, 0); erste LED bei `start` (Grad, 90 = oben), danach im Uhrzeigersinn (`ccw`: dagegen) |
-| `helix <anzahl> [radius r] [height h] [turns n] [start winkel] [ccw]` | Säule: Spirale um die y-Achse von unten nach oben |
+| `helix <anzahl> [radius r] [height h] [turns n] [start winkel] [ccw]` | Spirale: ein Strip um die y-Achse gewickelt, von unten nach oben |
+| `cylinder <leds-je-ring> <ringe> [radius r] [height h] [start winkel] [ccw] [straight]` | Säule: Ringe übereinander (Mittelachse bei x = z = r), das Kabel läuft Ring für Ring von unten nach oben; jeder zweite Ring läuft rückwärts, außer bei `straight` |
 | `point x y z` | eine LED einer Punktwolke, in Kabelreihenfolge; beliebig oft (aus CSV/JSON importierbar, siehe `docs/mapping.md`) |
 | `patch <artnet\|sacn\|ddp> destination <n> [universe u] [channel c] [offset o] [order RGB…] [gamma g] [brightness b]` | wohin das Fixture geht |
 
@@ -208,6 +209,7 @@ Cues. Alle Angaben außer `trigger` sind optional und stehen in beliebiger Reihe
 | Angabe | Bedeutung |
 |---|---|
 | `name "<text>"` | frei wählbarer Name (darf fehlen) |
+| `note "<text>"` | freie Notiz zum Cue, auch mehrzeilig (`\n` im Text); steht in der Cuelist und im Cue-Dialog |
 | `look <name>` | Name eines Looks der Datei; fehlt die Angabe, blendet der Cue nach Schwarz |
 | `trigger go` | von Hand: GO-Knopf oder Leertaste |
 | `trigger time <s>` | selbsttätig `<s>` Sekunden, nachdem der vorige Cue fertig eingeblendet ist |

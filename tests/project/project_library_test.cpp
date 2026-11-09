@@ -19,7 +19,13 @@ TEST_CASE("Bibliothek: Rundreise mit allen Formen", "[project][library]") {
     types.push_back({"Kreis \"groß\"", ring});
     mapping::HelixShape helix;
     helix.count = 60;
-    types.push_back({"Säule", helix});
+    types.push_back({"Spirale", helix});
+    mapping::CylinderShape tube;
+    tube.perRing = 10;
+    tube.rings = 8;
+    tube.serpentine = false;
+    tube.clockwise = false;
+    types.push_back({"Säule", tube});
     mapping::StripShape strip;
     strip.count = 30;
     strip.end = Vec3{30.0F, 0.0F, 0.0F};
@@ -29,12 +35,17 @@ TEST_CASE("Bibliothek: Rundreise mit allen Formen", "[project][library]") {
     CHECK(text.rfind("whitehole-project 1", 0) == 0);
     const auto parsed = project::parseFixtureLibrary(text, library->registry);
     REQUIRE(parsed.ok());
-    REQUIRE(parsed.value().size() == 4);
+    REQUIRE(parsed.value().size() == 5);
     CHECK(parsed.value()[1].name == "Kreis \"groß\"");
     CHECK(std::get<mapping::MatrixShape>(parsed.value()[0].shape).columns == 5);
     CHECK(std::get<mapping::RingShape>(parsed.value()[1].shape).count == 24);
     CHECK(std::get<mapping::HelixShape>(parsed.value()[2].shape).count == 60);
-    CHECK(mapping::ledCount(parsed.value()[3].shape) == 30);
+    const auto& tubeBack = std::get<mapping::CylinderShape>(parsed.value()[3].shape);
+    CHECK(tubeBack.perRing == 10);
+    CHECK(tubeBack.rings == 8);
+    CHECK_FALSE(tubeBack.serpentine);
+    CHECK_FALSE(tubeBack.clockwise);
+    CHECK(mapping::ledCount(parsed.value()[4].shape) == 30);
 }
 
 TEST_CASE("Bibliothek: leer, doppelter Name und Müll", "[project][library]") {

@@ -30,6 +30,7 @@ inline constexpr double kMaxCueSeconds = 3600.0;
 struct Cue {
     std::string name;  // frei, darf leer sein
     std::string look;  // Name eines Looks der Liste; leer = Schwarz
+    std::string note;  // freie Notiz zum Cue (Regieanweisung, Hinweis für den Bediener); darf mehrzeilig sein
     CueTrigger trigger{CueTrigger::Go};
     double delay{0.0};  // Sekunden zwischen Auslöser und Beginn der Überblendung
     double fade{2.0};   // Sekunden der Überblendung

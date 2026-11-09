@@ -132,6 +132,31 @@ void helix(Reader& r, FixtureDraft& d) {
     }
 }
 
+void cylinder(Reader& r, FixtureDraft& d) {
+    mapping::CylinderShape s;
+    s.perRing = r.whole("LEDs je Ring", kMaxDimension);
+    s.rings = r.whole("Ringe", kMaxDimension);
+    while (r.ok() && !r.atEnd()) {
+        const std::string key = r.word("Option");
+        if (key == "radius") {
+            s.radius = r.number("Radius");
+        } else if (key == "height") {
+            s.height = r.number("Höhe");
+        } else if (key == "start") {
+            s.startAngle = r.number("Startwinkel");
+        } else if (key == "ccw") {
+            s.clockwise = false;
+        } else if (key == "straight") {
+            s.serpentine = false;
+        } else if (r.ok()) {
+            r.fail("Unbekannte Option \"" + key + "\" bei cylinder");
+        }
+    }
+    if (r.ok()) {
+        setShape(r, d, s);
+    }
+}
+
 void point(Reader& r, FixtureDraft& d) {
     const Vec3 p = r.vec3("Punkt");
     r.expectEnd();
@@ -212,6 +237,8 @@ void fixtureStatement(const std::string& keyword, Reader& r, FixtureDraft& draft
         ring(r, draft);
     } else if (keyword == "helix") {
         helix(r, draft);
+    } else if (keyword == "cylinder") {
+        cylinder(r, draft);
     } else if (keyword == "point") {
         point(r, draft);
     } else if (keyword == "patch") {
@@ -235,7 +262,7 @@ std::optional<Error> finishFixture(FixtureDraft& draft, Project& project) {
             }
         }
         if (!hasShape) {
-            return at(Error{ErrorCode::InvalidArgument, "Es fehlt die Form (matrix, strip, grid, ring, helix oder point)"});
+            return at(Error{ErrorCode::InvalidArgument, "Es fehlt die Form (matrix, strip, grid, ring, helix, cylinder oder point)"});
         }
         if (!draft.patches.empty()) {
             return at(Error{ErrorCode::InvalidArgument, "Ein fixturetype hat keinen Patch"});
@@ -264,7 +291,7 @@ std::optional<Error> finishFixture(FixtureDraft& draft, Project& project) {
         }
         shape = found->shape;
     } else if (!hasShape) {
-        return at(Error{ErrorCode::InvalidArgument, "Es fehlt die Form (matrix, strip, grid, ring, helix oder point)"});
+        return at(Error{ErrorCode::InvalidArgument, "Es fehlt die Form (matrix, strip, grid, ring, helix, cylinder oder point)"});
     } else {
         shape = draft.shape ? std::move(*draft.shape) : mapping::FixtureShape{mapping::PointsShape{draft.points}};
     }

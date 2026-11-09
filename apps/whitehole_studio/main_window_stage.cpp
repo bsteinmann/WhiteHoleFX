@@ -29,6 +29,7 @@ void MainWindow::buildStageConfig(QMenu* menu) {
     connect(testPanel_, &TestPanel::patternChanged, testView_, &StageView::testPatternChanged);
     fixturePage_ = new FixtureLibraryPage{*player_};
     connect(fixturePage_, &FixtureLibraryPage::edited, this, &MainWindow::onLayoutEdited);
+    connect(fixturePage_, &FixtureLibraryPage::notice, this, [this](const QString& message) { statusBar()->showMessage(message, 8000); });
     connect(fixturePage_, &FixtureLibraryPage::projectNeeded, this, [this]() { newProject(false); });
     connect(fixturePage_, &FixtureLibraryPage::failed, this,
             [this](const QString& message) { statusBar()->showMessage(message, 8000); });

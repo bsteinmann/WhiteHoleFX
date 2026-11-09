@@ -124,3 +124,53 @@ TEST_CASE("Layout: rotate und setType, Fehler und Abtastung nutzen die Weltposit
     CHECK(layout.find(id.value())->type == "Bauform");
     CHECK(layout.setType(FixtureId{99}, "x").error().code == ErrorCode::NotFound);
 }
+
+TEST_CASE("Säule (Röhre): Ringe übereinander, Kabel Ring für Ring, jeder zweite Ring rückwärts", "[mapping][cylinder]") {
+    CylinderShape c;
+    c.perRing = 4;
+    c.rings = 2;
+    c.radius = 2.0F;
+    c.height = 10.0F;
+    c.startAngle = 0.0F;
+    c.clockwise = false;  // gegen den Uhrzeigersinn: +x, dann +z (x-z-Ebene)
+    REQUIRE(validateShape(c).ok());
+    CHECK(ledCount(c) == 8);
+    const auto points = localPositions(c);
+    REQUIRE(points.size() == 8);
+    // Unterer Ring (y = 2,5): vorwärts
+    checkNear(points[0], 4.0F, 2.5F, 2.0F);
+    checkNear(points[1], 2.0F, 2.5F, 4.0F);
+    checkNear(points[2], 0.0F, 2.5F, 2.0F);
+    checkNear(points[3], 2.0F, 2.5F, 0.0F);
+    // Oberer Ring (y = 7,5): rückwärts, beginnt dort, wo der untere endete
+    checkNear(points[4], 2.0F, 7.5F, 0.0F);
+    checkNear(points[7], 4.0F, 7.5F, 2.0F);
+    const Box box = localBox(c);
+    CHECK(box.max.x == Approx(4.0F));
+    CHECK(box.max.y == Approx(10.0F));
+    CHECK(box.max.z == Approx(4.0F));
+
+    c.serpentine = false;  // alle Ringe vorwärts
+    checkNear(localPositions(c)[4], 4.0F, 7.5F, 2.0F);
+}
+
+TEST_CASE("Säule (Röhre): Abstand und Prüfung", "[mapping][cylinder]") {
+    CylinderShape c;
+    c.perRing = 12;
+    c.rings = 20;
+    c.radius = 3.0F;
+    c.height = 20.0F;
+    CHECK(ledSpacing(c) == Approx(1.0F).epsilon(1e-3));  // Ringabstand 1, Sehne 2*3*sin(15°) = 1,55
+    c.perRing = 0;
+    CHECK_FALSE(validateShape(c).ok());
+    c.perRing = 12;
+    c.rings = 0;
+    CHECK_FALSE(validateShape(c).ok());
+    c.rings = 20;
+    c.height = 0.0F;
+    CHECK_FALSE(validateShape(c).ok());
+    c.height = 20.0F;
+    c.perRing = 4000000;
+    c.rings = 4000000;
+    CHECK_FALSE(validateShape(c).ok());  // zu viele LEDs
+}

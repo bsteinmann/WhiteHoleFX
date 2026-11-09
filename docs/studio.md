@@ -174,7 +174,7 @@ gewählte Fixture gibt es ein Formular:
 - Name, Ursprung (x y z), Drehung (x y z in Grad) und Bauform
 - Bei eigener Form (nicht aus der Bibliothek): Matrix (Spalten, Zeilen, Abstand, Ecke des Kabelanfangs, Laufrichtung,
   Serpentine), Strip (LED-Zahl, Anfang, Ende) oder 3D-Gitter (Anzahl je Achse, Abstand, Achsenreihenfolge, Serpentine,
-  Startecke). Ring, Säule und Punktwolken ändert man in der Bibliothek bzw. in der Datei.
+  Startecke). Ring, Säule, Spirale und Punktwolken ändert man in der Bibliothek bzw. in der Datei.
 - Der Patch steht nicht mehr hier, sondern im Reiter Ausgabe.
 
 **Import von Positionen:** In der Oberfläche vorerst entfernt (kommt mit dem neuen Stage-Config-Fenster zurück). Punktwolken
@@ -216,9 +216,9 @@ Unterbrechung). Alle Schritte lassen sich zurücknehmen.
 
 ### Seite „Fixtures“: Bibliothek der Bauformen
 
-Die erste Seite im Fenster Stage Config (Menü Stage Config → Fixtures …) ist die **Bibliothek**: Hier beschreibst du eine Bauform einmal, im Reiter Layout verteilst du sie dann beliebig oft. Links stehen die Bauformen des Projekts, mit **Neu** legst du eine an: 2D-Matrix, 3D-Matrix, Kreis, Strip oder Säule (Spirale um eine senkrechte Achse). In der Mitte stellst du Name, Größe, Abstände und Verkabelung ein; die Vorschau rechts zeigt die Form sofort, die erste LED am Kabel ist weiß. Der Knopf **Test** lässt ein Muster nur über diese Form laufen (Lauflicht in Kabelreihenfolge, Balken entlang x, y oder z, Farbfolge); gesendet wird dabei nichts. Ändert man eine Bauform, folgen alle Exemplare im Layout. Entfernt man sie, behalten die Exemplare ihre Form als eigene. Alles ist rückgängig zu machen und steht in der Projektdatei (`fixturetype`, siehe [Projektformat](project-format.md)).
+Die erste Seite im Fenster Stage Config (Menü Stage Config → Fixtures …) ist die **Bibliothek**: Hier beschreibst du eine Bauform einmal, im Reiter Layout verteilst du sie dann beliebig oft. Links stehen die Bauformen des Projekts, mit **Neu** legst du eine an: 2D-Matrix, 3D-Matrix, Kreis, Strip, Säule (Ringe übereinander, das Kabel läuft Ring für Ring nach oben) oder Spirale (ein Strip um eine senkrechte Achse gewickelt). In der Mitte stellst du Name, Größe, Abstände und Verkabelung ein; die Vorschau rechts zeigt die Form sofort, die erste LED am Kabel ist weiß. Der Knopf **Test** lässt ein Muster nur über diese Form laufen (Lauflicht in Kabelreihenfolge, Balken entlang x, y oder z, Farbfolge); gesendet wird dabei nichts. Ändert man eine Bauform, folgen alle Exemplare im Layout. Entfernt man sie, behalten die Exemplare ihre Form als eigene. Alles ist rückgängig zu machen und steht in der Projektdatei (`fixturetype`, siehe [Projektformat](project-format.md)).
 
-**Benutzerbibliothek.** Jede Bauform, die du hier anlegst, ändert, umbenennst oder entfernst, wird zusätzlich in einer Datei im Benutzerverzeichnis gespeichert (`fixture-library.whfx`; Linux `~/.local/share/WhiteHoleFX`, Windows `%APPDATA%\WhiteHoleFX`; der Tooltip des Knopfes nennt den genauen Pfad). Sie bleibt über neue Programmversionen erhalten. **Neue Projekte** (Datei → Neu) beginnen mit allen Bauformen daraus; in einem geöffneten Projekt holt **Aus Benutzerbibliothek ergänzen** die fehlenden hinzu (gleichnamige bleiben unberührt). Die Projektdatei bleibt trotzdem vollständig, weil die Bauformen darin stehen. Lässt sich die Bibliotheksdatei nicht lesen (defekt), bleibt sie unangetastet und das Studio meldet es; über die Umgebungsvariable `WHITEHOLEFX_FIXTURE_LIBRARY` lässt sich der Pfad ersetzen.
+**Zwei Listen: Fixtures und Gespeicherte Fixtures.** Links oben stehen die **Fixtures dieser Show** (sie liegen in der Projektdatei, die dadurch vollständig bleibt). Darunter stehen die **gespeicherten Fixtures**: alle Bauformen in einer Datei im Benutzerverzeichnis (`fixture-library.whfx`; Linux `~/.local/share/WhiteHoleFX`, Windows `%APPDATA%\WhiteHoleFX`; der Tooltip von „In Bibliothek speichern“ nennt den genauen Pfad). Diese Liste ist immer da, auch ohne geladenes Projekt, und bleibt über neue Programmversionen erhalten. Die beiden Listen sind getrennt: **In Bibliothek speichern** legt die gewählte Bauform der Show dort ab (eine gleichnamige wird ersetzt), **In Show übernehmen** (oder Doppelklick) holt die gewählte gespeicherte Bauform in die Show, **Alle übernehmen** alle, die in der Show fehlen, und **Aus Bibliothek löschen** nimmt sie aus der Bibliothek, ohne die Show zu ändern. Entfernen in der Show lässt die Bibliothek stehen. Eine gespeicherte Bauform lässt sich ansehen (Vorschau); bearbeitet wird sie in der Show und dann wieder gespeichert. Neue Projekte beginnen ohne Bauformen. Lässt sich die Bibliotheksdatei nicht lesen (defekt), bleibt sie unangetastet und das Studio meldet es; über die Umgebungsvariable `WHITEHOLEFX_FIXTURE_LIBRARY` lässt sich der Pfad ersetzen.
 
 ### Layout: Exemplare verteilen und drehen
 
@@ -353,8 +353,7 @@ Strenge Eingänge** den strengen Modus ein; er wird mit dem Projekt gespeichert 
 
 ## Aufbau des Fensters
 
-- **Oben:** die Menüs Datei, Bearbeiten, Stage Config, Ansicht, Wiedergabe, Live und Hilfe (siehe unten), darunter die Leiste „Datei“
-  (Neu, Öffnen, Speichern) und die Leiste „Betrieb“: Start/Stopp (Leertaste), Ausgabe senden, Look speichern (Strg+L),
+- **Oben:** die Menüs Datei, Bearbeiten, Stage Config, Ansicht, Wiedergabe, Live und Hilfe (siehe unten), darunter die Leiste „Betrieb“: Start/Stopp (Leertaste), Ausgabe senden, Look speichern (Strg+L),
   Live-Modus (F9); rechts außen Master und Blackout (Strg+B). Der Knopf „Ausgabe senden“ leuchtet rot, solange wirklich
   Pakete ins Netz gehen. Die Tooltips der Schaltflächen nennen ihr Tastenkürzel.
 - **Links:** Dock „Looks“ (immer in Reichweite).
@@ -387,8 +386,8 @@ Ausgangs-Node). Looks stehen in der Projektdatei (`look ... endlook`, siehe [Pro
   umbenennen, löschen, nach oben/unten.
 - Gespeichert wird mit dem Projekt (Strg+S).
 
-**Live-Modus (F9 oder Menü Live):** versteckt Editor, Parameter, das Fenster Stage Config, Looks-Dock und die
-Datei-Leiste (Neu/Öffnen/Speichern) und zeigt für jeden Look einen großen Knopf. Master und Blackout (Strg+B)
+**Live-Modus (F9 oder Menü Live):** versteckt Editor, Parameter, das Fenster Stage Config, Looks-Dock und sperrt
+Neu, Öffnen, Zuletzt geöffnet und Beispiele im Menü Datei. Es zeigt für jeden Look einen großen Knopf. Master und Blackout (Strg+B)
 bleiben in der Leiste. Rückgängig ist gesperrt, und die Leertaste ist GO statt Start/Stopp, damit auf der Bühne
 nichts versehentlich angehalten oder geändert wird.
 

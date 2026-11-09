@@ -31,7 +31,7 @@ class FixtureLibraryPage : public QWidget {
 
 public:
     /// Die Arten, aus denen "Neu" eine Bauform macht (Reihenfolge wie im Menü).
-    enum class Kind { Matrix2d, Matrix3d, Circle, Strip, Column };
+    enum class Kind { Matrix2d, Matrix3d, Circle, Strip, Column, Cylinder };  // Column = Spirale, Cylinder = Säule
 
     explicit FixtureLibraryPage(runtime::Player& player, QWidget* parent = nullptr);
 
@@ -49,6 +49,13 @@ public:
     void renameSelected(const QString& newName);
     /// Holt Bauformen der Benutzerbibliothek, die dem Projekt fehlen (gleichnamige bleiben unberührt). Gibt die Zahl der neuen zurück.
     int importFromUserLibrary();
+    /// Holt die gespeicherte Bauform `name` in die Show (ohne Projekt wird eines angelegt). Gleichnamige in der Show: Meldung, nichts passiert.
+    bool takeOverStored(const QString& name);
+    /// Speichert die gewählte Bauform der Show in der Benutzerbibliothek (ersetzt eine gleichnamige).
+    bool saveSelectedToLibrary();
+    /// Nimmt die gespeicherte Bauform `name` aus der Benutzerbibliothek (die Show bleibt unberührt).
+    void removeStored(const QString& name);
+    [[nodiscard]] QString selectedStoredName() const;
 
     /// Rauchtest für die CI: jede Art anlegen, Maße ändern, umbenennen, vervielfältigen, entfernen. Leer bei Erfolg.
     QString exercise();
@@ -56,6 +63,8 @@ public:
 Q_SIGNALS:
     void edited();
     void failed(const QString& message);
+    /// Kurze Rückmeldung (Statuszeile), zum Beispiel „gespeichert“.
+    void notice(const QString& message);
     /// Es ist noch kein Projekt geladen: das Hauptfenster soll eines anlegen (direkt verbunden, danach gibt es eins).
     void projectNeeded();
 
@@ -64,13 +73,11 @@ protected:
 
 private:
     void fillList(const QString& select);
+    void fillStored(const QString& select = {});
+    void showStored();
     void showSelected();
     void applyShape(const mapping::FixtureShape& shape);
     void report(const Result<void>& result);
-    /// Spiegelt die Bauform (oder ihr Entfernen/Umbenennen) in die Benutzerbibliothek auf der Festplatte.
-    void mirrorToUserLibrary(const QString& name);
-    void mirrorRemoval(const QString& name);
-    void mirrorRename(const QString& from, const QString& to);
     [[nodiscard]] QString uniqueName(const QString& base) const;
 
     runtime::Player& player_;
@@ -83,6 +90,10 @@ private:
     QPushButton* duplicate_;
     QPushButton* remove_;
     QPushButton* import_;
+    QListWidget* stored_;            // gespeicherte Bauformen (Benutzerbibliothek auf der Festplatte)
+    QPushButton* takeOver_;
+    QPushButton* saveToLibrary_;
+    QPushButton* deleteStored_;
     bool dirty_{false};    // Projekt hat sich geändert, während die Seite unsichtbar war
     bool editing_{false};  // wir ändern gerade selbst: rebuild() fasst die Felder nicht an
 };

@@ -57,7 +57,11 @@ Preset presetOf(FixtureLibraryPage::Kind kind) {
             h.radius = 3.0F;
             h.height = 20.0F;
             h.turns = 3.0F;
-            return {QObject::tr("Säule 60"), h};
+            return {QObject::tr("Spirale 60"), h};
+        }
+        case Kind::Cylinder: {
+            mapping::CylinderShape c;  // 12 LEDs je Ring, 20 Ringe
+            return {QObject::tr("Säule 12x20"), c};
         }
         case Kind::Matrix2d:
         default: {
@@ -76,7 +80,10 @@ FixtureLibraryPage::FixtureLibraryPage(runtime::Player& player, QWidget* parent)
       usage_{new QLabel{this}}, form_{new ShapeForm{this}}, preview_{new ShapePreview{this}},
       addButton_{new QPushButton{tr("Neu"), this}}, duplicate_{new QPushButton{tr("Duplizieren"), this}},
       remove_{new QPushButton{tr("Entfernen"), this}},
-      import_{new QPushButton{tr("Aus Benutzerbibliothek ergänzen"), this}} {
+      import_{new QPushButton{tr("Alle übernehmen"), this}}, stored_{new QListWidget{this}},
+      takeOver_{new QPushButton{tr("In Show übernehmen"), this}},
+      saveToLibrary_{new QPushButton{tr("In Bibliothek speichern"), this}},
+      deleteStored_{new QPushButton{tr("Aus Bibliothek löschen"), this}} {
     auto* split = new QSplitter{Qt::Horizontal, this};
     auto* outer = new QHBoxLayout{this};
     outer->setContentsMargins(6, 6, 6, 6);
@@ -85,7 +92,7 @@ FixtureLibraryPage::FixtureLibraryPage(runtime::Player& player, QWidget* parent)
     auto* left = new QWidget;
     auto* leftColumn = new QVBoxLayout{left};
     leftColumn->setContentsMargins(0, 0, 0, 0);
-    leftColumn->addWidget(new QLabel{tr("<b>Bauformen</b>")});
+    leftColumn->addWidget(new QLabel{tr("<b>Fixtures</b> (in dieser Show)")});
     leftColumn->addWidget(list_, 1);
     auto* menu = new QMenu{addButton_};
     const struct {
@@ -93,7 +100,7 @@ FixtureLibraryPage::FixtureLibraryPage(runtime::Player& player, QWidget* parent)
         Kind kind;
     } kinds[] = {{QT_TR_NOOP("2D-Matrix"), Kind::Matrix2d}, {QT_TR_NOOP("3D-Matrix"), Kind::Matrix3d},
                  {QT_TR_NOOP("Kreis"), Kind::Circle},      {QT_TR_NOOP("Strip"), Kind::Strip},
-                 {QT_TR_NOOP("Säule"), Kind::Column}};
+                 {QT_TR_NOOP("Säule (Ringe)"), Kind::Cylinder}, {QT_TR_NOOP("Spirale (Säule)"), Kind::Column}};
     for (const auto& entry : kinds) {
         const Kind kind = entry.kind;
         QAction* action = menu->addAction(tr(entry.text));
@@ -108,9 +115,19 @@ FixtureLibraryPage::FixtureLibraryPage(runtime::Player& player, QWidget* parent)
     buttons->addWidget(duplicate_);
     buttons->addWidget(remove_);
     leftColumn->addLayout(buttons);
-    import_->setToolTip(tr("Bauformen, die du früher angelegt hast und die in diesem Projekt fehlen, hinzufügen. "
-                           "Gespeichert in: %1").arg(userlib::path()));
-    leftColumn->addWidget(import_);
+    saveToLibrary_->setToolTip(tr("Speichert die gewählte Bauform in der Bibliothek (Benutzerverzeichnis), damit du sie in "
+                                  "anderen Shows wieder holen kannst. Gespeichert in: %1").arg(userlib::path()));
+    leftColumn->addWidget(saveToLibrary_);
+    leftColumn->addWidget(new QLabel{tr("<b>Gespeicherte Fixtures</b> (alle in der Bibliothek)")});
+    leftColumn->addWidget(stored_, 1);
+    takeOver_->setToolTip(tr("Holt die gewählte gespeicherte Bauform in diese Show"));
+    import_->setToolTip(tr("Holt alle gespeicherten Bauformen, die in dieser Show fehlen"));
+    deleteStored_->setToolTip(tr("Nimmt die gewählte Bauform aus der Bibliothek; die Show bleibt unverändert"));
+    auto* storedButtons = new QHBoxLayout;
+    storedButtons->addWidget(takeOver_);
+    storedButtons->addWidget(import_);
+    leftColumn->addLayout(storedButtons);
+    leftColumn->addWidget(deleteStored_);
     split->addWidget(left);
 
     auto* middle = new QWidget;
@@ -128,9 +145,28 @@ FixtureLibraryPage::FixtureLibraryPage(runtime::Player& player, QWidget* parent)
     split->setStretchFactor(0, 0);
     split->setStretchFactor(1, 0);
     split->setStretchFactor(2, 1);
-    split->setSizes({180, 320, 420});
+    split->setSizes({230, 320, 400});
 
-    connect(list_, &QListWidget::currentRowChanged, this, [this](int) { showSelected(); });
+    connect(list_, &QListWidget::currentRowChanged, this, [this](int row) {
+        if (row >= 0) {
+            const QSignalBlocker blocker{stored_};
+            stored_->setCurrentRow(-1);  // es ist immer nur eine der beiden Listen gewählt
+            takeOver_->setEnabled(false);
+            deleteStored_->setEnabled(false);
+        }
+        showSelected();
+    });
+    connect(stored_, &QListWidget::currentRowChanged, this, [this](int row) {
+        if (row >= 0) {
+            const QSignalBlocker blocker{list_};
+            list_->setCurrentRow(-1);
+        }
+        showStored();
+    });
+    connect(stored_, &QListWidget::itemDoubleClicked, this, [this](QListWidgetItem*) { takeOverStored(selectedStoredName()); });
+    connect(takeOver_, &QPushButton::clicked, this, [this]() { takeOverStored(selectedStoredName()); });
+    connect(saveToLibrary_, &QPushButton::clicked, this, [this]() { saveSelectedToLibrary(); });
+    connect(deleteStored_, &QPushButton::clicked, this, [this]() { removeStored(selectedStoredName()); });
     connect(duplicate_, &QPushButton::clicked, this, [this]() { duplicateSelected(); });
     connect(remove_, &QPushButton::clicked, this, [this]() { removeSelected(); });
     connect(import_, &QPushButton::clicked, this, [this]() { importFromUserLibrary(); });
@@ -159,6 +195,7 @@ void FixtureLibraryPage::rebuild() {
     }
     dirty_ = false;
     fillList(selectedName());
+    fillStored(selectedStoredName());
 }
 
 void FixtureLibraryPage::refresh() {
@@ -185,7 +222,7 @@ void FixtureLibraryPage::fillList(const QString& select) {
         list_->addItem(item);
     }
     selectType(select);
-    if (list_->currentRow() < 0 && list_->count() > 0) {
+    if (list_->currentRow() < 0 && list_->count() > 0 && stored_->currentRow() < 0) {
         list_->setCurrentRow(0);
     }
     showSelected();
@@ -203,7 +240,11 @@ void FixtureLibraryPage::showSelected() {
     name_->setEnabled(any);
     duplicate_->setEnabled(any);
     remove_->setEnabled(any);
+    saveToLibrary_->setEnabled(any);
     form_->setVisible(any);
+    if (!any && stored_->currentRow() >= 0) {
+        return;  // es wird gerade eine gespeicherte Bauform gezeigt (showStored)
+    }
     if (!any) {
         name_->clear();
         usage_->setText(tr("Lege mit „Neu“ eine Bauform an. Im Reiter Layout verteilst du sie dann auf der Bühne."));
@@ -258,7 +299,6 @@ bool FixtureLibraryPage::addType(Kind kind) {
         report(result);
         return false;
     }
-    mirrorToUserLibrary(name);
     editing_ = true;
     fillList(name);
     editing_ = false;
@@ -272,7 +312,6 @@ void FixtureLibraryPage::duplicateSelected() {
         if (fromStd(type.name) == name) {
             const QString copy = uniqueName(name);
             if (player_.addFixtureType(copy.toUtf8().toStdString(), type.shape).ok()) {
-                mirrorToUserLibrary(copy);
                 editing_ = true;
                 fillList(copy);
                 editing_ = false;
@@ -294,7 +333,6 @@ void FixtureLibraryPage::removeSelected() {
         report(result);
         return;
     }
-    mirrorRemoval(name);
     editing_ = true;
     fillList(QString{});
     list_->setCurrentRow(std::min(row, list_->count() - 1));
@@ -312,7 +350,6 @@ void FixtureLibraryPage::renameSelected(const QString& newName) {
         report(result);
         return;
     }
-    mirrorRename(name, newName);
     editing_ = true;
     fillList(newName);
     editing_ = false;
@@ -327,7 +364,6 @@ void FixtureLibraryPage::applyShape(const mapping::FixtureShape& shape) {
     editing_ = true;
     const Result<void> result = player_.replaceFixtureType(name.toUtf8().toStdString(), shape);
     if (result.ok()) {
-        mirrorToUserLibrary(name);
         preview_->setShape(shape);
         if (QListWidgetItem* item = list_->currentItem()) {
             item->setText(tr("%1 (%2 LEDs)").arg(name).arg(mapping::ledCount(shape)));

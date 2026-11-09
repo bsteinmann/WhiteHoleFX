@@ -49,8 +49,13 @@ NodeEditor::~NodeEditor() {
 
 void NodeEditor::reset() {
     // Neues Projekt: nichts ist ausgewählt (gleiche Node-Nummern wären sonst ein Zufallstreffer).
+    // Beim Neuaufbau ändert sich der Szenenbereich (Rand um die Nodes). Damit der Sichtbereich dabei nicht wandert (unter
+    // Windows verschwanden nach dem Ablegen aus der Palette alle Nodes aus dem Bild), merken wir uns die Mitte und
+    // stellen sie danach wieder ein.
+    const QPointF viewCenter = mapToScene(viewport()->rect().center());
     rebuilding_ = true;
     buildScene();
+    centerOn(viewCenter);
     rebuilding_ = false;
     fitPending_ = true;
     showAll();

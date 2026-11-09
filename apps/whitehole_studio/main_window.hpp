@@ -261,7 +261,7 @@ private:
     QDockWidget* liveDock_{nullptr};
     QAction* liveAction_{nullptr};
     QAction* saveLookAction_{nullptr};
-    QToolBar* fileBar_{nullptr};
+    std::vector<QAction*> liveLockedActions_;  // Datei-Einträge, die im Live-Modus gesperrt sind
     QToolButton* sendButton_{nullptr};  // "Ausgabe senden" in der Leiste: rot, solange wirklich gesendet wird
     QKeySequence runShortcut_;  // Leertaste: im Live-Modus gehört sie dem GO-Knopf
     std::vector<QDockWidget*> hiddenByLive_;  // Docks, die der Live-Modus versteckt hat (kommen danach zurück)

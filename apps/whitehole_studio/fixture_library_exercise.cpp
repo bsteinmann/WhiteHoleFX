@@ -45,7 +45,8 @@ QString FixtureLibraryPage::exercise() {
     const ScopedLibraryPath libraryPath;
     rebuild();
     const std::size_t before = player_.fixtureTypes().size();
-    const Kind all[] = {Kind::Matrix2d, Kind::Matrix3d, Kind::Circle, Kind::Strip, Kind::Column};
+    const Kind all[] = {Kind::Matrix2d, Kind::Matrix3d, Kind::Circle, Kind::Strip, Kind::Column, Kind::Cylinder};
+    const std::size_t kinds = std::size(all);
     for (const Kind kind : all) {
         if (!addType(kind)) {
             return QStringLiteral("Fixture-Bibliothek: Bauform %1 lässt sich nicht anlegen").arg(static_cast<int>(kind));
@@ -60,9 +61,9 @@ QString FixtureLibraryPage::exercise() {
             return QStringLiteral("Fixture-Bibliothek: Vorschau der Bauform %1 ist leer").arg(static_cast<int>(kind));
         }
     }
-    if (player_.fixtureTypes().size() != before + 5) {
+    if (player_.fixtureTypes().size() != before + kinds) {
         return QStringLiteral("Fixture-Bibliothek: erwartet %1 Bauformen, es sind %2")
-            .arg(before + 5)
+            .arg(before + kinds)
             .arg(player_.fixtureTypes().size());
     }
     if (const QString problem = preview_->exercise(); !problem.isEmpty()) {
@@ -73,31 +74,62 @@ QString FixtureLibraryPage::exercise() {
         return QStringLiteral("Fixture-Bibliothek: Umbenennen wurde nicht übernommen");
     }
     duplicateSelected();
-    if (player_.fixtureTypes().size() != before + 6) {
+    if (player_.fixtureTypes().size() != before + kinds + 1) {
         return QStringLiteral("Fixture-Bibliothek: Duplizieren hat keine Bauform angelegt");
     }
     {
-        // Die Benutzerbibliothek spiegelt alles mit: 6 Bauformen auf der Platte; fehlt eine im Projekt, holt der Knopf sie.
-        const auto stored = userlib::load(player_.project()->graph.registryPtr());
-        if (!stored.ok() || stored.value().size() != 6) {
-            return QStringLiteral("Fixture-Bibliothek: Benutzerbibliothek hat %1 statt 6 Bauformen")
-                .arg(stored.ok() ? static_cast<int>(stored.value().size()) : -1);
+        // Bibliothek und Show sind getrennt: gespeichert wird nur auf Knopfdruck (die letzten 6 Bauformen dieses Tests).
+        const auto registry = player_.registry();
+        const auto none = userlib::load(registry);
+        if (!none.ok() || !none.value().empty()) {
+            return QStringLiteral("Fixture-Bibliothek: Bibliothek ist ohne Speichern nicht leer");
         }
+        for (int row = list_->count() - static_cast<int>(kinds + 1); row < list_->count(); ++row) {
+            list_->setCurrentRow(row);
+            if (!saveSelectedToLibrary()) {
+                return QStringLiteral("Fixture-Bibliothek: Speichern in die Bibliothek schlägt fehl");
+            }
+        }
+        const auto stored = userlib::load(registry);
+        if (!stored.ok() || stored.value().size() != kinds + 1 || stored_->count() != static_cast<int>(kinds + 1)) {
+            return QStringLiteral("Fixture-Bibliothek: Bibliothek hat %1 statt %2 Bauformen")
+                .arg(stored.ok() ? static_cast<int>(stored.value().size()) : -1)
+                .arg(static_cast<int>(kinds + 1));
+        }
+        // Fehlt eine in der Show, holt „Alle übernehmen“ sie zurück; die Show-Liste bleibt von der Bibliothek getrennt
         const std::string gone = player_.fixtureTypes().back().name;
         if (!player_.removeFixtureType(gone).ok() || importFromUserLibrary() != 1 ||
-            player_.fixtureTypes().size() != before + 6) {
-            return QStringLiteral("Fixture-Bibliothek: Ergänzen aus der Benutzerbibliothek schlägt fehl");
+            player_.fixtureTypes().size() != before + kinds + 1) {
+            return QStringLiteral("Fixture-Bibliothek: Alle übernehmen schlägt fehl");
+        }
+        // Einzeln übernehmen: erst weg aus der Show, dann aus der gespeicherten Liste zurückholen; zweites Mal: Meldung
+        if (!player_.removeFixtureType(gone).ok()) {
+            return QStringLiteral("Fixture-Bibliothek: Entfernen aus der Show schlägt fehl");
+        }
+        fillList(QString{});
+        if (!takeOverStored(QString::fromStdString(gone)) || player_.fixtureTypes().size() != before + kinds + 1 ||
+            takeOverStored(QString::fromStdString(gone))) {
+            return QStringLiteral("Fixture-Bibliothek: In Show übernehmen schlägt fehl");
+        }
+        // Entfernen aus der Show lässt die Bibliothek stehen, Entfernen aus der Bibliothek lässt die Show stehen
+        removeSelected();
+        if (stored_->count() != static_cast<int>(kinds + 1)) {
+            return QStringLiteral("Fixture-Bibliothek: Entfernen aus der Show hat die Bibliothek verändert");
+        }
+        const std::size_t inShow = player_.fixtureTypes().size();
+        while (stored_->count() > 0) {
+            stored_->setCurrentRow(0);
+            removeStored(selectedStoredName());
+        }
+        const auto left = userlib::load(registry);
+        if (!left.ok() || !left.value().empty() || player_.fixtureTypes().size() != inShow) {
+            return QStringLiteral("Fixture-Bibliothek: Entfernen aus der Bibliothek ist fehlgeschlagen");
         }
     }
-    removeSelected();
     // Aufräumen: alles, was dieser Test angelegt hat, wieder entfernen (der Rauchtest soll das Projekt nicht ändern).
     while (player_.fixtureTypes().size() > before) {
         list_->setCurrentRow(list_->count() - 1);
         removeSelected();
-    }
-    const auto left = userlib::load(player_.project()->graph.registryPtr());
-    if (!left.ok() || !left.value().empty()) {
-        return QStringLiteral("Fixture-Bibliothek: Entfernen hat die Benutzerbibliothek nicht geleert");
     }
     return {};
 }

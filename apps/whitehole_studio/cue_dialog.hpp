@@ -16,6 +16,7 @@ class QComboBox;
 class QDoubleSpinBox;
 class QKeySequenceEdit;
 class QLineEdit;
+class QPlainTextEdit;
 class QSpinBox;
 
 namespace whitehole::studio {
@@ -33,6 +34,7 @@ private:
     void updateEnabled();
 
     QLineEdit* name_{nullptr};
+    QPlainTextEdit* note_{nullptr};
     QComboBox* look_{nullptr};
     QComboBox* trigger_{nullptr};
     QDoubleSpinBox* time_{nullptr};

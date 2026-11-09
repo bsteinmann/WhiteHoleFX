@@ -88,6 +88,18 @@ struct Validator {
         return {};
     }
 
+    Result<void> operator()(const CylinderShape& c) const {
+        std::uint64_t total = 1;
+        if (c.perRing == 0U || c.rings == 0U || !multiplyWithinLimit(total, c.perRing) || !multiplyWithinLimit(total, c.rings)) {
+            return invalid("Eine Säule braucht mindestens 1 LED je Ring und 1 Ring, insgesamt höchstens 4194304 LEDs");
+        }
+        if (!finite(c.radius) || c.radius <= 0.0F || c.radius > 1.0e6F || !finite(c.height) || c.height <= 0.0F ||
+            c.height > 1.0e6F || !finite(c.startAngle)) {
+            return invalid("Radius und Höhe der Säule müssen endlich und größer 0 sein, der Startwinkel eine Zahl");
+        }
+        return {};
+    }
+
     Result<void> operator()(const PointsShape& p) const {
         if (p.points.empty()) {
             return invalid("Eine Punktwolke braucht mindestens einen Punkt");
@@ -115,6 +127,7 @@ struct Counter {
     std::uint64_t operator()(const PointsShape& p) const noexcept { return p.points.size(); }
     std::uint64_t operator()(const RingShape& r) const noexcept { return r.count; }
     std::uint64_t operator()(const HelixShape& h) const noexcept { return h.count; }
+    std::uint64_t operator()(const CylinderShape& c) const noexcept { return std::uint64_t{c.perRing} * c.rings; }
 };
 
 struct BoxOf {
@@ -138,6 +151,9 @@ struct BoxOf {
     }
     Box operator()(const HelixShape& h) const noexcept {
         return Box{Vec3{}, Vec3{2.0F * h.radius, h.height, 2.0F * h.radius}};
+    }
+    Box operator()(const CylinderShape& c) const noexcept {
+        return Box{Vec3{}, Vec3{2.0F * c.radius, c.height, 2.0F * c.radius}};
     }
     Box operator()(const PointsShape& p) const noexcept {
         Box box{p.points.front(), p.points.front()};
@@ -200,6 +216,23 @@ struct PositionsOf {
             const float angle = (r.startAngle + direction * 360.0F * static_cast<float>(i) / static_cast<float>(r.count)) *
                                 kDegrees;
             out.push_back(Vec3{r.radius + r.radius * std::cos(angle), r.radius + r.radius * std::sin(angle), 0.0F});
+        }
+        return out;
+    }
+
+    std::vector<Vec3> operator()(const CylinderShape& c) const {
+        std::vector<Vec3> out;
+        out.reserve(std::uint64_t{c.perRing} * c.rings);
+        const float direction = c.clockwise ? -1.0F : 1.0F;
+        for (std::uint32_t ring = 0; ring < c.rings; ++ring) {
+            const float y = c.height * (static_cast<float>(ring) + 0.5F) / static_cast<float>(c.rings);
+            const bool backwards = c.serpentine && (ring % 2U) == 1U;
+            for (std::uint32_t k = 0; k < c.perRing; ++k) {
+                const std::uint32_t slot = backwards ? c.perRing - 1U - k : k;
+                const float angle =
+                    (c.startAngle + direction * 360.0F * static_cast<float>(slot) / static_cast<float>(c.perRing)) * kDegrees;
+                out.push_back(Vec3{c.radius + c.radius * std::cos(angle), y, c.radius + c.radius * std::sin(angle)});
+            }
         }
         return out;
     }
@@ -271,6 +304,13 @@ struct SpacingOf {
         const float chord = 2.0F * h.radius * std::sin(std::min(step, 3.14159265358979F) / 2.0F);
         const float rise = h.height / n;
         return std::sqrt(chord * chord + rise * rise);
+    }
+    float operator()(const CylinderShape& c) const noexcept {
+        // Nachbarn: innerhalb des Rings die Sehne, zwischen den Ringen der Höhenabstand
+        const float rise = c.rings > 1 ? c.height / static_cast<float>(c.rings) : 0.0F;
+        const float chord =
+            c.perRing > 1 ? 2.0F * c.radius * std::sin(3.14159265358979F / static_cast<float>(c.perRing)) : 0.0F;
+        return smallest({chord, rise});
     }
     float operator()(const PointsShape& p) const noexcept {
         constexpr std::size_t kMaxPoints = 20000;

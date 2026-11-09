@@ -19,7 +19,7 @@
 //  - Matrix: Zeile 0 ist oben (wie in einem Bild). Gitter: y = 0 ist unten (wie im Raum).
 //
 // Nicht enthalten: Teilstücke mit Lücken und gekrümmte Strips. Punktwolken decken diese Fälle ab.
-// Ring und Säule sind eigene Formen; gedreht wird das ganze Fixture (Fixture::rotation, worldPositions).
+// Ring, Spirale und Säule (Röhre) sind eigene Formen; gedreht wird das ganze Fixture (Fixture::rotation, worldPositions).
 #pragma once
 
 #include <cstdint>
@@ -87,7 +87,21 @@ struct HelixShape {
     bool clockwise{true};
 };
 
-using FixtureShape = std::variant<MatrixShape, StripShape, GridShape, PointsShape, RingShape, HelixShape>;
+/// Eine Säule als Röhre: `rings` Ringe mit je `perRing` LEDs übereinander (zum Beispiel Ringe aus LED-Strip auf einem Rohr).
+/// Mittelachse bei x = z = radius, die Ringe sitzen in der Mitte von `rings` gleich hohen Abschnitten von y = 0 bis `height`.
+/// Das Kabel läuft Ring für Ring von unten nach oben; bei `serpentine` läuft jeder zweite Ring rückwärts (kein Rücksprung
+/// am Ringende). Die erste LED des untersten Rings sitzt bei `startAngle` (Grad in der x-z-Ebene, 0 = +x).
+struct CylinderShape {
+    std::uint32_t perRing{12};
+    std::uint32_t rings{20};
+    float radius{3.0F};
+    float height{20.0F};
+    float startAngle{0.0F};
+    bool clockwise{true};
+    bool serpentine{true};
+};
+
+using FixtureShape = std::variant<MatrixShape, StripShape, GridShape, PointsShape, RingShape, HelixShape, CylinderShape>;
 
 struct Fixture {
     FixtureId id;

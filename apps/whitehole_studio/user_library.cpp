@@ -96,19 +96,4 @@ Result<void> rename(std::shared_ptr<const graph::INodeRegistry> registry, const 
     return save(types.value());
 }
 
-QString withLibraryTypes(const QString& projectText) {
-    QFile file{path()};
-    if (!file.exists() || !file.open(QIODevice::ReadOnly)) {
-        return projectText;
-    }
-    // Alles hinter der Kopfzeile "whitehole-project 1" der Bibliotheksdatei sind Kommentare und fixturetype-Blöcke.
-    const QString library = QString::fromUtf8(file.readAll());
-    const qsizetype libraryBody = library.indexOf(QLatin1Char('\n'));
-    const qsizetype projectBody = projectText.indexOf(QLatin1Char('\n'));
-    if (libraryBody < 0 || projectBody < 0 || !library.contains(QStringLiteral("fixturetype"))) {
-        return projectText;
-    }
-    return projectText.left(projectBody + 1) + library.mid(libraryBody + 1) + QLatin1Char('\n') + projectText.mid(projectBody + 1);
-}
-
 }  // namespace whitehole::studio::userlib

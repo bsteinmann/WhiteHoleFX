@@ -166,6 +166,10 @@ QString ShapePreview::exercise() {
     }
     setShape(mapping::HelixShape{});
     if (ledCount() != mapping::HelixShape{}.count || !renderNow()) {
+        return QStringLiteral("Formvorschau: Spirale wird nicht gezeichnet");
+    }
+    setShape(mapping::CylinderShape{});
+    if (ledCount() != mapping::ledCount(mapping::CylinderShape{}) || !renderNow()) {
         return QStringLiteral("Formvorschau: Säule wird nicht gezeichnet");
     }
     setShape(mapping::MatrixShape{});

@@ -38,7 +38,8 @@ Matrix, einen Strip, einen Cube und eine Punktwolke. Es wird kein Volumen gerast
 | `GridShape` | nx × ny × nz, Rasterabstand, Achsenfolge, optional Serpentine |
 | `PointsShape` | beliebige Positionen in Kabelreihenfolge |
 | `RingShape` | n LEDs auf einem Kreis in der x-y-Ebene (Radius, Startwinkel, Drehsinn) |
-| `HelixShape` | Säule: n LEDs in einer Spirale um die y-Achse, von unten nach oben (Radius, Höhe, Windungen) |
+| `HelixShape` | Spirale: n LEDs in einer Spirale um die y-Achse, von unten nach oben (Radius, Höhe, Windungen) |
+| `CylinderShape` | Säule: `rings` Ringe mit je `perRing` LEDs übereinander (Radius, Höhe, Startwinkel, Drehsinn, Serpentine) |
 
 Ein Fixture lässt sich außerdem **drehen** (`Fixture::rotation`, Grad um x, y, z, in dieser Reihenfolge, um die Mitte seiner
 lokalen Box). `worldPositions` und `worldBox` liefern Lage und Box nach der Drehung; Abtastung und Vorschau nutzen sie. Fixtures

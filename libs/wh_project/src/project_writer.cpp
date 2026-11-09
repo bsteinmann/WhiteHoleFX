@@ -52,6 +52,10 @@ void writeShape(std::ostream& out, const mapping::FixtureShape& shape) {
         out << "  helix " << helix->count << " radius " << formatFloat(helix->radius) << " height "
             << formatFloat(helix->height) << " turns " << formatFloat(helix->turns) << " start "
             << formatFloat(helix->startAngle) << (helix->clockwise ? "" : " ccw") << "\n";
+    } else if (const auto* cyl = std::get_if<mapping::CylinderShape>(&shape)) {
+        out << "  cylinder " << cyl->perRing << ' ' << cyl->rings << " radius " << formatFloat(cyl->radius) << " height "
+            << formatFloat(cyl->height) << " start " << formatFloat(cyl->startAngle) << (cyl->clockwise ? "" : " ccw")
+            << (cyl->serpentine ? "" : " straight") << "\n";
     } else if (const auto* p = std::get_if<mapping::PointsShape>(&shape)) {
         for (const Vec3& point : p->points) {
             out << "  point " << vec3(point) << "\n";

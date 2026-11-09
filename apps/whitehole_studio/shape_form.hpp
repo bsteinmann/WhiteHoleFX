@@ -59,12 +59,15 @@ private:
         QCheckBox* flipX{nullptr};
         QCheckBox* flipY{nullptr};
         QCheckBox* flipZ{nullptr};
-        // Ring und Säule
+        // Ring, Spirale und Säule
         QDoubleSpinBox* radius{nullptr};
         QDoubleSpinBox* height{nullptr};
         QDoubleSpinBox* turns{nullptr};
         QDoubleSpinBox* startAngle{nullptr};
         QCheckBox* clockwise{nullptr};
+        // Säule (Röhre)
+        QSpinBox* rings{nullptr};
+        QCheckBox* ringSerpentine{nullptr};
     };
 
     void build();
@@ -73,6 +76,7 @@ private:
     void buildGrid(QFormLayout& layout, const mapping::GridShape& g);
     void buildRing(QFormLayout& layout, const mapping::RingShape& r);
     void buildHelix(QFormLayout& layout, const mapping::HelixShape& h);
+    void buildCylinder(QFormLayout& layout, const mapping::CylinderShape& c);
     void changed();
     [[nodiscard]] mapping::FixtureShape read() const;
 

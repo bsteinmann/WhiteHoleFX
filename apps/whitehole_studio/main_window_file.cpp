@@ -91,11 +91,8 @@ bool MainWindow::newProject(bool interactive) {
     }
     const bool wasRunning = player_->status().running;
     timer_.stop();
-    // Bauformen aus der Benutzerbibliothek kommen mit; schlägt das fehl (defekte Datei), startet das Projekt ohne sie.
-    Result<void> r = player_->loadText(userlib::withLibraryTypes(QString::fromUtf8(kNewProject)).toStdString());
-    if (!r.ok()) {
-        r = player_->loadText(kNewProject);
-    }
+    // Ein neues Projekt hat keine Bauformen; gespeicherte holt man im Reiter Fixtures bewusst in die Show.
+    const Result<void> r = player_->loadText(kNewProject);
     if (!r.ok()) {
         reportError(tr("Neues Projekt"), r.error().message, interactive);
         updateActions();

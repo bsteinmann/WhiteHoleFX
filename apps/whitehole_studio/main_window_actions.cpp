@@ -68,7 +68,8 @@ void MainWindow::buildActions() {
     file->addAction(openAction_);
     recentMenu_ = file->addMenu(tr("&Zuletzt geöffnet"));
     connect(recentMenu_, &QMenu::aboutToShow, this, &MainWindow::fillRecentMenu);
-    fillExamplesMenu(file->addMenu(tr("&Beispiele")));
+    QMenu* examplesMenu = file->addMenu(tr("&Beispiele"));
+    fillExamplesMenu(examplesMenu);
     file->addSeparator();
     file->addAction(saveAction_);
     file->addAction(saveAsAction_);
@@ -114,15 +115,11 @@ void MainWindow::buildActions() {
 
     buildHelp(menuBar()->addMenu(tr("&Hilfe")));
 
-    // Eine Leiste für Dateien (im Live-Modus ausgeblendet, damit auf der Bühne nichts versehentlich geöffnet wird) ...
-    fileBar_ = addToolBar(tr("Datei"));
-    fileBar_->setObjectName(QStringLiteral("fileBar"));
-    fileBar_->setMovable(false);
-    fileBar_->addAction(newAction_);
-    fileBar_->addAction(openAction_);
-    fileBar_->addAction(saveAction_);
+    // Neu, Öffnen, Zuletzt geöffnet und Beispiele gibt es nur im Menü Datei (eine Leiste dafür war doppelt). Im Live-Modus
+    // sind sie gesperrt, damit auf der Bühne nichts versehentlich geöffnet wird.
+    liveLockedActions_ = {newAction_, openAction_, recentMenu_->menuAction(), examplesMenu->menuAction()};
 
-    // ... und eine für den Betrieb: Start, Senden, Looks, Live; rechts Master und Blackout.
+    // Eine Leiste für den Betrieb: Start, Senden, Looks, Live; rechts Master und Blackout.
     QToolBar* bar = addToolBar(tr("Betrieb"));
     bar->setObjectName(QStringLiteral("runBar"));
     bar->setMovable(false);

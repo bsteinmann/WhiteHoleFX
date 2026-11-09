@@ -23,7 +23,7 @@ namespace whitehole::studio {
 
 namespace {
 
-constexpr int kColumns = 6;
+constexpr int kColumns = 7;
 
 QString fromStd(const std::string& text) { return QString::fromUtf8(text.data(), static_cast<qsizetype>(text.size())); }
 
@@ -50,7 +50,7 @@ QString triggerText(const project::Cue& cue) {
 CuePanel::CuePanel(runtime::Player& player, QWidget* parent) : QWidget{parent}, player_{player} {
     auto* column = new QVBoxLayout{this};
     table_ = new QTableWidget{0, kColumns, this};
-    table_->setHorizontalHeaderLabels({tr("Nr."), tr("Name"), tr("Look"), tr("Auslöser"), tr("Delay"), tr("Fade")});
+    table_->setHorizontalHeaderLabels({tr("Nr."), tr("Name"), tr("Look"), tr("Auslöser"), tr("Delay"), tr("Fade"), tr("Notiz")});
     table_->setSelectionBehavior(QAbstractItemView::SelectRows);
     table_->setSelectionMode(QAbstractItemView::SingleSelection);
     table_->setEditTriggers(QAbstractItemView::NoEditTriggers);
@@ -117,7 +117,8 @@ void CuePanel::rebuild() {
         const project::Cue& cue = cues[i];
         const QStringList cells{QString::number(i + 1), fromStd(cue.name),
                                 cue.look.empty() ? tr("(Schwarz)") : fromStd(cue.look), triggerText(cue),
-                                secondsText(cue.delay), secondsText(cue.fade)};
+                                secondsText(cue.delay), secondsText(cue.fade),
+                                fromStd(cue.note).simplified()};
         for (int c = 0; c < kColumns; ++c) {
             table_->setItem(static_cast<int>(i), c, new QTableWidgetItem{cells[c]});
         }

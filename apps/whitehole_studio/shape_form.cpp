@@ -48,6 +48,7 @@ void ShapeForm::build() {
                           [&](const mapping::GridShape& g) { buildGrid(*layout, g); },
                           [&](const mapping::RingShape& r) { buildRing(*layout, r); },
                           [&](const mapping::HelixShape& h) { buildHelix(*layout, h); },
+                          [&](const mapping::CylinderShape& c) { buildCylinder(*layout, c); },
                           [&](const mapping::PointsShape& p) {
                               layout->addRow(new QLabel{tr("<b>Punktwolke</b>: %1 Punkte, nur in der Datei änderbar")
                                                             .arg(p.points.size())});
@@ -157,7 +158,7 @@ void ShapeForm::buildRing(QFormLayout& layout, const mapping::RingShape& r) {
 }
 
 void ShapeForm::buildHelix(QFormLayout& layout, const mapping::HelixShape& h) {
-    layout.addRow(new QLabel{tr("<b>Säule</b>")});
+    layout.addRow(new QLabel{tr("<b>Spirale</b> (Säule mit einem um das Rohr gewickelten Strip)")});
     c_.count = intBox(static_cast<int>(h.count), 1, 1000000);
     c_.radius = form::doubleBox(h.radius, 0.001, kBig, 0.5);
     c_.height = form::doubleBox(h.height, 0.001, kBig, 1.0);
@@ -176,6 +177,36 @@ void ShapeForm::buildHelix(QFormLayout& layout, const mapping::HelixShape& h) {
     layout.addRow(tr("Windungen"), form::labeledRow({{QString{}, c_.turns}}));
     layout.addRow(tr("Erste LED bei (Grad)"), form::labeledRow({{QString{}, c_.startAngle}}));
     layout.addRow(QString{}, c_.clockwise);
+}
+
+void ShapeForm::buildCylinder(QFormLayout& layout, const mapping::CylinderShape& c) {
+    layout.addRow(new QLabel{tr("<b>Säule</b> (Ringe übereinander)")});
+    c_.count = intBox(static_cast<int>(c.perRing), 1, 100000);
+    c_.rings = intBox(static_cast<int>(c.rings), 1, 100000);
+    c_.radius = form::doubleBox(c.radius, 0.001, kBig, 0.5);
+    c_.height = form::doubleBox(c.height, 0.001, kBig, 1.0);
+    c_.startAngle = form::doubleBox(c.startAngle, -360.0, 360.0, 15.0, 1);
+    c_.clockwise = new QCheckBox{tr("im Uhrzeigersinn")};
+    c_.clockwise->setChecked(c.clockwise);
+    c_.ringSerpentine = new QCheckBox{tr("Serpentine (jeder zweite Ring rückwärts)")};
+    c_.ringSerpentine->setChecked(c.serpentine);
+    c_.ringSerpentine->setToolTip(tr("Das Kabel läuft ohne Rücksprung von Ring zu Ring: unten vorwärts, den nächsten Ring rückwärts ..."));
+    c_.startAngle->setToolTip(tr("Winkel der ersten LED im untersten Ring: 0 = +x"));
+    for (QSpinBox* box : {c_.count, c_.rings}) {
+        connect(box, qOverload<int>(&QSpinBox::valueChanged), this, [this](int) { changed(); });
+    }
+    for (QDoubleSpinBox* box : {c_.radius, c_.height, c_.startAngle}) {
+        connect(box, qOverload<double>(&QDoubleSpinBox::valueChanged), this, [this](double) { changed(); });
+    }
+    for (QCheckBox* box : {c_.clockwise, c_.ringSerpentine}) {
+        connect(box, &QCheckBox::toggled, this, [this](bool) { changed(); });
+    }
+    layout.addRow(tr("LEDs je Ring"), form::labeledRow({{QString{}, c_.count}}));
+    layout.addRow(tr("Ringe"), form::labeledRow({{QString{}, c_.rings}}));
+    layout.addRow(tr("Radius und Höhe"), form::labeledRow({{QString{}, c_.radius}, {QString{}, c_.height}}));
+    layout.addRow(tr("Erste LED bei (Grad)"), form::labeledRow({{QString{}, c_.startAngle}}));
+    layout.addRow(QString{}, c_.clockwise);
+    layout.addRow(QString{}, c_.ringSerpentine);
 }
 
 mapping::FixtureShape ShapeForm::read() const {
@@ -226,6 +257,17 @@ mapping::FixtureShape ShapeForm::read() const {
         h.startAngle = static_cast<float>(c_.startAngle->value());
         h.clockwise = c_.clockwise->isChecked();
         return h;
+    }
+    if (std::get_if<mapping::CylinderShape>(&shape_) != nullptr && c_.rings != nullptr) {
+        mapping::CylinderShape c;
+        c.perRing = static_cast<std::uint32_t>(c_.count->value());
+        c.rings = static_cast<std::uint32_t>(c_.rings->value());
+        c.radius = static_cast<float>(c_.radius->value());
+        c.height = static_cast<float>(c_.height->value());
+        c.startAngle = static_cast<float>(c_.startAngle->value());
+        c.clockwise = c_.clockwise->isChecked();
+        c.serpentine = c_.ringSerpentine->isChecked();
+        return c;
     }
     return shape_;
 }

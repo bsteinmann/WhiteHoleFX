@@ -70,7 +70,7 @@ msgstr " Master "
 msgid " Wechsel/s"
 msgstr " changes/s"
 
-#: cue_dialog.cpp:54 cue_dialog.cpp:75 cue_dialog.cpp:78
+#: cue_dialog.cpp:61 cue_dialog.cpp:82 cue_dialog.cpp:85
 msgid " s"
 msgstr " s"
 
@@ -102,7 +102,7 @@ msgstr "%1  →  %2"
 msgid "%1 %"
 msgstr "%1 %"
 
-#: fixture_library_page.cpp:183 fixture_library_page.cpp:333 layout_panel_types.cpp:24
+#: fixture_library_page.cpp:220 fixture_library_page.cpp:369 fixture_library_user.cpp:45
 msgid "%1 (%2 LEDs)"
 msgstr "%1 (%2 LEDs)"
 
@@ -142,7 +142,7 @@ msgstr "&2D (edit)"
 msgid "&3D"
 msgstr "&3D"
 
-#: main_window_actions.cpp:93
+#: main_window_actions.cpp:94
 msgid "&Ansicht"
 msgstr "&View"
 
@@ -150,11 +150,11 @@ msgstr "&View"
 msgid "&Ausgabe senden"
 msgstr "Send &output"
 
-#: main_window_stage.cpp:52
+#: main_window_stage.cpp:53
 msgid "&Ausgabe …"
 msgstr "&Output …"
 
-#: main_window_actions.cpp:80
+#: main_window_actions.cpp:81
 msgid "&Bearbeiten"
 msgstr "&Edit"
 
@@ -186,15 +186,15 @@ msgstr "&Settings …"
 msgid "&Fehler melden oder Idee vorschlagen …"
 msgstr "&Report a bug or suggest an idea …"
 
-#: main_window_stage.cpp:61
+#: main_window_stage.cpp:62
 msgid "&Fixtures …"
 msgstr "&Fixtures …"
 
-#: main_window_actions.cpp:115
+#: main_window_actions.cpp:116
 msgid "&Hilfe"
 msgstr "&Help"
 
-#: main_window_stage.cpp:48
+#: main_window_stage.cpp:49
 msgid "&Layout …"
 msgstr "&Layout …"
 
@@ -206,7 +206,7 @@ msgstr "Port &legend …"
 msgid "&Leuchten (additiv)"
 msgstr "&Glow (additive)"
 
-#: main_window_actions.cpp:111
+#: main_window_actions.cpp:112
 msgid "&Live"
 msgstr "&Live"
 
@@ -234,7 +234,7 @@ msgstr "&Undo"
 msgid "&Speichern"
 msgstr "&Save"
 
-#: main_window_actions.cpp:91
+#: main_window_actions.cpp:92
 msgid "&Stage Config"
 msgstr "&Stage Config"
 
@@ -250,7 +250,7 @@ msgstr "&Stop"
 msgid "&Tastenkürzel …"
 msgstr "&Keyboard shortcuts …"
 
-#: main_window_stage.cpp:57
+#: main_window_stage.cpp:58
 msgid "&Testmodus …"
 msgstr "&Test mode …"
 
@@ -258,7 +258,7 @@ msgstr "&Test mode …"
 msgid "&Tutorial …"
 msgstr "&Tutorial …"
 
-#: main_window_actions.cpp:107
+#: main_window_actions.cpp:108
 msgid "&Wiedergabe"
 msgstr "&Playback"
 
@@ -282,7 +282,7 @@ msgstr "&About WhiteHoleFX"
 msgid "(Bibliothek ist leer)"
 msgstr "(library is empty)"
 
-#: cue_dialog.cpp:37 cue_panel.cpp:119
+#: cue_dialog.cpp:44 cue_panel.cpp:119
 msgid "(Schwarz)"
 msgstr "(Black)"
 
@@ -314,15 +314,15 @@ msgstr ", level %1 %"
 msgid "100 %"
 msgstr "100 %"
 
-#: fixture_library_page.cpp:94
+#: fixture_library_page.cpp:101
 msgid "2D-Matrix"
 msgstr "2D matrix"
 
-#: fixture_library_page.cpp:67
+#: fixture_library_page.cpp:71
 msgid "2D-Matrix 8x8"
 msgstr "2D matrix 8x8"
 
-#: main_window_actions.cpp:163
+#: main_window_actions.cpp:160
 msgid "3D"
 msgstr "3D"
 
@@ -358,7 +358,7 @@ msgstr "3D &display"
 msgid "3D-Gitter (Cube, Vorhang, Säule)"
 msgstr "3D grid (cube, curtain, column)"
 
-#: fixture_library_page.cpp:94
+#: fixture_library_page.cpp:101
 msgid "3D-Matrix"
 msgstr "3D matrix"
 
@@ -370,7 +370,7 @@ msgstr "3D matrix 4x4x4"
 msgid "3D: ziehen = drehen · Rechtsklick oder Umschalt+Ziehen = verschieben · Rad = Zoom · Doppelklick = Zoom zurücksetzen"
 msgstr "3D: drag = rotate · right-click or Shift+drag = pan · wheel = zoom · double-click = reset zoom"
 
-#: shape_form.cpp:65
+#: shape_form.cpp:66
 msgid "<b>2D-Matrix</b>"
 msgstr "<b>2D matrix</b>"
 
@@ -378,15 +378,19 @@ msgstr "<b>2D matrix</b>"
 msgid "<b>3D-Gitter</b>"
 msgstr "<b>3D grid</b>"
 
-#: shape_form.cpp:105
+#: shape_form.cpp:106
 msgid "<b>3D-Matrix</b>"
 msgstr "<b>3D matrix</b>"
 
-#: fixture_library_page.cpp:88
-msgid "<b>Bauformen</b>"
-msgstr "<b>Fixture types</b>"
+#: fixture_library_page.cpp:95
+msgid "<b>Fixtures</b> (in dieser Show)"
+msgstr "<b>Fixtures</b> (in this show)"
 
-#: shape_form.cpp:141
+#: fixture_library_page.cpp:121
+msgid "<b>Gespeicherte Fixtures</b> (alle in der Bibliothek)"
+msgstr "<b>Saved fixtures</b> (all in the library)"
+
+#: shape_form.cpp:142
 msgid "<b>Kreis</b>"
 msgstr "<b>Circle</b>"
 
@@ -394,7 +398,7 @@ msgstr "<b>Circle</b>"
 msgid "<b>Matrix</b>"
 msgstr "<b>Matrix</b>"
 
-#: fixture_form.cpp:189 shape_form.cpp:52
+#: fixture_form.cpp:189 shape_form.cpp:53
 msgid "<b>Punktwolke</b>: %1 Punkte, nur in der Datei änderbar"
 msgstr "<b>Point cloud</b>: %1 points, editable only in the file"
 
@@ -402,13 +406,17 @@ msgstr "<b>Point cloud</b>: %1 points, editable only in the file"
 msgid "<b>Ring oder Säule</b>: Form vorerst nur in der Datei änderbar"
 msgstr "<b>Ring or column</b>: shape can only be changed in the file for now"
 
-#: fixture_form.cpp:141 shape_form.cpp:91
+#: shape_form.cpp:161
+msgid "<b>Spirale</b> (Säule mit einem um das Rohr gewickelten Strip)"
+msgstr "<b>Spiral</b> (pillar with a strip wound around the tube)"
+
+#: fixture_form.cpp:141 shape_form.cpp:92
 msgid "<b>Strip</b>"
 msgstr "<b>Strip</b>"
 
-#: shape_form.cpp:160
-msgid "<b>Säule</b>"
-msgstr "<b>Column</b>"
+#: shape_form.cpp:183
+msgid "<b>Säule</b> (Ringe übereinander)"
+msgstr "<b>Pillar</b> (rings stacked on top of each other)"
 
 #: main_window_help.cpp:110
 msgid "<b>WhiteHoleFX Studio</b> %1<br><br>Steuerung für LED-Matrizen, Cubes und Pixel mit einem Node-Editor.<br>Lizenz: PolyForm Shield 1.0.0<br><br><a href=\"%2\">%2</a>"
@@ -422,11 +430,11 @@ msgstr "Dimmed node with dashed pass-through: bypassed (key B)."
 msgid "Abstand"
 msgstr "Gap"
 
-#: add_fixture_dialog.cpp:109 fixture_form.cpp:135 shape_form.cpp:84
+#: add_fixture_dialog.cpp:109 fixture_form.cpp:135 shape_form.cpp:85
 msgid "Abstand x y"
 msgstr "Spacing x y"
 
-#: add_fixture_dialog.cpp:149 fixture_form.cpp:183 shape_form.cpp:134
+#: add_fixture_dialog.cpp:149 fixture_form.cpp:183 shape_form.cpp:135
 msgid "Abstand x y z"
 msgstr "Spacing x y z"
 
@@ -462,6 +470,10 @@ msgstr "Reset all defaults"
 msgid "Alle Tastenkürzel in einer Liste"
 msgstr "All keyboard shortcuts in one list"
 
+#: fixture_library_page.cpp:83
+msgid "Alle übernehmen"
+msgstr "Take over all"
+
 #: parameter_editors.cpp:311
 msgid "Alpha 0: an dieser Stelle bleibt die LED aus (die Farbe bleibt gemerkt)."
 msgstr "Alpha 0: the LED stays off here (the color is remembered)."
@@ -486,7 +498,7 @@ msgstr "Save as template"
 msgid "An Bereich anpassen"
 msgstr "Fit to range"
 
-#: main_window_actions.cpp:86
+#: main_window_actions.cpp:87
 msgid "An: Ein nicht angeschlossener Eingang von Blend, Mix, Crossfade, Add oder Mask lässt die LEDs ausgehen. Aus: Er gilt als durchsichtiges Schwarz."
 msgstr "On: an unconnected input of Blend, Mix, Crossfade, Add or Mask turns the LEDs off. Off: it counts as transparent black."
 
@@ -494,7 +506,7 @@ msgstr "On: an unconnected input of Blend, Mix, Crossfade, Add or Mask turns the
 msgid "Anfang und Ende relativ zur Position; die erste LED sitzt am Anfang."
 msgstr "Start and end relative to the position; the first LED sits at the start."
 
-#: add_fixture_dialog.cpp:123 fixture_form.cpp:150 shape_form.cpp:100
+#: add_fixture_dialog.cpp:123 fixture_form.cpp:150 shape_form.cpp:101
 msgid "Anfang x y z"
 msgstr "Start x y z"
 
@@ -506,11 +518,11 @@ msgstr "View"
 msgid "Ansicht von vorn: Fixtures verschieben, Bereich aufziehen"
 msgstr "View from the front: move fixtures, drag out an area"
 
-#: fixture_form.cpp:182 shape_form.cpp:133
+#: fixture_form.cpp:182 shape_form.cpp:134
 msgid "Anzahl x y z"
 msgstr "Count x y z"
 
-#: cue_dialog.cpp:64 cue_panel.cpp:39 main_window_dmx.cpp:109
+#: cue_dialog.cpp:71 cue_panel.cpp:39 main_window_dmx.cpp:109
 msgid "Art-Net"
 msgstr "Art-Net"
 
@@ -530,11 +542,11 @@ msgstr "Art-Net, sACN and DDP leave through this card. With “Automatic” the 
 msgid "Art-Net-Port (UDP):"
 msgstr "Art-Net port (UDP):"
 
-#: main_window_actions.cpp:160 settings_dialog.cpp:62
+#: main_window_actions.cpp:157 settings_dialog.cpp:62
 msgid "Audio"
 msgstr "Audio"
 
-#: cue_dialog.cpp:49 cue_panel.cpp:43
+#: cue_dialog.cpp:56 cue_panel.cpp:43
 msgid "Audio-Beat"
 msgstr "Audio beat"
 
@@ -578,15 +590,11 @@ msgstr "Off"
 msgid "Aus Bauform"
 msgstr "From type"
 
-#: fixture_library_page.cpp:79
-msgid "Aus Benutzerbibliothek ergänzen"
-msgstr "Add from user library"
-
 #: output_form.cpp:52
 msgid "Aus Bibliothek +"
 msgstr "From library +"
 
-#: output_form.cpp:57
+#: fixture_library_page.cpp:86 output_form.cpp:57
 msgid "Aus Bibliothek löschen"
 msgstr "Delete from library"
 
@@ -622,7 +630,7 @@ msgstr "Connect output to new node"
 msgid "Ausgeschaltete LEDs als sehr dunkle Punkte, nur als Orientierung"
 msgstr "Switched-off LEDs as very dark dots, for orientation only"
 
-#: cue_dialog.cpp:51 cue_panel.cpp:53
+#: cue_dialog.cpp:58 cue_panel.cpp:53
 msgid "Auslöser"
 msgstr "Trigger"
 
@@ -662,13 +670,13 @@ msgstr "Fixture type"
 msgid "Bauform aus der Bibliothek (Stage Config → Fixtures). Änderungen an der Bauform gelten für alle Exemplare."
 msgstr "Fixture type from the library (Stage Config → Fixtures). Changes to the type apply to all instances."
 
-#: fixture_library_page.cpp:105
+#: fixture_library_page.cpp:112
 msgid "Bauform entfernen. Fixtures im Layout behalten ihre Form als eigene."
 msgstr "Remove fixture type. Fixtures in the layout keep their shape as their own."
 
-#: fixture_library_page.cpp:111
-msgid "Bauformen, die du früher angelegt hast und die in diesem Projekt fehlen, hinzufügen. Gespeichert in: %1"
-msgstr "Add fixture types you created earlier that are missing in this project. Stored in: %1"
+#: fixture_library_user.cpp:105
+msgid "Bauform „%1“ in der Bibliothek gespeichert."
+msgstr "Fixture type “%1” saved to the library."
 
 #: cue_panel.cpp:64
 msgid "Bearbeiten …"
@@ -694,11 +702,11 @@ msgstr "User library cannot be saved: %1"
 msgid "Bereit: %1 - GO drücken"
 msgstr "Ready: %1 - press GO"
 
-#: main_window_actions.cpp:126
+#: main_window_actions.cpp:123
 msgid "Betrieb"
 msgstr "Operation"
 
-#: main_window_stage.cpp:62
+#: main_window_stage.cpp:63
 msgid "Bibliothek der Bauformen: Matrix, Kreis, Strip, Säule mit Vorschau und Test"
 msgstr "Library of fixture types: matrix, circle, strip, column with preview and test"
 
@@ -766,7 +774,7 @@ msgstr "Cube"
 msgid "Cue +"
 msgstr "Cue +"
 
-#: cue_dialog.cpp:28
+#: cue_dialog.cpp:29
 msgid "Cue bearbeiten"
 msgstr "Edit cue"
 
@@ -798,19 +806,19 @@ msgstr "DDP offset (bytes)"
 msgid "DMX %1 U%2 K%3 ab %4"
 msgstr "DMX %1 U%2 Ch%3 from %4"
 
-#: cue_dialog.cpp:71
+#: cue_dialog.cpp:78
 msgid "DMX-Auslöser: Kanal"
 msgstr "DMX trigger: channel"
 
-#: cue_dialog.cpp:69
+#: cue_dialog.cpp:76
 msgid "DMX-Auslöser: Protokoll"
 msgstr "DMX trigger: protocol"
 
-#: cue_dialog.cpp:72
+#: cue_dialog.cpp:79
 msgid "DMX-Auslöser: Schwelle (1 bis 255)"
 msgstr "DMX trigger: threshold (1 to 255)"
 
-#: cue_dialog.cpp:70
+#: cue_dialog.cpp:77
 msgid "DMX-Auslöser: Universe"
 msgstr "DMX trigger: universe"
 
@@ -822,13 +830,17 @@ msgstr "DMX input"
 msgid "DMX-Eingang: %1"
 msgstr "DMX input: %1"
 
-#: cue_dialog.cpp:49
+#: cue_dialog.cpp:56
 msgid "DMX-Kanal"
 msgstr "DMX channel"
 
-#: add_fixture_dialog.cpp:146 fixture_form.cpp:171 shape_form.cpp:122
+#: add_fixture_dialog.cpp:146 fixture_form.cpp:171 shape_form.cpp:123
 msgid "Das Kabel beginnt an dieser Seite statt an der gegenüberliegenden"
 msgstr "The cable starts on this side instead of the opposite one"
+
+#: shape_form.cpp:193
+msgid "Das Kabel läuft ohne Rücksprung von Ring zu Ring: unten vorwärts, den nächsten Ring rückwärts ..."
+msgstr "The cable runs from ring to ring without jumping back: the bottom ring forwards, the next ring backwards ..."
 
 #: main_window.cpp:207
 msgid "Das Projekt wurde geändert. Änderungen verwerfen?"
@@ -846,15 +858,11 @@ msgstr "The Studio crashed last time."
 msgid "Das Testbild ersetzt den Effekt in der Vorschau und, wenn „Ausgabe senden“ an ist, auch auf den LEDs. Es wird nicht im Projekt gespeichert.\n\nAchtung: Weiß und Farbe leuchten mit voller Helligkeit. Prüfe vorher, ob die Netzteile die ganze Wand auf 100 % tragen."
 msgstr "The test pattern replaces the effect in the preview and, if “Send output” is on, on the LEDs too. It is not saved in the project.\n\nCaution: white and color light up at full brightness. Check beforehand that the power supplies can carry the whole wall at 100 %."
 
-#: main_window_actions.cpp:118
-msgid "Datei"
-msgstr "File"
-
-#: cue_dialog.cpp:79
+#: cue_dialog.cpp:86
 msgid "Dauer der Überblendung; der vorige Look blendet im selben Zug aus"
 msgstr "Duration of the crossfade; the previous look fades out at the same time"
 
-#: cue_dialog.cpp:80 cue_panel.cpp:53
+#: cue_dialog.cpp:87 cue_panel.cpp:53
 msgid "Delay"
 msgstr "Delay"
 
@@ -882,7 +890,7 @@ msgstr "The controller decides the protocol. If you switch to a controller with 
 msgid "Der Controller braucht einen Namen, um gespeichert zu werden"
 msgstr "The controller needs a name to be saved"
 
-#: cue_dialog.cpp:68
+#: cue_dialog.cpp:75
 msgid "Der Cue löst aus, wenn der Kanalwert auf diese Zahl oder darüber steigt"
 msgstr "The cue fires when the channel value rises to this number or above"
 
@@ -990,7 +998,7 @@ msgstr "Rotation about the z axis in degrees"
 msgid "Drehung x y z (Grad)"
 msgstr "Rotation x y z (degrees)"
 
-#: fixture_library_page.cpp:77
+#: fixture_library_page.cpp:81
 msgid "Duplizieren"
 msgstr "Duplicate"
 
@@ -1002,7 +1010,7 @@ msgstr "Duplicate\tCtrl+D"
 msgid "Ebene Welle: Streifen, die in eine Richtung wandern (Frequenz, Tempo, zwei Farben)."
 msgstr "Plane wave: stripes moving in one direction (frequency, speed, two colors)."
 
-#: main_window_actions.cpp:157
+#: main_window_actions.cpp:154
 msgid "Effekte (2D)"
 msgstr "Effects (2D)"
 
@@ -1098,15 +1106,15 @@ msgstr "Snap"
 msgid "Einstellungen"
 msgstr "Settings"
 
-#: main_window_actions.cpp:154
+#: main_window_actions.cpp:151
 msgid "Einstieg"
 msgstr "Getting started"
 
-#: add_fixture_dialog.cpp:124 fixture_form.cpp:151 shape_form.cpp:101
+#: add_fixture_dialog.cpp:124 fixture_form.cpp:151 shape_form.cpp:102
 msgid "Ende x y z"
 msgstr "End x y z"
 
-#: fixture_library_page.cpp:78 layout_panel.cpp:57
+#: fixture_library_page.cpp:82 layout_panel.cpp:57
 msgid "Entfernen"
 msgstr "Remove"
 
@@ -1130,7 +1138,7 @@ msgstr "Select fixtures first (hold Ctrl or Shift for several)"
 msgid "Erste Achse = läuft am schnellsten entlang des Kabels"
 msgstr "First axis = runs fastest along the cable"
 
-#: shape_form.cpp:155 shape_form.cpp:177
+#: shape_form.cpp:156 shape_form.cpp:178 shape_form.cpp:207
 msgid "Erste LED bei (Grad)"
 msgstr "First LED at (degrees)"
 
@@ -1158,7 +1166,7 @@ msgstr "No project is loaded. Create one with Ctrl+N or open one with Ctrl+O."
 msgid "Exemplar einer Bauform aus der Bibliothek (Stage Config → Fixtures) auf der Bühne anlegen"
 msgstr "Place an instance of a fixture type from the library (Stage Config → Fixtures) on the stage"
 
-#: cue_dialog.cpp:81 cue_panel.cpp:53
+#: cue_dialog.cpp:88 cue_panel.cpp:53
 msgid "Fade"
 msgstr "Fade"
 
@@ -1174,7 +1182,7 @@ msgstr "Colours and shapes of node inputs and outputs in a floating window"
 msgid "Farbfolge R G B W"
 msgstr "Colour sequence R G B W"
 
-#: main_window_actions.cpp:102
+#: main_window_actions.cpp:103
 msgid "Farbige Punkte vor den Nodes in der Palette: was der Node liefert"
 msgstr "Colored dots in front of the nodes in the palette: what the node delivers"
 
@@ -1190,7 +1198,7 @@ msgstr "A color ramp of up to four colors. \"Position\" picks the spot, or it ru
 msgid "Favoriten"
 msgstr "Favorites"
 
-#: main_window_actions.cpp:104
+#: main_window_actions.cpp:105
 msgid "Fensteranordnung &zurücksetzen"
 msgstr "Reset window &layout"
 
@@ -1206,7 +1214,7 @@ msgstr "Field"
 msgid "Fixture"
 msgstr "Fixture"
 
-#: main_window_stage.cpp:44
+#: main_window_stage.cpp:45
 msgid "Fixture &hinzufügen …"
 msgstr "&Add fixture …"
 
@@ -1222,7 +1230,7 @@ msgstr "Add fixture"
 msgid "Fixtures"
 msgstr "Fixtures"
 
-#: main_window_stage.cpp:50
+#: main_window_stage.cpp:51
 msgid "Fixtures auf der Bühne verteilen und drehen (eigenes Fenster)"
 msgstr "Place and rotate fixtures on the stage (own window)"
 
@@ -1241,6 +1249,10 @@ msgstr "Frame"
 #: main_window_view3d.cpp:40
 msgid "Frei drehbare Ansicht: ziehen = drehen, Rechtsklick = verschieben, Rad = Zoom"
 msgstr "Freely rotatable view: drag = rotate, right-click = pan, wheel = zoom"
+
+#: cue_dialog.cpp:39
+msgid "Freie Notiz zu diesem Cue; sie steht in der Cuelist und wird mit dem Projekt gespeichert"
+msgstr "Free note for this cue; it appears in the cue list and is saved with the project"
 
 #: stage_view.cpp:87
 msgid "Front"
@@ -1266,7 +1278,7 @@ msgstr "GO"
 msgid "GO  (Leertaste)"
 msgstr "GO  (Space)"
 
-#: cue_dialog.cpp:49
+#: cue_dialog.cpp:56
 msgid "GO (von Hand)"
 msgstr "GO (manual)"
 
@@ -1298,7 +1310,11 @@ msgstr "Overall brightness (affects preview and output, not saved in the project
 msgid "Gesamtlautstärke des Audio-Eingangs als Pegel und Spitze, linear oder in dB, auf Wunsch mit automatischer Verstärkung. Einzelne Schläge (Kick, Snare, Hi-Hat) erkennt „Kick / Snare / Hat“."
 msgstr "Overall loudness of the audio input as level and peak, linear or in dB, optionally with automatic gain. Single hits (kick, snare, hi-hat) are detected by “Kick / Snare / Hat”."
 
-#: main_window_file.cpp:149 main_window_file.cpp:174
+#: fixture_library_user.cpp:83
+msgid "Gespeichert in der Bibliothek. „In Show übernehmen“ (oder Doppelklick) holt sie in diese Show."
+msgstr "Stored in the library. “Add to show” (or double-click) brings it into this show."
+
+#: main_window_file.cpp:146 main_window_file.cpp:171
 msgid "Gespeichert: %1"
 msgstr "Saved: %1"
 
@@ -1342,7 +1358,7 @@ msgstr "Groups"
 msgid "Gruppen von Fixtures und Regionen der Bühne: Ziele für Output-Nodes"
 msgstr "Groups of fixtures and stage regions: targets for output nodes"
 
-#: fixture_form.cpp:133 shape_form.cpp:83
+#: fixture_form.cpp:133 shape_form.cpp:84
 msgid "Größe"
 msgstr "Size"
 
@@ -1362,6 +1378,14 @@ msgstr "Add"
 msgid "Hinzufügen …"
 msgstr "Add …"
 
+#: fixture_library_page.cpp:124
+msgid "Holt alle gespeicherten Bauformen, die in dieser Show fehlen"
+msgstr "Brings in all stored fixture types that are missing in this show"
+
+#: fixture_library_page.cpp:123
+msgid "Holt die gewählte gespeicherte Bauform in diese Show"
+msgstr "Brings the selected stored fixture type into this show"
+
 #: layout_panel_groups.cpp:195
 msgid "Höhe"
 msgstr "Height"
@@ -1370,7 +1394,7 @@ msgstr "Height"
 msgid "Hüllkurve (ADSR): Aus einem Schalter wird ein weicher Verlauf mit Attack, Decay, Sustain und Release. Auch als Einzelimpuls."
 msgstr "Envelope (ADSR): turns a switch into a smooth curve with attack, decay, sustain and release. Also as a one-shot."
 
-#: fixture_library_page.cpp:221
+#: fixture_library_page.cpp:262
 msgid "Im Layout %1 Mal verwendet; Änderungen gelten für alle."
 msgstr "Used %1 times in the layout; changes apply to all of them."
 
@@ -1382,13 +1406,21 @@ msgstr "Image"
 msgid "Impuls"
 msgstr "Trigger"
 
-#: output_form.cpp:53 output_form_library.cpp:68
+#: fixture_library_page.cpp:85 output_form.cpp:53 output_form_library.cpp:68
 msgid "In Bibliothek speichern"
 msgstr "Save to library"
+
+#: fixture_library_page.cpp:84
+msgid "In Show übernehmen"
+msgstr "Add to show"
 
 #: look_panel.cpp:60
 msgid "In den Editor laden"
 msgstr "Load into editor"
+
+#: fixture_library_user.cpp:129
+msgid "In dieser Show gibt es schon eine Bauform „%1“."
+msgstr "This show already has a fixture type “%1”."
 
 #: add_fixture_dialog.cpp:110 add_fixture_dialog.cpp:152 fixture_form.cpp:136
 msgid "Kabel beginnt"
@@ -1442,7 +1474,7 @@ msgstr "No capture devices found. Connect an audio interface and reopen the wind
 msgid "Klicke eine LED, um ihre Adresse zu sehen."
 msgstr "Click an LED to see its address."
 
-#: fixture_library_page.cpp:104
+#: fixture_library_page.cpp:111
 msgid "Kopie der gewählten Bauform anlegen"
 msgstr "Create a copy of the selected type"
 
@@ -1450,7 +1482,7 @@ msgstr "Create a copy of the selected type"
 msgid "Kopieren\tStrg+C"
 msgstr "Copy\tCtrl+C"
 
-#: fixture_library_page.cpp:95
+#: fixture_library_page.cpp:102
 msgid "Kreis"
 msgstr "Circle"
 
@@ -1465,6 +1497,10 @@ msgstr "LEDs"
 #: add_fixture_dialog.cpp:108
 msgid "LEDs breit × hoch"
 msgstr "LEDs wide × high"
+
+#: shape_form.cpp:204
+msgid "LEDs je Ring"
+msgstr "LEDs per ring"
 
 #: add_fixture_dialog.cpp:148
 msgid "LEDs x y z"
@@ -1498,7 +1534,7 @@ msgstr "Layout"
 msgid "Layout auf Würfel abbilden"
 msgstr "Map layout onto cube"
 
-#: fixture_library_page.cpp:209
+#: fixture_library_page.cpp:250
 msgid "Lege mit „Neu“ eine Bauform an. Im Reiter Layout verteilst du sie dann auf der Bühne."
 msgstr "Create a fixture type with “New”. Then place it on the stage in the Layout tab."
 
@@ -1558,7 +1594,7 @@ msgstr "Start live mode  ▶"
 msgid "Localhost"
 msgstr "Localhost"
 
-#: cue_dialog.cpp:46 cue_panel.cpp:53
+#: cue_dialog.cpp:53 cue_panel.cpp:53
 msgid "Look"
 msgstr "Look"
 
@@ -1650,7 +1686,7 @@ msgstr "Matrix"
 msgid "Matrix (Fläche)"
 msgstr "Matrix (surface)"
 
-#: main_window_stage.cpp:45
+#: main_window_stage.cpp:46
 msgid "Matrix, Strip oder 3D-Gitter mit Größe x y z, Lage, Verkabelung und Patch anlegen"
 msgstr "Create a matrix, strip or 3D grid with size x y z, position, wiring and patch"
 
@@ -1682,7 +1718,7 @@ msgstr "Mode"
 msgid "Multicast"
 msgstr "Multicast"
 
-#: add_fixture_dialog.cpp:55 cue_dialog.cpp:34 cue_panel.cpp:53
+#: add_fixture_dialog.cpp:55 cue_dialog.cpp:35 cue_panel.cpp:53
 msgid "Name"
 msgstr "Name"
 
@@ -1726,11 +1762,11 @@ msgstr "Network card for sending: %1"
 msgid "Netzwerkkarte, DMX-Eingang, Audio-Interface und Standardwerte für Nodes"
 msgstr "Network card, DMX input, audio interface and default values for nodes"
 
-#: fixture_library_page.cpp:77
+#: fixture_library_page.cpp:81
 msgid "Neu"
 msgstr "New"
 
-#: fixture_library_page.cpp:103
+#: fixture_library_page.cpp:110
 msgid "Neue Bauform anlegen"
 msgstr "Create new fixture type"
 
@@ -1742,7 +1778,7 @@ msgstr "New nodes start with these values instead of the library's. Existing nod
 msgid "Neuer Name:"
 msgstr "New name:"
 
-#: main_window_file.cpp:100
+#: main_window_file.cpp:97
 msgid "Neues Projekt"
 msgstr "New project"
 
@@ -1754,13 +1790,17 @@ msgstr "New project (Ctrl+N)"
 msgid "Neues Projekt (Strg+N), Projekt öffnen (Strg+O) oder eine .whfx-Datei hierher ziehen.\n\n%1"
 msgstr "New project (Ctrl+N), open a project (Ctrl+O) or drag a .whfx file here.\n\n%1"
 
-#: main_window_file.cpp:104
+#: main_window_file.cpp:101
 msgid "Neues Projekt. Mit Strg+S speichern."
 msgstr "New project. Save with Ctrl+S."
 
 #: add_fixture_dialog.cpp:161
 msgid "Nicht senden"
 msgstr "Do not send"
+
+#: fixture_library_page.cpp:125
+msgid "Nimmt die gewählte Bauform aus der Bibliothek; die Show bleibt unverändert"
+msgstr "Removes the selected fixture type from the library; the show stays unchanged"
 
 #: layout_panel_types.cpp:19
 msgid "Noch keine Bauform (Stage Config → Fixtures)"
@@ -1770,7 +1810,7 @@ msgstr "No fixture type yet (Stage Config → Fixtures)"
 msgid "Noch keine Vorlagen"
 msgstr "No templates yet"
 
-#: fixture_library_page.cpp:220
+#: fixture_library_page.cpp:261
 msgid "Noch nicht im Layout verwendet."
 msgstr "Not used in the layout yet."
 
@@ -1805,6 +1845,14 @@ msgstr "Nodes"
 #: node_palette.cpp:138
 msgid "Nodes suchen …"
 msgstr "Search nodes …"
+
+#: cue_dialog.cpp:41 cue_panel.cpp:53
+msgid "Notiz"
+msgstr "Note"
+
+#: cue_dialog.cpp:38
+msgid "Notiz zum Cue (zum Beispiel Regieanweisung)"
+msgstr "Note for the cue (for example a stage direction)"
 
 #: cue_panel.cpp:53
 msgid "Nr."
@@ -1858,7 +1906,7 @@ msgstr "Really send packets (Art-Net, sACN, DDP) onto the network"
 msgid "Palette"
 msgstr "Palette"
 
-#: main_window_actions.cpp:99
+#: main_window_actions.cpp:100
 msgid "Palette &farbig"
 msgstr "Colored &palette"
 
@@ -1874,7 +1922,7 @@ msgstr "Particles from an emitter: lifetime, speed, direction, spread, gravity a
 msgid "Patch (Ausgabe)"
 msgstr "Patch (output)"
 
-#: cue_dialog.cpp:76
+#: cue_dialog.cpp:83
 msgid "Pause zwischen Auslöser und Beginn der Überblendung"
 msgstr "Pause between trigger and start of the crossfade"
 
@@ -1938,11 +1986,11 @@ msgstr "Delete preset"
 msgid "Projekt laden"
 msgstr "Load project"
 
-#: main_window_file.cpp:158
+#: main_window_file.cpp:155
 msgid "Projekt speichern unter"
 msgstr "Save project as"
 
-#: main_window_file.cpp:118
+#: main_window_file.cpp:115
 msgid "Projekt öffnen"
 msgstr "Open project"
 
@@ -1962,11 +2010,11 @@ msgstr "Point cloud"
 msgid "Quellname (sACN)"
 msgstr "Source name (sACN)"
 
-#: shape_form.cpp:154
+#: shape_form.cpp:155
 msgid "Radius"
 msgstr "Radius"
 
-#: shape_form.cpp:175
+#: shape_form.cpp:176 shape_form.cpp:206
 msgid "Radius und Höhe"
 msgstr "Radius and height"
 
@@ -2022,7 +2070,7 @@ msgstr "Delete region"
 msgid "Regionen"
 msgstr "Regions"
 
-#: fixture_form.cpp:184 shape_form.cpp:135
+#: fixture_form.cpp:184 shape_form.cpp:136
 msgid "Reihenfolge (schnellste zuerst)"
 msgstr "Order (fastest first)"
 
@@ -2033,6 +2081,10 @@ msgstr "Direction"
 #: node_info_texts.cpp:29
 msgid "Ring, der bei einem Treffer von der Mitte nach außen läuft und verblasst. „Age“ kommt vom Ausgang „Age“ eines Kick-Erkenners."
 msgstr "Ring that travels outward from the center on a hit and fades. \"Age\" comes from the \"Age\" output of a kick detector."
+
+#: shape_form.cpp:205
+msgid "Ringe"
+msgstr "Rings"
 
 #: test_panel.cpp:29
 msgid "Rot"
@@ -2070,7 +2122,7 @@ msgstr "Send"
 msgid "Senkrecht mittig ausrichten"
 msgstr "Center vertically"
 
-#: fixture_form.cpp:124 fixture_form.cpp:162 shape_form.cpp:72
+#: fixture_form.cpp:124 fixture_form.cpp:162 shape_form.cpp:73
 msgid "Serpentine"
 msgstr "Serpentine"
 
@@ -2081,6 +2133,10 @@ msgstr "Serpentine (run reverses at each end)"
 #: add_fixture_dialog.cpp:106
 msgid "Serpentine (jede zweite Zeile rückwärts)"
 msgstr "Serpentine (every second row backwards)"
+
+#: shape_form.cpp:191
+msgid "Serpentine (jeder zweite Ring rückwärts)"
+msgstr "Serpentine (every second ring backwards)"
 
 #: node_info_texts.cpp:87
 msgid "Sich ausbreitende Formen (Kreis, Quadrat, Raute) von einem Mittelpunkt aus, mit Abstand, Tempo und Ausblenden."
@@ -2102,7 +2158,7 @@ msgstr "This is how long the fade to this look takes. 0 = hard switch."
 msgid "Sonstige"
 msgstr "Other"
 
-#: fixture_form.cpp:123 fixture_form.cpp:134 shape_form.cpp:71
+#: fixture_form.cpp:123 fixture_form.cpp:134 shape_form.cpp:72
 msgid "Spalten"
 msgstr "Columns"
 
@@ -2118,7 +2174,7 @@ msgstr "Columns can be moved by dragging the header"
 msgid "Spannt einen Wert von 0 bis 1 über den ganzen Bereich des Parameters"
 msgstr "Stretches a value from 0 to 1 over the parameter's whole range"
 
-#: main_window_file.cpp:145 main_window_file.cpp:169
+#: main_window_file.cpp:142 main_window_file.cpp:166
 msgid "Speichern"
 msgstr "Save"
 
@@ -2130,6 +2186,10 @@ msgstr "Save &as …"
 msgid "Speichert den gewählten Controller unter seinem Namen in der Bibliothek (Benutzerverzeichnis), damit du ihn in anderen Projekten wieder holen kannst. Gespeichert in: %1"
 msgstr "Saves the selected controller under its name in the library (user folder) so you can fetch it again in other projects. Stored in: %1"
 
+#: fixture_library_page.cpp:118
+msgid "Speichert die gewählte Bauform in der Bibliothek (Benutzerverzeichnis), damit du sie in anderen Shows wieder holen kannst. Gespeichert in: %1"
+msgstr "Saves the selected fixture type in the library (user folder) so you can fetch it again in other shows. Stored in: %1"
+
 #: node_info_texts.cpp:19
 msgid "Spektrum (32 Bänder) des Audio-Eingangs. Wird an „Spectrum Bars“ angeschlossen."
 msgstr "Spectrum (32 bands) of the audio input. Connect it to \"Spectrum Bars\"."
@@ -2137,6 +2197,14 @@ msgstr "Spectrum (32 bands) of the audio input. Connect it to \"Spectrum Bars\".
 #: node_info_texts.cpp:55
 msgid "Spiegelt das Bild an einer Linie in x, y und/oder z. Mit „Use other half“ ist die andere Hälfte die Vorlage."
 msgstr "Mirrors the image along a line in x, y and/or z. With \"Use other half\" the other half is the template."
+
+#: fixture_library_page.cpp:103
+msgid "Spirale (Säule)"
+msgstr "Spiral (pillar)"
+
+#: fixture_library_page.cpp:60
+msgid "Spirale 60"
+msgstr "Spiral 60"
 
 #: main_window_language.cpp:46
 msgid "Sprache"
@@ -2150,7 +2218,7 @@ msgstr "Stage Config"
 msgid "Standardgerät des Systems"
 msgstr "System default device"
 
-#: cue_panel.cpp:67 cue_panel.cpp:144 main_window.cpp:302
+#: cue_panel.cpp:67 cue_panel.cpp:145 main_window.cpp:302
 msgid "Start"
 msgstr "Start"
 
@@ -2162,11 +2230,11 @@ msgstr "Instead of the time saved with the look"
 msgid "Sternenhimmel: Funkelnde Sterne mit einstellbarer Dichte, Größe und Funkeltempo, auf Wunsch langsam abwärts driftend."
 msgstr "Starfield: twinkling stars with adjustable density, size and twinkle speed, optionally drifting down."
 
-#: cue_panel.cpp:144
+#: cue_panel.cpp:145
 msgid "Stopp"
 msgstr "Stop"
 
-#: main_window_actions.cpp:84
+#: main_window_actions.cpp:85
 msgid "Strenge &Eingänge"
 msgstr "Strict &inputs"
 
@@ -2174,7 +2242,7 @@ msgstr "Strict &inputs"
 msgid "Strenge Eingänge"
 msgstr "Strict inputs"
 
-#: fixture_library_page.cpp:95 layout_panel_add.cpp:37 layout_panel_add.cpp:119
+#: fixture_library_page.cpp:102 layout_panel_add.cpp:37 layout_panel_add.cpp:119
 msgid "Strip"
 msgstr "Strip"
 
@@ -2186,13 +2254,13 @@ msgstr "Strip (line)"
 msgid "Strip 30"
 msgstr "Strip 30"
 
-#: fixture_library_page.cpp:96
-msgid "Säule"
-msgstr "Column"
+#: fixture_library_page.cpp:103
+msgid "Säule (Ringe)"
+msgstr "Pillar (rings)"
 
-#: fixture_library_page.cpp:60
-msgid "Säule 60"
-msgstr "Column 60"
+#: fixture_library_page.cpp:64
+msgid "Säule 12x20"
+msgstr "Pillar 12x20"
 
 #: main_window_controls.cpp:79
 msgid "TESTMODUS: %1"
@@ -2202,7 +2270,7 @@ msgstr "TEST MODE: %1"
 msgid "Taktgeber: Liefert im eingestellten Tempo (BPM) Impulse, Phase und Zähler. Läuft ohne Audio."
 msgstr "Clock: outputs ticks, phase and a counter at the set tempo (BPM). Runs without audio."
 
-#: cue_dialog.cpp:49
+#: cue_dialog.cpp:56
 msgid "Taste"
 msgstr "Key"
 
@@ -2210,11 +2278,11 @@ msgstr "Key"
 msgid "Taste %1"
 msgstr "Key %1"
 
-#: cue_dialog.cpp:60
+#: cue_dialog.cpp:67
 msgid "Taste drücken, die den Cue auslösen soll"
 msgstr "Press the key that should fire the cue"
 
-#: cue_dialog.cpp:62
+#: cue_dialog.cpp:69
 msgid "Tasten-Auslöser: Taste"
 msgstr "Key trigger: key"
 
@@ -2242,7 +2310,7 @@ msgstr "Test pattern"
 msgid "Testbild für den Aufbau: x wird rot, y grün, z blau. So sieht man, welche Seite wo liegt und ob Verkabelung und Startecke stimmen."
 msgstr "Test image for the setup: x becomes red, y green, z blue, so you can see which side is where and whether cabling and start corner are right."
 
-#: main_window_stage.cpp:58
+#: main_window_stage.cpp:59
 msgid "Testbilder auf die LEDs schicken, um Verkabelung und Patch zu prüfen"
 msgstr "Send test patterns to the LEDs to check wiring and patch"
 
@@ -2358,7 +2426,7 @@ msgstr "WAV files (*.wav)"
 msgid "Waagrecht mittig ausrichten"
 msgstr "Center horizontally"
 
-#: cue_dialog.cpp:55
+#: cue_dialog.cpp:62
 msgid "Wartezeit nach dem Ende der vorigen Überblendung"
 msgstr "Wait after the previous crossfade has finished"
 
@@ -2394,11 +2462,11 @@ msgstr "WhiteHoleFX"
 msgid "WhiteHoleFX – %1%2"
 msgstr "WhiteHoleFX – %1%2"
 
-#: main_window_file.cpp:159
+#: main_window_file.cpp:156
 msgid "WhiteHoleFX-Projekte (*.whfx)"
 msgstr "WhiteHoleFX projects (*.whfx)"
 
-#: main_window_file.cpp:119
+#: main_window_file.cpp:116
 msgid "WhiteHoleFX-Projekte (*.whfx);;Alle Dateien (*)"
 msgstr "WhiteHoleFX projects (*.whfx);;All files (*)"
 
@@ -2406,7 +2474,7 @@ msgstr "WhiteHoleFX projects (*.whfx);;All files (*)"
 msgid "Wie in der 2D-Ansicht; graue Punkte der vorderen Schicht verdecken LEDs dahinter"
 msgstr "As in the 2D view; gray dots of the front layer hide LEDs behind them"
 
-#: shape_form.cpp:168
+#: shape_form.cpp:169
 msgid "Wie oft die Spirale um die Säule läuft (0 = gerade nach oben)"
 msgstr "How often the spiral winds around the column (0 = straight up)"
 
@@ -2414,11 +2482,15 @@ msgstr "How often the spiral winds around the column (0 = straight up)"
 msgid "Wiederholt das Bild als Kacheln (Tiles X/Y/Z), auf Wunsch jede zweite gespiegelt."
 msgstr "Repeats the image as tiles (Tiles X/Y/Z), optionally mirroring every other tile."
 
-#: shape_form.cpp:176
+#: shape_form.cpp:177
 msgid "Windungen"
 msgstr "Turns"
 
-#: shape_form.cpp:147
+#: shape_form.cpp:194
+msgid "Winkel der ersten LED im untersten Ring: 0 = +x"
+msgstr "Angle of the first LED in the bottom ring: 0 = +x"
+
+#: shape_form.cpp:148
 msgid "Winkel der ersten LED: 0 = rechts, 90 = oben"
 msgstr "Angle of the first LED: 0 = right, 90 = up"
 
@@ -2437,6 +2509,10 @@ msgstr "Select fixtures in the list first."
 #: layout_panel_library.cpp:83
 msgid "Wähle zuerst ein Fixture in der Liste."
 msgstr "Select a fixture in the list first."
+
+#: fixture_library_user.cpp:93
+msgid "Wähle zuerst eine Bauform in der Liste „Fixtures“."
+msgstr "Select a fixture type in the “Fixtures” list first."
 
 #: output_form_library.cpp:62 output_form_library.cpp:104
 msgid "Wähle zuerst einen Controller in der Tabelle."
@@ -2470,7 +2546,7 @@ msgstr "Draws only the edges of the image (outline) in a chosen color."
 msgid "Zeigt das Bild nur in einem Ausschnitt (links, oben, Breite, Höhe, Tiefe) und füllt den Rest mit Transparent."
 msgstr "Shows the image only in a section (left, top, width, height, depth); the rest becomes transparent."
 
-#: fixture_form.cpp:123 fixture_form.cpp:134 shape_form.cpp:71
+#: fixture_form.cpp:123 fixture_form.cpp:134 shape_form.cpp:72
 msgid "Zeilen"
 msgstr "Rows"
 
@@ -2478,11 +2554,11 @@ msgstr "Rows"
 msgid "Zeilen (waagrecht)"
 msgstr "Rows (horizontal)"
 
-#: cue_dialog.cpp:49
+#: cue_dialog.cpp:56
 msgid "Zeit"
 msgstr "Time"
 
-#: cue_dialog.cpp:56
+#: cue_dialog.cpp:63
 msgid "Zeit-Auslöser: Wartezeit"
 msgstr "Time trigger: wait"
 
@@ -2506,7 +2582,7 @@ msgstr "Destination no."
 msgid "Ziel zuweisen"
 msgstr "Assign target"
 
-#: main_window_stage.cpp:53
+#: main_window_stage.cpp:54
 msgid "Ziele (Controller) und Patch: welches Fixture auf welches Universe sendet"
 msgstr "Destinations (controllers) and patch: which fixture sends to which universe"
 
@@ -2518,7 +2594,7 @@ msgstr "Zooms the image around the center: a factor above 1 enlarges, below 1 sh
 msgid "Zu Favoriten hinzufügen"
 msgstr "Add to favorites"
 
-#: add_fixture_dialog.cpp:111 fixture_form.cpp:137 shape_form.cpp:86
+#: add_fixture_dialog.cpp:111 fixture_form.cpp:137 shape_form.cpp:87
 msgid "Zuerst entlang"
 msgstr "First along"
 
@@ -2582,27 +2658,27 @@ msgstr "a short trigger, e.g. a beat or hit"
 msgid "eine einzelne Farbe"
 msgstr "a single colour"
 
-#: shape_form.cpp:145 shape_form.cpp:166
+#: shape_form.cpp:146 shape_form.cpp:167 shape_form.cpp:189
 msgid "im Uhrzeigersinn"
 msgstr "clockwise"
 
-#: add_fixture_dialog.cpp:143 fixture_form.cpp:165 shape_form.cpp:116
+#: add_fixture_dialog.cpp:143 fixture_form.cpp:165 shape_form.cpp:117
 msgid "oben (y max)"
 msgstr "top (y max)"
 
-#: add_fixture_dialog.cpp:104 fixture_form.cpp:121 shape_form.cpp:69
+#: add_fixture_dialog.cpp:104 fixture_form.cpp:121 shape_form.cpp:70
 msgid "oben links"
 msgstr "top left"
 
-#: add_fixture_dialog.cpp:104 fixture_form.cpp:121 shape_form.cpp:69
+#: add_fixture_dialog.cpp:104 fixture_form.cpp:121 shape_form.cpp:70
 msgid "oben rechts"
 msgstr "top right"
 
-#: add_fixture_dialog.cpp:142 fixture_form.cpp:164 shape_form.cpp:115
+#: add_fixture_dialog.cpp:142 fixture_form.cpp:164 shape_form.cpp:116
 msgid "rechts (x max)"
 msgstr "right (x max)"
 
-#: cue_dialog.cpp:64 cue_panel.cpp:39 main_window_dmx.cpp:112
+#: cue_dialog.cpp:71 cue_panel.cpp:39 main_window_dmx.cpp:112
 msgid "sACN"
 msgstr "sACN"
 
@@ -2626,15 +2702,15 @@ msgstr "stretch (Stretch)"
 msgid "unbenannt"
 msgstr "untitled"
 
-#: add_fixture_dialog.cpp:104 fixture_form.cpp:121 shape_form.cpp:69
+#: add_fixture_dialog.cpp:104 fixture_form.cpp:121 shape_form.cpp:70
 msgid "unten links"
 msgstr "bottom left"
 
-#: add_fixture_dialog.cpp:104 fixture_form.cpp:121 shape_form.cpp:69
+#: add_fixture_dialog.cpp:104 fixture_form.cpp:121 shape_form.cpp:70
 msgid "unten rechts"
 msgstr "bottom right"
 
-#: add_fixture_dialog.cpp:144 fixture_form.cpp:166 shape_form.cpp:117
+#: add_fixture_dialog.cpp:144 fixture_form.cpp:166 shape_form.cpp:118
 msgid "vorn (z max)"
 msgstr "front (z max)"
 

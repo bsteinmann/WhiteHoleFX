@@ -10,6 +10,7 @@
 #include <QDropEvent>
 #include <QGuiApplication>
 #include <QMimeData>
+#include <QTimer>
 
 #include "node_editor.hpp"
 #include "node_palette.hpp"
@@ -57,6 +58,11 @@ void NodeEditor::dropEvent(QDropEvent* event) {
         return;
     }
     event->acceptProposedAction();
+    // Der Drag läuft unter Windows in einer eigenen Schleife des Systems; danach das Bild sicher neu zeichnen lassen.
+    QTimer::singleShot(0, this, [this]() {
+        scene_.update();
+        viewport()->update();
+    });
 }
 
 bool NodeEditor::handleNodeDrop(const QMimeData* mime, const QPoint& viewportPos) {

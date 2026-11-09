@@ -64,6 +64,8 @@ Cue parseCue(Reader& r) {
         }
         if (key == "name") {
             cue.name = r.word("Name");
+        } else if (key == "note") {
+            cue.note = r.word("Notiz");
         } else if (key == "look") {
             cue.look = r.word("Lookname");
         } else if (key == "trigger") {
@@ -89,6 +91,9 @@ void writeCue(std::ostream& out, const Cue& cue) {
     out << "cue";
     if (!cue.name.empty()) {
         out << " name " << quoteWord(cue.name);
+    }
+    if (!cue.note.empty()) {
+        out << " note " << quoteWord(cue.note);
     }
     if (!cue.look.empty()) {
         out << " look " << quoteWord(cue.look);

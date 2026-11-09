@@ -141,7 +141,9 @@ void MainWindow::leaveLive() {
 }
 
 void MainWindow::hideEditDocks() {
-    fileBar_->hide();
+    for (QAction* action : liveLockedActions_) {
+        action->setEnabled(false);
+    }
     runShortcut_ = runAction_->shortcut();
     runAction_->setShortcut(QKeySequence{});  // Leertaste ist im Live-Modus GO, nicht Start/Stopp
     hiddenByLive_.clear();
@@ -157,7 +159,9 @@ void MainWindow::hideEditDocks() {
 }
 
 void MainWindow::showEditDocks() {
-    fileBar_->show();
+    for (QAction* action : liveLockedActions_) {
+        action->setEnabled(true);
+    }
     stageMenu_->setEnabled(true);
     if (!runShortcut_.isEmpty()) {
         runAction_->setShortcut(runShortcut_);
@@ -208,8 +212,8 @@ QString MainWindow::exerciseLive() {
     if (!enterLive(0) || !player_->liveActive() || !liveDock_->isVisible() || editorDock_->isVisible()) {
         return tr("Live: Wechsel in den Live-Modus scheitert");
     }
-    if (fileBar_->isVisible() || !runAction_->shortcut().isEmpty() || undoAction_->isEnabled()) {
-        return tr("Live: Datei-Leiste, Leertaste oder Rückgängig sind im Live-Modus nicht gesperrt");
+    if (newAction_->isEnabled() || openAction_->isEnabled() || !runAction_->shortcut().isEmpty() || undoAction_->isEnabled()) {
+        return tr("Live: Neu/Öffnen, Leertaste oder Rückgängig sind im Live-Modus nicht gesperrt");
     }
     for (int i = 0; i < 3; ++i) {
         tick();
@@ -247,8 +251,8 @@ QString MainWindow::exerciseLive() {
     if (player_->liveActive() || liveDock_->isVisible()) {
         return tr("Live: Zurück zum Editor scheitert");
     }
-    if (!fileBar_->isVisible() || runAction_->shortcut().isEmpty() || !editorDock_->isVisible()) {
-        return tr("Live: Datei-Leiste, Leertaste oder Editor kommen nach dem Live-Modus nicht zurück");
+    if (!newAction_->isEnabled() || !openAction_->isEnabled() || runAction_->shortcut().isEmpty() || !editorDock_->isVisible()) {
+        return tr("Live: Neu/Öffnen, Leertaste oder Editor kommen nach dem Live-Modus nicht zurück");
     }
     if (!lookPanel_->removeLook(0) || lookPanel_->lookCount() != 1) {
         return tr("Live: Look löschen scheitert");

@@ -32,7 +32,7 @@ struct FixtureDraft {
 /// hinter dem Schlüsselwort).
 FixtureDraft beginFixture(Reader& r, bool isType = false);
 
-/// Eine Anweisung im Block (matrix, strip, grid, ring, helix, point, patch). Unbekannt: Fehler im Reader.
+/// Eine Anweisung im Block (matrix, strip, grid, ring, helix, cylinder, point, patch). Unbekannt: Fehler im Reader.
 void fixtureStatement(const std::string& keyword, Reader& r, FixtureDraft& draft);
 
 /// `end`: legt das Fixture im Layout an und übernimmt die Patches.
