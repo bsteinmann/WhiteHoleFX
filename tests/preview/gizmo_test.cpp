@@ -90,3 +90,36 @@ TEST_CASE("Gizmo: bei sehr kleinem Bild verkürzt sich der Pfeil, statt zu versc
     REQUIRE(gizmo.has_value());
     CHECK(gizmoAxisPixels(*gizmo, 0) > 0.0F);
 }
+
+// ---- Drehringe ----
+
+TEST_CASE("Gizmo: Ringe sind Kreise um die Achsen und von der richtigen Seite greifbar", "[preview][gizmo]") {
+    // Von vorn: Ring um z ist ein Kreis (sichtbar), Ringe um x und y sind Kanten (nicht greifbar).
+    const GizmoGeometry g = gizmoIn(ViewPreset::Front, {2.0F, 3.0F, 0.0F});
+    REQUIRE(g.ringVisible[2]);
+    const float radius = kGizmoLengthPixels * kGizmoRingRadius;
+    CHECK(gizmoRingMinorPixels(g, 2) == Approx(radius).margin(radius * 0.05F));
+    CHECK(gizmoRingMinorPixels(g, 0) < kGizmoRingMinMinorPixels);
+    CHECK(gizmoRingMinorPixels(g, 1) < kGizmoRingMinMinorPixels);
+    // Punkt auf dem Kreis (rechts der Mitte) trifft den z-Ring, die Mitte und weit außen nichts.
+    CHECK(pickGizmoRing(g, g.originX + radius, g.originY) == std::optional<int>{2});
+    CHECK_FALSE(pickGizmoRing(g, g.originX, g.originY).has_value());
+    CHECK_FALSE(pickGizmoRing(g, g.originX + radius * 2.0F, g.originY).has_value());
+}
+
+TEST_CASE("Gizmo: Ringwinkel läuft im Rechtssinn um die Achse", "[preview][gizmo]") {
+    const GizmoGeometry g = gizmoIn(ViewPreset::Front, {0.0F, 0.0F, 0.0F});
+    const float radius = kGizmoLengthPixels * kGizmoRingRadius;
+    // z-Ring: 0° liegt auf x (rechts), 90° auf y (im Bild oben, Zeile 0 oben, also kleineres y).
+    CHECK(gizmoRingAngle(g, 2, g.originX + radius, g.originY) == Approx(0.0F).margin(2.0F));
+    CHECK(gizmoRingAngle(g, 2, g.originX, g.originY - radius) == Approx(90.0F).margin(2.0F));
+    CHECK(gizmoRingAngle(g, 2, g.originX - radius, g.originY) == Approx(180.0F).margin(2.0F));
+    CHECK(gizmoRingAngle(g, 2, g.originX, g.originY + radius) == Approx(270.0F).margin(2.0F));
+}
+
+TEST_CASE("Gizmo: Winkelunterschied geht kurz über die Nullgrenze", "[preview][gizmo]") {
+    CHECK(angleDelta(350.0F, 10.0F) == Approx(20.0F));
+    CHECK(angleDelta(10.0F, 350.0F) == Approx(-20.0F));
+    CHECK(angleDelta(0.0F, 90.0F) == Approx(90.0F));
+    CHECK(angleDelta(0.0F, 180.0F) == Approx(180.0F));
+}

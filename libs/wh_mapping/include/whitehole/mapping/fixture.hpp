@@ -151,4 +151,10 @@ struct Box {
 /// Dreht `point` um die Achsen x, y, z (Grad, in dieser Reihenfolge) um `center`.
 [[nodiscard]] Vec3 rotateAround(const Vec3& point, const Vec3& center, const Vec3& degrees) noexcept;
 
+/// Die Drehung (x, y, z in Grad, wie Fixture::rotation) eines Fixtures, nachdem es zusätzlich um die feste Weltachse
+/// `axis` (0 x, 1 y, 2 z) um `turnDegrees` gedreht wurde. Das ist, was ein Drehring in der Bühnenansicht tut: Die Lage
+/// im Raum ändert sich genau um diese Weltdrehung, auch wenn x, y und z schon belegt sind (die Winkel dürfen sich
+/// dabei ändern). Ergebnis in (-180, 180].
+[[nodiscard]] Vec3 rotationAfterWorldTurn(const Vec3& degrees, int axis, float turnDegrees) noexcept;
+
 }  // namespace whitehole::mapping

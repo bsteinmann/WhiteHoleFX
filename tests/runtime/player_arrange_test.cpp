@@ -68,6 +68,27 @@ TEST_CASE("Anordnen: mehrere Fixtures verschieben ist ein Undo-Schritt", "[playe
     CHECK(rig.origin(1) == Vec3{10.0F, 3.0F, 0.0F});
 }
 
+TEST_CASE("Anordnen: Drehen um eine Weltachse, mehrere Schritte verschmelzen zu einem Undo", "[player][arrange]") {
+    Rig rig;
+    const Vec3 start0 = rig.player.project()->layout.fixtures().at(0).rotation;
+    REQUIRE(rig.player.rotateFixtures({rig.id(0), rig.id(1)}, Player::Axis::Z, 10.0F).ok());
+    REQUIRE(rig.player.rotateFixtures({rig.id(0), rig.id(1)}, Player::Axis::Z, 5.0F).ok());
+    const Vec3 turned = rig.player.project()->layout.fixtures().at(0).rotation;
+    CHECK(turned.x == Approx(start0.x).margin(1e-3));
+    CHECK(turned.z == Approx(start0.z + 15.0F).margin(1e-3));
+    CHECK(rig.player.project()->layout.fixtures().at(2).rotation == Vec3{});  // nicht gewählt
+    REQUIRE(rig.player.undo().ok());
+    CHECK(rig.player.project()->layout.fixtures().at(0).rotation == start0);
+}
+
+TEST_CASE("Anordnen: Drehen meldet Fehler und ändert dann nichts", "[player][arrange]") {
+    Rig rig;
+    CHECK_FALSE(rig.player.rotateFixtures({}, Player::Axis::X, 5.0F).ok());
+    CHECK_FALSE(rig.player.rotateFixtures({rig.id(0)}, Player::Axis::X, std::numeric_limits<float>::infinity()).ok());
+    CHECK(rig.player.rotateFixtures({mapping::FixtureId{99}}, Player::Axis::X, 5.0F).error().code == ErrorCode::NotFound);
+    CHECK_FALSE(rig.player.canUndo());
+}
+
 TEST_CASE("Anordnen: Fehler lassen alles unverändert", "[player][arrange]") {
     Rig rig;
     CHECK(rig.player.moveFixtures({mapping::FixtureId{99}}, Vec3{1.0F, 0.0F, 0.0F}).error().code == ErrorCode::NotFound);

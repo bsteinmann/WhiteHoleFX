@@ -12,6 +12,7 @@
 // PreviewWidget, das Drehen, Verschieben und Zoomen schon kann.
 #pragma once
 
+#include <QColor>
 #include <QElapsedTimer>
 #include <QImage>
 #include <QPointF>
@@ -36,6 +37,9 @@ class QPainter;
 namespace whitehole::studio {
 
 class PreviewWidget;
+
+/// Farbe der Achse im Griff (0 x rot, 1 y grün, 2 z blau); `bright` beim Überfahren und Ziehen.
+[[nodiscard]] QColor gizmoAxisColor(int axis, bool bright);
 
 class StageView : public QWidget {
     Q_OBJECT
@@ -98,7 +102,14 @@ private:
     void gizmoRelease();
     void gizmoHover(QPointF position);
     [[nodiscard]] std::optional<int> gizmoAxisAt(QPointF position) const;
+    // Drehringe (stage_view_rings.cpp), Teil des Achsen-Griffs
+    void paintRings(QPainter& painter) const;
+    bool ringGrab(QPointF position);
+    void ringDrag(QPointF position, Qt::KeyboardModifiers modifiers);
+    [[nodiscard]] std::optional<int> ringAt(QPointF position) const;
+    [[nodiscard]] QPointF imageScale() const;  // Bildpunkte je Widgetpunkt (x, y)
     QString exerciseGizmo();
+    QString exerciseRings();  // Teil von exerciseGizmo (stage_view_rings.cpp)
 
     runtime::Player& player_;
     PreviewWidget* view_;
@@ -117,6 +128,11 @@ private:
     QPointF gizmoLast_;
     float gizmoRaw_{0.0F};                         // bisher gezogene Strecke ohne Einrasten (Welteinheiten)
     float gizmoApplied_{0.0F};                     // davon schon verschoben (eingerastet)
+    int ringActive_{-1};                           // gerade gedrehter Ring (Achse), sonst -1
+    int ringHover_{-1};                            // Ring unter der Maus, sonst -1
+    float ringLast_{0.0F};                         // letzter Ringwinkel unter der Maus (Grad)
+    float ringRaw_{0.0F};                          // bisher gedreht ohne Einrasten (Grad)
+    float ringApplied_{0.0F};                      // davon schon angewendet (eingerastet)
     bool showWiring_{true};
     bool testPreview_{false};
     bool drewTestPattern_{false};

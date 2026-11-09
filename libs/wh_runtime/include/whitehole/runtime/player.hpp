@@ -238,6 +238,11 @@ public:
     enum class Align : std::uint8_t { Left, HCenter, Right, Top, VCenter, Bottom };
     /// Achse zum Aneinanderreihen.
     enum class Axis : std::uint8_t { X, Y, Z };
+    /// Dreht mehrere Fixtures um dieselbe feste Weltachse, jedes um die eigene Mitte (ein Undo-Schritt, aufeinander
+    /// folgende Drehungen derselben Fixtures verschmelzen wie beim Ziehen). Die Winkel x, y, z der Fixtures dürfen
+    /// sich dabei ändern (siehe mapping::rotationAfterWorldTurn). Fehler: NotFound (unbekannte Id), InvalidArgument
+    /// (Liste leer, Winkel nicht endlich).
+    Result<void> rotateFixtures(const std::vector<mapping::FixtureId>& ids, Axis axis, float degrees);
     /// Richtet die Fixtures aus (ein Undo-Schritt). Fehler: NotFound (unbekannte Id), InvalidArgument
     /// (Liste leer).
     Result<void> alignFixtures(const std::vector<mapping::FixtureId>& ids, Align mode);

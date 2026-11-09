@@ -21,6 +21,37 @@ Vec3 center(const Box& box) noexcept {
 
 }  // namespace
 
+Vec3 rotationAfterWorldTurn(const Vec3& degrees, int axis, float turnDegrees) noexcept {
+    // Die Drehung ist R = Rz(z) * Ry(y) * Rx(x). Neue Lage: R' = Rturn * R. Wir drehen dazu die drei Spalten von R
+    // (Bilder der Einheitsvektoren) mit rotateAround und lesen die Winkel aus R' zurück.
+    const Vec3 zero{0.0F, 0.0F, 0.0F};
+    Vec3 turn{};
+    (axis == 0 ? turn.x : axis == 1 ? turn.y : turn.z) = turnDegrees;
+    const Vec3 c0 = rotateAround(rotateAround(Vec3{1.0F, 0.0F, 0.0F}, zero, degrees), zero, turn);
+    const Vec3 c1 = rotateAround(rotateAround(Vec3{0.0F, 1.0F, 0.0F}, zero, degrees), zero, turn);
+    const Vec3 c2 = rotateAround(rotateAround(Vec3{0.0F, 0.0F, 1.0F}, zero, degrees), zero, turn);
+    // R'(Zeile, Spalte): Spalte j ist c_j. Aus R = Rz*Ry*Rx folgt: R20 = -sin(y), R21 = cos(y)*sin(x), R22 = cos(y)*cos(x),
+    // R10 = sin(z)*cos(y), R00 = cos(z)*cos(y).
+    const float r20 = std::clamp(c0.z, -1.0F, 1.0F);
+    float x = 0.0F;
+    float y = std::asin(-r20);
+    float z = 0.0F;
+    if (std::abs(r20) < 0.99999F) {
+        x = std::atan2(c1.z, c2.z);
+        z = std::atan2(c0.y, c0.x);
+    } else {  // Kardan-Sperre (y = ±90°): z ist nicht eindeutig, wir setzen z = 0
+        x = std::atan2(-c2.y, c1.y);
+    }
+    const auto toDegrees = [](float radians) {
+        float d = radians * (180.0F / 3.14159265358979F);
+        if (std::abs(d) < 1e-4F) {
+            d = 0.0F;
+        }
+        return d <= -180.0F ? d + 360.0F : d;
+    };
+    return Vec3{toDegrees(x), toDegrees(y), toDegrees(z)};
+}
+
 Vec3 rotateAround(const Vec3& point, const Vec3& c, const Vec3& degrees) noexcept {
     float x = point.x - c.x;
     float y = point.y - c.y;

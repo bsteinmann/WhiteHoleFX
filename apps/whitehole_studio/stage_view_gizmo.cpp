@@ -22,17 +22,19 @@ namespace {
 
 constexpr float kSnapStep = 0.1F;  // Einrasten beim Ziehen (Alt gedrückt: aus)
 
-QColor axisColor(int axis, bool bright) {
+}  // namespace
+
+QColor gizmoAxisColor(int axis, bool bright) {
     const QColor base = axis == 0 ? QColor{235, 70, 70} : axis == 1 ? QColor{80, 215, 90} : QColor{80, 140, 255};
     return bright ? base.lighter(140) : base;
 }
-
-}  // namespace
 
 void StageView::setGizmoEnabled(bool on) {
     gizmoEnabled_ = on;
     gizmoActive_ = -1;
     gizmoHover_ = -1;
+    ringActive_ = -1;
+    ringHover_ = -1;
     updateGizmo();
     view_->update();
 }
@@ -52,7 +54,11 @@ void StageView::updateGizmo() {
     // In kleinen Bildern kürzer, damit die Pfeile nicht das ganze Bild füllen (und greifbar bleiben).
     const float shortSide = static_cast<float>(std::min(imageOptions_.width, imageOptions_.height));
     const float length = std::clamp(shortSide * 0.3F, preview::kGizmoMinPixels * 1.5F, preview::kGizmoLengthPixels);
-    gizmo_ = preview::gizmoFor(projector, fixture->origin, length);
+    // Der Griff sitzt im Drehpunkt (Mitte der Box des Fixtures), damit Pfeile und Ringe um denselben Punkt liegen.
+    const mapping::Box local = mapping::localBox(fixture->shape);
+    const Vec3 pivot{fixture->origin.x + (local.min.x + local.max.x) * 0.5F, fixture->origin.y + (local.min.y + local.max.y) * 0.5F,
+                     fixture->origin.z + (local.min.z + local.max.z) * 0.5F};
+    gizmo_ = preview::gizmoFor(projector, pivot, length);
 }
 
 std::optional<int> StageView::gizmoAxisAt(QPointF position) const {
@@ -77,7 +83,7 @@ std::optional<std::pair<QPointF, QPointF>> StageView::gizmoAxisInWidget(int axis
 bool StageView::gizmoGrab(QPointF position) {
     const std::optional<int> axis = gizmoAxisAt(position);
     if (!axis) {
-        return false;
+        return ringGrab(position);
     }
     gizmoActive_ = *axis;
     gizmoHover_ = *axis;
@@ -90,6 +96,10 @@ bool StageView::gizmoGrab(QPointF position) {
 }
 
 void StageView::gizmoDrag(QPointF position, Qt::KeyboardModifiers modifiers) {
+    if (ringActive_ >= 0) {
+        ringDrag(position, modifiers);
+        return;
+    }
     if (gizmoActive_ < 0 || !gizmo_ || view_->width() <= 0 || view_->height() <= 0) {
         return;
     }
@@ -117,17 +127,20 @@ void StageView::gizmoDrag(QPointF position, Qt::KeyboardModifiers modifiers) {
 
 void StageView::gizmoRelease() {
     gizmoActive_ = -1;
+    ringActive_ = -1;
     view_->setCursor(Qt::ArrowCursor);
     view_->update();
 }
 
 void StageView::gizmoHover(QPointF position) {
     const int axis = gizmoAxisAt(position).value_or(-1);
-    if (axis == gizmoHover_) {
+    const int ring = axis >= 0 ? -1 : ringAt(position).value_or(-1);
+    if (axis == gizmoHover_ && ring == ringHover_) {
         return;
     }
     gizmoHover_ = axis;
-    view_->setCursor(axis >= 0 ? Qt::OpenHandCursor : Qt::ArrowCursor);
+    ringHover_ = ring;
+    view_->setCursor(axis >= 0 || ring >= 0 ? Qt::OpenHandCursor : Qt::ArrowCursor);
     view_->update();
 }
 
@@ -139,12 +152,13 @@ void StageView::paintGizmo(QPainter& painter) const {
     const double sy = static_cast<double>(view_->height()) / imageOptions_.height;
     const QPointF origin{gizmo_->originX * sx, gizmo_->originY * sy};
     painter.setRenderHint(QPainter::Antialiasing, true);
+    paintRings(painter);  // unter den Pfeilen
     for (int axis = 0; axis < 3; ++axis) {
         const auto i = static_cast<std::size_t>(axis);
         const QPointF tip{gizmo_->tipX[i] * sx, gizmo_->tipY[i] * sy};
         const bool grabbable = preview::gizmoAxisPixels(*gizmo_, axis) >= preview::kGizmoMinPixels;
         const bool bright = axis == gizmoHover_ || axis == gizmoActive_;
-        QColor color = axisColor(axis, bright);
+        QColor color = gizmoAxisColor(axis, bright);
         if (!grabbable) {
             color.setAlpha(90);  // zeigt zur Kamera: nur angedeutet, nicht greifbar
         }
@@ -214,6 +228,9 @@ QString StageView::exerciseGizmo() {
     // Zurück an die alte Stelle (der Test soll das Projekt nicht verändern)
     if (!player_.moveFixtures({id}, Vec3{before.x - after.x, 0.0F, 0.0F}).ok()) {
         return QStringLiteral("Bühnenansicht: Zurückschieben nach dem Griff-Test schlug fehl");
+    }
+    if (const QString ringProblem = exerciseRings(); !ringProblem.isEmpty()) {
+        return ringProblem;
     }
     setSelection({});
     renderNow();

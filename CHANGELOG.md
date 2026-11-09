@@ -1,5 +1,9 @@
 # Änderungen
 
+## 0.66.0
+
+- **Drehringe am Achsen-Griff.** In der 3D-Bühnenansicht liegen um das gewählte Fixture drei Ringe (x rot, y grün, z blau). Ziehen an einem Ring dreht alle gewählten Fixtures um die feste Weltachse, jedes um die eigene Mitte, in 5°-Schritten (Alt: frei). Von der Kante gesehene Ringe sind nur angedeutet. Der Griff sitzt jetzt im Drehpunkt (Mitte des Fixtures) statt am Ursprung. Rechnung getestet: `preview/gizmo.hpp` (Ringe, Treffer, Winkel), `mapping::rotationAfterWorldTurn` (neue Winkel x/y/z nach einer Weltdrehung), `Player::rotateFixtures` (ein Undo-Schritt).
+
 ## 0.65.0
 
 - **Update-Benachrichtigung.** Hilfe → **Auf Updates prüfen …** fragt bei GitHub nach dem neuesten Release und bietet die Seite zum Öffnen an. Beim ersten Start fragt das Programm einmal, ob es das beim Start selbst tun darf („Hilfe → Beim Start nach Updates suchen“ ändert die Wahl); ohne Zustimmung geht nie eine Anfrage hinaus. Gesendet werden nur Programmname und Version. Es wird nichts heruntergeladen oder installiert. Die Prüfung läuft im Hintergrund (Zeitgrenze 10 s); Links außerhalb von github.com, Entwürfe und Vorabversionen werden verworfen. Kern und Tests: `core/update_check.hpp`. Siehe docs/studio.md.

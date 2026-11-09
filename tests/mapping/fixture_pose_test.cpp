@@ -174,3 +174,36 @@ TEST_CASE("Säule (Röhre): Abstand und Prüfung", "[mapping][cylinder]") {
     c.rings = 4000000;
     CHECK_FALSE(validateShape(c).ok());  // zu viele LEDs
 }
+
+// ---- Drehung um eine feste Weltachse (Drehringe der Bühnenansicht) ----
+
+TEST_CASE("Weltdrehung: ohne Vorbelegung ändert sich nur der Winkel der Achse", "[mapping][pose]") {
+    const Vec3 x = rotationAfterWorldTurn({0.0F, 0.0F, 0.0F}, 0, 30.0F);
+    CHECK(x.x == Catch::Approx(30.0F).margin(1e-3));
+    CHECK(x.y == Catch::Approx(0.0F).margin(1e-3));
+    CHECK(x.z == Catch::Approx(0.0F).margin(1e-3));
+    const Vec3 z = rotationAfterWorldTurn({0.0F, 0.0F, 20.0F}, 2, 15.0F);
+    CHECK(z.z == Catch::Approx(35.0F).margin(1e-3));
+    CHECK(rotationAfterWorldTurn({0.0F, 0.0F, 0.0F}, 1, 190.0F).y != 190.0F);  // landet in (-180, 180]
+}
+
+TEST_CASE("Weltdrehung: die Lage im Raum ist genau um die Weltdrehung gedreht", "[mapping][pose]") {
+    const Vec3 zero{0.0F, 0.0F, 0.0F};
+    const Vec3 start[] = {{10.0F, 20.0F, 30.0F}, {-45.0F, 80.0F, 120.0F}, {170.0F, -30.0F, -100.0F}, {0.0F, 90.0F, 25.0F}};
+    for (const Vec3& before : start) {
+        for (int axis = 0; axis < 3; ++axis) {
+            for (const float turn : {5.0F, -17.0F, 90.0F}) {
+                const Vec3 after = rotationAfterWorldTurn(before, axis, turn);
+                Vec3 world{};
+                (axis == 0 ? world.x : axis == 1 ? world.y : world.z) = turn;
+                for (const Vec3& p : {Vec3{1.0F, 0.0F, 0.0F}, Vec3{0.0F, 1.0F, 0.0F}, Vec3{0.3F, -0.7F, 0.5F}}) {
+                    const Vec3 expected = rotateAround(rotateAround(p, zero, before), zero, world);
+                    const Vec3 got = rotateAround(p, zero, after);
+                    CHECK(got.x == Catch::Approx(expected.x).margin(1e-3));
+                    CHECK(got.y == Catch::Approx(expected.y).margin(1e-3));
+                    CHECK(got.z == Catch::Approx(expected.z).margin(1e-3));
+                }
+            }
+        }
+    }
+}

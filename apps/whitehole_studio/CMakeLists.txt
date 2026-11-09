@@ -119,6 +119,7 @@ add_executable(whitehole_studio
     stage_setup_window.cpp
     stage_view.cpp
     stage_view_gizmo.cpp
+    stage_view_rings.cpp
     stage_view.hpp
     stage_setup_window.hpp
     test_panel.cpp

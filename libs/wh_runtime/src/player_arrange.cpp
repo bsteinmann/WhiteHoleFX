@@ -82,6 +82,28 @@ Result<void> Player::moveFixtures(const std::vector<mapping::FixtureId>& ids, co
     });
 }
 
+Result<void> Player::rotateFixtures(const std::vector<mapping::FixtureId>& ids, Axis axis, float degrees) {
+    if (ids.empty()) {
+        return invalid("Keine Fixtures gewählt");
+    }
+    if (!std::isfinite(degrees)) {
+        return invalid("Der Winkel muss eine endliche Zahl sein");
+    }
+    return editProject("frotates", [&](project::Project& p) -> Result<void> {
+        for (const mapping::FixtureId id : ids) {
+            const mapping::Fixture* fixture = p.layout.find(id);
+            if (fixture == nullptr) {
+                return Error{ErrorCode::NotFound, "Fixture unbekannt"};
+            }
+            const Vec3 turned = mapping::rotationAfterWorldTurn(fixture->rotation, static_cast<int>(axis), degrees);
+            if (const Result<void> r = p.layout.rotate(id, turned); !r.ok()) {
+                return r;
+            }
+        }
+        return {};
+    });
+}
+
 Result<void> Player::alignFixtures(const std::vector<mapping::FixtureId>& ids, Align mode) {
     if (ids.empty()) {
         return invalid("Keine Fixtures gewählt");
