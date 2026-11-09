@@ -2,6 +2,7 @@
 //
 // Warum es diese Datei gibt: Der Test spielt Klicks, Ziehen und Tasten durch, ohne dass jemand die
 // Maus bewegt. Er steht getrennt vom Controller, damit dessen Datei klein bleibt.
+#include <array>
 #include <cmath>
 
 #include "form_helpers.hpp"
@@ -160,6 +161,7 @@ QString PreviewController::exercise() {
             .arg(grid.horizontal.size());
     }
     panel_->setGrid(true, true, 1.0F);
+    panel_->setFixtureSnap(false);  // dieser Teil prüft nur das Raster
     const QPointF grab = toQRect(preview::toPixels(lastFrame_, preview::worldBox(*player_.project()->layout.find(id)))).center();
     onPressed(grab, Qt::NoModifier);
     onDragged(grab + QPointF{13.0, 7.0});
@@ -171,6 +173,47 @@ QString PreviewController::exercise() {
             .arg(static_cast<double>(snapped.min.x))
             .arg(static_cast<double>(snapped.min.y))
             .arg(1.0);
+    }
+
+    // 7. Einrasten an anderen Fixtures: Kante/Mitte landet genau auf einer Linie des Nachbarn (braucht zwei Fixtures).
+    panel_->setFixtureSnap(true);
+    const mapping::Fixture* neighbour = nullptr;
+    for (const mapping::Fixture& other : player_.project()->layout.fixtures()) {
+        if (other.id != id) {
+            neighbour = &other;
+            break;
+        }
+    }
+    if (neighbour == nullptr) {
+        return {};
+    }
+    if (const QString note = render(); !note.isEmpty()) {
+        return note;
+    }
+    const mapping::Box neighbourBox = preview::worldBox(*neighbour);
+    const mapping::Box own = preview::worldBox(*player_.project()->layout.find(id));
+    const float scale = lastFrame_.scale > 0.0F ? lastFrame_.scale : 1.0F;
+    // Ziel: linke Kante 2 Bildpunkte neben der rechten Kante des Nachbarn
+    const float wantedX = neighbourBox.max.x + 2.0F / scale;
+    const QPointF start = toQRect(preview::toPixels(lastFrame_, own)).center();
+    const QPointF target = start + QPointF{static_cast<double>((wantedX - own.min.x) * scale), 0.0};
+    onPressed(start, Qt::NoModifier);
+    onDragged(start + (target - start) / 2.0);
+    onDragged(target);
+    const bool guideShown = !guides_.empty();
+    onReleased(target);
+    const mapping::Box placed = preview::worldBox(*player_.project()->layout.find(id));
+    const std::array<float, 3> mine{placed.min.x, (placed.min.x + placed.max.x) * 0.5F, placed.max.x};
+    const std::array<float, 3> theirs{neighbourBox.min.x, (neighbourBox.min.x + neighbourBox.max.x) * 0.5F, neighbourBox.max.x};
+    bool aligned = false;
+    for (const float a : mine) {
+        for (const float b : theirs) {
+            aligned = aligned || std::abs(a - b) < 1e-3F;
+        }
+    }
+    if (!aligned || !guideShown) {
+        return QStringLiteral("Vorschau: Einrasten an Fixtures: Kante liegt bei %1 (Nachbar %2 bis %3), Hilfslinie %4")
+            .arg(static_cast<double>(placed.min.x)).arg(static_cast<double>(neighbourBox.min.x)).arg(static_cast<double>(neighbourBox.max.x)).arg(guideShown);
     }
     return {};
 }

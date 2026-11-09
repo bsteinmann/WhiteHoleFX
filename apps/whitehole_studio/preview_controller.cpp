@@ -11,12 +11,14 @@
 
 #include "form_helpers.hpp"
 #include "layout_panel.hpp"
+#include "whitehole/preview/fixture_snap.hpp"
 #include "whitehole/preview/grid.hpp"
 
 namespace whitehole::studio {
 
 namespace {
 
+constexpr float kFixtureSnapPixels = 6.0F;  // so nah (in Bildpunkten) rastet eine Kante an einem anderen Fixture ein
 constexpr qreal kMinDragPixels = 3.0;     // darunter gilt eine Bewegung als Wackeln beim Klicken
 constexpr qreal kHandlePixels = 10.0;     // Reichweite der Eckgriffe des Bereichs
 constexpr qint64 kHoverMs = 60;           // höchstens so oft wird beim Überfahren nach einer LED gesucht
@@ -143,6 +145,14 @@ void PreviewController::refreshOverlay() {
             (line.major ? overlay.gridMajor : overlay.gridMinor).append(QLineF{0.0, line.pixel, w, line.pixel});
         }
     }
+    if (haveFrame_ && mode_ == Mode::MoveFixtures && !widget_->view3d()) {
+        for (const preview::SnapGuide& guide : guides_) {
+            const mapping::Box line = guide.vertical ? mapping::Box{{guide.position, guide.from, 0.0F}, {guide.position, guide.to, 0.0F}}
+                                                     : mapping::Box{{guide.from, guide.position, 0.0F}, {guide.to, guide.position, 0.0F}};
+            const QRectF r = toQRect(preview::toPixels(lastFrame_, line));
+            overlay.guides.append(guide.vertical ? QLineF{r.left(), r.top(), r.left(), r.bottom()} : QLineF{r.left(), r.top(), r.right(), r.top()});
+        }
+    }
     overlay.rubberBand = rubber_;
     widget_->setOverlay(overlay);
 }
@@ -195,6 +205,7 @@ void PreviewController::onPressed(QPointF position, Qt::KeyboardModifiers modifi
         select(selection);
         dragged_ = selection;
         dragOrigin_ = dragCorner();
+        dragRect_ = dragRect();
         mode_ = Mode::MoveFixtures;
         return;
     }
@@ -236,6 +247,18 @@ bool PreviewController::pressRegion(QPointF position) {
     return false;  // sonst wie gewohnt: Fixture wählen oder Gummiband
 }
 
+preview::SnapRect PreviewController::dragRect() const {
+    preview::SnapRect rect{1e30F, 1e30F, -1e30F, -1e30F};
+    for (const mapping::FixtureId id : dragged_) {
+        if (const mapping::Fixture* fixture = player_.project()->layout.find(id)) {
+            const mapping::Box box = preview::worldBox(*fixture);
+            rect = {std::min(rect.minX, box.min.x), std::min(rect.minY, box.min.y), std::max(rect.maxX, box.max.x),
+                    std::max(rect.maxY, box.max.y)};
+        }
+    }
+    return rect;
+}
+
 Vec3 PreviewController::dragCorner() const {
     Vec3 corner{};
     bool first = true;
@@ -268,6 +291,29 @@ void PreviewController::applyDrag(QPointF position, bool force) {
             const float step = panel_->gridStep();
             total.x = preview::snapToGrid(dragOrigin_.x + static_cast<float>(delta.x() / scale), step) - dragOrigin_.x;
             total.y = preview::snapToGrid(dragOrigin_.y - static_cast<float>(delta.y() / scale), step) - dragOrigin_.y;
+        }
+        guides_.clear();
+        if (snap && panel_->fixtureSnapEnabled()) {
+            // An Kanten und Mitten der übrigen Fixtures (hat Vorrang vor dem Raster, wenn nah genug)
+            const float rawX = static_cast<float>(delta.x() / scale);
+            const float rawY = static_cast<float>(-delta.y() / scale);
+            const preview::SnapRect moving{dragRect_.minX + rawX, dragRect_.minY + rawY, dragRect_.maxX + rawX, dragRect_.maxY + rawY};
+            std::vector<preview::SnapRect> others;
+            for (const mapping::Fixture& fixture : player_.project()->layout.fixtures()) {
+                if (std::find(dragged_.begin(), dragged_.end(), fixture.id) == dragged_.end()) {
+                    const mapping::Box box = preview::worldBox(fixture);
+                    others.push_back({box.min.x, box.min.y, box.max.x, box.max.y});
+                }
+            }
+            const preview::FixtureSnap fixtureSnap = preview::snapToFixtures(moving, others, kFixtureSnapPixels / scale);
+            const auto rounded = [](float v) { return std::round(v * 10000.0F) / 10000.0F; };
+            if (fixtureSnap.snappedX) {
+                total.x = rounded(rawX + fixtureSnap.dx);
+            }
+            if (fixtureSnap.snappedY) {
+                total.y = rounded(rawY + fixtureSnap.dy);
+            }
+            guides_ = fixtureSnap.guides;
         }
         const Vec3 step{total.x - applied_.x, total.y - applied_.y, 0.0F};
         if (step.x == 0.0F && step.y == 0.0F) {
@@ -327,6 +373,7 @@ void PreviewController::finish() {
     const bool regionChanged = moved_ && mode_ == Mode::RegionDrag;
     mode_ = Mode::Idle;
     rubber_ = QRectF{};
+    guides_.clear();
     moved_ = false;
     frozen_.reset();
     player_.closeEditGroup();

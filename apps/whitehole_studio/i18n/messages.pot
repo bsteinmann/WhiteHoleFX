@@ -502,6 +502,10 @@ msgstr ""
 msgid "An Bereich anpassen"
 msgstr ""
 
+#: layout_panel_grid.cpp:41
+msgid "An Fixtures"
+msgstr ""
+
 #: main_window_actions.cpp:87
 msgid "An: Ein nicht angeschlossener Eingang von Blend, Mix, Crossfade, Add oder Mask lässt die LEDs ausgehen. Aus: Er gilt als durchsichtiges Schwarz."
 msgstr ""
@@ -700,6 +704,10 @@ msgstr ""
 
 #: main_window_update.cpp:34
 msgid "Beim Start nach Updates &suchen"
+msgstr ""
+
+#: layout_panel_grid.cpp:42
+msgid "Beim Ziehen rasten Kanten und Mitte an den Kanten und Mitten anderer Fixtures ein; Hilfslinien zeigen, woran (nur mit „Einrasten“; Alt gedrückt: ohne Einrasten)"
 msgstr ""
 
 #: layout_panel_grid.cpp:39
@@ -2106,7 +2114,7 @@ msgstr ""
 msgid "Raster in der Vorschau anzeigen"
 msgstr ""
 
-#: layout_panel_grid.cpp:42
+#: layout_panel_grid.cpp:46
 msgid "Rasterweite in Layout-Einheiten"
 msgstr ""
 

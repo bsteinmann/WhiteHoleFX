@@ -34,6 +34,7 @@ struct PreviewOverlay {
     QRectF region;               // Rechteck des gewählten Region-Nodes; leer = keiner
     QList<QLineF> gridMinor;     // Rasterlinien (nur in der 2D-Ansicht gezeichnet)
     QList<QLineF> gridMajor;     // jede zehnte Rasterlinie
+    QList<QLineF> guides;        // Hilfslinien beim Einrasten an anderen Fixtures (nur in der 2D-Ansicht)
     bool editingRegion{false};   // Region-Node gewählt: Griffe an Ecken und Mitte, Leinwand angedeutet
 };
 

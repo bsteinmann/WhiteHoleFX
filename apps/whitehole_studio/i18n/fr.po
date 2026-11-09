@@ -502,6 +502,10 @@ msgstr "Enregistrer comme modèle"
 msgid "An Bereich anpassen"
 msgstr "Adapter à la plage"
 
+#: layout_panel_grid.cpp:41
+msgid "An Fixtures"
+msgstr "Aux fixtures"
+
 #: main_window_actions.cpp:87
 msgid "An: Ein nicht angeschlossener Eingang von Blend, Mix, Crossfade, Add oder Mask lässt die LEDs ausgehen. Aus: Er gilt als durchsichtiges Schwarz."
 msgstr "Activé : une entrée non connectée de Blend, Mix, Crossfade, Add ou Mask éteint les LED. Désactivé : elle compte comme du noir transparent."
@@ -701,6 +705,10 @@ msgstr "Consulter GitHub une fois au démarrage pour voir s'il existe une versio
 #: main_window_update.cpp:34
 msgid "Beim Start nach Updates &suchen"
 msgstr "Rechercher les mises à jour au &démarrage"
+
+#: layout_panel_grid.cpp:42
+msgid "Beim Ziehen rasten Kanten und Mitte an den Kanten und Mitten anderer Fixtures ein; Hilfslinien zeigen, woran (nur mit „Einrasten“; Alt gedrückt: ohne Einrasten)"
+msgstr "Pendant le déplacement, les bords et le centre s'alignent sur les bords et centres des autres fixtures ; des lignes guides montrent sur quoi (seulement avec « Aimanter » ; Alt maintenu : sans aimantation)"
 
 #: layout_panel_grid.cpp:39
 msgid "Beim Ziehen rastet die linke untere Ecke der Fixtures am Raster ein (Alt gedrückt: ohne Einrasten)"
@@ -2106,7 +2114,7 @@ msgstr "Grille"
 msgid "Raster in der Vorschau anzeigen"
 msgstr "Afficher la grille dans l'aperçu"
 
-#: layout_panel_grid.cpp:42
+#: layout_panel_grid.cpp:46
 msgid "Rasterweite in Layout-Einheiten"
 msgstr "Pas de la grille en unités de layout"
 

@@ -1,5 +1,9 @@
 # Änderungen
 
+## 0.68.0
+
+- **Layout: Einrasten an anderen Fixtures (#117).** Beim Ziehen rasten Kanten und Mitten der gezogenen Fixtures an Kanten und Mitten der übrigen ein (6 Bildpunkte Reichweite, hat Vorrang vor dem Raster), violette Hilfslinien zeigen woran. Neuer Schalter „An Fixtures“ neben „Einrasten“ (Alt: ohne). Rechnung getestet: `preview/fixture_snap.hpp`; der Rauchtest zieht ein Fixture neben einen Nachbarn.
+
 ## 0.67.0
 
 - **Parameterfenster übersichtlicher (#118).** Oben im Dock „Parameter“: Ansicht **Gewählter Node** (Standard, zeigt nur den gewählten Node) oder **Alle Nodes** (alle Gruppen, aufgeklappt nur der gewählte), dazu ein **Suchfeld** nach Node- und Parameternamen. **Anheften** hält einen Node im Fenster, auch wenn man im Editor weiterklickt; der Pfeil in jeder Gruppe klappt auf und zu. Die Scrollleisten sind schon seit 0.53.0 abgesetzt. Der Rauchtest prüft Ansichten, Anheften und Suche.

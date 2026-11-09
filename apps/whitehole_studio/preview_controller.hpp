@@ -27,6 +27,7 @@
 
 #include "preview_widget.hpp"
 #include "whitehole/mapping/region_edit.hpp"
+#include "whitehole/preview/fixture_snap.hpp"
 #include "whitehole/preview/view.hpp"
 #include "whitehole/runtime/player.hpp"
 
@@ -76,6 +77,7 @@ private:
     void applyDrag(QPointF position, bool force);
     /// Linke untere Ecke (x, y) der Gesamtbox der gezogenen Fixtures.
     [[nodiscard]] Vec3 dragCorner() const;
+    [[nodiscard]] preview::SnapRect dragRect() const;
     void finish();
     void select(const std::vector<mapping::FixtureId>& ids);
     void report(const Result<void>& result);
@@ -100,6 +102,8 @@ private:
     bool moved_{false};
     Vec3 dragOrigin_;                             // linke untere Ecke der gezogenen Fixtures beim Drücken
     Vec3 applied_;                                // bereits angewendeter Versatz der Ziehbewegung
+    preview::SnapRect dragRect_;                  // Rechteck der gezogenen Fixtures beim Drücken (Welteinheiten)
+    std::vector<preview::SnapGuide> guides_;      // Hilfslinien des letzten Einrastens an Fixtures
     std::vector<mapping::FixtureId> dragged_;     // die Fixtures, die gezogen werden
     std::vector<mapping::FixtureId> base_;        // Auswahl vor dem Gummiband (bei Strg/Umschalt)
     std::optional<mapping::FixtureId> clicked_;   // Klick ohne Ziehen wählt nur dieses

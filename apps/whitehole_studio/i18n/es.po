@@ -502,6 +502,10 @@ msgstr "Guardar como plantilla"
 msgid "An Bereich anpassen"
 msgstr "Ajustar al rango"
 
+#: layout_panel_grid.cpp:41
+msgid "An Fixtures"
+msgstr "A fixtures"
+
 #: main_window_actions.cpp:87
 msgid "An: Ein nicht angeschlossener Eingang von Blend, Mix, Crossfade, Add oder Mask lässt die LEDs ausgehen. Aus: Er gilt als durchsichtiges Schwarz."
 msgstr "Activado: una entrada sin conectar de Blend, Mix, Crossfade, Add o Mask apaga los LED. Desactivado: cuenta como negro transparente."
@@ -701,6 +705,10 @@ msgstr "Consultar GitHub una vez al iniciar para ver si hay una versión más re
 #: main_window_update.cpp:34
 msgid "Beim Start nach Updates &suchen"
 msgstr "Buscar actualizaciones al &iniciar"
+
+#: layout_panel_grid.cpp:42
+msgid "Beim Ziehen rasten Kanten und Mitte an den Kanten und Mitten anderer Fixtures ein; Hilfslinien zeigen, woran (nur mit „Einrasten“; Alt gedrückt: ohne Einrasten)"
+msgstr "Al arrastrar, los bordes y el centro se ajustan a los bordes y centros de otros fixtures; las líneas guía muestran a qué (solo con «Ajustar»; con Alt pulsado: sin ajuste)"
 
 #: layout_panel_grid.cpp:39
 msgid "Beim Ziehen rastet die linke untere Ecke der Fixtures am Raster ein (Alt gedrückt: ohne Einrasten)"
@@ -2106,7 +2114,7 @@ msgstr "Cuadrícula"
 msgid "Raster in der Vorschau anzeigen"
 msgstr "Mostrar la cuadrícula en la vista previa"
 
-#: layout_panel_grid.cpp:42
+#: layout_panel_grid.cpp:46
 msgid "Rasterweite in Layout-Einheiten"
 msgstr "Separación de la cuadrícula en unidades de layout"
 

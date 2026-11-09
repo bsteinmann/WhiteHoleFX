@@ -502,6 +502,10 @@ msgstr "Зберегти як шаблон"
 msgid "An Bereich anpassen"
 msgstr "Підігнати під діапазон"
 
+#: layout_panel_grid.cpp:41
+msgid "An Fixtures"
+msgstr "До фікстур"
+
 #: main_window_actions.cpp:87
 msgid "An: Ein nicht angeschlossener Eingang von Blend, Mix, Crossfade, Add oder Mask lässt die LEDs ausgehen. Aus: Er gilt als durchsichtiges Schwarz."
 msgstr "Увімкнено: непідключений вхід у Blend, Mix, Crossfade, Add або Mask вимикає LED. Вимкнено: він вважається прозорим чорним."
@@ -701,6 +705,10 @@ msgstr "Один раз під час запуску зазирнути на Git
 #: main_window_update.cpp:34
 msgid "Beim Start nach Updates &suchen"
 msgstr "Перевіряти оновлення під час &запуску"
+
+#: layout_panel_grid.cpp:42
+msgid "Beim Ziehen rasten Kanten und Mitte an den Kanten und Mitten anderer Fixtures ein; Hilfslinien zeigen, woran (nur mit „Einrasten“; Alt gedrückt: ohne Einrasten)"
+msgstr "Під час перетягування краї та центр прилипають до країв і центрів інших фікстур; напрямні лінії показують, до чого (лише з «Прилипання»; з Alt: без прилипання)"
 
 #: layout_panel_grid.cpp:39
 msgid "Beim Ziehen rastet die linke untere Ecke der Fixtures am Raster ein (Alt gedrückt: ohne Einrasten)"
@@ -2106,7 +2114,7 @@ msgstr "Сітка"
 msgid "Raster in der Vorschau anzeigen"
 msgstr "Показувати сітку в попередньому перегляді"
 
-#: layout_panel_grid.cpp:42
+#: layout_panel_grid.cpp:46
 msgid "Rasterweite in Layout-Einheiten"
 msgstr "Крок сітки в одиницях Layout"
 

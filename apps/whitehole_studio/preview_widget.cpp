@@ -79,6 +79,10 @@ void PreviewWidget::paintEvent(QPaintEvent*) {
         painter.setPen(QPen{QColor{255, 255, 255, 70}, 1.0});
         painter.drawLines(overlay_.gridMajor.constData(), static_cast<int>(overlay_.gridMajor.size()));
     }
+    if (!view3d_ && !overlay_.guides.isEmpty()) {
+        painter.setPen(QPen{QColor{255, 80, 220}, 1.5, Qt::DashLine});
+        painter.drawLines(overlay_.guides.constData(), static_cast<int>(overlay_.guides.size()));
+    }
     if (!view3d_ && overlay_.editingRegion && !overlay_.wall.isEmpty()) {
         drawFrame(painter, overlay_.wall, QColor{140, 140, 150}, Qt::DotLine, 1.0);
     }

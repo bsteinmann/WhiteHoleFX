@@ -196,6 +196,7 @@ Jeder Knopf ist ein Schritt für Rückgängig.
 kräftiger; bei kleinem Zoom wird es gröber). „Einrasten“ lässt beim Ziehen die linke untere Ecke der gewählten
 Fixtures auf dem Raster einrasten, die Weite stellt man daneben ein (0,1 bis 10). Mit gedrückter Alt-Taste zieht man
 ohne Einrasten. Die Einstellungen gelten für das Studio und bleiben erhalten.
+**An Fixtures:** Ist „An Fixtures“ an (Standard, wirkt nur zusammen mit „Einrasten“), rasten beim Ziehen die linke Kante, die Mitte und die rechte Kante (ebenso unten, Mitte, oben) der gezogenen Fixtures an den gleichen Linien der übrigen Fixtures ein, sobald sie weniger als 6 Bildpunkte entfernt sind. Das gilt vor dem Raster. Violette gestrichelte Hilfslinien zeigen, woran eingerastet wurde. So stehen zwei Matrizen bündig nebeneinander oder ein Strip genau über der Mitte einer Matrix. Alt gedrückt: ohne Einrasten.
 
 **Ausgabe (eigener Reiter):** Oben die Tabelle der **Controller** (Name, **Protokoll**, Adresse, Port; leere Adresse = Multicast,
 nur sACN; leerer Port = Standardport des Protokolls; die Nummer links ist die Controllernummer aus dem Patch) mit „Controller +“

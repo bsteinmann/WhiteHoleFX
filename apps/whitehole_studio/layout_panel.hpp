@@ -36,6 +36,9 @@ public:
     /// Raster im Layout-Editor: anzeigen, Einrasten beim Ziehen, Weite in Layout-Einheiten.
     [[nodiscard]] bool gridVisible() const;
     [[nodiscard]] bool snapEnabled() const;
+    /// Zusätzlich an Kanten und Mitten anderer Fixtures einrasten (nur wirksam, wenn Einrasten an ist).
+    [[nodiscard]] bool fixtureSnapEnabled() const;
+    void setFixtureSnap(bool on);
     [[nodiscard]] float gridStep() const;
     /// Setzt alle drei (für den Rauchtest); meldet `gridChanged`.
     void setGrid(bool show, bool snap, float step);
@@ -116,6 +119,7 @@ private:
     FixtureForm* fixture_{nullptr};
     QCheckBox* showGrid_{nullptr};
     QCheckBox* snap_{nullptr};
+    QCheckBox* snapFixtures_{nullptr};
     QComboBox* gridStep_{nullptr};
     QDoubleSpinBox* packGap_{nullptr};  // Abstand für "Nebeneinander"/"Übereinander"
 };

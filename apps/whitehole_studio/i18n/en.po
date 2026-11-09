@@ -502,6 +502,10 @@ msgstr "Save as template"
 msgid "An Bereich anpassen"
 msgstr "Fit to range"
 
+#: layout_panel_grid.cpp:41
+msgid "An Fixtures"
+msgstr "To fixtures"
+
 #: main_window_actions.cpp:87
 msgid "An: Ein nicht angeschlossener Eingang von Blend, Mix, Crossfade, Add oder Mask lässt die LEDs ausgehen. Aus: Er gilt als durchsichtiges Schwarz."
 msgstr "On: an unconnected input of Blend, Mix, Crossfade, Add or Mask turns the LEDs off. Off: it counts as transparent black."
@@ -701,6 +705,10 @@ msgstr "Look once at GitHub on startup to see whether a newer version exists"
 #: main_window_update.cpp:34
 msgid "Beim Start nach Updates &suchen"
 msgstr "Check for updates on &startup"
+
+#: layout_panel_grid.cpp:42
+msgid "Beim Ziehen rasten Kanten und Mitte an den Kanten und Mitten anderer Fixtures ein; Hilfslinien zeigen, woran (nur mit „Einrasten“; Alt gedrückt: ohne Einrasten)"
+msgstr "While dragging, edges and centre snap to the edges and centres of other fixtures; guide lines show to what (only with \"Snap\"; Alt held: no snapping)"
 
 #: layout_panel_grid.cpp:39
 msgid "Beim Ziehen rastet die linke untere Ecke der Fixtures am Raster ein (Alt gedrückt: ohne Einrasten)"
@@ -2106,7 +2114,7 @@ msgstr "Grid"
 msgid "Raster in der Vorschau anzeigen"
 msgstr "Show grid in the preview"
 
-#: layout_panel_grid.cpp:42
+#: layout_panel_grid.cpp:46
 msgid "Rasterweite in Layout-Einheiten"
 msgstr "Grid spacing in layout units"
 
