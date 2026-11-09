@@ -199,7 +199,7 @@ QString PreviewController::exercise() {
     const QPointF target = start + QPointF{static_cast<double>((wantedX - own.min.x) * scale), 0.0};
     onPressed(start, Qt::NoModifier);
     onDragged(start + (target - start) / 2.0);
-    onDragged(target);
+    applyDrag(target, true);  // ohne Drosselung, sonst fehlt die Hilfslinie vor dem Loslassen
     const bool guideShown = !guides_.empty();
     onReleased(target);
     const mapping::Box placed = preview::worldBox(*player_.project()->layout.find(id));
