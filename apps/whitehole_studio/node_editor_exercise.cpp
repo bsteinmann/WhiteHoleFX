@@ -4,10 +4,12 @@
 // fügt ein und dupliziert, löscht Kabel und Nodes wieder. Getrennt von node_editor.cpp, weil es mit
 // dem normalen Betrieb nichts zu tun hat.
 #include <QPointF>
+#include <QScrollBar>
 #include <QString>
 #include <QTransform>
 #include <QTemporaryDir>
 
+#include <algorithm>
 #include <cmath>
 #include <filesystem>
 
@@ -70,6 +72,31 @@ QString NodeEditor::exercise() {
     const std::optional<NodeId> sink = addNodeAt("wh.transform.mirror", freeSpot());
     if (!sink) {
         return QStringLiteral("Mirror-Node anlegen");
+    }
+    // Leere Ansicht (Maßstab fast null, oder weit weggescrollt): ensureNodesVisible passt alles wieder ein. Nur prüfbar,
+    // wenn die Fläche eine brauchbare Größe hat.
+    if (viewport()->width() >= 100 && viewport()->height() >= 100) {
+        const QTransform before = transform();
+        const auto nodeInView = [this]() {
+            const QRectF visible = mapToScene(viewport()->rect()).boundingRect();
+            return std::any_of(nodes_.begin(), nodes_.end(), [&](const auto& entry) { return visible.intersects(entry.second->sceneBoundingRect()); });
+        };
+        resetTransform();
+        scale(0.005, 0.005);
+        ensureNodesVisible();
+        const double afterTiny = transform().m11();
+        resetTransform();
+        scale(2.0, 2.0);
+        horizontalScrollBar()->setValue(horizontalScrollBar()->maximum());
+        verticalScrollBar()->setValue(verticalScrollBar()->maximum());
+        const bool awayBefore = !nodeInView();
+        ensureNodesVisible();
+        const bool backInView = nodeInView();
+        setTransform(before);
+        if (afterTiny < 0.02 || !backInView) {
+            return QStringLiteral("Leere Ansicht: Maßstab nach dem Einpassen %1, Nodes im Bild: %2 (vorher weg: %3)")
+                .arg(afterTiny).arg(backInView).arg(awayBefore);
+        }
     }
     // Issue #29: Ein neuer Node ist der einzige ausgewählte, auch wenn vorher andere gewählt waren.
     if (scene_.selectedItems().size() != 1 || !itemOf(*sink)->isSelected()) {

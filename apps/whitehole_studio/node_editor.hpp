@@ -55,6 +55,9 @@ public:
     void rebuild();
     /// Zoomt so, dass alle Nodes zu sehen sind (höchstens im Maßstab 1:1).
     void showAll();
+    /// Sicherung gegen eine leere Ansicht: Ist kein Node im sichtbaren Bereich (oder der Maßstab praktisch null),
+    /// wird wie bei `showAll` alles eingepasst. Nach dem Ablegen aus der Palette aufgerufen.
+    void ensureNodesVisible();
 
     /// Kopieren, Einfügen, Duplizieren (Strg+C, Strg+V, Strg+D). Eingefügt wird an `scenePos`
     /// (linke obere Ecke der Kopie) oder, ohne Angabe, an der Maus (sonst leicht versetzt).

@@ -70,6 +70,8 @@ void NodeEditor::rebuild() {
             selected.push_back(id);
         }
     }
+    // Die Ansicht bleibt: Der Szenenbereich ändert sich mit den Nodes, und das darf den Sichtbereich nicht verschieben.
+    const QPointF viewCenter = mapToScene(viewport()->rect().center());
     rebuilding_ = true;
     buildScene();
     for (const std::uint64_t id : selected) {
@@ -77,6 +79,7 @@ void NodeEditor::rebuild() {
             it->second->setSelected(true);
         }
     }
+    centerOn(viewCenter);
     rebuilding_ = false;
 }
 
@@ -171,6 +174,10 @@ void NodeEditor::buildScene() {
 }
 
 void NodeEditor::showAll() {
+    // Während des Umbaus von Fenstern kann die Fläche kurz fast leer sein; ein Einpassen darauf ergäbe Maßstab null.
+    if (viewport()->width() < 40 || viewport()->height() < 40) {
+        return;
+    }
     QRectF content;
     for (const auto& [id, item] : nodes_) {
         content = content.united(item->sceneBoundingRect());

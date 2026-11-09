@@ -1,5 +1,9 @@
 # Änderungen
 
+## 0.70.1
+
+- **Node-Editor: Nodes verschwinden nach dem Ablegen aus der Palette (Windows).** Der Sichtbereich bleibt jetzt bei *jedem* Neuaufbau des Editors an seiner Stelle (bisher nur beim Laden; der Fix aus 0.64.0 griff nur dort). Nach dem Ablegen prüft der Editor, ob noch ein Node im Bild ist, und passt sonst alles ein (`ensureNodesVisible`); der Fensterumbau danach wird erneut geprüft. Die Ansicht folgt der Fenstergröße nicht mehr von selbst, sobald man etwas abgelegt hat, und ein Einpassen auf eine fast leere Fläche wird übersprungen (ergab Maßstab null). Die Ablegestelle bleibt innerhalb des Editors. Der Rauchtest prüft die leere Ansicht (Maßstab null, weggescrollt). Die eigentliche Ursache unter Windows ließ sich ohne Windows nicht nachstellen: bitte mit dem Windows-Paket testen.
+
 ## 0.70.0
 
 - **Programmsymbol für Windows und Startbildschirm.** Die `.exe` trägt jetzt das Symbol (wie das Linux-Paket), das Studio setzt es zusätzlich als Fenstersymbol. Beim Start zeigt ein Startbildschirm Logo, Version und den aktuellen Schritt; abschaltbar mit `--no-splash` oder `WHITEHOLEFX_NO_SPLASH=1`. Das Symbol erzeugt `scripts/make_icons.py` aus der SVG-Vorlage. Der Rauchtest prüft das Startbild und die eingebetteten Symbole.

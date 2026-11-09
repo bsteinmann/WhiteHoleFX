@@ -12,6 +12,9 @@
 #include <QMimeData>
 #include <QTimer>
 
+#include <algorithm>
+#include <cmath>
+
 #include "node_editor.hpp"
 #include "node_palette.hpp"
 
@@ -59,7 +62,9 @@ void NodeEditor::dropEvent(QDropEvent* event) {
     }
     event->acceptProposedAction();
     // Der Drag läuft unter Windows in einer eigenen Schleife des Systems; danach das Bild sicher neu zeichnen lassen.
+    // Dazu noch einmal prüfen, ob Nodes im Bild sind: Fenster dürfen sich nach dem Ablegen noch umbauen.
     QTimer::singleShot(0, this, [this]() {
+        ensureNodesVisible();
         scene_.update();
         viewport()->update();
     });
@@ -70,7 +75,12 @@ bool NodeEditor::handleNodeDrop(const QMimeData* mime, const QPoint& viewportPos
         return false;
     }
     const std::string typeId = nodeTypeOf(mime);
-    const QPointF scenePos = mapToScene(viewportPos);
+    fitPending_ = false;  // der Nutzer arbeitet im Editor: die Ansicht folgt der Fenstergröße nicht mehr von selbst
+    // Abgelegt wird nur, was im Editor liegt; eine Stelle daneben (Fehler im Drag-System) landet am Rand.
+    const QRect area = viewport()->rect();
+    const QPoint inside{std::clamp(viewportPos.x(), 0, std::max(0, area.width() - 1)),
+                        std::clamp(viewportPos.y(), 0, std::max(0, area.height() - 1))};
+    const QPointF scenePos = mapToScene(inside);
     const std::optional<graph::DockPlan> plan = dockPlanAt(typeId, scenePos, altPressed());
     clearDockPreview();
     // Der Mauszeiger steht in der Mitte des neuen Nodes; eingerastet sitzt er zwischen seinen Nachbarn (Platz machen)
@@ -91,11 +101,28 @@ bool NodeEditor::handleNodeDrop(const QMimeData* mime, const QPoint& viewportPos
         if (addNodeAt(typeId, QPointF{static_cast<double>(placement.position.x), static_cast<double>(placement.position.y)}, &*plan,
                       &placement.moved)
                 .has_value()) {
+            ensureNodesVisible();
             return true;
         }
     }
     addNodeAt(typeId, scenePos - QPointF{70.0, 20.0});
+    ensureNodesVisible();
     return true;
+}
+
+void NodeEditor::ensureNodesVisible() {
+    if (nodes_.empty() || viewport()->width() < 40 || viewport()->height() < 40) {
+        return;
+    }
+    const QRectF visible = mapToScene(viewport()->rect()).boundingRect();
+    bool anyVisible = false;
+    for (const auto& [id, item] : nodes_) {
+        anyVisible = anyVisible || visible.intersects(item->sceneBoundingRect());
+    }
+    const double scale = transform().m11();
+    if (!anyVisible || !std::isfinite(scale) || scale < 0.02) {
+        showAll();
+    }
 }
 
 bool NodeEditor::viewportEvent(QEvent* event) {
