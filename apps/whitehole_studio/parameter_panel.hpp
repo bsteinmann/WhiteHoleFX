@@ -39,13 +39,13 @@
 
 #include "whitehole/runtime/player.hpp"
 
-namespace whitehole::studio {
-
 class QComboBox;
 class QLabel;
 class QLineEdit;
 class QScrollArea;
 class QToolButton;
+
+namespace whitehole::studio {
 
 class ParameterPanel : public QWidget {
     Q_OBJECT
