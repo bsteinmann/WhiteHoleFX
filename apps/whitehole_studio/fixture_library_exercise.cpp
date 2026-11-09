@@ -7,6 +7,8 @@
 #include <QListWidget>
 #include <QTemporaryDir>
 
+#include <iterator>
+
 #include "fixture_library_page.hpp"
 #include "shape_form.hpp"
 #include "shape_preview.hpp"

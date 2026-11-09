@@ -4,6 +4,10 @@
 // berührt, steht an einer Stelle. Die Seite zeigt zwei Listen: die Fixtures dieser Show (im Projekt) und darunter alle
 // gespeicherten (die Datei fixture-library.whfx). Beides ist getrennt: In die Bibliothek kommt eine Bauform nur auf
 // Knopfdruck, in die Show nur durch Übernehmen; Entfernen in der einen Liste lässt die andere unberührt.
+#include <QLabel>
+#include <QLineEdit>
+#include <QListWidget>
+#include <QPushButton>
 #include <QString>
 
 #include <algorithm>
