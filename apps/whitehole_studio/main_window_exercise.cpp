@@ -122,6 +122,45 @@ QString MainWindow::exerciseSelection() {
     return {};
 }
 
+QString MainWindow::exerciseParameterView() {
+    const std::vector<runtime::NodeInfo> nodes = player_->nodes();
+    if (nodes.size() < 2) {
+        return {};
+    }
+    const NodeId a = nodes.front().id;
+    const NodeId b = nodes.back().id;
+    const ParameterPanel::Mode oldMode = parameters_->mode();
+    const std::optional<NodeId> oldSelection = editor_->selectedNode();
+    parameters_->searchField()->clear();
+    parameters_->setMode(ParameterPanel::Mode::Selected);
+    editor_->selectNode(a);
+    QString problem;
+    if (!parameters_->groupShown(a) || !parameters_->groupOpen(a) || parameters_->groupShown(b)) {
+        problem = QStringLiteral("Parameter: \"Gewählter Node\" zeigt nicht nur den gewählten Node");
+    } else if (parameters_->setPinned(b, true), !parameters_->groupShown(b)) {
+        problem = QStringLiteral("Parameter: ein angehefteter Node verschwindet");
+    } else if (parameters_->setPinned(b, false), parameters_->groupShown(b)) {
+        problem = QStringLiteral("Parameter: Lösen der Anheftung blendet den Node nicht aus");
+    } else if (parameters_->setMode(ParameterPanel::Mode::All), !parameters_->groupShown(b) || parameters_->groupOpen(b) || !parameters_->groupOpen(a)) {
+        problem = QStringLiteral("Parameter: \"Alle Nodes\" klappt nicht nur den gewählten Node auf");
+    } else {
+        parameters_->searchField()->setText(QStringLiteral("zzzz-kein-node-heißt-so"));
+        const bool none = !parameters_->groupShown(a) && !parameters_->groupShown(b);
+        parameters_->searchField()->setText(QString::fromStdString(nodes.front().title));
+        const bool found = parameters_->groupShown(a);
+        parameters_->searchField()->clear();
+        if (!none || !found) {
+            problem = QStringLiteral("Parameter: das Suchfeld filtert nicht");
+        }
+    }
+    parameters_->setPinned(b, false);
+    parameters_->setMode(oldMode);
+    if (oldSelection) {
+        editor_->selectNode(*oldSelection);
+    }
+    return problem;
+}
+
 void MainWindow::exerciseCtrlN() {
     newAction_->trigger();
     for (int i = 0; i < 20; ++i) {

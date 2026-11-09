@@ -119,6 +119,8 @@ public:
     QString exerciseLanguage();
     /// Rauchtest: Update-Prüfung ohne Netzwerk (Bewertung einer Antwort, Menüeintrag).
     QString exerciseUpdate();
+    /// Rauchtest: Parameterfenster (Ansicht Gewählter Node / Alle, Anheften, Suchfeld).
+    QString exerciseParameterView();
     /// Beim Start: ggf. einmal um Erlaubnis fragen, dann nach einer neueren Version suchen (main_window_update.cpp).
     void startupUpdateCheck();
     /// Rauchtest: Umschalter 2D/3D, Orbit mit der Maus, Zoom, feste Ansichten.

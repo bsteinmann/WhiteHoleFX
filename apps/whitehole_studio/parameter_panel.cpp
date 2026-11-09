@@ -12,6 +12,8 @@
 #include <QLabel>
 #include <QIcon>
 #include <QLineEdit>
+#include <QScrollArea>
+#include <QSettings>
 #include <QPainter>
 #include <QPixmap>
 #include <QPushButton>
@@ -98,28 +100,149 @@ QWidget* ParameterPanel::makeScaleRow(const runtime::ParameterInfo& info, QWidge
     return row;
 }
 
-ParameterPanel::ParameterPanel(QWidget* parent) : QScrollArea{parent} {
-    setWidgetResizable(true);
-    setFrameShape(QFrame::NoFrame);
-    auto* hint = new QLabel{tr("Kein Projekt geladen."), this};
+ParameterPanel::ParameterPanel(QWidget* parent) : QWidget{parent} {
+    auto* outer = new QVBoxLayout{this};
+    outer->setContentsMargins(0, 0, 0, 0);
+    outer->setSpacing(2);
+    auto* bar = new QHBoxLayout;
+    bar->setContentsMargins(4, 4, 4, 0);
+    modeBox_ = new QComboBox{this};
+    modeBox_->addItem(tr("Gewählter Node"));
+    modeBox_->addItem(tr("Alle Nodes"));
+    modeBox_->setToolTip(tr("Gewählter Node: nur der Node, den du im Editor gewählt hast, und angeheftete Nodes. "
+                            "Alle Nodes: jede Gruppe, aufgeklappt nur die des gewählten und der angehefteten Nodes."));
+    search_ = new QLineEdit{this};
+    search_->setPlaceholderText(tr("Suchen …"));
+    search_->setClearButtonEnabled(true);
+    search_->setToolTip(tr("Filtert die Gruppen nach Node- oder Parametername (über alle Nodes)"));
+    bar->addWidget(modeBox_);
+    bar->addWidget(search_, 1);
+    outer->addLayout(bar);
+    scroll_ = new QScrollArea{this};
+    scroll_->setWidgetResizable(true);
+    scroll_->setFrameShape(QFrame::NoFrame);
+    auto* hint = new QLabel{tr("Kein Projekt geladen."), scroll_};
     hint->setMargin(12);
-    setWidget(hint);
+    scroll_->setWidget(hint);
+    outer->addWidget(scroll_, 1);
+
+    QSettings settings{QStringLiteral("WhiteHoleFX"), QStringLiteral("WhiteHoleFX")};
+    mode_ = settings.value(QStringLiteral("parameters/mode")).toString() == QStringLiteral("all") ? Mode::All : Mode::Selected;
+    modeBox_->setCurrentIndex(mode_ == Mode::All ? 1 : 0);
+    connect(modeBox_, &QComboBox::currentIndexChanged, this, [this](int index) { setMode(index == 1 ? Mode::All : Mode::Selected); });
+    connect(search_, &QLineEdit::textChanged, this, [this]() { applyVisibility(); });
+}
+
+void ParameterPanel::setMode(Mode mode) {
+    if (mode == mode_) {
+        return;
+    }
+    mode_ = mode;
+    modeBox_->setCurrentIndex(mode == Mode::All ? 1 : 0);  // Rückruf ruft setMode erneut auf und endet dort (gleicher Wert)
+    QSettings settings{QStringLiteral("WhiteHoleFX"), QStringLiteral("WhiteHoleFX")};
+    settings.setValue(QStringLiteral("parameters/mode"), mode == Mode::All ? QStringLiteral("all") : QStringLiteral("selected"));
+    applyVisibility();
+}
+
+void ParameterPanel::setPinned(NodeId node, bool pinned) {
+    if (pinned) {
+        pinned_.insert(node.value());
+    } else {
+        pinned_.erase(node.value());
+    }
+    if (const auto found = entries_.find(node.value()); found != entries_.end() && found->second.pin != nullptr) {
+        const QSignalBlocker blocker{found->second.pin};
+        found->second.pin->setChecked(pinned);
+    }
+    applyVisibility();
+}
+
+bool ParameterPanel::groupShown(NodeId node) const {
+    const auto found = entries_.find(node.value());
+    return found != entries_.end() && found->second.group != nullptr && !found->second.group->isHidden();
+}
+
+bool ParameterPanel::groupOpen(NodeId node) const {
+    const auto found = entries_.find(node.value());
+    return found != entries_.end() && found->second.body != nullptr && !found->second.body->isHidden();
+}
+
+void ParameterPanel::applyVisibility() {
+    const QString needle = search_->text().trimmed().toLower();
+    int visibleGroups = 0;
+    for (auto& [id, entry] : entries_) {
+        if (entry.group == nullptr) {
+            continue;
+        }
+        const bool selected = shown_ && shown_->value() == id;
+        const bool isPinned = pinned_.contains(id);
+        const bool searching = !needle.isEmpty();
+        const bool visible = searching ? entry.text.contains(needle) : (mode_ == Mode::All || selected || isPinned);
+        bool open = searching || mode_ == Mode::Selected || selected || isPinned;
+        if (const auto manual = open_.find(id); manual != open_.end() && !searching) {
+            open = manual->second;
+        }
+        entry.group->setVisible(visible);
+        entry.body->setVisible(open);
+        entry.arrow->setArrowType(open ? Qt::DownArrow : Qt::RightArrow);
+        visibleGroups += visible ? 1 : 0;
+    }
+    if (emptyHint_ != nullptr) {
+        emptyHint_->setText(needle.isEmpty() ? tr("Wähle einen Node im Node-Editor, um seine Parameter zu sehen. "
+                                                  "Mit „Anheften“ bleibt ein Node hier stehen.")
+                                             : tr("Keine Treffer."));
+        emptyHint_->setVisible(visibleGroups == 0 && !entries_.empty());
+    }
 }
 
 void ParameterPanel::rebuild(const std::vector<runtime::NodeInfo>& nodes) {
-    groups_.clear();
+    entries_.clear();
+    open_.clear();
     shown_.reset();
     auto* content = new QWidget;
     auto* column = new QVBoxLayout{content};
+    emptyHint_ = new QLabel{content};
+    emptyHint_->setWordWrap(true);
+    emptyHint_->setMargin(12);
+    column->addWidget(emptyHint_);
     if (nodes.empty()) {
         column->addWidget(new QLabel{tr("Dieses Projekt hat keine einstellbaren Parameter."), content});
     }
     for (const runtime::NodeInfo& node : nodes) {
         auto* group = new QGroupBox{fromStd(node.title), content};
-        auto* grid = new QGridLayout{group};
+        auto* groupLayout = new QVBoxLayout{group};
+        auto* body = new QWidget{group};
+        auto* grid = new QGridLayout{body};
+        grid->setContentsMargins(0, 0, 0, 0);
+        auto* header = new QHBoxLayout;
+        auto* arrow = new QToolButton{group};
+        arrow->setAutoRaise(true);
+        arrow->setArrowType(Qt::DownArrow);
+        arrow->setToolTip(tr("Parameter dieses Nodes auf- oder zuklappen"));
+        auto* pin = new QToolButton{group};
+        pin->setText(tr("Anheften"));
+        pin->setCheckable(true);
+        pin->setChecked(pinned_.contains(node.id.value()));
+        pin->setToolTip(tr("Hält diesen Node im Fenster, auch wenn du im Editor einen anderen wählst"));
+        header->addWidget(arrow);
+        header->addStretch(1);
+        header->addWidget(pin);
+        groupLayout->setContentsMargins(6, 6, 6, 6);
+        groupLayout->addLayout(header);
+        groupLayout->addWidget(body);
+        QString searchText = fromStd(node.title);
+        const std::uint64_t nodeKey = node.id.value();
+        QObject::connect(arrow, &QToolButton::clicked, this, [this, nodeKey]() {
+            const auto found = entries_.find(nodeKey);
+            if (found != entries_.end() && found->second.body != nullptr) {
+                open_[nodeKey] = found->second.body->isHidden();  // umkehren
+                applyVisibility();
+            }
+        });
+        QObject::connect(pin, &QToolButton::toggled, this, [this, nodeId = node.id](bool on) { setPinned(nodeId, on); });
         int row = 0;
         if (node.parameters.empty()) {
-            grid->addWidget(new QLabel{tr("Dieser Node hat keine einstellbaren Parameter."), group}, row++, 0);
+            grid->addWidget(new QLabel{tr("Dieser Node hat keine einstellbaren Parameter."), body}, row++, 0);
         }
         std::unordered_map<std::string, std::shared_ptr<Editor>> holders;
         const auto numberOf = [&node](const std::string& name) -> std::optional<double> {
@@ -154,10 +277,11 @@ void ParameterPanel::rebuild(const std::vector<runtime::NodeInfo>& nodes) {
                     sliderRange = std::array<double, 2>{*low, *high};
                 }
             }
-            *holder = makeEditor(info, commit, group, sliderRange);
+            *holder = makeEditor(info, commit, body, sliderRange);
 
-            auto* label = new QLabel{fromStd(info.displayName), group};
-            auto* reset = new QToolButton{group};
+            searchText += QLatin1Char{' '} + fromStd(info.displayName) + QLatin1Char{' '} + fromStd(info.key);
+            auto* label = new QLabel{fromStd(info.displayName), body};
+            auto* reset = new QToolButton{body};
             reset->setText(QStringLiteral("↺"));
             reset->setToolTip(tr("Auf Standardwert zurücksetzen"));
             const graph::ParameterValue defaultValue = info.defaultValue;
@@ -174,7 +298,7 @@ void ParameterPanel::rebuild(const std::vector<runtime::NodeInfo>& nodes) {
             grid->addWidget(reset, row, 2);
             ++row;
             if (info.driven && (info.value.index() == 1 || info.value.index() == 2)) {
-                grid->addWidget(makeScaleRow(info, group), row, 0, 1, 3);
+                grid->addWidget(makeScaleRow(info, body), row, 0, 1, 3);
                 ++row;
             }
         }
@@ -202,33 +326,38 @@ void ParameterPanel::rebuild(const std::vector<runtime::NodeInfo>& nodes) {
         }
         grid->setColumnStretch(1, 1);
         column->addWidget(group);
-        groups_.emplace(node.id.value(), group);
+        entries_[node.id.value()] = Entry{group, body, arrow, pin, searchText.toLower()};
     }
     column->addStretch(1);
-    setWidget(content);  // übernimmt den Besitz und löscht den alten Inhalt
+    scroll_->setWidget(content);  // übernimmt den Besitz und löscht den alten Inhalt
+    applyVisibility();
 }
 
 bool ParameterPanel::showNode(std::optional<NodeId> node) {
     // Alte Hervorhebung weg (die Gruppe kann nach einem Neuaufbau schon nicht mehr existieren).
     if (shown_) {
-        if (const auto old = groups_.find(shown_->value()); old != groups_.end() && old->second != nullptr) {
-            old->second->setStyleSheet({});
+        if (const auto old = entries_.find(shown_->value()); old != entries_.end() && old->second.group != nullptr) {
+            old->second.group->setStyleSheet({});
         }
     }
     shown_.reset();
     if (!node) {
+        applyVisibility();
         return false;
     }
-    const auto found = groups_.find(node->value());
-    if (found == groups_.end() || found->second == nullptr) {
+    const auto found = entries_.find(node->value());
+    if (found == entries_.end() || found->second.group == nullptr) {
+        applyVisibility();
         return false;
     }
-    QGroupBox* group = found->second;
+    QGroupBox* group = found->second.group;
     group->setStyleSheet(QStringLiteral(
         "QGroupBox { border: 2px solid #e8a33d; border-radius: 4px; margin-top: 1.4ex; font-weight: bold; }"
         "QGroupBox::title { subcontrol-origin: margin; left: 8px; padding: 0 4px; color: #e8a33d; }"));
     shown_ = node;
-    ensureWidgetVisible(group, 0, 24);
+    open_.erase(node->value());  // der neu gewählte Node klappt wieder nach der Regel der Ansicht auf
+    applyVisibility();
+    scroll_->ensureWidgetVisible(group, 0, 24);
     return true;
 }
 

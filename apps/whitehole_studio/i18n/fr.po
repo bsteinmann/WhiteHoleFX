@@ -462,6 +462,10 @@ msgstr "Enregistrer l'effet actuel comme look …"
 msgid "Alle LEDs aus; die Pakete laufen weiter (Strg+B)"
 msgstr "Toutes les LED éteintes ; les paquets continuent (Ctrl+B)"
 
+#: parameter_panel.cpp:111
+msgid "Alle Nodes"
+msgstr "Tous les nodes"
+
 #: node_defaults_page.cpp:61
 msgid "Alle Standardwerte zurücksetzen"
 msgstr "Réinitialiser toutes les valeurs par défaut"
@@ -494,7 +498,7 @@ msgstr "Enregistrer comme préréglage …"
 msgid "Als Vorlage speichern"
 msgstr "Enregistrer comme modèle"
 
-#: parameter_panel.cpp:78
+#: parameter_panel.cpp:80
 msgid "An Bereich anpassen"
 msgstr "Adapter à la plage"
 
@@ -509,6 +513,10 @@ msgstr "Début et fin relatifs à la position ; la première LED est au début."
 #: add_fixture_dialog.cpp:123 fixture_form.cpp:150 shape_form.cpp:101
 msgid "Anfang x y z"
 msgstr "Début x y z"
+
+#: parameter_panel.cpp:223
+msgid "Anheften"
+msgstr "Épingler"
 
 #: main_window_view3d.cpp:47
 msgid "Ansicht"
@@ -566,7 +574,7 @@ msgstr "Onde audio"
 msgid "Auf &Updates prüfen …"
 msgstr "Rechercher des &mises à jour …"
 
-#: parameter_panel.cpp:162
+#: parameter_panel.cpp:286
 msgid "Auf Standardwert zurücksetzen"
 msgstr "Rétablir la valeur par défaut"
 
@@ -982,7 +990,7 @@ msgstr "La modification prend effet immédiatement après « OK »."
 msgid "Diese Form ist ungültig."
 msgstr "Cette forme est invalide."
 
-#: main_window.cpp:184 parameter_panel.cpp:122
+#: main_window.cpp:184 parameter_panel.cpp:245
 msgid "Dieser Node hat keine einstellbaren Parameter."
 msgstr "Ce nœud n'a pas de paramètres réglables."
 
@@ -990,7 +998,7 @@ msgstr "Ce nœud n'a pas de paramètres réglables."
 msgid "Dieses Programm wurde ohne GPU-Backend gebaut (-DWHITEHOLEFX_WEBGPU=ON); es zeigt nur das Layout."
 msgstr "Ce programme a été compilé sans le backend GPU (-DWHITEHOLEFX_WEBGPU=ON) ; il n'affiche que la disposition."
 
-#: parameter_panel.cpp:115
+#: parameter_panel.cpp:209
 msgid "Dieses Projekt hat keine einstellbaren Parameter."
 msgstr "Ce projet n'a pas de paramètres réglables."
 
@@ -1238,6 +1246,10 @@ msgstr "Disposition de la fenêtre réinitialisée : elle s'applique au prochain
 msgid "Field"
 msgstr "Field"
 
+#: parameter_panel.cpp:117
+msgid "Filtert die Gruppen nach Node- oder Parametername (über alle Nodes)"
+msgstr "Filtre les groupes par nom de node ou de paramètre (sur tous les nodes)"
+
 #: patch_table.cpp:46
 msgid "Fixture"
 msgstr "Fixture"
@@ -1366,6 +1378,14 @@ msgstr "Aligner les fixtures sélectionnées côte à côte (celle de gauche res
 msgid "Gewählten Controller −"
 msgstr "Supprimer le contrôleur choisi −"
 
+#: parameter_panel.cpp:110
+msgid "Gewählter Node"
+msgstr "Node sélectionné"
+
+#: parameter_panel.cpp:112
+msgid "Gewählter Node: nur der Node, den du im Editor gewählt hast, und angeheftete Nodes. Alle Nodes: jede Gruppe, aufgeklappt nur die des gewählten und der angehefteten Nodes."
+msgstr "Node sélectionné : seulement le node choisi dans l'éditeur, plus les nodes épinglés. Tous les nodes : chaque groupe, déplié seulement pour le node sélectionné et les nodes épinglés."
+
 #: layout_panel_library.cpp:32
 msgid "Gewähltes Fixture als Vorlage speichern …"
 msgstr "Enregistrer la fixture choisie comme modèle …"
@@ -1418,6 +1438,10 @@ msgstr "Reprend toutes les formes enregistrées qui manquent dans ce spectacle"
 msgid "Holt die gewählte gespeicherte Bauform in diese Show"
 msgstr "Ajoute la forme enregistrée choisie à ce spectacle"
 
+#: parameter_panel.cpp:226
+msgid "Hält diesen Node im Fenster, auch wenn du im Editor einen anderen wählst"
+msgstr "Garde ce node dans la fenêtre même si vous en choisissez un autre dans l'éditeur"
+
 #: layout_panel_groups.cpp:195
 msgid "Höhe"
 msgstr "Hauteur"
@@ -1462,7 +1486,7 @@ msgstr "Oui, vérifier au démarrage"
 msgid "Kabel beginnt"
 msgstr "Le câble commence"
 
-#: parameter_panel.cpp:49
+#: parameter_panel.cpp:51
 msgid "Kabel:"
 msgstr "Câble :"
 
@@ -1494,7 +1518,7 @@ msgstr "Aucun adaptateur GPU : %1"
 msgid "Kein Projekt"
 msgstr "Aucun projet"
 
-#: parameter_panel.cpp:104 stage_view.cpp:160
+#: parameter_panel.cpp:124 stage_view.cpp:160
 msgid "Kein Projekt geladen."
 msgstr "Aucun projet chargé."
 
@@ -1505,6 +1529,10 @@ msgstr "Pas de cible (rectangle libre)"
 #: settings_dialog.cpp:194
 msgid "Keine Aufnahmegeräte gefunden. Ein Audio-Interface anschließen und das Fenster neu öffnen."
 msgstr "Aucun périphérique de capture trouvé. Branchez une interface audio et rouvrez la fenêtre."
+
+#: parameter_panel.cpp:193
+msgid "Keine Treffer."
+msgstr "Aucun résultat."
 
 #: stage_view.cpp:55 stage_view.cpp:206
 msgid "Klicke eine LED, um ihre Adresse zu sehen."
@@ -1962,6 +1990,10 @@ msgstr "&Palette en couleur"
 msgid "Parameter"
 msgstr "Paramètres"
 
+#: parameter_panel.cpp:221
+msgid "Parameter dieses Nodes auf- oder zuklappen"
+msgstr "Déplier ou replier les paramètres de ce node"
+
 #: node_info_texts.cpp:101
 msgid "Partikel von einem Emitter: Lebensdauer, Tempo, Richtung, Streuung, Schwerkraft und Schweif einstellbar."
 msgstr "Particles from an emitter: lifetime, speed, direction, spread, gravity and trail are adjustable."
@@ -2194,11 +2226,11 @@ msgstr "Serpentin (un anneau sur deux à l'envers)"
 msgid "Sich ausbreitende Formen (Kreis, Quadrat, Raute) von einem Mittelpunkt aus, mit Abstand, Tempo und Ausblenden."
 msgstr "Expanding shapes (circle, square, diamond) from a center, with spacing, speed and fade-out."
 
-#: parameter_panel.cpp:47
+#: parameter_panel.cpp:49
 msgid "Skalierung am Kabel: Wert × Faktor + Offset, danach begrenzt auf den Bereich des Parameters. So steuert ein Wert von 0 bis 1 zum Beispiel einen Winkel von 0 bis 360."
 msgstr "Mise à l'échelle sur le câble : valeur × facteur + décalage, puis limitée à la plage du paramètre. Ainsi, une valeur de 0 à 1 peut par exemple piloter un angle de 0 à 360."
 
-#: parameter_panel.cpp:90
+#: parameter_panel.cpp:92
 msgid "Skalierung zurücksetzen (× 1, + 0)"
 msgstr "Réinitialiser l'échelle (× 1, + 0)"
 
@@ -2226,7 +2258,7 @@ msgstr "Colonnes (verticales)"
 msgid "Spalten lassen sich an der Kopfzeile verschieben"
 msgstr "Les colonnes se déplacent en faisant glisser l’en-tête"
 
-#: parameter_panel.cpp:79
+#: parameter_panel.cpp:81
 msgid "Spannt einen Wert von 0 bis 1 über den ganzen Bereich des Parameters"
 msgstr "Étend une valeur de 0 à 1 sur toute la plage du paramètre"
 
@@ -2313,6 +2345,10 @@ msgstr "Strip 30"
 #: main_window_update.cpp:51
 msgid "Suche nach Updates …"
 msgstr "Recherche de mises à jour …"
+
+#: parameter_panel.cpp:115
+msgid "Suchen …"
+msgstr "Rechercher …"
 
 #: fixture_library_page.cpp:103
 msgid "Säule (Ringe)"
@@ -2566,9 +2602,13 @@ msgstr "Angle de la première LED : 0 = droite, 90 = haut"
 msgid "Wirbel: Dreht das Bild um einen Mittelpunkt, in der Mitte am stärksten, nach außen abklingend (Radius)."
 msgstr "Vortex: swirls the image around a center, strongest in the middle and fading outward (radius)."
 
-#: parameter_panel.cpp:169
+#: parameter_panel.cpp:293
 msgid "Wird durch eine Verbindung im Graphen gesteuert."
 msgstr "Piloté par une connexion dans le graphe."
+
+#: parameter_panel.cpp:191
+msgid "Wähle einen Node im Node-Editor, um seine Parameter zu sehen. Mit „Anheften“ bleibt ein Node hier stehen."
+msgstr "Choisissez un node dans l'éditeur de nodes pour voir ses paramètres. « Épingler » garde un node ici."
 
 #: layout_panel_groups.cpp:78
 msgid "Wähle zuerst Fixtures in der Liste."

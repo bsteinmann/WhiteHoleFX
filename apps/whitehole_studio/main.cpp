@@ -206,7 +206,9 @@ int main(int argc, char** argv) {
         std::printf("Sprachen/Tutorial: %s\n", languages.isEmpty() ? "ok" : "FEHLER");
         const QString update = languages.isEmpty() ? window.exerciseUpdate() : QString{};
         std::printf("Update-Prüfung: %s\n", update.isEmpty() ? "ok" : "FEHLER");
-        for (const QString& failure : {selection, created, transparency, controls, dmx, audio, palette, live, settingsResult, stage, view3d, menus, cues, languages, update}) {
+        const QString paramView = update.isEmpty() ? window.exerciseParameterView() : QString{};
+        std::printf("Parameterfenster: %s\n", paramView.isEmpty() ? "ok" : "FEHLER");
+        for (const QString& failure : {selection, created, transparency, controls, dmx, audio, palette, live, settingsResult, stage, view3d, menus, cues, languages, update, paramView}) {
             if (!failure.isEmpty()) {
                 std::fprintf(stderr, "Rauchtest fehlgeschlagen: %s\n", failure.toUtf8().constData());
                 return 1;

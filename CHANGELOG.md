@@ -1,5 +1,9 @@
 # Änderungen
 
+## 0.67.0
+
+- **Parameterfenster übersichtlicher (#118).** Oben im Dock „Parameter“: Ansicht **Gewählter Node** (Standard, zeigt nur den gewählten Node) oder **Alle Nodes** (alle Gruppen, aufgeklappt nur der gewählte), dazu ein **Suchfeld** nach Node- und Parameternamen. **Anheften** hält einen Node im Fenster, auch wenn man im Editor weiterklickt; der Pfeil in jeder Gruppe klappt auf und zu. Die Scrollleisten sind schon seit 0.53.0 abgesetzt. Der Rauchtest prüft Ansichten, Anheften und Suche.
+
 ## 0.66.0
 
 - **Drehringe am Achsen-Griff.** In der 3D-Bühnenansicht liegen um das gewählte Fixture drei Ringe (x rot, y grün, z blau). Ziehen an einem Ring dreht alle gewählten Fixtures um die feste Weltachse, jedes um die eigene Mitte, in 5°-Schritten (Alt: frei). Von der Kante gesehene Ringe sind nur angedeutet. Der Griff sitzt jetzt im Drehpunkt (Mitte des Fixtures) statt am Ursprung. Rechnung getestet: `preview/gizmo.hpp` (Ringe, Treffer, Winkel), `mapping::rotationAfterWorldTurn` (neue Winkel x/y/z nach einer Weltdrehung), `Player::rotateFixtures` (ein Undo-Schritt).

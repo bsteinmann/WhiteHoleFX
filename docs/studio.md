@@ -48,7 +48,14 @@ sich. Die CI macht das und legt die Bilder als Artefakt „fenster“ ab.
 
 ## Parameterregler
 
-Das Dock „Parameter“ (Menü Ansicht) listet jeden Node mit seinen Parametern:
+Das Dock „Parameter“ (Menü Ansicht) zeigt die Parameter der Nodes. Oben stellst du die **Ansicht** ein:
+
+- **Gewählter Node** (Standard): nur der Node, den du im Node-Editor gewählt hast, und die **angehefteten** Nodes.
+- **Alle Nodes**: jeder Node als Gruppe; aufgeklappt sind nur der gewählte und die angehefteten, die anderen klappst du mit dem Pfeil in der Gruppe auf.
+- **Anheften** (Knopf in jeder Gruppe) hält einen Node im Fenster, auch wenn du im Editor weiterklickst. Praktisch für Live-Regler wie Helligkeit oder Tempo.
+- Das **Suchfeld** filtert über alle Nodes nach Node- und Parameternamen.
+
+Die Ansicht merkt sich das Programm. Pro Node gibt es:
 
 - Zahlen mit Wertebereich: Regler plus Zahlenfeld, ohne Bereich nur Zahlenfeld. Die Pfeile des
   Zahlenfelds gehen in sinnvollen Schritten (ein Hundertstel der Spanne gerundet auf 1, 2 oder 5;
