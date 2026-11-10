@@ -18,6 +18,7 @@
 #include "node_editor.hpp"
 #include "node_items.hpp"
 #include "node_palette.hpp"
+#include "parameter_panel.hpp"
 
 namespace whitehole::studio {
 
