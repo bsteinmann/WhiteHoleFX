@@ -3,6 +3,7 @@
 // Warum es das gibt: Presets und Gruppen sollen dort liegen, wo man Nodes sucht. Die Einträge sind Dateien in zwei
 // Ordnern (runtime/node_preset.hpp); die Palette liest sie neu ein, wenn der Editor etwas speichert oder löscht.
 #include <QAction>
+#include <QLineEdit>
 #include <QMenu>
 #include <QMessageBox>
 #include <QTreeWidget>
