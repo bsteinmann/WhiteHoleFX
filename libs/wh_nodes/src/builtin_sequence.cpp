@@ -146,6 +146,11 @@ constexpr int kMaxSteps = 8;
 constexpr std::array<const char*, kMaxSteps> kStepKeys{"step1", "step2", "step3", "step4",
                                                       "step5", "step6", "step7", "step8"};
 constexpr std::array<double, kMaxSteps> kStepDefaults{1.0, 0.0, 0.5, 0.0, 1.0, 0.0, 0.5, 0.0};
+// Je Schritt zwei Ausgänge: "trigN" feuert im Moment, in dem der Schritt betreten wird; "onN" ist an, solange er gilt.
+// (Die Schlüssel dürfen nicht "stepN" heißen, das sind die Werte-Regler.)
+constexpr std::array<const char*, kMaxSteps> kTriggerKeys{"trig1", "trig2", "trig3", "trig4",
+                                                          "trig5", "trig6", "trig7", "trig8"};
+constexpr std::array<const char*, kMaxSteps> kActiveKeys{"on1", "on2", "on3", "on4", "on5", "on6", "on7", "on8"};
 
 // Hält einen Schrittzähler, der bei jeder steigenden Flanke an `advance` um eins wächst; welcher
 // der Schritte gerade gilt, ergibt sich aus Zähler, Schrittzahl und Richtung. Weil die Position
@@ -174,7 +179,13 @@ public:
         outputs.set("value", value);
         outputs.set("step", index);
         outputs.set("trigger", moved && !resetEdge_.rose());
-        outputs.set("hit", moved && !resetEdge_.rose() && value > 0.0);
+        const bool entered = moved && !resetEdge_.rose();
+        outputs.set("hit", entered && value > 0.0);
+        for (std::int64_t i = 0; i < kMaxSteps; ++i) {
+            const auto slot = static_cast<std::size_t>(i);
+            outputs.set(kTriggerKeys[slot], entered && i == index);
+            outputs.set(kActiveKeys[slot], i == index);
+        }
     }
 
 private:
@@ -237,11 +248,17 @@ std::vector<values::CpuNodeDefinition> sequenceNodes() {
         parameters.push_back(number(kStepKeys[static_cast<std::size_t>(i)], "Step " + std::to_string(i + 1),
                                     kStepDefaults[static_cast<std::size_t>(i)], 0.0, 1.0));
     }
-    nodes.push_back(cpuNode(
-        "wh.value.sequencer", "Sequencer", "Value",
-        {valueOutput("value", "Value", PortType::Scalar), valueOutput("step", "Step", PortType::Integer),
-         valueOutput("trigger", "Trigger", PortType::Trigger), valueOutput("hit", "Hit", PortType::Trigger)},
-        std::move(parameters), kernelFactory<SequencerKernel>()));
+    std::vector<graph::PortDescriptor> sequencerOutputs{
+        valueOutput("value", "Value", PortType::Scalar), valueOutput("step", "Step", PortType::Integer),
+        valueOutput("trigger", "Trigger", PortType::Trigger), valueOutput("hit", "Hit", PortType::Trigger)};
+    for (std::size_t i = 0; i < static_cast<std::size_t>(kMaxSteps); ++i) {
+        sequencerOutputs.push_back(valueOutput(kTriggerKeys[i], "Trigger " + std::to_string(i + 1), PortType::Trigger));
+    }
+    for (std::size_t i = 0; i < static_cast<std::size_t>(kMaxSteps); ++i) {
+        sequencerOutputs.push_back(valueOutput(kActiveKeys[i], "Active " + std::to_string(i + 1), PortType::Boolean));
+    }
+    nodes.push_back(cpuNode("wh.value.sequencer", "Sequencer", "Value", std::move(sequencerOutputs),
+                            std::move(parameters), kernelFactory<SequencerKernel>()));
     return nodes;
 }
 

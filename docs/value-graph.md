@@ -175,7 +175,7 @@ lässt sich deshalb direkt anschließen (Trigger → Boolean ist erlaubt).
 | `wh.value.compare` | `out` (Boolean), `rise`, `fall` (Trigger) | `value`, `threshold`, `hysteresis`, `mode` (0 Above, 1 Below) | An über Schwelle + Hysterese/2, aus unter Schwelle − Hysterese/2; im ersten Frame keine Flanke |
 | `wh.value.clock` | `tick` (Trigger), `phase` (0..1), `count` | `bpm`, `ratio` (0 = 1/8 … 3 = 1x … 6 = 8x), `running`, `reset` | `bpm` ist modulierbar (zum Beispiel von Tap Tempo). Pro Frame höchstens ein Tick |
 | `wh.value.envelope` | `out`, `active` (Boolean) | `gate`, `mode` (0 ADSR, 1 One-shot), `attack`, `decay`, `sustain`, `release` | Zeiten gelten für den vollen Hub 0 → 1; Zeit 0 springt sofort. Ein schon beim Start anliegendes Gate startet den Anschlag |
-| `wh.value.sequencer` | `value`, `step` (Integer), `trigger`, `hit` | `advance`, `reset`, `steps` (1–8), `direction` (0 vorwärts, 1 rückwärts, 2 hin und her, 3 zufällig), `seed`, `step1`–`step8` (0..1) | `trigger` bei jedem Weiterschalten, `hit` nur bei Schritten mit Wert über 0. Rückwärts beginnt am letzten Schritt. Mit `Map` auf einen anderen Bereich umrechnen |
+| `wh.value.sequencer` | `value`, `step` (Integer), `trigger`, `hit`, `trig1`–`trig8` (Trigger beim Betreten des Schritts), `on1`–`on8` (Boolean, an solange der Schritt gilt) | `advance`, `reset`, `steps` (1–8), `direction` (0 vorwärts, 1 rückwärts, 2 hin und her, 3 zufällig), `seed`, `step1`–`step8` (0..1) | `trigger` bei jedem Weiterschalten, `hit` nur bei Schritten mit Wert über 0. Rückwärts beginnt am letzten Schritt. `trigN` und `onN` ersetzen für „Schritt N“ einen Compare-Node auf `step`; Reset und Start lösen keinen `trigN` aus, `on1` ist dann aber an. Mit `Map` auf einen anderen Bereich umrechnen |
 
 ### Pong (Spiel)
 

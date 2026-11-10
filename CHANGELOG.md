@@ -1,5 +1,9 @@
 # Änderungen
 
+## 0.79.0
+
+- **Sequencer: Ausgänge je Schritt.** Neu sind `Trigger 1` bis `Trigger 8` (feuern im Moment, in dem der Schritt betreten wird) und `Active 1` bis `Active 8` (an, solange der Schritt gilt). Damit braucht man für „Schritt N“ keinen Compare-Node mehr. Reset und Start lösen keinen Trigger aus. Die Schlüssel heißen `trigN` und `onN`, weil `stepN` die Werte-Regler sind. Alte Projekte laufen unverändert. Ob acht plus acht Ausgänge im Node praktisch sind, wird sich zeigen; ausblenden je nach Schrittzahl ist als eigener Schritt vorgemerkt.
+
 ## 0.78.1
 
 - **Automatisch OpenGL auf Kepler-Karten (#13).** Auf NVIDIA GeForce GTX 600/700 (ohne 745 und 750) blieb der Text-Node unter Vulkan unsichtbar. WhiteHoleFX erkennt diese Karten am Namen und nimmt OpenGL; schlägt das fehl, bleibt es bei Vulkan. `WHITEHOLEFX_GPU_BACKEND` hat weiter Vorrang. Andere Karten sind nicht betroffen. Gesehen wurde das Problem bisher nur auf einer GTX 760; weitere betroffene Karten bitte als Issue melden.

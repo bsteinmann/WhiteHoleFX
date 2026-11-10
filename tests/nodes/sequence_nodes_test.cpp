@@ -286,6 +286,48 @@ TEST_CASE("Sequencer: Schritte, Wert, Trigger und Hit") {
     CHECK_FALSE(flag(lab, seq, "trigger"));
 }
 
+TEST_CASE("Sequencer: je Schritt ein Trigger- und ein Active-Ausgang") {
+    Lab lab;
+    const NodeId seq = lab.add("wh.value.sequencer");
+    lab.feed(seq, "value");
+    lab.set(seq, "steps", std::int64_t{3});
+    lab.run(0.0, 0.125);
+
+    const auto active = [&] {
+        std::vector<int> on;
+        for (int i = 1; i <= 8; ++i) {
+            if (flag(lab, seq, ("on" + std::to_string(i)).c_str())) {
+                on.push_back(i);
+            }
+        }
+        return on;
+    };
+    const auto fired = [&] {
+        std::vector<int> hit;
+        for (int i = 1; i <= 8; ++i) {
+            if (flag(lab, seq, ("trig" + std::to_string(i)).c_str())) {
+                hit.push_back(i);
+            }
+        }
+        return hit;
+    };
+    CHECK(active() == std::vector<int>{1});  // Start: Schritt 1 gilt, aber kein Trigger
+    CHECK(fired().empty());
+    for (const int expected : {2, 3, 1, 2}) {
+        pulse(lab, seq, "advance");
+        CHECK(active() == std::vector<int>{expected});
+        CHECK(fired() == std::vector<int>{expected});
+    }
+    lab.run(0.0, 0.125);  // kein Weiterschalten: der Schritt bleibt an, der Trigger ist weg
+    CHECK(active() == std::vector<int>{2});
+    CHECK(fired().empty());
+
+    lab.set(seq, "reset", true);  // Reset gilt nicht als Betreten
+    lab.run(0.0, 0.125);
+    CHECK(active() == std::vector<int>{1});
+    CHECK(fired().empty());
+}
+
 TEST_CASE("Sequencer: Richtungen und Reset") {
     Lab lab;
     const NodeId seq = lab.add("wh.value.sequencer");
