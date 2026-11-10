@@ -2687,7 +2687,7 @@ msgid "Verdreht das Bild entlang einer Achse, je weiter weg, desto stärker (Win
 msgstr ""
 
 #: node_info_texts.cpp:156
-msgid "Vergleicht einen Wert mit einer Schwelle (mit Hysterese) und liefert Ja/Nein sowie Impulse beim Überschreiten und Unterschreiten."
+msgid "Vergleicht einen Wert mit einer Schwelle (mit Hysterese): darüber, darunter, zwischen zwei Grenzen oder gleich (mit Toleranz). Liefert Ja/Nein sowie Impulse beim Einschalten und Ausschalten."
 msgstr ""
 
 #: node_info_texts.cpp:59

@@ -2687,8 +2687,8 @@ msgid "Verdreht das Bild entlang einer Achse, je weiter weg, desto stärker (Win
 msgstr "Twists the image along an axis, stronger the further away (angle per unit)."
 
 #: node_info_texts.cpp:156
-msgid "Vergleicht einen Wert mit einer Schwelle (mit Hysterese) und liefert Ja/Nein sowie Impulse beim Überschreiten und Unterschreiten."
-msgstr "Compares a value with a threshold (with hysteresis) and outputs yes/no plus triggers on rising and falling."
+msgid "Vergleicht einen Wert mit einer Schwelle (mit Hysterese): darüber, darunter, zwischen zwei Grenzen oder gleich (mit Toleranz). Liefert Ja/Nein sowie Impulse beim Einschalten und Ausschalten."
+msgstr "Compara un valor con un umbral (con histéresis): por encima, por debajo, entre dos límites o igual (con tolerancia). Entrega sí/no y pulsos al activarse y al desactivarse."
 
 #: node_info_texts.cpp:59
 msgid "Vergröbert das Bild zu einem Raster aus Zellen (Cells X/Y/Z), wie große Pixel."

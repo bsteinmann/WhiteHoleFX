@@ -153,7 +153,7 @@ std::span<const NodeInfoEntry> nodeInfoEntries() {
     {"wh.value.colorramp",
      QT_TR_NOOP("Farbverlauf aus bis zu vier Farben. „Position“ wählt die Stelle, oder er läuft von selbst im eingestellten Tempo.")},
     {"wh.value.compare",
-     QT_TR_NOOP("Vergleicht einen Wert mit einer Schwelle (mit Hysterese) und liefert Ja/Nein sowie Impulse beim Überschreiten und Unterschreiten.")},
+     QT_TR_NOOP("Vergleicht einen Wert mit einer Schwelle (mit Hysterese): darüber, darunter, zwischen zwei Grenzen oder gleich (mit Toleranz). Liefert Ja/Nein sowie Impulse beim Einschalten und Ausschalten.")},
     {"wh.value.envelope",
      QT_TR_NOOP("Hüllkurve (ADSR): Aus einem Schalter wird ein weicher Verlauf mit Attack, Decay, Sustain und Release. Auch als Einzelimpuls.")},
     {"wh.value.lfo",

@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <cmath>
 #include <numbers>
+#include <utility>
 
 #include "builtin_internal.hpp"
 
@@ -52,6 +53,9 @@ public:
 // Schwellwert mit Hysterese: "an", sobald der Wert über threshold + hysteresis/2 steigt, und erst
 // wieder "aus" unter threshold - hysteresis/2. Im ersten Frame gilt der einfache Vergleich mit der
 // Schwelle (ohne Hysterese) und es gibt keine Flanke.
+// Die Modi Between (zwischen threshold und upper) und Equal (threshold ± tolerance) prüfen einen Bereich
+// [lo, hi]; die Hysterese macht ihn zum Einschalten enger und zum Ausschalten weiter (je hysteresis/2 an
+// jeder Kante), damit ein Wert an der Grenze nicht flackert.
 class CompareKernel final : public values::ICpuKernel {
 public:
     void evaluate(const KernelContext& context, KernelOutputs& outputs) override {
@@ -59,15 +63,42 @@ public:
         const double value = in.number("value", 0.0);
         const double threshold = in.number("threshold", 0.5);
         const double halfBand = std::max(in.number("hysteresis", 0.0), 0.0) * 0.5;
-        if (!initialized_) {
-            above_ = value > threshold;
-        } else if (above_ && value < threshold - halfBand) {
-            above_ = false;
-        } else if (!above_ && value > threshold + halfBand) {
-            above_ = true;
+        const std::int64_t mode = in.integer("mode", 0);
+        if (mode != mode_) {
+            mode_ = mode;
+            initialized_ = false;  // anderer Vergleich: der erste Blick gilt ohne Hysterese
         }
-        const bool below = in.integer("mode", 0) == 1;
-        const bool state = below ? !above_ : above_;
+        bool state = false;
+        if (mode >= 2) {
+            double lo = threshold;
+            double hi = in.number("upper", 1.0);
+            if (mode == 2) {
+                if (lo > hi) {
+                    std::swap(lo, hi);
+                }
+            } else {
+                const double tolerance = std::max(in.number("tolerance", 0.05), 0.0);
+                lo = threshold - tolerance;
+                hi = threshold + tolerance;
+            }
+            if (!initialized_) {
+                inside_ = value >= lo && value <= hi;
+            } else if (inside_ && (value < lo - halfBand || value > hi + halfBand)) {
+                inside_ = false;
+            } else if (!inside_ && value >= lo + halfBand && value <= hi - halfBand) {
+                inside_ = true;
+            }
+            state = inside_;
+        } else {
+            if (!initialized_) {
+                above_ = value > threshold;
+            } else if (above_ && value < threshold - halfBand) {
+                above_ = false;
+            } else if (!above_ && value > threshold + halfBand) {
+                above_ = true;
+            }
+            state = mode == 1 ? !above_ : above_;
+        }
         edge_.update(state);
         initialized_ = true;
         outputs.set("out", state);
@@ -78,6 +109,8 @@ public:
 private:
     bool initialized_{false};
     bool above_{false};
+    bool inside_{false};
+    std::int64_t mode_{0};
     EdgeDetector edge_;
 };
 
@@ -98,7 +131,10 @@ std::vector<values::CpuNodeDefinition> mathNodes() {
         {valueOutput("out", "Out", PortType::Boolean), valueOutput("rise", "Rise", PortType::Trigger),
          valueOutput("fall", "Fall", PortType::Trigger)},
         {number("value", "Value", 0.0), number("threshold", "Threshold", 0.5),
-         number("hysteresis", "Hysteresis", 0.0, 0.0, 10.0), choice("mode", "On when value is", {"Above", "Below"})},
+         number("hysteresis", "Hysteresis", 0.0, 0.0, 10.0),
+         choice("mode", "On when value is",
+                {"Above", "Below", "Between Threshold and Upper", "Equal to Threshold (within Tolerance)"}),
+         number("upper", "Upper limit (Between)", 1.0), number("tolerance", "Tolerance (Equal)", 0.05, 0.0, 10.0)},
         kernelFactory<CompareKernel>()));
     return nodes;
 }

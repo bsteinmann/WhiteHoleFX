@@ -1,5 +1,9 @@
 # Änderungen
 
+## 0.82.0
+
+- **Compare: Between und Equal.** Die Auswahl „On when value is“ kennt zusätzlich *Between* (an zwischen `threshold` und der neuen oberen Grenze `upper`) und *Equal* (an bei `threshold` ± `tolerance`, zum Beispiel für die Schrittnummer eines Sequencers). Die Hysterese gilt an beiden Kanten (zum Einschalten enger, zum Ausschalten weiter). *Above* und *Below* verhalten sich wie bisher, alte Projekte laufen unverändert.
+
 ## 0.81.0
 
 - **Audio Trigger mit eigenem Frequenzbereich.** Der Node „Kick / Snare / Hat“ heißt jetzt **Audio Trigger** (Typ `wh.value.onset`, alte Projekte laufen unverändert). Neu in der Auswahl *Instrument*: **Eigener Bereich** mit `From (Hz)` und `To (Hz)`. Der Node führt dafür einen eigenen Einsatz-Erkenner (gleiches Verfahren wie Kick/Snare/Hat: Anstieg im Vergleich zur letzten Sekunde, Mindestabstand 0,1 s); der Bereich im Anzeigestreifen folgt automatisch. Verdrehte Grenzen werden sortiert.

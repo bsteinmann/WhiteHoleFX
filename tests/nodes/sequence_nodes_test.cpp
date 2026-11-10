@@ -109,6 +109,79 @@ TEST_CASE("Compare: Schwelle, Hysterese und Flanken") {
     CHECK(flag(lab, node, "fall"));
 }
 
+TEST_CASE("Compare: Between schaltet im Bereich an, Equal mit Toleranz, Hysterese an beiden Kanten") {
+    Lab lab;
+    const NodeId node = lab.add("wh.value.compare");
+    lab.feed(node, "out");
+    const auto step = [&](double value) {
+        lab.set(node, "value", value);
+        lab.run(0.0, 0.1);
+    };
+
+    lab.set(node, "mode", std::int64_t{2});  // Between 0,3 .. 0,7
+    lab.set(node, "threshold", 0.7);         // verdreht angegeben: wird sortiert
+    lab.set(node, "upper", 0.3);
+    step(0.1);
+    CHECK_FALSE(flag(lab, node, "out"));
+    step(0.5);
+    CHECK(flag(lab, node, "out"));
+    CHECK(flag(lab, node, "rise"));
+    step(0.7);  // die Grenze selbst zählt dazu
+    CHECK(flag(lab, node, "out"));
+    step(0.71);
+    CHECK_FALSE(flag(lab, node, "out"));
+    CHECK(flag(lab, node, "fall"));
+    step(0.3);
+    CHECK(flag(lab, node, "out"));
+
+    lab.set(node, "hysteresis", 0.1);  // Einschalten 0,35 .. 0,65, Ausschalten erst unter 0,25 / über 0,75
+    step(0.9);
+    CHECK_FALSE(flag(lab, node, "out"));
+    step(0.7);  // im Bereich, aber noch außerhalb des engeren Einschaltbereichs
+    CHECK_FALSE(flag(lab, node, "out"));
+    step(0.6);
+    CHECK(flag(lab, node, "out"));
+    step(0.72);  // über 0,7, aber unter 0,75: bleibt an
+    CHECK(flag(lab, node, "out"));
+    step(0.8);
+    CHECK_FALSE(flag(lab, node, "out"));
+
+    lab.set(node, "hysteresis", 0.0);
+    lab.set(node, "mode", std::int64_t{3});  // Equal 3 ± 0,5 (Schrittnummer eines Sequencers)
+    lab.set(node, "threshold", 3.0);
+    lab.set(node, "tolerance", 0.5);
+    step(2.0);
+    CHECK_FALSE(flag(lab, node, "out"));
+    step(3.0);
+    CHECK(flag(lab, node, "out"));
+    CHECK(flag(lab, node, "rise"));
+    step(3.4);
+    CHECK(flag(lab, node, "out"));
+    step(4.0);
+    CHECK_FALSE(flag(lab, node, "out"));
+    CHECK(flag(lab, node, "fall"));
+}
+
+TEST_CASE("Compare: Equal erkennt den Schritt eines Sequencers") {
+    Lab lab;
+    const NodeId seq = lab.add("wh.value.sequencer");
+    lab.set(seq, "steps", std::int64_t{4});
+    const NodeId is3 = lab.add("wh.value.compare");
+    lab.feed(is3, "out");
+    lab.set(is3, "mode", std::int64_t{3});
+    lab.set(is3, "threshold", 2.0);  // dritter Schritt (Zählung ab 0)
+    lab.set(is3, "tolerance", 0.5);
+    lab.connect(seq, "step", is3, "value");
+    lab.run(0.0, 0.125);
+    CHECK_FALSE(flag(lab, is3, "out"));
+    pulse(lab, seq, "advance");
+    CHECK_FALSE(flag(lab, is3, "out"));
+    pulse(lab, seq, "advance");
+    CHECK(flag(lab, is3, "out"));
+    pulse(lab, seq, "advance");
+    CHECK_FALSE(flag(lab, is3, "out"));
+}
+
 TEST_CASE("Compare: Modus Below kehrt um, der erste Frame hat keine Flanke") {
     Lab lab;
     const NodeId node = lab.add("wh.value.compare");
