@@ -8,6 +8,7 @@
 
 #include "whitehole/project/output_target.hpp"
 #include "whitehole/output/patch_protocol.hpp"
+#include "whitehole/output/patch_space.hpp"
 #include "whitehole/runtime/player.hpp"
 
 namespace whitehole::runtime {
@@ -155,6 +156,27 @@ output::FixturePatch Player::suggestPatch(std::uint64_t leds) const {
     patch.universe = static_cast<std::uint16_t>(
         std::min<std::uint64_t>(next, std::max<std::uint16_t>(output::lastUniverse(patch.protocol), output::firstUniverse(patch.protocol))));
     return patch;
+}
+
+output::FixturePatch Player::fitPatch(mapping::FixtureId id, output::FixturePatch wanted) const {
+    if (!project_) {
+        return wanted;
+    }
+    const auto ledsOf = [&](mapping::FixtureId fixtureId) -> std::uint32_t {
+        const mapping::Fixture* fixture = project_->layout.find(fixtureId);
+        return fixture != nullptr ? static_cast<std::uint32_t>(mapping::ledCount(fixture->shape)) : 0U;
+    };
+    std::vector<output::ChannelBlock> others;
+    for (const output::FixturePatch& existing : project_->patches) {
+        if (existing.fixture != id) {
+            const std::vector<output::ChannelBlock> blocks = output::channelBlocks(existing, ledsOf(existing.fixture));
+            others.insert(others.end(), blocks.begin(), blocks.end());
+        }
+    }
+    if (const auto channel = output::fitChannel(wanted, ledsOf(id), others)) {
+        wanted.channel = *channel;
+    }
+    return wanted;
 }
 
 Result<void> Player::setSettings(const Settings& settings) {

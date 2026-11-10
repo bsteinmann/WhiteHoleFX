@@ -286,7 +286,7 @@ msgstr "(бібліотека порожня)"
 msgid "(Schwarz)"
 msgstr "(Чорний)"
 
-#: fixture_form.cpp:79 patch_table.cpp:103
+#: fixture_form.cpp:79 patch_table.cpp:107
 msgid "(eigene Form)"
 msgstr "(власна форма)"
 
@@ -454,6 +454,10 @@ msgstr "Додає два зображення: світло складаєть�
 msgid "Adresse (leer = Multicast, nur sACN)"
 msgstr "Адреса (порожня = multicast, лише sACN)"
 
+#: patch_table.cpp:49
+msgid "Adressraum"
+msgstr "Діапазон адрес"
+
 #: look_panel.cpp:38
 msgid "Aktuellen Effekt als Look speichern …"
 msgstr "Зберегти поточний ефект як Look …"
@@ -542,7 +546,7 @@ msgstr "Art-Net"
 msgid "Art-Net empfangen"
 msgstr "Приймати Art-Net"
 
-#: patch_table.cpp:52
+#: patch_table.cpp:54
 msgid "Art-Net zählt Universen ab 0 (bis 32767), sACN ab 1 (bis 63999). Bei DDP gibt es keine Universen."
 msgstr "Art-Net рахує універси з 0 (до 32767), sACN з 1 (до 63999). У DDP універсів немає."
 
@@ -678,7 +682,7 @@ msgstr "Смуга вздовж y"
 msgid "Balken entlang z"
 msgstr "Смуга вздовж z"
 
-#: fixture_form.cpp:90 patch_table.cpp:46
+#: fixture_form.cpp:90 patch_table.cpp:48
 msgid "Bauform"
 msgstr "Тип фікстури"
 
@@ -774,11 +778,15 @@ msgstr "Блискавки: випадкові розгалужені удари
 msgid "Breite"
 msgstr "Ширина"
 
+#: patch_table.cpp:195
+msgid "Byte %1–%2"
+msgstr "Байт %1–%2"
+
 #: node_info_texts.cpp:118
 msgid "Bänder aus Licht laufen die gewählte Achse entlang. „Frequency“ ist die Zahl der Wellen über die Länge, „Sharpness“ macht aus der weichen Welle schmale Pulse. Für Strips."
 msgstr "Смуги світла біжать уздовж вибраної осі. «Frequency» — кількість хвиль на довжині, «Sharpness» перетворює м’яку хвилю на вузькі імпульси. Для стрічок."
 
-#: output_form.cpp:26 patch_table.cpp:46
+#: output_form.cpp:26 patch_table.cpp:48
 msgid "Controller"
 msgstr "Контролер"
 
@@ -822,7 +830,7 @@ msgstr "Запустити Cuelist: перемикає в режим Live і п�
 msgid "Cyan"
 msgstr "Блакитний"
 
-#: patch_table.cpp:47
+#: patch_table.cpp:49
 msgid "DDP-Offset"
 msgstr "Зміщення DDP"
 
@@ -914,7 +922,7 @@ msgstr "Додати поточний ефект до списку як Look (Ct
 msgid "Der Ausgang: Was hier ankommt, wird auf die LEDs gesendet. Mit „Mode“ in einen Bereich skalieren oder als Fenster ausschneiden, plus Helligkeit."
 msgstr "Вихід: усе, що сюди надходить, надсилається на LED. Через «Mode» масштабується в область або вирізається як вікно, плюс яскравість."
 
-#: patch_table.cpp:49
+#: patch_table.cpp:51
 msgid "Der Controller bestimmt das Protokoll. Wechselst du auf einen Controller mit anderem Protokoll, wird die Universe-Nummer zwischen Art-Net und sACN um 1 verschoben."
 msgstr "Контролер визначає протокол. Якщо перейти на контролер з іншим протоколом, номер універсу зсувається на 1 між Art-Net і sACN."
 
@@ -1186,7 +1194,7 @@ msgstr "Перша вісь = біжить найшвидше вздовж ка�
 msgid "Erste LED bei (Grad)"
 msgstr "Перший світлодіод на (градусів)"
 
-#: add_fixture_dialog.cpp:177 patch_table.cpp:47
+#: add_fixture_dialog.cpp:177 patch_table.cpp:49
 msgid "Erster Kanal"
 msgstr "Перший канал"
 
@@ -1230,7 +1238,7 @@ msgstr "Послідовність кольорів R G B W"
 msgid "Farbige Punkte vor den Nodes in der Palette: was der Node liefert"
 msgstr "Кольорові точки перед нодами в палітрі: що нода віддає"
 
-#: add_fixture_dialog.cpp:179 patch_table.cpp:48 test_panel.cpp:39
+#: add_fixture_dialog.cpp:179 patch_table.cpp:50 test_panel.cpp:39
 msgid "Farbreihenfolge"
 msgstr "Порядок кольорів"
 
@@ -1258,7 +1266,7 @@ msgstr "Field"
 msgid "Filtert die Gruppen nach Node- oder Parametername (über alle Nodes)"
 msgstr "Фільтрує групи за назвою нода або параметра (серед усіх нод)"
 
-#: patch_table.cpp:46
+#: patch_table.cpp:48
 msgid "Fixture"
 msgstr "Фікстура"
 
@@ -1266,7 +1274,7 @@ msgstr "Фікстура"
 msgid "Fixture &hinzufügen …"
 msgstr "&Додати фікстуру …"
 
-#: patch_table.cpp:116
+#: patch_table.cpp:120
 msgid "Fixture an die Ausgabe schicken"
 msgstr "Надсилати фікстуру на вивід"
 
@@ -1338,7 +1346,7 @@ msgstr "GO (вручну)"
 msgid "GPU wird vorbereitet …"
 msgstr "Підготовка GPU …"
 
-#: patch_table.cpp:48
+#: patch_table.cpp:50
 msgid "Gamma"
 msgstr "Gamma"
 
@@ -1430,7 +1438,7 @@ msgstr "Розмір"
 msgid "Grün"
 msgstr "Зелений"
 
-#: patch_table.cpp:48
+#: patch_table.cpp:50
 msgid "Helligkeit"
 msgstr "Яскравість"
 
@@ -1570,7 +1578,7 @@ msgstr "Коло 24"
 msgid "LED-Steuerung für Matrizen, Cubes und Pixelinstallationen"
 msgstr "Керування LED-матрицями, кубами та піксельними інсталяціями"
 
-#: add_fixture_dialog.cpp:122 fixture_form.cpp:149 patch_table.cpp:46
+#: add_fixture_dialog.cpp:122 fixture_form.cpp:149 patch_table.cpp:48
 msgid "LEDs"
 msgstr "LED"
 
@@ -1794,7 +1802,7 @@ msgstr "Центр"
 msgid "Modus"
 msgstr "Режим"
 
-#: output_form_library.cpp:133 patch_table.cpp:124
+#: output_form_library.cpp:133 patch_table.cpp:128
 msgid "Multicast"
 msgstr "Multicast"
 
@@ -2094,7 +2102,7 @@ msgstr "Зберегти проєкт як"
 msgid "Projekt öffnen"
 msgstr "Відкрити проєкт"
 
-#: add_fixture_dialog.cpp:174 output_form.cpp:30 patch_table.cpp:46
+#: add_fixture_dialog.cpp:174 output_form.cpp:30 patch_table.cpp:48
 msgid "Protokoll"
 msgstr "Протокол"
 
@@ -2218,7 +2226,7 @@ msgstr "Відкрити сторінку"
 msgid "Seitenverhältnis halten (KeepAspect)"
 msgstr "Зберігати пропорції (KeepAspect)"
 
-#: patch_table.cpp:46
+#: patch_table.cpp:48
 msgid "Senden"
 msgstr "Надсилати"
 
@@ -2274,7 +2282,7 @@ msgstr "Стовпці"
 msgid "Spalten (senkrecht)"
 msgstr "Стовпці (вертикально)"
 
-#: patch_table.cpp:57
+#: patch_table.cpp:61
 msgid "Spalten lassen sich an der Kopfzeile verschieben"
 msgstr "Стовпці можна переміщувати перетягуванням заголовка"
 
@@ -2454,6 +2462,14 @@ msgstr "Ефект тунелю: зображення спотворюється
 msgid "Tutorial"
 msgstr "Туторіал"
 
+#: patch_table.cpp:199
+msgid "U%1: %2 – U%3: %4"
+msgstr "U%1: %2 – U%3: %4"
+
+#: patch_table.cpp:197
+msgid "U%1: %2–%3"
+msgstr "U%1: %2–%3"
+
 #: look_panel.cpp:61
 msgid "Umbenennen …"
 msgstr "Перейменувати …"
@@ -2470,7 +2486,7 @@ msgstr "Universe"
 msgid "Universe %1 ab Kanal 1"
 msgstr "Universe %1 з каналу 1"
 
-#: patch_table.cpp:47
+#: patch_table.cpp:49
 msgid "Universe (Art-Net ab 0, sACN ab 1)"
 msgstr "Універс (Art-Net з 0, sACN з 1)"
 
@@ -2577,6 +2593,10 @@ msgstr "Додатково"
 #: test_panel.cpp:29
 msgid "Weiß"
 msgstr "Білий"
+
+#: patch_table.cpp:56
+msgid "Welche Kanäle das Fixture belegt: Universe und erster bis letzter Kanal (eine LED belegt drei Kanäle). Läuft es über, steht das letzte Universe dahinter."
+msgstr "Які канали займає фікстура: всесвіт і перший-останній канал (один світлодіод займає три канали). Якщо вона переходить далі, вказано останній всесвіт."
 
 #: node_info_texts.cpp:21
 msgid "Wellenform des Audio-Eingangs (ein kurzes Zeitfenster, auf Wunsch an der steigenden Flanke ausgerichtet). Wird an „Oscilloscope“ angeschlossen."

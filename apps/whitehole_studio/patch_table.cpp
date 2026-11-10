@@ -10,9 +10,11 @@
 #include <QTimer>
 
 #include <algorithm>
+#include <optional>
 
 #include "form_helpers.hpp"
 #include "whitehole/output/patch_protocol.hpp"
+#include "whitehole/output/patch_space.hpp"
 
 namespace whitehole::studio {
 
@@ -44,13 +46,15 @@ QTableWidgetItem* readOnly(const QString& text) {
 
 PatchTable::PatchTable(runtime::Player& player, QWidget* parent) : QTableWidget{0, Count, parent}, player_{player} {
     setHorizontalHeaderLabels({tr("Fixture"), tr("Bauform"), tr("LEDs"), tr("Senden"), tr("Controller"), tr("Protokoll"),
-                               tr("Universe (Art-Net ab 0, sACN ab 1)"), tr("Erster Kanal"), tr("DDP-Offset"),
+                               tr("Universe (Art-Net ab 0, sACN ab 1)"), tr("Erster Kanal"), tr("Adressraum"), tr("DDP-Offset"),
                                tr("Farbreihenfolge"), tr("Gamma"), tr("Helligkeit")});
     horizontalHeaderItem(Destination)->setToolTip(tr("Der Controller bestimmt das Protokoll. Wechselst du auf einen "
                                                      "Controller mit anderem Protokoll, wird die Universe-Nummer "
                                                      "zwischen Art-Net und sACN um 1 verschoben."));
     horizontalHeaderItem(Universe)->setToolTip(tr("Art-Net zählt Universen ab 0 (bis 32767), sACN ab 1 (bis 63999). "
                                                   "Bei DDP gibt es keine Universen."));
+    horizontalHeaderItem(Range)->setToolTip(tr("Welche Kanäle das Fixture belegt: Universe und erster bis letzter Kanal "
+                                               "(eine LED belegt drei Kanäle). Läuft es über, steht das letzte Universe dahinter."));
     horizontalHeader()->setSectionsMovable(true);  // Spalten per Ziehen an der Kopfzeile umordnen
     horizontalHeader()->setStretchLastSection(false);
     horizontalHeader()->setSectionResizeMode(QHeaderView::Interactive);
@@ -59,7 +63,7 @@ PatchTable::PatchTable(runtime::Player& player, QWidget* parent) : QTableWidget{
     setSelectionBehavior(QAbstractItemView::SelectRows);
     setEditTriggers(QAbstractItemView::NoEditTriggers);
     setMinimumHeight(160);
-    const QByteArray saved = settings().value(QStringLiteral("stageSetup/patchHeader2")).toByteArray();
+    const QByteArray saved = settings().value(QStringLiteral("stageSetup/patchHeader3")).toByteArray();
     if (!saved.isEmpty()) {
         horizontalHeader()->restoreState(saved);
     }
@@ -69,7 +73,7 @@ PatchTable::PatchTable(runtime::Player& player, QWidget* parent) : QTableWidget{
 
 void PatchTable::saveHeader() const {
     if (!populating_) {
-        settings().setValue(QStringLiteral("stageSetup/patchHeader2"), horizontalHeader()->saveState());
+        settings().setValue(QStringLiteral("stageSetup/patchHeader3"), horizontalHeader()->saveState());
     }
 }
 
@@ -145,6 +149,7 @@ void PatchTable::rebuild() {
             setCellWidget(row, Destination, destination);
             setCellWidget(row, Universe, universe);
             setCellWidget(row, Channel, channel);
+            setItem(row, Range, readOnly(QString{}));
             setCellWidget(row, DdpOffset, offset);
             setCellWidget(row, Order, order);
             setCellWidget(row, Gamma, gamma);
@@ -159,6 +164,7 @@ void PatchTable::rebuild() {
                 connect(box, qOverload<double>(&QDoubleSpinBox::valueChanged), this, [this, id](double) { commit(id); });
             }
             updateEnabled(row);
+            updateRange(row);
         }
     }
     resizeColumnsToContents();
@@ -168,6 +174,31 @@ void PatchTable::rebuild() {
 output::Protocol PatchTable::protocolAt(int row) const {
     const QTableWidgetItem* item = this->item(row, Protocol);
     return item != nullptr ? static_cast<output::Protocol>(item->data(kProtocolRole).toInt()) : output::Protocol::ArtNet;
+}
+
+void PatchTable::updateRange(int row) {
+    QTableWidgetItem* cell = row >= 0 ? item(row, Range) : nullptr;
+    const project::Project* project = player_.project();
+    if (cell == nullptr || project == nullptr) {
+        return;
+    }
+    const mapping::FixtureId id = idAt(row);
+    const mapping::Fixture* fixture = project->layout.find(id);
+    const auto patch = std::find_if(project->patches.begin(), project->patches.end(),
+                                    [&](const output::FixturePatch& candidate) { return candidate.fixture == id; });
+    const auto span = fixture != nullptr && patch != project->patches.end()
+                          ? output::addressSpan(*patch, static_cast<std::uint32_t>(mapping::ledCount(fixture->shape)))
+                          : std::nullopt;
+    if (!span) {
+        cell->setText(QStringLiteral("–"));
+    } else if (span->protocol == output::Protocol::Ddp) {
+        cell->setText(tr("Byte %1–%2").arg(span->firstChannel).arg(span->lastChannel));
+    } else if (span->firstUniverse == span->lastUniverse) {
+        cell->setText(tr("U%1: %2–%3").arg(span->firstUniverse).arg(span->firstChannel).arg(span->lastChannel));
+    } else {
+        cell->setText(tr("U%1: %2 – U%3: %4")
+                          .arg(span->firstUniverse).arg(span->firstChannel).arg(span->lastUniverse).arg(span->lastChannel));
+    }
 }
 
 void PatchTable::updateEnabled(int row) {
@@ -234,7 +265,29 @@ void PatchTable::commit(mapping::FixtureId id, bool rebuildAfter) {
     patch.color.order = static_cast<output::ColorOrder>(qobject_cast<QComboBox*>(cellWidget(row, Order))->currentIndex());
     patch.color.gamma = static_cast<float>(dbl(Gamma));
     patch.color.brightness = static_cast<float>(dbl(Brightness));
+    // Wechselt der Fixture-Patch Universe oder Controller und der Kanal ist dort schon belegt, kommt er hinter das andere
+    // Fixture (Matrix und dahinter ein einzelner Pixel im selben Universe), statt dass die Änderung abgelehnt wird.
+    const project::Project* project = player_.project();
+    const output::FixturePatch* stored = nullptr;
+    if (project != nullptr) {
+        for (const output::FixturePatch& candidate : project->patches) {
+            if (candidate.fixture == id) {
+                stored = &candidate;
+            }
+        }
+    }
+    if (stored != nullptr && patch.protocol != output::Protocol::Ddp &&
+        (stored->universe != patch.universe || stored->destination != patch.destination)) {
+        const output::FixturePatch fitted = player_.fitPatch(id, patch);
+        if (fitted.channel != patch.channel) {
+            patch.channel = fitted.channel;
+            populating_ = true;
+            qobject_cast<QSpinBox*>(cellWidget(row, Channel))->setValue(patch.channel);
+            populating_ = false;
+        }
+    }
     report(player_.setPatch(id, patch), rebuildAfter);
+    updateRange(rowOf(id));
 }
 
 QString PatchTable::exercise() {
@@ -253,6 +306,10 @@ QString PatchTable::exercise() {
         return QStringLiteral("Patch-Tabelle: kein Fixture mit Patch");
     }
     const mapping::FixtureId id = idAt(row);
+    // Der Adressraum eines gepatchten Fixtures steht in der Zelle ("U1: 1–297"), nie nur der Strich
+    if (item(row, Range) == nullptr || item(row, Range)->text().isEmpty() || item(row, Range)->text() == QStringLiteral("–")) {
+        return QStringLiteral("Patch-Tabelle: der Adressraum fehlt");
+    }
     qobject_cast<QComboBox*>(cellWidget(row, Order))->setCurrentIndex(static_cast<int>(output::ColorOrder::GRB));
     const auto patchOf = [&]() -> const output::FixturePatch* {
         for (const output::FixturePatch& patch : player_.project()->patches) {

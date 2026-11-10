@@ -212,6 +212,12 @@ KeepAspect); **sACN-Priorität und Quellname** erscheinen nur, wenn mindestens e
 Universe, erster Kanal, DDP-Offset, Farbreihenfolge, Gamma, Helligkeit. Nur was zum Protokoll des Controllers gehört, ist aktiv:
 Universe und erster Kanal bei Art-Net und sACN (Bereich 0 bis 32767 bzw. 1 bis 63999), der DDP-Offset bei DDP. Die Spalten lassen
 sich an der Kopfzeile verschieben (auch bei der Controller-Tabelle); die Reihenfolge der Patch-Tabelle wird gemerkt.
+Die Spalte **Adressraum** zeigt, welche Kanäle ein Fixture belegt: `U1: 1–297` heißt Universe 1, Kanal 1 bis 297 (eine LED belegt
+drei Kanäle, bei einer Matrix aus 9 × 11 LEDs also 297); läuft das Fixture über, steht `U1: 1 – U3: 180` da, bei DDP die Bytes.
+**Mehrere Fixtures im selben Universe:** Sie dürfen sich ein Universe teilen, solange sich die Kanäle nicht überlappen. Ändert man
+bei einem Fixture das Universe auf eines, in dem der gewählte Kanal schon belegt ist, rückt es automatisch hinter das letzte belegte
+Fixture (eine Matrix und dahinter ein einzelner Pixel am selben Controller: Universe 1 eintragen, der Pixel liegt auf Kanal 298).
+Den Kanal kann man danach von Hand ändern; liegt er auf einem anderen Fixture, lehnt der Ausgabeplan es ab und nennt den Grund.
 
 **Controller-Bibliothek.** Unter der Controller-Tabelle speichert **In Bibliothek speichern** den gewählten Controller (Name, Protokoll, Adresse, Port) in `controller-library.whfx` im Benutzerverzeichnis (neben der Bauform-Bibliothek; Pfad im Tooltip; Umgebungsvariable `WHITEHOLEFX_CONTROLLER_LIBRARY` ersetzt ihn). Ohne Namen fragt das Studio danach; ein gleichnamiger Eintrag wird ersetzt. **Aus Bibliothek +** listet die gespeicherten Controller und fügt den gewählten als neuen Controller ein, **Auf gewählten anwenden** überschreibt stattdessen den in der Tabelle gewählten Controller (dasselbe Gerät mit anderen Einstellungen; die Patches bleiben darauf), **Aus Bibliothek löschen** entfernt einen Eintrag aus der Bibliothek, nicht aus dem Projekt. So hältst du verschiedene Aufbauten (zum Beispiel „Bühne“, „Proberaum“) bereit.
 

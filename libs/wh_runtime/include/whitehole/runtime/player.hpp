@@ -277,6 +277,11 @@ public:
     /// geht davon aus, dass je Universe 170 LEDs passen. Ohne Projekt Universe 0.
     [[nodiscard]] output::FixturePatch suggestPatch(std::uint64_t leds) const;
 
+    /// Passt den Wunschkanal von `wanted` für das Fixture `id` an: Liegt er schon bei einem anderen Fixture im selben
+    /// Universe, kommt das Fixture direkt hinter dessen letzten Kanal (die Matrix und dahinter ein einzelner Pixel im
+    /// selben Universe). Passt es nirgends, bleibt `wanted` unverändert und `setPatch` meldet den Grund.
+    [[nodiscard]] output::FixturePatch fitPatch(mapping::FixtureId id, output::FixturePatch wanted) const;
+
     struct Settings {
         double framesPerSecond{40.0};
         mapping::NormalizeMode normalize{mapping::NormalizeMode::Stretch};

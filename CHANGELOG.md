@@ -1,5 +1,10 @@
 # Änderungen
 
+## 0.71.0
+
+- **Ausgabe: Spalte „Adressraum“ in der Patch-Tabelle.** Zeigt je Fixture, welche Kanäle es belegt (`U1: 1–297`, bei Überlauf `U1: 1 – U3: 180`, bei DDP die Bytes). Die Rechnung steht in `output/patch_space.hpp` und folgt den Regeln des Ausgabeplans.
+- **Ausgabe: mehrere Fixtures in einem Universe.** Das ging im Plan schon, scheiterte aber in der Tabelle: Jede Änderung wird sofort geprüft, und „Universe 1“ mit Kanal 1 liegt auf der Matrix. Jetzt rückt ein Fixture beim Wechsel auf ein Universe oder Controller, in dem sein Kanal belegt ist, automatisch hinter das letzte belegte Fixture (`Player::fitPatch`). Der Vorschlag für neue Fixtures bleibt das nächste freie Universe.
+
 ## 0.70.1
 
 - **Node-Editor: Nodes verschwinden nach dem Ablegen aus der Palette (Windows).** Der Sichtbereich bleibt jetzt bei *jedem* Neuaufbau des Editors an seiner Stelle (bisher nur beim Laden; der Fix aus 0.64.0 griff nur dort). Nach dem Ablegen prüft der Editor, ob noch ein Node im Bild ist, und passt sonst alles ein (`ensureNodesVisible`); der Fensterumbau danach wird erneut geprüft. Die Ansicht folgt der Fenstergröße nicht mehr von selbst, sobald man etwas abgelegt hat, und ein Einpassen auf eine fast leere Fläche wird übersprungen (ergab Maßstab null). Die Ablegestelle bleibt innerhalb des Editors. Der Rauchtest prüft die leere Ansicht (Maßstab null, weggescrollt). Die eigentliche Ursache unter Windows ließ sich ohne Windows nicht nachstellen: bitte mit dem Windows-Paket testen.

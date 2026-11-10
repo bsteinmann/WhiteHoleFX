@@ -71,6 +71,7 @@ add_executable(wh_tests
     output/ddp_test.cpp
     output/output_pipeline_test.cpp
     output/output_plan_test.cpp
+    output/patch_space_test.cpp
     output/patch_protocol_test.cpp
     output/output_worker_test.cpp
     output/sacn_test.cpp

@@ -36,7 +36,7 @@ Q_SIGNALS:
 
 private:
     // Protocol ist nur eine Anzeige: das Protokoll gehört zum Controller (Spalte Destination), nicht zum Fixture.
-    enum Column { Name, Type, Leds, Send, Destination, Protocol, Universe, Channel, DdpOffset, Order, Gamma, Brightness, Count };
+    enum Column { Name, Type, Leds, Send, Destination, Protocol, Universe, Channel, Range, DdpOffset, Order, Gamma, Brightness, Count };
 
     void commit(mapping::FixtureId id, bool rebuildAfter = false);
     void toggle(mapping::FixtureId id, bool on);
@@ -44,6 +44,8 @@ private:
     [[nodiscard]] int rowOf(mapping::FixtureId id) const;
     [[nodiscard]] mapping::FixtureId idAt(int row) const;
     void updateEnabled(int row);
+    /// Schreibt den belegten Adressraum der Zeile ("U1: 1–297") aus dem gespeicherten Patch in die Spalte Adressraum.
+    void updateRange(int row);
     /// Das Protokoll, das die Zeile gerade anzeigt (kommt vom Controller; im Item der Spalte Protocol gemerkt).
     [[nodiscard]] output::Protocol protocolAt(int row) const;
     void saveHeader() const;

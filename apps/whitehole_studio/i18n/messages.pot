@@ -286,7 +286,7 @@ msgstr ""
 msgid "(Schwarz)"
 msgstr ""
 
-#: fixture_form.cpp:79 patch_table.cpp:103
+#: fixture_form.cpp:79 patch_table.cpp:107
 msgid "(eigene Form)"
 msgstr ""
 
@@ -454,6 +454,10 @@ msgstr ""
 msgid "Adresse (leer = Multicast, nur sACN)"
 msgstr ""
 
+#: patch_table.cpp:49
+msgid "Adressraum"
+msgstr ""
+
 #: look_panel.cpp:38
 msgid "Aktuellen Effekt als Look speichern …"
 msgstr ""
@@ -542,7 +546,7 @@ msgstr ""
 msgid "Art-Net empfangen"
 msgstr ""
 
-#: patch_table.cpp:52
+#: patch_table.cpp:54
 msgid "Art-Net zählt Universen ab 0 (bis 32767), sACN ab 1 (bis 63999). Bei DDP gibt es keine Universen."
 msgstr ""
 
@@ -678,7 +682,7 @@ msgstr ""
 msgid "Balken entlang z"
 msgstr ""
 
-#: fixture_form.cpp:90 patch_table.cpp:46
+#: fixture_form.cpp:90 patch_table.cpp:48
 msgid "Bauform"
 msgstr ""
 
@@ -774,11 +778,15 @@ msgstr ""
 msgid "Breite"
 msgstr ""
 
+#: patch_table.cpp:195
+msgid "Byte %1–%2"
+msgstr ""
+
 #: node_info_texts.cpp:118
 msgid "Bänder aus Licht laufen die gewählte Achse entlang. „Frequency“ ist die Zahl der Wellen über die Länge, „Sharpness“ macht aus der weichen Welle schmale Pulse. Für Strips."
 msgstr ""
 
-#: output_form.cpp:26 patch_table.cpp:46
+#: output_form.cpp:26 patch_table.cpp:48
 msgid "Controller"
 msgstr ""
 
@@ -822,7 +830,7 @@ msgstr ""
 msgid "Cyan"
 msgstr ""
 
-#: patch_table.cpp:47
+#: patch_table.cpp:49
 msgid "DDP-Offset"
 msgstr ""
 
@@ -914,7 +922,7 @@ msgstr ""
 msgid "Der Ausgang: Was hier ankommt, wird auf die LEDs gesendet. Mit „Mode“ in einen Bereich skalieren oder als Fenster ausschneiden, plus Helligkeit."
 msgstr ""
 
-#: patch_table.cpp:49
+#: patch_table.cpp:51
 msgid "Der Controller bestimmt das Protokoll. Wechselst du auf einen Controller mit anderem Protokoll, wird die Universe-Nummer zwischen Art-Net und sACN um 1 verschoben."
 msgstr ""
 
@@ -1186,7 +1194,7 @@ msgstr ""
 msgid "Erste LED bei (Grad)"
 msgstr ""
 
-#: add_fixture_dialog.cpp:177 patch_table.cpp:47
+#: add_fixture_dialog.cpp:177 patch_table.cpp:49
 msgid "Erster Kanal"
 msgstr ""
 
@@ -1230,7 +1238,7 @@ msgstr ""
 msgid "Farbige Punkte vor den Nodes in der Palette: was der Node liefert"
 msgstr ""
 
-#: add_fixture_dialog.cpp:179 patch_table.cpp:48 test_panel.cpp:39
+#: add_fixture_dialog.cpp:179 patch_table.cpp:50 test_panel.cpp:39
 msgid "Farbreihenfolge"
 msgstr ""
 
@@ -1258,7 +1266,7 @@ msgstr ""
 msgid "Filtert die Gruppen nach Node- oder Parametername (über alle Nodes)"
 msgstr ""
 
-#: patch_table.cpp:46
+#: patch_table.cpp:48
 msgid "Fixture"
 msgstr ""
 
@@ -1266,7 +1274,7 @@ msgstr ""
 msgid "Fixture &hinzufügen …"
 msgstr ""
 
-#: patch_table.cpp:116
+#: patch_table.cpp:120
 msgid "Fixture an die Ausgabe schicken"
 msgstr ""
 
@@ -1338,7 +1346,7 @@ msgstr ""
 msgid "GPU wird vorbereitet …"
 msgstr ""
 
-#: patch_table.cpp:48
+#: patch_table.cpp:50
 msgid "Gamma"
 msgstr ""
 
@@ -1430,7 +1438,7 @@ msgstr ""
 msgid "Grün"
 msgstr ""
 
-#: patch_table.cpp:48
+#: patch_table.cpp:50
 msgid "Helligkeit"
 msgstr ""
 
@@ -1570,7 +1578,7 @@ msgstr ""
 msgid "LED-Steuerung für Matrizen, Cubes und Pixelinstallationen"
 msgstr ""
 
-#: add_fixture_dialog.cpp:122 fixture_form.cpp:149 patch_table.cpp:46
+#: add_fixture_dialog.cpp:122 fixture_form.cpp:149 patch_table.cpp:48
 msgid "LEDs"
 msgstr ""
 
@@ -1794,7 +1802,7 @@ msgstr ""
 msgid "Modus"
 msgstr ""
 
-#: output_form_library.cpp:133 patch_table.cpp:124
+#: output_form_library.cpp:133 patch_table.cpp:128
 msgid "Multicast"
 msgstr ""
 
@@ -2094,7 +2102,7 @@ msgstr ""
 msgid "Projekt öffnen"
 msgstr ""
 
-#: add_fixture_dialog.cpp:174 output_form.cpp:30 patch_table.cpp:46
+#: add_fixture_dialog.cpp:174 output_form.cpp:30 patch_table.cpp:48
 msgid "Protokoll"
 msgstr ""
 
@@ -2218,7 +2226,7 @@ msgstr ""
 msgid "Seitenverhältnis halten (KeepAspect)"
 msgstr ""
 
-#: patch_table.cpp:46
+#: patch_table.cpp:48
 msgid "Senden"
 msgstr ""
 
@@ -2274,7 +2282,7 @@ msgstr ""
 msgid "Spalten (senkrecht)"
 msgstr ""
 
-#: patch_table.cpp:57
+#: patch_table.cpp:61
 msgid "Spalten lassen sich an der Kopfzeile verschieben"
 msgstr ""
 
@@ -2454,6 +2462,14 @@ msgstr ""
 msgid "Tutorial"
 msgstr ""
 
+#: patch_table.cpp:199
+msgid "U%1: %2 – U%3: %4"
+msgstr ""
+
+#: patch_table.cpp:197
+msgid "U%1: %2–%3"
+msgstr ""
+
 #: look_panel.cpp:61
 msgid "Umbenennen …"
 msgstr ""
@@ -2470,7 +2486,7 @@ msgstr ""
 msgid "Universe %1 ab Kanal 1"
 msgstr ""
 
-#: patch_table.cpp:47
+#: patch_table.cpp:49
 msgid "Universe (Art-Net ab 0, sACN ab 1)"
 msgstr ""
 
@@ -2576,6 +2592,10 @@ msgstr ""
 
 #: test_panel.cpp:29
 msgid "Weiß"
+msgstr ""
+
+#: patch_table.cpp:56
+msgid "Welche Kanäle das Fixture belegt: Universe und erster bis letzter Kanal (eine LED belegt drei Kanäle). Läuft es über, steht das letzte Universe dahinter."
 msgstr ""
 
 #: node_info_texts.cpp:21

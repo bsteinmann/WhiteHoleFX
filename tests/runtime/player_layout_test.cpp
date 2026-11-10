@@ -165,6 +165,22 @@ TEST_CASE("Layout: suggestPatch wählt das erste freie Universe", "[player][layo
     CHECK(rig.player.addFixture("Noch ein Strip", Vec3{}, strip(10), rig.player.suggestPatch(10)).ok());
 }
 
+TEST_CASE("Layout: fitPatch legt ein Fixture hinter ein anderes im selben Universe", "[player][layout]") {
+    Rig rig;
+    // Panel 4x2 = 8 LEDs = Kanal 1..24 auf Universe 1; der einzelne Pixel liegt zuerst auf Universe 2
+    const auto pixel = rig.player.addFixture("Pixel", Vec3{}, strip(1), patchOn(2));
+    REQUIRE(pixel.ok());
+    // Wunsch: Universe 1, Kanal 1 - belegt, also direkt hinter dem Panel (Kanal 25)
+    output::FixturePatch wanted = patchOn(1);
+    CHECK_FALSE(rig.player.setPatch(pixel.value(), wanted).ok());
+    const output::FixturePatch fitted = rig.player.fitPatch(pixel.value(), wanted);
+    CHECK(fitted.channel == 25);
+    CHECK(rig.player.setPatch(pixel.value(), fitted).ok());
+    // Ein freier Wunschkanal bleibt, wie er ist
+    wanted.channel = 100;
+    CHECK(rig.player.fitPatch(pixel.value(), wanted).channel == 100);
+}
+
 TEST_CASE("Layout: Einstellungen", "[player][layout]") {
     Rig rig;
     runtime::Player::Settings s;
