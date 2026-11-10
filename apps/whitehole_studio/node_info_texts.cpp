@@ -168,6 +168,8 @@ std::span<const NodeInfoEntry> nodeInfoEntries() {
      QT_TR_NOOP("Zufallswert, der sich im eingestellten Takt ändert, auf Wunsch weich überblendet. Mit Seed wiederholbar.")},
     {"wh.value.pong",
      QT_TR_NOOP("Das Pong-Spiel als Rechen-Node: Ball, Schläger, Punkte und Treffer als Werte. Computer oder Eingang spielen, auch im Takt der Musik. Gezeichnet wird es von „Pong Display“.")},
+    {"wh.value.shot",
+     QT_TR_NOOP("Ein Trigger startet einen Durchlauf von 0 nach 1, im Tempo der Musik (Schläge oder gemessener Abstand der Trigger). Mehrfach wiederholbar. Mit Map auf Radius, Position oder Helligkeit legen.")},
     {"wh.value.sequencer",
      QT_TR_NOOP("Schrittfolge mit bis zu acht Werten. Jedes Einschalten von „Advance“ geht einen Schritt weiter (vorwärts, rückwärts, hin und her oder zufällig).")},
     {"wh.value.smooth",

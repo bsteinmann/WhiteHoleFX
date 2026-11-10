@@ -202,6 +202,7 @@ std::vector<compiler::NodeDefinition> modifierNodes();  // Modifier und Ausgang
 std::vector<values::CpuNodeDefinition> valueNodes();
 std::vector<values::CpuNodeDefinition> mathNodes();      // Math, Compare
 std::vector<values::CpuNodeDefinition> sequenceNodes();  // Envelope, Sequencer, Clock
+std::vector<values::CpuNodeDefinition> shotNodes();      // Shot: Durchlauf 0..1 pro Trigger
 std::vector<values::CpuNodeDefinition> audioNodes(std::shared_ptr<audio::AudioStore> store);  // Pegel, Band, Spektrum, Beat, Tap
 std::vector<values::CpuNodeDefinition> audioWaveNodes(std::shared_ptr<audio::AudioStore> store);  // Audio Waveform
 std::vector<compiler::NodeDefinition> pongFieldNodes();   // Pong Display

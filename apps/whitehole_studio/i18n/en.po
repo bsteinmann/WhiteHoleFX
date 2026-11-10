@@ -1046,7 +1046,7 @@ msgstr "The number before the name is the stored value."
 msgid "Die neue Sprache gilt nach einem Neustart von WhiteHoleFX. Jetzt neu starten?\n(Nicht gespeicherte Änderungen werden vorher abgefragt.)"
 msgstr "The new language applies after WhiteHoleFX restarts. Restart now?\n(Unsaved changes will be asked about first.)"
 
-#: node_info_texts.cpp:176
+#: node_info_texts.cpp:178
 msgid "Die vergangene Zeit in Sekunden, mit Tempo-Faktor und Versatz. Zum Antreiben von Bewegungen."
 msgstr "The elapsed time in seconds, with speed factor and offset. For driving motion."
 
@@ -1153,6 +1153,10 @@ msgstr "A head runs along the chosen axis with a fading tail behind it. “Speed
 #: look_panel.cpp:32
 msgid "Ein Look ist ein fertiger Effekt (vom Generator bis zum Ausgang). Speichere deine Effekte hier und rufe sie im Live-Modus mit einem Klick ab."
 msgstr "A look is a finished effect (from generator to output). Save your effects here and recall them in live mode with one click."
+
+#: node_info_texts.cpp:172
+msgid "Ein Trigger startet einen Durchlauf von 0 nach 1, im Tempo der Musik (Schläge oder gemessener Abstand der Trigger). Mehrfach wiederholbar. Mit Map auf Radius, Position oder Helligkeit legen."
+msgstr "A trigger starts a run from 0 to 1 at the tempo of the music (beats or the measured spacing of the triggers). Can repeat several times. Route it through Map to a radius, position or brightness."
 
 #: port_legend.cpp:54
 msgid "Ein- und Ausgang"
@@ -1490,7 +1494,7 @@ msgstr "Selected node: only the node you selected in the editor, plus pinned nod
 msgid "Gewähltes Fixture als Vorlage speichern …"
 msgstr "Save selected fixture as template …"
 
-#: node_info_texts.cpp:174
+#: node_info_texts.cpp:176
 msgid "Glättet einen Wert: Er folgt dem Eingang mit einer Zeitkonstante, statt zu springen."
 msgstr "Smooths a value: it follows the input with a time constant instead of jumping."
 
@@ -2366,7 +2370,7 @@ msgstr "Switch"
 msgid "Schnellwahl"
 msgstr "Quick pick"
 
-#: node_info_texts.cpp:172
+#: node_info_texts.cpp:174
 msgid "Schrittfolge mit bis zu acht Werten. Jedes Einschalten von „Advance“ geht einen Schritt weiter (vorwärts, rückwärts, hin und her oder zufällig)."
 msgstr "A step sequence with up to eight values. Each switch-on of \"Advance\" moves one step (forward, backward, ping-pong or random)."
 

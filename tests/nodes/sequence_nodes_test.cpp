@@ -380,3 +380,119 @@ TEST_CASE("Sequencer: eine Steuerung durch Clock, Tick schaltet weiter") {
     }
     CHECK(steps == std::vector<std::int64_t>{0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3});
 }
+
+// --- Shot -------------------------------------------------------------------------------------
+
+namespace {
+
+/// Ein Frame mit Trigger an, danach Trigger aus (die Flanke ist der Start).
+void shoot(Lab& lab, NodeId shot) {
+    lab.set(shot, "trigger", false);
+    lab.run(0.0, 0.0);
+    lab.set(shot, "trigger", true);
+    lab.run(0.0, 0.0);
+    lab.set(shot, "trigger", false);
+}
+
+}  // namespace
+
+TEST_CASE("Shot: ein Durchlauf dauert genau die eingestellten Schläge und bleibt am Ende stehen") {
+    Lab lab;
+    const NodeId shot = lab.add("wh.value.shot");
+    lab.feed(shot, "progress");
+    lab.set(shot, "bpm", 120.0);  // ein Schlag = 0,5 s
+    lab.set(shot, "beats", 2.0);  // Durchlauf = 1 s
+    lab.run(0.0, 0.125);
+    CHECK(lab.number(shot, "progress") == Approx(0.0));
+    CHECK_FALSE(flag(lab, shot, "active"));
+
+    shoot(lab, shot);
+    CHECK(lab.number(shot, "progress") == Approx(0.0));
+    CHECK(flag(lab, shot, "active"));
+    for (int frame = 1; frame <= 4; ++frame) {
+        lab.run(0.0, 0.125);
+    }
+    CHECK(lab.number(shot, "progress") == Approx(0.5));  // nach 0,5 s von 1 s
+    for (int frame = 1; frame <= 3; ++frame) {
+        lab.run(0.0, 0.125);
+        CHECK_FALSE(flag(lab, shot, "done"));
+    }
+    lab.run(0.0, 0.125);
+    CHECK(lab.number(shot, "progress") == Approx(1.0));
+    CHECK(flag(lab, shot, "done"));
+    CHECK_FALSE(flag(lab, shot, "active"));
+    CHECK(lab.number(shot, "reverse") == Approx(0.0));
+    lab.run(0.0, 0.125);  // danach bleibt es stehen, "done" kommt nur einmal
+    CHECK(lab.number(shot, "progress") == Approx(1.0));
+    CHECK_FALSE(flag(lab, shot, "done"));
+}
+
+TEST_CASE("Shot: mehrere Wiederholungen, abwechselnd rückwärts, Zähler und Wechsel") {
+    Lab lab;
+    const NodeId shot = lab.add("wh.value.shot");
+    lab.feed(shot, "progress");
+    lab.set(shot, "bpm", 240.0);  // ein Schlag = 0,25 s
+    lab.set(shot, "beats", 1.0);
+    lab.set(shot, "repeats", std::int64_t{3});
+    lab.set(shot, "alternate", true);
+
+    shoot(lab, shot);
+    CHECK(whole(lab, shot, "run") == 1);
+    CHECK(whole(lab, shot, "count") == 1);
+    CHECK(flag(lab, shot, "flip"));
+    std::vector<double> samples;  // alle 0,125 s
+    for (int frame = 0; frame < 6; ++frame) {
+        lab.run(0.0, 0.125);
+        samples.push_back(lab.number(shot, "progress"));
+    }
+    // Durchlauf 1 vorwärts (0,5 / 1), Durchlauf 2 rückwärts (0,5 / 0), Durchlauf 3 vorwärts (0,5 / 1)
+    const std::vector<double> expected{0.5, 1.0, 0.5, 0.0, 0.5, 1.0};
+    for (std::size_t i = 0; i < expected.size(); ++i) {
+        CHECK(samples[i] == Approx(expected[i]));
+    }
+    CHECK(whole(lab, shot, "run") == 3);
+    CHECK_FALSE(flag(lab, shot, "active"));
+
+    shoot(lab, shot);  // der zweite Trigger: Zähler 2, Wechsel aus
+    CHECK(whole(lab, shot, "count") == 2);
+    CHECK_FALSE(flag(lab, shot, "flip"));
+}
+
+TEST_CASE("Shot: Tempo wird aus dem Abstand der Trigger gemessen") {
+    Lab lab;
+    const NodeId shot = lab.add("wh.value.shot");
+    lab.feed(shot, "progress");
+    lab.set(shot, "beatLength", 2.0);  // gilt nur bis zum zweiten Trigger
+    lab.run(0.0, 0.125);
+
+    shoot(lab, shot);
+    for (int frame = 0; frame < 4; ++frame) {  // 0,5 s von 2 s: Fortschritt 0,25
+        lab.run(0.0, 0.125);
+    }
+    CHECK(lab.number(shot, "progress") == Approx(0.25));
+    for (int frame = 0; frame < 4; ++frame) {  // der zweite Trigger kommt nach 1 s
+        lab.run(0.0, 0.125);
+    }
+    shoot(lab, shot);
+    for (int frame = 0; frame < 4; ++frame) {  // Schlaglänge jetzt 1 s: nach 0,5 s steht es bei 0,5
+        lab.run(0.0, 0.125);
+    }
+    CHECK(lab.number(shot, "progress") == Approx(0.5));
+}
+
+TEST_CASE("Shot: Kurven und neuer Trigger mitten im Lauf") {
+    Lab lab;
+    const NodeId shot = lab.add("wh.value.shot");
+    lab.feed(shot, "progress");
+    lab.set(shot, "bpm", 60.0);
+    lab.set(shot, "beats", 2.0);  // 2 s
+    lab.set(shot, "curve", std::int64_t{1});  // langsam am Ende: schnell am Anfang
+    shoot(lab, shot);
+    for (int frame = 0; frame < 4; ++frame) {
+        lab.run(0.0, 0.25);  // 1 s = Hälfte
+    }
+    CHECK(lab.number(shot, "progress") == Approx(0.875));  // 1 - 0,5^3
+    shoot(lab, shot);  // von vorn
+    CHECK(lab.number(shot, "progress") == Approx(0.0));
+    CHECK(flag(lab, shot, "active"));
+}

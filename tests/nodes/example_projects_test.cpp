@@ -36,6 +36,10 @@ TEST_CASE("Beispiel: examples/effekte/gewitter.whfx lädt und kompiliert", "[exa
     checkExample("effekte/gewitter.whfx", "wh_bolt_x");
 }
 
+TEST_CASE("Beispiel: examples/effekte/schlag-kreis.whfx lädt und kompiliert", "[examples][nodes]") {
+    checkExample("effekte/schlag-kreis.whfx", "wh_");
+}
+
 TEST_CASE("Beispiel: examples/effekte/funken.whfx lädt und kompiliert", "[examples][nodes]") {
     checkExample("effekte/funken.whfx", "wh_seg_dist");
 }

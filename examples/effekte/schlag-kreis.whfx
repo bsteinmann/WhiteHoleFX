@@ -1,0 +1,46 @@
+whitehole-project 1
+# Beispiel für Shot: bei jedem Schlag dehnt sich ein Kreis aus und verblasst.
+#
+# So ausprobieren:
+#   whitehole_studio examples/effekte/schlag-kreis.whfx --run
+#
+# Aufbau: Eine Clock gibt 128 Schläge pro Minute, ihr Tick startet den Shot-Node. Der liefert bei jedem Tick
+# einmal "progress" von 0 nach 1 (in genau einem Schlag, "curve" 1 = schnell am Anfang, langsam am Ende) und
+# "reverse" von 1 nach 0. Ein Map-Node legt "progress" auf den Radius der Sphere, "reverse" regelt die Helligkeit.
+# Statt der Clock kann der Beat- oder der Audio-Trigger-Node des Audio-Eingangs den Shot auslösen: Dann misst
+# der Shot das Tempo aus dem Abstand der Trigger (`bpm` auf 0 lassen). Mehrere Durchläufe pro Schlag: `repeats`.
+
+settings fps 40
+
+destination 0 127.0.0.1
+
+fixture Wand
+  matrix 32 16 serpentine
+  patch artnet destination 0 universe 0
+end
+
+node takt wh.value.clock
+  set bpm 128
+end
+node schlag wh.value.shot
+  set bpm 128
+  set beats 1
+  set curve 1
+end
+node radius wh.value.map
+  set outMin 0.02
+  set outMax 0.5
+end
+node kreis wh.generator.sphere
+  set space 0
+  set softness 0.25
+end
+node hell wh.modifier.coloradjust
+end
+
+connect takt.tick -> schlag.trigger
+connect schlag.progress -> radius.value
+connect radius.out -> kreis.radius
+connect kreis.out -> hell.source
+connect schlag.reverse -> hell.brightness
+output hell.out

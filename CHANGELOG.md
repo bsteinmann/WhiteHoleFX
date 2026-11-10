@@ -1,5 +1,10 @@
 # Änderungen
 
+## 0.80.0
+
+- **Shot-Node (Value): ein Durchlauf pro Trigger, im Tempo der Musik.** Jeder Trigger startet einen Durchlauf von 0 nach 1 (`progress`, dazu `reverse` von 1 nach 0). Die Dauer ist `beats` Schläge; die Schlaglänge kommt aus `bpm` oder wird aus dem Abstand der letzten Trigger gemessen und geglättet. `repeats` spielt bis zu 16 Durchläufe hintereinander (auf Wunsch jeder zweite rückwärts), `curve` formt den Verlauf (linear, langsam am Ende für sich ausdehnende Formen, langsam am Anfang, weich). Weitere Ausgänge: `active`, `done`, `run`, `count` und `flip` (wechselt bei jedem Trigger, für abwechselnde Seiten). Der Node animiert nichts selbst: `progress` wird mit Map auf Radius, Position, Helligkeit oder jeden anderen Regler gelegt, deshalb gilt er für Balken, Formen und Blitze gleichermaßen.
+- Beispiel `effekte/schlag-kreis.whfx`: ein Kreis dehnt sich bei jedem Schlag aus und verblasst.
+
 ## 0.79.0
 
 - **Sequencer: Ausgänge je Schritt.** Neu sind `Trigger 1` bis `Trigger 8` (feuern im Moment, in dem der Schritt betreten wird) und `Active 1` bis `Active 8` (an, solange der Schritt gilt). Damit braucht man für „Schritt N“ keinen Compare-Node mehr. Reset und Start lösen keinen Trigger aus. Die Schlüssel heißen `trigN` und `onN`, weil `stepN` die Werte-Regler sind. Alte Projekte laufen unverändert. Ob acht plus acht Ausgänge im Node praktisch sind, wird sich zeigen; ausblenden je nach Schrittzahl ist als eigener Schritt vorgemerkt.

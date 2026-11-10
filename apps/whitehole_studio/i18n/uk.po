@@ -1046,7 +1046,7 @@ msgstr "Число перед назвою — це збережене знач�
 msgid "Die neue Sprache gilt nach einem Neustart von WhiteHoleFX. Jetzt neu starten?\n(Nicht gespeicherte Änderungen werden vorher abgefragt.)"
 msgstr "Нова мова діятиме після перезапуску WhiteHoleFX. Перезапустити зараз?\n(Про незбережені зміни буде запитано заздалегідь.)"
 
-#: node_info_texts.cpp:176
+#: node_info_texts.cpp:178
 msgid "Die vergangene Zeit in Sekunden, mit Tempo-Faktor und Versatz. Zum Antreiben von Bewegungen."
 msgstr "Минулий час у секундах, з коефіцієнтом темпу та зсувом. Для керування рухом."
 
@@ -1153,6 +1153,10 @@ msgstr "Голова біжить уздовж вибраної осі, за н�
 #: look_panel.cpp:32
 msgid "Ein Look ist ein fertiger Effekt (vom Generator bis zum Ausgang). Speichere deine Effekte hier und rufe sie im Live-Modus mit einem Klick ab."
 msgstr "Look — це готовий ефект (від генератора до виходу). Зберігайте тут свої ефекти й викликайте їх у режимі Live одним кліком."
+
+#: node_info_texts.cpp:172
+msgid "Ein Trigger startet einen Durchlauf von 0 nach 1, im Tempo der Musik (Schläge oder gemessener Abstand der Trigger). Mehrfach wiederholbar. Mit Map auf Radius, Position oder Helligkeit legen."
+msgstr "Тригер запускає прохід від 0 до 1 у темпі музики (долі або виміряний інтервал між тригерами). Можна повторювати кілька разів. Через Map подайте його на радіус, позицію або яскравість."
 
 #: port_legend.cpp:54
 msgid "Ein- und Ausgang"
@@ -1490,7 +1494,7 @@ msgstr "Вибраний нод: лише нод, вибраний у редак
 msgid "Gewähltes Fixture als Vorlage speichern …"
 msgstr "Зберегти вибрану фікстуру як шаблон …"
 
-#: node_info_texts.cpp:174
+#: node_info_texts.cpp:176
 msgid "Glättet einen Wert: Er folgt dem Eingang mit einer Zeitkonstante, statt zu springen."
 msgstr "Згладжує значення: воно слідує за входом із постійною часу, замість того щоб стрибати."
 
@@ -2366,7 +2370,7 @@ msgstr "Перемикач"
 msgid "Schnellwahl"
 msgstr "Швидкий вибір"
 
-#: node_info_texts.cpp:172
+#: node_info_texts.cpp:174
 msgid "Schrittfolge mit bis zu acht Werten. Jedes Einschalten von „Advance“ geht einen Schritt weiter (vorwärts, rückwärts, hin und her oder zufällig)."
 msgstr "Послідовність до восьми значень. Кожне вмикання «Advance» робить крок далі (вперед, назад, туди й назад або випадково)."
 

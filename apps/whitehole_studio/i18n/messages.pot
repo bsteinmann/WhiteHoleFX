@@ -1046,7 +1046,7 @@ msgstr ""
 msgid "Die neue Sprache gilt nach einem Neustart von WhiteHoleFX. Jetzt neu starten?\n(Nicht gespeicherte Änderungen werden vorher abgefragt.)"
 msgstr ""
 
-#: node_info_texts.cpp:176
+#: node_info_texts.cpp:178
 msgid "Die vergangene Zeit in Sekunden, mit Tempo-Faktor und Versatz. Zum Antreiben von Bewegungen."
 msgstr ""
 
@@ -1152,6 +1152,10 @@ msgstr ""
 
 #: look_panel.cpp:32
 msgid "Ein Look ist ein fertiger Effekt (vom Generator bis zum Ausgang). Speichere deine Effekte hier und rufe sie im Live-Modus mit einem Klick ab."
+msgstr ""
+
+#: node_info_texts.cpp:172
+msgid "Ein Trigger startet einen Durchlauf von 0 nach 1, im Tempo der Musik (Schläge oder gemessener Abstand der Trigger). Mehrfach wiederholbar. Mit Map auf Radius, Position oder Helligkeit legen."
 msgstr ""
 
 #: port_legend.cpp:54
@@ -1490,7 +1494,7 @@ msgstr ""
 msgid "Gewähltes Fixture als Vorlage speichern …"
 msgstr ""
 
-#: node_info_texts.cpp:174
+#: node_info_texts.cpp:176
 msgid "Glättet einen Wert: Er folgt dem Eingang mit einer Zeitkonstante, statt zu springen."
 msgstr ""
 
@@ -2366,7 +2370,7 @@ msgstr ""
 msgid "Schnellwahl"
 msgstr ""
 
-#: node_info_texts.cpp:172
+#: node_info_texts.cpp:174
 msgid "Schrittfolge mit bis zu acht Werten. Jedes Einschalten von „Advance“ geht einen Schritt weiter (vorwärts, rückwärts, hin und her oder zufällig)."
 msgstr ""
 
