@@ -47,6 +47,8 @@ void drawPortMarker(QPainter* painter, const QPointF& center, graph::PortType ty
 
 /// Maße eines Nodes; die Kachel einer Gruppe (node_items_group.cpp) legt ihre Ports genauso an.
 inline constexpr double kNodeWidth = 190.0;
+/// Höhe des Anzeigestreifens (Audio-Nodes mit `liveView`): Balken oder Wellenform plus eine Zeile Frequenzbeschriftung.
+inline constexpr double kMonitorHeight = 44.0;
 inline constexpr double kNodeTitleHeight = 26.0;
 inline constexpr double kNodeRowHeight = 22.0;
 
@@ -59,6 +61,16 @@ struct LiveDisplay {
     std::array<float, 32> bars{};
     QColor color;
     bool operator==(const LiveDisplay&) const = default;
+};
+
+/// Anzeigestreifen eines Nodes (Spektrum mit markiertem Bereich oder Wellenform), siehe NodeItem::setMonitor.
+struct MonitorDisplay {
+    bool active{false};
+    bool bipolar{false};
+    int first{-1};  // markierter Bereich der Bänder (einschließlich), -1 = keiner
+    int last{-1};
+    std::array<float, 32> bars{};
+    bool operator==(const MonitorDisplay&) const = default;
 };
 
 struct PortSlot {
@@ -121,8 +133,14 @@ public:
     /// Live-Anzeige am Ausgang `portKey`: Balken im Node und Helligkeit des Kabels. Spitzen bleiben kurz stehen
     /// (fallen mit jedem Aufruf ab), damit ein einzelner Trigger-Frame sichtbar bleibt.
     void setLive(const std::string& portKey, LiveDisplay display);
-    /// Nimmt die Live-Anzeige weg (Wiedergabe gestoppt oder Anzeige aus).
+    /// Nimmt die Live-Anzeige weg (Wiedergabe gestoppt oder Anzeige aus), auch den Anzeigestreifen.
     void clearLive();
+    /// Hat der Node einen Anzeigestreifen (Descriptor `liveView`)? Der Platz dafür ist immer reserviert.
+    [[nodiscard]] bool hasMonitor() const noexcept { return view_ != graph::LiveView::None; }
+    /// Füllt den Anzeigestreifen: Balken fallen langsam ab (Spitzen bleiben kurz stehen), der Bereich folgt sofort.
+    void setMonitor(MonitorDisplay display);
+    void clearMonitor();
+    [[nodiscard]] const MonitorDisplay& monitor() const noexcept { return monitor_; }
     /// Pegel 0..1 am Ausgang oder -1, wenn dort nichts Live anliegt.
     [[nodiscard]] float liveLevel(const std::string& portKey) const;
 
@@ -157,6 +175,10 @@ private:
     bool dockHighlight_{false};
     std::string dockPort_;
     QString info_;
+    graph::LiveView view_{graph::LiveView::None};
+    double monitorTop_{0.0};  // obere Kante des Anzeigestreifens
+    MonitorDisplay monitor_;
+    void drawMonitor(QPainter* painter) const;
 };
 
 /// Rahmen um die Nodes einer aufgeklappten Gruppe (mit Namen). Nicht auswählbar und nicht beweglich: Er folgt den

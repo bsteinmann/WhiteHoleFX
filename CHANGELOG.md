@@ -1,5 +1,11 @@
 # Änderungen
 
+## 0.78.0
+
+- **Anzeigestreifen in den Audio-Nodes.** Audio Spectrum, Audio Band, Kick/Snare/Hat und Audio Waveform zeigen ihre 32 Balken (beziehungsweise die Welle) jetzt in einem eigenen Streifen unten im Node statt hinter der Schrift; der Node wird dafür etwas höher. Eine Frequenzachse (100 Hz, 1 kHz, 10 kHz) hilft beim Zuordnen.
+- **Aktiver Bereich farbig:** Bei Audio Band und Kick/Snare/Hat ist der ausgewertete Bereich hinterlegt und seine Balken leuchten, der Rest ist gedämpft – auch bei Stille. Der Bereich kommt aus dem Node selbst (`from`/`to`, die Kick-/Snare-/Hat-Bereiche des Analysators), nicht aus einer zweiten Rechnung in der Oberfläche.
+- Technik: neuer Datenkanal `MonitorView` (Core → ValueStore → Live-Signale), `NodeDescriptor::liveView`, Konstanten der Instrumentenbereiche im Analysator; Tests `[monitor]` und Selbsttest `--exercise` des Streifens.
+
 ## 0.77.0
 
 - **Pong.** Zwei neue Nodes: **Pong** (Kategorie „Game“, Rechen-Node) hält das Spiel und gibt Ball, Schläger, Punkte und Ereignisse (`hitPaddle`, `hitWall`, `point`) als Werte aus; **Pong Display** (Generators) zeichnet sie. Die Trennung ist nötig, weil Bild-Nodes zustandslos sind, und lässt die Werte auch anderswo nutzen (ein Treffer lässt das Bild blitzen).

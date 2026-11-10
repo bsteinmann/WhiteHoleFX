@@ -168,6 +168,7 @@ public:
     void refreshLive();
     /// Rauchtest der Live-Anzeige ohne laufende Wiedergabe: Balken setzen, Kabel folgen, Aufräumen. Leer = in Ordnung.
     QString exerciseLive();
+    QString exerciseMonitor();
 
     [[nodiscard]] int nodeCount() const noexcept { return static_cast<int>(nodes_.size()); }
     [[nodiscard]] int wireCount() const noexcept { return static_cast<int>(wires_.size()); }

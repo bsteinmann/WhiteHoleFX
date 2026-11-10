@@ -44,7 +44,10 @@ std::optional<Spectrum> ValueStore::spectrum(NodeId node, std::string_view portK
     return portIt->second;
 }
 
+void ValueStore::setMonitor(NodeId node, const MonitorView& view) { monitors_.insert_or_assign(node, view); }
+
 void ValueStore::clear() noexcept {
+    monitors_.clear();
     spectra_.clear();
     values_.clear();
     count_ = 0;

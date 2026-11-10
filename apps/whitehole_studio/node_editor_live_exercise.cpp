@@ -1,7 +1,9 @@
 // node_editor_live_exercise.cpp: Rauchtest der Live-Anzeige für die CI (--exercise).
 //
 // Setzt Werte von Hand an einen Ausgang (ohne laufende Wiedergabe), prüft, dass das Kabel folgt, die Spitze
-// stehen bleibt, alle drei Zeichenarten malen und das Aufräumen alles zurücknimmt.
+// stehen bleibt, alle drei Zeichenarten malen und das Aufräumen alles zurücknimmt; danach der Anzeigestreifen
+// der Audio-Nodes (exerciseMonitor).
+#include <QGraphicsScene>
 #include <QImage>
 #include <QPainter>
 
@@ -66,8 +68,9 @@ QString NodeEditor::exerciseLive() {
     }
     bars.level = 0.97F;
     source->setLive(key, bars);
-    if (render() == withBar) {
-        return QStringLiteral("Live-Anzeige: Spektrum malt nichts");
+    wire->syncLive();
+    if (wire->liveLevel() < 0.9F) {
+        return QStringLiteral("Live-Anzeige: Spektrum färbt das Kabel nicht (%1)").arg(static_cast<double>(wire->liveLevel()));
     }
     LiveDisplay color;
     color.kind = LiveDisplay::Kind::Color;
@@ -87,6 +90,67 @@ QString NodeEditor::exerciseLive() {
     }
     if (render() != plain) {
         return QStringLiteral("Live-Anzeige: nach dem Aufräumen sieht das Bild anders aus");
+    }
+    return exerciseMonitor();
+}
+
+/// Anzeigestreifen: der Node wird höher, der Streifen malt, der markierte Bereich ist sichtbar und Aufräumen nimmt alles zurück.
+QString NodeEditor::exerciseMonitor() {
+    graph::NodeDescriptor plainType;
+    plainType.typeId = "test.plain";
+    graph::NodeDescriptor stripType = plainType;
+    stripType.typeId = "test.strip";
+    stripType.liveView = graph::LiveView::Spectrum;
+    if (NodeItem::sizeFor(stripType).height() <= NodeItem::sizeFor(plainType).height()) {
+        return QStringLiteral("Anzeigestreifen: der Node wird nicht höher");
+    }
+    const auto render = [](NodeItem& item) {
+        QImage image{200, 140, QImage::Format_ARGB32};
+        image.fill(Qt::black);
+        QPainter painter{&image};
+        QGraphicsScene scene;
+        scene.addItem(&item);
+        scene.render(&painter, QRectF{0, 0, 200, 140}, item.sceneBoundingRect());
+        scene.removeItem(&item);
+        return image;
+    };
+    NodeItem item{NodeId{1}, stripType, QStringLiteral("Test")};
+    if (!item.hasMonitor()) {
+        return QStringLiteral("Anzeigestreifen: der Node kennt seinen Streifen nicht");
+    }
+    const QImage empty = render(item);
+    MonitorDisplay display;
+    display.active = true;
+    for (std::size_t i = 0; i < display.bars.size(); ++i) {
+        display.bars[i] = static_cast<float>(i % 8) / 8.0F;
+    }
+    item.setMonitor(display);
+    const QImage bars = render(item);
+    if (bars == empty) {
+        return QStringLiteral("Anzeigestreifen: Balken malen nichts");
+    }
+    display.first = 8;
+    display.last = 14;
+    item.setMonitor(display);
+    if (render(item) == bars) {
+        return QStringLiteral("Anzeigestreifen: der markierte Bereich ist nicht zu sehen");
+    }
+    item.clearLive();
+    if (item.monitor().active || render(item) != empty) {
+        return QStringLiteral("Anzeigestreifen: Aufräumen lässt Reste stehen");
+    }
+    stripType.liveView = graph::LiveView::Wave;
+    NodeItem wave{NodeId{2}, stripType, QStringLiteral("Welle")};
+    const QImage still = render(wave);
+    display.first = -1;
+    display.last = -1;
+    display.bipolar = true;
+    for (std::size_t i = 0; i < display.bars.size(); ++i) {
+        display.bars[i] = std::sin(static_cast<float>(i) * 0.5F);
+    }
+    wave.setMonitor(display);
+    if (render(wave) == still) {
+        return QStringLiteral("Anzeigestreifen: die Wellenform malt nichts");
     }
     return {};
 }

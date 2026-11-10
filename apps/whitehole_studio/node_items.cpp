@@ -144,6 +144,8 @@ NodeItem::NodeItem(NodeId id, const graph::NodeDescriptor& descriptor, const QSt
         ports_.push_back(std::move(slot));
     }
     height_ = sizeFor(descriptor).height();
+    view_ = descriptor.liveView;
+    monitorTop_ = height_ - kMonitorHeight - 6.0;
 }
 
 QSizeF NodeItem::size() const { return QSizeF{kWidth, height_}; }
@@ -154,7 +156,8 @@ QSizeF NodeItem::sizeFor(const graph::NodeDescriptor& descriptor) {
     for (const graph::PortDescriptor& port : descriptor.ports) {
         (port.direction == graph::PortDirection::Output ? outputs : inputs) += 1;
     }
-    return QSizeF{kWidth, kTitleHeight + 12.0 + std::max(1, std::max(inputs, outputs)) * kRowHeight};
+    const double monitor = descriptor.liveView != graph::LiveView::None ? kMonitorHeight + 4.0 : 0.0;
+    return QSizeF{kWidth, kTitleHeight + 12.0 + std::max(1, std::max(inputs, outputs)) * kRowHeight + monitor};
 }
 
 namespace {
@@ -369,6 +372,9 @@ void NodeItem::paint(QPainter* painter, const QStyleOptionGraphicsItem*, QWidget
                                      static_cast<double>(labelWidth), kRowHeight},
                               Qt::AlignVCenter | Qt::AlignLeft, text);
         }
+    }
+    if (hasMonitor()) {
+        drawMonitor(painter);  // eigener Streifen unter den Ports (node_items_live.cpp)
     }
 }
 

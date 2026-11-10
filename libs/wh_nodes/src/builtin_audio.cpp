@@ -96,18 +96,19 @@ private:
 
 // --- Frequenzband -----------------------------------------------------------------------------
 
-/// Größter Wert unter allen Bändern, die den Bereich [from, to] Hz berühren.
-double bandValue(const Spectrum& spectrum, double from, double to) {
+/// Die Bänder [first, last], die den Bereich [from, to] Hz berühren; liegt er zwischen zwei Grenzen oder außerhalb, das
+/// nächste Band. Der Editor hebt genau diese Bänder hervor.
+std::pair<std::size_t, std::size_t> bandRange(double from, double to) {
     const auto& edges = audio::bandEdgesHz();
-    double best = 0.0;
-    bool any = false;
+    std::size_t first = kSpectrumBands;
+    std::size_t last = 0;
     for (std::size_t i = 0; i < kSpectrumBands; ++i) {
         if (edges[i + 1] > from && edges[i] < to) {
-            best = std::max(best, static_cast<double>(spectrum.bands[i]));
-            any = true;
+            first = std::min(first, i);
+            last = i;
         }
     }
-    if (!any) {  // Bereich liegt zwischen zwei Grenzen oder außerhalb: nächstes Band
+    if (first == kSpectrumBands) {
         const double center = std::sqrt(std::max(from, 1.0) * std::max(to, 1.0));
         std::size_t nearest = center < edges.front() ? 0 : kSpectrumBands - 1;
         for (std::size_t i = 0; i < kSpectrumBands; ++i) {
@@ -115,7 +116,17 @@ double bandValue(const Spectrum& spectrum, double from, double to) {
                 nearest = i;
             }
         }
-        best = spectrum.bands[nearest];
+        return {nearest, nearest};
+    }
+    return {first, last};
+}
+
+/// Größter Wert unter allen Bändern, die den Bereich [from, to] Hz berühren.
+double bandValue(const Spectrum& spectrum, double from, double to) {
+    const auto [first, last] = bandRange(from, to);
+    double best = 0.0;
+    for (std::size_t i = first; i <= last; ++i) {
+        best = std::max(best, static_cast<double>(spectrum.bands[i]));
     }
     return best;
 }
@@ -129,13 +140,27 @@ public:
         const double dt = context.time.delta.count();
         const auto frame = freshFrame(*store_);
 
+        const double from = std::min(in.number("from", 60.0), in.number("to", 250.0));
+        const double to = std::max(in.number("from", 60.0), in.number("to", 250.0));
         double raw = 0.0;
         if (frame) {
-            const double from = std::min(in.number("from", 60.0), in.number("to", 250.0));
-            const double to = std::max(in.number("from", 60.0), in.number("to", 250.0));
             raw = bandValue(frame->spectrum, from, to);
         }
-        const double shaped = shape(raw, in.number("gain", 1.0), in.number("floor", 0.0));
+        const double gain = in.number("gain", 1.0);
+        const double floor = in.number("floor", 0.0);
+        const double shaped = shape(raw, gain, floor);
+
+        // Anzeigestreifen: das ganze Spektrum nach Verstärkung und Schwelle, der ausgewertete Bereich markiert.
+        MonitorView view;
+        const auto [first, last] = bandRange(from, to);
+        view.rangeFirst = static_cast<int>(first);
+        view.rangeLast = static_cast<int>(last);
+        if (frame) {
+            for (std::size_t i = 0; i < kSpectrumBands; ++i) {
+                view.bands.bands[i] = static_cast<float>(shape(static_cast<double>(frame->spectrum.bands[i]), gain, floor));
+            }
+        }
+        outputs.setMonitor(view);
         outputs.set("value", follower_.step(shaped, in.number("attack", 0.01), in.number("release", 0.2), dt));
         outputs.set("present", frame.has_value());
     }
@@ -166,6 +191,9 @@ public:
             out.bands[i] = static_cast<float>(followers_[i].step(shape(raw, gain, floor), attack, release, dt));
         }
         outputs.setSpectrum("spectrum", out);
+        MonitorView view;
+        view.bands = out;
+        outputs.setMonitor(view);
         outputs.set("present", frame.has_value());
     }
 
@@ -264,6 +292,14 @@ public:
         } else {
             initialized_ = false;
         }
+        MonitorView view;
+        if (frame) {
+            view.bands = frame->spectrum;
+        }
+        const bool hat = band == 2;
+        view.rangeFirst = static_cast<int>(band == 1 ? audio::kSnareFirstBand : (hat ? audio::kHatFirstBand : audio::kKickFirstBand));
+        view.rangeLast = static_cast<int>((band == 1 ? audio::kSnareEndBand : (hat ? kSpectrumBands : audio::kKickEndBand)) - 1);
+        outputs.setMonitor(view);
         const double decay = in.number("decay", 0.2);
         const double elapsed = std::max(0.0, now - lastBeat_);
         const double pulse = decay > 1e-6 ? std::exp(-elapsed / decay) : (hit ? 1.0 : 0.0);
@@ -371,6 +407,7 @@ std::vector<values::CpuNodeDefinition> audioNodes(std::shared_ptr<audio::AudioSt
     nodes.push_back(cpuNode("wh.value.audioband", "Audio Band", "Audio",
                             {valueOutput("value", "Value", PortType::Scalar), valueOutput("present", "Signal", PortType::Boolean)},
                             std::move(bandParameters), [store] { return std::make_unique<AudioBandKernel>(store); }));
+    nodes.back().descriptor.liveView = graph::LiveView::Spectrum;
 
     auto spectrumParameters = followParameters(0.2);
     spectrumParameters.push_back(number("floor", "Noise floor", 0.0, 0.0, 0.95));
@@ -378,6 +415,7 @@ std::vector<values::CpuNodeDefinition> audioNodes(std::shared_ptr<audio::AudioSt
                             {valueOutput("spectrum", "Spectrum", PortType::AudioSpectrum),
                              valueOutput("present", "Signal", PortType::Boolean)},
                             std::move(spectrumParameters), [store] { return std::make_unique<AudioSpectrumKernel>(store); }));
+    nodes.back().descriptor.liveView = graph::LiveView::Spectrum;
 
     nodes.push_back(cpuNode("wh.value.beat", "Beat", "Audio",
                             {valueOutput("beat", "Beat", PortType::Trigger), valueOutput("pulse", "Pulse", PortType::Scalar),
@@ -394,6 +432,7 @@ std::vector<values::CpuNodeDefinition> audioNodes(std::shared_ptr<audio::AudioSt
                             {choice("band", "Instrument", kOnsetBand, 0), number("threshold", "Min. strength", 1.0, 1.0, 6.0),
                              number("decay", "Pulse decay (s)", 0.2, 0.0, 5.0)},
                             [store] { return std::make_unique<AudioOnsetKernel>(store); }));
+    nodes.back().descriptor.liveView = graph::LiveView::Spectrum;
 
     nodes.push_back(cpuNode("wh.value.tap", "Tap Tempo", "Audio",
                             {valueOutput("beat", "Beat", PortType::Trigger), valueOutput("pulse", "Pulse", PortType::Scalar),

@@ -26,9 +26,9 @@ AudioAnalyzer::AudioAnalyzer(AnalyzerConfig config)
       fft_{config.fftSize},
       beat_{static_cast<double>(config.hop) / (config.sampleRate > 0.0 ? config.sampleRate : 48000.0),
             config.minBeatInterval},
-      kick_{static_cast<double>(config.hop) / (config.sampleRate > 0.0 ? config.sampleRate : 48000.0), 0, 8, 0.18},
-      snare_{static_cast<double>(config.hop) / (config.sampleRate > 0.0 ? config.sampleRate : 48000.0), 8, 23, 0.15},
-      hat_{static_cast<double>(config.hop) / (config.sampleRate > 0.0 ? config.sampleRate : 48000.0), 26, kSpectrumBands, 0.06} {
+      kick_{static_cast<double>(config.hop) / (config.sampleRate > 0.0 ? config.sampleRate : 48000.0), kKickFirstBand, kKickEndBand, 0.18},
+      snare_{static_cast<double>(config.hop) / (config.sampleRate > 0.0 ? config.sampleRate : 48000.0), kSnareFirstBand, kSnareEndBand, 0.15},
+      hat_{static_cast<double>(config.hop) / (config.sampleRate > 0.0 ? config.sampleRate : 48000.0), kHatFirstBand, kSpectrumBands, 0.06} {
     if (config_.sampleRate <= 0.0) {
         config_.sampleRate = 48000.0;
     }

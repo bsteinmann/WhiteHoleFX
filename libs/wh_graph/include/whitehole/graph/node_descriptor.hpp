@@ -53,6 +53,9 @@ struct ParameterDescriptor {
     std::vector<std::string> choices{};
 };
 
+/// Ob der Node im Editor einen Anzeigestreifen bekommt (Platz unter den Ports), den sein Kernel füllt (KernelOutputs::setMonitor).
+enum class LiveView { None, Spectrum, Wave };
+
 struct NodeDescriptor {
     std::string typeId;  // eindeutig, z. B. "whitehole.noise.simplex"
     std::string displayName;
@@ -60,6 +63,7 @@ struct NodeDescriptor {
     NodeDomain domain{NodeDomain::Field};
     std::vector<PortDescriptor> ports;
     std::vector<ParameterDescriptor> parameters;
+    LiveView liveView{LiveView::None};
 
     [[nodiscard]] const PortDescriptor* findPort(std::string_view key) const noexcept {
         for (const auto& port : ports) {

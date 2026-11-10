@@ -152,17 +152,24 @@ eines Reglers oder des Mikrofons sofort sieht:
 
 - **Zahl, Schalter, Trigger:** schmaler Balken unter dem Namen des Ausgangs. Werte von 0 bis 1 zeigen direkt
   ihren Wert; größere oder negative Werte weiten den Bereich auf, der danach langsam wieder auf 0 bis 1 zurückfällt.
-- **Spektrum und Wellenform:** 32 kleine Balken hinter dem Namen.
+- **Spektrum und Wellenform:** ein eigener Anzeigestreifen unten im Node (siehe unten), nicht mehr hinter dem Namen.
 - **Farbe:** ein Farbstreifen.
 - **Kabel:** je höher der Pegel, desto heller, dicker und mit Schein; ohne Signal gedämpft. Ein ausgewähltes Kabel
   bleibt weiß.
 - Spitzen bleiben einen Moment stehen, damit auch ein einzelner Trigger zu sehen ist.
 
+**Anzeigestreifen der Audio-Nodes.** Audio Spectrum, Audio Band, Kick/Snare/Hat und Audio Waveform haben unten im Node
+einen eigenen Streifen mit 32 Balken (Frequenzachse 100 Hz, 1 kHz, 10 kHz) beziehungsweise der Wellenform. Bei **Audio Band**
+und **Kick/Snare/Hat** ist der Bereich, den der Node auswertet, farbig hinterlegt und seine Balken leuchten; die übrigen
+Bänder sind gedämpft. Der Bereich kommt vom Node selbst (`from`/`to` in Hz beim Band, feste Bereiche bei Kick, Snare und
+Hi-Hat), die Anzeige zeigt also genau die Bänder, die zählen – auch bei Stille. Level, Beat und Tap behalten ihren
+Pegelbalken am Ausgang.
+
 Bild-Nodes (GPU) zeigen nichts, und ein Rechen-Node, den niemand verbraucht, wird nicht gerechnet und zeigt deshalb
 auch nichts. Zugeklappte Gruppen zeigen die Pegel an ihren herausgeführten Ausgängen. Abschalten unter
 **Ansicht → Pegel im Editor** (die Einstellung bleibt erhalten).
 
-Die CI prüft mit `--exercise` auch den Editor: Zwei Nodes anlegen, ein Kabel auf dem Weg der Maus
+Die CI prüft mit `--exercise` auch den Anzeigestreifen (Node wird höher, Balken, markierter Bereich, Welle, Aufräumen). Außerdem prüft sie den Editor: Zwei Nodes anlegen, ein Kabel auf dem Weg der Maus
 ziehen (Treffer auf Ports), verschieben, Kabel und Nodes wieder löschen.
 
 ## Layout-Editor

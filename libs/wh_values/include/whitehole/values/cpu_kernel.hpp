@@ -21,6 +21,7 @@
 #include <functional>
 #include <map>
 #include <memory>
+#include <optional>
 #include <span>
 #include <string>
 #include <string_view>
@@ -69,9 +70,15 @@ public:
     void setSpectrum(std::string_view portKey, const Spectrum& spectrum);
     [[nodiscard]] const std::map<std::string, Spectrum, std::less<>>& spectra() const noexcept { return spectra_; }
 
+    /// Anzeigestreifen für den Editor (Balken oder Wellenform, dazu der ausgewertete Bereich). Optional und ohne Wirkung
+    /// auf die Werte; der Node muss im Descriptor `liveView` gesetzt haben, damit der Editor Platz dafür lässt.
+    void setMonitor(const MonitorView& view) { monitor_ = view; }
+    [[nodiscard]] const std::optional<MonitorView>& monitor() const noexcept { return monitor_; }
+
 private:
     std::map<std::string, graph::ParameterValue, std::less<>> values_;
     std::map<std::string, Spectrum, std::less<>> spectra_;
+    std::optional<MonitorView> monitor_;
 };
 
 struct KernelContext {

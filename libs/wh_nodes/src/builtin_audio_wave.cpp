@@ -74,6 +74,10 @@ public:
             shown_.bands[i] = shown_.bands[i] * smooth + target.bands[i] * (1.0F - smooth);
         }
         outputs.setSpectrum("wave", shown_);
+        MonitorView view;
+        view.bands = shown_;
+        view.bipolar = true;
+        outputs.setMonitor(view);
         outputs.set("present", frame.has_value());
     }
 
@@ -96,6 +100,7 @@ std::vector<values::CpuNodeDefinition> audioWaveNodes(std::shared_ptr<audio::Aud
                              toggle("trigger", "Trigger on rising edge", true), number("level", "Trigger level", 0.0, -1.0, 1.0),
                              number("smooth", "Smoothing", 0.0, 0.0, 0.95)},
                             [store] { return std::make_unique<AudioWaveKernel>(store); }));
+    nodes.back().descriptor.liveView = graph::LiveView::Wave;
     return nodes;
 }
 

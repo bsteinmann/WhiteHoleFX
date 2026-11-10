@@ -180,6 +180,9 @@ Result<void> ValueEvaluator::evaluate(const graph::Graph& graph, const FrameTime
         for (const auto& [key, spectrum] : outputs.spectra()) {
             store.setSpectrum(id, key, spectrum);
         }
+        if (outputs.monitor().has_value()) {
+            store.setMonitor(id, *outputs.monitor());
+        }
     }
     return {};
 }

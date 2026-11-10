@@ -59,6 +59,17 @@ std::vector<LiveSignal> collectLiveSignals(const values::ValueStore& store) {
             signals.push_back(std::move(signal));
         }
     }
+    for (const auto& [node, view] : store.allMonitors()) {
+        LiveSignal signal;
+        signal.node = node;
+        signal.portKey = kMonitorKey;
+        signal.kind = LiveSignalKind::Monitor;
+        signal.bars = view.bands;
+        signal.bipolar = view.bipolar;
+        signal.rangeFirst = view.rangeFirst;
+        signal.rangeLast = view.rangeLast;
+        signals.push_back(std::move(signal));
+    }
     return signals;
 }
 

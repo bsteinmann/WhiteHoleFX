@@ -31,6 +31,7 @@ add_executable(wh_tests
     audio/onset_test.cpp
     audio/onset_node_test.cpp
     audio/audio_nodes_test.cpp
+    audio/monitor_test.cpp
     audio/audio_wave_test.cpp
     audio/audio_store_test.cpp
     audio/wav_test.cpp

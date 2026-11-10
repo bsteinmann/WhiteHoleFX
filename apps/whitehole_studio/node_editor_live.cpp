@@ -43,6 +43,8 @@ LiveDisplay displayOf(const runtime::LiveSignal& signal, graph::PortType type, r
             (void)type;
             break;
         }
+        case runtime::LiveSignalKind::Monitor:
+            break;  // gehört zum Node, nicht zu einem Ausgang (refreshLive)
         case runtime::LiveSignalKind::Color:
             display.kind = LiveDisplay::Kind::Color;
             display.color = QColor::fromRgbF(toDisplay(signal.color.r), toDisplay(signal.color.g), toDisplay(signal.color.b));
@@ -51,6 +53,26 @@ LiveDisplay displayOf(const runtime::LiveSignal& signal, graph::PortType type, r
             break;
     }
     return display;
+}
+
+/// Überträgt den Anzeigestreifen eines Nodes (Spektrum, Band-Bereich, Welle) aus der Signalliste.
+void refreshMonitor(NodeItem* item, const std::unordered_map<std::string, const runtime::LiveSignal*>& byPort) {
+    const auto found = byPort.find(keyOf(item->nodeId().value(), runtime::kMonitorKey));
+    if (found == byPort.end()) {
+        item->clearMonitor();
+        return;
+    }
+    const runtime::LiveSignal& signal = *found->second;
+    MonitorDisplay display;
+    display.active = true;
+    display.bipolar = signal.bipolar;
+    display.first = signal.rangeFirst;
+    display.last = signal.rangeLast;
+    for (std::size_t i = 0; i < display.bars.size(); ++i) {
+        const float value = signal.bars.bands[i];
+        display.bars[i] = signal.bipolar ? std::clamp(value, -1.0F, 1.0F) : std::clamp(value, 0.0F, 1.0F);
+    }
+    item->setMonitor(display);
 }
 
 }  // namespace
@@ -101,6 +123,9 @@ void NodeEditor::refreshLive() {
     }
     for (const auto& entry : nodes_) {
         NodeItem* item = entry.second;
+        if (item->hasMonitor()) {
+            refreshMonitor(item, byPort);
+        }
         for (const PortSlot& port : item->ports()) {
             if (!port.output) {
                 continue;

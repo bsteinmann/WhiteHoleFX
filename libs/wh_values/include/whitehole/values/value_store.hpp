@@ -35,6 +35,11 @@ public:
     void setSpectrum(NodeId node, std::string_view portKey, const Spectrum& spectrum);
     [[nodiscard]] std::optional<Spectrum> spectrum(NodeId node, std::string_view portKey) const override;
 
+    /// Anzeigestreifen (Live-Anzeige im Editor) eines Nodes; gehört zu keinem Ausgang.
+    void setMonitor(NodeId node, const MonitorView& view);
+    using MonitorTable = std::unordered_map<NodeId, MonitorView>;
+    [[nodiscard]] const MonitorTable& allMonitors() const noexcept { return monitors_; }
+
     /// Entfernt alle Werte (Anfang jedes Frames).
     void clear() noexcept;
 
@@ -50,6 +55,7 @@ public:
 private:
     ValueTable values_;
     SpectrumTable spectra_;
+    MonitorTable monitors_;
     std::size_t count_{0};
 };
 

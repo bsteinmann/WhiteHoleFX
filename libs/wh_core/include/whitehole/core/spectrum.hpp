@@ -21,4 +21,13 @@ struct Spectrum {
     std::array<float, kSpectrumBands> bands{};
 };
 
+/// Was ein Node im Editor als Anzeigestreifen zeigen möchte (Live-Anzeige): 32 Balken oder eine Wellenform und optional der
+/// Bereich der Bänder, den er auswertet. Reine Anzeige, hat keinen Einfluss auf die Werte.
+struct MonitorView {
+    Spectrum bands{};
+    bool bipolar{false};     ///< Wellenform (-1..1) statt Balken (0..1)
+    int rangeFirst{-1};      ///< erstes ausgewertetes Band, -1 = kein Bereich hervorheben
+    int rangeLast{-1};       ///< letztes ausgewertetes Band (einschließlich)
+};
+
 }  // namespace whitehole

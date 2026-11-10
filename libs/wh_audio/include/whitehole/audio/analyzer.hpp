@@ -32,6 +32,14 @@ inline constexpr double kFloorDb = -60.0;
 /// So viele der letzten Samples hängen an jedem Frame (für die Wellenform): 8192 sind bei 48 kHz 170 ms.
 inline constexpr std::size_t kRecentSamples = 8192;
 
+/// Welche Bänder [first, end) die Einsatz-Erkennung je Instrument auswertet (Kick etwa 40..170 Hz, Snare 200 Hz..2,5 kHz,
+/// Hi-Hat ab etwa 5 kHz). Der Editor zeigt dieselben Bänder an.
+inline constexpr std::size_t kKickFirstBand = 0;
+inline constexpr std::size_t kKickEndBand = 8;
+inline constexpr std::size_t kSnareFirstBand = 8;
+inline constexpr std::size_t kSnareEndBand = 23;
+inline constexpr std::size_t kHatFirstBand = 26;
+
 /// Die 33 Bandgrenzen in Hz (Band i reicht von edges[i] bis edges[i+1]).
 [[nodiscard]] const std::array<double, kSpectrumBands + 1>& bandEdgesHz();
 

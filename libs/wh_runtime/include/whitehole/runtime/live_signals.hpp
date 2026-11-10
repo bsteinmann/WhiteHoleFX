@@ -21,7 +21,11 @@ enum class LiveSignalKind {
     Number,  ///< Scalar, Integer, Boolean, Trigger: `number`
     Bars,    ///< Spektrum oder Wellenform: `bars` (Spektrum 0..1, Welle -1..1)
     Color,   ///< Farbe: `color`
+    Monitor, ///< Anzeigestreifen eines Nodes (portKey kMonitorKey): `bars`, `bipolar`, `rangeFirst`, `rangeLast`
 };
+
+/// Schlüssel, unter dem der Anzeigestreifen eines Nodes in der Signalliste steht (er gehört zu keinem Ausgang).
+inline constexpr const char* kMonitorKey = "@monitor";
 
 struct LiveSignal {
     NodeId node;
@@ -30,6 +34,9 @@ struct LiveSignal {
     double number{0.0};
     Spectrum bars{};
     ColorRgba color{};
+    bool bipolar{false};  ///< nur Monitor: Wellenform statt Balken
+    int rangeFirst{-1};   ///< nur Monitor: markierter Bereich der Bänder, -1 = keiner
+    int rangeLast{-1};
 };
 
 /// Alle Werte des Stores als Liste. Texte und Vektoren werden übersprungen (sie haben keinen sinnvollen Pegel).
