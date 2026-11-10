@@ -9,7 +9,7 @@ dann `whitehole_studio` starten (oder aus dem Anwendungsmenü).
 
 Die `.exe` ist noch **nicht digital signiert**. Windows zeigt deshalb beim ersten Start „Der Computer wurde durch Windows
 geschützt“ (SmartScreen) oder „Unbekannter Herausgeber“. Das heißt nur: Das Programm ist neu und hat bei Microsoft noch
-keinen Ruf, nicht dass etwas daran auffällig wäre. Die Signierung ist für die Version 1.0 geplant. Bis dahin:
+keinen Ruf, nicht dass etwas daran auffällig wäre. Bis dahin:
 
 1. „Weitere Informationen“ → „Trotzdem ausführen“.
 2. Wer sichergehen will, prüft vorher die **Prüfsumme** (SHA-256). Sie steht in der Datei `…sha256` neben dem Download
