@@ -102,6 +102,11 @@ void MainWindow::buildActions() {
     coloredPalette->setChecked(palette_->colored());
     coloredPalette->setToolTip(tr("Farbige Punkte vor den Nodes in der Palette: was der Node liefert"));
     connect(coloredPalette, &QAction::toggled, this, [this](bool on) { palette_->setColored(on); });
+    QAction* liveLevels = view->addAction(tr("Pegel im &Editor"));
+    liveLevels->setCheckable(true);
+    liveLevels->setChecked(editor_->liveEnabled());
+    liveLevels->setToolTip(tr("Balken in den Nodes und leuchtende Kabel, solange die Wiedergabe läuft"));
+    connect(liveLevels, &QAction::toggled, this, [this](bool on) { editor_->setLiveEnabled(on); });
     view->addAction(tr("Fensteranordnung &zurücksetzen"), this, [this]() { resetWindowLayout(); });
 
     // Reihenfolge wie im Betrieb: erst Wiedergabe und Ausgabe, dann der Live-Modus, ganz rechts die Hilfe.

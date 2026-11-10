@@ -144,6 +144,24 @@ Ungespeicherte Änderungen zeigt ein Stern im Fenstertitel; beim Neu, Öffnen, N
 nachgefragt. Dateien ohne Positionen (von Hand geschrieben) ordnet der Editor selbst in Spalten
 an. Die Anordnung ist erst gespeichert, wenn du „Speichern unter“ wählst.
 
+### Pegel im Editor (Balken und leuchtende Kabel)
+
+Solange die Wiedergabe läuft, zeigt der Editor, was an den Ausgängen der Rechen-Nodes (LFO, Audio-Pegel,
+Audio-Band, Beat, Mathe, Map, Smooth …) anliegt – das macht das Einstellen leichter, weil man die Wirkung
+eines Reglers oder des Mikrofons sofort sieht:
+
+- **Zahl, Schalter, Trigger:** schmaler Balken unter dem Namen des Ausgangs. Werte von 0 bis 1 zeigen direkt
+  ihren Wert; größere oder negative Werte weiten den Bereich auf, der danach langsam wieder auf 0 bis 1 zurückfällt.
+- **Spektrum und Wellenform:** 32 kleine Balken hinter dem Namen.
+- **Farbe:** ein Farbstreifen.
+- **Kabel:** je höher der Pegel, desto heller, dicker und mit Schein; ohne Signal gedämpft. Ein ausgewähltes Kabel
+  bleibt weiß.
+- Spitzen bleiben einen Moment stehen, damit auch ein einzelner Trigger zu sehen ist.
+
+Bild-Nodes (GPU) zeigen nichts, und ein Rechen-Node, den niemand verbraucht, wird nicht gerechnet und zeigt deshalb
+auch nichts. Zugeklappte Gruppen zeigen die Pegel an ihren herausgeführten Ausgängen. Abschalten unter
+**Ansicht → Pegel im Editor** (die Einstellung bleibt erhalten).
+
 Die CI prüft mit `--exercise` auch den Editor: Zwei Nodes anlegen, ein Kabel auf dem Weg der Maus
 ziehen (Treffer auf Ports), verschieben, Kabel und Nodes wieder löschen.
 
@@ -385,7 +403,7 @@ Strenge Eingänge** den strengen Modus ein; er wird mit dem Projekt gespeichert 
 | Datei | Neu, Öffnen, Zuletzt geöffnet, Beispiele (in Untergruppen Einstieg, Effekte, Audio, 3D; siehe [Beispielprojekte](examples.md)); Speichern, Speichern unter; Neu laden (F5); Beenden |
 | Bearbeiten | Rückgängig, Wiederholen; Einstellungen … (Strg+Komma) |
 | Stage Config | Fixtures …; Fixture hinzufügen …; Layout … (F4); Ausgabe …; Testmodus … (alles im selben Fenster) |
-| Ansicht | Docks ein- und ausblenden; 2D/3D-Umschalter (Strg+1 bis 5); 3D-Darstellung (Aus-LEDs, Leuchten) |
+| Ansicht | Docks ein- und ausblenden; Palette farbig; Pegel im Editor; 2D/3D-Umschalter (Strg+1 bis 5); 3D-Darstellung (Aus-LEDs, Leuchten) |
 | Wiedergabe | Start/Stopp, Ausgabe senden; Blackout |
 | Live | Live-Modus (F9), Look speichern |
 | Hilfe | Tutorial (eingebaut, in der gewählten Sprache), Dokumentation (F1, öffnet die Anleitung im Browser), Sprache / Language (Deutsch, English, Français, Español, Українська; gilt nach einem Neustart, den das Programm anbietet), Fehler melden oder Idee vorschlagen (öffnet ein neues Issue auf GitHub), Auf Updates prüfen … und „Beim Start nach Updates suchen“ (siehe unten), Tastenkürzel (Liste aller Kürzel, direkt aus den Aktionen gelesen), Über WhiteHoleFX (Version, Lizenz) |

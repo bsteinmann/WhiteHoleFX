@@ -23,6 +23,7 @@
 #include <QPointF>
 #include <QString>
 
+#include <map>
 #include <optional>
 #include <string>
 #include <unordered_map>
@@ -158,6 +159,16 @@ public:
     /// Rauchtest der Gruppen: gruppieren, zuklappen, verbinden an der Kachel, aufklappen, auflösen. Leer = in Ordnung.
     QString exerciseGroups();
 
+    // --- Live-Anzeige (node_editor_live.cpp) ---
+    /// Pegelbalken in den Nodes und leuchtende Kabel, solange Werte laufen. Die Einstellung bleibt gespeichert.
+    [[nodiscard]] bool liveEnabled() const noexcept;
+    void setLiveEnabled(bool on);
+    /// Holt die Werte des letzten Frames vom Player und zeigt sie an (nach jedem Frame aufrufen; billig, wenn
+    /// nichts läuft oder die Anzeige aus ist).
+    void refreshLive();
+    /// Rauchtest der Live-Anzeige ohne laufende Wiedergabe: Balken setzen, Kabel folgen, Aufräumen. Leer = in Ordnung.
+    QString exerciseLive();
+
     [[nodiscard]] int nodeCount() const noexcept { return static_cast<int>(nodes_.size()); }
     [[nodiscard]] int wireCount() const noexcept { return static_cast<int>(wires_.size()); }
 
@@ -271,6 +282,11 @@ private:
     std::vector<WireItem*> wires_;
     std::unordered_map<std::uint64_t, NodeItem*> tiles_;  // Mitglied zugeklappter Gruppe -> Kachel
     std::size_t tileCount_{0};
+    bool liveEnabled_{true};
+    bool liveShown_{false};  // gerade steht eine Live-Anzeige in den Items
+    std::map<std::string, runtime::LiveRange> liveRanges_;  // je Ausgang "Node/Port"
+    void loadLiveSetting();
+    void clearLive();
     std::vector<GroupFrameItem*> frames_;                 // Rahmen aufgeklappter Gruppen
 
     NodeItem* wireNode_{nullptr};

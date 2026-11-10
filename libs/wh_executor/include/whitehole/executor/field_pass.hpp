@@ -94,6 +94,8 @@ public:
     [[nodiscard]] const std::optional<Error>& graphError() const noexcept { return graphError_; }
     [[nodiscard]] const std::optional<Error>& frameError() const noexcept { return frameError_; }
     [[nodiscard]] StageStats stats() const noexcept { return stats_; }
+    /// Die Werte, die die CPU-Nodes im letzten Frame geliefert haben (nur vom Frame-Thread aus lesen).
+    [[nodiscard]] const values::ValueStore& values() const noexcept { return store_; }
 
 private:
     FieldPass(gpu::IGpuDevice& device, const compiler::ISnippetLibrary& snippets,

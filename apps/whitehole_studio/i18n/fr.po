@@ -194,7 +194,7 @@ msgstr "&Signaler un bogue ou proposer une idée …"
 msgid "&Fixtures …"
 msgstr "&Fixtures …"
 
-#: main_window_actions.cpp:116
+#: main_window_actions.cpp:121
 msgid "&Hilfe"
 msgstr "&Aide"
 
@@ -210,7 +210,7 @@ msgstr "&Légende des ports …"
 msgid "&Leuchten (additiv)"
 msgstr "&Halo (additif)"
 
-#: main_window_actions.cpp:112
+#: main_window_actions.cpp:117
 msgid "&Live"
 msgstr "&Live"
 
@@ -262,7 +262,7 @@ msgstr "Mode &test …"
 msgid "&Tutorial …"
 msgstr "&Tutoriel …"
 
-#: main_window_actions.cpp:108
+#: main_window_actions.cpp:113
 msgid "&Wiedergabe"
 msgstr "&Lecture"
 
@@ -334,7 +334,7 @@ msgstr "Matrice 2D"
 msgid "2D-Matrix 8x8"
 msgstr "Matrice 2D 8x8"
 
-#: main_window_actions.cpp:160
+#: main_window_actions.cpp:165
 msgid "3D"
 msgstr "3D"
 
@@ -574,7 +574,7 @@ msgstr "Art-Net, sACN et DDP sortent par cette carte. Avec « Automatique », la
 msgid "Art-Net-Port (UDP):"
 msgstr "Port Art-Net (UDP) :"
 
-#: main_window_actions.cpp:157 settings_dialog.cpp:62
+#: main_window_actions.cpp:162 settings_dialog.cpp:62
 msgid "Audio"
 msgstr "Audio"
 
@@ -710,6 +710,10 @@ msgstr "Barre le long de y"
 msgid "Balken entlang z"
 msgstr "Barre le long de z"
 
+#: main_window_actions.cpp:108
+msgid "Balken in den Nodes und leuchtende Kabel, solange die Wiedergabe läuft"
+msgstr "Barres dans les nœuds et câbles lumineux pendant la lecture"
+
 #: fixture_form.cpp:90 patch_table.cpp:48
 msgid "Bauform"
 msgstr "Type de fixture"
@@ -766,7 +770,7 @@ msgstr "Prêt : %1 - appuyer sur GO"
 msgid "Beschriftung auf der Kachel"
 msgstr "Libellé sur la tuile"
 
-#: main_window_actions.cpp:123
+#: main_window_actions.cpp:128
 msgid "Betrieb"
 msgstr "Fonctionnement"
 
@@ -1114,7 +1118,7 @@ msgstr "Dupliquer\tCtrl+D"
 msgid "Ebene Welle: Streifen, die in eine Richtung wandern (Frequenz, Tempo, zwei Farben)."
 msgstr "Plane wave: stripes moving in one direction (frequency, speed, two colors)."
 
-#: main_window_actions.cpp:154
+#: main_window_actions.cpp:159
 msgid "Effekte (2D)"
 msgstr "Effets (2D)"
 
@@ -1222,7 +1226,7 @@ msgstr "Aimanter"
 msgid "Einstellungen"
 msgstr "Réglages"
 
-#: main_window_actions.cpp:151
+#: main_window_actions.cpp:156
 msgid "Einstieg"
 msgstr "Premiers pas"
 
@@ -1322,7 +1326,7 @@ msgstr "A color ramp of up to four colors. \"Position\" picks the spot, or it ru
 msgid "Favoriten"
 msgstr "Favoris"
 
-#: main_window_actions.cpp:105
+#: main_window_actions.cpp:110
 msgid "Fensteranordnung &zurücksetzen"
 msgstr "Réinitialiser la disposition de la &fenêtre"
 
@@ -2074,7 +2078,7 @@ msgstr "Valeurs par défaut des nœuds"
 msgid "Node-Typ suchen …"
 msgstr "Chercher un type de nœud …"
 
-#: main_window_editor.cpp:64
+#: main_window_editor.cpp:65
 msgid "Nodes"
 msgstr "Nœuds"
 
@@ -2177,6 +2181,10 @@ msgstr "Pause entre le déclencheur et le début du fondu"
 #: node_info_texts.cpp:15
 msgid "Pegel eines Frequenzbereichs (Von–Bis in Hz) des Audio-Eingangs, geglättet mit Attack und Release. Gut für Bass- oder Höhen-Effekte. „Signal“ zeigt, ob Audio ankommt."
 msgstr "Level of one frequency band (From–To in Hz) of the audio input, smoothed with attack and release. Good for bass or treble effects. \"Signal\" shows whether audio is arriving."
+
+#: main_window_actions.cpp:105
+msgid "Pegel im &Editor"
+msgstr "Niveaux dans l'&éditeur"
 
 #: node_info_texts.cpp:126
 msgid "Pegelbalken: füllt die gewählte Achse bis „Level“ (0 bis 1), unten „Color low“, oben „Color high“. „Level“ lässt sich mit „Audio Level“ oder einem LFO steuern. Für Strips."
@@ -2506,7 +2514,7 @@ msgstr "Stop"
 msgid "Strenge &Eingänge"
 msgstr "Entrées &strictes"
 
-#: main_window_editor.cpp:179
+#: main_window_editor.cpp:180
 msgid "Strenge Eingänge"
 msgstr "Entrées strictes"
 

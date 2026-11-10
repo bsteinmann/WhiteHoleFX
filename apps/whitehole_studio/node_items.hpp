@@ -17,6 +17,7 @@
 #include <QString>
 
 #include <cstdint>
+#include <array>
 #include <functional>
 #include <optional>
 #include <utility>
@@ -49,6 +50,17 @@ inline constexpr double kNodeWidth = 190.0;
 inline constexpr double kNodeTitleHeight = 26.0;
 inline constexpr double kNodeRowHeight = 22.0;
 
+/// Was ein Ausgang gerade liefert (Live-Anzeige): ein Pegelbalken, 32 Balken (Spektrum, Welle) oder eine Farbe.
+/// `level` (0..1) gilt für alle Arten und färbt auch das Kabel.
+struct LiveDisplay {
+    enum class Kind { None, Level, Bars, Color };
+    Kind kind{Kind::None};
+    float level{0.0F};
+    std::array<float, 32> bars{};
+    QColor color;
+    bool operator==(const LiveDisplay&) const = default;
+};
+
 struct PortSlot {
     std::string key;
     QString label;
@@ -59,7 +71,12 @@ struct PortSlot {
     /// `realNode` 0 = gewöhnlicher Port des Items selbst.
     std::uint64_t realNode{0};
     std::string realKey;
+    LiveDisplay live;
 };
+
+/// Zeichnet die Live-Anzeige eines Ausgangs (Balken, Spektrum, Farbstreifen) unter oder hinter seinem Namen;
+/// `width` ist die Breite des Namensfelds. Eingänge und Ausgänge ohne Live-Wert zeichnet es nicht.
+void drawPortLive(QPainter* painter, const PortSlot& port, double width);
 
 class NodeItem : public QGraphicsItem {
 public:
@@ -100,6 +117,14 @@ public:
     [[nodiscard]] const QString& info() const noexcept { return info_; }
     [[nodiscard]] const QString& title() const noexcept { return title_; }
     [[nodiscard]] bool infoButtonAt(const QPointF& scenePos) const;
+
+    /// Live-Anzeige am Ausgang `portKey`: Balken im Node und Helligkeit des Kabels. Spitzen bleiben kurz stehen
+    /// (fallen mit jedem Aufruf ab), damit ein einzelner Trigger-Frame sichtbar bleibt.
+    void setLive(const std::string& portKey, LiveDisplay display);
+    /// Nimmt die Live-Anzeige weg (Wiedergabe gestoppt oder Anzeige aus).
+    void clearLive();
+    /// Pegel 0..1 am Ausgang oder -1, wenn dort nichts Live anliegt.
+    [[nodiscard]] float liveLevel(const std::string& portKey) const;
 
     /// Markiert den Ausgang, der auf die LEDs abgetastet wird (Orange).
     void setTargetKey(std::optional<std::string> key);
@@ -162,11 +187,16 @@ public:
     [[nodiscard]] ConnectionId connectionId() const noexcept { return id_; }
     [[nodiscard]] const NodeItem* fromNode() const noexcept { return from_; }
     [[nodiscard]] const NodeItem* toNode() const noexcept { return to_; }
+    [[nodiscard]] const std::string& fromKey() const noexcept { return fromKey_; }
+    /// Pegel der Live-Anzeige 0..1 oder -1 (nichts Live).
+    [[nodiscard]] float liveLevel() const noexcept { return live_; }
     /// Zieht das Kabel an die aktuellen Port-Positionen nach.
     void updatePath();
     /// Einrast-Vorschau: hellblau und dick, weil ein gezogener Node hier eingefügt würde.
     void setDockHighlight(bool on);
     [[nodiscard]] static QColor dockColor() { return QColor{90, 210, 255}; }
+    /// Liest den Pegel vom Ausgang (NodeItem::liveLevel) und zeichnet neu, wenn er sich geändert hat.
+    void syncLive();
 
     /// Weicher Verlauf von `a` (Ausgang, Kabel läuft nach rechts) nach `b` (Eingang).
     [[nodiscard]] static QPainterPath curve(const QPointF& a, const QPointF& b);
@@ -183,6 +213,8 @@ private:
     std::string toKey_;
     QColor color_;
     bool dockHighlight_{false};
+    void paintLive(QPainter* painter) const;
+    float live_{-1.0F};  // Pegel des Ausgangs 0..1, -1 = nichts Live
 };
 
 }  // namespace whitehole::studio

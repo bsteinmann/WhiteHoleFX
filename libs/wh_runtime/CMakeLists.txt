@@ -20,6 +20,8 @@ wh_add_library(wh_runtime
         src/player_edit.cpp
         src/player_groups.cpp
         src/group_infos.cpp
+        src/live_signals.cpp
+        src/player_signals.cpp
         src/player_dock.cpp
         src/player_targets.cpp
         src/player_master.cpp

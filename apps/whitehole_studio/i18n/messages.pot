@@ -194,7 +194,7 @@ msgstr ""
 msgid "&Fixtures …"
 msgstr ""
 
-#: main_window_actions.cpp:116
+#: main_window_actions.cpp:121
 msgid "&Hilfe"
 msgstr ""
 
@@ -210,7 +210,7 @@ msgstr ""
 msgid "&Leuchten (additiv)"
 msgstr ""
 
-#: main_window_actions.cpp:112
+#: main_window_actions.cpp:117
 msgid "&Live"
 msgstr ""
 
@@ -262,7 +262,7 @@ msgstr ""
 msgid "&Tutorial …"
 msgstr ""
 
-#: main_window_actions.cpp:108
+#: main_window_actions.cpp:113
 msgid "&Wiedergabe"
 msgstr ""
 
@@ -334,7 +334,7 @@ msgstr ""
 msgid "2D-Matrix 8x8"
 msgstr ""
 
-#: main_window_actions.cpp:160
+#: main_window_actions.cpp:165
 msgid "3D"
 msgstr ""
 
@@ -574,7 +574,7 @@ msgstr ""
 msgid "Art-Net-Port (UDP):"
 msgstr ""
 
-#: main_window_actions.cpp:157 settings_dialog.cpp:62
+#: main_window_actions.cpp:162 settings_dialog.cpp:62
 msgid "Audio"
 msgstr ""
 
@@ -710,6 +710,10 @@ msgstr ""
 msgid "Balken entlang z"
 msgstr ""
 
+#: main_window_actions.cpp:108
+msgid "Balken in den Nodes und leuchtende Kabel, solange die Wiedergabe läuft"
+msgstr ""
+
 #: fixture_form.cpp:90 patch_table.cpp:48
 msgid "Bauform"
 msgstr ""
@@ -766,7 +770,7 @@ msgstr ""
 msgid "Beschriftung auf der Kachel"
 msgstr ""
 
-#: main_window_actions.cpp:123
+#: main_window_actions.cpp:128
 msgid "Betrieb"
 msgstr ""
 
@@ -1114,7 +1118,7 @@ msgstr ""
 msgid "Ebene Welle: Streifen, die in eine Richtung wandern (Frequenz, Tempo, zwei Farben)."
 msgstr ""
 
-#: main_window_actions.cpp:154
+#: main_window_actions.cpp:159
 msgid "Effekte (2D)"
 msgstr ""
 
@@ -1222,7 +1226,7 @@ msgstr ""
 msgid "Einstellungen"
 msgstr ""
 
-#: main_window_actions.cpp:151
+#: main_window_actions.cpp:156
 msgid "Einstieg"
 msgstr ""
 
@@ -1322,7 +1326,7 @@ msgstr ""
 msgid "Favoriten"
 msgstr ""
 
-#: main_window_actions.cpp:105
+#: main_window_actions.cpp:110
 msgid "Fensteranordnung &zurücksetzen"
 msgstr ""
 
@@ -2074,7 +2078,7 @@ msgstr ""
 msgid "Node-Typ suchen …"
 msgstr ""
 
-#: main_window_editor.cpp:64
+#: main_window_editor.cpp:65
 msgid "Nodes"
 msgstr ""
 
@@ -2176,6 +2180,10 @@ msgstr ""
 
 #: node_info_texts.cpp:15
 msgid "Pegel eines Frequenzbereichs (Von–Bis in Hz) des Audio-Eingangs, geglättet mit Attack und Release. Gut für Bass- oder Höhen-Effekte. „Signal“ zeigt, ob Audio ankommt."
+msgstr ""
+
+#: main_window_actions.cpp:105
+msgid "Pegel im &Editor"
 msgstr ""
 
 #: node_info_texts.cpp:126
@@ -2506,7 +2514,7 @@ msgstr ""
 msgid "Strenge &Eingänge"
 msgstr ""
 
-#: main_window_editor.cpp:179
+#: main_window_editor.cpp:180
 msgid "Strenge Eingänge"
 msgstr ""
 

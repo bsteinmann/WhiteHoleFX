@@ -115,6 +115,8 @@ public:
     [[nodiscard]] std::optional<Error> lastOutputError() const;
     /// Fehler der Abtast-Stage (Graph nicht übersetzbar, Frame fehlgeschlagen).
     [[nodiscard]] std::optional<Error> stageError() const;
+    /// Die CPU-Werte des letzten Frames (Live-Anzeige). Nur von dem Thread aus aufrufen, der renderFrame() ruft.
+    [[nodiscard]] const values::ValueStore& values() const noexcept { return stage_->values(); }
 
 private:
     class ColorTap;

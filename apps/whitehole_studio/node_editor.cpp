@@ -23,6 +23,7 @@ QString fromStd(const std::string& text) { return QString::fromUtf8(text.data(),
 }  // namespace
 
 NodeEditor::NodeEditor(runtime::Player& player, QWidget* parent) : QGraphicsView{parent}, player_{player} {
+    loadLiveSetting();
     setScene(&scene_);
     setRenderHint(QPainter::Antialiasing);
     setBackgroundBrush(QColor{30, 31, 36});

@@ -1,5 +1,9 @@
 # Änderungen
 
+## 0.76.0
+
+- **Pegel im Editor: Balken in den Nodes und leuchtende Kabel.** Solange die Wiedergabe läuft, zeigt jeder Ausgang eines Rechen-Nodes (LFO, Audio-Pegel, Beat, Mathe, Map, Smooth …), was gerade anliegt: **Zahlen, Schalter und Trigger** als schmaler Balken unter dem Namen des Ausgangs, **Spektrum und Wellenform** als 32 kleine Balken hinter dem Namen, **Farben** als Farbstreifen. Das **Kabel** vom Ausgang wird heller, dicker und bekommt einen Schein, je höher der Pegel ist; ohne Signal ist es gedämpft. Zahlen zwischen 0 und 1 zeigen direkt ihren Wert, größere oder negative Werte weiten den Bereich auf, der danach langsam zurückfällt. Spitzen bleiben kurz stehen, damit ein einzelner Trigger zu sehen ist. Zugeklappte Gruppen zeigen die Pegel an ihren herausgeführten Ausgängen. Bild-Nodes (GPU) bleiben unverändert, ebenso Nodes, die niemand verbraucht (sie werden nicht gerechnet). Ein-/ausschalten unter **Ansicht → Pegel im Editor** (wird gemerkt). Technik: `Player::liveSignals()` liest den ValueStore des letzten Frames (`runtime/live_signals.hpp`, mit Tests), der Editor holt ihn nach jedem Frame; Rauchtest `exerciseLive` in der CI.
+
 ## 0.75.0
 
 - **Gruppen-Regler im Parameterfenster.** Wählt man die Kachel einer zugeklappten Gruppe, zeigt das Parameterfenster einen Eintrag mit dem Namen der Gruppe und genau den Reglern, die im Dialog „Gruppieren“ (oder „Gruppe bearbeiten …“) angehakt wurden, mit der dort vergebenen Beschriftung. Die Regler wirken auf die Parameter der Nodes in der Gruppe (Schieber, Farbe, Ja/Nein wie sonst, auch Zurücksetzen); Anheften und Suchen funktionieren. Aufgeklappt erscheinen die Nodes einzeln wie bisher. Zum Hineinschauen: Doppelklick auf die Kachel klappt auf. Die Rechnung steht in `runtime/group_infos.hpp` (`applyGroups`, Schlüssel `@<NodeId>/<Parameter>`), mit Test; Rauchtest „Gruppen-Regler“.

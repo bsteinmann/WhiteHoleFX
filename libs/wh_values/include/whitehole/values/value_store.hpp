@@ -41,9 +41,15 @@ public:
     /// Anzahl der gespeicherten Werte (Ausgänge, nicht Nodes).
     [[nodiscard]] std::size_t size() const noexcept { return count_; }
 
+    using ValueTable = std::unordered_map<NodeId, std::map<std::string, graph::ParameterValue, std::less<>>>;
+    using SpectrumTable = std::unordered_map<NodeId, std::map<std::string, Spectrum, std::less<>>>;
+    /// Lesezugriff auf alles, was im letzten Frame geliefert wurde (Live-Anzeige im Editor).
+    [[nodiscard]] const ValueTable& allValues() const noexcept { return values_; }
+    [[nodiscard]] const SpectrumTable& allSpectra() const noexcept { return spectra_; }
+
 private:
-    std::unordered_map<NodeId, std::map<std::string, graph::ParameterValue, std::less<>>> values_;
-    std::unordered_map<NodeId, std::map<std::string, Spectrum, std::less<>>> spectra_;
+    ValueTable values_;
+    SpectrumTable spectra_;
     std::size_t count_{0};
 };
 

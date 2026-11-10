@@ -162,6 +162,10 @@ QString NodeEditor::exercise() {
         return problem;
     }
 
+    // Live-Anzeige: Balken, Kabel, Aufräumen
+    if (const QString problem = exerciseLive(); !problem.isEmpty()) {
+        return problem;
+    }
     // Gruppen: Kachel, Rahmen, Auflösen
     if (const QString problem = exerciseGroups(); !problem.isEmpty()) {
         return problem;

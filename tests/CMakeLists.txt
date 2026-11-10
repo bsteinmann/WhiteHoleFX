@@ -120,6 +120,7 @@ add_executable(wh_tests
     runtime/player_live_test.cpp
     runtime/player_edit_test.cpp
     runtime/player_groups_test.cpp
+    runtime/live_signals_test.cpp
     runtime/player_test.cpp
     runtime/session_test.cpp
     runtime/test_pattern_test.cpp)

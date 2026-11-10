@@ -81,6 +81,8 @@ public:
     [[nodiscard]] const std::optional<Error>& graphError() const noexcept { return pass_->graphError(); }
     [[nodiscard]] const std::optional<Error>& frameError() const noexcept { return pass_->frameError(); }
     [[nodiscard]] StageStats stats() const noexcept;
+    /// Die CPU-Werte des letzten Frames (für die Live-Anzeige). Nur vom Frame-Thread aus lesen.
+    [[nodiscard]] const values::ValueStore& values() const noexcept { return pass_->values(); }
 
 private:
     SamplingRenderStage(gpu::IGpuDevice& device, std::uint64_t capacity, gpu::BufferHandle positions,

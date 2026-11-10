@@ -194,7 +194,7 @@ msgstr "&Повідомити про помилку або запропонув�
 msgid "&Fixtures …"
 msgstr "&Фікстури …"
 
-#: main_window_actions.cpp:116
+#: main_window_actions.cpp:121
 msgid "&Hilfe"
 msgstr "&Довідка"
 
@@ -210,7 +210,7 @@ msgstr "&Легенда портів …"
 msgid "&Leuchten (additiv)"
 msgstr "&Світіння (адитивно)"
 
-#: main_window_actions.cpp:112
+#: main_window_actions.cpp:117
 msgid "&Live"
 msgstr "&Live"
 
@@ -262,7 +262,7 @@ msgstr "&Тестовий режим …"
 msgid "&Tutorial …"
 msgstr "&Туторіал …"
 
-#: main_window_actions.cpp:108
+#: main_window_actions.cpp:113
 msgid "&Wiedergabe"
 msgstr "&Відтворення"
 
@@ -334,7 +334,7 @@ msgstr "2D-матриця"
 msgid "2D-Matrix 8x8"
 msgstr "2D-матриця 8x8"
 
-#: main_window_actions.cpp:160
+#: main_window_actions.cpp:165
 msgid "3D"
 msgstr "3D"
 
@@ -574,7 +574,7 @@ msgstr "Art-Net, sACN і DDP виходять через цю карту. За �
 msgid "Art-Net-Port (UDP):"
 msgstr "Порт Art-Net (UDP):"
 
-#: main_window_actions.cpp:157 settings_dialog.cpp:62
+#: main_window_actions.cpp:162 settings_dialog.cpp:62
 msgid "Audio"
 msgstr "Аудіо"
 
@@ -710,6 +710,10 @@ msgstr "Смуга вздовж y"
 msgid "Balken entlang z"
 msgstr "Смуга вздовж z"
 
+#: main_window_actions.cpp:108
+msgid "Balken in den Nodes und leuchtende Kabel, solange die Wiedergabe läuft"
+msgstr "Смуги у вузлах і світні кабелі під час відтворення"
+
 #: fixture_form.cpp:90 patch_table.cpp:48
 msgid "Bauform"
 msgstr "Тип фікстури"
@@ -766,7 +770,7 @@ msgstr "Готово: %1 - натисніть GO"
 msgid "Beschriftung auf der Kachel"
 msgstr "Підпис на плитці"
 
-#: main_window_actions.cpp:123
+#: main_window_actions.cpp:128
 msgid "Betrieb"
 msgstr "Робота"
 
@@ -1114,7 +1118,7 @@ msgstr "Дублювати\tCtrl+D"
 msgid "Ebene Welle: Streifen, die in eine Richtung wandern (Frequenz, Tempo, zwei Farben)."
 msgstr "Плоска хвиля: смуги, що рухаються в одному напрямку (частота, темп, два кольори)."
 
-#: main_window_actions.cpp:154
+#: main_window_actions.cpp:159
 msgid "Effekte (2D)"
 msgstr "Ефекти (2D)"
 
@@ -1222,7 +1226,7 @@ msgstr "Прилипання"
 msgid "Einstellungen"
 msgstr "Налаштування"
 
-#: main_window_actions.cpp:151
+#: main_window_actions.cpp:156
 msgid "Einstieg"
 msgstr "Початок"
 
@@ -1322,7 +1326,7 @@ msgstr "Градієнт із чотирьох кольорів. «Position» о
 msgid "Favoriten"
 msgstr "Обране"
 
-#: main_window_actions.cpp:105
+#: main_window_actions.cpp:110
 msgid "Fensteranordnung &zurücksetzen"
 msgstr "&Скинути розташування вікон"
 
@@ -2074,7 +2078,7 @@ msgstr "Стандартні значення нод"
 msgid "Node-Typ suchen …"
 msgstr "Знайти тип ноди …"
 
-#: main_window_editor.cpp:64
+#: main_window_editor.cpp:65
 msgid "Nodes"
 msgstr "Ноди"
 
@@ -2177,6 +2181,10 @@ msgstr "Пауза між тригером і початком переходу"
 #: node_info_texts.cpp:15
 msgid "Pegel eines Frequenzbereichs (Von–Bis in Hz) des Audio-Eingangs, geglättet mit Attack und Release. Gut für Bass- oder Höhen-Effekte. „Signal“ zeigt, ob Audio ankommt."
 msgstr "Рівень діапазону частот (Від–До в Гц) аудіовходу, згладжений через Attack і Release. Добре для ефектів на баси чи верхи. «Signal» показує, чи надходить аудіо."
+
+#: main_window_actions.cpp:105
+msgid "Pegel im &Editor"
+msgstr "Рівні в &редакторі"
 
 #: node_info_texts.cpp:126
 msgid "Pegelbalken: füllt die gewählte Achse bis „Level“ (0 bis 1), unten „Color low“, oben „Color high“. „Level“ lässt sich mit „Audio Level“ oder einem LFO steuern. Für Strips."
@@ -2506,7 +2514,7 @@ msgstr "Стоп"
 msgid "Strenge &Eingänge"
 msgstr "Суворі &входи"
 
-#: main_window_editor.cpp:179
+#: main_window_editor.cpp:180
 msgid "Strenge Eingänge"
 msgstr "Суворі входи"
 

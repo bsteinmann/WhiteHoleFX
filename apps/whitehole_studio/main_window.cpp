@@ -338,6 +338,9 @@ void MainWindow::tick() {
         updateActions();
     }
     followMasterDmx();
+    if (editor_ != nullptr && editorDock_->isVisible()) {
+        editor_->refreshLive();
+    }
     if (liveMode_) {
         livePanel_->refresh();
     }

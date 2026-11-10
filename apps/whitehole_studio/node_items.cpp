@@ -357,6 +357,7 @@ void NodeItem::paint(QPainter* painter, const QStyleOptionGraphicsItem*, QWidget
         }
         drawPortMarker(painter, port.anchor, port.type, port.output, kPortRadius);
 
+        drawPortLive(painter, port, labelWidth);  // hinter bzw. unter dem Namen
         painter->setPen(QColor{205, 207, 214});
         const QString text = painter->fontMetrics().elidedText(port.label, Qt::ElideRight, labelWidth);
         if (port.output) {
@@ -414,6 +415,10 @@ void WireItem::paint(QPainter* painter, const QStyleOptionGraphicsItem*, QWidget
     if (dockHighlight_) {
         painter->setPen(QPen{dockColor(), 5.0});
         painter->drawPath(path());
+        return;
+    }
+    if (live_ >= 0.0F && !isSelected()) {
+        paintLive(painter);
         return;
     }
     painter->setPen(QPen{isSelected() ? QColor{255, 255, 255} : color_, isSelected() ? 4.0 : 2.5});

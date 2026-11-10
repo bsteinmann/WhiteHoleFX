@@ -40,6 +40,7 @@
 #include "whitehole/runtime/audio_usage.hpp"
 #include "whitehole/runtime/dmx_usage.hpp"
 #include "whitehole/runtime/led_info.hpp"
+#include "whitehole/runtime/live_signals.hpp"
 #include "whitehole/runtime/cue_runner.hpp"
 #include "whitehole/runtime/live_decks.hpp"
 #include "whitehole/runtime/master_dmx.hpp"
@@ -381,6 +382,12 @@ public:
     [[nodiscard]] LiveStatus liveStatus() const noexcept;
     /// Uhr für die Überblendung in Sekunden (Standard: Systemuhr). Nur für Tests austauschbar.
     void setLiveClock(std::function<double()> clock) { liveClock_ = std::move(clock); }
+
+    // --- Live-Anzeige --------------------------------------------------------------------------------------------
+    /// Die Werte der CPU-Nodes im zuletzt gerechneten Frame (für Balken und leuchtende Kabel im Editor). Leer ohne
+    /// laufende Session. Nur vom GUI-Thread aus rufen (derselbe, der step() ruft). Nur Nodes, die im Frame wirklich
+    /// ausgewertet wurden, tauchen auf; ein Node ohne Verbraucher liefert nichts.
+    [[nodiscard]] std::vector<LiveSignal> liveSignals() const;
 
     // --- Cuelist (Issue #21) ---------------------------------------------------------------------------------
     // Die Cues stehen im Projekt (Zeilen `cue ...`). Der Ablauf braucht den Live-Betrieb: cuesStart() startet ihn,
