@@ -91,6 +91,7 @@ Result<void> Graph::removeNode(NodeId id) {
         return connection.from.node == id || connection.to.node == id;
     });
     nodes_.erase(it);
+    dropFromGroups(id);
     return {};
 }
 

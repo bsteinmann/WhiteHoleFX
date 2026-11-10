@@ -182,6 +182,26 @@ begrenzt. Ohne die Angaben gilt `scale 1 offset 0`; die Zeile wird dann auch nic
 betragsmäßig höchstens 1e9. Farben, Schalter und Trigger ignorieren die Skalierung. Ältere Programme lehnen Dateien mit
 `scale`/`offset` ab.
 
+### `nodegroup "<name>"` … `end` (Gruppe von Nodes)
+
+Eine Gruppe fasst Nodes zu einer Kachel mit selbst gewählter Schnittstelle zusammen (siehe [Studio](studio.md)). Sie ist nur ein
+Behälter: Die Nodes und Kabel bleiben normale `node`- und `connect`-Zeilen, der Compiler sieht von Gruppen nichts. Der Block steht
+**hinter** den `node`- und `connect`-Zeilen seines Graphen (Hauptgraph oder `look`), weil er Nodes beim Namen nennt.
+
+```
+nodegroup "Plasma mit Farbwechsel"
+  at 120 40                      # Lage der Kachel im Node-Editor
+  color 0.5 0.25 1               # Farbe der Kachel (0 bis 1)
+  expanded                       # aufgeklappt; ohne die Zeile ist die Gruppe zugeklappt
+  member n1 n2 n3                # die Nodes der Gruppe
+  port n3.out as "Ausgang"       # nach außen gezeigter Ein- oder Ausgang, mit Beschriftung
+  param n1.speed as "Tempo"      # nach außen gezeigter Regler
+end
+```
+
+Ein Node steckt in höchstens einer Gruppe, Gruppennamen sind eindeutig (bis 64 Zeichen), jeder `port` und `param` gehört zu einem
+Mitglied und steht nur einmal da. Wird ein Node gelöscht, verlässt er die Gruppe samt Schnittstelle; eine leere Gruppe verschwindet.
+
 ### `look "<name>" fade <sekunden>` ... `endlook`
 
 Ein gespeicherter Effekt (siehe [Looks und Live-Betrieb](studio.md)). Zwischen `look` und `endlook` stehen

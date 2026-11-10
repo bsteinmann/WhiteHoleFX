@@ -13,6 +13,7 @@
 #include "project_stage.hpp"
 #include "project_fixture_parser.hpp"
 #include "project_names.hpp"
+#include "project_nodegroup.hpp"
 #include "whitehole/project/project.hpp"
 
 namespace whitehole::project {
@@ -36,10 +37,11 @@ public:
     Result<Project> finish();
 
 private:
-    enum class State { Outside, Fixture, Node };
+    enum class State { Outside, Fixture, Node, NodeGroup };
 
     std::optional<Error> handleOutside(const Line& line);
     std::optional<Error> handleNode(const Line& line);
+    std::optional<Error> handleNodeGroup(const Line& line);
     std::optional<Error> settings(Reader& r);
     void destination(Reader& r);
     std::optional<Error> beginNode(Reader& r);
@@ -64,6 +66,7 @@ private:
     std::size_t blockStart_{0};
     FixtureDraft fixture_;
     NodeId node_;
+    detail::NodeGroupDraft nodeGroup_;
     std::unordered_map<std::string, NodeId> nodes_;
 };
 
@@ -105,6 +108,9 @@ std::optional<Error> Parser::handle(const Line& line) {
     if (state_ == State::Node) {
         return handleNode(line);
     }
+    if (state_ == State::NodeGroup) {
+        return handleNodeGroup(line);
+    }
     return handleOutside(line);
 }
 
@@ -128,6 +134,12 @@ std::optional<Error> Parser::handleOutside(const Line& line) {
     } else if (key == "node") {
         error = beginNode(r);
         blockStart_ = line.number;
+    } else if (key == "nodegroup") {
+        nodeGroup_ = detail::beginNodeGroup(r);
+        blockStart_ = line.number;
+        if (r.ok()) {
+            state_ = State::NodeGroup;
+        }
     } else if (key == "connect") {
         error = connect(r);
     } else if (key == "output") {
@@ -249,6 +261,24 @@ std::optional<Error> Parser::beginNode(Reader& r) {
     node_ = id.value();
     state_ = State::Node;
     return std::nullopt;
+}
+
+std::optional<Error> Parser::handleNodeGroup(const Line& line) {
+    Reader r{line, 0};
+    const std::string key = r.word("Schlüsselwort");
+    if (key == "end") {
+        r.expectEnd();
+        if (!r.ok()) {
+            return r.error();
+        }
+        state_ = State::Outside;
+        if (const auto result = detail::finishNodeGroup(nodeGroup_, nodes_, *graph_); !result.ok()) {
+            return withLine(blockStart_, result.error());
+        }
+        return std::nullopt;
+    }
+    detail::nodeGroupStatement(key, r, nodeGroup_);
+    return r.ok() ? std::nullopt : std::optional<Error>{r.error()};
 }
 
 std::optional<Error> Parser::handleNode(const Line& line) {

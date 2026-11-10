@@ -12,6 +12,7 @@
 #include "project_cue.hpp"
 #include "project_stage.hpp"
 #include "project_names.hpp"
+#include "project_nodegroup.hpp"
 #include "whitehole/project/project.hpp"
 
 namespace whitehole::project {
@@ -130,6 +131,7 @@ Result<void> writeGraph(std::ostream& out, const graph::Graph& graph, const std:
         }
         out << "\n";
     }
+    detail::writeNodeGroups(out, graph, names);
     if (target) {
         const auto it = names.find(target->node.value());
         if (it == names.end()) {

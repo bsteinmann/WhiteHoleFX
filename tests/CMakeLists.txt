@@ -15,6 +15,7 @@ add_executable(wh_tests
     core/update_check_test.cpp
     graph/graph_test.cpp
     graph/graph_topology_test.cpp
+    graph/node_group_test.cpp
     graph/node_registry_test.cpp
     graph/parameter_resolve_test.cpp
     graph/port_type_test.cpp
@@ -88,6 +89,7 @@ add_executable(wh_tests
     project/project_library_test.cpp
     project/project_destinations_test.cpp
     project/cue_test.cpp
+    project/node_group_file_test.cpp
     project/fixture_template_test.cpp
     project/output_target_test.cpp
     fuzz/parser_fuzz_test.cpp

@@ -4,6 +4,7 @@
 wh_add_library(wh_graph
     SOURCES
         src/graph.cpp
+        src/graph_groups.cpp
         src/graph_topology.cpp
         src/output_merge.cpp
         src/node_docking.cpp

@@ -1,5 +1,9 @@
 # Änderungen
 
+## 0.72.0
+
+- **Gruppen von Nodes, Schritt 1 von 4: Datenmodell und Datei.** Eine Gruppe (`NodeGroup`) fasst Nodes zu einer Kachel mit selbst gewählter Schnittstelle zusammen: ausgewählte Ein-/Ausgänge und Parameter, mit Beschriftung. Sie ist nur ein Behälter über normalen Nodes; Kabel, Compiler, Rückgängig und Kopien des Graphen bleiben unverändert. `Graph::addGroup/replaceGroup/removeGroup/setGroupCollapsed/setGroupPosition/findGroup/groupOf`, alle mit Prüfungen (Name einmalig, ein Node nur in einer Gruppe, Ports und Parameter existieren). Ein gelöschter Node verlässt seine Gruppe, eine leere Gruppe verschwindet. In der Projektdatei als Block `nodegroup "Name" … end` (Hauptgraph und `look`), siehe `docs/project-format.md`. Noch ohne Oberfläche: Kachel, Pop-up und Bibliothek folgen in den nächsten Versionen.
+
 ## 0.71.0
 
 - **Ausgabe: Spalte „Adressraum“ in der Patch-Tabelle.** Zeigt je Fixture, welche Kanäle es belegt (`U1: 1–297`, bei Überlauf `U1: 1 – U3: 180`, bei DDP die Bytes). Die Rechnung steht in `output/patch_space.hpp` und folgt den Regeln des Ausgabeplans.

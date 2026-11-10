@@ -14,6 +14,7 @@
 #include "whitehole/core/result.hpp"
 #include "whitehole/core/types.hpp"
 #include "whitehole/graph/node_descriptor.hpp"
+#include "whitehole/graph/node_group.hpp"
 #include "whitehole/graph/node_registry.hpp"
 
 namespace whitehole::graph {
@@ -100,6 +101,26 @@ public:
     /// Fehler: NotFound, InvalidArgument (NaN oder Unendlich).
     Result<void> setPosition(NodeId id, Vec2 position);
 
+    /// Legt eine Gruppe an (siehe node_group.hpp). Geprüft wird: Name nicht leer, höchstens kMaxGroupNameLength Zeichen und
+    /// noch frei; mindestens ein Mitglied, alle vorhanden, keines doppelt oder schon in einer anderen Gruppe; jeder Port und
+    /// Parameter gehört zu einem Mitglied, existiert im Node-Typ und steht nur einmal da; jede Beschriftung ist nicht leer.
+    /// Fehler: InvalidArgument, NotFound (Mitglied, Port, Parameter), AlreadyExists (Name, Mitglied in anderer Gruppe).
+    Result<void> addGroup(NodeGroup group);
+    /// Ersetzt die Gruppe `name` (Name, Mitglieder, Schnittstelle, Lage). Dieselben Prüfungen; bei einem Fehler bleibt die
+    /// alte Gruppe. Fehler wie addGroup, dazu NotFound (keine solche Gruppe).
+    Result<void> replaceGroup(std::string_view name, NodeGroup group);
+    /// Löst die Gruppe auf; die Nodes bleiben. Fehler: NotFound.
+    Result<void> removeGroup(std::string_view name);
+    /// Klappt die Gruppe zu oder auf. Fehler: NotFound.
+    Result<void> setGroupCollapsed(std::string_view name, bool collapsed);
+    /// Lage der Kachel. Fehler: NotFound, InvalidArgument (NaN oder Unendlich).
+    Result<void> setGroupPosition(std::string_view name, Vec2 position);
+
+    [[nodiscard]] const NodeGroup* findGroup(std::string_view name) const noexcept;
+    /// Die Gruppe, in der der Node steckt, oder nullptr.
+    [[nodiscard]] const NodeGroup* groupOf(NodeId node) const noexcept;
+    [[nodiscard]] const std::vector<NodeGroup>& groups() const noexcept { return groups_; }
+
     [[nodiscard]] const NodeInstance* findNode(NodeId id) const noexcept;
     [[nodiscard]] const Connection* findConnection(ConnectionId id) const noexcept;
 
@@ -123,9 +144,14 @@ public:
     }
 
 private:
+    /// Nimmt einen entfernten Node aus allen Gruppen (Mitglied, Schnittstelle); leere Gruppen verschwinden.
+    void dropFromGroups(NodeId id);
+    [[nodiscard]] Result<void> checkGroup(const NodeGroup& group, std::string_view replacing) const;
+
     std::shared_ptr<const INodeRegistry> registry_;
     std::vector<NodeInstance> nodes_;
     std::vector<Connection> connections_;
+    std::vector<NodeGroup> groups_;
     IdGenerator<NodeId> nodeIds_;
     IdGenerator<ConnectionId> connectionIds_;
     bool strictInputs_{false};
