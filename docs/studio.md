@@ -158,9 +158,9 @@ eines Reglers oder des Mikrofons sofort sieht:
   bleibt weiß.
 - Spitzen bleiben einen Moment stehen, damit auch ein einzelner Trigger zu sehen ist.
 
-**Anzeigestreifen der Audio-Nodes.** Audio Spectrum, Audio Band, Kick/Snare/Hat und Audio Waveform haben unten im Node
+**Anzeigestreifen der Audio-Nodes.** Audio Spectrum, Audio Band, Audio Trigger und Audio Waveform haben unten im Node
 einen eigenen Streifen mit 32 Balken (Frequenzachse 100 Hz, 1 kHz, 10 kHz) beziehungsweise der Wellenform. Bei **Audio Band**
-und **Kick/Snare/Hat** ist der Bereich, den der Node auswertet, farbig hinterlegt und seine Balken leuchten; die übrigen
+und **Audio Trigger** ist der Bereich, den der Node auswertet, farbig hinterlegt und seine Balken leuchten; die übrigen
 Bänder sind gedämpft. Der Bereich kommt vom Node selbst (`from`/`to` in Hz beim Band, feste Bereiche bei Kick, Snare und
 Hi-Hat), die Anzeige zeigt also genau die Bänder, die zählen – auch bei Stille. Level, Beat und Tap behalten ihren
 Pegelbalken am Ausgang.

@@ -1,4 +1,4 @@
-// Audio-Eingang als Nodes: Pegel, Frequenzband, Beat, Kick/Snare/Hat, Tap-Tempo und Spektrum.
+// Audio-Eingang als Nodes: Pegel, Frequenzband, Beat, Audio Trigger (Kick/Snare/Hat/eigener Bereich), Tap-Tempo und Spektrum.
 //
 // Warum es diese Datei gibt: Die Analyse (wh_audio) kennt keine Nodes. Hier hängen die Kernel am
 // gemeinsamen AudioStore, holen sich pro Frame den aktuellen Zustand und machen daraus Werte, die
@@ -10,6 +10,7 @@
 #include <algorithm>
 #include <cmath>
 #include <memory>
+#include <optional>
 
 #include "builtin_internal.hpp"
 #include "whitehole/audio/audio_store.hpp"
@@ -261,7 +262,10 @@ private:
 
 // --- Einsatz (Kick / Snare / Hi-Hat) ------------------------------------------------------------
 
-/// Löst bei jedem Einsatz im gewählten Frequenzbereich aus (Kick, Snare, Hi-Hat), mit klingendem Puls.
+/// Löst bei jedem Einsatz im gewählten Frequenzbereich aus (Kick, Snare, Hi-Hat oder ein eigener Bereich in Hz), mit
+/// klingendem Puls. Die drei Instrumente rechnet der Analysator vor; für den eigenen Bereich führt der Node einen
+/// eigenen Erkenner, den er mit jedem neuen Audio-Frame füttert (er sieht damit so viele Spektren, wie der Node
+/// ausgewertet wird, also etwas weniger als der Analysator).
 class AudioOnsetKernel final : public values::ICpuKernel {
 public:
     explicit AudioOnsetKernel(std::shared_ptr<AudioStore> store) : store_{std::move(store)} {}
@@ -271,10 +275,21 @@ public:
         const auto frame = freshFrame(*store_);
         const double now = context.time.time.count();
         const auto band = static_cast<int>(std::lround(in.number("band", 0.0)));
+        const bool custom = band == 3;
+        std::pair<std::size_t, std::size_t> range{0, 0};
+        if (custom) {
+            const double a = in.number("from", 100.0);
+            const double b = in.number("to", 400.0);
+            range = bandRange(std::min(a, b), std::max(a, b));
+        }
 
         bool hit = false;
         if (frame) {
-            const audio::OnsetInfo& onset = band == 1 ? frame->snare : (band == 2 ? frame->hat : frame->kick);
+            if (custom) {
+                feedCustom(*frame, range, context.time.delta.count());
+            }
+            const audio::OnsetInfo& onset =
+                custom ? custom_->info() : (band == 1 ? frame->snare : (band == 2 ? frame->hat : frame->kick));
             if (!initialized_ || onset.count < lastCount_ || band != lastBand_) {
                 lastCount_ = onset.count;  // erster Blick, Quelle neu gestartet oder Bereich gewechselt: nichts nachholen
                 lastBand_ = band;
@@ -291,14 +306,20 @@ public:
             }
         } else {
             initialized_ = false;
+            custom_.reset();
         }
         MonitorView view;
         if (frame) {
             view.bands = frame->spectrum;
         }
         const bool hat = band == 2;
-        view.rangeFirst = static_cast<int>(band == 1 ? audio::kSnareFirstBand : (hat ? audio::kHatFirstBand : audio::kKickFirstBand));
-        view.rangeLast = static_cast<int>((band == 1 ? audio::kSnareEndBand : (hat ? kSpectrumBands : audio::kKickEndBand)) - 1);
+        if (custom) {
+            view.rangeFirst = static_cast<int>(range.first);
+            view.rangeLast = static_cast<int>(range.second);
+        } else {
+            view.rangeFirst = static_cast<int>(band == 1 ? audio::kSnareFirstBand : (hat ? audio::kHatFirstBand : audio::kKickFirstBand));
+            view.rangeLast = static_cast<int>((band == 1 ? audio::kSnareEndBand : (hat ? kSpectrumBands : audio::kKickEndBand)) - 1);
+        }
         outputs.setMonitor(view);
         const double decay = in.number("decay", 0.2);
         const double elapsed = std::max(0.0, now - lastBeat_);
@@ -311,10 +332,29 @@ public:
     }
 
 private:
+    /// Füttert den eigenen Erkenner; ein neuer Bereich beginnt mit leerem Erkenner (und Zählerstand 0).
+    void feedCustom(const audio::AudioFrame& frame, std::pair<std::size_t, std::size_t> range, double delta) {
+        if (!custom_ || range != customRange_) {
+            const double hop = delta > 0.001 ? delta : 0.02;  // so oft sieht der Erkenner ein neues Spektrum
+            custom_.emplace(hop, range.first, range.second + 1, kCustomMinInterval);
+            customRange_ = range;
+            lastFrameCount_ = frame.frameCount + 1;  // das aktuelle Spektrum zählt als neu
+        }
+        if (frame.frameCount != lastFrameCount_) {
+            custom_->push(frame.spectrum, frame.audioTime);
+            lastFrameCount_ = frame.frameCount;
+        }
+    }
+
+    static constexpr double kCustomMinInterval = 0.1;  // kürzester Abstand zweier Treffer im eigenen Bereich (s)
+
     std::shared_ptr<AudioStore> store_;
     bool initialized_{false};
     std::uint64_t lastCount_{0};
     int lastBand_{0};
+    std::optional<audio::OnsetDetector> custom_;
+    std::pair<std::size_t, std::size_t> customRange_{0, 0};
+    std::uint64_t lastFrameCount_{0};
     double lastBeat_{-1e9};
     double accent_{1.0};
 };
@@ -376,7 +416,7 @@ private:
 };
 
 const std::vector<std::string> kLevelScale{"Linear", "dB"};
-const std::vector<std::string> kOnsetBand{"Kick", "Snare", "Hi-Hat"};
+const std::vector<std::string> kOnsetBand{"Kick", "Snare", "Hi-Hat", "Custom range (From / To)"};
 
 std::vector<graph::ParameterDescriptor> followParameters(double release) {
     return {number("gain", "Gain", 1.0, 0.0, 50.0), number("attack", "Attack (s)", 0.01, 0.0, 5.0),
@@ -425,11 +465,12 @@ std::vector<values::CpuNodeDefinition> audioNodes(std::shared_ptr<audio::AudioSt
                              number("manualBpm", "Fixed tempo (BPM, 0 = detect)", 0.0, 0.0, 300.0)},
                             [store] { return std::make_unique<AudioBeatKernel>(store); }));
 
-    nodes.push_back(cpuNode("wh.value.onset", "Kick / Snare / Hat", "Audio",
+    nodes.push_back(cpuNode("wh.value.onset", "Audio Trigger", "Audio",
                             {valueOutput("beat", "Hit", PortType::Trigger), valueOutput("pulse", "Pulse", PortType::Scalar),
                              valueOutput("strength", "Strength", PortType::Scalar), valueOutput("age", "Age (s)", PortType::Scalar),
                              valueOutput("present", "Signal", PortType::Boolean)},
-                            {choice("band", "Instrument", kOnsetBand, 0), number("threshold", "Min. strength", 1.0, 1.0, 6.0),
+                            {choice("band", "Instrument", kOnsetBand, 0), number("from", "From (Hz, custom range)", 100.0, 40.0, 16000.0),
+                             number("to", "To (Hz, custom range)", 400.0, 40.0, 16000.0), number("threshold", "Min. strength", 1.0, 1.0, 6.0),
                              number("decay", "Pulse decay (s)", 0.2, 0.0, 5.0)},
                             [store] { return std::make_unique<AudioOnsetKernel>(store); }));
     nodes.back().descriptor.liveView = graph::LiveView::Spectrum;

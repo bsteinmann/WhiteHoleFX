@@ -1455,8 +1455,8 @@ msgid "Gesamthelligkeit (wirkt auf Vorschau und Ausgabe, nicht im Projekt gespei
 msgstr "Загальна яскравість (діє на попередній перегляд і вивід, у проєкті не зберігається)"
 
 #: node_info_texts.cpp:17
-msgid "Gesamtlautstärke des Audio-Eingangs als Pegel und Spitze, linear oder in dB, auf Wunsch mit automatischer Verstärkung. Einzelne Schläge (Kick, Snare, Hi-Hat) erkennt „Kick / Snare / Hat“."
-msgstr "Загальна гучність аудіовходу як рівень і пік, лінійно або в дБ, за бажанням з автоматичним підсиленням. Окремі удари (кік, снейр, хай-хет) визначає «Kick / Snare / Hat»."
+msgid "Gesamtlautstärke des Audio-Eingangs als Pegel und Spitze, linear oder in dB, auf Wunsch mit automatischer Verstärkung. Einzelne Schläge (Kick, Snare, Hi-Hat) erkennt „Audio Trigger“."
+msgstr "Загальна гучність аудіовходу як рівень і пік, лінійно або в дБ, за бажанням з автоматичним підсиленням. Окремі удари (бочка, малий барабан, хай-хет) розпізнає «Audio Trigger»."
 
 #: fixture_library_user.cpp:87
 msgid "Gespeichert in der Bibliothek. „In Show übernehmen“ (oder Doppelklick) holt sie in diese Show."
@@ -1875,8 +1875,8 @@ msgid "Löschen"
 msgstr "Видалити"
 
 #: node_info_texts.cpp:25
-msgid "Löst bei jedem Kick, jeder Snare oder Hi-Hat aus (Instrument wählbar) und liefert Treffer, Pulse (klingt ab), Stärke und „Age“. Für einzelne Schläge; die Gesamtlautstärke liefert „Audio Level“, den Takt „Beat“. Die Schwelle folgt der Lautstärke, auch leise Schläge werden erkannt."
-msgstr "Спрацьовує на кожен кік, снейр чи хай-хет (інструмент на вибір) і видає удар, пульс (згасає), силу та «Age». Для окремих ударів; загальну гучність дає «Audio Level», темп — «Beat». Поріг залежить від гучності, тож тихі удари теж помічаються."
+msgid "Löst bei jedem Einsatz in einem Frequenzbereich aus: Kick, Snare, Hi-Hat oder ein eigener Bereich in Hz. Liefert Treffer, Pulse (klingt ab), Stärke und „Age“. Für einzelne Schläge; die Gesamtlautstärke liefert „Audio Level“, den Takt „Beat“. Die Schwelle folgt der Lautstärke, auch leise Schläge werden erkannt."
+msgstr "Спрацьовує на кожен удар у діапазоні частот: бочка, малий барабан, хай-хет або власний діапазон у Гц. Дає удар, pulse (згасає), силу та «Age». Для окремих ударів; загальну гучність дає «Audio Level», темп — «Beat». Поріг слідує за гучністю, тому тихі удари теж розпізнаються."
 
 #: node_info_texts.cpp:43
 msgid "Macht Schwarz durchsichtig (die Deckkraft folgt der Helligkeit). So lässt sich das Bild danach mit Blend oder Add über etwas anderes legen."

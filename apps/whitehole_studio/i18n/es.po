@@ -1455,8 +1455,8 @@ msgid "Gesamthelligkeit (wirkt auf Vorschau und Ausgabe, nicht im Projekt gespei
 msgstr "Brillo global (afecta a la vista previa y a la salida, no se guarda en el proyecto)"
 
 #: node_info_texts.cpp:17
-msgid "Gesamtlautstärke des Audio-Eingangs als Pegel und Spitze, linear oder in dB, auf Wunsch mit automatischer Verstärkung. Einzelne Schläge (Kick, Snare, Hi-Hat) erkennt „Kick / Snare / Hat“."
-msgstr "Volumen total de la entrada de audio como nivel y pico, lineal o en dB, opcionalmente con ganancia automática. Los golpes sueltos (bombo, caja, hi-hat) los detecta «Kick / Snare / Hat»."
+msgid "Gesamtlautstärke des Audio-Eingangs als Pegel und Spitze, linear oder in dB, auf Wunsch mit automatischer Verstärkung. Einzelne Schläge (Kick, Snare, Hi-Hat) erkennt „Audio Trigger“."
+msgstr "Volumen global de la entrada de audio como nivel y pico, lineal o en dB, con ganancia automática si se desea. Los golpes individuales (bombo, caja, hi-hat) los detecta «Audio Trigger»."
 
 #: fixture_library_user.cpp:87
 msgid "Gespeichert in der Bibliothek. „In Show übernehmen“ (oder Doppelklick) holt sie in diese Show."
@@ -1875,8 +1875,8 @@ msgid "Löschen"
 msgstr "Eliminar"
 
 #: node_info_texts.cpp:25
-msgid "Löst bei jedem Kick, jeder Snare oder Hi-Hat aus (Instrument wählbar) und liefert Treffer, Pulse (klingt ab), Stärke und „Age“. Für einzelne Schläge; die Gesamtlautstärke liefert „Audio Level“, den Takt „Beat“. Die Schwelle folgt der Lautstärke, auch leise Schläge werden erkannt."
-msgstr "Se dispara con cada bombo, caja o hi-hat (instrumento a elegir) y entrega golpe, pulso (decae), fuerza y «Age». Para golpes sueltos; el volumen total lo da «Audio Level», el tempo «Beat». El umbral sigue el volumen, también se detectan golpes suaves."
+msgid "Löst bei jedem Einsatz in einem Frequenzbereich aus: Kick, Snare, Hi-Hat oder ein eigener Bereich in Hz. Liefert Treffer, Pulse (klingt ab), Stärke und „Age“. Für einzelne Schläge; die Gesamtlautstärke liefert „Audio Level“, den Takt „Beat“. Die Schwelle folgt der Lautstärke, auch leise Schläge werden erkannt."
+msgstr "Se dispara en cada ataque dentro de un rango de frecuencias: bombo, caja, hi-hat o un rango propio en Hz. Entrega golpe, pulse (decae), fuerza y «Age». Para golpes individuales; el volumen global lo da «Audio Level» y el tempo «Beat». El umbral sigue al volumen, así que también se detectan golpes suaves."
 
 #: node_info_texts.cpp:43
 msgid "Macht Schwarz durchsichtig (die Deckkraft folgt der Helligkeit). So lässt sich das Bild danach mit Blend oder Add über etwas anderes legen."

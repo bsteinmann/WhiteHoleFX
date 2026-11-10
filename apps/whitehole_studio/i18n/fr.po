@@ -1455,8 +1455,8 @@ msgid "Gesamthelligkeit (wirkt auf Vorschau und Ausgabe, nicht im Projekt gespei
 msgstr "Luminosité globale (agit sur l'aperçu et la sortie, non enregistrée dans le projet)"
 
 #: node_info_texts.cpp:17
-msgid "Gesamtlautstärke des Audio-Eingangs als Pegel und Spitze, linear oder in dB, auf Wunsch mit automatischer Verstärkung. Einzelne Schläge (Kick, Snare, Hi-Hat) erkennt „Kick / Snare / Hat“."
-msgstr "Volume global de l'entrée audio en niveau et crête, linéaire ou en dB, avec gain automatique au choix. Les coups isolés (grosse caisse, caisse claire, charleston) sont détectés par « Kick / Snare / Hat »."
+msgid "Gesamtlautstärke des Audio-Eingangs als Pegel und Spitze, linear oder in dB, auf Wunsch mit automatischer Verstärkung. Einzelne Schläge (Kick, Snare, Hi-Hat) erkennt „Audio Trigger“."
+msgstr "Volume global de l'entrée audio en niveau et crête, linéaire ou en dB, avec gain automatique au choix. Les coups isolés (grosse caisse, caisse claire, charleston) sont détectés par « Audio Trigger »."
 
 #: fixture_library_user.cpp:87
 msgid "Gespeichert in der Bibliothek. „In Show übernehmen“ (oder Doppelklick) holt sie in diese Show."
@@ -1875,8 +1875,8 @@ msgid "Löschen"
 msgstr "Supprimer"
 
 #: node_info_texts.cpp:25
-msgid "Löst bei jedem Kick, jeder Snare oder Hi-Hat aus (Instrument wählbar) und liefert Treffer, Pulse (klingt ab), Stärke und „Age“. Für einzelne Schläge; die Gesamtlautstärke liefert „Audio Level“, den Takt „Beat“. Die Schwelle folgt der Lautstärke, auch leise Schläge werden erkannt."
-msgstr "Se déclenche à chaque grosse caisse, caisse claire ou charleston (instrument au choix) et fournit coup, pulse (décroît), force et « Age ». Pour les coups isolés ; le volume global vient de « Audio Level », le tempo de « Beat ». Le seuil suit le volume, même les coups faibles sont détectés."
+msgid "Löst bei jedem Einsatz in einem Frequenzbereich aus: Kick, Snare, Hi-Hat oder ein eigener Bereich in Hz. Liefert Treffer, Pulse (klingt ab), Stärke und „Age“. Für einzelne Schläge; die Gesamtlautstärke liefert „Audio Level“, den Takt „Beat“. Die Schwelle folgt der Lautstärke, auch leise Schläge werden erkannt."
+msgstr "Se déclenche à chaque attaque dans une plage de fréquences : grosse caisse, caisse claire, charleston ou une plage personnalisée en Hz. Fournit coup, pulse (décroissant), force et « Age ». Pour les coups isolés ; le volume global vient de « Audio Level », le tempo de « Beat ». Le seuil suit le volume, les coups faibles sont donc détectés aussi."
 
 #: node_info_texts.cpp:43
 msgid "Macht Schwarz durchsichtig (die Deckkraft folgt der Helligkeit). So lässt sich das Bild danach mit Blend oder Add über etwas anderes legen."

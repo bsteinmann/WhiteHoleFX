@@ -56,12 +56,14 @@ Mindestabstand zwischen zwei Treffern: Kick 0,18 s, Snare 0,15 s, Hi-Hat 0,06 s.
 | `wh.value.audiospectrum` | `spectrum` (AudioSpectrum), `present` | `gain`, `floor`, `attack`, `release` |
 | `wh.value.audiowave` | `wave` (AudioWave), `present` | `span` (Fenster in ms, 2–100), `gain`, `trigger` (steigender Nulldurchgang), `level` (Triggerschwelle), `smooth` |
 | `wh.value.beat` | `beat` (Trigger), `pulse`, `phase`, `bpm` (Scalar), `present` | `threshold` (Mindeststärke), `decay`, `manualBpm` (0 = erkennen) |
-| `wh.value.onset` (Kick / Snare / Hat) | `beat` (Trigger), `pulse`, `strength`, `age` (Sekunden seit dem Treffer), `present` | `band` (Kick, Snare, Hi-Hat), `threshold` (Mindeststärke), `decay` |
+| `wh.value.onset` (Audio Trigger, früher „Kick / Snare / Hat“) | `beat` (Trigger), `pulse`, `strength`, `age` (Sekunden seit dem Treffer), `present` | `band` (Kick, Snare, Hi-Hat, Eigener Bereich), `from`/`to` (Hz, nur bei *Eigener Bereich*), `threshold` (Mindeststärke), `decay` |
 | `wh.generator.hitflash` (Hit Flash) | Field | `level` (0..1), `shape` (Full, Disc, Frame, Bar), `size`, `softness`, `color` |
 | `wh.generator.shockwave` (Shockwave) | Field | `age`, `speed`, `life`, `thickness`, `shape`, `cx`/`cy`/`cz`, `color`, `space` |
 | `wh.value.tap` | `beat` (Trigger), `pulse`, `phase`, `bpm` | `tap` (jedes Einschalten zählt), `manualBpm`, `decay` |
 | `wh.generator.scope` | Field | Eingang `wave`; `amplitude` (halbe Höhe), `thickness`, `glow`, `fill` (Fläche zur Mittellinie), `color` |
 | `wh.generator.spectrum` | Field | Eingang `spectrum`; `bars` (4–32), `gap`, `mode` (von unten / von der Mitte), `softness`, `color`, `colorTop` |
+
+**Audio Trigger mit eigenem Bereich:** Bei *Eigener Bereich* wertet der Node die Bänder aus, die zwischen `from` und `to` (Hz) liegen, zum Beispiel 800 bis 1500 Hz für ein Clap oder einen Synth-Stab. Er erkennt wie bei den festen Instrumenten einen plötzlichen Anstieg der Energie im Bereich im Vergleich zur letzten Sekunde, nicht einen festen Pegel; `threshold` regelt die Empfindlichkeit. Der Mindestabstand zweier Treffer ist 0,1 s. Im Anzeigestreifen des Nodes ist der gewählte Bereich farbig hinterlegt. Der Erkenner im Node sieht so viele Spektren, wie der Node ausgewertet wird (etwa 40 bis 60 je Sekunde), die festen Instrumente rechnet der Analysator mit jedem Schritt (etwa 94 je Sekunde) und erkennen sehr schnelle Folgen etwas genauer.
 
 - **Attack/Release** glätten den Wert: Anstieg und Abfall mit eigener Zeit in Sekunden (0 = sofort). Kurzes
   Attack und längeres Release lassen Lichter schnell aufblitzen und weich ausklingen.
@@ -84,12 +86,12 @@ Jeder Parameter hat wie üblich einen Modulations-Eingang. Rezepte:
 - **Equalizer:** `Audio Spectrum` → `Spectrum Bars` → Ausgang. Über Plasma legen: `Blend` (Mode *Over*) mit dem
   Plasma als A und den Balken als B.
 - **Oszilloskop:** `Audio Waveform` → `Oscilloscope` → Ausgang. Beispiel: `examples/audio/oszilloskop.whfx`.
-- **Techno (dunkel, ein Hit pro Instrument):** `Kick / Snare / Hat` (Instrument *Kick*) → `pulse` an `Hit Flash.level`,
+- **Techno (dunkel, ein Hit pro Instrument):** `Audio Trigger` (Instrument *Kick*) → `pulse` an `Hit Flash.level`,
   `age` an `Shockwave.age`, beide mit `Add` zusammenlegen. Eine zweite Instanz mit *Hi-Hat* und kurzem `decay`
   lässt einen dünnen Rahmen blitzen. Beispiel: `examples/audio/techno.whfx`.
 - **Phrasen zählen:** `Kick.beat` → `Sequencer.advance` (Schritte 4 oder 8, Wert 1 nur auf Schritt 1): `hit` kommt
   dann nur auf der „Eins“ und kann einen Cue, Strobe oder einen Farbwechsel auslösen.
-- **Strobe nur auf Ansage (Strobe Gate):** `Kick / Snare / Hat` (Instrument *Hi-Hat*) → `pulse` an `Strobe Gate.gate`, davor der Effekt als `source`: Es blitzt nur bei Hi-Hat-Treffern bzw. solange der Wert über `threshold` liegt. Dasselbe mit einem Fader oder einer DMX-Taste als Gate.
+- **Strobe nur auf Ansage (Strobe Gate):** `Audio Trigger` (Instrument *Hi-Hat*) → `pulse` an `Strobe Gate.gate`, davor der Effekt als `source`: Es blitzt nur bei Hi-Hat-Treffern bzw. solange der Wert über `threshold` liegt. Dasselbe mit einem Fader oder einer DMX-Taste als Gate.
 - **Blitz im Takt:** `Beat.pulse` → `Color Adjust.brightness` eines Effekts.
 - **Bass lässt es wachsen:** `Audio Band` (40–150 Hz) → `Scale.factor`.
 - **Farbwechsel im Takt:** `Beat.phase` → `Color Ramp.position` (mit `loop`).

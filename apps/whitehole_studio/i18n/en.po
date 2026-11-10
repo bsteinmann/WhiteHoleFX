@@ -1455,8 +1455,8 @@ msgid "Gesamthelligkeit (wirkt auf Vorschau und Ausgabe, nicht im Projekt gespei
 msgstr "Overall brightness (affects preview and output, not saved in the project)"
 
 #: node_info_texts.cpp:17
-msgid "Gesamtlautstärke des Audio-Eingangs als Pegel und Spitze, linear oder in dB, auf Wunsch mit automatischer Verstärkung. Einzelne Schläge (Kick, Snare, Hi-Hat) erkennt „Kick / Snare / Hat“."
-msgstr "Overall loudness of the audio input as level and peak, linear or in dB, optionally with automatic gain. Single hits (kick, snare, hi-hat) are detected by “Kick / Snare / Hat”."
+msgid "Gesamtlautstärke des Audio-Eingangs als Pegel und Spitze, linear oder in dB, auf Wunsch mit automatischer Verstärkung. Einzelne Schläge (Kick, Snare, Hi-Hat) erkennt „Audio Trigger“."
+msgstr "Overall loudness of the audio input as level and peak, linear or in dB, with automatic gain if you like. Individual hits (kick, snare, hi-hat) are detected by “Audio Trigger”."
 
 #: fixture_library_user.cpp:87
 msgid "Gespeichert in der Bibliothek. „In Show übernehmen“ (oder Doppelklick) holt sie in diese Show."
@@ -1875,8 +1875,8 @@ msgid "Löschen"
 msgstr "Delete"
 
 #: node_info_texts.cpp:25
-msgid "Löst bei jedem Kick, jeder Snare oder Hi-Hat aus (Instrument wählbar) und liefert Treffer, Pulse (klingt ab), Stärke und „Age“. Für einzelne Schläge; die Gesamtlautstärke liefert „Audio Level“, den Takt „Beat“. Die Schwelle folgt der Lautstärke, auch leise Schläge werden erkannt."
-msgstr "Fires on every kick, snare or hi-hat (instrument selectable) and provides hit, pulse (decays), strength and “Age”. For single hits; overall loudness comes from “Audio Level”, the tempo from “Beat”. The threshold follows the loudness, so quiet hits are detected too."
+msgid "Löst bei jedem Einsatz in einem Frequenzbereich aus: Kick, Snare, Hi-Hat oder ein eigener Bereich in Hz. Liefert Treffer, Pulse (klingt ab), Stärke und „Age“. Für einzelne Schläge; die Gesamtlautstärke liefert „Audio Level“, den Takt „Beat“. Die Schwelle folgt der Lautstärke, auch leise Schläge werden erkannt."
+msgstr "Fires on every onset in a frequency range: kick, snare, hi-hat or a custom range in Hz. Delivers hit, pulse (decays), strength and “Age”. For individual hits; overall loudness comes from “Audio Level”, the tempo from “Beat”. The threshold follows the loudness, so quiet hits are detected too."
 
 #: node_info_texts.cpp:43
 msgid "Macht Schwarz durchsichtig (die Deckkraft folgt der Helligkeit). So lässt sich das Bild danach mit Blend oder Add über etwas anderes legen."

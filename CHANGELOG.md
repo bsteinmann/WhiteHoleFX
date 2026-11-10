@@ -1,5 +1,9 @@
 # Änderungen
 
+## 0.81.0
+
+- **Audio Trigger mit eigenem Frequenzbereich.** Der Node „Kick / Snare / Hat“ heißt jetzt **Audio Trigger** (Typ `wh.value.onset`, alte Projekte laufen unverändert). Neu in der Auswahl *Instrument*: **Eigener Bereich** mit `From (Hz)` und `To (Hz)`. Der Node führt dafür einen eigenen Einsatz-Erkenner (gleiches Verfahren wie Kick/Snare/Hat: Anstieg im Vergleich zur letzten Sekunde, Mindestabstand 0,1 s); der Bereich im Anzeigestreifen folgt automatisch. Verdrehte Grenzen werden sortiert.
+
 ## 0.80.0
 
 - **Shot-Node (Value): ein Durchlauf pro Trigger, im Tempo der Musik.** Jeder Trigger startet einen Durchlauf von 0 nach 1 (`progress`, dazu `reverse` von 1 nach 0). Die Dauer ist `beats` Schläge; die Schlaglänge kommt aus `bpm` oder wird aus dem Abstand der letzten Trigger gemessen und geglättet. `repeats` spielt bis zu 16 Durchläufe hintereinander (auf Wunsch jeder zweite rückwärts), `curve` formt den Verlauf (linear, langsam am Ende für sich ausdehnende Formen, langsam am Anfang, weich). Weitere Ausgänge: `active`, `done`, `run`, `count` und `flip` (wechselt bei jedem Trigger, für abwechselnde Seiten). Der Node animiert nichts selbst: `progress` wird mit Map auf Radius, Position, Helligkeit oder jeden anderen Regler gelegt, deshalb gilt er für Balken, Formen und Blitze gleichermaßen.
