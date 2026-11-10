@@ -35,9 +35,27 @@ struct ClipboardWire {
     double offset{0.0};
 };
 
+/// Eine Gruppe (graph/node_group.hpp) in der Zwischenablage: Mitglieder, Ports und Parameter als Indizes in `nodes`.
+/// Kopiert werden nur Gruppen, deren Mitglieder alle dabei sind.
+struct ClipboardGroup {
+    std::string name;
+    Vec2 position;
+    Vec3 color;
+    bool collapsed{true};
+    std::vector<std::size_t> members;
+    struct Port {
+        std::size_t node{0};
+        std::string key;
+        std::string label;
+    };
+    std::vector<Port> ports;
+    std::vector<Port> parameters;
+};
+
 struct NodeClipboard {
     std::vector<ClipboardNode> nodes;
     std::vector<ClipboardWire> wires;
+    std::vector<ClipboardGroup> groups;
 
     [[nodiscard]] bool empty() const noexcept { return nodes.empty(); }
     /// Linke obere Ecke aller kopierten Nodes (für das Einfügen an einer Stelle).
@@ -48,8 +66,9 @@ struct NodeClipboard {
 /// Graphen, dazu alle Kabel, deren beide Enden in der Auswahl liegen.
 [[nodiscard]] NodeClipboard copyNodes(const graph::Graph& graph, std::span<const NodeId> selection);
 
-/// Legt die Nodes der Zwischenablage im Graphen an (Parameter und Kabel inklusive); `offset` wird auf
-/// ihre Positionen addiert. Liefert die neuen Ids in der Reihenfolge der Zwischenablage. Scheitert
+/// Legt die Nodes der Zwischenablage im Graphen an (Parameter, Kabel und Gruppen inklusive); `offset` wird auf
+/// ihre Positionen addiert. Eine Gruppe, deren Name im Graphen schon vergeben ist, bekommt eine Zahl angehängt
+/// ("Name 2"). Liefert die neuen Ids in der Reihenfolge der Zwischenablage. Scheitert
 /// ein Schritt, bleibt der Graph möglicherweise halb gefüllt: Der Aufrufer muss ihn zurücksetzen
 /// (der Player sichert dafür das Projekt, ein Preset-Export arbeitet auf einem Wegwerf-Graphen).
 /// Fehler: die von Graph::addNode, setParameter und connect, InvalidArgument bei beschädigten Indizes.

@@ -24,6 +24,7 @@
 // Die Palette kennt nur das Verzeichnis der Node-Typen, nicht den Graphen.
 #pragma once
 
+#include <QFont>
 #include <QSet>
 #include <QString>
 #include <QStringList>
@@ -36,10 +37,21 @@
 #include "whitehole/graph/port_type.hpp"
 
 class QLabel;
+class QTreeWidgetItem;
 class QLineEdit;
 class QTreeWidget;
 
+namespace whitehole::runtime {
+class PresetStore;
+}
+
 namespace whitehole::studio {
+
+/// MIME-Typ eines Bibliothekseintrags (Preset oder Gruppe): Inhalt "preset" oder "group", Zeilenumbruch, Name (UTF-8).
+inline constexpr const char* kLibraryMime = "application/x-whitehole-library";
+/// Rollen der Bibliothek im Baum: Art ("preset" / "group") an der Rubrik und an jedem Eintrag, Name nur am Eintrag.
+inline constexpr int kLibraryKindRole = Qt::UserRole + 3;
+inline constexpr int kLibraryNameRole = Qt::UserRole + 4;
 
 /// Name des MIME-Typs, mit dem ein Node-Typ per Drag & Drop wandert (Inhalt: die Typ-ID als UTF-8).
 inline constexpr const char* kNodeTypeMime = "application/x-whitehole-node-type";
@@ -75,22 +87,35 @@ public:
     [[nodiscard]] int dotTypeCount() const;
     [[nodiscard]] int dimmedTypeCount() const;
 
+    /// Bibliothek: Presets und Gruppen aus je einem Ordner (gehört dem Aufrufer) als eigene Rubriken unter den Favoriten.
+    void setLibrary(const runtime::PresetStore* presets, const runtime::PresetStore* groups);
+    /// Liest die Ordner neu ein (nach Speichern oder Löschen).
+    void refreshLibrary();
+    /// Zahl der Einträge der Bibliothek, die gerade sichtbar sind (für die Prüfung).
+    [[nodiscard]] int libraryEntryCount() const;
+
     [[nodiscard]] QSize sizeHint() const override { return {230, 300}; }
 
 Q_SIGNALS:
     /// Doppelklick oder Enter auf einem Eintrag.
     void addRequested(const QString& typeId);
+    /// Doppelklick oder Enter auf einem Eintrag der Bibliothek: `kind` "preset" oder "group".
+    void libraryAddRequested(const QString& kind, const QString& name);
 
 private:
     void fill(const QString& filter);
     void applyStyles();
     void showContextMenu(const QPoint& position);
+    void fillLibrary(bool filtered, const QString& filter, const QFont& bold);
+    void showLibraryMenu(const QTreeWidgetItem& item, const QPoint& globalPosition);
 
     std::shared_ptr<const graph::INodeRegistry> registry_;
     QLineEdit* search_{nullptr};
     QTreeWidget* tree_{nullptr};
     QLabel* hint_{nullptr};
     QStringList favorites_;
+    const runtime::PresetStore* presetStore_{nullptr};
+    const runtime::PresetStore* groupStore_{nullptr};
     QSet<QString> expanded_;  // Namen der Kategorien, die der Nutzer geöffnet hat
     bool filling_{false};
     bool colored_{true};

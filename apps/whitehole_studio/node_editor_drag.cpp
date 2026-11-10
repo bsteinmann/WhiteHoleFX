@@ -24,6 +24,9 @@ namespace {
 
 bool carriesNodeType(const QMimeData* mime) { return mime != nullptr && mime->hasFormat(QString::fromLatin1(kNodeTypeMime)); }
 
+/// Ein Eintrag der Bibliothek (Preset oder Gruppe) wird gezogen.
+bool carriesLibraryItem(const QMimeData* mime) { return mime != nullptr && mime->hasFormat(QString::fromLatin1(kLibraryMime)); }
+
 std::string nodeTypeOf(const QMimeData* mime) {
     return QString::fromUtf8(mime->data(QString::fromLatin1(kNodeTypeMime))).toStdString();
 }
@@ -34,7 +37,7 @@ bool altPressed() { return QGuiApplication::queryKeyboardModifiers().testFlag(Qt
 }  // namespace
 
 void NodeEditor::dragEnterEvent(QDragEnterEvent* event) {
-    if (carriesNodeType(event->mimeData())) {
+    if (carriesNodeType(event->mimeData()) || carriesLibraryItem(event->mimeData())) {
         event->acceptProposedAction();
         return;
     }
@@ -42,6 +45,10 @@ void NodeEditor::dragEnterEvent(QDragEnterEvent* event) {
 }
 
 void NodeEditor::dragMoveEvent(QDragMoveEvent* event) {
+    if (carriesLibraryItem(event->mimeData())) {
+        event->acceptProposedAction();
+        return;
+    }
     if (carriesNodeType(event->mimeData())) {
         event->acceptProposedAction();
         showDockPreview(nodeTypeOf(event->mimeData()), mapToScene(event->position().toPoint()), altPressed());
@@ -56,7 +63,8 @@ void NodeEditor::dragLeaveEvent(QDragLeaveEvent* event) {
 }
 
 void NodeEditor::dropEvent(QDropEvent* event) {
-    if (!handleNodeDrop(event->mimeData(), event->position().toPoint())) {
+    if (!handleNodeDrop(event->mimeData(), event->position().toPoint()) &&
+        !handleLibraryDrop(event->mimeData(), event->position().toPoint())) {
         QGraphicsView::dropEvent(event);
         return;
     }
@@ -128,13 +136,15 @@ void NodeEditor::ensureNodesVisible() {
 bool NodeEditor::viewportEvent(QEvent* event) {
     switch (event->type()) {
         case QEvent::DragEnter:
-            if (carriesNodeType(static_cast<QDragEnterEvent*>(event)->mimeData())) {
+            if (carriesNodeType(static_cast<QDragEnterEvent*>(event)->mimeData()) ||
+                carriesLibraryItem(static_cast<QDragEnterEvent*>(event)->mimeData())) {
                 dragEnterEvent(static_cast<QDragEnterEvent*>(event));
                 return true;
             }
             break;
         case QEvent::DragMove:
-            if (carriesNodeType(static_cast<QDragMoveEvent*>(event)->mimeData())) {
+            if (carriesNodeType(static_cast<QDragMoveEvent*>(event)->mimeData()) ||
+                carriesLibraryItem(static_cast<QDragMoveEvent*>(event)->mimeData())) {
                 dragMoveEvent(static_cast<QDragMoveEvent*>(event));
                 return true;
             }
@@ -143,7 +153,8 @@ bool NodeEditor::viewportEvent(QEvent* event) {
             clearDockPreview();
             break;
         case QEvent::Drop:
-            if (carriesNodeType(static_cast<QDropEvent*>(event)->mimeData())) {
+            if (carriesNodeType(static_cast<QDropEvent*>(event)->mimeData()) ||
+                carriesLibraryItem(static_cast<QDropEvent*>(event)->mimeData())) {
                 dropEvent(static_cast<QDropEvent*>(event));
                 return true;
             }

@@ -39,6 +39,7 @@ bool NodeEditor::savePreset(const QString& name) {
         return false;
     }
     Q_EMIT notice(tr("Preset \"%1\" gespeichert (%2 Nodes).").arg(name).arg(clip.nodes.size()));
+    Q_EMIT libraryChanged();
     return true;
 }
 
@@ -67,22 +68,7 @@ bool NodeEditor::savePresetInteractive() {
 }
 
 bool NodeEditor::insertPreset(const QString& name, const QPointF& scenePos) {
-    if (presets_ == nullptr || player_.project() == nullptr) {
-        return false;
-    }
-    const auto text = presets_->load(toStd(name));
-    if (!text.ok()) {
-        fail(text.error().message);
-        return false;
-    }
-    const auto clip = runtime::presetFromText(text.value(), player_.registry());
-    if (!clip.ok()) {
-        fail("Preset \"" + toStd(name) + "\": " + clip.error().message);
-        return false;
-    }
-    const Vec2 corner = clip.value().topLeft();
-    return pasteWithOffset(clip.value(),
-                           scenePos - QPointF{static_cast<qreal>(corner.x), static_cast<qreal>(corner.y)});
+    return insertFromStore(presets_, name, scenePos, false);
 }
 
 bool NodeEditor::deletePreset(const QString& name) {
@@ -94,6 +80,7 @@ bool NodeEditor::deletePreset(const QString& name) {
         return false;
     }
     Q_EMIT notice(tr("Preset \"%1\" gelöscht.").arg(name));
+    Q_EMIT libraryChanged();
     return true;
 }
 

@@ -241,6 +241,7 @@ private:
     std::unique_ptr<output::UdpSender> udp_;
     std::unique_ptr<runtime::GatedPacketSink> gate_;
     std::unique_ptr<runtime::Player> player_;
+    std::unique_ptr<runtime::PresetStore> groupLibrary_;  // Ordner mit gespeicherten Gruppen (Bibliothek in der Palette)
     std::unique_ptr<runtime::PresetStore> presets_;  // Ordner mit Node-Presets im Datenordner des Nutzers
     std::unique_ptr<input::DmxReceiver> dmxReceiver_;  // nach library_: liest/schreibt dessen Speicher
     AppSettings appSettings_;                           // was gerade angewendet ist (Netzwerkkarten, DMX, Audio)

@@ -5,6 +5,8 @@
 #include "recording_sink.hpp"
 #include "whitehole/nodes/builtin_library.hpp"
 #include "whitehole/runtime/gated_sink.hpp"
+#include "whitehole/runtime/node_clipboard.hpp"
+#include "whitehole/runtime/node_preset.hpp"
 #include "whitehole/runtime/player.hpp"
 
 using namespace whitehole;
@@ -125,4 +127,38 @@ TEST_CASE("Player: Ziehen der Kachel ist ein Schritt Rückgängig", "[player][gr
     CHECK(rig.graph().findGroup("A")->position.x == 0.0F);
     CHECK(rig.graph().findGroup("A") != nullptr);
     CHECK_FALSE(rig.player.moveNodeGroup("fehlt", Vec2{}).ok());
+}
+
+TEST_CASE("Zwischenablage und Preset tragen vollständige Gruppen mit", "[player][groups][preset]") {
+    Rig rig;
+    graph::NodeGroup group = rig.group("A");
+    group.ports = {graph::GroupPort{rig.graph().nodes().back().id, "out", "Ausgang"}};
+    REQUIRE(rig.player.addNodeGroup(group).ok());
+
+    std::vector<NodeId> all;
+    for (const auto& node : rig.graph().nodes()) {
+        all.push_back(node.id);
+    }
+    const runtime::NodeClipboard clip = runtime::copyNodes(rig.graph(), all);
+    REQUIRE(clip.groups.size() == 1);
+    CHECK(clip.groups.front().ports.size() == 1);
+
+    const std::vector<NodeId> one{all.front()};
+    CHECK(runtime::copyNodes(rig.graph(), one).groups.empty());  // nur ein Mitglied: die Gruppe bleibt zurück
+
+    const auto text = runtime::presetToText(clip, rig.player.registry());
+    REQUIRE(text.ok());
+    const auto back = runtime::presetFromText(text.value(), rig.player.registry());
+    REQUIRE(back.ok());
+    REQUIRE(back.value().groups.size() == 1);
+    CHECK(back.value().groups.front().name == "A");
+    CHECK(back.value().groups.front().ports.front().label == "Ausgang");
+
+    // Einfügen legt eine zweite Gruppe an, der Name wird frei gemacht; ein Schritt Rückgängig nimmt alles zurück
+    REQUIRE(rig.player.pasteNodes(back.value(), Vec2{0.0F, 200.0F}).ok());
+    REQUIRE(rig.graph().groups().size() == 2);
+    CHECK(rig.graph().findGroup("A 2") != nullptr);
+    CHECK(rig.graph().findGroup("A 2")->members.size() == 2);
+    REQUIRE(rig.player.undo().ok());
+    CHECK(rig.graph().groups().size() == 1);
 }

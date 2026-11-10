@@ -9,6 +9,7 @@
 #include <QSplitter>
 #include <QStandardPaths>
 #include <QStatusBar>
+#include <QTemporaryDir>
 
 #include <filesystem>
 #include <string>
@@ -27,6 +28,10 @@ void MainWindow::buildEditorDock() {
         presets_ = std::make_unique<runtime::PresetStore>(std::filesystem::path{
             std::u8string{reinterpret_cast<const char8_t*>(folder.constData()), static_cast<std::size_t>(folder.size())}});
         editor_->setPresetStore(presets_.get());
+        const QByteArray groupFolder = (QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + QStringLiteral("/groups")).toUtf8();
+        groupLibrary_ = std::make_unique<runtime::PresetStore>(std::filesystem::path{std::u8string{
+            reinterpret_cast<const char8_t*>(groupFolder.constData()), static_cast<std::size_t>(groupFolder.size())}});
+        editor_->setGroupStore(groupLibrary_.get());
     }
     connect(editor_, &NodeEditor::edited, this, &MainWindow::onGraphEdited);
     connect(editor_, &NodeEditor::selectionChanged, this, &MainWindow::onNodeSelected);
@@ -42,6 +47,11 @@ void MainWindow::buildEditorDock() {
     connect(editor_, &NodeEditor::wireDragEnded, palette_, &NodePalette::clearWireNeed);
     connect(palette_, &NodePalette::addRequested, this,
             [this](const QString& typeId) { editor_->addNodeAtCenter(typeId.toStdString()); });
+    palette_->setLibrary(presets_.get(), groupLibrary_.get());
+    connect(editor_, &NodeEditor::libraryChanged, palette_, &NodePalette::refreshLibrary);
+    connect(palette_, &NodePalette::libraryAddRequested, this, [this](const QString& kind, const QString& name) {
+        editor_->insertLibraryItem(kind, name, editor_->sceneCenter() - QPointF{70.0, 20.0});
+    });
 
     auto* split = new QSplitter{Qt::Horizontal, this};
     split->addWidget(palette_);
@@ -89,6 +99,33 @@ QString MainWindow::exercisePalette() {
     palette_->setFilter({});
     if (all < 10 || some < 1 || some >= all) {
         return tr("Palette: Filter zeigt %1 von %2 Typen").arg(some).arg(all);
+    }
+    // Bibliothek: Presets und Gruppen erscheinen als eigene Rubriken, ohne die Typen zu verändern
+    {
+        QTemporaryDir temp;
+        if (!temp.isValid()) {
+            return tr("Palette: kein temporärer Ordner für die Bibliothek");
+        }
+        const QByteArray folder = temp.path().toUtf8();
+        const std::filesystem::path root{
+            std::u8string{reinterpret_cast<const char8_t*>(folder.constData()), static_cast<std::size_t>(folder.size())}};
+        const runtime::PresetStore testPresets{root / "p"};
+        const runtime::PresetStore testGroups{root / "g"};
+        (void)testPresets.save("Eins", "x");
+        (void)testGroups.save("Zwei", "x");
+        (void)testGroups.save("Drei", "x");
+        palette_->setLibrary(&testPresets, &testGroups);
+        const int entries = palette_->libraryEntryCount();
+        const int typesWithLibrary = palette_->visibleTypeCount();
+        const int openWithLibrary = palette_->expandedCategoryCount();
+        palette_->setFilter(QStringLiteral("zwei"));
+        const int filtered = palette_->libraryEntryCount();
+        palette_->setFilter({});
+        palette_->setLibrary(presets_.get(), groupLibrary_.get());
+        if (entries != 3 || filtered != 1 || typesWithLibrary != all || openWithLibrary != 0) {
+            return tr("Palette: Bibliothek zeigt %1 Einträge (erwartet 3), gefiltert %2 (erwartet 1), %3 Typen statt %4, %5 offene Rubriken")
+                .arg(entries).arg(filtered).arg(typesWithLibrary).arg(all).arg(openWithLibrary);
+        }
     }
     // Farbige Punkte und Hervorhebung beim Kabelziehen
     {

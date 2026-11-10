@@ -78,11 +78,17 @@ protected:
             return;
         }
         const QString typeId = item->data(0, kTypeIdRole).toString();
-        if (typeId.isEmpty()) {
+        const QString libraryName = item->data(0, kLibraryNameRole).toString();
+        if (typeId.isEmpty() && libraryName.isEmpty()) {
             return;  // eine Kategorie
         }
         auto* mime = new QMimeData;
-        mime->setData(QString::fromLatin1(kNodeTypeMime), typeId.toUtf8());
+        if (typeId.isEmpty()) {
+            mime->setData(QString::fromLatin1(kLibraryMime),
+                          (item->data(0, kLibraryKindRole).toString() + QLatin1Char('\n') + libraryName).toUtf8());
+        } else {
+            mime->setData(QString::fromLatin1(kNodeTypeMime), typeId.toUtf8());
+        }
         mime->setText(item->text(0));
 
         QPixmap pixmap{170, 26};
@@ -153,6 +159,8 @@ NodePalette::NodePalette(std::shared_ptr<const graph::INodeRegistry> registry, Q
     layout->addWidget(hint_);
     setRemoveHighlight(false);
 
+    expanded_.insert(tr("Gruppen"));  // die Bibliothek ist klein und soll gleich zu sehen sein
+    expanded_.insert(tr("Presets"));
     favorites_ = loadFavorites();
     colored_ = QSettings{QStringLiteral("WhiteHoleFX"), QStringLiteral("WhiteHoleFX")}
                    .value(QString::fromLatin1(kColoredKey), true)
@@ -174,6 +182,8 @@ NodePalette::NodePalette(std::shared_ptr<const graph::INodeRegistry> registry, Q
         const QString typeId = item->data(0, kTypeIdRole).toString();
         if (!typeId.isEmpty()) {
             Q_EMIT addRequested(typeId);
+        } else if (const QString name = item->data(0, kLibraryNameRole).toString(); !name.isEmpty()) {
+            Q_EMIT libraryAddRequested(item->data(0, kLibraryKindRole).toString(), name);
         }
     });
     fill({});
@@ -217,6 +227,8 @@ void NodePalette::fill(const QString& filter) {
         }
         addType(favoriteGroup, *type, false);
     }
+
+    fillLibrary(filtered, filter, bold);
 
     QTreeWidgetItem* category = nullptr;
     std::string currentCategory;
@@ -319,6 +331,10 @@ void NodePalette::showContextMenu(const QPoint& position) {
     if (item == nullptr) {
         return;
     }
+    if (!item->data(0, kLibraryNameRole).toString().isEmpty()) {
+        showLibraryMenu(*item, tree_->viewport()->mapToGlobal(position));
+        return;
+    }
     const QString typeId = item->data(0, kTypeIdRole).toString();
     if (typeId.isEmpty()) {
         return;  // eine Kategorie
@@ -334,7 +350,8 @@ void NodePalette::showContextMenu(const QPoint& position) {
 int NodePalette::expandedCategoryCount() const {
     int count = 0;
     for (int i = 0; i < tree_->topLevelItemCount(); ++i) {
-        count += tree_->topLevelItem(i)->isExpanded() ? 1 : 0;
+        const QTreeWidgetItem* group = tree_->topLevelItem(i);
+        count += (group->isExpanded() && group->data(0, kLibraryKindRole).isNull()) ? 1 : 0;
     }
     return count;
 }
@@ -345,7 +362,7 @@ int NodePalette::visibleTypeCount() const {
     int count = 0;
     for (int i = 0; i < tree_->topLevelItemCount(); ++i) {
         const QTreeWidgetItem* group = tree_->topLevelItem(i);
-        if (!group->data(0, kFavoritesRole).toBool()) {  // die Favoriten sind nur eine zweite Ansicht
+        if (!group->data(0, kFavoritesRole).toBool() && group->data(0, kLibraryKindRole).isNull()) {  // Favoriten: zweite Ansicht; Bibliothek: keine Typen
             count += group->childCount();
         }
     }

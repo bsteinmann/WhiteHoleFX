@@ -6,7 +6,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: node_palette.cpp:194
+#: node_palette.cpp:204
 msgid "\nRechtsklick: Favorit umschalten"
 msgstr "\nПравий клік: додати/прибрати з обраного"
 
@@ -89,6 +89,10 @@ msgstr " · лежить за останнім universe"
 #: stage_view.cpp:241
 msgid " · nicht gepatcht"
 msgstr " · не пропатчено"
+
+#: node_palette_library.cpp:105
+msgid "\"%1\" aus der Bibliothek löschen?"
+msgstr "Видалити \"%1\" з бібліотеки?"
 
 #: layout_panel.cpp:247
 msgid "%1  (%2 LEDs)"
@@ -294,13 +298,21 @@ msgstr "(власна форма)"
 msgid "(kein Look)"
 msgstr "(немає Look)"
 
-#: node_editor_presets.cpp:108
+#: node_editor_presets.cpp:95
 msgid "(keine Presets)"
 msgstr "(немає пресетів)"
 
 #: main_window_controls.cpp:150
 msgid "(leer)"
 msgstr "(порожньо)"
+
+#: node_palette_library.cpp:50
+msgid "(noch keine Gruppen)"
+msgstr "(груп ще немає)"
+
+#: node_palette_library.cpp:52
+msgid "(noch keine Presets)"
+msgstr "(пресетів ще немає)"
 
 #: main_window_audio.cpp:65
 msgid ", %1 BPM"
@@ -490,11 +502,11 @@ msgstr "Альфа 0: у цьому місці LED лишається вимкн
 msgid "Als Ausgang setzen (output)"
 msgstr "Зробити виходом (output)"
 
-#: node_editor_presets.cpp:51
+#: node_editor_presets.cpp:52
 msgid "Als Preset speichern"
 msgstr "Зберегти як пресет"
 
-#: node_editor_menu.cpp:73
+#: node_editor_menu.cpp:74
 msgid "Als Preset speichern …"
 msgstr "Зберегти як пресет …"
 
@@ -526,7 +538,7 @@ msgstr "Початок x y z"
 msgid "Anheften"
 msgstr "Закріпити"
 
-#: group_dialog.cpp:50
+#: group_dialog.cpp:51
 msgid "Anschluss / Parameter"
 msgstr "Порт / параметр"
 
@@ -594,7 +606,15 @@ msgstr "Скинути до стандартного значення"
 msgid "Auf den Wert der Bibliothek zurückstellen"
 msgstr "Повернути значення з бібліотеки"
 
-#: node_palette.cpp:151 node_palette.cpp:361
+#: node_editor_library.cpp:150
+msgid "Auf der Kachel ausblenden"
+msgstr "Приховати на плитці"
+
+#: node_editor_library.cpp:149
+msgid "Auf der Kachel ausblenden (Kabel nach außen vorhanden)"
+msgstr "Приховати на плитці (є кабель назовні)"
+
+#: node_palette.cpp:157 node_palette.cpp:378
 msgid "Auf die Fläche ziehen: Node hinzufügen.\nNode hierher ziehen: entfernen."
 msgstr "Перетягніть на поле: додати ноду.\nПеретягніть ноду сюди: видалити."
 
@@ -622,7 +642,7 @@ msgstr "З бібліотеки +"
 msgid "Aus Bibliothek löschen"
 msgstr "Видалити з бібліотеки"
 
-#: node_palette.cpp:328
+#: node_palette.cpp:344
 msgid "Aus Favoriten entfernen"
 msgstr "Прибрати з обраного"
 
@@ -650,7 +670,7 @@ msgstr "Вихід (заповнений, праворуч на ноді)"
 msgid "Ausgang verbinden mit neuem Node"
 msgstr "З’єднати вихід із новим нодом"
 
-#: group_dialog.cpp:64
+#: group_dialog.cpp:65
 msgid "Ausgang: %1"
 msgstr "Вихід: %1"
 
@@ -742,7 +762,7 @@ msgstr "Не вдається зберегти бібліотеку корист
 msgid "Bereit: %1 - GO drücken"
 msgstr "Готово: %1 - натисніть GO"
 
-#: group_dialog.cpp:50
+#: group_dialog.cpp:51
 msgid "Beschriftung auf der Kachel"
 msgstr "Підпис на плитці"
 
@@ -962,6 +982,10 @@ msgstr "Відкрити посібник у браузері"
 msgid "Die Antwort von GitHub war nicht lesbar."
 msgstr "Не вдалося прочитати відповідь від GitHub."
 
+#: node_editor_library.cpp:58
+msgid "Die Bibliothek enthält schon eine Gruppe \"%1\". Ersetzen?"
+msgstr "У бібліотеці вже є група \"%1\". Замінити?"
+
 #: main_window_cues.cpp:27
 msgid "Die Cuelist ist leer. Erst Cues anlegen (Dock „Cuelist“)."
 msgstr "Cuelist порожній. Спершу створіть Cue (док «Cuelist»)."
@@ -982,9 +1006,13 @@ msgstr "Фікстури зі списку Layout; усі інші лишают�
 msgid "Die Form kommt aus der Bauform und wird im Reiter Fixtures geändert."
 msgstr "Форма походить від типу і змінюється на вкладці «Фікстури»."
 
-#: group_dialog.cpp:96
+#: group_dialog.cpp:106
 msgid "Die Gruppe braucht einen Namen."
 msgstr "Групі потрібна назва."
+
+#: group_dialog.cpp:82
+msgid "Die Gruppe erscheint links in der Palette unter \"Gruppen\" und lässt sich in jedes Projekt einfügen."
+msgstr "Група з'явиться ліворуч у палітрі в розділі \"Групи\" і її можна вставити в будь-який проєкт."
 
 #: node_info_texts.cpp:45
 msgid "Die Helligkeit der Maske bestimmt, wie viel vom Inhalt zu sehen ist. „Shape“ macht daraus eine harte Form, „Intensity“ behält Verläufe."
@@ -1038,6 +1066,14 @@ msgstr "Цей проєкт не має параметрів для налашт
 msgid "Digitaler Regen: Spalten mit fallenden Leuchtspuren wie in der Matrix. Dichte, Tempo und Länge einstellbar."
 msgstr "Цифровий дощ: стовпці з падаючими світловими слідами, як у «Матриці». Щільність, темп і довжину можна налаштувати."
 
+#: node_palette_library.cpp:51
+msgid "Doppelklick oder auf die Fläche ziehen: Gruppe einfügen\nRechtsklick: löschen"
+msgstr "Подвійний клац або перетягніть на поле: вставити групу\nПравий клац: видалити"
+
+#: node_palette_library.cpp:53
+msgid "Doppelklick oder auf die Fläche ziehen: Nodes einfügen\nRechtsklick: löschen"
+msgstr "Подвійний клац або перетягніть на поле: вставити ноди\nПравий клац: видалити"
+
 #: node_info_texts.cpp:65
 msgid "Dreht das Bild im Raum um die Mitte, um die Achsen X, Y und Z (Winkel in Grad). Für 3D-Aufbauten."
 msgstr "Обертає зображення в просторі навколо центру, навколо осей X, Y і Z (кути в градусах). Для 3D-конструкцій."
@@ -1070,7 +1106,7 @@ msgstr "У вас остання версія (%1)."
 msgid "Duplizieren"
 msgstr "Дублювати"
 
-#: node_editor_menu.cpp:67
+#: node_editor_menu.cpp:68
 msgid "Duplizieren\tStrg+D"
 msgstr "Дублювати\tCtrl+D"
 
@@ -1126,7 +1162,7 @@ msgstr "Вступ до роботи з програмою обраною мов
 msgid "Eine Farbe als Wert, mit Farbton-Verschiebung, Sättigung und Helligkeit. Speist Farb-Eingänge anderer Nodes."
 msgstr "Колір як значення, зі зсувом відтінку, насиченістю та яскравістю. Живить колірні входи інших нод."
 
-#: group_dialog.cpp:99
+#: group_dialog.cpp:109
 msgid "Eine Gruppe heißt schon \"%1\"."
 msgstr "Група з назвою \"%1\" уже існує."
 
@@ -1158,7 +1194,11 @@ msgstr "Фіксоване число. Зручно, щоб живити кіл�
 msgid "Einen gespeicherten Controller als neuen Controller in dieses Projekt holen"
 msgstr "Додати збережений контролер до цього проєкту як новий контролер"
 
-#: node_editor_menu.cpp:100
+#: node_palette_library.cpp:98
+msgid "Einfügen"
+msgstr "Вставити"
+
+#: node_editor_menu.cpp:101
 msgid "Einfügen\tStrg+V"
 msgstr "Вставити\tCtrl+V"
 
@@ -1170,7 +1210,7 @@ msgstr "Вхід (лише кільце, ліворуч на ноді)"
 msgid "Eingang verbinden mit neuem Node"
 msgstr "З’єднати вхід із новим нодом"
 
-#: group_dialog.cpp:64
+#: group_dialog.cpp:65
 msgid "Eingang: %1"
 msgstr "Вхід: %1"
 
@@ -1226,7 +1266,7 @@ msgstr "Перший канал"
 msgid "Es gibt keine Bauform \"%1\""
 msgstr "Типу \"%1\" не існує"
 
-#: node_editor_presets.cpp:62
+#: node_editor_presets.cpp:63
 msgid "Es gibt schon ein Preset \"%1\". Ersetzen?"
 msgstr "Пресет «%1» уже існує. Замінити?"
 
@@ -1246,15 +1286,15 @@ msgstr "Розмістити на сцені екземпляр типу з бі
 msgid "Fade"
 msgstr "Fade"
 
-#: group_dialog.cpp:42 parameter_editors.cpp:92 port_legend.cpp:68
+#: group_dialog.cpp:43 parameter_editors.cpp:92 port_legend.cpp:68
 msgid "Farbe"
 msgstr "Колір"
 
-#: group_dialog.cpp:36
+#: group_dialog.cpp:37
 msgid "Farbe der Gruppe"
 msgstr "Колір групи"
 
-#: group_dialog.cpp:34
+#: group_dialog.cpp:35
 msgid "Farbe der Kachel"
 msgstr "Колір плитки"
 
@@ -1278,7 +1318,7 @@ msgstr "Порядок кольорів"
 msgid "Farbverlauf aus bis zu vier Farben. „Position“ wählt die Stelle, oder er läuft von selbst im eingestellten Tempo."
 msgstr "Градієнт із чотирьох кольорів. «Position» обирає місце, або він рухається сам з заданим темпом."
 
-#: node_palette.cpp:214
+#: node_palette.cpp:224
 msgid "Favoriten"
 msgstr "Обране"
 
@@ -1446,31 +1486,47 @@ msgstr "Зберегти вибрану фікстуру як шаблон …"
 msgid "Glättet einen Wert: Er folgt dem Eingang mit einer Zeitkonstante, statt zu springen."
 msgstr "Згладжує значення: воно слідує за входом із постійною часу, замість того щоб стрибати."
 
-#: node_editor_group.cpp:257
+#: node_editor_library.cpp:72
+msgid "Gruppe \"%1\" in der Bibliothek gespeichert."
+msgstr "Групу \"%1\" збережено в бібліотеці."
+
+#: node_editor_group_dialog.cpp:128
 msgid "Gruppe %1"
 msgstr "Група %1"
 
-#: node_editor_group.cpp:389
+#: node_editor_group.cpp:237
 msgid "Gruppe aufklappen"
 msgstr "Розгорнути групу"
 
-#: node_editor_group.cpp:394
+#: node_editor_group.cpp:246
 msgid "Gruppe auflösen"
 msgstr "Розгрупувати"
 
-#: node_editor_group.cpp:262
+#: node_palette_library.cpp:99
+msgid "Gruppe aus der Bibliothek löschen …"
+msgstr "Видалити групу з бібліотеки …"
+
+#: node_editor_group_dialog.cpp:133
 msgid "Gruppe bearbeiten"
 msgstr "Редагувати групу"
 
-#: node_editor_group.cpp:393
+#: node_editor_group.cpp:245
 msgid "Gruppe bearbeiten …"
 msgstr "Редагувати групу …"
+
+#: node_editor_library.cpp:58
+msgid "Gruppe ersetzen"
+msgstr "Замінити групу"
+
+#: node_editor_group.cpp:242
+msgid "Gruppe in Bibliothek speichern"
+msgstr "Зберегти групу в бібліотеці"
 
 #: layout_panel_groups.cpp:41
 msgid "Gruppe löschen"
 msgstr "Видалити групу"
 
-#: node_editor_menu.cpp:82
+#: node_editor_menu.cpp:83
 msgid "Gruppe samt Nodes löschen"
 msgstr "Видалити групу разом із нодами"
 
@@ -1478,11 +1534,11 @@ msgstr "Видалити групу разом із нодами"
 msgid "Gruppe speichern"
 msgstr "Зберегти групу"
 
-#: node_editor_group.cpp:391
+#: node_editor_group.cpp:239
 msgid "Gruppe zuklappen"
 msgstr "Згорнути групу"
 
-#: layout_panel.cpp:52 node_editor_targets.cpp:56
+#: layout_panel.cpp:52 node_editor_targets.cpp:56 node_palette.cpp:162
 msgid "Gruppen"
 msgstr "Групи"
 
@@ -1490,11 +1546,11 @@ msgstr "Групи"
 msgid "Gruppen von Fixtures und Regionen der Bühne: Ziele für Output-Nodes"
 msgstr "Групи фікстур і регіони сцени: цілі для Output-нод"
 
-#: node_editor_group.cpp:262
+#: node_editor_group_dialog.cpp:133
 msgid "Gruppieren"
 msgstr "Групувати"
 
-#: node_editor_group.cpp:399
+#: node_editor_group.cpp:251
 msgid "Gruppieren …\tStrg+G"
 msgstr "Групувати …\tCtrl+G"
 
@@ -1506,7 +1562,7 @@ msgstr "Розмір"
 msgid "Grün"
 msgstr "Зелений"
 
-#: group_dialog.cpp:45
+#: group_dialog.cpp:46
 msgid "Haken setzen, was auf der Kachel erscheinen soll. Verbundene Anschlüsse nach außen erscheinen immer."
 msgstr "Позначте, що має бути на плитці. Порти, з'єднані із зовнішнім світом, показуються завжди."
 
@@ -1565,6 +1621,10 @@ msgstr "Взяти в шоу"
 #: look_panel.cpp:60
 msgid "In den Editor laden"
 msgstr "Завантажити в редактор"
+
+#: group_dialog.cpp:80
+msgid "In der Bibliothek speichern"
+msgstr "Зберегти в бібліотеці"
 
 #: fixture_library_user.cpp:133
 msgid "In dieser Show gibt es schon eine Bauform „%1“."
@@ -1634,7 +1694,7 @@ msgstr "Клацніть LED, щоб побачити його адресу."
 msgid "Kopie der gewählten Bauform anlegen"
 msgstr "Створити копію вибраного типу"
 
-#: node_editor_menu.cpp:66
+#: node_editor_menu.cpp:67
 msgid "Kopieren\tStrg+C"
 msgstr "Копіювати\tCtrl+C"
 
@@ -1786,7 +1846,7 @@ msgstr "Перезаписати Look"
 msgid "Looks"
 msgstr "Looks"
 
-#: node_palette.cpp:357
+#: node_palette.cpp:374
 msgid "Loslassen: Node wird entfernt"
 msgstr "Відпустіть: нода буде видалена"
 
@@ -1798,7 +1858,7 @@ msgstr "Змушує зображення блимати: частота в Гц
 msgid "Lässt ein Testmuster über diese Form laufen (nur hier, nichts wird gesendet)"
 msgstr "Запускає тестовий візерунок на цій формі (лише тут, нічого не надсилається)"
 
-#: look_panel.cpp:62
+#: look_panel.cpp:62 node_palette_library.cpp:105
 msgid "Löschen"
 msgstr "Видалити"
 
@@ -1882,6 +1942,10 @@ msgstr "Multicast"
 msgid "Nach Updates suchen?"
 msgstr "Перевіряти оновлення?"
 
+#: node_editor_library.cpp:154
+msgid "Nach außen führen (auf der Kachel zeigen)"
+msgstr "Винести назовні (показати на плитці)"
+
 #: add_fixture_dialog.cpp:55 cue_dialog.cpp:35 cue_panel.cpp:53
 msgid "Name"
 msgstr "Назва"
@@ -1906,7 +1970,7 @@ msgstr "Назва контролера:"
 msgid "Name des Looks:"
 msgstr "Назва Look:"
 
-#: node_editor_presets.cpp:51
+#: node_editor_presets.cpp:52
 msgid "Name des Presets:"
 msgstr "Назва пресету:"
 
@@ -1990,11 +2054,11 @@ msgstr "Ще не використано в розкладці."
 msgid "Node hinzufügen"
 msgstr "Додати ноду"
 
-#: node_editor_menu.cpp:82
+#: node_editor_menu.cpp:83
 msgid "Node löschen"
 msgstr "Видалити ноду"
 
-#: node_editor_menu.cpp:96
+#: node_editor_menu.cpp:97
 msgid "Node suchen …\tStrg+Leertaste"
 msgstr "Знайти ноду …\tCtrl+Пробіл"
 
@@ -2010,11 +2074,11 @@ msgstr "Стандартні значення нод"
 msgid "Node-Typ suchen …"
 msgstr "Знайти тип ноди …"
 
-#: main_window_editor.cpp:54
+#: main_window_editor.cpp:64
 msgid "Nodes"
 msgstr "Ноди"
 
-#: node_palette.cpp:138
+#: node_palette.cpp:144
 msgid "Nodes suchen …"
 msgstr "Знайти ноди …"
 
@@ -2094,7 +2158,7 @@ msgstr "Параметри"
 msgid "Parameter dieses Nodes auf- oder zuklappen"
 msgstr "Розгорнути або згорнути параметри цього нода"
 
-#: group_dialog.cpp:62
+#: group_dialog.cpp:63
 msgid "Parameter: %1"
 msgstr "Параметр: %1"
 
@@ -2142,7 +2206,7 @@ msgstr "Позиція x y z"
 msgid "Positionen von Punkten im Raum"
 msgstr "Позиції точок у просторі"
 
-#: node_editor_presets.cpp:96
+#: node_editor_presets.cpp:82
 msgid "Preset \"%1\" gelöscht."
 msgstr "Пресет «%1» видалено."
 
@@ -2150,21 +2214,29 @@ msgstr "Пресет «%1» видалено."
 msgid "Preset \"%1\" gespeichert (%2 Nodes)."
 msgstr "Пресет «%1» збережено (%2 нод)."
 
-#: node_editor_presets.cpp:118
+#: node_editor_presets.cpp:105
 msgid "Preset \"%1\" löschen?"
 msgstr "Видалити пресет «%1»?"
 
-#: node_editor_presets.cpp:105
+#: node_editor_presets.cpp:92
 msgid "Preset einfügen"
 msgstr "Вставити пресет"
 
-#: node_editor_presets.cpp:62
+#: node_editor_presets.cpp:63
 msgid "Preset ersetzen"
 msgstr "Замінити пресет"
 
-#: node_editor_presets.cpp:106 node_editor_presets.cpp:118
+#: node_editor_presets.cpp:93 node_editor_presets.cpp:105
 msgid "Preset löschen"
 msgstr "Видалити пресет"
+
+#: node_palette_library.cpp:100
+msgid "Preset löschen …"
+msgstr "Видалити пресет …"
+
+#: node_palette.cpp:163 node_palette_library.cpp:52
+msgid "Presets"
+msgstr "Пресети"
 
 #: main_window_file.cpp:76
 msgid "Projekt laden"
@@ -2346,7 +2418,7 @@ msgstr "Стільки триває перехід до цього Look. 0 = р�
 msgid "Soll WhiteHoleFX beim Start bei GitHub nachsehen, ob es eine neuere Version gibt?"
 msgstr "Чи має WhiteHoleFX під час запуску заглядати на GitHub, чи є новіша версія?"
 
-#: node_palette.cpp:226
+#: node_palette.cpp:238
 msgid "Sonstige"
 msgstr "Інше"
 
@@ -2434,7 +2506,7 @@ msgstr "Стоп"
 msgid "Strenge &Eingänge"
 msgstr "Суворі &входи"
 
-#: main_window_editor.cpp:142
+#: main_window_editor.cpp:179
 msgid "Strenge Eingänge"
 msgstr "Суворі входи"
 
@@ -2586,7 +2658,7 @@ msgstr "Перевірка оновлень"
 msgid "Ursprung x y z"
 msgstr "Початок координат x y z"
 
-#: node_editor_menu.cpp:89
+#: node_editor_menu.cpp:90
 msgid "Verbindung trennen"
 msgstr "Розірвати зв'язок"
 
@@ -2826,7 +2898,7 @@ msgstr "Призначення (контролери) і патч: яка фік
 msgid "Zoomt das Bild um die Mitte: Faktor über 1 vergrößert, unter 1 verkleinert. „Factor Z“ zoomt die Tiefe getrennt."
 msgstr "Масштабує зображення навколо центру: коефіцієнт понад 1 збільшує, менше 1 зменшує. «Factor Z» масштабує глибину окремо."
 
-#: node_palette.cpp:328
+#: node_palette.cpp:344
 msgid "Zu Favoriten hinzufügen"
 msgstr "Додати до обраного"
 
@@ -2990,11 +3062,11 @@ msgstr "Час переходу %1 с"
 msgid "Überblendzeit:"
 msgstr "Час переходу:"
 
-#: node_editor_menu.cpp:77
+#: node_editor_menu.cpp:78
 msgid "Überbrücken\tB"
 msgstr "Обійти\tB"
 
-#: node_editor_menu.cpp:77
+#: node_editor_menu.cpp:78
 msgid "Überbrückung aufheben\tB"
 msgstr "Скасувати обхід\tB"
 

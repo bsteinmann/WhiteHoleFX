@@ -81,6 +81,18 @@ public:
     /// Löscht ein Preset (ohne Rückfrage; die fragt das Menü).
     bool deletePreset(const QString& name);
 
+    /// Bibliothek der Gruppen (node_editor_library.cpp): eine Datei je Gruppe wie bei den Presets, mit den Gruppendaten.
+    /// Der Ordner gehört dem Aufrufer.
+    void setGroupStore(const runtime::PresetStore* store) noexcept { groups_ = store; }
+    /// Speichert die Gruppe samt Nodes und Kabeln in der Bibliothek; `askReplace` fragt vor dem Ersetzen.
+    bool saveGroupToLibrary(const std::string& groupName, bool askReplace);
+    /// Fügt einen Eintrag der Bibliothek ein: `kind` "preset" (lose Nodes) oder "group" (zugeklappte Gruppe).
+    /// Mitte der sichtbaren Fläche in Szenenkoordinaten.
+    [[nodiscard]] QPointF sceneCenter() const { return mapToScene(viewport()->rect().center()); }
+    bool insertLibraryItem(const QString& kind, const QString& name, const QPointF& scenePos);
+    /// Zugriff für die Prüfung: Zahl der Einträge je Art.
+    [[nodiscard]] bool hasGroupStore() const noexcept { return groups_ != nullptr; }
+
     /// Der Node, der als einziges ausgewählt ist (leer bei keiner oder mehreren Auswahlen).
     [[nodiscard]] std::optional<NodeId> selectedNode() const;
     /// Wählt genau diesen Node aus (und sonst nichts); wahr, wenn es ihn gibt.
@@ -158,6 +170,8 @@ Q_SIGNALS:
     void failed(const QString& message);
     /// Hinweis, der kein Fehler ist (z. B. der Ausgang ist umgezogen).
     void notice(const QString& message);
+    /// Presets oder Gruppen der Bibliothek haben sich geändert (die Palette liest neu ein).
+    void libraryChanged();
     /// Die Auswahl hat sich durch Anklicken oder selectNode geändert (nicht durch Neuaufbau).
     void selectionChanged();
     /// Ein Node wird gerade über die Löschzone gezogen (true) oder wieder davon weg (false).
@@ -240,12 +254,18 @@ private:
     void onItemMoved(NodeItem& moved);
     bool moveGroupTile(const NodeItem& tile, Vec2 position);
     void addGroupMenu(QMenu& menu, NodeItem* node, const QPointF& scenePos);
+    /// Rechtsklick auf einen Port einer Gruppe: nach außen führen oder auf der Kachel ausblenden.
+    void addGroupPortMenu(QMenu& menu, const Hit& hit);
+    bool setGroupPortExposed(const std::string& groupName, const graph::PortRef& port, const std::string& label, bool exposed);
+    bool insertFromStore(const runtime::PresetStore* store, const QString& name, const QPointF& scenePos, bool collapseGroups);
+    bool handleLibraryDrop(const QMimeData* mime, const QPoint& viewportPos);
     bool openGroupDialog(const graph::NodeGroup* existing, const std::vector<NodeId>& members);
     bool pasteWithOffset(const runtime::NodeClipboard& clip, const QPointF& offset);
 
     runtime::Player& player_;
     runtime::NodeClipboard clipboard_;
     const runtime::PresetStore* presets_{nullptr};
+    const runtime::PresetStore* groups_{nullptr};
     QGraphicsScene scene_;
     std::unordered_map<std::uint64_t, NodeItem*> nodes_;
     std::vector<WireItem*> wires_;

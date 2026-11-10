@@ -15,6 +15,7 @@
 
 #include "whitehole/core/ids.hpp"
 
+class QCheckBox;
 class QLineEdit;
 class QPushButton;
 class QTreeWidget;
@@ -54,6 +55,9 @@ public:
 
     [[nodiscard]] QString name() const;
     [[nodiscard]] QColor color() const noexcept { return color_; }
+    /// "In der Bibliothek speichern": beim Anlegen angeboten (voreingestellt an), beim Bearbeiten nicht.
+    void hideLibraryOption();
+    [[nodiscard]] bool saveToLibrary() const;
     [[nodiscard]] std::vector<GroupDialogChoice> chosenPorts() const;
     [[nodiscard]] std::vector<GroupDialogChoice> chosenParameters() const;
     /// Prüft Name und Auswahl wie ein Klick auf OK; leer = in Ordnung, sonst der Hinweis an den Nutzer.
@@ -75,6 +79,7 @@ private:
     QLineEdit* name_{nullptr};
     QPushButton* colorButton_{nullptr};
     QTreeWidget* tree_{nullptr};
+    QCheckBox* library_{nullptr};
     QColor color_;
     std::vector<Row> rows_;
     std::vector<QString> taken_;

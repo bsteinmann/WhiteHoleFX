@@ -1,6 +1,7 @@
 // group_dialog.cpp: Fenster zum Anlegen und Bearbeiten einer Gruppe (siehe group_dialog.hpp).
 #include "group_dialog.hpp"
 
+#include <QCheckBox>
 #include <QColorDialog>
 #include <QDialogButtonBox>
 #include <QFormLayout>
@@ -76,6 +77,11 @@ GroupDialog::GroupDialog(const QString& title, const QString& name, const QColor
     }
     tree_->expandAll();
 
+    library_ = new QCheckBox{tr("In der Bibliothek speichern")};
+    library_->setChecked(true);
+    library_->setToolTip(tr("Die Gruppe erscheint links in der Palette unter \"Gruppen\" und lässt sich in jedes Projekt einfügen."));
+    column->addWidget(library_);
+
     auto* buttons = new QDialogButtonBox{QDialogButtonBox::Ok | QDialogButtonBox::Cancel};
     connect(buttons, &QDialogButtonBox::accepted, this, &QDialog::accept);
     connect(buttons, &QDialogButtonBox::rejected, this, &QDialog::reject);
@@ -87,6 +93,10 @@ void GroupDialog::updateColorButton() {
     colorButton_->setStyleSheet(QStringLiteral("background-color: %1; color: %2;")
                                     .arg(color_.name(), color_.lightness() > 128 ? QStringLiteral("black") : QStringLiteral("white")));
 }
+
+void GroupDialog::hideLibraryOption() { library_->setVisible(false); }
+
+bool GroupDialog::saveToLibrary() const { return library_->isVisibleTo(this) && library_->isChecked(); }
 
 QString GroupDialog::name() const { return name_->text().trimmed(); }
 

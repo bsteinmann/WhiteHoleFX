@@ -6,7 +6,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: node_palette.cpp:194
+#: node_palette.cpp:204
 msgid "\nRechtsklick: Favorit umschalten"
 msgstr "\nRight-click: toggle favorite"
 
@@ -89,6 +89,10 @@ msgstr " · lies beyond the last universe"
 #: stage_view.cpp:241
 msgid " · nicht gepatcht"
 msgstr " · not patched"
+
+#: node_palette_library.cpp:105
+msgid "\"%1\" aus der Bibliothek löschen?"
+msgstr "Delete \"%1\" from the library?"
 
 #: layout_panel.cpp:247
 msgid "%1  (%2 LEDs)"
@@ -294,13 +298,21 @@ msgstr "(own shape)"
 msgid "(kein Look)"
 msgstr "(no look)"
 
-#: node_editor_presets.cpp:108
+#: node_editor_presets.cpp:95
 msgid "(keine Presets)"
 msgstr "(no presets)"
 
 #: main_window_controls.cpp:150
 msgid "(leer)"
 msgstr "(empty)"
+
+#: node_palette_library.cpp:50
+msgid "(noch keine Gruppen)"
+msgstr "(no groups yet)"
+
+#: node_palette_library.cpp:52
+msgid "(noch keine Presets)"
+msgstr "(no presets yet)"
 
 #: main_window_audio.cpp:65
 msgid ", %1 BPM"
@@ -490,11 +502,11 @@ msgstr "Alpha 0: the LED stays off here (the color is remembered)."
 msgid "Als Ausgang setzen (output)"
 msgstr "Set as output (output)"
 
-#: node_editor_presets.cpp:51
+#: node_editor_presets.cpp:52
 msgid "Als Preset speichern"
 msgstr "Save as preset"
 
-#: node_editor_menu.cpp:73
+#: node_editor_menu.cpp:74
 msgid "Als Preset speichern …"
 msgstr "Save as preset …"
 
@@ -526,7 +538,7 @@ msgstr "Start x y z"
 msgid "Anheften"
 msgstr "Pin"
 
-#: group_dialog.cpp:50
+#: group_dialog.cpp:51
 msgid "Anschluss / Parameter"
 msgstr "Port / parameter"
 
@@ -594,7 +606,15 @@ msgstr "Reset to default"
 msgid "Auf den Wert der Bibliothek zurückstellen"
 msgstr "Reset to the library value"
 
-#: node_palette.cpp:151 node_palette.cpp:361
+#: node_editor_library.cpp:150
+msgid "Auf der Kachel ausblenden"
+msgstr "Hide on the tile"
+
+#: node_editor_library.cpp:149
+msgid "Auf der Kachel ausblenden (Kabel nach außen vorhanden)"
+msgstr "Hide on the tile (has a cable to the outside)"
+
+#: node_palette.cpp:157 node_palette.cpp:378
 msgid "Auf die Fläche ziehen: Node hinzufügen.\nNode hierher ziehen: entfernen."
 msgstr "Drag onto the canvas: add a node.\nDrag a node here: remove it."
 
@@ -622,7 +642,7 @@ msgstr "From library +"
 msgid "Aus Bibliothek löschen"
 msgstr "Delete from library"
 
-#: node_palette.cpp:328
+#: node_palette.cpp:344
 msgid "Aus Favoriten entfernen"
 msgstr "Remove from favorites"
 
@@ -650,7 +670,7 @@ msgstr "Output (filled, on the right of the node)"
 msgid "Ausgang verbinden mit neuem Node"
 msgstr "Connect output to new node"
 
-#: group_dialog.cpp:64
+#: group_dialog.cpp:65
 msgid "Ausgang: %1"
 msgstr "Output: %1"
 
@@ -742,7 +762,7 @@ msgstr "User library cannot be saved: %1"
 msgid "Bereit: %1 - GO drücken"
 msgstr "Ready: %1 - press GO"
 
-#: group_dialog.cpp:50
+#: group_dialog.cpp:51
 msgid "Beschriftung auf der Kachel"
 msgstr "Label on the tile"
 
@@ -962,6 +982,10 @@ msgstr "Open the manual in the browser"
 msgid "Die Antwort von GitHub war nicht lesbar."
 msgstr "The answer from GitHub could not be read."
 
+#: node_editor_library.cpp:58
+msgid "Die Bibliothek enthält schon eine Gruppe \"%1\". Ersetzen?"
+msgstr "The library already contains a group \"%1\". Replace it?"
+
 #: main_window_cues.cpp:27
 msgid "Die Cuelist ist leer. Erst Cues anlegen (Dock „Cuelist“)."
 msgstr "The cue list is empty. Create cues first (Cue list dock)."
@@ -982,9 +1006,13 @@ msgstr "The fixtures in the layout list; all others stay dark."
 msgid "Die Form kommt aus der Bauform und wird im Reiter Fixtures geändert."
 msgstr "The shape comes from the fixture type and is changed in the Fixtures tab."
 
-#: group_dialog.cpp:96
+#: group_dialog.cpp:106
 msgid "Die Gruppe braucht einen Namen."
 msgstr "The group needs a name."
+
+#: group_dialog.cpp:82
+msgid "Die Gruppe erscheint links in der Palette unter \"Gruppen\" und lässt sich in jedes Projekt einfügen."
+msgstr "The group appears on the left in the palette under \"Groups\" and can be inserted into any project."
 
 #: node_info_texts.cpp:45
 msgid "Die Helligkeit der Maske bestimmt, wie viel vom Inhalt zu sehen ist. „Shape“ macht daraus eine harte Form, „Intensity“ behält Verläufe."
@@ -1038,6 +1066,14 @@ msgstr "This project has no adjustable parameters."
 msgid "Digitaler Regen: Spalten mit fallenden Leuchtspuren wie in der Matrix. Dichte, Tempo und Länge einstellbar."
 msgstr "Digital rain: columns of falling light trails like in the Matrix. Density, speed and trail length are adjustable."
 
+#: node_palette_library.cpp:51
+msgid "Doppelklick oder auf die Fläche ziehen: Gruppe einfügen\nRechtsklick: löschen"
+msgstr "Double-click or drag onto the canvas: insert group\nRight-click: delete"
+
+#: node_palette_library.cpp:53
+msgid "Doppelklick oder auf die Fläche ziehen: Nodes einfügen\nRechtsklick: löschen"
+msgstr "Double-click or drag onto the canvas: insert nodes\nRight-click: delete"
+
 #: node_info_texts.cpp:65
 msgid "Dreht das Bild im Raum um die Mitte, um die Achsen X, Y und Z (Winkel in Grad). Für 3D-Aufbauten."
 msgstr "Rotates the image in space around the center, about the X, Y and Z axes (degrees). For 3D setups."
@@ -1070,7 +1106,7 @@ msgstr "You have the latest version (%1)."
 msgid "Duplizieren"
 msgstr "Duplicate"
 
-#: node_editor_menu.cpp:67
+#: node_editor_menu.cpp:68
 msgid "Duplizieren\tStrg+D"
 msgstr "Duplicate\tCtrl+D"
 
@@ -1126,7 +1162,7 @@ msgstr "An introduction to using the program, in the selected language"
 msgid "Eine Farbe als Wert, mit Farbton-Verschiebung, Sättigung und Helligkeit. Speist Farb-Eingänge anderer Nodes."
 msgstr "A color as a value, with hue shift, saturation and brightness. Feeds color inputs of other nodes."
 
-#: group_dialog.cpp:99
+#: group_dialog.cpp:109
 msgid "Eine Gruppe heißt schon \"%1\"."
 msgstr "A group is already called \"%1\"."
 
@@ -1158,7 +1194,11 @@ msgstr "A fixed number. Handy for feeding the same value to several parameters."
 msgid "Einen gespeicherten Controller als neuen Controller in dieses Projekt holen"
 msgstr "Add a stored controller to this project as a new controller"
 
-#: node_editor_menu.cpp:100
+#: node_palette_library.cpp:98
+msgid "Einfügen"
+msgstr "Insert"
+
+#: node_editor_menu.cpp:101
 msgid "Einfügen\tStrg+V"
 msgstr "Paste\tCtrl+V"
 
@@ -1170,7 +1210,7 @@ msgstr "Input (ring only, on the left of the node)"
 msgid "Eingang verbinden mit neuem Node"
 msgstr "Connect input to new node"
 
-#: group_dialog.cpp:64
+#: group_dialog.cpp:65
 msgid "Eingang: %1"
 msgstr "Input: %1"
 
@@ -1226,7 +1266,7 @@ msgstr "First channel"
 msgid "Es gibt keine Bauform \"%1\""
 msgstr "There is no fixture type \"%1\""
 
-#: node_editor_presets.cpp:62
+#: node_editor_presets.cpp:63
 msgid "Es gibt schon ein Preset \"%1\". Ersetzen?"
 msgstr "A preset \"%1\" already exists. Replace it?"
 
@@ -1246,15 +1286,15 @@ msgstr "Place an instance of a fixture type from the library (Stage Config → F
 msgid "Fade"
 msgstr "Fade"
 
-#: group_dialog.cpp:42 parameter_editors.cpp:92 port_legend.cpp:68
+#: group_dialog.cpp:43 parameter_editors.cpp:92 port_legend.cpp:68
 msgid "Farbe"
 msgstr "Color"
 
-#: group_dialog.cpp:36
+#: group_dialog.cpp:37
 msgid "Farbe der Gruppe"
 msgstr "Group color"
 
-#: group_dialog.cpp:34
+#: group_dialog.cpp:35
 msgid "Farbe der Kachel"
 msgstr "Tile color"
 
@@ -1278,7 +1318,7 @@ msgstr "Color order"
 msgid "Farbverlauf aus bis zu vier Farben. „Position“ wählt die Stelle, oder er läuft von selbst im eingestellten Tempo."
 msgstr "A color ramp of up to four colors. \"Position\" picks the spot, or it runs by itself at the set speed."
 
-#: node_palette.cpp:214
+#: node_palette.cpp:224
 msgid "Favoriten"
 msgstr "Favorites"
 
@@ -1446,31 +1486,47 @@ msgstr "Save selected fixture as template …"
 msgid "Glättet einen Wert: Er folgt dem Eingang mit einer Zeitkonstante, statt zu springen."
 msgstr "Smooths a value: it follows the input with a time constant instead of jumping."
 
-#: node_editor_group.cpp:257
+#: node_editor_library.cpp:72
+msgid "Gruppe \"%1\" in der Bibliothek gespeichert."
+msgstr "Group \"%1\" saved to the library."
+
+#: node_editor_group_dialog.cpp:128
 msgid "Gruppe %1"
 msgstr "Group %1"
 
-#: node_editor_group.cpp:389
+#: node_editor_group.cpp:237
 msgid "Gruppe aufklappen"
 msgstr "Expand group"
 
-#: node_editor_group.cpp:394
+#: node_editor_group.cpp:246
 msgid "Gruppe auflösen"
 msgstr "Ungroup"
 
-#: node_editor_group.cpp:262
+#: node_palette_library.cpp:99
+msgid "Gruppe aus der Bibliothek löschen …"
+msgstr "Delete group from the library …"
+
+#: node_editor_group_dialog.cpp:133
 msgid "Gruppe bearbeiten"
 msgstr "Edit group"
 
-#: node_editor_group.cpp:393
+#: node_editor_group.cpp:245
 msgid "Gruppe bearbeiten …"
 msgstr "Edit group …"
+
+#: node_editor_library.cpp:58
+msgid "Gruppe ersetzen"
+msgstr "Replace group"
+
+#: node_editor_group.cpp:242
+msgid "Gruppe in Bibliothek speichern"
+msgstr "Save group to library"
 
 #: layout_panel_groups.cpp:41
 msgid "Gruppe löschen"
 msgstr "Delete group"
 
-#: node_editor_menu.cpp:82
+#: node_editor_menu.cpp:83
 msgid "Gruppe samt Nodes löschen"
 msgstr "Delete group with its nodes"
 
@@ -1478,11 +1534,11 @@ msgstr "Delete group with its nodes"
 msgid "Gruppe speichern"
 msgstr "Save group"
 
-#: node_editor_group.cpp:391
+#: node_editor_group.cpp:239
 msgid "Gruppe zuklappen"
 msgstr "Collapse group"
 
-#: layout_panel.cpp:52 node_editor_targets.cpp:56
+#: layout_panel.cpp:52 node_editor_targets.cpp:56 node_palette.cpp:162
 msgid "Gruppen"
 msgstr "Groups"
 
@@ -1490,11 +1546,11 @@ msgstr "Groups"
 msgid "Gruppen von Fixtures und Regionen der Bühne: Ziele für Output-Nodes"
 msgstr "Groups of fixtures and stage regions: targets for output nodes"
 
-#: node_editor_group.cpp:262
+#: node_editor_group_dialog.cpp:133
 msgid "Gruppieren"
 msgstr "Group"
 
-#: node_editor_group.cpp:399
+#: node_editor_group.cpp:251
 msgid "Gruppieren …\tStrg+G"
 msgstr "Group …\tCtrl+G"
 
@@ -1506,7 +1562,7 @@ msgstr "Size"
 msgid "Grün"
 msgstr "Green"
 
-#: group_dialog.cpp:45
+#: group_dialog.cpp:46
 msgid "Haken setzen, was auf der Kachel erscheinen soll. Verbundene Anschlüsse nach außen erscheinen immer."
 msgstr "Tick what should appear on the tile. Ports connected to the outside always appear."
 
@@ -1565,6 +1621,10 @@ msgstr "Add to show"
 #: look_panel.cpp:60
 msgid "In den Editor laden"
 msgstr "Load into editor"
+
+#: group_dialog.cpp:80
+msgid "In der Bibliothek speichern"
+msgstr "Save to the library"
 
 #: fixture_library_user.cpp:133
 msgid "In dieser Show gibt es schon eine Bauform „%1“."
@@ -1634,7 +1694,7 @@ msgstr "Click an LED to see its address."
 msgid "Kopie der gewählten Bauform anlegen"
 msgstr "Create a copy of the selected type"
 
-#: node_editor_menu.cpp:66
+#: node_editor_menu.cpp:67
 msgid "Kopieren\tStrg+C"
 msgstr "Copy\tCtrl+C"
 
@@ -1786,7 +1846,7 @@ msgstr "Overwrite look"
 msgid "Looks"
 msgstr "Looks"
 
-#: node_palette.cpp:357
+#: node_palette.cpp:374
 msgid "Loslassen: Node wird entfernt"
 msgstr "Release: node will be removed"
 
@@ -1798,7 +1858,7 @@ msgstr "Makes the image flash: rate in Hz, share of on-time and an optional fade
 msgid "Lässt ein Testmuster über diese Form laufen (nur hier, nichts wird gesendet)"
 msgstr "Runs a test pattern over this shape (only here, nothing is sent)"
 
-#: look_panel.cpp:62
+#: look_panel.cpp:62 node_palette_library.cpp:105
 msgid "Löschen"
 msgstr "Delete"
 
@@ -1882,6 +1942,10 @@ msgstr "Multicast"
 msgid "Nach Updates suchen?"
 msgstr "Check for updates?"
 
+#: node_editor_library.cpp:154
+msgid "Nach außen führen (auf der Kachel zeigen)"
+msgstr "Expose (show on the tile)"
+
 #: add_fixture_dialog.cpp:55 cue_dialog.cpp:35 cue_panel.cpp:53
 msgid "Name"
 msgstr "Name"
@@ -1906,7 +1970,7 @@ msgstr "Controller name:"
 msgid "Name des Looks:"
 msgstr "Name of the look:"
 
-#: node_editor_presets.cpp:51
+#: node_editor_presets.cpp:52
 msgid "Name des Presets:"
 msgstr "Name of the preset:"
 
@@ -1990,11 +2054,11 @@ msgstr "Not used in the layout yet."
 msgid "Node hinzufügen"
 msgstr "Add node"
 
-#: node_editor_menu.cpp:82
+#: node_editor_menu.cpp:83
 msgid "Node löschen"
 msgstr "Delete node"
 
-#: node_editor_menu.cpp:96
+#: node_editor_menu.cpp:97
 msgid "Node suchen …\tStrg+Leertaste"
 msgstr "Search node …\tCtrl+Space"
 
@@ -2010,11 +2074,11 @@ msgstr "Node defaults"
 msgid "Node-Typ suchen …"
 msgstr "Search node type …"
 
-#: main_window_editor.cpp:54
+#: main_window_editor.cpp:64
 msgid "Nodes"
 msgstr "Nodes"
 
-#: node_palette.cpp:138
+#: node_palette.cpp:144
 msgid "Nodes suchen …"
 msgstr "Search nodes …"
 
@@ -2094,7 +2158,7 @@ msgstr "Parameters"
 msgid "Parameter dieses Nodes auf- oder zuklappen"
 msgstr "Expand or collapse this node's parameters"
 
-#: group_dialog.cpp:62
+#: group_dialog.cpp:63
 msgid "Parameter: %1"
 msgstr "Parameter: %1"
 
@@ -2142,7 +2206,7 @@ msgstr "Position x y z"
 msgid "Positionen von Punkten im Raum"
 msgstr "Positions of points in space"
 
-#: node_editor_presets.cpp:96
+#: node_editor_presets.cpp:82
 msgid "Preset \"%1\" gelöscht."
 msgstr "Preset \"%1\" deleted."
 
@@ -2150,21 +2214,29 @@ msgstr "Preset \"%1\" deleted."
 msgid "Preset \"%1\" gespeichert (%2 Nodes)."
 msgstr "Preset \"%1\" saved (%2 nodes)."
 
-#: node_editor_presets.cpp:118
+#: node_editor_presets.cpp:105
 msgid "Preset \"%1\" löschen?"
 msgstr "Delete preset \"%1\"?"
 
-#: node_editor_presets.cpp:105
+#: node_editor_presets.cpp:92
 msgid "Preset einfügen"
 msgstr "Insert preset"
 
-#: node_editor_presets.cpp:62
+#: node_editor_presets.cpp:63
 msgid "Preset ersetzen"
 msgstr "Replace preset"
 
-#: node_editor_presets.cpp:106 node_editor_presets.cpp:118
+#: node_editor_presets.cpp:93 node_editor_presets.cpp:105
 msgid "Preset löschen"
 msgstr "Delete preset"
+
+#: node_palette_library.cpp:100
+msgid "Preset löschen …"
+msgstr "Delete preset …"
+
+#: node_palette.cpp:163 node_palette_library.cpp:52
+msgid "Presets"
+msgstr "Presets"
 
 #: main_window_file.cpp:76
 msgid "Projekt laden"
@@ -2346,7 +2418,7 @@ msgstr "This is how long the fade to this look takes. 0 = hard switch."
 msgid "Soll WhiteHoleFX beim Start bei GitHub nachsehen, ob es eine neuere Version gibt?"
 msgstr "Should WhiteHoleFX look at GitHub on startup to see whether a newer version exists?"
 
-#: node_palette.cpp:226
+#: node_palette.cpp:238
 msgid "Sonstige"
 msgstr "Other"
 
@@ -2434,7 +2506,7 @@ msgstr "Stop"
 msgid "Strenge &Eingänge"
 msgstr "Strict &inputs"
 
-#: main_window_editor.cpp:142
+#: main_window_editor.cpp:179
 msgid "Strenge Eingänge"
 msgstr "Strict inputs"
 
@@ -2586,7 +2658,7 @@ msgstr "Update check"
 msgid "Ursprung x y z"
 msgstr "Origin x y z"
 
-#: node_editor_menu.cpp:89
+#: node_editor_menu.cpp:90
 msgid "Verbindung trennen"
 msgstr "Disconnect"
 
@@ -2826,7 +2898,7 @@ msgstr "Destinations (controllers) and patch: which fixture sends to which unive
 msgid "Zoomt das Bild um die Mitte: Faktor über 1 vergrößert, unter 1 verkleinert. „Factor Z“ zoomt die Tiefe getrennt."
 msgstr "Zooms the image around the center: a factor above 1 enlarges, below 1 shrinks. \"Factor Z\" zooms the depth separately."
 
-#: node_palette.cpp:328
+#: node_palette.cpp:344
 msgid "Zu Favoriten hinzufügen"
 msgstr "Add to favorites"
 
@@ -2990,11 +3062,11 @@ msgstr "Fade time %1 s"
 msgid "Überblendzeit:"
 msgstr "Fade time:"
 
-#: node_editor_menu.cpp:77
+#: node_editor_menu.cpp:78
 msgid "Überbrücken\tB"
 msgstr "Bypass\tB"
 
-#: node_editor_menu.cpp:77
+#: node_editor_menu.cpp:78
 msgid "Überbrückung aufheben\tB"
 msgstr "Remove bypass\tB"
 

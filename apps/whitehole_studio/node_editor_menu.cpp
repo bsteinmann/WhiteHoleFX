@@ -57,6 +57,7 @@ void NodeEditor::contextMenuEvent(QContextMenuEvent* event) {
     }
     if (hit.port != nullptr) {
         buildConnectMenu(menu, hit);
+        addGroupPortMenu(menu, hit);
     }
     if (node != nullptr) {
         if (!node->isSelected()) {

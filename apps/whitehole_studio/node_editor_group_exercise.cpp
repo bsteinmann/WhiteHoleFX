@@ -2,9 +2,12 @@
 //
 // Warum es das gibt: Der Test läuft in der CI in einem unsichtbaren Fenster und prüft, was sich ohne Maus prüfen lässt:
 // Kachel statt Mitglieder, Kabel an der Kachel, Verschieben, Aufklappen mit Rahmen, Auflösen, Löschen der Kachel.
+#include <QByteArray>
 #include <QColor>
+#include <QTemporaryDir>
 
 #include <cmath>
+#include <filesystem>
 
 #include "group_dialog.hpp"
 #include "node_editor.hpp"
@@ -103,6 +106,49 @@ QString NodeEditor::exerciseGroups() {
         return giveUp(QString::fromStdString(added.error().message));
     }
     rebuild();
+
+    // Bibliothek: speichern, einfügen (der Name wird frei gemacht), mit einem Rückgängig wieder weg
+    {
+        QTemporaryDir temp;
+        if (!temp.isValid()) {
+            return giveUp(QStringLiteral("kein temporärer Ordner"));
+        }
+        const QByteArray folder = temp.path().toUtf8();
+        const runtime::PresetStore store{
+            std::filesystem::path{std::u8string{reinterpret_cast<const char8_t*>(folder.constData()), static_cast<std::size_t>(folder.size())}}};
+        const runtime::PresetStore* const userStore = groups_;
+        groups_ = &store;
+        const std::size_t groupsBefore = player_.project()->graph.groups().size();
+        QString problem;
+        if (!saveGroupToLibrary(group.name, false) || store.list().size() != 1) {
+            problem = QStringLiteral("Speichern");
+        } else if (!insertLibraryItem(QStringLiteral("group"), QString::fromStdString(group.name), QPointF{-300.0, 900.0}) ||
+                   player_.project()->graph.groups().size() != groupsBefore + 1 ||
+                   player_.project()->graph.findGroup(group.name + " 2") == nullptr) {
+            problem = QStringLiteral("Einfügen");
+        } else if (!player_.undo().ok()) {
+            problem = QStringLiteral("Rückgängig");
+        } else {
+            rebuild();
+            if (player_.project()->graph.groups().size() != groupsBefore) {
+                problem = QStringLiteral("Rückgängig nimmt die Gruppe nicht zurück");
+            }
+        }
+        groups_ = userStore;
+        if (!problem.isEmpty()) {
+            return giveUp(QStringLiteral("Bibliothek: %1").arg(problem));
+        }
+    }
+
+    // Port nach außen führen / ausblenden (Rechtsklick auf einen Port in der Gruppe)
+    {
+        const graph::PortRef extra{*a, "out"};
+        if (!setGroupPortExposed(group.name, extra, "Bild", true) || player_.project()->graph.findGroup(group.name)->ports.size() != 2 ||
+            !setGroupPortExposed(group.name, extra, "Bild", false) || player_.project()->graph.findGroup(group.name)->ports.size() != 1) {
+            return giveUp(QStringLiteral("Port nach außen führen / ausblenden"));
+        }
+    }
+
     scene_.clearSelection();
     if (itemOf(*a) == nullptr) {
         return giveUp(QStringLiteral("Kachel fehlt nach dem zweiten Gruppieren"));

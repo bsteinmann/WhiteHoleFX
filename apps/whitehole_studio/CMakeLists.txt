@@ -86,6 +86,9 @@ add_executable(whitehole_studio
     node_items.cpp
     node_items_group.cpp
     node_editor_group.cpp
+    node_editor_group_dialog.cpp
+    node_editor_library.cpp
+    node_palette_library.cpp
     node_editor_group_exercise.cpp
     node_palette.cpp
     node_palette.hpp

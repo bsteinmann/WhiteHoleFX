@@ -1,5 +1,11 @@
 # Änderungen
 
+## 0.74.0
+
+- **Bibliothek: Gruppen und Presets in der Palette.** Die Palette links zeigt über den Node-Kategorien die Rubriken **Gruppen** und **Presets** (Suche und Ziehen wie bei Nodes). Doppelklick oder auf die Fläche ziehen fügt ein; Rechtsklick fügt ein oder löscht. Eine Gruppe wird eingefügt als zugeklappte Kachel (Name wird bei Bedarf „Name 2“).
+- **Gruppen speichern:** Im Dialog „Gruppieren“ gibt es das Häkchen „In der Bibliothek speichern“ (voreingestellt an); später über Rechtsklick → „Gruppe in Bibliothek speichern“. Eine Gruppe ist eine Datei im Preset-Format (`groups` im Datenordner), samt `nodegroup`-Block; sie lässt sich im Texteditor lesen.
+- **Port einer Gruppe nach außen führen oder ausblenden:** Rechtsklick auf einen Ein- oder Ausgang eines Mitglieds (aufgeklappt) oder auf der Kachel. Ein Anschluss mit Kabel nach außen bleibt sichtbar.
+- **Zwischenablage, Duplizieren und Presets nehmen vollständige Gruppen mit** (`ClipboardGroup`); eine Gruppe, von der nur ein Teil ausgewählt ist, bleibt zurück. Tests in `player_groups_test.cpp`, Rauchtest für Bibliothek und Port-Menü.
 ## 0.73.0
 
 - **Gruppen von Nodes, Schritt 2 von 4: Kachel im Node-Editor.** Mehrere Nodes auswählen, **Strg+G** oder Rechtsklick → „Gruppieren …“: Der Dialog fragt Name, Farbe und die Schnittstelle (Haken bei den Ein-/Ausgängen und Parametern, die auf der Kachel erscheinen sollen, mit änderbarer Beschriftung). Die Gruppe erscheint zugeklappt als **Kachel** mit doppeltem Rand; ihre Ports stehen für die echten Ports der Mitglieder, Kabel nach außen laufen an der Kachel (ein Anschluss mit Kabel nach außen erscheint immer, damit kein Kabel unsichtbar wird). Doppelklick auf die Kachel oder Rechtsklick → „Gruppe aufklappen“ zeigt die Nodes einzeln in einem Rahmen mit dem Namen (an der Stelle der Kachel); „Gruppe zuklappen“, „Gruppe bearbeiten …“ und „Gruppe auflösen“ im Rechtsklick-Menü. Kachel ziehen verschiebt die Gruppe, Entf auf der Kachel löscht die Gruppe samt Nodes (Rückgängig holt sie zurück), Kopieren/Duplizieren nimmt die Nodes der Gruppe mit. Alles Rückgängig-fähig (`Player::addNodeGroup/replaceNodeGroup/removeNodeGroup/setNodeGroupCollapsed/moveNodeGroup`, mit Tests). Rauchtest `exerciseGroups` in der CI. Die Regler der Gruppe im Parameterdock und das Speichern in der Bibliothek folgen.
