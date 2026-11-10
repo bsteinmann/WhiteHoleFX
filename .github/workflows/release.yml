@@ -70,7 +70,7 @@ jobs:
           # Prüfsumme zum Selbstprüfen (die .exe ist noch nicht signiert): "<hash>  <datei>", wie sha256sum sie schreibt
           $hash = (Get-FileHash $zip -Algorithm SHA256).Hash.ToLower()
           "$hash  $zip" | Set-Content -Encoding ascii "$zip.sha256"
-          gh release create $tag $zip "$zip.sha256" --target "${{ github.sha }}" --prerelease --title "WhiteHoleFX $tag (Testversion für Windows)" --notes-file packaging/windows/RELEASE_NOTES.md
+          gh release create $tag $zip "$zip.sha256" --target "${{ github.sha }}" --title "WhiteHoleFX $tag" --notes-file packaging/windows/RELEASE_NOTES.md
 
   linux:
     name: Linux-Paket (.deb) bauen, testen und ans Release hängen
