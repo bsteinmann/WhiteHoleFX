@@ -1,0 +1,57 @@
+whitehole-project 1
+# Beispiel für Pong: zwei Rechner-Spieler, Punkte als Reihe einzelner LEDs.
+#
+# So ausprobieren:
+#   whitehole_studio examples/spiele/pong.whfx --run
+#
+# Aufbau: Der Rechen-Node "Pong" hält das Spiel (Ball, Schläger, Punkte) und gibt den Stand als Werte aus.
+# "Pong Display" zeichnet ihn; die Werte sind einfach an dessen gleichnamige Eingänge gelegt. `aspect` ist
+# Breite / Höhe der Leinwand (32x16 = 2), damit der Ball rund bleibt, `soft` die Weichheit der Ränder
+# (etwa eine LED). Punkte, Ball und Schläger sind auf das 32x16-Raster ausgerichtet (Mitte der LED-Spalte 1
+# liegt bei x = 0,047). `skill` 0..1 bestimmt, wie oft der Rechner den Ball erreicht. Einen Schläger selbst
+# steuern: "Left player" auf Input stellen und einen Regler an "Left paddle input" legen.
+
+settings fps 40
+
+destination 0 127.0.0.1
+
+fixture Wand
+  matrix 32 16 serpentine
+  patch artnet destination 0 universe 0
+end
+
+node spiel wh.value.pong
+  set skill 0.8
+  set speed 0.7
+  set maxScore 5
+  set margin 0.047
+  set ballRadius 0.06
+end
+node bild wh.generator.pong
+  set aspect 2
+  set soft 0.07
+  set thickness 0.03
+  set dotSize 0.035
+  set dotSpacing 0.125
+  set leftX 0.047
+  set leftY 0.969
+  set rightX 0.953
+  set rightY 0.969
+  set paddleLeft 0.2 0.6 1 1
+  set paddleRight 1 0.4 0.2 1
+  set net 1 1 1 0.2
+end
+
+connect spiel.ballX -> bild.ballX
+connect spiel.ballY -> bild.ballY
+connect spiel.left -> bild.left
+connect spiel.right -> bild.right
+connect spiel.paddleLength -> bild.paddleSize
+connect spiel.ballSize -> bild.ballRadius
+connect spiel.paddleX -> bild.margin
+connect spiel.scoreLeft -> bild.scoreLeft
+connect spiel.scoreRight -> bild.scoreRight
+connect spiel.target -> bild.maxScore
+connect spiel.winner -> bild.winner
+connect spiel.flash -> bild.flash
+output bild.out

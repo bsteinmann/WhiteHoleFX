@@ -177,6 +177,24 @@ lässt sich deshalb direkt anschließen (Trigger → Boolean ist erlaubt).
 | `wh.value.envelope` | `out`, `active` (Boolean) | `gate`, `mode` (0 ADSR, 1 One-shot), `attack`, `decay`, `sustain`, `release` | Zeiten gelten für den vollen Hub 0 → 1; Zeit 0 springt sofort. Ein schon beim Start anliegendes Gate startet den Anschlag |
 | `wh.value.sequencer` | `value`, `step` (Integer), `trigger`, `hit` | `advance`, `reset`, `steps` (1–8), `direction` (0 vorwärts, 1 rückwärts, 2 hin und her, 3 zufällig), `seed`, `step1`–`step8` (0..1) | `trigger` bei jedem Weiterschalten, `hit` nur bei Schritten mit Wert über 0. Rückwärts beginnt am letzten Schritt. Mit `Map` auf einen anderen Bereich umrechnen |
 
+### Pong (Spiel)
+
+`wh.value.pong` (Kategorie „Game“) ist ein Spiel als Rechen-Node: Er hält den Zustand (Ball, Schläger, Punkte) und
+gibt ihn als Werte aus; gezeichnet wird er vom Bild-Node `wh.generator.pong` (siehe [Field-Nodes](field-nodes.md)),
+dessen Eingänge dieselben Namen haben. Das Spielfeld läuft in x und y von 0 bis 1; gerechnet wird in festen Schritten
+von 1/240 s, gleiche Einstellungen mit gleichem `seed` ergeben also dasselbe Spiel bei jeder Bildrate.
+
+| Typ | Ausgang | Parameter | Hinweis |
+|---|---|---|---|
+| `wh.value.pong` | `ballX`, `ballY`, `left`, `right`, `paddleLength`, `ballSize`, `paddleX`, `flash` (Scalar); `scoreLeft`, `scoreRight`, `target`, `winner` (Integer); `hitPaddle`, `hitWall`, `point` (Trigger) | `leftControl`, `rightControl` (0 Computer, 1 Input), `leftInput`, `rightInput` (0..1), `timing` (0 Speed, 1 Beat), `speed`, `bpm`, `beats`, `beat`, `speedUp`, `paddleSize`, `ballRadius`, `margin`, `skill`, `paddleSpeed`, `maxScore`, `serveDelay`, `autoServe`, `serve`, `winHold`, `restart`, `seed` | Siehe unten |
+
+- **Computer** spielt den Schläger: `skill` (0..1) ist die Chance, dass er den Ball erreicht, `paddleSpeed` wie schnell er sich bewegt. Bei `skill` 1 hält der Ballwechsel ewig, bei 0 fällt jeder Ballwechsel. **Input**: der Schläger folgt `leftInput` / `rightInput` (zum Beispiel ein Regler, DMX oder später die Fernbedienung).
+- **Timing Speed:** `speed` in Feldbreiten pro Sekunde, `speedUp` Zuwachs je Schlägertreffer (höchstens das Dreifache). **Timing Beat:** eine Überquerung von Schläger zu Schläger dauert `beats` Schläge bei `bpm`; der Aufschlag wartet auf den nächsten Schlag am Eingang `beat` (steigende Flanke, ein Trigger lässt sich direkt anschließen). `bpm` an Clock oder Tap Tempo koppeln, indem man den gleichen Wert setzt oder moduliert.
+- **Aufschlag:** nach `serveDelay` automatisch (`autoServe`) oder durch eine steigende Flanke an `serve`. Den Punkt bekommt, wer den Ball nicht erreicht; der Ball geht danach zum Verlierer.
+- **Spielende:** bei `maxScore` Punkten bleibt der Gewinner `winHold` Sekunden stehen (`winner` 1 oder 2, `flash` blinkt), danach beginnt mit `restart` ein neues Spiel.
+- **Ereignisse:** `hitPaddle`, `hitWall`, `point` sind einen Frame lang an; damit lässt sich zum Beispiel das Bild bei jedem Treffer aufblitzen.
+- Beispiele: `examples/spiele/pong.whfx` (Rechner gegen Rechner) und `examples/spiele/pong-takt.whfx` (im Takt, Treffer lassen das Bild heller werden).
+
 ### DMX-Eingang
 
 Die beiden DMX-Nodes (Kategorie „Input“) lesen Kanalwerte, die per Art-Net oder sACN ins Studio kommen,

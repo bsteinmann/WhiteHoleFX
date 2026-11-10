@@ -204,6 +204,8 @@ std::vector<values::CpuNodeDefinition> mathNodes();      // Math, Compare
 std::vector<values::CpuNodeDefinition> sequenceNodes();  // Envelope, Sequencer, Clock
 std::vector<values::CpuNodeDefinition> audioNodes(std::shared_ptr<audio::AudioStore> store);  // Pegel, Band, Spektrum, Beat, Tap
 std::vector<values::CpuNodeDefinition> audioWaveNodes(std::shared_ptr<audio::AudioStore> store);  // Audio Waveform
+std::vector<compiler::NodeDefinition> pongFieldNodes();   // Pong Display
+std::vector<values::CpuNodeDefinition> pongNodes();       // Pong (Spiel)
 std::vector<compiler::NodeDefinition> audioFieldNodes();  // Spectrum Bars
 /// DMX-Eingang (Art-Net/sACN): die Kernel lesen aus `store`; null = ein leerer Speicher (nie ein Signal).
 std::vector<values::CpuNodeDefinition> dmxNodes(std::shared_ptr<input::DmxStore> store);

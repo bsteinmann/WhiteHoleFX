@@ -65,14 +65,14 @@ TEST_CASE("Built-ins: alle Nodes werden samt Snippet beziehungsweise Kernel regi
         "wh.transform.kaleidoscope", "wh.transform.tunnel", "wh.transform.vortex", "wh.modifier.colormap",
         "wh.generator.hitflash", "wh.generator.shockwave", "wh.generator.box", "wh.generator.helix", "wh.generator.position", "wh.transform.twist",
         "wh.generator1d.comet", "wh.generator1d.pulses", "wh.generator1d.gradient", "wh.generator1d.meteors",
-        "wh.generator1d.sparkle", "wh.generator1d.levelbar"};
+        "wh.generator1d.sparkle", "wh.generator1d.levelbar", "wh.generator.pong"};
     const std::set<std::string> expectedCpu{"wh.value.time",   "wh.value.number", "wh.value.color",
                                             "wh.value.lfo",    "wh.value.random", "wh.value.map",
                                             "wh.value.smooth", "wh.value.colorramp", "wh.value.dmx",
                                             "wh.value.dmxcolor", "wh.value.audiolevel", "wh.value.audioband",
                                             "wh.value.audiospectrum", "wh.value.beat", "wh.value.onset", "wh.value.tap",
                                             "wh.value.audiowave", "wh.value.math", "wh.value.compare",
-                                            "wh.value.clock", "wh.value.envelope", "wh.value.sequencer"};
+                                            "wh.value.clock", "wh.value.envelope", "wh.value.sequencer", "wh.value.pong"};
 
     std::set<std::string> field;
     std::set<std::string> cpu;

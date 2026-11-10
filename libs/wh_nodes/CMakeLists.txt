@@ -13,6 +13,8 @@ wh_add_library(wh_nodes
         src/builtin_math.cpp
         src/builtin_sequence.cpp
         src/builtin_modifiers.cpp
+        src/builtin_pong.cpp
+        src/pong_sim.cpp
         src/builtin_shapes.cpp
         src/builtin_sparks.cpp
         src/builtin_text.cpp

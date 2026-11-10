@@ -1,0 +1,75 @@
+whitehole-project 1
+# Beispiel für Pong im Takt: der Ball braucht genau zwei Schläge von Schläger zu Schläger, der Aufschlag
+# kommt auf dem Schlag, und jeder Treffer lässt das Bild kurz heller werden.
+#
+# So ausprobieren:
+#   whitehole_studio examples/spiele/pong-takt.whfx --run
+#
+# Aufbau: Eine Clock gibt 128 Schläge pro Minute; ihr Tick geht an "Beat" von Pong und löst den Aufschlag aus.
+# In "Timing" steht *Beat*, `bpm` und `beats` bestimmen das Tempo (hier 128 BPM, zwei Schläge je Überquerung).
+# Tempo anders einstellen: `bpm` an Clock und Pong gleich setzen oder statt der Clock den Beat-Node des
+# Audio-Eingangs an "Beat" legen. Der Treffer-Trigger (`hitPaddle`) startet eine kurze Hüllkurve, die über
+# eine Skalierung die Helligkeit anhebt.
+
+settings fps 40
+
+destination 0 127.0.0.1
+
+fixture Wand
+  matrix 32 16 serpentine
+  patch artnet destination 0 universe 0
+end
+
+node takt wh.value.clock
+  set bpm 128
+end
+node spiel wh.value.pong
+  set timing 1
+  set bpm 128
+  set beats 2
+  set skill 0.9
+  set maxScore 7
+  set margin 0.047
+  set ballRadius 0.06
+end
+node bild wh.generator.pong
+  set aspect 2
+  set soft 0.07
+  set thickness 0.03
+  set dotSize 0.035
+  set dotSpacing 0.125
+  set leftX 0.047
+  set leftY 0.969
+  set rightX 0.953
+  set rightY 0.969
+end
+node treffer wh.value.envelope
+  set mode 1
+  set attack 0.01
+  set release 0.25
+end
+node skala wh.value.map
+  set outMin 0.55
+  set outMax 1
+end
+node hell wh.modifier.coloradjust
+end
+
+connect takt.tick -> spiel.beat
+connect spiel.ballX -> bild.ballX
+connect spiel.ballY -> bild.ballY
+connect spiel.left -> bild.left
+connect spiel.right -> bild.right
+connect spiel.paddleLength -> bild.paddleSize
+connect spiel.ballSize -> bild.ballRadius
+connect spiel.paddleX -> bild.margin
+connect spiel.scoreLeft -> bild.scoreLeft
+connect spiel.scoreRight -> bild.scoreRight
+connect spiel.target -> bild.maxScore
+connect spiel.winner -> bild.winner
+connect spiel.flash -> bild.flash
+connect spiel.hitPaddle -> treffer.gate
+connect treffer.out -> skala.value
+connect skala.out -> hell.brightness
+connect bild.out -> hell.source
+output hell.out

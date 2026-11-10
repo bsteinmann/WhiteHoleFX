@@ -131,3 +131,11 @@ TEST_CASE("Beispiele: jede Datei in examples/ (auch in Untergruppen) kompiliert"
     CHECK(found >= 15);
     CHECK(threeD == 5);  // die fünf 3D-Beispiele in examples/3d/
 }
+
+TEST_CASE("Beispiel: examples/spiele/pong.whfx lädt und kompiliert", "[examples][nodes][pong]") {
+    checkExample("spiele/pong.whfx", "wh_pong_cov");
+}
+
+TEST_CASE("Beispiel: examples/spiele/pong-takt.whfx lädt und kompiliert", "[examples][nodes][pong]") {
+    checkExample("spiele/pong-takt.whfx", "wh_pong_cov");
+}

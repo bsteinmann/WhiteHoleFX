@@ -42,6 +42,7 @@ add_executable(wh_tests
     input/dmx_packets_test.cpp
     input/dmx_receiver_test.cpp
     nodes/builtin_nodes_test.cpp
+    nodes/pong_test.cpp
     nodes/node_audit_test.cpp
     nodes/volume_nodes_test.cpp
     nodes/perf_bench_test.cpp
@@ -171,6 +172,7 @@ if(TARGET wh_gpu_webgpu)
         gpu_device/spectrum_on_device_test.cpp
         gpu_device/node_patterns_on_device_test.cpp
         gpu_device/spark_nodes_on_device_test.cpp
+        gpu_device/pong_display_on_device_test.cpp
         gpu_device/text_on_device_test.cpp
         gpu_device/text_session_on_device_test.cpp
         gpu_device/warps_on_device_test.cpp

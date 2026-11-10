@@ -334,7 +334,7 @@ msgstr ""
 msgid "2D-Matrix 8x8"
 msgstr ""
 
-#: main_window_actions.cpp:165
+#: main_window_actions.cpp:168
 msgid "3D"
 msgstr ""
 
@@ -574,7 +574,7 @@ msgstr ""
 msgid "Art-Net-Port (UDP):"
 msgstr ""
 
-#: main_window_actions.cpp:162 settings_dialog.cpp:62
+#: main_window_actions.cpp:165 settings_dialog.cpp:62
 msgid "Audio"
 msgstr ""
 
@@ -790,7 +790,7 @@ msgstr ""
 msgid "Bildrate (fps)"
 msgstr ""
 
-#: node_info_texts.cpp:122
+#: node_info_texts.cpp:124
 msgid "Bis zu acht Kometen gleichzeitig, jeder mit eigener Geschwindigkeit und eigenem Startpunkt. „Count“ ist die Zahl, „Tail length“ die Länge des Schweifs. Für Strips."
 msgstr ""
 
@@ -818,7 +818,7 @@ msgstr ""
 msgid "Byte %1–%2"
 msgstr ""
 
-#: node_info_texts.cpp:118
+#: node_info_texts.cpp:120
 msgid "Bänder aus Licht laufen die gewählte Achse entlang. „Frequency“ ist die Zahl der Wellen über die Länge, „Sharpness“ macht aus der weichen Welle schmale Pulse. Für Strips."
 msgstr ""
 
@@ -918,6 +918,10 @@ msgstr ""
 msgid "Das Kabel läuft ohne Rücksprung von Ring zu Ring: unten vorwärts, den nächsten Ring rückwärts ..."
 msgstr ""
 
+#: node_info_texts.cpp:170
+msgid "Das Pong-Spiel als Rechen-Node: Ball, Schläger, Punkte und Treffer als Werte. Computer oder Eingang spielen, auch im Takt der Musik. Gezeichnet wird es von „Pong Display“."
+msgstr ""
+
 #: main_window.cpp:212
 msgid "Das Projekt wurde geändert. Änderungen verwerfen?"
 msgstr ""
@@ -954,7 +958,7 @@ msgstr ""
 msgid "Den aktuellen Effekt als Look in die Liste legen (Strg+L)"
 msgstr ""
 
-#: node_info_texts.cpp:146
+#: node_info_texts.cpp:148
 msgid "Der Ausgang: Was hier ankommt, wird auf die LEDs gesendet. Mit „Mode“ in einen Bereich skalieren oder als Fenster ausschneiden, plus Helligkeit."
 msgstr ""
 
@@ -1042,7 +1046,7 @@ msgstr ""
 msgid "Die neue Sprache gilt nach einem Neustart von WhiteHoleFX. Jetzt neu starten?\n(Nicht gespeicherte Änderungen werden vorher abgefragt.)"
 msgstr ""
 
-#: node_info_texts.cpp:172
+#: node_info_texts.cpp:176
 msgid "Die vergangene Zeit in Sekunden, mit Tempo-Faktor und Versatz. Zum Antreiben von Bewegungen."
 msgstr ""
 
@@ -1142,7 +1146,7 @@ msgstr ""
 msgid "Ein Klick lädt den Look nur vor. GO (Leertaste) startet dann die Überblendung."
 msgstr ""
 
-#: node_info_texts.cpp:116
+#: node_info_texts.cpp:118
 msgid "Ein Kopf läuft die gewählte Achse entlang, dahinter ein verblassender Schweif. „Speed“ sind Durchläufe pro Sekunde (negativ = rückwärts), „Ping-pong“ lässt ihn an den Enden umkehren. Für Strips."
 msgstr ""
 
@@ -1162,7 +1166,7 @@ msgstr ""
 msgid "Eine Einführung in die Bedienung, in der gewählten Sprache"
 msgstr ""
 
-#: node_info_texts.cpp:150
+#: node_info_texts.cpp:152
 msgid "Eine Farbe als Wert, mit Farbton-Verschiebung, Sättigung und Helligkeit. Speist Farb-Eingänge anderer Nodes."
 msgstr ""
 
@@ -1170,7 +1174,7 @@ msgstr ""
 msgid "Eine Gruppe heißt schon \"%1\"."
 msgstr ""
 
-#: node_info_texts.cpp:134
+#: node_info_texts.cpp:136
 msgid "Eine Kugel (Kreis) mit weichem Rand, Innen- und Außenfarbe. „Space“ wählt flach, Volumen oder automatisch nach Aufbau."
 msgstr ""
 
@@ -1178,7 +1182,7 @@ msgstr ""
 msgid "Eine Region ist ein Rechteck der Bühne. Ein Output mit dieser Region als Ziel bespielt alle LEDs darin. Die Angaben sind Prozent der ganzen Bühne."
 msgstr ""
 
-#: node_info_texts.cpp:128
+#: node_info_texts.cpp:130
 msgid "Eine Scan-Linie, die über das Bild läuft. Position, Breite, Weichheit und Winkel einstellbar; mit „Position“ lässt sie sich steuern."
 msgstr ""
 
@@ -1186,11 +1190,11 @@ msgstr ""
 msgid "Eine Spirale (Helix) aus einer oder mehreren Strähnen, die sich um eine senkrechte Achse dreht. Für 3D-Aufbauten."
 msgstr ""
 
-#: node_info_texts.cpp:132
+#: node_info_texts.cpp:134
 msgid "Eine einfarbige Fläche. Der einfachste Generator, gut als Hintergrund oder Test."
 msgstr ""
 
-#: node_info_texts.cpp:164
+#: node_info_texts.cpp:166
 msgid "Eine feste Zahl. Praktisch, um mehrere Parameter mit demselben Wert zu speisen."
 msgstr ""
 
@@ -1318,7 +1322,7 @@ msgstr ""
 msgid "Farbreihenfolge"
 msgstr ""
 
-#: node_info_texts.cpp:152
+#: node_info_texts.cpp:154
 msgid "Farbverlauf aus bis zu vier Farben. „Position“ wählt die Stelle, oder er läuft von selbst im eingestellten Tempo."
 msgstr ""
 
@@ -1394,7 +1398,7 @@ msgstr ""
 msgid "Front"
 msgstr ""
 
-#: node_info_texts.cpp:124
+#: node_info_texts.cpp:126
 msgid "Funkeln: Einzelne Zellen blitzen auf und klingen ab, jede in eigenem Takt. „Cells“ stellt man auf die LED-Zahl, „Density“ bestimmt, wie viele Zellen funkeln. Für Strips."
 msgstr ""
 
@@ -1486,7 +1490,7 @@ msgstr ""
 msgid "Gewähltes Fixture als Vorlage speichern …"
 msgstr ""
 
-#: node_info_texts.cpp:170
+#: node_info_texts.cpp:174
 msgid "Glättet einen Wert: Er folgt dem Eingang mit einer Zeitkonstante, statt zu springen."
 msgstr ""
 
@@ -1598,7 +1602,7 @@ msgstr ""
 msgid "Höhe"
 msgstr ""
 
-#: node_info_texts.cpp:156
+#: node_info_texts.cpp:158
 msgid "Hüllkurve (ADSR): Aus einem Schalter wird ein weicher Verlauf mit Attack, Decay, Sustain und Release. Auch als Einzelimpuls."
 msgstr ""
 
@@ -1774,11 +1778,11 @@ msgstr ""
 msgid "Leuchtende LEDs mit weichem Schein, Farben addieren sich; nichts verdeckt etwas"
 msgstr ""
 
-#: node_info_texts.cpp:144
+#: node_info_texts.cpp:146
 msgid "Liest drei oder vier DMX-Kanäle (Art-Net oder sACN) als Farbe, wahlweise RGB oder RGB mit Dimmer."
 msgstr ""
 
-#: node_info_texts.cpp:142
+#: node_info_texts.cpp:144
 msgid "Liest einen DMX-Kanal (Art-Net oder sACN) als Zahl. Mit Umrechnung auf einen Bereich, 16-Bit-Betrieb und Verhalten bei Signalverlust."
 msgstr ""
 
@@ -1786,7 +1790,7 @@ msgstr ""
 msgid "Linearer Farbverlauf von Farbe A nach Farbe B in einem einstellbaren Winkel."
 msgstr ""
 
-#: node_info_texts.cpp:130
+#: node_info_texts.cpp:132
 msgid "Linien als Sinuswellen, die sich bewegen (Anzahl, Amplitude, Frequenz, Tempo, Phasenversatz)."
 msgstr ""
 
@@ -2186,7 +2190,7 @@ msgstr ""
 msgid "Pegel im &Editor"
 msgstr ""
 
-#: node_info_texts.cpp:126
+#: node_info_texts.cpp:128
 msgid "Pegelbalken: füllt die gewählte Achse bis „Level“ (0 bis 1), unten „Color low“, oben „Color high“. „Level“ lässt sich mit „Audio Level“ oder einem LFO steuern. Für Strips."
 msgstr ""
 
@@ -2194,7 +2198,7 @@ msgstr ""
 msgid "Perspektive"
 msgstr ""
 
-#: node_info_texts.cpp:108
+#: node_info_texts.cpp:110
 msgid "Plasma: Weich ineinanderfließende, wabernde Farbflächen. Skalierung, Tempo und Tiefe einstellbar."
 msgstr ""
 
@@ -2294,11 +2298,11 @@ msgstr ""
 msgid "Rasterweite in Layout-Einheiten"
 msgstr ""
 
-#: node_info_texts.cpp:160
+#: node_info_texts.cpp:162
 msgid "Rechnet einen Wert von einem Bereich in einen anderen um (In min/max auf Out min/max), auf Wunsch begrenzt."
 msgstr ""
 
-#: node_info_texts.cpp:162
+#: node_info_texts.cpp:164
 msgid "Rechnet mit zwei Zahlen: Addieren, Subtrahieren, Multiplizieren, Dividieren, Minimum, Maximum und weitere."
 msgstr ""
 
@@ -2362,11 +2366,11 @@ msgstr ""
 msgid "Schnellwahl"
 msgstr ""
 
-#: node_info_texts.cpp:168
+#: node_info_texts.cpp:172
 msgid "Schrittfolge mit bis zu acht Werten. Jedes Einschalten von „Advance“ geht einen Schritt weiter (vorwärts, rückwärts, hin und her oder zufällig)."
 msgstr ""
 
-#: node_info_texts.cpp:158
+#: node_info_texts.cpp:160
 msgid "Schwingung (LFO): Sinus, Dreieck, Sägezahn oder Rechteck mit Frequenz, Phase und Wertebereich. Der Klassiker zum Bewegen von Parametern."
 msgstr ""
 
@@ -2470,6 +2474,10 @@ msgstr ""
 msgid "Spiegelt das Bild an einer Linie in x, y und/oder z. Mit „Use other half“ ist die andere Hälfte die Vorlage."
 msgstr ""
 
+#: main_window_actions.cpp:162
+msgid "Spiele"
+msgstr ""
+
 #: fixture_library_page.cpp:103
 msgid "Spirale (Säule)"
 msgstr ""
@@ -2502,7 +2510,7 @@ msgstr ""
 msgid "Statt der Zeit, die beim Look gespeichert ist"
 msgstr ""
 
-#: node_info_texts.cpp:136
+#: node_info_texts.cpp:138
 msgid "Sternenhimmel: Funkelnde Sterne mit einstellbarer Dichte, Größe und Funkeltempo, auf Wunsch langsam abwärts driftend."
 msgstr ""
 
@@ -2550,7 +2558,7 @@ msgstr ""
 msgid "TESTMODUS: %1"
 msgstr ""
 
-#: node_info_texts.cpp:148
+#: node_info_texts.cpp:150
 msgid "Taktgeber: Liefert im eingestellten Tempo (BPM) Impulse, Phase und Zähler. Läuft ohne Audio."
 msgstr ""
 
@@ -2590,7 +2598,7 @@ msgstr ""
 msgid "Testbild"
 msgstr ""
 
-#: node_info_texts.cpp:110
+#: node_info_texts.cpp:112
 msgid "Testbild für den Aufbau: x wird rot, y grün, z blau. So sieht man, welche Seite wo liegt und ob Verkabelung und Startecke stimmen."
 msgstr ""
 
@@ -2606,7 +2614,7 @@ msgstr ""
 msgid "Text"
 msgstr ""
 
-#: node_info_texts.cpp:138
+#: node_info_texts.cpp:140
 msgid "Text als Laufschrift oder statisch. Tempo, Ausrichtung, Höhe und Farben einstellbar."
 msgstr ""
 
@@ -2674,7 +2682,7 @@ msgstr ""
 msgid "Verdreht das Bild entlang einer Achse, je weiter weg, desto stärker (Winkel pro Einheit)."
 msgstr ""
 
-#: node_info_texts.cpp:154
+#: node_info_texts.cpp:156
 msgid "Vergleicht einen Wert mit einer Schwelle (mit Hysterese) und liefert Ja/Nein sowie Impulse beim Überschreiten und Unterschreiten."
 msgstr ""
 
@@ -2686,7 +2694,7 @@ msgstr ""
 msgid "Verkabelung"
 msgstr ""
 
-#: node_info_texts.cpp:120
+#: node_info_texts.cpp:122
 msgid "Verlauf über drei Farben (A → B → C → A) entlang der gewählten Achse, mehrfach wiederholbar und auf Wunsch durchlaufend. Für Strips."
 msgstr ""
 
@@ -2738,7 +2746,7 @@ msgstr ""
 msgid "Weiche, ineinanderfließende Kugeln (Metaballs), die sich bewegen. Anzahl, Größe und Tempo einstellbar."
 msgstr ""
 
-#: node_info_texts.cpp:140
+#: node_info_texts.cpp:142
 msgid "Weiches Rauschen (Value Noise) als Muster aus zwei Farben. Skalierung, Tempo, Dichte und Weichheit einstellbar."
 msgstr ""
 
@@ -2758,7 +2766,7 @@ msgstr ""
 msgid "Wellenform des Audio-Eingangs (ein kurzes Zeitfenster, auf Wunsch an der steigenden Flanke ausgerichtet). Wird an „Oscilloscope“ angeschlossen."
 msgstr ""
 
-#: node_info_texts.cpp:114
+#: node_info_texts.cpp:116
 msgid "Wellenringe wie Wassertropfen: Ringe breiten sich von zufälligen Punkten aus (Tropfen pro Sekunde, Tempo, Ringbreite)."
 msgstr ""
 
@@ -2850,6 +2858,10 @@ msgstr ""
 msgid "Zeichnet das Audio-Spektrum als Balken, von unten oder von der Mitte aus. „Spectrum“ kommt von „Audio Spectrum“."
 msgstr ""
 
+#: node_info_texts.cpp:108
+msgid "Zeichnet ein Pong-Spiel (Ball, Schläger, Mittellinie, Punkte als einzelne LEDs) aus den Werten des Nodes „Pong“. Seitenverhältnis und Randweichheit einstellbar."
+msgstr ""
+
 #: node_info_texts.cpp:31
 msgid "Zeichnet eine Audio-Wellenform als Linie (Oszilloskop). „Wave“ kommt von „Audio Waveform“."
 msgstr ""
@@ -2914,11 +2926,11 @@ msgstr ""
 msgid "Zuerst entlang"
 msgstr ""
 
-#: node_info_texts.cpp:166
+#: node_info_texts.cpp:168
 msgid "Zufallswert, der sich im eingestellten Takt ändert, auf Wunsch weich überblendet. Mit Seed wiederholbar."
 msgstr ""
 
-#: node_info_texts.cpp:112
+#: node_info_texts.cpp:114
 msgid "Zufällig aufleuchtende Pixel, blinkend oder weich überblendend, zwischen zwei Farben."
 msgstr ""
 

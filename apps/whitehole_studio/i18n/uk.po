@@ -334,7 +334,7 @@ msgstr "2D-матриця"
 msgid "2D-Matrix 8x8"
 msgstr "2D-матриця 8x8"
 
-#: main_window_actions.cpp:165
+#: main_window_actions.cpp:168
 msgid "3D"
 msgstr "3D"
 
@@ -574,7 +574,7 @@ msgstr "Art-Net, sACN і DDP виходять через цю карту. За �
 msgid "Art-Net-Port (UDP):"
 msgstr "Порт Art-Net (UDP):"
 
-#: main_window_actions.cpp:162 settings_dialog.cpp:62
+#: main_window_actions.cpp:165 settings_dialog.cpp:62
 msgid "Audio"
 msgstr "Аудіо"
 
@@ -790,7 +790,7 @@ msgstr "Зображення на сцені: один колір для кож�
 msgid "Bildrate (fps)"
 msgstr "Частота кадрів (fps)"
 
-#: node_info_texts.cpp:122
+#: node_info_texts.cpp:124
 msgid "Bis zu acht Kometen gleichzeitig, jeder mit eigener Geschwindigkeit und eigenem Startpunkt. „Count“ ist die Zahl, „Tail length“ die Länge des Schweifs. Für Strips."
 msgstr "До восьми комет одночасно, кожна зі своєю швидкістю й початком. «Count» — кількість, «Tail length» — довжина хвоста. Для стрічок."
 
@@ -818,7 +818,7 @@ msgstr "Ширина"
 msgid "Byte %1–%2"
 msgstr "Байт %1–%2"
 
-#: node_info_texts.cpp:118
+#: node_info_texts.cpp:120
 msgid "Bänder aus Licht laufen die gewählte Achse entlang. „Frequency“ ist die Zahl der Wellen über die Länge, „Sharpness“ macht aus der weichen Welle schmale Pulse. Für Strips."
 msgstr "Смуги світла біжать уздовж вибраної осі. «Frequency» — кількість хвиль на довжині, «Sharpness» перетворює м’яку хвилю на вузькі імпульси. Для стрічок."
 
@@ -918,6 +918,10 @@ msgstr "Кабель починається з цього боку, а не з �
 msgid "Das Kabel läuft ohne Rücksprung von Ring zu Ring: unten vorwärts, den nächsten Ring rückwärts ..."
 msgstr "Кабель переходить від кільця до кільця без повернення: нижнє вперед, наступне назад ..."
 
+#: node_info_texts.cpp:170
+msgid "Das Pong-Spiel als Rechen-Node: Ball, Schläger, Punkte und Treffer als Werte. Computer oder Eingang spielen, auch im Takt der Musik. Gezeichnet wird es von „Pong Display“."
+msgstr "Гра Pong як обчислювальний вузол: м'яч, ракетки, рахунок і удари як значення. Грає комп'ютер або вхід, також у такт музики. Малює її «Pong Display»."
+
 #: main_window.cpp:212
 msgid "Das Projekt wurde geändert. Änderungen verwerfen?"
 msgstr "Проєкт змінено. Відкинути зміни?"
@@ -954,7 +958,7 @@ msgstr "Видалити Look «%1»?"
 msgid "Den aktuellen Effekt als Look in die Liste legen (Strg+L)"
 msgstr "Додати поточний ефект до списку як Look (Ctrl+L)"
 
-#: node_info_texts.cpp:146
+#: node_info_texts.cpp:148
 msgid "Der Ausgang: Was hier ankommt, wird auf die LEDs gesendet. Mit „Mode“ in einen Bereich skalieren oder als Fenster ausschneiden, plus Helligkeit."
 msgstr "Вихід: усе, що сюди надходить, надсилається на LED. Через «Mode» масштабується в область або вирізається як вікно, плюс яскравість."
 
@@ -1042,7 +1046,7 @@ msgstr "Число перед назвою — це збережене знач�
 msgid "Die neue Sprache gilt nach einem Neustart von WhiteHoleFX. Jetzt neu starten?\n(Nicht gespeicherte Änderungen werden vorher abgefragt.)"
 msgstr "Нова мова діятиме після перезапуску WhiteHoleFX. Перезапустити зараз?\n(Про незбережені зміни буде запитано заздалегідь.)"
 
-#: node_info_texts.cpp:172
+#: node_info_texts.cpp:176
 msgid "Die vergangene Zeit in Sekunden, mit Tempo-Faktor und Versatz. Zum Antreiben von Bewegungen."
 msgstr "Минулий час у секундах, з коефіцієнтом темпу та зсувом. Для керування рухом."
 
@@ -1142,7 +1146,7 @@ msgstr "Кабель можна провести лише між сумісни�
 msgid "Ein Klick lädt den Look nur vor. GO (Leertaste) startet dann die Überblendung."
 msgstr "Клік лише попередньо завантажує Look. Перехід починається по GO (пробіл)."
 
-#: node_info_texts.cpp:116
+#: node_info_texts.cpp:118
 msgid "Ein Kopf läuft die gewählte Achse entlang, dahinter ein verblassender Schweif. „Speed“ sind Durchläufe pro Sekunde (negativ = rückwärts), „Ping-pong“ lässt ihn an den Enden umkehren. Für Strips."
 msgstr "Голова біжить уздовж вибраної осі, за нею згасаючий хвіст. «Speed» — проходів за секунду (від’ємне = назад), «Ping-pong» розвертає її на кінцях. Для стрічок."
 
@@ -1162,7 +1166,7 @@ msgstr "Бокс (прямокутник або паралелепіпед) з �
 msgid "Eine Einführung in die Bedienung, in der gewählten Sprache"
 msgstr "Вступ до роботи з програмою обраною мовою"
 
-#: node_info_texts.cpp:150
+#: node_info_texts.cpp:152
 msgid "Eine Farbe als Wert, mit Farbton-Verschiebung, Sättigung und Helligkeit. Speist Farb-Eingänge anderer Nodes."
 msgstr "Колір як значення, зі зсувом відтінку, насиченістю та яскравістю. Живить колірні входи інших нод."
 
@@ -1170,7 +1174,7 @@ msgstr "Колір як значення, зі зсувом відтінку, н
 msgid "Eine Gruppe heißt schon \"%1\"."
 msgstr "Група з назвою \"%1\" уже існує."
 
-#: node_info_texts.cpp:134
+#: node_info_texts.cpp:136
 msgid "Eine Kugel (Kreis) mit weichem Rand, Innen- und Außenfarbe. „Space“ wählt flach, Volumen oder automatisch nach Aufbau."
 msgstr "Куля (коло) з м'яким краєм, внутрішнім і зовнішнім кольором. «Space» обирає плоский, об'ємний або автоматичний режим залежно від конструкції."
 
@@ -1178,7 +1182,7 @@ msgstr "Куля (коло) з м'яким краєм, внутрішнім і �
 msgid "Eine Region ist ein Rechteck der Bühne. Ein Output mit dieser Region als Ziel bespielt alle LEDs darin. Die Angaben sind Prozent der ganzen Bühne."
 msgstr "Регіон — це прямокутник сцени. Output із цим регіоном як ціллю керує всіма LED у ньому. Значення вказано у відсотках від усієї сцени."
 
-#: node_info_texts.cpp:128
+#: node_info_texts.cpp:130
 msgid "Eine Scan-Linie, die über das Bild läuft. Position, Breite, Weichheit und Winkel einstellbar; mit „Position“ lässt sie sich steuern."
 msgstr "Лінія сканування, що рухається по зображенню. Позиція, ширина, м'якість і кут налаштовуються; позицією її можна керувати."
 
@@ -1186,11 +1190,11 @@ msgstr "Лінія сканування, що рухається по зобра
 msgid "Eine Spirale (Helix) aus einer oder mehreren Strähnen, die sich um eine senkrechte Achse dreht. Für 3D-Aufbauten."
 msgstr "Спіраль (геліс) з однієї чи кількох ниток, що обертається навколо вертикальної осі. Для 3D-конструкцій."
 
-#: node_info_texts.cpp:132
+#: node_info_texts.cpp:134
 msgid "Eine einfarbige Fläche. Der einfachste Generator, gut als Hintergrund oder Test."
 msgstr "Однокольорова поверхня. Найпростіший генератор, добре підходить як тло або для тесту."
 
-#: node_info_texts.cpp:164
+#: node_info_texts.cpp:166
 msgid "Eine feste Zahl. Praktisch, um mehrere Parameter mit demselben Wert zu speisen."
 msgstr "Фіксоване число. Зручно, щоб живити кілька параметрів одним значенням."
 
@@ -1318,7 +1322,7 @@ msgstr "Кольорові точки перед нодами в палітрі:
 msgid "Farbreihenfolge"
 msgstr "Порядок кольорів"
 
-#: node_info_texts.cpp:152
+#: node_info_texts.cpp:154
 msgid "Farbverlauf aus bis zu vier Farben. „Position“ wählt die Stelle, oder er läuft von selbst im eingestellten Tempo."
 msgstr "Градієнт із чотирьох кольорів. «Position» обирає місце, або він рухається сам з заданим темпом."
 
@@ -1394,7 +1398,7 @@ msgstr "Вільна нотатка до цього cue; вона відобра
 msgid "Front"
 msgstr "Спереду"
 
-#: node_info_texts.cpp:124
+#: node_info_texts.cpp:126
 msgid "Funkeln: Einzelne Zellen blitzen auf und klingen ab, jede in eigenem Takt. „Cells“ stellt man auf die LED-Zahl, „Density“ bestimmt, wie viele Zellen funkeln. Für Strips."
 msgstr "Мерехтіння: окремі комірки спалахують і згасають, кожна у своєму темпі. «Cells» — кількість світлодіодів, «Density» визначає, скільки комірок мерехтить. Для стрічок."
 
@@ -1486,7 +1490,7 @@ msgstr "Вибраний нод: лише нод, вибраний у редак
 msgid "Gewähltes Fixture als Vorlage speichern …"
 msgstr "Зберегти вибрану фікстуру як шаблон …"
 
-#: node_info_texts.cpp:170
+#: node_info_texts.cpp:174
 msgid "Glättet einen Wert: Er folgt dem Eingang mit einer Zeitkonstante, statt zu springen."
 msgstr "Згладжує значення: воно слідує за входом із постійною часу, замість того щоб стрибати."
 
@@ -1598,7 +1602,7 @@ msgstr "Залишає цей нод у вікні, навіть якщо в р�
 msgid "Höhe"
 msgstr "Висота"
 
-#: node_info_texts.cpp:156
+#: node_info_texts.cpp:158
 msgid "Hüllkurve (ADSR): Aus einem Schalter wird ein weicher Verlauf mit Attack, Decay, Sustain und Release. Auch als Einzelimpuls."
 msgstr "Огинаюча (ADSR): із перемикача робить м'який перебіг з Attack, Decay, Sustain і Release. Також як одиночний імпульс."
 
@@ -1774,11 +1778,11 @@ msgstr "Накладає зображення B на A. Режим визнач�
 msgid "Leuchtende LEDs mit weichem Schein, Farben addieren sich; nichts verdeckt etwas"
 msgstr "Світні LED з м'яким сяйвом, кольори додаються; ніщо нічого не затуляє"
 
-#: node_info_texts.cpp:144
+#: node_info_texts.cpp:146
 msgid "Liest drei oder vier DMX-Kanäle (Art-Net oder sACN) als Farbe, wahlweise RGB oder RGB mit Dimmer."
 msgstr "Читає три або чотири канали DMX (Art-Net чи sACN) як колір, на вибір RGB або RGB із діммером."
 
-#: node_info_texts.cpp:142
+#: node_info_texts.cpp:144
 msgid "Liest einen DMX-Kanal (Art-Net oder sACN) als Zahl. Mit Umrechnung auf einen Bereich, 16-Bit-Betrieb und Verhalten bei Signalverlust."
 msgstr "Читає один канал DMX (Art-Net чи sACN) як число. З перерахунком у діапазон, 16-бітним режимом і поведінкою при втраті сигналу."
 
@@ -1786,7 +1790,7 @@ msgstr "Читає один канал DMX (Art-Net чи sACN) як число. 
 msgid "Linearer Farbverlauf von Farbe A nach Farbe B in einem einstellbaren Winkel."
 msgstr "Лінійний градієнт від кольору A до кольору B під налаштовуваним кутом."
 
-#: node_info_texts.cpp:130
+#: node_info_texts.cpp:132
 msgid "Linien als Sinuswellen, die sich bewegen (Anzahl, Amplitude, Frequenz, Tempo, Phasenversatz)."
 msgstr "Лінії як синусоїди, що рухаються (кількість, амплітуда, частота, темп, зсув фази)."
 
@@ -2186,7 +2190,7 @@ msgstr "Рівень діапазону частот (Від–До в Гц) а�
 msgid "Pegel im &Editor"
 msgstr "Рівні в &редакторі"
 
-#: node_info_texts.cpp:126
+#: node_info_texts.cpp:128
 msgid "Pegelbalken: füllt die gewählte Achse bis „Level“ (0 bis 1), unten „Color low“, oben „Color high“. „Level“ lässt sich mit „Audio Level“ oder einem LFO steuern. Für Strips."
 msgstr "Індикатор рівня: заповнює вибрану вісь до «Level» (від 0 до 1), унизу «Color low», угорі «Color high». «Level» можна керувати через «Audio Level» або LFO. Для стрічок."
 
@@ -2194,7 +2198,7 @@ msgstr "Індикатор рівня: заповнює вибрану вісь 
 msgid "Perspektive"
 msgstr "Перспектива"
 
-#: node_info_texts.cpp:108
+#: node_info_texts.cpp:110
 msgid "Plasma: Weich ineinanderfließende, wabernde Farbflächen. Skalierung, Tempo und Tiefe einstellbar."
 msgstr "Плазма: м'яко перетікаючі, хвилясті кольорові плями. Масштаб, темп і глибина налаштовуються."
 
@@ -2294,11 +2298,11 @@ msgstr "Показувати сітку в попередньому перегл
 msgid "Rasterweite in Layout-Einheiten"
 msgstr "Крок сітки в одиницях Layout"
 
-#: node_info_texts.cpp:160
+#: node_info_texts.cpp:162
 msgid "Rechnet einen Wert von einem Bereich in einen anderen um (In min/max auf Out min/max), auf Wunsch begrenzt."
 msgstr "Перераховує значення з одного діапазону в інший (з In min/max в Out min/max), за бажанням з обмеженням."
 
-#: node_info_texts.cpp:162
+#: node_info_texts.cpp:164
 msgid "Rechnet mit zwei Zahlen: Addieren, Subtrahieren, Multiplizieren, Dividieren, Minimum, Maximum und weitere."
 msgstr "Рахує з двома числами: додавання, віднімання, множення, ділення, мінімум, максимум та інше."
 
@@ -2362,11 +2366,11 @@ msgstr "Перемикач"
 msgid "Schnellwahl"
 msgstr "Швидкий вибір"
 
-#: node_info_texts.cpp:168
+#: node_info_texts.cpp:172
 msgid "Schrittfolge mit bis zu acht Werten. Jedes Einschalten von „Advance“ geht einen Schritt weiter (vorwärts, rückwärts, hin und her oder zufällig)."
 msgstr "Послідовність до восьми значень. Кожне вмикання «Advance» робить крок далі (вперед, назад, туди й назад або випадково)."
 
-#: node_info_texts.cpp:158
+#: node_info_texts.cpp:160
 msgid "Schwingung (LFO): Sinus, Dreieck, Sägezahn oder Rechteck mit Frequenz, Phase und Wertebereich. Der Klassiker zum Bewegen von Parametern."
 msgstr "Коливання (LFO): синус, трикутник, пилка або прямокутник із частотою, фазою та діапазоном значень. Класика для руху параметрів."
 
@@ -2470,6 +2474,10 @@ msgstr "Спектр (32 смуги) аудіовходу. Підключаєт�
 msgid "Spiegelt das Bild an einer Linie in x, y und/oder z. Mit „Use other half“ ist die andere Hälfte die Vorlage."
 msgstr "Віддзеркалює зображення відносно лінії по x, y та/або z. З «Use other half» зразком слугує інша половина."
 
+#: main_window_actions.cpp:162
+msgid "Spiele"
+msgstr "Ігри"
+
 #: fixture_library_page.cpp:103
 msgid "Spirale (Säule)"
 msgstr "Спіраль (колона)"
@@ -2502,7 +2510,7 @@ msgstr "Запуск …"
 msgid "Statt der Zeit, die beim Look gespeichert ist"
 msgstr "Замість часу, що збережений у Look"
 
-#: node_info_texts.cpp:136
+#: node_info_texts.cpp:138
 msgid "Sternenhimmel: Funkelnde Sterne mit einstellbarer Dichte, Größe und Funkeltempo, auf Wunsch langsam abwärts driftend."
 msgstr "Зоряне небо: мерехтливі зірки з налаштовуваною щільністю, розміром і темпом мерехтіння, за бажанням повільно зміщуються вниз."
 
@@ -2550,7 +2558,7 @@ msgstr "Колона 12x20"
 msgid "TESTMODUS: %1"
 msgstr "ТЕСТОВИЙ РЕЖИМ: %1"
 
-#: node_info_texts.cpp:148
+#: node_info_texts.cpp:150
 msgid "Taktgeber: Liefert im eingestellten Tempo (BPM) Impulse, Phase und Zähler. Läuft ohne Audio."
 msgstr "Тактовий генератор: видає імпульси, фазу та лічильник із заданим темпом (BPM). Працює без аудіо."
 
@@ -2590,7 +2598,7 @@ msgstr "Тест"
 msgid "Testbild"
 msgstr "Тестове зображення"
 
-#: node_info_texts.cpp:110
+#: node_info_texts.cpp:112
 msgid "Testbild für den Aufbau: x wird rot, y grün, z blau. So sieht man, welche Seite wo liegt und ob Verkabelung und Startecke stimmen."
 msgstr "Тестове зображення для монтажу: x стає червоним, y зеленим, z синім. Так видно, де яка сторона і чи правильні підключення та стартовий кут."
 
@@ -2606,7 +2614,7 @@ msgstr "Завершити тестовий режим"
 msgid "Text"
 msgstr "Текст"
 
-#: node_info_texts.cpp:138
+#: node_info_texts.cpp:140
 msgid "Text als Laufschrift oder statisch. Tempo, Ausrichtung, Höhe und Farben einstellbar."
 msgstr "Текст як рядок, що біжить, або статичний. Темп, вирівнювання, висота й кольори налаштовуються."
 
@@ -2674,7 +2682,7 @@ msgstr "Розірвати зв'язок"
 msgid "Verdreht das Bild entlang einer Achse, je weiter weg, desto stärker (Winkel pro Einheit)."
 msgstr "Закручує зображення вздовж осі, тим сильніше, чим далі (кут на одиницю)."
 
-#: node_info_texts.cpp:154
+#: node_info_texts.cpp:156
 msgid "Vergleicht einen Wert mit einer Schwelle (mit Hysterese) und liefert Ja/Nein sowie Impulse beim Überschreiten und Unterschreiten."
 msgstr "Порівнює значення з порогом (з гістерезисом) і дає так/ні, а також імпульси при перевищенні й падінні нижче."
 
@@ -2686,7 +2694,7 @@ msgstr "Огрублює зображення до сітки клітинок (
 msgid "Verkabelung"
 msgstr "Підключення"
 
-#: node_info_texts.cpp:120
+#: node_info_texts.cpp:122
 msgid "Verlauf über drei Farben (A → B → C → A) entlang der gewählten Achse, mehrfach wiederholbar und auf Wunsch durchlaufend. Für Strips."
 msgstr "Градієнт із трьох кольорів (A → B → C → A) уздовж вибраної осі, з повторенням і за бажанням прокруткою. Для стрічок."
 
@@ -2738,7 +2746,7 @@ msgstr "Очікування після завершення попереднь�
 msgid "Weiche, ineinanderfließende Kugeln (Metaballs), die sich bewegen. Anzahl, Größe und Tempo einstellbar."
 msgstr "М'які кулі (метаболи), що перетікають одна в одну й рухаються. Кількість, розмір і темп налаштовуються."
 
-#: node_info_texts.cpp:140
+#: node_info_texts.cpp:142
 msgid "Weiches Rauschen (Value Noise) als Muster aus zwei Farben. Skalierung, Tempo, Dichte und Weichheit einstellbar."
 msgstr "М'який шум (Value Noise) як візерунок із двох кольорів. Масштаб, темп, щільність і м'якість налаштовуються."
 
@@ -2758,7 +2766,7 @@ msgstr "Які канали займає фікстура: всесвіт і п�
 msgid "Wellenform des Audio-Eingangs (ein kurzes Zeitfenster, auf Wunsch an der steigenden Flanke ausgerichtet). Wird an „Oscilloscope“ angeschlossen."
 msgstr "Форма хвилі аудіовходу (короткий часовий проміжок, за бажанням вирівняний по висхідному фронту). Підключається до «Oscilloscope»."
 
-#: node_info_texts.cpp:114
+#: node_info_texts.cpp:116
 msgid "Wellenringe wie Wassertropfen: Ringe breiten sich von zufälligen Punkten aus (Tropfen pro Sekunde, Tempo, Ringbreite)."
 msgstr "Хвильові кільця, як краплі води: кільця розходяться від випадкових точок (крапель за секунду, темп, ширина кільця)."
 
@@ -2850,6 +2858,10 @@ msgstr "Символи, напр. для ноди Text"
 msgid "Zeichnet das Audio-Spektrum als Balken, von unten oder von der Mitte aus. „Spectrum“ kommt von „Audio Spectrum“."
 msgstr "Малює спектр аудіо стовпчиками, знизу або від центру. «Spectrum» надходить від «Audio Spectrum»."
 
+#: node_info_texts.cpp:108
+msgid "Zeichnet ein Pong-Spiel (Ball, Schläger, Mittellinie, Punkte als einzelne LEDs) aus den Werten des Nodes „Pong“. Seitenverhältnis und Randweichheit einstellbar."
+msgstr "Малює гру Pong (м'яч, ракетки, центральна лінія, рахунок окремими світлодіодами) за значеннями вузла «Pong». Співвідношення сторін і м'якість країв налаштовуються."
+
 #: node_info_texts.cpp:31
 msgid "Zeichnet eine Audio-Wellenform als Linie (Oszilloskop). „Wave“ kommt von „Audio Waveform“."
 msgstr "Малює форму аудіохвилі лінією (осцилограф). «Wave» надходить від «Audio Waveform»."
@@ -2914,11 +2926,11 @@ msgstr "Додати до обраного"
 msgid "Zuerst entlang"
 msgstr "Спочатку вздовж"
 
-#: node_info_texts.cpp:166
+#: node_info_texts.cpp:168
 msgid "Zufallswert, der sich im eingestellten Takt ändert, auf Wunsch weich überblendet. Mit Seed wiederholbar."
 msgstr "Випадкове значення, що змінюється в заданому такті, за бажанням плавно. Відтворюється через Seed."
 
-#: node_info_texts.cpp:112
+#: node_info_texts.cpp:114
 msgid "Zufällig aufleuchtende Pixel, blinkend oder weich überblendend, zwischen zwei Farben."
 msgstr "Пікселі, що спалахують випадково, блимаючи чи плавно змінюючись, між двома кольорами."
 

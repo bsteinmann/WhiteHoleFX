@@ -13,6 +13,8 @@ Die Beispiele liegen in `examples/`, nach Themen in Untergruppen. Im Studio ersc
 | Effekte (2D) | `effekte/funken.whfx` | Funken (Particles) |
 | Effekte (2D) | `effekte/kaleidoskop.whfx` | Metaballs im Kaleidoskop |
 | Effekte (2D) | `effekte/laufschrift.whfx` | Laufschrift |
+| Spiele | `spiele/pong.whfx` | Pong, Rechner gegen Rechner, Punkte als einzelne LEDs |
+| Spiele | `spiele/pong-takt.whfx` | Pong im Takt: zwei Schläge je Überquerung, Treffer lassen das Bild aufleuchten |
 | Audio | `audio/audio.whfx` | Equalizer mit pulsierendem Hintergrund |
 | Audio | `audio/takt.whfx` | Effekte im Takt der Musik |
 | Audio | `audio/oszilloskop.whfx` | Wellenform als Oszilloskop |

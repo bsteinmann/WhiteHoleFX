@@ -158,6 +158,9 @@ QString groupTitle(const QString& folder) {
     if (folder == QStringLiteral("effekte")) {
         return QObject::tr("Effekte (2D)");
     }
+    if (folder == QStringLiteral("spiele")) {
+        return QObject::tr("Spiele");
+    }
     if (folder == QStringLiteral("audio")) {
         return QObject::tr("Audio");
     }
