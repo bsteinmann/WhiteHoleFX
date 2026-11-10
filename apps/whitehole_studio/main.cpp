@@ -236,9 +236,11 @@ int main(int argc, char** argv) {
         std::printf("Update-Prüfung: %s\n", update.isEmpty() ? "ok" : "FEHLER");
         const QString paramView = update.isEmpty() ? window.exerciseParameterView() : QString{};
         std::printf("Parameterfenster: %s\n", paramView.isEmpty() ? "ok" : "FEHLER");
-        const QString splashResult = paramView.isEmpty() ? studio::splashProblem() : QString{};
+        const QString groupParams = paramView.isEmpty() ? window.exerciseGroupParameters() : QString{};
+        std::printf("Gruppen-Regler: %s\n", groupParams.isEmpty() ? "ok" : "FEHLER");
+        const QString splashResult = groupParams.isEmpty() ? studio::splashProblem() : QString{};
         std::printf("Startbild: %s\n", splashResult.isEmpty() ? "ok" : "FEHLER");
-        for (const QString& failure : {selection, created, transparency, controls, dmx, audio, palette, live, settingsResult, stage, view3d, menus, cues, languages, update, paramView, splashResult}) {
+        for (const QString& failure : {selection, created, transparency, controls, dmx, audio, palette, live, settingsResult, stage, view3d, menus, cues, languages, update, paramView, groupParams, splashResult}) {
             if (!failure.isEmpty()) {
                 std::fprintf(stderr, "Rauchtest fehlgeschlagen: %s\n", failure.toUtf8().constData());
                 return 1;

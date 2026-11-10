@@ -1,5 +1,8 @@
 # Änderungen
 
+## 0.75.0
+
+- **Gruppen-Regler im Parameterfenster.** Wählt man die Kachel einer zugeklappten Gruppe, zeigt das Parameterfenster einen Eintrag mit dem Namen der Gruppe und genau den Reglern, die im Dialog „Gruppieren“ (oder „Gruppe bearbeiten …“) angehakt wurden, mit der dort vergebenen Beschriftung. Die Regler wirken auf die Parameter der Nodes in der Gruppe (Schieber, Farbe, Ja/Nein wie sonst, auch Zurücksetzen); Anheften und Suchen funktionieren. Aufgeklappt erscheinen die Nodes einzeln wie bisher. Zum Hineinschauen: Doppelklick auf die Kachel klappt auf. Die Rechnung steht in `runtime/group_infos.hpp` (`applyGroups`, Schlüssel `@<NodeId>/<Parameter>`), mit Test; Rauchtest „Gruppen-Regler“.
 ## 0.74.0
 
 - **Bibliothek: Gruppen und Presets in der Palette.** Die Palette links zeigt über den Node-Kategorien die Rubriken **Gruppen** und **Presets** (Suche und Ziehen wie bei Nodes). Doppelklick oder auf die Fläche ziehen fügt ein; Rechtsklick fügt ein oder löscht. Eine Gruppe wird eingefügt als zugeklappte Kachel (Name wird bei Bedarf „Name 2“).

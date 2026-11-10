@@ -10,7 +10,7 @@ msgstr ""
 msgid "\nRechtsklick: Favorit umschalten"
 msgstr "\nClic droit : ajouter/retirer des favoris"
 
-#: main_window.cpp:284
+#: main_window.cpp:289
 msgid "   |   AUSGABE AN"
 msgstr "   |   SORTIE ACTIVE"
 
@@ -22,11 +22,11 @@ msgstr "   |   Nœuds audio dans le projet, entrée désactivée (Réglages)"
 msgid "   |   Audio: %1"
 msgstr "   |   Audio : %1"
 
-#: main_window.cpp:284
+#: main_window.cpp:289
 msgid "   |   Ausgabe aus (%1 Pakete nicht gesendet)"
 msgstr "   |   Sortie désactivée (%1 paquets non envoyés)"
 
-#: main_window.cpp:274
+#: main_window.cpp:279
 msgid "   |   BLACKOUT"
 msgstr "   |   BLACKOUT"
 
@@ -38,15 +38,15 @@ msgstr "   |   Entrée DMX %1 : %2 paquets"
 msgid "   |   DMX-Nodes im Projekt, Eingang aus (Einstellungen)"
 msgstr "   |   Nœuds DMX dans le projet, entrée désactivée (Réglages)"
 
-#: main_window.cpp:279
+#: main_window.cpp:284
 msgid "   |   EINGANG FEHLT – LEDs aus"
 msgstr "   |   ENTRÉE MANQUANTE – LED éteintes"
 
-#: main_window.cpp:276
+#: main_window.cpp:281
 msgid "   |   Master %1 %"
 msgstr "   |   Master %1 %"
 
-#: main_window.cpp:271
+#: main_window.cpp:276
 msgid "   |   TESTMODUS"
 msgstr "   |   MODE TEST"
 
@@ -90,7 +90,7 @@ msgstr " · dépasse le dernier univers"
 msgid " · nicht gepatcht"
 msgstr " · non patchée"
 
-#: node_palette_library.cpp:105
+#: node_palette_library.cpp:106
 msgid "\"%1\" aus der Bibliothek löschen?"
 msgstr "Supprimer \"%1\" de la bibliothèque ?"
 
@@ -126,11 +126,11 @@ msgstr "%1 (introuvable)"
 msgid "%1 LEDs · Größe %2 × %3 × %4 · %5 Kanäle (RGB), rund %6 Universe(s)"
 msgstr "%1 LED · taille %2 × %3 × %4 · %5 canaux (RVB), environ %6 univers"
 
-#: main_window.cpp:260
+#: main_window.cpp:265
 msgid "%1 LEDs, Frame %2 (verworfen %3), Pakete %4, Sendefehler %5"
 msgstr "%1 LED, image %2 (perdues %3), paquets %4, erreurs d'envoi %5"
 
-#: main_window.cpp:258
+#: main_window.cpp:263
 msgid "%1 LEDs, angehalten"
 msgstr "%1 LED, arrêté"
 
@@ -242,11 +242,11 @@ msgstr "Enregi&strer"
 msgid "&Stage Config"
 msgstr "&Stage Config"
 
-#: main_window.cpp:147 main_window_actions.cpp:55
+#: main_window.cpp:151 main_window_actions.cpp:55
 msgid "&Start"
 msgstr "&Démarrer"
 
-#: main_window.cpp:147
+#: main_window.cpp:151
 msgid "&Stopp"
 msgstr "&Arrêter"
 
@@ -306,11 +306,11 @@ msgstr "(aucun préréglage)"
 msgid "(leer)"
 msgstr "(vide)"
 
-#: node_palette_library.cpp:50
+#: node_palette_library.cpp:51
 msgid "(noch keine Gruppen)"
 msgstr "(pas encore de groupes)"
 
-#: node_palette_library.cpp:52
+#: node_palette_library.cpp:53
 msgid "(noch keine Presets)"
 msgstr "(pas encore de presets)"
 
@@ -914,7 +914,7 @@ msgstr "Le câble commence de ce côté plutôt que du côté opposé"
 msgid "Das Kabel läuft ohne Rücksprung von Ring zu Ring: unten vorwärts, den nächsten Ring rückwärts ..."
 msgstr "Le câble passe d'anneau en anneau sans retour : l'anneau du bas en avant, le suivant en arrière ..."
 
-#: main_window.cpp:207
+#: main_window.cpp:212
 msgid "Das Projekt wurde geändert. Änderungen verwerfen?"
 msgstr "Le projet a été modifié. Abandonner les modifications ?"
 
@@ -1050,7 +1050,7 @@ msgstr "La modification prend effet immédiatement après « OK »."
 msgid "Diese Form ist ungültig."
 msgstr "Cette forme est invalide."
 
-#: main_window.cpp:184 parameter_panel.cpp:245
+#: main_window.cpp:189 parameter_panel.cpp:245
 msgid "Dieser Node hat keine einstellbaren Parameter."
 msgstr "Ce nœud n'a pas de paramètres réglables."
 
@@ -1066,11 +1066,11 @@ msgstr "Ce projet n'a pas de paramètres réglables."
 msgid "Digitaler Regen: Spalten mit fallenden Leuchtspuren wie in der Matrix. Dichte, Tempo und Länge einstellbar."
 msgstr "Digital rain: columns of falling light trails like in the Matrix. Density, speed and trail length are adjustable."
 
-#: node_palette_library.cpp:51
+#: node_palette_library.cpp:52
 msgid "Doppelklick oder auf die Fläche ziehen: Gruppe einfügen\nRechtsklick: löschen"
 msgstr "Double-clic ou glisser sur la zone : insérer le groupe\nClic droit : supprimer"
 
-#: node_palette_library.cpp:53
+#: node_palette_library.cpp:54
 msgid "Doppelklick oder auf die Fläche ziehen: Nodes einfügen\nRechtsklick: löschen"
 msgstr "Double-clic ou glisser sur la zone : insérer les nodes\nClic droit : supprimer"
 
@@ -1194,7 +1194,7 @@ msgstr "A fixed number. Handy for feeding the same value to several parameters."
 msgid "Einen gespeicherten Controller als neuen Controller in dieses Projekt holen"
 msgstr "Ajouter un contrôleur enregistré à ce projet comme nouveau contrôleur"
 
-#: node_palette_library.cpp:98
+#: node_palette_library.cpp:99
 msgid "Einfügen"
 msgstr "Insérer"
 
@@ -1374,7 +1374,7 @@ msgstr "Forme"
 msgid "Fragt bei GitHub nach der neuesten Version (nur die Versionsnummer, nichts wird installiert)"
 msgstr "Demande à GitHub la dernière version (uniquement le numéro de version ; rien n'est installé)"
 
-#: main_window.cpp:332
+#: main_window.cpp:337
 msgid "Frame"
 msgstr "Image"
 
@@ -1502,7 +1502,7 @@ msgstr "Déplier le groupe"
 msgid "Gruppe auflösen"
 msgstr "Dissoudre le groupe"
 
-#: node_palette_library.cpp:99
+#: node_palette_library.cpp:100
 msgid "Gruppe aus der Bibliothek löschen …"
 msgstr "Supprimer le groupe de la bibliothèque …"
 
@@ -1666,7 +1666,7 @@ msgstr "Aucun fixture sélectionné."
 msgid "Kein GPU-Adapter: %1"
 msgstr "Aucun adaptateur GPU : %1"
 
-#: main_window.cpp:256
+#: main_window.cpp:261
 msgid "Kein Projekt"
 msgstr "Aucun projet"
 
@@ -1726,7 +1726,7 @@ msgstr "LED par anneau"
 msgid "LEDs x y z"
 msgstr "LED x y z"
 
-#: main_window.cpp:268
+#: main_window.cpp:273
 msgid "LIVE   |   "
 msgstr "LIVE   |   "
 
@@ -1858,7 +1858,7 @@ msgstr "Makes the image flash: rate in Hz, share of on-time and an optional fade
 msgid "Lässt ein Testmuster über diese Form laufen (nur hier, nichts wird gesendet)"
 msgstr "Fait défiler un motif de test sur cette forme (ici seulement, rien n’est envoyé)"
 
-#: look_panel.cpp:62 node_palette_library.cpp:105
+#: look_panel.cpp:62 node_palette_library.cpp:106
 msgid "Löschen"
 msgstr "Supprimer"
 
@@ -2022,7 +2022,7 @@ msgstr "Nouveau projet"
 msgid "Neues Projekt (Strg+N)"
 msgstr "Nouveau projet (Ctrl+N)"
 
-#: main_window.cpp:129
+#: main_window.cpp:133
 msgid "Neues Projekt (Strg+N), Projekt öffnen (Strg+O) oder eine .whfx-Datei hierher ziehen.\n\n%1"
 msgstr "Nouveau projet (Ctrl+N), ouvrir un projet (Ctrl+O) ou glisser un fichier .whfx ici.\n\n%1"
 
@@ -2150,7 +2150,7 @@ msgstr "Palette"
 msgid "Palette &farbig"
 msgstr "&Palette en couleur"
 
-#: main_window.cpp:93
+#: main_window.cpp:97
 msgid "Parameter"
 msgstr "Paramètres"
 
@@ -2230,11 +2230,11 @@ msgstr "Remplacer le préréglage"
 msgid "Preset löschen"
 msgstr "Supprimer le préréglage"
 
-#: node_palette_library.cpp:100
+#: node_palette_library.cpp:101
 msgid "Preset löschen …"
 msgstr "Supprimer le preset …"
 
-#: node_palette.cpp:163 node_palette_library.cpp:52
+#: node_palette.cpp:163 node_palette_library.cpp:53
 msgid "Presets"
 msgstr "Presets"
 
@@ -2482,7 +2482,7 @@ msgstr "Stage Config"
 msgid "Standardgerät des Systems"
 msgstr "Périphérique par défaut du système"
 
-#: cue_panel.cpp:67 cue_panel.cpp:145 main_window.cpp:302
+#: cue_panel.cpp:67 cue_panel.cpp:145 main_window.cpp:307
 msgid "Start"
 msgstr "Démarrer"
 
@@ -2622,7 +2622,7 @@ msgstr "U%1 : %2–%3"
 msgid "Umbenennen …"
 msgstr "Renommer …"
 
-#: main_window.cpp:206
+#: main_window.cpp:211
 msgid "Ungespeicherte Änderungen"
 msgstr "Modifications non enregistrées"
 
@@ -2754,11 +2754,11 @@ msgstr "Waveform of the audio input (a short time window, optionally aligned to 
 msgid "Wellenringe wie Wassertropfen: Ringe breiten sich von zufälligen Punkten aus (Tropfen pro Sekunde, Tempo, Ringbreite)."
 msgstr "Ripples like water drops: rings spread from random points (drops per second, speed, ring width)."
 
-#: main_window.cpp:121 main_window.cpp:160
+#: main_window.cpp:125 main_window.cpp:164
 msgid "WhiteHoleFX"
 msgstr "WhiteHoleFX"
 
-#: main_window.cpp:164
+#: main_window.cpp:168
 msgid "WhiteHoleFX – %1%2"
 msgstr "WhiteHoleFX – %1%2"
 
@@ -3006,7 +3006,7 @@ msgstr "Priorité sACN"
 msgid "strecken (Stretch)"
 msgstr "étirer (Stretch)"
 
-#: main_window.cpp:163
+#: main_window.cpp:167
 msgid "unbenannt"
 msgstr "sans titre"
 

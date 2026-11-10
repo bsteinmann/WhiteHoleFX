@@ -5,6 +5,7 @@
 #include "recording_sink.hpp"
 #include "whitehole/nodes/builtin_library.hpp"
 #include "whitehole/runtime/gated_sink.hpp"
+#include "whitehole/runtime/group_infos.hpp"
 #include "whitehole/runtime/node_clipboard.hpp"
 #include "whitehole/runtime/node_preset.hpp"
 #include "whitehole/runtime/player.hpp"
@@ -161,4 +162,34 @@ TEST_CASE("Zwischenablage und Preset tragen vollständige Gruppen mit", "[player
     CHECK(rig.graph().findGroup("A 2")->members.size() == 2);
     REQUIRE(rig.player.undo().ok());
     CHECK(rig.graph().groups().size() == 1);
+}
+
+TEST_CASE("Parameteranzeige: zugeklappte Gruppe zeigt nur die nach außen geführten Regler", "[player][groups][parameters]") {
+    Rig rig;
+    const NodeId plasma = rig.graph().nodes().front().id;
+    graph::NodeGroup group = rig.group("Look");
+    group.parameters = {graph::GroupParameter{plasma, "scale", "Größe"}};
+    REQUIRE(rig.player.addNodeGroup(group).ok());
+
+    const auto all = rig.player.nodes();
+    REQUIRE(all.size() == 2);
+    const auto shown = runtime::applyGroups(rig.graph(), all);
+    REQUIRE(shown.size() == 1);
+    CHECK(shown.front().id == plasma);
+    CHECK(shown.front().title == "Look");
+    REQUIRE(shown.front().parameters.size() == 1);
+    CHECK(shown.front().parameters.front().displayName == "Größe");
+    const auto decoded = runtime::parseGroupParameterKey(shown.front().parameters.front().key);
+    REQUIRE(decoded.has_value());
+    CHECK(decoded->first == plasma);
+    CHECK(decoded->second == "scale");
+    CHECK(rig.player.setParameter(decoded->first, decoded->second, 7.0).ok());  // der Schlüssel findet den echten Parameter
+
+    // aufgeklappt: die Nodes erscheinen einzeln wie sonst
+    REQUIRE(rig.player.setNodeGroupCollapsed("Look", false).ok());
+    CHECK(runtime::applyGroups(rig.graph(), rig.player.nodes()).size() == 2);
+
+    CHECK_FALSE(runtime::parseGroupParameterKey("scale").has_value());
+    CHECK_FALSE(runtime::parseGroupParameterKey("@x/scale").has_value());
+    CHECK_FALSE(runtime::parseGroupParameterKey("@12/").has_value());
 }

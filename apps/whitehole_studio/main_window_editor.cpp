@@ -181,4 +181,42 @@ void MainWindow::onStrictInputs(bool on) {
     afterRestore();  // setzt auch den Haken im Menü auf den Stand des Players zurück, falls es nicht ging
 }
 
+QString MainWindow::exerciseGroupParameters() {
+    if (player_->project() == nullptr) {
+        return {};
+    }
+    const auto a = editor_->addNodeAtCenter("wh.generator.plasma");
+    const auto b = editor_->addNodeAtCenter("wh.transform.mirror");
+    if (!a || !b) {
+        return QStringLiteral("Gruppen-Regler: Test-Nodes nicht angelegt");
+    }
+    const auto cleanup = [&]() {
+        (void)player_->removeNodeGroup("Regler-Test");
+        (void)player_->removeNode(*a);
+        (void)player_->removeNode(*b);
+        editor_->rebuild();
+        refreshParameters();
+    };
+    refreshParameters();
+    const std::size_t before = parameters_->groupCount();
+    graph::NodeGroup group;
+    group.name = "Regler-Test";
+    group.members = {*a, *b};
+    group.parameters = {graph::GroupParameter{*a, "scale", "Größe"}};
+    if (const auto added = player_->addNodeGroup(group); !added.ok()) {
+        cleanup();
+        return QStringLiteral("Gruppen-Regler: %1").arg(QString::fromStdString(added.error().message));
+    }
+    editor_->rebuild();
+    refreshParameters();
+    QString problem;
+    if (parameters_->groupCount() + 1 != before) {
+        problem = QStringLiteral("Gruppen-Regler: %1 Einträge statt %2 (zwei Nodes werden zu einem Eintrag)").arg(parameters_->groupCount()).arg(before - 1);
+    } else if (!editor_->selectNode(*a) || parameters_->shownNode() != *a || !parameters_->groupShown(*a) || parameters_->groupShown(*b)) {
+        problem = QStringLiteral("Gruppen-Regler: die Kachel zeigt ihren Eintrag nicht");
+    }
+    cleanup();
+    return problem;
+}
+
 }  // namespace whitehole::studio

@@ -41,6 +41,7 @@
 #include "preview_controller.hpp"
 #include "preview_widget.hpp"
 #include "test_panel.hpp"
+#include "whitehole/runtime/group_infos.hpp"
 
 namespace whitehole::studio {
 
@@ -78,7 +79,10 @@ MainWindow::MainWindow(gpu::IGpuDevice* device, const QString& deviceNote, QWidg
     parameters_->setChangeHandler(
         [this](NodeId node, const std::string& key,
                graph::ParameterValue value) -> std::optional<graph::ParameterValue> {
-            const auto stored = player_->setParameter(node, key, std::move(value));
+            // Regler einer zugeklappten Gruppe tragen Node und Parameter im Schlüssel (runtime/group_infos.hpp)
+            const auto grouped = runtime::parseGroupParameterKey(key);
+            const auto stored = grouped ? player_->setParameter(grouped->first, grouped->second, std::move(value))
+                                        : player_->setParameter(node, key, std::move(value));
             if (!stored.ok()) {
                 statusBar()->showMessage(fromStd(stored.error().message), 8000);
                 return std::nullopt;
@@ -165,7 +169,8 @@ void MainWindow::updateTitle() {
 }
 
 void MainWindow::refreshParameters() {
-    parameters_->rebuild(player_->nodes());
+    parameters_->rebuild(player_->project() != nullptr ? runtime::applyGroups(player_->project()->graph, player_->nodes())
+                                                        : player_->nodes());
     parameters_->showNode(editor_->selectedNode());
 }
 

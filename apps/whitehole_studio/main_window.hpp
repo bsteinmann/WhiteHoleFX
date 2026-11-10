@@ -106,6 +106,8 @@ public:
     QString exerciseAudio();
     /// Rauchtest: Node-Palette (Filter, Ablegen, Doppelklick, Rückgängig).
     QString exercisePalette();
+    /// Rauchtest: Eine zugeklappte Gruppe erscheint im Parameterfenster als ein Eintrag mit ihren Reglern.
+    QString exerciseGroupParameters();
     /// Rauchtest: Looks speichern/ordnen/umbenennen, Live-Modus mit Überblendung, GO und Rückkehr.
     QString exerciseLive();
     QString exerciseCues();
