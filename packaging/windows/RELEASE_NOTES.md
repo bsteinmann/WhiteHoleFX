@@ -1,39 +1,54 @@
-**Testversion für Windows (64 Bit) und Linux.**
+**Vorabversion (0.x) für Windows (64 Bit) und Linux.** Alle Einzelheiten stehen in `CHANGELOG.md`.
 
 **Windows:** ZIP herunterladen, in einen eigenen Ordner entpacken, `whitehole_studio.exe` starten.
-Windows warnt vor einem nicht signierten Programm: „Weitere Informationen“ → „Trotzdem ausführen“.
 
 **Linux (Ubuntu 22.04 und neuer, Debian):** `.deb` herunterladen und mit `sudo apt install ./whiteholefx_*.deb` installieren,
 dann `whitehole_studio` starten (oder aus dem Anwendungsmenü).
 
-**Neu seit v0.22.0** (alle Einzelheiten in `CHANGELOG.md`):
+### Warum warnt Windows? (Programm nicht signiert)
 
-- **Node-Editor:** Nodes lassen sich **überbrücken** (Schalter im Kopf, Taste B), jeder Node hat ein **Info-„i“** mit Beschreibung,
-  beim Ziehen aus der Palette **rastet** ein Node auf Kabeln und Nodes **ein** (Alt schaltet das ab), die Palette zeigt
-  farbige Punkte und hebt beim Kabelziehen die passenden Nodes hervor. Zahlen-Ausgänge (LFO, Math ...) passen jetzt
-  auch an Ganzzahl-Eingänge und Auswahlfelder.
-- **Neue Nodes und Effekte:** Text, Random Pixels, Value Noise, Color Ramp, Cuelist, Master per DMX, Sphere und Box
-  wählen auf flachen Matrizen automatisch 2D, in Volumen 3D; mehrere 3D-Nodes und fünf 3D-Beispiele.
-- **Oberfläche:** Fensteranordnung wird gemerkt (#27), Stage Setup und Einstellungen als eigene Fenster, Sprachen
-  Deutsch, Englisch, Französisch und Spanisch, schnellere 3D-Vorschau, Tutorial und Menü Hilfe.
-- **Fehlersuche:** Das Studio erkennt, wenn es hängt, und schreibt einen Bericht in den Cache-Ordner (#26).
+Die `.exe` ist noch **nicht digital signiert**. Windows zeigt deshalb beim ersten Start „Der Computer wurde durch Windows
+geschützt“ (SmartScreen) oder „Unbekannter Herausgeber“. Das heißt nur: Das Programm ist neu und hat bei Microsoft noch
+keinen Ruf, nicht dass etwas daran auffällig wäre. Die Signierung ist für die Version 1.0 geplant. Bis dahin:
 
-**Bekannt:** Der **Text-Node** zeigt auf manchen Grafikkarten (etwa NVIDIA GTX 760 mit Vulkan) noch keinen Text (#13);
-dort lohnt ein Versuch mit der Umgebungsvariable `WHITEHOLEFX_GPU_BACKEND` (`vulkan`, `gl` oder `dx12`). Neu und nur in der CI, nicht von Hand
-auf Windows geprüft: Einrasten, Info-Zeichen, Bypass und farbige Palette - bitte melden, wenn etwas hakt. Die
-Node-Beschreibungen sind auf Französisch und Spanisch noch englisch.
+1. „Weitere Informationen“ → „Trotzdem ausführen“.
+2. Wer sichergehen will, prüft vorher die **Prüfsumme** (SHA-256). Sie steht in der Datei `…sha256` neben dem Download
+   und muss mit der Datei übereinstimmen, die du heruntergeladen hast. Das Programm wird ausschließlich von GitHub Actions
+   aus dem öffentlichen Quelltext gebaut, der Bau ist in den Actions des Projekts nachzulesen.
 
-**Zum Ausprobieren:** Datei → Beispiele → `looks` öffnen, „Start“ drücken, mit **F9** in den Live-Modus wechseln
-und per Klick oder Tasten 1 bis 3 zwischen den Looks überblenden.
+   Windows (PowerShell, im Ordner der Datei):
+   `Get-FileHash .\WhiteHoleFX-<version>-windows-x64.zip -Algorithm SHA256`
+   Linux: `sha256sum -c whiteholefx_*.deb.sha256`
+
+Stimmt die Prüfsumme nicht, bitte nicht starten und melden.
+
+### Neu seit v0.51.0
+
+- **Node-Editor:** Rechtsklick auf einen Ein- oder Ausgang zeigt passende Nodes und verbindet sie sofort; Skalierung am Kabel
+  (`Wert × Faktor + Offset`); Parameterfenster zeigt nur den gewählten Node, mit Suche und Anheften.
+- **Neue Nodes:** sechs 1D-Generatoren für Strips (Achse wählbar), Strobe Gate.
+- **Stage Config mit vier Reitern** (Fixtures, Layout, Ausgabe, Test): Bibliothek der Bauformen (Matrix, Kreis, Strip, Säule,
+  Ring), Drehung von Fixtures, Achsen-Griff und Drehringe in der Bühnenansicht, Einrasten an anderen Fixtures,
+  Controller-Bibliothek mit Protokoll (Art-Net, sACN, DDP) pro Controller.
+- **Windows:** Programmsymbol und Startbildschirm, Node-Editor bleibt nach dem Ablegen aus der Palette sichtbar,
+  Update-Benachrichtigung (Hilfe → Auf Updates prüfen …, erst nach Zustimmung).
+
+### Hinweise
 
 **Sicherheit:** Nach dem Start geht nichts ins Netz. Erst „Ausgabe senden“ schickt Art-Net/sACN/DDP an die im Projekt
-eingetragenen Adressen (die Beispiele zeigen auf den eigenen Rechner).
+eingetragenen Adressen. Die Suche nach Updates fragt GitHub nur, wenn du sie einschaltest oder anstößt.
 
 **Stand:** Das Programm wird automatisch auf Linux und Windows gebaut und getestet, in der CI auch in einem
 unsichtbaren Fenster bedient. Auf echter Hardware (GPU-Treiber, Controller im Netz, Maus und Bildschirm) ist es noch
 wenig erprobt. **Rückmeldungen sind willkommen** (Issues): bitte mit Windows-Version, Grafikkarte und den Schritten
 bis zum Problem.
 
+**Bekannt:** Der Text-Node zeigt auf manchen Grafikkarten (etwa NVIDIA GTX 760 mit Vulkan) noch keinen Text (#13);
+dort lohnt ein Versuch mit der Umgebungsvariable `WHITEHOLEFX_GPU_BACKEND` (`vulkan`, `gl` oder `dx12`).
+
+**Zum Ausprobieren:** Datei → Beispiele → `looks` öffnen, „Start“ drücken, mit **F9** in den Live-Modus wechseln
+und per Klick oder Tasten 1 bis 3 zwischen den Looks überblenden.
+
 **Lizenz:** PolyForm Shield 1.0.0 — kostenlos für jeden Zweck, auch für DJs und Lichttechniker auf bezahlten
 Veranstaltungen; nicht erlaubt ist, ein konkurrierendes Produkt oder einen Dienst daraus zu machen. Details in
-`LICENSE` und `NOTICE`. Änderungen: `CHANGELOG.md`.
+`LICENSE` und `NOTICE`.
