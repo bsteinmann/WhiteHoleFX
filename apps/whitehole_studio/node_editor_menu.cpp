@@ -51,7 +51,7 @@ void NodeEditor::contextMenuEvent(QContextMenuEvent* event) {
     WireItem* wire = wireAt(scenePos);
 
     if (hit.port != nullptr && hit.port->output && hit.port->type == graph::PortType::Field) {
-        const graph::PortRef port{hit.node->nodeId(), hit.port->key};
+        const graph::PortRef port = hit.node->portRef(*hit.port);
         QAction* action = menu.addAction(tr("Als Ausgang setzen (output)"));
         connect(action, &QAction::triggered, this, [this, port]() { setTarget(port); });
     }
@@ -66,7 +66,9 @@ void NodeEditor::contextMenuEvent(QContextMenuEvent* event) {
         connect(menu.addAction(tr("Kopieren\tStrg+C")), &QAction::triggered, this, [this]() { copySelection(); });
         connect(menu.addAction(tr("Duplizieren\tStrg+D")), &QAction::triggered, this,
                 [this]() { duplicateSelection(); });
-        addTargetMenu(menu, node->nodeId());
+        if (!node->isGroupTile()) {
+            addTargetMenu(menu, node->nodeId());
+        }
         if (presets_ != nullptr) {
             connect(menu.addAction(tr("Als Preset speichern …")), &QAction::triggered, this,
                     [this]() { savePresetInteractive(); });
@@ -75,8 +77,9 @@ void NodeEditor::contextMenuEvent(QContextMenuEvent* event) {
             connect(menu.addAction(node->bypassed() ? tr("Überbrückung aufheben\tB") : tr("Überbrücken\tB")),
                     &QAction::triggered, this, [this]() { toggleBypassOfSelection(); });
         }
+        addGroupMenu(menu, node, scenePos);
         menu.addSeparator();
-        QAction* action = menu.addAction(tr("Node löschen"));
+        QAction* action = menu.addAction(node->isGroupTile() ? tr("Gruppe samt Nodes löschen") : tr("Node löschen"));
         connect(action, &QAction::triggered, this, [this, node]() {
             scene()->clearSelection();
             node->setSelected(true);
@@ -93,6 +96,7 @@ void NodeEditor::contextMenuEvent(QContextMenuEvent* event) {
         connect(menu.addAction(tr("Node suchen …\tStrg+Leertaste")), &QAction::triggered, this,
                 [this, scenePos]() { showSearch(scenePos); });
         buildAddMenu(menu, scenePos);
+        addGroupMenu(menu, nullptr, scenePos);
         QAction* pasteAction = menu.addAction(tr("Einfügen\tStrg+V"));
         pasteAction->setEnabled(canPaste());
         connect(pasteAction, &QAction::triggered, this, [this, scenePos]() { paste(scenePos); });

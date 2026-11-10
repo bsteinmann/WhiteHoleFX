@@ -16,9 +16,9 @@ namespace whitehole::studio {
 
 namespace {
 
-constexpr double kWidth = 190.0;
-constexpr double kTitleHeight = 26.0;
-constexpr double kRowHeight = 22.0;
+constexpr double kWidth = kNodeWidth;
+constexpr double kTitleHeight = kNodeTitleHeight;
+constexpr double kRowHeight = kNodeRowHeight;
 constexpr double kPortRadius = 5.0;
 constexpr double kPortHit = 10.0;  // halbe Kantenlänge der Klickfläche
 constexpr double kMargin = 12.0;   // Platz um den Node für die halben Port-Kreise
@@ -278,6 +278,12 @@ void NodeItem::paint(QPainter* painter, const QStyleOptionGraphicsItem*, QWidget
     painter->setPen(QPen{border, borderWidth});
     painter->setBrush(QColor{44, 46, 54});
     painter->drawRoundedRect(body, 6.0, 6.0);
+    if (groupTile_) {
+        // Doppelter Rand: erkennbar als Gruppe, die mehr enthält, als man sieht.
+        painter->setBrush(Qt::NoBrush);
+        painter->setPen(QPen{QColor{150, 154, 170}, 1.0});
+        painter->drawRoundedRect(body.adjusted(3.0, 3.0, -3.0, -3.0), 4.0, 4.0);
+    }
 
     painter->save();
     painter->setClipRect(QRectF{0.0, 0.0, kWidth, kTitleHeight});

@@ -101,7 +101,12 @@ void NodeEditor::removeSelected() {
         if (auto* wire = dynamic_cast<WireItem*>(item)) {
             connections.push_back(wire->connectionId());
         } else if (auto* node = dynamic_cast<NodeItem*>(item)) {
-            nodes.push_back(node->nodeId());
+            if (node->isGroupTile()) {  // Entf auf einer Kachel löscht die Gruppe samt ihren Nodes (Rückgängig holt sie zurück)
+                const std::vector<NodeId> members = groupMembersOf(*node);
+                nodes.insert(nodes.end(), members.begin(), members.end());
+            } else {
+                nodes.push_back(node->nodeId());
+            }
         }
     }
     bool changed = false;
@@ -136,10 +141,8 @@ void NodeEditor::commitMoves() {
     bool moved = false;
     for (const auto& [id, item] : nodes_) {
         if (item->takeMoved()) {
-            moved = player_.moveNode(item->nodeId(), Vec2{static_cast<float>(item->pos().x()),
-                                                           static_cast<float>(item->pos().y())})
-                        .ok() ||
-                    moved;
+            const Vec2 position{static_cast<float>(item->pos().x()), static_cast<float>(item->pos().y())};
+            moved = (item->isGroupTile() ? moveGroupTile(*item, position) : player_.moveNode(item->nodeId(), position).ok()) || moved;
         }
     }
     if (moved) {
@@ -196,8 +199,8 @@ bool NodeEditor::endWire(const QPointF& scenePos) {
     if (hit.node == nullptr || hit.node == startNode || hit.port->output == start.output) {
         return false;  // ins Leere oder auf einen unpassenden Port: abgebrochen, keine Meldung
     }
-    const graph::PortRef a{startNode->nodeId(), start.key};
-    const graph::PortRef b{hit.node->nodeId(), hit.port->key};
+    const graph::PortRef a = startNode->portRef(start);
+    const graph::PortRef b = hit.node->portRef(*hit.port);
     return start.output ? connectPorts(a, b) : connectPorts(b, a);
 }
 

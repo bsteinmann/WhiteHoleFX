@@ -34,7 +34,7 @@ bool NodeEditor::connectNewNode(const graph::PortRef& port, bool portIsOutput, c
     // Höhe des angeklickten Ports übernehmen, damit das Kabel ungefähr waagerecht läuft.
     double portY = 0.0;
     for (const PortSlot& slot : anchor->ports()) {
-        if (slot.key == port.portKey && slot.output == portIsOutput) {
+        if (anchor->portRef(slot) == port && slot.output == portIsOutput) {
             portY = slot.anchor.y();
         }
     }
@@ -55,7 +55,7 @@ void NodeEditor::buildConnectMenu(QMenu& menu, const Hit& hit) {
     if (project == nullptr || hit.node == nullptr || hit.port == nullptr) {
         return;
     }
-    const graph::PortRef port{hit.node->nodeId(), hit.port->key};
+    const graph::PortRef port = hit.node->portRef(*hit.port);
     const bool isOutput = hit.port->output;
     // Ein Eingang nimmt nur ein Kabel; ist er belegt, gibt es nichts anzubieten.
     if (!isOutput && project->graph.findInputConnection(port.node, port.portKey) != nullptr) {
@@ -126,8 +126,9 @@ QString NodeEditor::exerciseConnectMenu() {
         for (const auto& entry : nodes_) {
             NodeItem* item = entry.second;
             for (const PortSlot& slot : item->ports()) {
+                const graph::PortRef ref = item->portRef(slot);
                 if (slot.output != output ||
-                    (!output && player_.project()->graph.findInputConnection(item->nodeId(), slot.key) != nullptr)) {
+                    (!output && player_.project()->graph.findInputConnection(ref.node, ref.portKey) != nullptr)) {
                     continue;
                 }
                 QMenu menu;

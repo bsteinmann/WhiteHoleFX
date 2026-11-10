@@ -494,7 +494,7 @@ msgstr "Définir comme sortie (output)"
 msgid "Als Preset speichern"
 msgstr "Enregistrer comme préréglage"
 
-#: node_editor_menu.cpp:71
+#: node_editor_menu.cpp:73
 msgid "Als Preset speichern …"
 msgstr "Enregistrer comme préréglage …"
 
@@ -525,6 +525,10 @@ msgstr "Début x y z"
 #: parameter_panel.cpp:223
 msgid "Anheften"
 msgstr "Épingler"
+
+#: group_dialog.cpp:50
+msgid "Anschluss / Parameter"
+msgstr "Port / paramètre"
 
 #: main_window_view3d.cpp:47
 msgid "Ansicht"
@@ -646,6 +650,10 @@ msgstr "Sortie (remplie, à droite du node)"
 msgid "Ausgang verbinden mit neuem Node"
 msgstr "Relier la sortie à un nouveau node"
 
+#: group_dialog.cpp:64
+msgid "Ausgang: %1"
+msgstr "Sortie : %1"
+
 #: main_window_view3d.cpp:96
 msgid "Ausgeschaltete LEDs als sehr dunkle Punkte, nur als Orientierung"
 msgstr "LED éteintes en points très sombres, pour l'orientation seulement"
@@ -733,6 +741,10 @@ msgstr "Impossible d'enregistrer la bibliothèque utilisateur : %1"
 #: live_panel.cpp:155
 msgid "Bereit: %1 - GO drücken"
 msgstr "Prêt : %1 - appuyer sur GO"
+
+#: group_dialog.cpp:50
+msgid "Beschriftung auf der Kachel"
+msgstr "Libellé sur la tuile"
 
 #: main_window_actions.cpp:123
 msgid "Betrieb"
@@ -970,6 +982,10 @@ msgstr "Les fixtures de la liste de disposition ; tous les autres restent étein
 msgid "Die Form kommt aus der Bauform und wird im Reiter Fixtures geändert."
 msgstr "La forme vient du type et se modifie dans l'onglet Fixtures."
 
+#: group_dialog.cpp:96
+msgid "Die Gruppe braucht einen Namen."
+msgstr "Le groupe doit avoir un nom."
+
 #: node_info_texts.cpp:45
 msgid "Die Helligkeit der Maske bestimmt, wie viel vom Inhalt zu sehen ist. „Shape“ macht daraus eine harte Form, „Intensity“ behält Verläufe."
 msgstr "The brightness of the mask decides how much of the content is visible. \"Shape\" makes a hard-edged form, \"Intensity\" keeps fades."
@@ -1110,6 +1126,10 @@ msgstr "Une introduction à l'utilisation, dans la langue choisie"
 msgid "Eine Farbe als Wert, mit Farbton-Verschiebung, Sättigung und Helligkeit. Speist Farb-Eingänge anderer Nodes."
 msgstr "A color as a value, with hue shift, saturation and brightness. Feeds color inputs of other nodes."
 
+#: group_dialog.cpp:99
+msgid "Eine Gruppe heißt schon \"%1\"."
+msgstr "Un groupe s'appelle déjà \"%1\"."
+
 #: node_info_texts.cpp:134
 msgid "Eine Kugel (Kreis) mit weichem Rand, Innen- und Außenfarbe. „Space“ wählt flach, Volumen oder automatisch nach Aufbau."
 msgstr "A sphere (circle) with a soft edge, inside and outside color. \"Space\" chooses flat, volume or automatic by layout."
@@ -1138,7 +1158,7 @@ msgstr "A fixed number. Handy for feeding the same value to several parameters."
 msgid "Einen gespeicherten Controller als neuen Controller in dieses Projekt holen"
 msgstr "Ajouter un contrôleur enregistré à ce projet comme nouveau contrôleur"
 
-#: node_editor_menu.cpp:96
+#: node_editor_menu.cpp:100
 msgid "Einfügen\tStrg+V"
 msgstr "Coller\tCtrl+V"
 
@@ -1149,6 +1169,10 @@ msgstr "Entrée (anneau seul, à gauche du node)"
 #: node_editor_connect.cpp:86
 msgid "Eingang verbinden mit neuem Node"
 msgstr "Relier l'entrée à un nouveau node"
+
+#: group_dialog.cpp:64
+msgid "Eingang: %1"
+msgstr "Entrée : %1"
 
 #: layout_panel_grid.cpp:38
 msgid "Einrasten"
@@ -1222,9 +1246,17 @@ msgstr "Placer sur la scène une instance d’un type de la bibliothèque (Stage
 msgid "Fade"
 msgstr "Fondu"
 
-#: parameter_editors.cpp:92 port_legend.cpp:68 test_panel.cpp:38
+#: group_dialog.cpp:42 parameter_editors.cpp:92 port_legend.cpp:68
 msgid "Farbe"
 msgstr "Couleur"
+
+#: group_dialog.cpp:36
+msgid "Farbe der Gruppe"
+msgstr "Couleur du groupe"
+
+#: group_dialog.cpp:34
+msgid "Farbe der Kachel"
+msgstr "Couleur de la tuile"
 
 #: main_window_help.cpp:51
 msgid "Farben und Formen der Node-Ein- und Ausgänge in einem schwebenden Fenster"
@@ -1414,13 +1446,41 @@ msgstr "Enregistrer la fixture choisie comme modèle …"
 msgid "Glättet einen Wert: Er folgt dem Eingang mit einer Zeitkonstante, statt zu springen."
 msgstr "Smooths a value: it follows the input with a time constant instead of jumping."
 
+#: node_editor_group.cpp:257
+msgid "Gruppe %1"
+msgstr "Groupe %1"
+
+#: node_editor_group.cpp:389
+msgid "Gruppe aufklappen"
+msgstr "Déplier le groupe"
+
+#: node_editor_group.cpp:394
+msgid "Gruppe auflösen"
+msgstr "Dissoudre le groupe"
+
+#: node_editor_group.cpp:262
+msgid "Gruppe bearbeiten"
+msgstr "Modifier le groupe"
+
+#: node_editor_group.cpp:393
+msgid "Gruppe bearbeiten …"
+msgstr "Modifier le groupe …"
+
 #: layout_panel_groups.cpp:41
 msgid "Gruppe löschen"
 msgstr "Supprimer le groupe"
 
+#: node_editor_menu.cpp:82
+msgid "Gruppe samt Nodes löschen"
+msgstr "Supprimer le groupe et ses nodes"
+
 #: layout_panel_groups.cpp:82
 msgid "Gruppe speichern"
 msgstr "Enregistrer le groupe"
+
+#: node_editor_group.cpp:391
+msgid "Gruppe zuklappen"
+msgstr "Replier le groupe"
 
 #: layout_panel.cpp:52 node_editor_targets.cpp:56
 msgid "Gruppen"
@@ -1430,6 +1490,14 @@ msgstr "Groupes"
 msgid "Gruppen von Fixtures und Regionen der Bühne: Ziele für Output-Nodes"
 msgstr "Groupes de fixtures et régions de la scène : cibles pour les nodes de sortie"
 
+#: node_editor_group.cpp:262
+msgid "Gruppieren"
+msgstr "Grouper"
+
+#: node_editor_group.cpp:399
+msgid "Gruppieren …\tStrg+G"
+msgstr "Grouper …\tCtrl+G"
+
 #: fixture_form.cpp:133 shape_form.cpp:84
 msgid "Größe"
 msgstr "Taille"
@@ -1437,6 +1505,10 @@ msgstr "Taille"
 #: test_panel.cpp:30
 msgid "Grün"
 msgstr "Vert"
+
+#: group_dialog.cpp:45
+msgid "Haken setzen, was auf der Kachel erscheinen soll. Verbundene Anschlüsse nach außen erscheinen immer."
+msgstr "Cochez ce qui doit apparaître sur la tuile. Les ports reliés vers l'extérieur apparaissent toujours."
 
 #: patch_table.cpp:50
 msgid "Helligkeit"
@@ -1918,11 +1990,11 @@ msgstr "Pas encore utilisé dans le layout."
 msgid "Node hinzufügen"
 msgstr "Ajouter un nœud"
 
-#: node_editor_menu.cpp:79
+#: node_editor_menu.cpp:82
 msgid "Node löschen"
 msgstr "Supprimer le nœud"
 
-#: node_editor_menu.cpp:93
+#: node_editor_menu.cpp:96
 msgid "Node suchen …\tStrg+Leertaste"
 msgstr "Chercher un nœud …\tCtrl+Espace"
 
@@ -2021,6 +2093,10 @@ msgstr "Paramètres"
 #: parameter_panel.cpp:221
 msgid "Parameter dieses Nodes auf- oder zuklappen"
 msgstr "Déplier ou replier les paramètres de ce node"
+
+#: group_dialog.cpp:62
+msgid "Parameter: %1"
+msgstr "Paramètre : %1"
 
 #: node_info_texts.cpp:104
 msgid "Partikel von einem Emitter: Lebensdauer, Tempo, Richtung, Streuung, Schwerkraft und Schweif einstellbar."
@@ -2510,7 +2586,7 @@ msgstr "Vérification des mises à jour"
 msgid "Ursprung x y z"
 msgstr "Origine x y z"
 
-#: node_editor_menu.cpp:86
+#: node_editor_menu.cpp:89
 msgid "Verbindung trennen"
 msgstr "Déconnecter"
 
@@ -2914,11 +2990,11 @@ msgstr "Durée de fondu %1 s"
 msgid "Überblendzeit:"
 msgstr "Durée de fondu :"
 
-#: node_editor_menu.cpp:75
+#: node_editor_menu.cpp:77
 msgid "Überbrücken\tB"
 msgstr "Contourner\tB"
 
-#: node_editor_menu.cpp:75
+#: node_editor_menu.cpp:77
 msgid "Überbrückung aufheben\tB"
 msgstr "Réactiver\tB"
 

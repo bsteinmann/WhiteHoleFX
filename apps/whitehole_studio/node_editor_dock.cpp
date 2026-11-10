@@ -35,6 +35,9 @@ double distanceToPath(const QPainterPath& path, const QPointF& point) {
 
 std::optional<graph::DockTarget> NodeEditor::findDockTarget(const QPointF& scenePos) const {
     if (NodeItem* node = nodeAt(scenePos)) {
+        if (node->isGroupTile()) {
+            return std::nullopt;  // an der Kachel einer Gruppe rastet nichts ein; die Nodes darin sind verdeckt
+        }
         graph::DockTarget target;
         target.kind = graph::DockTarget::Kind::Node;
         target.node = node->nodeId();

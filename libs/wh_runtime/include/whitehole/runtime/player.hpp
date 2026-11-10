@@ -165,6 +165,16 @@ public:
     /// Lage im Editor; ändert den Effekt nicht.
     Result<void> moveNode(NodeId node, Vec2 position);
 
+    /// Gruppen (siehe graph/node_group.hpp): reine Oberfläche, der Effekt ändert sich nicht. Alle Schritte sind
+    /// Rückgängig-fähig. Fehler wie Graph::addGroup / replaceGroup / removeGroup.
+    Result<void> addNodeGroup(graph::NodeGroup group);
+    Result<void> replaceNodeGroup(const std::string& name, graph::NodeGroup group);
+    /// Löst die Gruppe auf; die Nodes bleiben.
+    Result<void> removeNodeGroup(const std::string& name);
+    Result<void> setNodeGroupCollapsed(const std::string& name, bool collapsed);
+    /// Lage der Kachel; mehrere Schritte hintereinander (Ziehen) sind ein Schritt Rückgängig.
+    Result<void> moveNodeGroup(const std::string& name, Vec2 position);
+
     /// Überbrückt einen Field-Node oder schaltet ihn wieder ein (Undo-fähig, baut den Shader neu).
     /// Fehler: Unsupported für Nodes ohne Field-Domäne.
     Result<void> setNodeBypassed(NodeId node, bool bypassed);

@@ -162,6 +162,11 @@ QString NodeEditor::exercise() {
         return problem;
     }
 
+    // Gruppen: Kachel, Rahmen, Auflösen
+    if (const QString problem = exerciseGroups(); !problem.isEmpty()) {
+        return problem;
+    }
+
     // Verschieben wie mit der Maus: Position ändern, Änderung übernehmen
     from = itemOf(*source);
     if (from == nullptr) {

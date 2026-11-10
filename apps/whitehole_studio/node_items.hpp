@@ -16,6 +16,7 @@
 #include <QSizeF>
 #include <QString>
 
+#include <cstdint>
 #include <functional>
 #include <optional>
 #include <utility>
@@ -43,17 +44,33 @@ void drawPortMarker(QPainter* painter, const QPointF& center, graph::PortType ty
 /// Selbsttest für `--exercise`: leer, wenn alle Typen unterscheidbar sind (Farbe oder Form), sonst die Beschreibung.
 [[nodiscard]] QString checkPortStyles();
 
+/// Maße eines Nodes; die Kachel einer Gruppe (node_items_group.cpp) legt ihre Ports genauso an.
+inline constexpr double kNodeWidth = 190.0;
+inline constexpr double kNodeTitleHeight = 26.0;
+inline constexpr double kNodeRowHeight = 22.0;
+
 struct PortSlot {
     std::string key;
     QString label;
     graph::PortType type{graph::PortType::Field};
     bool output{false};
     QPointF anchor;  // Mitte des Port-Kreises in Item-Koordinaten
+    /// Nur bei der Kachel einer Gruppe: der echte Port eines Mitglieds, für den dieser Port steht (node_group.hpp).
+    /// `realNode` 0 = gewöhnlicher Port des Items selbst.
+    std::uint64_t realNode{0};
+    std::string realKey;
 };
 
 class NodeItem : public QGraphicsItem {
 public:
     NodeItem(NodeId id, const graph::NodeDescriptor& descriptor, const QString& title);
+    /// Kachel einer zugeklappten Gruppe (node_items_group.cpp): `id` ist der erste Node der Gruppe, `ports` kommen ohne
+    /// Lage (die Anker setzt der Konstruktor). Bypass und Info gibt es nicht.
+    NodeItem(NodeId id, const QString& groupName, std::vector<PortSlot> ports, const QColor& color);
+
+    [[nodiscard]] bool isGroupTile() const noexcept { return groupTile_; }
+    /// Der Port im Graphen, für den `slot` steht (bei einem gewöhnlichen Node der Port selbst).
+    [[nodiscard]] graph::PortRef portRef(const PortSlot& slot) const;
 
     [[nodiscard]] NodeId nodeId() const noexcept { return id_; }
     /// Größe des Nodes (ohne Rand) in Szenenkoordinaten; `sizeFor` rechnet sie für einen Typ, der noch nicht im Editor steht.
@@ -111,9 +128,30 @@ private:
     bool moved_{false};
     bool canBypass_{false};
     bool bypassed_{false};
+    bool groupTile_{false};
     bool dockHighlight_{false};
     std::string dockPort_;
     QString info_;
+};
+
+/// Rahmen um die Nodes einer aufgeklappten Gruppe (mit Namen). Nicht auswählbar und nicht beweglich: Er folgt den
+/// Mitgliedern (`updateRect`) und liegt hinter ihnen.
+class GroupFrameItem : public QGraphicsItem {
+public:
+    GroupFrameItem(QString name, const QColor& color, std::vector<NodeItem*> members);
+
+    [[nodiscard]] const QString& name() const noexcept { return name_; }
+    /// Passt den Rahmen an die Lage der Mitglieder an.
+    void updateRect();
+
+    [[nodiscard]] QRectF boundingRect() const override;
+    void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget) override;
+
+private:
+    QString name_;
+    QColor color_;
+    std::vector<NodeItem*> members_;
+    QRectF rect_;
 };
 
 class WireItem : public QGraphicsPathItem {

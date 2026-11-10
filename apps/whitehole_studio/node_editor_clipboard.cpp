@@ -12,7 +12,13 @@ namespace whitehole::studio {
 std::vector<NodeId> NodeEditor::selectedNodes() const {
     std::vector<NodeId> ids;
     for (const auto& [id, item] : nodes_) {
-        if (item->isSelected()) {
+        if (!item->isSelected()) {
+            continue;
+        }
+        if (item->isGroupTile()) {
+            const std::vector<NodeId> members = groupMembersOf(*item);
+            ids.insert(ids.end(), members.begin(), members.end());
+        } else {
             ids.push_back(item->nodeId());
         }
     }

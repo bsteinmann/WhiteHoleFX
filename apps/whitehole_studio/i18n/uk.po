@@ -494,7 +494,7 @@ msgstr "Зробити виходом (output)"
 msgid "Als Preset speichern"
 msgstr "Зберегти як пресет"
 
-#: node_editor_menu.cpp:71
+#: node_editor_menu.cpp:73
 msgid "Als Preset speichern …"
 msgstr "Зберегти як пресет …"
 
@@ -525,6 +525,10 @@ msgstr "Початок x y z"
 #: parameter_panel.cpp:223
 msgid "Anheften"
 msgstr "Закріпити"
+
+#: group_dialog.cpp:50
+msgid "Anschluss / Parameter"
+msgstr "Порт / параметр"
 
 #: main_window_view3d.cpp:47
 msgid "Ansicht"
@@ -646,6 +650,10 @@ msgstr "Вихід (заповнений, праворуч на ноді)"
 msgid "Ausgang verbinden mit neuem Node"
 msgstr "З’єднати вихід із новим нодом"
 
+#: group_dialog.cpp:64
+msgid "Ausgang: %1"
+msgstr "Вихід: %1"
+
 #: main_window_view3d.cpp:96
 msgid "Ausgeschaltete LEDs als sehr dunkle Punkte, nur als Orientierung"
 msgstr "Вимкнені LED як дуже темні точки, лише для орієнтації"
@@ -733,6 +741,10 @@ msgstr "Не вдається зберегти бібліотеку корист
 #: live_panel.cpp:155
 msgid "Bereit: %1 - GO drücken"
 msgstr "Готово: %1 - натисніть GO"
+
+#: group_dialog.cpp:50
+msgid "Beschriftung auf der Kachel"
+msgstr "Підпис на плитці"
 
 #: main_window_actions.cpp:123
 msgid "Betrieb"
@@ -970,6 +982,10 @@ msgstr "Фікстури зі списку Layout; усі інші лишают�
 msgid "Die Form kommt aus der Bauform und wird im Reiter Fixtures geändert."
 msgstr "Форма походить від типу і змінюється на вкладці «Фікстури»."
 
+#: group_dialog.cpp:96
+msgid "Die Gruppe braucht einen Namen."
+msgstr "Групі потрібна назва."
+
 #: node_info_texts.cpp:45
 msgid "Die Helligkeit der Maske bestimmt, wie viel vom Inhalt zu sehen ist. „Shape“ macht daraus eine harte Form, „Intensity“ behält Verläufe."
 msgstr "Яскравість маски визначає, наскільки видно вміст. «Shape» робить із неї жорстку форму, «Intensity» зберігає градієнти."
@@ -1110,6 +1126,10 @@ msgstr "Вступ до роботи з програмою обраною мов
 msgid "Eine Farbe als Wert, mit Farbton-Verschiebung, Sättigung und Helligkeit. Speist Farb-Eingänge anderer Nodes."
 msgstr "Колір як значення, зі зсувом відтінку, насиченістю та яскравістю. Живить колірні входи інших нод."
 
+#: group_dialog.cpp:99
+msgid "Eine Gruppe heißt schon \"%1\"."
+msgstr "Група з назвою \"%1\" уже існує."
+
 #: node_info_texts.cpp:134
 msgid "Eine Kugel (Kreis) mit weichem Rand, Innen- und Außenfarbe. „Space“ wählt flach, Volumen oder automatisch nach Aufbau."
 msgstr "Куля (коло) з м'яким краєм, внутрішнім і зовнішнім кольором. «Space» обирає плоский, об'ємний або автоматичний режим залежно від конструкції."
@@ -1138,7 +1158,7 @@ msgstr "Фіксоване число. Зручно, щоб живити кіл�
 msgid "Einen gespeicherten Controller als neuen Controller in dieses Projekt holen"
 msgstr "Додати збережений контролер до цього проєкту як новий контролер"
 
-#: node_editor_menu.cpp:96
+#: node_editor_menu.cpp:100
 msgid "Einfügen\tStrg+V"
 msgstr "Вставити\tCtrl+V"
 
@@ -1149,6 +1169,10 @@ msgstr "Вхід (лише кільце, ліворуч на ноді)"
 #: node_editor_connect.cpp:86
 msgid "Eingang verbinden mit neuem Node"
 msgstr "З’єднати вхід із новим нодом"
+
+#: group_dialog.cpp:64
+msgid "Eingang: %1"
+msgstr "Вхід: %1"
 
 #: layout_panel_grid.cpp:38
 msgid "Einrasten"
@@ -1222,9 +1246,17 @@ msgstr "Розмістити на сцені екземпляр типу з бі
 msgid "Fade"
 msgstr "Fade"
 
-#: parameter_editors.cpp:92 port_legend.cpp:68 test_panel.cpp:38
+#: group_dialog.cpp:42 parameter_editors.cpp:92 port_legend.cpp:68
 msgid "Farbe"
 msgstr "Колір"
+
+#: group_dialog.cpp:36
+msgid "Farbe der Gruppe"
+msgstr "Колір групи"
+
+#: group_dialog.cpp:34
+msgid "Farbe der Kachel"
+msgstr "Колір плитки"
 
 #: main_window_help.cpp:51
 msgid "Farben und Formen der Node-Ein- und Ausgänge in einem schwebenden Fenster"
@@ -1414,13 +1446,41 @@ msgstr "Зберегти вибрану фікстуру як шаблон …"
 msgid "Glättet einen Wert: Er folgt dem Eingang mit einer Zeitkonstante, statt zu springen."
 msgstr "Згладжує значення: воно слідує за входом із постійною часу, замість того щоб стрибати."
 
+#: node_editor_group.cpp:257
+msgid "Gruppe %1"
+msgstr "Група %1"
+
+#: node_editor_group.cpp:389
+msgid "Gruppe aufklappen"
+msgstr "Розгорнути групу"
+
+#: node_editor_group.cpp:394
+msgid "Gruppe auflösen"
+msgstr "Розгрупувати"
+
+#: node_editor_group.cpp:262
+msgid "Gruppe bearbeiten"
+msgstr "Редагувати групу"
+
+#: node_editor_group.cpp:393
+msgid "Gruppe bearbeiten …"
+msgstr "Редагувати групу …"
+
 #: layout_panel_groups.cpp:41
 msgid "Gruppe löschen"
 msgstr "Видалити групу"
 
+#: node_editor_menu.cpp:82
+msgid "Gruppe samt Nodes löschen"
+msgstr "Видалити групу разом із нодами"
+
 #: layout_panel_groups.cpp:82
 msgid "Gruppe speichern"
 msgstr "Зберегти групу"
+
+#: node_editor_group.cpp:391
+msgid "Gruppe zuklappen"
+msgstr "Згорнути групу"
 
 #: layout_panel.cpp:52 node_editor_targets.cpp:56
 msgid "Gruppen"
@@ -1430,6 +1490,14 @@ msgstr "Групи"
 msgid "Gruppen von Fixtures und Regionen der Bühne: Ziele für Output-Nodes"
 msgstr "Групи фікстур і регіони сцени: цілі для Output-нод"
 
+#: node_editor_group.cpp:262
+msgid "Gruppieren"
+msgstr "Групувати"
+
+#: node_editor_group.cpp:399
+msgid "Gruppieren …\tStrg+G"
+msgstr "Групувати …\tCtrl+G"
+
 #: fixture_form.cpp:133 shape_form.cpp:84
 msgid "Größe"
 msgstr "Розмір"
@@ -1437,6 +1505,10 @@ msgstr "Розмір"
 #: test_panel.cpp:30
 msgid "Grün"
 msgstr "Зелений"
+
+#: group_dialog.cpp:45
+msgid "Haken setzen, was auf der Kachel erscheinen soll. Verbundene Anschlüsse nach außen erscheinen immer."
+msgstr "Позначте, що має бути на плитці. Порти, з'єднані із зовнішнім світом, показуються завжди."
 
 #: patch_table.cpp:50
 msgid "Helligkeit"
@@ -1918,11 +1990,11 @@ msgstr "Ще не використано в розкладці."
 msgid "Node hinzufügen"
 msgstr "Додати ноду"
 
-#: node_editor_menu.cpp:79
+#: node_editor_menu.cpp:82
 msgid "Node löschen"
 msgstr "Видалити ноду"
 
-#: node_editor_menu.cpp:93
+#: node_editor_menu.cpp:96
 msgid "Node suchen …\tStrg+Leertaste"
 msgstr "Знайти ноду …\tCtrl+Пробіл"
 
@@ -2021,6 +2093,10 @@ msgstr "Параметри"
 #: parameter_panel.cpp:221
 msgid "Parameter dieses Nodes auf- oder zuklappen"
 msgstr "Розгорнути або згорнути параметри цього нода"
+
+#: group_dialog.cpp:62
+msgid "Parameter: %1"
+msgstr "Параметр: %1"
 
 #: node_info_texts.cpp:104
 msgid "Partikel von einem Emitter: Lebensdauer, Tempo, Richtung, Streuung, Schwerkraft und Schweif einstellbar."
@@ -2510,7 +2586,7 @@ msgstr "Перевірка оновлень"
 msgid "Ursprung x y z"
 msgstr "Початок координат x y z"
 
-#: node_editor_menu.cpp:86
+#: node_editor_menu.cpp:89
 msgid "Verbindung trennen"
 msgstr "Розірвати зв'язок"
 
@@ -2914,11 +2990,11 @@ msgstr "Час переходу %1 с"
 msgid "Überblendzeit:"
 msgstr "Час переходу:"
 
-#: node_editor_menu.cpp:75
+#: node_editor_menu.cpp:77
 msgid "Überbrücken\tB"
 msgstr "Обійти\tB"
 
-#: node_editor_menu.cpp:75
+#: node_editor_menu.cpp:77
 msgid "Überbrückung aufheben\tB"
 msgstr "Скасувати обхід\tB"
 

@@ -56,6 +56,8 @@ add_executable(whitehole_studio
     main_window_view3d.cpp
     cue_dialog.cpp
     cue_dialog.hpp
+    group_dialog.cpp
+    group_dialog.hpp
     cue_panel.cpp
     cue_panel.hpp
     live_panel.cpp
@@ -82,6 +84,9 @@ add_executable(whitehole_studio
     node_info.hpp
     node_info_texts.cpp
     node_items.cpp
+    node_items_group.cpp
+    node_editor_group.cpp
+    node_editor_group_exercise.cpp
     node_palette.cpp
     node_palette.hpp
     node_search.hpp

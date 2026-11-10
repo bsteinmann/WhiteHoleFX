@@ -131,6 +131,21 @@ public:
     /// zeigen" bei vielen Nodes), geht es nur in Richtung des Bereichs - das Rad blockiert nie ganz.
     void zoomBy(double factor);
 
+    /// Gruppen (node_editor_group.cpp, siehe graph/node_group.hpp). "Gruppieren": fragt nach Name, Farbe und der Schnittstelle
+    /// (Ports, Parameter) und legt eine zugeklappte Gruppe aus den ausgewählten Nodes an.
+    bool groupSelection();
+    /// Dialog für eine bestehende Gruppe (Name, Farbe, Schnittstelle ändern).
+    bool editGroup(const std::string& name);
+    /// Löst die Gruppe auf; die Nodes bleiben.
+    bool ungroup(const std::string& name);
+    /// Klappt die Gruppe zu (Kachel) oder auf (die Nodes einzeln, mit Rahmen).
+    bool setGroupCollapsed(const std::string& name, bool collapsed);
+    /// Anzahl der Kacheln zugeklappter Gruppen und der Rahmen aufgeklappter Gruppen (für den Rauchtest).
+    [[nodiscard]] int groupTileCount() const noexcept { return static_cast<int>(tileCount_); }
+    [[nodiscard]] int groupFrameCount() const noexcept { return static_cast<int>(frames_.size()); }
+    /// Rauchtest der Gruppen: gruppieren, zuklappen, verbinden an der Kachel, aufklappen, auflösen. Leer = in Ordnung.
+    QString exerciseGroups();
+
     [[nodiscard]] int nodeCount() const noexcept { return static_cast<int>(nodes_.size()); }
     [[nodiscard]] int wireCount() const noexcept { return static_cast<int>(wires_.size()); }
 
@@ -164,6 +179,7 @@ protected:
     void mouseReleaseEvent(QMouseEvent* event) override;
     void wheelEvent(QWheelEvent* event) override;
     void keyPressEvent(QKeyEvent* event) override;
+    void mouseDoubleClickEvent(QMouseEvent* event) override;
     void contextMenuEvent(QContextMenuEvent* event) override;
     void resizeEvent(QResizeEvent* event) override;
 
@@ -207,6 +223,24 @@ private:
     void buildScene();
 
     [[nodiscard]] std::vector<NodeId> selectedNodes() const;
+
+    // Gruppen (node_editor_group.cpp)
+    /// Das Gegenstück zu einem Port im Graphen: wo im Bild (Node oder Kachel) und unter welchem Schlüssel er sitzt.
+    struct Endpoint {
+        NodeItem* item{nullptr};
+        std::string key;
+    };
+    [[nodiscard]] Endpoint endpointOf(const graph::PortRef& ref) const;
+    /// Die Mitglieder der Gruppe, für die `tile` steht.
+    [[nodiscard]] std::vector<NodeId> groupMembersOf(const NodeItem& tile) const;
+    [[nodiscard]] const graph::NodeGroup* groupOfItem(const NodeItem& item) const;
+    /// Gruppe unter einem Punkt: eine Kachel, ein Mitglied oder der Rahmen einer aufgeklappten Gruppe.
+    [[nodiscard]] const graph::NodeGroup* groupAt(const QPointF& scenePos) const;
+    void buildGroupItems();
+    void onItemMoved(NodeItem& moved);
+    bool moveGroupTile(const NodeItem& tile, Vec2 position);
+    void addGroupMenu(QMenu& menu, NodeItem* node, const QPointF& scenePos);
+    bool openGroupDialog(const graph::NodeGroup* existing, const std::vector<NodeId>& members);
     bool pasteWithOffset(const runtime::NodeClipboard& clip, const QPointF& offset);
 
     runtime::Player& player_;
@@ -215,6 +249,9 @@ private:
     QGraphicsScene scene_;
     std::unordered_map<std::uint64_t, NodeItem*> nodes_;
     std::vector<WireItem*> wires_;
+    std::unordered_map<std::uint64_t, NodeItem*> tiles_;  // Mitglied zugeklappter Gruppe -> Kachel
+    std::size_t tileCount_{0};
+    std::vector<GroupFrameItem*> frames_;                 // Rahmen aufgeklappter Gruppen
 
     NodeItem* wireNode_{nullptr};
     PortSlot wireSlot_;

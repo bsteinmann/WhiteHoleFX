@@ -110,6 +110,9 @@ void NodeEditor::buildScene() {
     // Erst die Zeiger vergessen, dann die Szene leeren: clear() löscht alle Items.
     wires_.clear();
     nodes_.clear();
+    tiles_.clear();
+    frames_.clear();
+    tileCount_ = 0;
     tempWire_ = nullptr;
     wireNode_ = nullptr;
     dockWire_ = nullptr;
@@ -134,6 +137,9 @@ void NodeEditor::buildScene() {
         if (descriptor == nullptr) {
             continue;
         }
+        if (const graph::NodeGroup* group = g.groupOf(node.id); group != nullptr && group->collapsed) {
+            continue;  // zugeklappt: die Kachel steht für den Node (buildGroupItems)
+        }
         // Dieselbe Nummerierung wie im Dock "Parameter" (Player::nodes).
         QString title = fromStd(descriptor->displayName);
         if (total[node.typeId] > 1) {
@@ -144,28 +150,23 @@ void NodeEditor::buildScene() {
         item->setInfo(nodeInfoText(node.typeId));
         item->setPos(static_cast<qreal>(node.position.x), static_cast<qreal>(node.position.y));
         scene_.addItem(item);
-        item->setMoveCallback([this](NodeItem& moved) {
-            for (WireItem* wire : wires_) {
-                if (wire->fromNode() == &moved || wire->toNode() == &moved) {
-                    wire->updatePath();
-                }
-            }
-        });
+        item->setMoveCallback([this](NodeItem& moved) { onItemMoved(moved); });
         nodes_.emplace(node.id.value(), item);
     }
+    buildGroupItems();
     if (project->target) {
         if (NodeItem* item = itemOf(project->target->node)) {
             item->setTargetKey(project->target->portKey);
         }
     }
     for (const graph::Connection& c : g.connections()) {
-        NodeItem* from = itemOf(c.from.node);
-        NodeItem* to = itemOf(c.to.node);
-        const PortSlot* port = from != nullptr ? from->findPort(c.from.portKey) : nullptr;
-        if (from == nullptr || to == nullptr || port == nullptr) {
-            continue;
+        const Endpoint source = endpointOf(c.from);
+        const Endpoint sink = endpointOf(c.to);
+        const PortSlot* port = source.item != nullptr ? source.item->findPort(source.key) : nullptr;
+        if (source.item == nullptr || sink.item == nullptr || source.item == sink.item || port == nullptr) {
+            continue;  // Kabel im Inneren einer zugeklappten Gruppe zeigt das Bild nicht
         }
-        auto* wire = new WireItem{c.id, from, c.from.portKey, to, c.to.portKey, port->type};
+        auto* wire = new WireItem{c.id, source.item, source.key, sink.item, sink.key, port->type};
         scene_.addItem(wire);
         wires_.push_back(wire);
     }
@@ -195,6 +196,9 @@ void NodeEditor::showAll() {
 }
 
 NodeItem* NodeEditor::itemOf(NodeId id) const {
+    if (const auto tile = tiles_.find(id.value()); tile != tiles_.end()) {
+        return tile->second;  // Mitglied einer zugeklappten Gruppe: im Bild steht die Kachel
+    }
     const auto it = nodes_.find(id.value());
     return it == nodes_.end() ? nullptr : it->second;
 }
@@ -351,6 +355,11 @@ void NodeEditor::keyPressEvent(QKeyEvent* event) {
     if (event->key() == Qt::Key_Space && event->modifiers() == Qt::ControlModifier) {
         const QPoint local = viewport()->mapFromGlobal(QCursor::pos());
         showSearch(mapToScene(viewport()->rect().contains(local) ? local : viewport()->rect().center()));
+        event->accept();
+        return;
+    }
+    if (event->key() == Qt::Key_G && event->modifiers() == Qt::ControlModifier) {
+        groupSelection();
         event->accept();
         return;
     }
