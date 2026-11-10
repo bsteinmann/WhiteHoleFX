@@ -27,6 +27,7 @@
 #include <cstdint>
 #include <memory>
 #include <string>
+#include <string_view>
 #include <vector>
 
 #include "whitehole/core/result.hpp"
@@ -46,6 +47,10 @@ struct WebGpuOptions {
 
 /// Bytes je Texel des Formats.
 [[nodiscard]] std::uint32_t bytesPerTexel(TextureFormat format) noexcept;
+
+/// Bekannte Grafikkarten, auf denen Vulkan fehlerhaft arbeitet und OpenGL besser ist: Kepler (GeForce GTX 600/700, ohne
+/// 745 und 750). `WebGpuDevice::create` wechselt dort von selbst auf OpenGL, wenn `WHITEHOLEFX_GPU_BACKEND` nichts vorgibt.
+[[nodiscard]] bool prefersOpenGl(std::string_view deviceName) noexcept;
 
 class WebGpuDevice final : public IGpuDevice {
 public:

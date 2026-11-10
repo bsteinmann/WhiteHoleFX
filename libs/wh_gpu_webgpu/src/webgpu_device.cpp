@@ -3,6 +3,9 @@
 
 #include <chrono>
 #include <cstdlib>
+#include <optional>
+#include <string>
+#include <string_view>
 #include <thread>
 #include <utility>
 
@@ -134,24 +137,20 @@ std::vector<std::string> WebGpuDevice::takeErrors() {
     return impl_->drainErrors();
 }
 
-Result<std::unique_ptr<WebGpuDevice>> WebGpuDevice::create(const WebGpuOptions& options) {
-    auto impl = std::make_unique<Impl>();
+namespace {
 
-    // WHITEHOLEFX_GPU_BACKEND=vulkan|gl|dx12|metal wählt die Grafikschnittstelle. Gedacht für die Fehlersuche (Issue #13):
-    // Dieselbe GPU kann je nach Schnittstelle andere Shader-Übersetzung und andere Treiberfehler haben.
+/// Öffnet Instanz, Adapter und Gerät. `backends` leer = Voreinstellung der Bibliothek.
+Result<std::unique_ptr<WebGpuDevice::Impl>> openImpl(const WebGpuOptions& options,
+                                                      std::optional<WGPUInstanceBackend> backends) {
+    auto impl = std::make_unique<WebGpuDevice::Impl>();
+
     WGPUInstanceExtras extras{};
     extras.chain.sType = static_cast<WGPUSType>(WGPUSType_InstanceExtras);
     WGPUInstanceDescriptor instanceDesc{};
-    bool backendChosen = false;
-    if (const char* wanted = std::getenv("WHITEHOLEFX_GPU_BACKEND"); wanted != nullptr) {
-        const std::string name{wanted};
-        extras.backends = name == "vulkan" ? WGPUInstanceBackend_Vulkan
-                          : name == "gl"   ? WGPUInstanceBackend_GL
-                          : name == "dx12" ? WGPUInstanceBackend_DX12
-                          : name == "metal" ? WGPUInstanceBackend_Metal
-                                            : WGPUInstanceBackend_All;
+    const bool backendChosen = backends.has_value();
+    if (backendChosen) {
+        extras.backends = *backends;
         instanceDesc.nextInChain = &extras.chain;
-        backendChosen = true;
     }
     // Ohne Wunsch genau wie vor 0.36.2: kein Deskriptor, die Bibliothek nimmt ihre Voreinstellung.
     impl->instance = wgpuCreateInstance(backendChosen ? &instanceDesc : nullptr);
@@ -183,6 +182,8 @@ Result<std::unique_ptr<WebGpuDevice>> WebGpuDevice::create(const WebGpuOptions& 
         if (impl->adapterName.empty()) {
             impl->adapterName = toString(info.description);
         }
+        impl->deviceName = impl->adapterName;
+        impl->backendType = info.backendType;
         switch (info.backendType) {
             case WGPUBackendType_Vulkan: impl->adapterName += " [Vulkan]"; break;
             case WGPUBackendType_OpenGL:
@@ -216,7 +217,70 @@ Result<std::unique_ptr<WebGpuDevice>> WebGpuDevice::create(const WebGpuOptions& 
     impl->device = deviceRequest.device;
     impl->queue = wgpuDeviceGetQueue(impl->device);
 
-    return std::unique_ptr<WebGpuDevice>(new WebGpuDevice(std::move(impl)));
+    return impl;
+}
+
+}  // namespace
+
+bool prefersOpenGl(std::string_view deviceName) noexcept {
+    // Gesucht: "GTX 760", "GT 740", "GTX 780 Ti", "GeForce GTX 770M" ... Kepler ist die 600er- und 700er-Reihe,
+    // außer den Maxwell-Karten 745 und 750 (Ti); bei diesen (und 750M, das beides sein kann) bleibt es bei Vulkan.
+    for (const std::string_view prefix : {std::string_view{"GTX "}, std::string_view{"GT "}}) {
+        for (std::size_t at = deviceName.find(prefix); at != std::string_view::npos;
+             at = deviceName.find(prefix, at + 1)) {
+            if (at > 0 && deviceName[at - 1] != ' ') {
+                continue;  // nur ganze Wörter
+            }
+            const std::size_t digits = at + prefix.size();
+            if (digits + 3 > deviceName.size()) {
+                continue;
+            }
+            int model = 0;
+            bool numeric = true;
+            for (std::size_t i = 0; i < 3; ++i) {
+                const char c = deviceName[digits + i];
+                numeric = numeric && c >= '0' && c <= '9';
+                model = model * 10 + (c - '0');
+            }
+            const bool fourDigits = digits + 3 < deviceName.size() && deviceName[digits + 3] >= '0' && deviceName[digits + 3] <= '9';
+            if (numeric && !fourDigits && model >= 600 && model < 800 && model != 745 && model != 750) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+Result<std::unique_ptr<WebGpuDevice>> WebGpuDevice::create(const WebGpuOptions& options) {
+    // WHITEHOLEFX_GPU_BACKEND=vulkan|gl|dx12|metal wählt die Grafikschnittstelle und gilt immer. Gedacht für die
+    // Fehlersuche (Issue #13): Dieselbe GPU kann je nach Schnittstelle andere Shader-Übersetzung und Treiberfehler haben.
+    if (const char* wanted = std::getenv("WHITEHOLEFX_GPU_BACKEND"); wanted != nullptr) {
+        const std::string name{wanted};
+        const WGPUInstanceBackend backend = name == "vulkan"  ? WGPUInstanceBackend_Vulkan
+                                            : name == "gl"    ? WGPUInstanceBackend_GL
+                                            : name == "dx12"  ? WGPUInstanceBackend_DX12
+                                            : name == "metal" ? WGPUInstanceBackend_Metal
+                                                              : WGPUInstanceBackend_All;
+        Result<std::unique_ptr<Impl>> chosen = openImpl(options, backend);
+        if (!chosen.ok()) {
+            return chosen.error();
+        }
+        return std::unique_ptr<WebGpuDevice>(new WebGpuDevice(std::move(chosen.value())));
+    }
+    Result<std::unique_ptr<Impl>> first = openImpl(options, std::nullopt);
+    if (!first.ok()) {
+        return first.error();
+    }
+    // Bekannter Treiberfehler: Auf Kepler-Karten (GTX 600/700) kommt der Text-Node unter Vulkan nicht an (#13).
+    // Dort nimmt WhiteHoleFX OpenGL; schlägt das fehl, bleibt es bei Vulkan.
+    if (!options.forceFallbackAdapter && first.value()->backendType == WGPUBackendType_Vulkan &&
+        prefersOpenGl(first.value()->deviceName)) {
+        Result<std::unique_ptr<Impl>> gl = openImpl(options, WGPUInstanceBackend_GL);
+        if (gl.ok() && gl.value()->backendType != WGPUBackendType_Vulkan) {
+            return std::unique_ptr<WebGpuDevice>(new WebGpuDevice(std::move(gl.value())));
+        }
+    }
+    return std::unique_ptr<WebGpuDevice>(new WebGpuDevice(std::move(first.value())));
 }
 
 void WebGpuDevice::poll() {

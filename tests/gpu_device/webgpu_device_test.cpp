@@ -14,6 +14,22 @@
 using namespace whitehole;
 using namespace whitehole::gpu;
 
+TEST_CASE("prefersOpenGl erkennt Kepler-Karten (GTX 600/700)", "[gpu][quirk]") {
+    CHECK(prefersOpenGl("NVIDIA GeForce GTX 760"));
+    CHECK(prefersOpenGl("GeForce GTX 780 Ti"));
+    CHECK(prefersOpenGl("NVIDIA GeForce GTX 770M"));
+    CHECK(prefersOpenGl("NVIDIA GeForce GT 730"));
+    CHECK(prefersOpenGl("NVIDIA GeForce GTX 650"));
+    CHECK_FALSE(prefersOpenGl("NVIDIA GeForce GTX 750 Ti"));
+    CHECK_FALSE(prefersOpenGl("NVIDIA GeForce GTX 745"));
+    CHECK_FALSE(prefersOpenGl("NVIDIA GeForce GTX 960"));
+    CHECK_FALSE(prefersOpenGl("NVIDIA GeForce GTX 1060"));
+    CHECK_FALSE(prefersOpenGl("NVIDIA GeForce RTX 3060"));
+    CHECK_FALSE(prefersOpenGl("AMD Radeon RX 760"));
+    CHECK_FALSE(prefersOpenGl("llvmpipe (LLVM 15.0.7, 256 bits)"));
+    CHECK_FALSE(prefersOpenGl(""));
+}
+
 namespace {
 
 std::unique_ptr<WebGpuDevice> makeDevice() {

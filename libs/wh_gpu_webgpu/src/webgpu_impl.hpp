@@ -59,6 +59,8 @@ struct WebGpuDevice::Impl {
     WGPUDevice device{nullptr};
     WGPUQueue queue{nullptr};
     std::string adapterName;
+    std::string deviceName;  // Name ohne Zusatz "[Vulkan]"
+    WGPUBackendType backendType{WGPUBackendType_Undefined};
 
     std::uint64_t nextId{0};
     std::unordered_map<std::uint64_t, BufferEntry> buffers;

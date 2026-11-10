@@ -59,6 +59,17 @@ Ohne Adapter werden die Tests übersprungen. Für einen Lauf ohne GPU unter Linu
 - **Puffergrößen** werden auf Vielfache von 4 aufgerundet; `writeBuffer` verlangt Offset
   und Länge als Vielfache von 4.
 
+## Grafikschnittstelle (Vulkan, OpenGL)
+
+Ohne Vorgabe nimmt die Bibliothek ihre Voreinstellung (meist Vulkan, unter Windows auch DX12). Mit der Umgebungsvariable
+`WHITEHOLEFX_GPU_BACKEND` (`vulkan`, `gl`, `dx12`, `metal`) lässt sich die Schnittstelle wählen; sie gilt immer.
+
+**Ausnahme Kepler:** Auf NVIDIA-Karten der Kepler-Generation (GeForce GTX 600 und 700, ohne 745 und 750) bleibt der
+Text-Node unter Vulkan unsichtbar (#13). `WebGpuDevice::create` erkennt diese Karten am Namen (`prefersOpenGl`) und öffnet
+OpenGL; klappt das nicht, bleibt es bei Vulkan. Wer es anders will, setzt `WHITEHOLEFX_GPU_BACKEND=vulkan`. Der gewählte
+Adapter steht mit `[Vulkan]` oder `[OpenGL]` im Namen. Auf anderen Karten ändert sich nichts. Zeigt eine weitere Karte
+Fehler, bitte ein Issue mit Kartenname und Treiber anlegen.
+
 ## Grenzen
 
 - Nur 2D-Texturen, nur WGSL, nur Linux/macOS-Pfade getestet vorgesehen (Windows unbekannt).

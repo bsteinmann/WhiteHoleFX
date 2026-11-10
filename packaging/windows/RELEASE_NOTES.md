@@ -43,8 +43,9 @@ unsichtbaren Fenster bedient. Auf echter Hardware (GPU-Treiber, Controller im Ne
 wenig erprobt. **Rückmeldungen sind willkommen** (Issues): bitte mit Windows-Version, Grafikkarte und den Schritten
 bis zum Problem.
 
-**Bekannt:** Der Text-Node zeigt auf manchen Grafikkarten (etwa NVIDIA GTX 760 mit Vulkan) noch keinen Text (#13);
-dort lohnt ein Versuch mit der Umgebungsvariable `WHITEHOLEFX_GPU_BACKEND` (`vulkan`, `gl` oder `dx12`).
+**Bekannt:** Der Text-Node zeigt unter Vulkan auf NVIDIA-Karten der Kepler-Generation (GTX 600/700) keinen Text (#13);
+dort nimmt WhiteHoleFX automatisch OpenGL. Bei anderen Karten mit dem gleichen Problem lohnt ein Versuch mit der
+Umgebungsvariable `WHITEHOLEFX_GPU_BACKEND` (`vulkan`, `gl` oder `dx12`) und ein Issue mit Kartenname und Treiber.
 
 **Zum Ausprobieren:** Datei → Beispiele → `looks` öffnen, „Start“ drücken, mit **F9** in den Live-Modus wechseln
 und per Klick oder Tasten 1 bis 3 zwischen den Looks überblenden.

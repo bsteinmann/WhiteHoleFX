@@ -1,5 +1,9 @@
 # Änderungen
 
+## 0.78.1
+
+- **Automatisch OpenGL auf Kepler-Karten (#13).** Auf NVIDIA GeForce GTX 600/700 (ohne 745 und 750) blieb der Text-Node unter Vulkan unsichtbar. WhiteHoleFX erkennt diese Karten am Namen und nimmt OpenGL; schlägt das fehl, bleibt es bei Vulkan. `WHITEHOLEFX_GPU_BACKEND` hat weiter Vorrang. Andere Karten sind nicht betroffen. Gesehen wurde das Problem bisher nur auf einer GTX 760; weitere betroffene Karten bitte als Issue melden.
+
 ## 0.78.0
 
 - **Anzeigestreifen in den Audio-Nodes.** Audio Spectrum, Audio Band, Kick/Snare/Hat und Audio Waveform zeigen ihre 32 Balken (beziehungsweise die Welle) jetzt in einem eigenen Streifen unten im Node statt hinter der Schrift; der Node wird dafür etwas höher. Eine Frequenzachse (100 Hz, 1 kHz, 10 kHz) hilft beim Zuordnen.
