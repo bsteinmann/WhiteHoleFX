@@ -18,4 +18,8 @@ namespace whitehole::studio {
 /// Zeigt den Hinweis (nicht blockierend). Leerer Pfad: tut nichts.
 void showCrashNotice(QWidget* parent, const QString& reportPath);
 
+/// Hinweis für den Fall ohne Bericht: Das Studio wurde zuletzt nicht ordentlich beendet (siehe session_marker.hpp), aber
+/// der Absturz-Handler hat nichts geschrieben. `cacheDir` ist der Ordner mit stack.txt und crash/.
+void showUncleanNotice(QWidget* parent, const QString& cacheDir);
+
 }  // namespace whitehole::studio

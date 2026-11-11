@@ -223,6 +223,8 @@ jobs:
           run_studio --ctrl-n --software --grab fenster-neu.png
           run_studio --ctrl-n --run --software --frames 20 --grab fenster-neu-lauf.png
           run_studio --software --grab fenster-leer.png
+          # Sitzungsmarke: ein unsauberes Ende (Absturz ohne Bericht) muss beim nächsten Start erkannt werden.
+          run_studio --session-test
           # Wächter (Issue 26): Ein 4 s langer Stillstand muss einen Aufrufstapel auf stderr ausgeben.
           hang=$("$studio" --hang-test --software --grab fenster-hang.png 2>&1) || true
           echo "$hang" | grep -E "Hauptthread|Studio:" | head
@@ -305,6 +307,15 @@ jobs:
           $p2 = Start-Process -FilePath $exe -ArgumentList "examples/einstieg/regler.whfx","--run","--software","--frames","30","--exercise","--grab","fenster-lauf.png" -Wait -PassThru
           Write-Output "::notice title=Rauchtest mit Lauf::Exit-Code $($p2.ExitCode)"
           if (-not (Test-Path fenster-regler.png)) { exit 1 }
+      - name: Sitzungsmarke prüfen (unsauberes Ende erkennen)
+        env:
+          QT_QPA_PLATFORM: offscreen
+          PATH_QT: C:\Qt\6.8.3\msvc2022_64\bin
+        run: |
+          $env:PATH = "$env:PATH_QT;$env:PATH"
+          $p = Start-Process -FilePath "./build/apps/whitehole_studio/Release/whitehole_studio.exe" -ArgumentList "--session-test" -Wait -PassThru
+          Write-Output "::notice title=Sitzungsmarke::Exit-Code $($p.ExitCode)"
+          if ($p.ExitCode -ne 0) { exit 1 }
       - name: Absturzbericht prüfen (absichtlicher Absturz, Bericht und Dump müssen entstehen)
         env:
           QT_QPA_PLATFORM: offscreen

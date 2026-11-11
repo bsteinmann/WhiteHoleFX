@@ -319,3 +319,17 @@ TEST_CASE("Projekt: Node-Positionen (at) werden gelesen und geschrieben", "[proj
     REQUIRE(old.ok());
     CHECK(old.value().graph.nodes().at(0).position == Vec2{});
 }
+
+TEST_CASE("Projekt: Dateien in Ordnern mit Umlauten lassen sich schreiben und lesen", "[project][io]") {
+    // Unter Windows scheiterte das, solange der UTF-8-Pfad als ANSI-Pfad gedeutet wurde (Speichern unter, Öffnen).
+    namespace fs = std::filesystem;
+    const fs::path folder = fs::temp_directory_path() / std::filesystem::path{u8"whfx-Prüfung-Größe"};
+    fs::create_directories(folder);
+    const std::u8string name = (folder / std::filesystem::path{u8"Schön.whfx"}).u8string();
+    const std::string path{reinterpret_cast<const char*>(name.data()), name.size()};
+    REQUIRE(project::writeTextFile(path, "whitehole-project 1\n").ok());
+    const auto back = project::readTextFile(path);
+    REQUIRE(back.ok());
+    CHECK(back.value() == "whitehole-project 1\n");
+    fs::remove_all(folder);
+}

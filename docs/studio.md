@@ -609,6 +609,13 @@ Stürzt das Studio ab oder reagiert es länger als einige Sekunden nicht, schrei
   (das Programm läuft weiter). Beim nächsten Start weist das Studio auf den Bericht hin („Ordner öffnen“). Die
   Funktionsnamen im Bericht lassen sich mit der `.pdb` der Version auflösen; ohne sie stehen dort Modul und Offset.
 - **Linux:** der Aufrufstapel steht auf stderr und in `stack.txt` im Cache-Ordner.
+- **Ohne Bericht:** Manche Abstürze erreichen den Handler nicht (Schnellabbruch der Laufzeit, beschädigter Heap, Fehler in
+  Erweiterungen der Windows-Dialoge). Dafür legt das Studio beim Start `crash\session.txt` (Prozessnummer) an und löscht sie
+  beim ordentlichen Beenden. Findet der nächste Start die Datei vor und der Prozess lebt nicht mehr, zeigt es „Unerwartetes
+  Ende beim letzten Mal“ mit dem Cache-Ordner. Zwei gleichzeitig laufende Studios stören sich nicht. Selbsttest:
+  `whitehole_studio --session-test`.
+- **Speichern unter** nutzt den Qt-eigenen Dialog statt des Windows-Dialogs, damit Erweiterungen von Fremdprogrammen nicht
+  hineinwirken können.
 - Das Speicherabbild enthält Teile des Arbeitsspeichers. Es bleibt auf dem Rechner, bis du es selbst weitergibst.
 - Ausschalten: Umgebungsvariable `WHITEHOLEFX_NO_WATCHDOG=1`. Selbsttest: `whitehole_studio --crash-test`.
 

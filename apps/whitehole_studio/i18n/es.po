@@ -934,6 +934,10 @@ msgstr "El protocolo pertenece al controlador. Puertos predeterminados: Art-Net 
 msgid "Das Studio ist beim letzten Mal abgestürzt."
 msgstr "El Studio se cerró inesperadamente la última vez."
 
+#: crash_notice.cpp:46
+msgid "Das Studio wurde beim letzten Mal nicht ordentlich beendet."
+msgstr "El estudio no se cerró correctamente la última vez."
+
 #: test_panel.cpp:97
 msgid "Das Testbild ersetzt den Effekt in der Vorschau und, wenn „Ausgabe senden“ an ist, auch auf den LEDs. Es wird nicht im Projekt gespeichert.\n\nAchtung: Weiß und Farbe leuchten mit voller Helligkeit. Prüfe vorher, ob die Netzteile die ganze Wand auf 100 % tragen."
 msgstr "La imagen de prueba sustituye al efecto en la vista previa y, si «Enviar salida» está activado, también en los LED. No se guarda en el proyecto.\n\nAtención: el blanco y el color se encienden a pleno brillo. Comprueba antes que las fuentes de alimentación soportan toda la pared al 100 %."
@@ -1062,7 +1066,7 @@ msgstr "Esta forma no es válida."
 msgid "Dieser Node hat keine einstellbaren Parameter."
 msgstr "Este nodo no tiene parámetros ajustables."
 
-#: main.cpp:128
+#: main.cpp:133
 msgid "Dieses Programm wurde ohne GPU-Backend gebaut (-DWHITEHOLEFX_WEBGPU=ON); es zeigt nur das Layout."
 msgstr "Este programa se compiló sin el backend de GPU (-DWHITEHOLEFX_WEBGPU=ON); solo muestra la disposición."
 
@@ -1278,6 +1282,10 @@ msgstr "Primer canal"
 msgid "Es gibt keine Bauform \"%1\""
 msgstr "No existe el tipo \"%1\""
 
+#: crash_notice.cpp:47
+msgid "Es gibt keinen Absturzbericht: Das Programm wurde von außen beendet oder ist so abgestürzt, dass es nichts mehr schreiben konnte. Hilfreich für den Entwickler: was zuletzt geklickt wurde, und die Datei stack.txt im Ordner:\n%1"
+msgstr "No hay informe de fallo: el programa se cerró desde fuera o falló sin poder escribir nada. Útil para el desarrollador: lo último que se pulsó y el archivo stack.txt de la carpeta:\n%1"
+
 #: node_editor_presets.cpp:63
 msgid "Es gibt schon ein Preset \"%1\". Ersetzen?"
 msgstr "Ya existe un preajuste «%1». ¿Sustituirlo?"
@@ -1426,7 +1434,7 @@ msgstr "GO  (barra espaciadora)"
 msgid "GO (von Hand)"
 msgstr "GO (manual)"
 
-#: main.cpp:107
+#: main.cpp:112
 msgid "GPU wird vorbereitet …"
 msgstr "Preparando la GPU …"
 
@@ -1462,7 +1470,7 @@ msgstr "Volumen global de la entrada de audio como nivel y pico, lineal o en dB,
 msgid "Gespeichert in der Bibliothek. „In Show übernehmen“ (oder Doppelklick) holt sie in diese Show."
 msgstr "Guardado en la biblioteca. «Tomar en el show» (o doble clic) lo trae a este show."
 
-#: main_window_file.cpp:146 main_window_file.cpp:171
+#: main_window_file.cpp:146 main_window_file.cpp:174
 msgid "Gespeichert: %1"
 msgstr "Guardado: %1"
 
@@ -1674,7 +1682,7 @@ msgstr "Tarjeta para enviar:"
 msgid "Kein Fixture ausgewählt."
 msgstr "Ningún fixture seleccionado."
 
-#: main.cpp:125
+#: main.cpp:130
 msgid "Kein GPU-Adapter: %1"
 msgstr "Ningún adaptador de GPU: %1"
 
@@ -2130,7 +2138,7 @@ msgstr "Borde superior en"
 msgid "Obere Kanten ausrichten"
 msgstr "Alinear bordes superiores"
 
-#: main.cpp:132
+#: main.cpp:137
 msgid "Oberfläche wird aufgebaut …"
 msgstr "Construyendo la interfaz …"
 
@@ -2146,7 +2154,7 @@ msgstr "Contorno naranja en un nodo: su salida se muestrea sobre los LED."
 msgid "Ordner der Benutzerbibliothek lässt sich nicht anlegen: %1"
 msgstr "No se puede crear la carpeta de la biblioteca de usuario: %1"
 
-#: crash_notice.cpp:38
+#: crash_notice.cpp:38 crash_notice.cpp:51
 msgid "Ordner öffnen"
 msgstr "Abrir carpeta"
 
@@ -2258,7 +2266,7 @@ msgstr "Presets"
 msgid "Projekt laden"
 msgstr "Cargar proyecto"
 
-#: main_window_file.cpp:155
+#: main_window_file.cpp:158
 msgid "Projekt speichern unter"
 msgstr "Guardar proyecto como"
 
@@ -2454,7 +2462,7 @@ msgstr "Las columnas se mueven arrastrando la cabecera"
 msgid "Spannt einen Wert von 0 bis 1 über den ganzen Bereich des Parameters"
 msgstr "Extiende un valor de 0 a 1 sobre todo el rango del parámetro"
 
-#: main_window_file.cpp:142 main_window_file.cpp:166
+#: main_window_file.cpp:142 main_window_file.cpp:169
 msgid "Speichern"
 msgstr "Guardar"
 
@@ -2506,7 +2514,7 @@ msgstr "Dispositivo predeterminado del sistema"
 msgid "Start"
 msgstr "Inicio"
 
-#: main.cpp:101
+#: main.cpp:106
 msgid "Starte …"
 msgstr "Iniciando …"
 
@@ -2641,6 +2649,10 @@ msgstr "U%1: %2–%3"
 #: look_panel.cpp:61
 msgid "Umbenennen …"
 msgstr "Renombrar …"
+
+#: crash_notice.cpp:45
+msgid "Unerwartetes Ende beim letzten Mal"
+msgstr "Final inesperado la última vez"
 
 #: main_window.cpp:211
 msgid "Ungespeicherte Änderungen"
@@ -2782,7 +2794,7 @@ msgstr "WhiteHoleFX"
 msgid "WhiteHoleFX – %1%2"
 msgstr "WhiteHoleFX – %1%2"
 
-#: main_window_file.cpp:156
+#: main_window_file.cpp:159
 msgid "WhiteHoleFX-Projekte (*.whfx)"
 msgstr "Proyectos de WhiteHoleFX (*.whfx)"
 

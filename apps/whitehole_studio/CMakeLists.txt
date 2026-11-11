@@ -50,6 +50,8 @@ add_executable(whitehole_studio
     stall_watchdog_win.cpp
     crash_notice.cpp
     crash_notice.hpp
+    session_marker.cpp
+    session_marker.hpp
     stall_watchdog.hpp
     main_window_settings.cpp
     main_window_stage.cpp

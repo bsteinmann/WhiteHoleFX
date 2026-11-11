@@ -22,6 +22,7 @@
 #include "app_language.hpp"
 #include "main_window.hpp"
 #include "crash_notice.hpp"
+#include "session_marker.hpp"
 #include "stall_event_filter.hpp"
 #include "scroll_behavior.hpp"
 #include "splash.hpp"
@@ -78,9 +79,13 @@ int main(int argc, char** argv) {
     const QCommandLineOption ctrlNOption{QStringLiteral("ctrl-n"), QStringLiteral("gleich nach dem Start Strg+N (Neu) auslösen (Prüfung für Issue #26)")};
     const QCommandLineOption hangTestOption{QStringLiteral("hang-test"), QStringLiteral("Selbsttest des Wächters: den Hauptthread 4 s anhalten")};
     const QCommandLineOption noSplashOption{QStringLiteral("no-splash"), QStringLiteral("keinen Startbildschirm zeigen")};
+    const QCommandLineOption sessionTestOption{QStringLiteral("session-test"), QStringLiteral("Selbsttest der Sitzungsmarke (unsauberes Ende erkennen)")};
     const QCommandLineOption crashTestOption{QStringLiteral("crash-test"), QStringLiteral("Selbsttest des Absturzberichts: stürzt absichtlich ab")};
-    parser.addOptions({runOption, softwareOption, grabOption, framesOption, exerciseOption, langOption, ctrlNOption, hangTestOption, crashTestOption, noSplashOption});
+    parser.addOptions({runOption, softwareOption, grabOption, framesOption, exerciseOption, langOption, ctrlNOption, hangTestOption, crashTestOption, noSplashOption, sessionTestOption});
     parser.process(app);
+    if (parser.isSet(sessionTestOption)) {
+        return studio::sessionSelfTest() ? 0 : 1;
+    }
 
     // Sprache vor dem ersten Fenster setzen. Die Rauchtests (--grab) prüfen deutsche Texte und laufen deshalb
     // deutsch, außer --lang sagt etwas anderes.
@@ -141,7 +146,15 @@ int main(int argc, char** argv) {
         splash->finish(&window);
     }
     if (!grabbing && !parser.isSet(crashTestOption)) {
-        studio::showCrashNotice(&window, studio::takePendingCrashReport(cacheDir));  // Absturz beim letzten Mal?
+        // Absturz beim letzten Mal? Mit Bericht (Marke pending.txt) oder, wenn der Handler nichts mehr schreiben konnte, nur
+        // an der Sitzungsmarke zu erkennen.
+        const bool uncleanEnd = studio::beginSession(cacheDir);
+        const QString report = studio::takePendingCrashReport(cacheDir);
+        if (!report.isEmpty()) {
+            studio::showCrashNotice(&window, report);
+        } else if (uncleanEnd) {
+            studio::showUncleanNotice(&window, cacheDir);
+        }
         window.startupUpdateCheck();  // nur nach Zustimmung des Nutzers (Frage beim ersten Start)
     }
 
@@ -176,7 +189,9 @@ int main(int argc, char** argv) {
     }
 
     if (!grab) {
-        return QApplication::exec();
+        const int code = QApplication::exec();
+        studio::endSession(cacheDir);  // ordentliches Ende: Sitzungsmarke löschen
+        return code;
     }
 
     // Rauchtest: einige Frames im Takt, dann Fensterbild.

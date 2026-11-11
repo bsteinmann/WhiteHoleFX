@@ -151,9 +151,12 @@ void MainWindow::onSaveAs() {
     const QString start = player_->status().path.empty() ? QString{} : toQString(player_->status().path);
     QString path;
     {
+        // Qt-eigener Dialog statt des Windows-Dialogs: Dessen Erweiterungen von Fremdprogrammen (Cloud-Ordner, Shell-
+        // Erweiterungen) lösten auf einem Rechner einen Absturz ohne Bericht aus. Der Qt-Dialog läuft in unserer
+        // eigenen Ereignisschleife; die Pause schadet trotzdem nicht.
         const StallPause pause;
         path = QFileDialog::getSaveFileName(this, tr("Projekt speichern unter"), start,
-                                            tr("WhiteHoleFX-Projekte (*.whfx)"));
+                                            tr("WhiteHoleFX-Projekte (*.whfx)"), nullptr, QFileDialog::DontUseNativeDialog);
     }
     if (path.isEmpty()) {
         return;

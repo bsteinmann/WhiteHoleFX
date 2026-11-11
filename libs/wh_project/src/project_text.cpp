@@ -3,6 +3,7 @@
 
 #include <charconv>
 #include <cmath>
+#include <filesystem>
 #include <fstream>
 #include <sstream>
 
@@ -245,8 +246,18 @@ void Reader::expectEnd() {
 
 namespace whitehole::project {
 
+namespace {
+
+/// Pfad aus UTF-8: Unter Windows deutet ein std::string-Pfad sonst die Ansicht der ANSI-Codepage (Umlaute im
+/// Benutzernamen oder Ordner führten dazu, dass Projekte nicht zu öffnen oder zu speichern waren).
+std::filesystem::path fromUtf8(const std::string& path) {
+    return std::filesystem::path{std::u8string{reinterpret_cast<const char8_t*>(path.data()), path.size()}};
+}
+
+}  // namespace
+
 Result<std::string> readTextFile(const std::string& path) {
-    std::ifstream in{path, std::ios::binary};
+    std::ifstream in{fromUtf8(path), std::ios::binary};
     if (!in) {
         return Error{ErrorCode::IoError, "Datei kann nicht geöffnet werden: " + path};
     }
@@ -259,7 +270,7 @@ Result<std::string> readTextFile(const std::string& path) {
 }
 
 Result<void> writeTextFile(const std::string& path, std::string_view text) {
-    std::ofstream out{path, std::ios::binary | std::ios::trunc};
+    std::ofstream out{fromUtf8(path), std::ios::binary | std::ios::trunc};
     if (!out) {
         return Error{ErrorCode::IoError, "Datei kann nicht geschrieben werden: " + path};
     }

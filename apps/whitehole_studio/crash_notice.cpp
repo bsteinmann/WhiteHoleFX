@@ -41,4 +41,17 @@ void showCrashNotice(QWidget* parent, const QString& reportPath) {
     box->open();
 }
 
+void showUncleanNotice(QWidget* parent, const QString& cacheDir) {
+    auto* box = new QMessageBox{QMessageBox::Warning, QObject::tr("Unerwartetes Ende beim letzten Mal"),
+                                QObject::tr("Das Studio wurde beim letzten Mal nicht ordentlich beendet."), QMessageBox::Ok, parent};
+    box->setInformativeText(QObject::tr("Es gibt keinen Absturzbericht: Das Programm wurde von außen beendet oder ist so abgestürzt, "
+                                        "dass es nichts mehr schreiben konnte. Hilfreich für den Entwickler: was zuletzt geklickt "
+                                        "wurde, und die Datei stack.txt im Ordner:\n%1")
+                                .arg(QDir::toNativeSeparators(cacheDir)));
+    QPushButton* open = box->addButton(QObject::tr("Ordner öffnen"), QMessageBox::ActionRole);
+    QObject::connect(open, &QPushButton::clicked, box, [cacheDir]() { QDesktopServices::openUrl(QUrl::fromLocalFile(cacheDir)); });
+    box->setAttribute(Qt::WA_DeleteOnClose);
+    box->open();
+}
+
 }  // namespace whitehole::studio

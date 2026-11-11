@@ -1,5 +1,11 @@
 # Änderungen
 
+## 0.84.1
+
+- **Absturz bei „Speichern unter …“ unter Windows entschärft.** Der Absturz erreichte den Absturz-Handler nicht und hinterließ darum keinen Bericht (vermutlich der Windows-Dialog samt Erweiterungen von Fremdprogrammen). „Speichern unter“ nutzt jetzt den Qt-eigenen Dialog. Sollte es weiter krachen, bitte kurz melden, was im Dialog geschah (Ordner, Cloud-Laufwerk).
+- **Unsauberes Ende wird beim nächsten Start gemeldet,** auch ohne Absturzbericht: eine Sitzungsmarke (`crash\session.txt`) bleibt nur liegen, wenn das Studio nicht ordentlich beendet wurde. Dann erscheint „Unerwartetes Ende beim letzten Mal“. Prüfung: `whitehole_studio --session-test` (Linux- und Windows-CI).
+- **Projektdateien in Ordnern mit Umlauten** (zum Beispiel ein Benutzername mit „ü“) ließen sich unter Windows nicht öffnen oder speichern, weil der UTF-8-Pfad als ANSI-Pfad gedeutet wurde. Jetzt gehen Lesen und Schreiben über UTF-8-Pfade; Test mit Umlaut-Ordner.
+
 ## 0.84.0
 
 - **Beim Kabelziehen werden unpassende Ports abgedunkelt.** Sobald man ein Kabel von einem Port aufzieht, sind alle Ports gedimmt, die es nicht annehmen würden (falsche Seite, falscher Typ, derselbe Node). Ports, die nur nach einer Umwandlung passen (Boolean an ein Zahlenfeld, Trigger an einen Schalter, Integer an Scalar), sind etwas dezenter als exakt passende, damit man sie überhaupt entdeckt. Der Port unter der Maus bekommt einen weißen Ring, wenn er das Kabel annimmt. Die Palette hebt wie bisher passende Node-Typen hervor. Die Entscheidung kommt aus `graph::isConnectable`, derselben Regel wie beim Loslassen. Reine Anzeige.
