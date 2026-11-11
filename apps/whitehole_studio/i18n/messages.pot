@@ -606,11 +606,11 @@ msgstr ""
 msgid "Auf den Wert der Bibliothek zurückstellen"
 msgstr ""
 
-#: node_editor_library.cpp:150
+#: node_editor_library.cpp:154
 msgid "Auf der Kachel ausblenden"
 msgstr ""
 
-#: node_editor_library.cpp:149
+#: node_editor_library.cpp:153
 msgid "Auf der Kachel ausblenden (Kabel nach außen vorhanden)"
 msgstr ""
 
@@ -1954,7 +1954,7 @@ msgstr ""
 msgid "Nach Updates suchen?"
 msgstr ""
 
-#: node_editor_library.cpp:154
+#: node_editor_library.cpp:158
 msgid "Nach außen führen (auf der Kachel zeigen)"
 msgstr ""
 
@@ -2924,6 +2924,10 @@ msgstr ""
 
 #: node_palette.cpp:344
 msgid "Zu Favoriten hinzufügen"
+msgstr ""
+
+#: node_editor_drag.cpp:88 node_editor_library.cpp:93
+msgid "Zuerst ein Projekt anlegen (Strg+N) oder öffnen (Strg+O)."
 msgstr ""
 
 #: add_fixture_dialog.cpp:111 fixture_form.cpp:137 shape_form.cpp:87

@@ -1,5 +1,9 @@
 # Änderungen
 
+## 0.82.1
+
+- **Absturz behoben: Node aus der Palette in den leeren Editor ziehen.** Direkt nach dem Start ist noch kein Projekt geöffnet. Ließ man dort einen Node aus der Palette los, griff der Editor auf das nicht vorhandene Projekt zu (Zugriffsverletzung, gemeldet unter Windows). Jetzt passiert nichts außer dem Hinweis „Zuerst ein Projekt anlegen (Strg+N) oder öffnen (Strg+O).“; dasselbe gilt für Einträge aus der Bibliothek. Mit Strg+N oder einem geöffneten Projekt ging es schon vorher. Der CI-Test `--ctrl-n` prüft den Fall jetzt vor dem Anlegen des Projekts.
+
 ## 0.82.0
 
 - **Compare: Between und Equal.** Die Auswahl „On when value is“ kennt zusätzlich *Between* (an zwischen `threshold` und der neuen oberen Grenze `upper`) und *Equal* (an bei `threshold` ± `tolerance`, zum Beispiel für die Schrittnummer eines Sequencers). Die Hysterese gilt an beiden Kanten (zum Einschalten enger, zum Ausschalten weiter). *Above* und *Below* verhalten sich wie bisher, alte Projekte laufen unverändert.

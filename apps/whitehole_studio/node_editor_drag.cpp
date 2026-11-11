@@ -82,6 +82,12 @@ bool NodeEditor::handleNodeDrop(const QMimeData* mime, const QPoint& viewportPos
     if (!carriesNodeType(mime)) {
         return false;
     }
+    if (player_.project() == nullptr) {
+        // Nach dem Start ist noch kein Projekt da (Absturz in 0.82.0 beim Ziehen eines Nodes in den leeren Editor).
+        clearDockPreview();
+        Q_EMIT notice(tr("Zuerst ein Projekt anlegen (Strg+N) oder öffnen (Strg+O)."));
+        return true;
+    }
     const std::string typeId = nodeTypeOf(mime);
     fitPending_ = false;  // der Nutzer arbeitet im Editor: die Ansicht folgt der Fenstergröße nicht mehr von selbst
     // Abgelegt wird nur, was im Editor liegt; eine Stelle daneben (Fehler im Drag-System) landet am Rand.
@@ -131,6 +137,23 @@ void NodeEditor::ensureNodesVisible() {
     if (!anyVisible || !std::isfinite(scale) || scale < 0.02) {
         showAll();
     }
+}
+
+QString NodeEditor::exerciseEmptyDrop() {
+    if (player_.project() != nullptr) {
+        return {};  // der Fall "kein Projekt" lässt sich nur direkt nach dem Start prüfen
+    }
+    QMimeData mime;
+    mime.setData(QString::fromLatin1(kNodeTypeMime), QByteArrayLiteral("wh.generator.plasma"));
+    if (!handleNodeDrop(&mime, QPoint{10, 10}) || !nodes_.empty()) {
+        return QStringLiteral("Drop ohne Projekt: legt etwas an oder wird nicht abgefangen");
+    }
+    QMimeData library;
+    library.setData(QString::fromLatin1(kLibraryMime), QByteArrayLiteral("preset\nname"));
+    if (!handleLibraryDrop(&library, QPoint{10, 10}) || !nodes_.empty()) {
+        return QStringLiteral("Bibliotheks-Drop ohne Projekt: legt etwas an oder wird nicht abgefangen");
+    }
+    return {};
 }
 
 bool NodeEditor::viewportEvent(QEvent* event) {

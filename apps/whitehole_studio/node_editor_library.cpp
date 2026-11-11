@@ -89,6 +89,10 @@ bool NodeEditor::handleLibraryDrop(const QMimeData* mime, const QPoint& viewport
     if (parts.size() != 2) {
         return false;
     }
+    if (player_.project() == nullptr) {
+        Q_EMIT notice(tr("Zuerst ein Projekt anlegen (Strg+N) oder öffnen (Strg+O)."));
+        return true;
+    }
     fitPending_ = false;
     const QRect area = viewport()->rect();
     const QPoint inside{std::clamp(viewportPos.x(), 0, std::max(0, area.width() - 1)),

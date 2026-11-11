@@ -606,11 +606,11 @@ msgstr "Restablecer al valor predeterminado"
 msgid "Auf den Wert der Bibliothek zurückstellen"
 msgstr "Restablecer al valor de la biblioteca"
 
-#: node_editor_library.cpp:150
+#: node_editor_library.cpp:154
 msgid "Auf der Kachel ausblenden"
 msgstr "Ocultar en la ficha"
 
-#: node_editor_library.cpp:149
+#: node_editor_library.cpp:153
 msgid "Auf der Kachel ausblenden (Kabel nach außen vorhanden)"
 msgstr "Ocultar en la ficha (hay un cable hacia fuera)"
 
@@ -1954,7 +1954,7 @@ msgstr "Multicast"
 msgid "Nach Updates suchen?"
 msgstr "¿Buscar actualizaciones?"
 
-#: node_editor_library.cpp:154
+#: node_editor_library.cpp:158
 msgid "Nach außen führen (auf der Kachel zeigen)"
 msgstr "Exponer (mostrar en la ficha)"
 
@@ -2925,6 +2925,10 @@ msgstr "Zooms the image around the center: a factor above 1 enlarges, below 1 sh
 #: node_palette.cpp:344
 msgid "Zu Favoriten hinzufügen"
 msgstr "Añadir a favoritos"
+
+#: node_editor_drag.cpp:88 node_editor_library.cpp:93
+msgid "Zuerst ein Projekt anlegen (Strg+N) oder öffnen (Strg+O)."
+msgstr "Primero crea un proyecto (Ctrl+N) o abre uno (Ctrl+O)."
 
 #: add_fixture_dialog.cpp:111 fixture_form.cpp:137 shape_form.cpp:87
 msgid "Zuerst entlang"

@@ -105,6 +105,9 @@ public:
     /// Falsch, wenn die Daten keinen Node-Typ tragen. Von dropEvent benutzt; der Rauchtest ruft es direkt auf,
     /// weil sich Drag-Ereignisse nicht per sendEvent einspeisen lassen.
     bool handleNodeDrop(const QMimeData* mime, const QPoint& viewportPos);
+    /// Rauchtest: Ein Drop (Node und Bibliothekseintrag) ohne geöffnetes Projekt darf nichts anlegen und nicht abstürzen.
+    /// Leer, wenn schon ein Projekt da ist oder alles stimmt.
+    QString exerciseEmptyDrop();
     /// Das Widget, auf dem losgelassene Nodes gelöscht werden (die Palette). Gehört dem Aufrufer.
     void setDeleteZone(QWidget* zone);
 

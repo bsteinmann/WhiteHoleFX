@@ -606,11 +606,11 @@ msgstr "Скинути до стандартного значення"
 msgid "Auf den Wert der Bibliothek zurückstellen"
 msgstr "Повернути значення з бібліотеки"
 
-#: node_editor_library.cpp:150
+#: node_editor_library.cpp:154
 msgid "Auf der Kachel ausblenden"
 msgstr "Приховати на плитці"
 
-#: node_editor_library.cpp:149
+#: node_editor_library.cpp:153
 msgid "Auf der Kachel ausblenden (Kabel nach außen vorhanden)"
 msgstr "Приховати на плитці (є кабель назовні)"
 
@@ -1954,7 +1954,7 @@ msgstr "Multicast"
 msgid "Nach Updates suchen?"
 msgstr "Перевіряти оновлення?"
 
-#: node_editor_library.cpp:154
+#: node_editor_library.cpp:158
 msgid "Nach außen führen (auf der Kachel zeigen)"
 msgstr "Винести назовні (показати на плитці)"
 
@@ -2925,6 +2925,10 @@ msgstr "Масштабує зображення навколо центру: к�
 #: node_palette.cpp:344
 msgid "Zu Favoriten hinzufügen"
 msgstr "Додати до обраного"
+
+#: node_editor_drag.cpp:88 node_editor_library.cpp:93
+msgid "Zuerst ein Projekt anlegen (Strg+N) oder öffnen (Strg+O)."
+msgstr "Спершу створіть проєкт (Ctrl+N) або відкрийте наявний (Ctrl+O)."
 
 #: add_fixture_dialog.cpp:111 fixture_form.cpp:137 shape_form.cpp:87
 msgid "Zuerst entlang"

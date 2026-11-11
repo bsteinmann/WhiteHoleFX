@@ -11,6 +11,8 @@
 #include <QSlider>
 #include <QSpinBox>
 
+#include <cstdlib>
+
 #include "layout_panel.hpp"
 #include "preview_controller.hpp"
 #include "test_panel.hpp"
@@ -162,6 +164,11 @@ QString MainWindow::exerciseParameterView() {
 }
 
 void MainWindow::exerciseCtrlN() {
+    // Zuerst der Fall ohne Projekt: ein Node wird in den leeren Editor gezogen (Absturz in 0.82.0).
+    if (const QString dropProblem = editor_->exerciseEmptyDrop(); !dropProblem.isEmpty()) {
+        qCritical("%s", qPrintable(dropProblem));
+        std::exit(1);
+    }
     newAction_->trigger();
     for (int i = 0; i < 20; ++i) {
         QApplication::processEvents();
