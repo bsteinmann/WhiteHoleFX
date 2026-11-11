@@ -116,6 +116,7 @@ void NodeEditor::buildScene() {
     tileCount_ = 0;
     tempWire_ = nullptr;
     wireNode_ = nullptr;
+    wireHover_ = nullptr;
     dockWire_ = nullptr;
     dockNode_ = nullptr;
     dockLines_.clear();

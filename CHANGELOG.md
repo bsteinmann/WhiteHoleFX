@@ -1,5 +1,9 @@
 # Änderungen
 
+## 0.84.0
+
+- **Beim Kabelziehen werden unpassende Ports abgedunkelt.** Sobald man ein Kabel von einem Port aufzieht, sind alle Ports gedimmt, die es nicht annehmen würden (falsche Seite, falscher Typ, derselbe Node). Ports, die nur nach einer Umwandlung passen (Boolean an ein Zahlenfeld, Trigger an einen Schalter, Integer an Scalar), sind etwas dezenter als exakt passende, damit man sie überhaupt entdeckt. Der Port unter der Maus bekommt einen weißen Ring, wenn er das Kabel annimmt. Die Palette hebt wie bisher passende Node-Typen hervor. Die Entscheidung kommt aus `graph::isConnectable`, derselben Regel wie beim Loslassen. Reine Anzeige.
+
 ## 0.83.0
 
 - **Beispiel `effekte/schuss.whfx` für den Shot-Node:** Eine Scan-Linie läuft bei jedem Schlag einmal über die Matrix, ein Kreis dehnt sich bei jedem vierten Schlag aus (Sequencer `Trigger 1` als Signal). Beide sind nur sichtbar, solange ihr Shot läuft: `active` steuert den `amount` des Blend-Nodes (beim Kreis `active` mal `reverse`), vor dem ersten Trigger und nach dem Ende ist nichts zu sehen. Als Signal dient eine Clock; mit Musik tauscht man sie gegen den Audio Trigger (Kick).

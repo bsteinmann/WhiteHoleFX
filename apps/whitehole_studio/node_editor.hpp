@@ -172,6 +172,7 @@ public:
     /// Rauchtest der Live-Anzeige ohne laufende Wiedergabe: Balken setzen, Kabel folgen, Aufräumen. Leer = in Ordnung.
     QString exerciseLive();
     QString exerciseMonitor();
+    QString exerciseWireFit();
 
     [[nodiscard]] int nodeCount() const noexcept { return static_cast<int>(nodes_.size()); }
     [[nodiscard]] int wireCount() const noexcept { return static_cast<int>(wires_.size()); }
@@ -294,6 +295,7 @@ private:
     std::vector<GroupFrameItem*> frames_;                 // Rahmen aufgeklappter Gruppen
 
     NodeItem* wireNode_{nullptr};
+    NodeItem* wireHover_{nullptr};  // Node, dessen Port unter dem gezogenen Kabel einen Ring trägt
     PortSlot wireSlot_;
     QGraphicsPathItem* tempWire_{nullptr};
 

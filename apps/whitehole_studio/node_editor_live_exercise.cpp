@@ -91,7 +91,70 @@ QString NodeEditor::exerciseLive() {
     if (render() != plain) {
         return QStringLiteral("Live-Anzeige: nach dem Aufräumen sieht das Bild anders aus");
     }
-    return exerciseMonitor();
+    const QString monitor = exerciseMonitor();
+    return monitor.isEmpty() ? exerciseWireFit() : monitor;
+}
+
+/// Kabel ziehen: passende Ports bleiben hell, Umwandlungen sind dezenter, unpassende dunkel, Aufräumen nimmt alles zurück.
+QString NodeEditor::exerciseWireFit() {
+    using graph::PortDescriptor;
+    using graph::PortDirection;
+    using graph::PortType;
+    graph::NodeDescriptor start;
+    start.typeId = "test.start";
+    start.ports = {PortDescriptor{"flag", "Flag", PortType::Boolean, PortDirection::Output, false}};
+    graph::NodeDescriptor other;
+    other.typeId = "test.other";
+    other.ports = {PortDescriptor{"b", "Bool", PortType::Boolean, PortDirection::Input, false},
+                   PortDescriptor{"s", "Scalar", PortType::Scalar, PortDirection::Input, false},
+                   PortDescriptor{"t", "Text", PortType::Text, PortDirection::Input, false},
+                   PortDescriptor{"o", "Out", PortType::Scalar, PortDirection::Output, false}};
+    NodeItem from{NodeId{1}, start, QStringLiteral("Start")};
+    NodeItem to{NodeId{2}, other, QStringLiteral("Ziel")};
+    const auto render = [&] {
+        QImage image{220, 140, QImage::Format_ARGB32};
+        image.fill(Qt::black);
+        QPainter painter{&image};
+        QGraphicsScene scene;
+        scene.addItem(&to);
+        scene.render(&painter, QRectF{0, 0, 220, 140}, to.sceneBoundingRect());
+        scene.removeItem(&to);
+        return image;
+    };
+    const QImage plain = render();
+    from.setWireFit(PortType::Boolean, true, true, "flag");
+    to.setWireFit(PortType::Boolean, true, false, "flag");
+    const auto fitOf = [&](const char* key) { return to.findPort(key)->fit; };
+    if (fitOf("b") != WireFit::Exact || fitOf("s") != WireFit::Convert || fitOf("t") != WireFit::No ||
+        fitOf("o") != WireFit::No) {
+        return QStringLiteral("Kabel ziehen: Passung der Ports stimmt nicht (Bool %1, Scalar %2, Text %3, Ausgang %4)")
+            .arg(static_cast<int>(fitOf("b")))
+            .arg(static_cast<int>(fitOf("s")))
+            .arg(static_cast<int>(fitOf("t")))
+            .arg(static_cast<int>(fitOf("o")));
+    }
+    if (from.findPort("flag")->fit != WireFit::Exact) {
+        return QStringLiteral("Kabel ziehen: der Startport ist nicht normal sichtbar");
+    }
+    const QImage dimmed = render();
+    if (dimmed == plain) {
+        return QStringLiteral("Kabel ziehen: unpassende Ports werden nicht abgedunkelt");
+    }
+    to.setWireHover("s");
+    if (render() == dimmed) {
+        return QStringLiteral("Kabel ziehen: der Ring am passenden Port fehlt");
+    }
+    // Eingang als Start: nur Ausgänge kommen in Frage, Eingänge sind abgedunkelt
+    to.setWireFit(PortType::Scalar, false, false, "x");
+    if (fitOf("o") != WireFit::Exact || fitOf("b") != WireFit::No) {
+        return QStringLiteral("Kabel ziehen: Eingangs-Start wird falsch beurteilt");
+    }
+    to.clearWireFit();
+    from.clearWireFit();
+    if (fitOf("s") != WireFit::Off || render() != plain) {
+        return QStringLiteral("Kabel ziehen: Aufräumen lässt Reste stehen");
+    }
+    return {};
 }
 
 /// Anzeigestreifen: der Node wird höher, der Streifen malt, der markierte Bereich ist sichtbar und Aufräumen nimmt alles zurück.

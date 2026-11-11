@@ -120,7 +120,7 @@ stehen nicht im Node, sondern im Dock „Parameter“; beide benutzen dieselbe N
 |---|---|
 | Node hinzufügen | aus der **Palette** links im Dock ziehen oder doppelklicken (siehe unten); Rechtsklick auf freie Fläche, Menü nach Kategorien; schneller: Strg+Leertaste, tippen („rain“, „mix“, „blend add“), Pfeiltasten, Enter. Der Node entsteht an der Maus |
 | Node verschieben | ziehen; die Lage wird in der Projektdatei gespeichert (`at`) |
-| verbinden | von einem Port zu einem passenden anderen ziehen (in beide Richtungen); ein belegter Eingang wird ersetzt |
+| verbinden | von einem Port zu einem passenden anderen ziehen (in beide Richtungen); ein belegter Eingang wird ersetzt. Beim Ziehen werden alle Ports, die das Kabel nicht annehmen würden, abgedunkelt; Ports, die nur nach Umwandlung passen (etwa ein Boolean-Ausgang an einem Zahlenfeld, ein Trigger an einem Schalter), sind etwas dezenter als exakt passende; der Port unter der Maus bekommt einen weißen Ring, wenn er das Kabel annimmt. Die Palette hebt weiterhin die Node-Typen mit passendem Port hervor. Die Passung kommt aus derselben Regel (`isConnectable`), die beim Loslassen gilt |
 | löschen | anklicken (Strg oder Rahmen für mehrere), Entf; oder Rechtsklick; oder den Node auf die Palette ziehen und loslassen (sie färbt sich rot). Steckt der Node in einer Kette (A → X → B), werden A und B danach direkt verbunden |
 | kopieren, einfügen, duplizieren | Strg+C, Strg+V (an der Mausposition), Strg+D; auch im Rechtsklick-Menü. Kabel zwischen den ausgewählten Nodes kommen mit, Kabel nach draußen nicht. Die Kopie ist danach ausgewählt, ein Schritt Rückgängig nimmt sie komplett zurück |
 | Passenden Node anschließen | Rechtsklick auf einen **Ein- oder Ausgang**: „Eingang/Ausgang verbinden mit neuem Node“ zeigt nur Nodes (nach Kategorien), die einen passenden Port haben. Der gewählte Node entsteht neben dem angeklickten (bei einem Ausgang rechts, bei einem Eingang links) und ist sofort verbunden. Ein bereits belegter Eingang bietet nichts an. Ein Schritt Rückgängig nimmt Node und Kabel zurück, wenn du zweimal drückst (erst das Kabel, dann den Node) |
@@ -169,7 +169,7 @@ Bild-Nodes (GPU) zeigen nichts, und ein Rechen-Node, den niemand verbraucht, wir
 auch nichts. Zugeklappte Gruppen zeigen die Pegel an ihren herausgeführten Ausgängen. Abschalten unter
 **Ansicht → Pegel im Editor** (die Einstellung bleibt erhalten).
 
-Die CI prüft mit `--exercise` auch den Anzeigestreifen (Node wird höher, Balken, markierter Bereich, Welle, Aufräumen). Außerdem prüft sie den Editor: Zwei Nodes anlegen, ein Kabel auf dem Weg der Maus
+Die CI prüft mit `--exercise` auch das Abdunkeln beim Kabelziehen und den Anzeigestreifen (Node wird höher, Balken, markierter Bereich, Welle, Aufräumen). Außerdem prüft sie den Editor: Zwei Nodes anlegen, ein Kabel auf dem Weg der Maus
 ziehen (Treffer auf Ports), verschieben, Kabel und Nodes wieder löschen.
 
 ## Layout-Editor

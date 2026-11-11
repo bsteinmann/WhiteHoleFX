@@ -73,6 +73,14 @@ struct MonitorDisplay {
     bool operator==(const MonitorDisplay&) const = default;
 };
 
+/// Zustand eines Ports, während ein Kabel gezogen wird (node_items_fit.cpp).
+enum class WireFit {
+    Off,      ///< es wird kein Kabel gezogen
+    Exact,    ///< gleicher Typ
+    Convert,  ///< passt nach Umwandlung (zum Beispiel Boolean an ein Zahlenfeld): dezenter
+    No        ///< passt nicht: abgedunkelt
+};
+
 struct PortSlot {
     std::string key;
     QString label;
@@ -84,6 +92,7 @@ struct PortSlot {
     std::uint64_t realNode{0};
     std::string realKey;
     LiveDisplay live;
+    WireFit fit{WireFit::Off};
 };
 
 /// Zeichnet die Live-Anzeige eines Ausgangs (Balken, Spektrum, Farbstreifen) unter oder hinter seinem Namen;
@@ -106,6 +115,13 @@ public:
     [[nodiscard]] QSizeF size() const;
     [[nodiscard]] static QSizeF sizeFor(const graph::NodeDescriptor& descriptor);
     [[nodiscard]] const std::vector<PortSlot>& ports() const noexcept { return ports_; }
+
+    /// Kabel ziehen: markiert, welche Ports passen. `type`/`fromOutput`: der Startport; `ownNode`: dies ist sein Node
+    /// (dort passt nichts außer dem Startport selbst, `startKey`).
+    void setWireFit(graph::PortType type, bool fromOutput, bool ownNode, const std::string& startKey);
+    void clearWireFit();
+    /// Ring um den Port unter der Maus, wenn er das Kabel annehmen würde (leer = keiner).
+    void setWireHover(const std::string& portKey);
     [[nodiscard]] const PortSlot* findPort(const std::string& key) const;
     /// Der Port unter einem Punkt in Szenenkoordinaten, sonst nullptr.
     [[nodiscard]] const PortSlot* portAt(const QPointF& scenePos) const;
@@ -165,6 +181,7 @@ private:
     QString title_;
     QColor titleColor_;
     std::vector<PortSlot> ports_;
+    std::string hoverKey_;  // Port unter dem gezogenen Kabel
     double height_{0.0};
     std::optional<std::string> targetKey_;
     std::function<void(NodeItem&)> onMoved_;

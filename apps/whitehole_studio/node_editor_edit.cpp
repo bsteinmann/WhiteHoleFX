@@ -162,6 +162,11 @@ bool NodeEditor::beginWire(const QPointF& scenePos) {
     tempWire_ = scene_.addPath(QPainterPath{}, QPen{portColor(wireSlot_.type), 2.5, Qt::DashLine});
     tempWire_->setZValue(10.0);
     moveWire(scenePos);
+    for (QGraphicsItem* item : scene_.items()) {
+        if (auto* node = dynamic_cast<NodeItem*>(item)) {
+            node->setWireFit(wireSlot_.type, wireSlot_.output, node == wireNode_, wireSlot_.key);
+        }
+    }
     Q_EMIT wireDragBegan(static_cast<int>(wireSlot_.type), wireSlot_.output);
     return true;
 }
@@ -170,6 +175,16 @@ void NodeEditor::moveWire(const QPointF& scenePos) {
     if (tempWire_ == nullptr || wireNode_ == nullptr) {
         return;
     }
+    // Ring um den Port, der das Kabel hier annähme
+    const Hit under = portAt(scenePos);
+    NodeItem* hovered = under.node != nullptr && under.port->fit != WireFit::No && under.port->fit != WireFit::Off ? under.node : nullptr;
+    if (wireHover_ != nullptr && wireHover_ != hovered) {
+        wireHover_->setWireHover({});
+    }
+    if (hovered != nullptr) {
+        hovered->setWireHover(under.port->key);
+    }
+    wireHover_ = hovered;
     const QPointF anchor = wireNode_->anchorScene(wireSlot_);
     tempWire_->setPath(wireSlot_.output ? WireItem::curve(anchor, scenePos) : WireItem::curve(scenePos, anchor));
 }
@@ -182,7 +197,13 @@ void NodeEditor::cancelWire() {
         tempWire_ = nullptr;
     }
     wireNode_ = nullptr;
+    wireHover_ = nullptr;
     if (dragged) {
+        for (QGraphicsItem* item : scene_.items()) {
+            if (auto* node = dynamic_cast<NodeItem*>(item)) {
+                node->clearWireFit();
+            }
+        }
         Q_EMIT wireDragEnded();
     }
 }
