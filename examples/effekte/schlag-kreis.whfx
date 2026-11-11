@@ -6,7 +6,8 @@ whitehole-project 1
 #
 # Aufbau: Eine Clock gibt 128 Schläge pro Minute, ihr Tick startet den Shot-Node. Der liefert bei jedem Tick
 # einmal "progress" von 0 nach 1 (in genau einem Schlag, "curve" 1 = schnell am Anfang, langsam am Ende) und
-# "reverse" von 1 nach 0. Ein Map-Node legt "progress" auf den Radius der Sphere, "reverse" regelt die Helligkeit.
+# "reverse" von 1 nach 0. Ein Map-Node legt "progress" auf den Radius der Sphere, "reverse" mal "active" regelt
+# die Helligkeit: Vor dem ersten Trigger und nach dem Ende ist nichts zu sehen.
 # Statt der Clock kann der Beat- oder der Audio-Trigger-Node des Audio-Eingangs den Shot auslösen: Dann misst
 # der Shot das Tempo aus dem Abstand der Trigger (`bpm` auf 0 lassen). Mehrere Durchläufe pro Schlag: `repeats`.
 
@@ -27,6 +28,9 @@ node schlag wh.value.shot
   set beats 1
   set curve 1
 end
+node sichtbar wh.value.math
+  set op 2
+end
 node radius wh.value.map
   set outMin 0.02
   set outMax 0.5
@@ -42,5 +46,7 @@ connect takt.tick -> schlag.trigger
 connect schlag.progress -> radius.value
 connect radius.out -> kreis.radius
 connect kreis.out -> hell.source
-connect schlag.reverse -> hell.brightness
+connect schlag.active -> sichtbar.a
+connect schlag.reverse -> sichtbar.b
+connect sichtbar.out -> hell.brightness
 output hell.out

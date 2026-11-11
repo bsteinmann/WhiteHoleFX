@@ -40,6 +40,10 @@ TEST_CASE("Beispiel: examples/effekte/schlag-kreis.whfx lädt und kompiliert", "
     checkExample("effekte/schlag-kreis.whfx", "wh_");
 }
 
+TEST_CASE("Beispiel: examples/effekte/schuss.whfx lädt und kompiliert", "[examples][nodes]") {
+    checkExample("effekte/schuss.whfx", "wh_");
+}
+
 TEST_CASE("Beispiel: examples/effekte/funken.whfx lädt und kompiliert", "[examples][nodes]") {
     checkExample("effekte/funken.whfx", "wh_seg_dist");
 }

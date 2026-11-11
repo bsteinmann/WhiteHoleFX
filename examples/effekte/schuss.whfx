@@ -1,0 +1,84 @@
+whitehole-project 1
+# Beispiel für Shot: ein einzelner "Schuss" pro Signal, sonst ist nichts zu sehen.
+#
+#   whitehole_studio examples/effekte/schuss.whfx --run
+#
+# Zwei Schüsse auf demselben dunklen Hintergrund:
+#   - Eine Scan-Linie läuft bei jedem Schlag einmal von links nach rechts (Shot "linie").
+#   - Ein Kreis dehnt sich bei jedem vierten Schlag aus und verblasst (Shot "ring").
+# Solange ein Shot nicht läuft, steht sein Ausgang "active" auf aus; der Blend-Node bekommt ihn als "amount",
+# der Effekt ist also vor dem ersten Trigger und nach dem Ende unsichtbar (Shot hält "progress" am Ende
+# bei 1 fest, ohne "active" bliebe die Linie am rechten Rand stehen). Beim Kreis wird "active" mit "reverse"
+# multipliziert: er blendet beim Ausdehnen aus und ist am Ende ganz weg.
+#
+# Als Signal dient hier eine Clock (120 Schläge pro Minute). Mit Musik ersetzt man "takt.tick" durch den
+# Ausgang "beat" eines Audio-Trigger-Nodes (Instrument Kick): Dann feuert der Shot bei jedem Kick, und der
+# Shot misst das Tempo selbst (Tempo "bpm" im Shot dann auf 0 stellen).
+
+settings fps 40
+
+destination 0 127.0.0.1
+
+fixture Wand
+  matrix 32 16 serpentine
+  patch artnet destination 0 universe 0
+end
+
+node takt wh.value.clock
+  set bpm 120
+end
+node folge wh.value.sequencer
+  set steps 4
+end
+node linie wh.value.shot
+  set bpm 120
+  set beats 0.75
+end
+node ring wh.value.shot
+  set bpm 120
+  set beats 3
+  set curve 1
+end
+node sichtbar wh.value.math
+  set op 2
+end
+node radius wh.value.map
+  set outMin 0.03
+  set outMax 0.45
+end
+node hintergrund wh.generator.gradient
+  set colorA 0 0 0.04 1
+  set colorB 0.08 0 0.06 1
+end
+node balken wh.generator.scan
+  set width 0.1
+  set softness 0.6
+  set color 1 0.55 0.1 1
+end
+node kreis wh.generator.sphere
+  set space 0
+  set softness 0.3
+  set colorInside 0.2 0.9 1 1
+end
+node mitLinie wh.blend.blend
+  set mode 0
+end
+node mitRing wh.blend.blend
+  set mode 0
+end
+
+connect takt.tick -> folge.advance
+connect takt.tick -> linie.trigger
+connect folge.trig1 -> ring.trigger
+connect linie.progress -> balken.position
+connect linie.active -> mitLinie.amount
+connect ring.progress -> radius.value
+connect radius.out -> kreis.radius
+connect ring.active -> sichtbar.a
+connect ring.reverse -> sichtbar.b
+connect sichtbar.out -> mitRing.amount
+connect hintergrund.out -> mitLinie.a
+connect balken.out -> mitLinie.b
+connect mitLinie.out -> mitRing.a
+connect kreis.out -> mitRing.b
+output mitRing.out

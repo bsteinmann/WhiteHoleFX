@@ -1,5 +1,10 @@
 # Änderungen
 
+## 0.83.0
+
+- **Beispiel `effekte/schuss.whfx` für den Shot-Node:** Eine Scan-Linie läuft bei jedem Schlag einmal über die Matrix, ein Kreis dehnt sich bei jedem vierten Schlag aus (Sequencer `Trigger 1` als Signal). Beide sind nur sichtbar, solange ihr Shot läuft: `active` steuert den `amount` des Blend-Nodes (beim Kreis `active` mal `reverse`), vor dem ersten Trigger und nach dem Ende ist nichts zu sehen. Als Signal dient eine Clock; mit Musik tauscht man sie gegen den Audio Trigger (Kick).
+- Beispiel `effekte/schlag-kreis.whfx` angepasst: Vor dem ersten Trigger war ein kleiner Kreis zu sehen, jetzt blendet `active` ihn aus.
+
 ## 0.82.1
 
 - **Absturz behoben: Node aus der Palette in den leeren Editor ziehen.** Direkt nach dem Start ist noch kein Projekt geöffnet. Ließ man dort einen Node aus der Palette los, griff der Editor auf das nicht vorhandene Projekt zu (Zugriffsverletzung, gemeldet unter Windows). Jetzt passiert nichts außer dem Hinweis „Zuerst ein Projekt anlegen (Strg+N) oder öffnen (Strg+O).“; dasselbe gilt für Einträge aus der Bibliothek. Mit Strg+N oder einem geöffneten Projekt ging es schon vorher. Der CI-Test `--ctrl-n` prüft den Fall jetzt vor dem Anlegen des Projekts.

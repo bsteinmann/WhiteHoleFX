@@ -10,6 +10,7 @@ Die Beispiele liegen in `examples/`, nach Themen in Untergruppen. Im Studio ersc
 | Einstieg | `einstieg/looks.whfx` | drei gespeicherte Looks für den Live-Modus |
 | Einstieg | `einstieg/cuelist.whfx` | dieselben Looks als Cuelist: GO, Zeit-Auslöser, Taste F5, Delay/Fade, Schwarz am Ende |
 | Effekte (2D) | `effekte/gewitter.whfx` | Blitze über Plasma-Wolken |
+| Effekte (2D) | `effekte/schuss.whfx` | Shot-Node: eine Scan-Linie pro Schlag und ein sich ausdehnender Kreis bei jedem vierten Schlag, sonst unsichtbar (Shot `active` als Blend-`amount`) |
 | Effekte (2D) | `effekte/schlag-kreis.whfx` | ein Kreis dehnt sich bei jedem Schlag aus (Clock → Shot → Map → Sphere) |
 | Effekte (2D) | `effekte/funken.whfx` | Funken (Particles) |
 | Effekte (2D) | `effekte/kaleidoskop.whfx` | Metaballs im Kaleidoskop |
