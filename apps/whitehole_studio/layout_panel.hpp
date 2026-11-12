@@ -68,9 +68,10 @@ public:
     void addRegion();
     void addFromTemplate(const project::FixtureTemplate& tpl);
 
-    /// Bauformen aus der Bibliothek (Stage Config → Fixtures): Menü füllen und ein Exemplar mit Patch auf der Bühne anlegen.
-    void fillTypeMenu(QMenu* menu);
+    /// Bauformen dieser Show (Stage Config → Fixtures): Liste füllen und ein Exemplar mit Patch auf der Bühne anlegen.
+    void fillTypeList();
     bool addFromType(const QString& typeName);
+    [[nodiscard]] QString selectedTypeName() const;
 
     /// Alle in der Liste gewählten Fixtures (in Listenreihenfolge).
     [[nodiscard]] std::vector<mapping::FixtureId> selectedIds() const;
@@ -116,6 +117,7 @@ private:
 
     runtime::Player& player_;
     QListWidget* list_{nullptr};
+    QListWidget* types_{nullptr};  // Bauformen der Show; Doppelklick stellt ein Exemplar auf die Bühne
     FixtureForm* fixture_{nullptr};
     QCheckBox* showGrid_{nullptr};
     QCheckBox* snap_{nullptr};

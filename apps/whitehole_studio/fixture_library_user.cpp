@@ -50,9 +50,13 @@ void FixtureLibraryPage::fillStored(const QString& select) {
         item->setData(Qt::UserRole, fromStd(type.name));
         stored_->addItem(item);
     }
-    for (int row = 0; row < stored_->count(); ++row) {
-        if (stored_->item(row)->data(Qt::UserRole).toString() == select) {
-            stored_->setCurrentRow(row);
+    // Es ist immer nur eine der beiden Listen gewählt: Hat die Show-Liste eine Auswahl, bleibt die gespeicherte ohne
+    // (sonst versteckte showStored() nach dem Übernehmen das Formular der gerade geholten Bauform wieder).
+    if (list_->currentRow() < 0) {
+        for (int row = 0; row < stored_->count(); ++row) {
+            if (stored_->item(row)->data(Qt::UserRole).toString() == select) {
+                stored_->setCurrentRow(row);
+            }
         }
     }
     const bool any = stored_->count() > 0;
@@ -138,6 +142,12 @@ bool FixtureLibraryPage::takeOverStored(const QString& name) {
             Q_EMIT failed(fromStd(result.error().message));
             return false;
         }
+        {
+            const QSignalBlocker blocker{stored_};  // ab jetzt ist die Bauform in der Show gewählt, nicht mehr die gespeicherte
+            stored_->setCurrentRow(-1);
+        }
+        takeOver_->setEnabled(false);
+        deleteStored_->setEnabled(false);
         editing_ = true;
         fillList(name);
         editing_ = false;

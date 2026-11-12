@@ -82,6 +82,8 @@ Q_SIGNALS:
     void fixturesMoved();
     /// Der Griff konnte nicht verschieben (Meldung für die Statuszeile).
     void failed(const QString& message);
+    /// Eine LED wurde angeklickt: ihr Fixture (`extend`: mit Strg, zur Auswahl dazu). Die Test-Seite wählt damit Fixtures.
+    void fixtureClicked(mapping::FixtureId id, bool extend);
 
 protected:
     void showEvent(QShowEvent* event) override;

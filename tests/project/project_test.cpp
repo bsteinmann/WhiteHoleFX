@@ -333,3 +333,24 @@ TEST_CASE("Projekt: Dateien in Ordnern mit Umlauten lassen sich schreiben und le
     CHECK(back.value() == "whitehole-project 1\n");
     fs::remove_all(folder);
 }
+
+TEST_CASE("Projekt: übersprungene Pixel im Patch werden gelesen und geschrieben", "[project][skip]") {
+    const Library lib;
+    const std::string text = withHeader(
+        "destination 0 127.0.0.1\nfixture A\n  matrix 4 2\n  patch artnet destination 0 universe 0 channel 1 skip-first 1 "
+        "skip-every 4 skip-count 2\nend\n");
+    const auto parsed = parseProject(text, lib.registry);
+    REQUIRE(parsed.ok());
+    REQUIRE(parsed.value().patches.size() == 1);
+    const output::FixturePatch& p = parsed.value().patches[0];
+    CHECK(p.skipFirst == 1);
+    CHECK(p.skipEvery == 4);
+    CHECK(p.skipCount == 2);
+    const auto written = writeProject(parsed.value());
+    REQUIRE(written.ok());
+    CHECK(written.value().find("skip-first 1 skip-every 4 skip-count 2") != std::string::npos);
+    // Ohne Überspringen taucht nichts davon in der Datei auf (ältere Programme lesen sie weiter).
+    const auto plain = parseProject(withHeader("destination 0 127.0.0.1\nfixture A\n  matrix 4 2\n  patch artnet destination 0\nend\n"), lib.registry);
+    REQUIRE(plain.ok());
+    CHECK(writeProject(plain.value()).value().find("skip") == std::string::npos);
+}

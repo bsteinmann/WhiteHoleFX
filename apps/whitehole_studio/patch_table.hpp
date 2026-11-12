@@ -36,7 +36,7 @@ Q_SIGNALS:
 
 private:
     // Protocol ist nur eine Anzeige: das Protokoll gehört zum Controller (Spalte Destination), nicht zum Fixture.
-    enum Column { Name, Type, Leds, Send, Destination, Protocol, Universe, Channel, Range, DdpOffset, Order, Gamma, Brightness, Count };
+    enum Column { Name, Type, Leds, Send, Destination, Protocol, Universe, Channel, Range, DdpOffset, SkipFirst, SkipEvery, SkipCount, Order, Gamma, Brightness, Count };
 
     void commit(mapping::FixtureId id, bool rebuildAfter = false);
     void toggle(mapping::FixtureId id, bool on);

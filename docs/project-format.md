@@ -122,6 +122,7 @@ Genau eine Form pro Fixture, beliebig viele Patches:
 | `cylinder <leds-je-ring> <ringe> [radius r] [height h] [start winkel] [ccw] [straight]` | Säule: Ringe übereinander (Mittelachse bei x = z = r), das Kabel läuft Ring für Ring von unten nach oben; jeder zweite Ring läuft rückwärts, außer bei `straight` |
 | `point x y z` | eine LED einer Punktwolke, in Kabelreihenfolge; beliebig oft (aus CSV/JSON importierbar, siehe `docs/mapping.md`) |
 | `patch <artnet\|sacn\|ddp> destination <n> [universe u] [channel c] [offset o] [order RGB…] [gamma g] [brightness b]` | wohin das Fixture geht |
+| `… [skip-first s] [skip-every n skip-count k]` | Pixel am Kabel, die nicht leuchten (zum Beispiel ein Pixel als Signalverstärker): `s` Pixel vor der ersten LED, nach je `n` LEDs `k` Pixel. Sie bekommen Schwarz, belegen aber ihre Kanäle; die Adressen danach rücken weiter |
 
 `rotate x y z` dreht das ganze Fixture (Grad, um die Mitte seiner Box, Reihenfolge x, y, z). `type "Name"` verweist auf eine
 Bauform aus der Bibliothek (siehe unten); die Form steht dann dort und im Fixture selbst nicht.

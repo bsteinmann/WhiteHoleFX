@@ -35,7 +35,7 @@ std::vector<ChannelBlock> channelBlocks(const FixturePatch& patch, std::uint32_t
     }
     std::uint32_t universe = patch.universe;
     std::uint32_t byte = patch.channel > 0 ? patch.channel - 1U : 0U;
-    std::uint32_t remaining = ledCount;
+    std::uint32_t remaining = dataSlots(patch, ledCount);  // übersprungene Pixel belegen ihre Kanäle mit
     while (remaining > 0 && universe <= lastUniverseOf(patch.protocol)) {
         const std::uint32_t fit = std::min(remaining, byte < kTotal ? (kTotal - byte) / kBytesPerLed : 0U);
         if (fit > 0) {
@@ -56,7 +56,7 @@ std::optional<AddressSpan> addressSpan(const FixturePatch& patch, std::uint32_t 
     span.protocol = patch.protocol;
     if (patch.protocol == Protocol::Ddp) {
         span.firstChannel = patch.ddpOffset;
-        span.lastChannel = patch.ddpOffset + ledCount * kBytesPerLed - 1U;
+        span.lastChannel = patch.ddpOffset + dataSlots(patch, ledCount) * kBytesPerLed - 1U;
         return span;
     }
     const std::vector<ChannelBlock> blocks = channelBlocks(patch, ledCount);

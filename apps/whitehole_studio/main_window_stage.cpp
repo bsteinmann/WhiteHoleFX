@@ -27,6 +27,12 @@ void MainWindow::buildStageConfig(QMenu* menu) {
     connect(stageView_, &StageView::fixturesMoved, this, &MainWindow::onLayoutEdited);
     connect(stageView_, &StageView::failed, this, [this](const QString& message) { statusBar()->showMessage(message, 8000); });
     connect(testPanel_, &TestPanel::patternChanged, testView_, &StageView::testPatternChanged);
+    // Klick auf eine LED in der Test-Ansicht wählt ihr Fixture fürs Hervorheben (Strg: dazu/weg).
+    connect(testView_, &StageView::fixtureClicked, testPanel_, &TestPanel::pickFixture);
+    connect(testPanel_, &TestPanel::selectionChanged, this, [this]() {
+        testView_->setSelection(testPanel_->selectedIds());
+        testView_->refresh();
+    });
     fixturePage_ = new FixtureLibraryPage{*player_};
     connect(fixturePage_, &FixtureLibraryPage::edited, this, &MainWindow::onLayoutEdited);
     connect(fixturePage_, &FixtureLibraryPage::notice, this, [this](const QString& message) { statusBar()->showMessage(message, 8000); });
@@ -79,6 +85,8 @@ void MainWindow::refreshStageViews() {
     outputPage_->refresh();
     stageView_->setSelection(layoutPanel_->selectedIds());
     stageView_->refresh();
+    testPanel_->rebuild();  // Fixtures können dazugekommen oder weg sein
+    testView_->setSelection(testPanel_->selectedIds());
     testView_->refresh();
     layoutPanel_->refreshView();
 }

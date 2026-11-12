@@ -4,6 +4,7 @@
 #include <QCheckBox>
 #include <QColor>
 #include <QHBoxLayout>
+#include <QGuiApplication>
 #include <QLabel>
 #include <QPainter>
 #include <QPolygonF>
@@ -59,7 +60,12 @@ StageView::StageView(runtime::Player& player, bool compact, QWidget* parent)
         bar->addWidget(info_, 1);
         column->addLayout(bar);
         connect(wiringCheck_, &QCheckBox::toggled, this, [this](bool on) { setWiringVisible(on); });
-        connect(view_, &PreviewWidget::clicked, this, [this](QPointF position) { pickAt(position); });
+        connect(view_, &PreviewWidget::clicked, this, [this](QPointF position) {
+            if (pickAt(position) && picked_->range < player_.ledMap().ranges.size()) {
+                Q_EMIT fixtureClicked(player_.ledMap().ranges[picked_->range].fixture,
+                                      QGuiApplication::keyboardModifiers().testFlag(Qt::ControlModifier));
+            }
+        });
         view_->setPaintHook([this](QPainter& painter) {
             paintWiring(painter);
             paintGizmo(painter);

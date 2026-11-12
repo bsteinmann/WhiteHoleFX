@@ -108,7 +108,7 @@ MainWindow::MainWindow(gpu::IGpuDevice* device, const QString& deviceNote, QWidg
     connect(previewController_, &PreviewController::regionEdited, this, &MainWindow::refreshParameters);
     connect(previewController_, &PreviewController::failed, this,
             [this](const QString& message) { statusBar()->showMessage(message, 8000); });
-    testPanel_ = new TestPanel{*player_, *layoutPanel_, this};
+    testPanel_ = new TestPanel{*player_, this};
     connect(testPanel_, &TestPanel::patternChanged, this, &MainWindow::onTestPatternChanged);
     connect(testPanel_, &TestPanel::failed, this,
             [this](const QString& message) { statusBar()->showMessage(message, 8000); });

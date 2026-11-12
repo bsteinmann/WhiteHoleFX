@@ -47,7 +47,13 @@ QTableWidgetItem* readOnly(const QString& text) {
 PatchTable::PatchTable(runtime::Player& player, QWidget* parent) : QTableWidget{0, Count, parent}, player_{player} {
     setHorizontalHeaderLabels({tr("Fixture"), tr("Bauform"), tr("LEDs"), tr("Senden"), tr("Controller"), tr("Protokoll"),
                                tr("Universe (Art-Net ab 0, sACN ab 1)"), tr("Erster Kanal"), tr("Adressraum"), tr("DDP-Offset"),
+                               tr("Vorweg überspringen"), tr("Überspringen nach je"), tr("Übersprungene Pixel"),
                                tr("Farbreihenfolge"), tr("Gamma"), tr("Helligkeit")});
+    horizontalHeaderItem(SkipFirst)->setToolTip(tr("Pixel am Kabel vor der ersten LED, die nicht leuchten (zum Beispiel ein Pixel als "
+                                                   "Signalverstärker). Sie bekommen Schwarz und belegen ihre Kanäle."));
+    horizontalHeaderItem(SkipEvery)->setToolTip(tr("Nach je so vielen LEDs werden Pixel übersprungen (0 = nie), etwa ein Verstärker "
+                                                   "am Ende jeder Reihe: hier die Spaltenzahl eintragen."));
+    horizontalHeaderItem(SkipCount)->setToolTip(tr("Wie viele Pixel nach je N LEDs übersprungen werden."));
     horizontalHeaderItem(Destination)->setToolTip(tr("Der Controller bestimmt das Protokoll. Wechselst du auf einen "
                                                      "Controller mit anderem Protokoll, wird die Universe-Nummer "
                                                      "zwischen Art-Net und sACN um 1 verschoben."));
@@ -63,7 +69,7 @@ PatchTable::PatchTable(runtime::Player& player, QWidget* parent) : QTableWidget{
     setSelectionBehavior(QAbstractItemView::SelectRows);
     setEditTriggers(QAbstractItemView::NoEditTriggers);
     setMinimumHeight(160);
-    const QByteArray saved = settings().value(QStringLiteral("stageSetup/patchHeader3")).toByteArray();
+    const QByteArray saved = settings().value(QStringLiteral("stageSetup/patchHeader4")).toByteArray();
     if (!saved.isEmpty()) {
         horizontalHeader()->restoreState(saved);
     }
@@ -73,7 +79,7 @@ PatchTable::PatchTable(runtime::Player& player, QWidget* parent) : QTableWidget{
 
 void PatchTable::saveHeader() const {
     if (!populating_) {
-        settings().setValue(QStringLiteral("stageSetup/patchHeader3"), horizontalHeader()->saveState());
+        settings().setValue(QStringLiteral("stageSetup/patchHeader4"), horizontalHeader()->saveState());
     }
 }
 
@@ -141,6 +147,9 @@ void PatchTable::rebuild() {
                                           std::max<int>(output::lastUniverse(shownProtocol), output::firstUniverse(shownProtocol)));
             auto* channel = form::intBox(static_cast<int>(shown.channel), 1, 510);
             auto* offset = form::intBox(static_cast<int>(shown.ddpOffset), 0, 2000000000);
+            auto* skipFirst = form::intBox(static_cast<int>(shown.skipFirst), 0, 65535);
+            auto* skipEvery = form::intBox(static_cast<int>(shown.skipEvery), 0, 1000000);
+            auto* skipCount = form::intBox(static_cast<int>(shown.skipCount), 1, 65535);
             auto* order = form::combo({QStringLiteral("RGB"), QStringLiteral("RBG"), QStringLiteral("GRB"),
                                        QStringLiteral("GBR"), QStringLiteral("BRG"), QStringLiteral("BGR")},
                                       static_cast<int>(shown.color.order));
@@ -151,13 +160,16 @@ void PatchTable::rebuild() {
             setCellWidget(row, Channel, channel);
             setItem(row, Range, readOnly(QString{}));
             setCellWidget(row, DdpOffset, offset);
+            setCellWidget(row, SkipFirst, skipFirst);
+            setCellWidget(row, SkipEvery, skipEvery);
+            setCellWidget(row, SkipCount, skipCount);
             setCellWidget(row, Order, order);
             setCellWidget(row, Gamma, gamma);
             setCellWidget(row, Brightness, brightness);
             // Anderer Controller: das Protokoll (und damit die Universe-Nummer) kann sich ändern, die Zeile wird neu gelesen.
             connect(destination, qOverload<int>(&QComboBox::currentIndexChanged), this, [this, id](int) { commit(id, true); });
             connect(order, qOverload<int>(&QComboBox::currentIndexChanged), this, [this, id](int) { commit(id); });
-            for (QSpinBox* box : {universe, channel, offset}) {
+            for (QSpinBox* box : {universe, channel, offset, skipFirst, skipEvery, skipCount}) {
                 connect(box, qOverload<int>(&QSpinBox::valueChanged), this, [this, id](int) { commit(id); });
             }
             for (QDoubleSpinBox* box : {gamma, brightness}) {
@@ -262,6 +274,9 @@ void PatchTable::commit(mapping::FixtureId id, bool rebuildAfter) {
     patch.universe = static_cast<std::uint16_t>(spin(Universe));
     patch.channel = static_cast<std::uint16_t>(spin(Channel));
     patch.ddpOffset = static_cast<std::uint32_t>(spin(DdpOffset));
+    patch.skipFirst = static_cast<std::uint16_t>(spin(SkipFirst));
+    patch.skipEvery = static_cast<std::uint32_t>(spin(SkipEvery));
+    patch.skipCount = static_cast<std::uint16_t>(spin(SkipCount));
     patch.color.order = static_cast<output::ColorOrder>(qobject_cast<QComboBox*>(cellWidget(row, Order))->currentIndex());
     patch.color.gamma = static_cast<float>(dbl(Gamma));
     patch.color.brightness = static_cast<float>(dbl(Brightness));
@@ -322,6 +337,13 @@ QString PatchTable::exercise() {
     if (patchOf() == nullptr || patchOf()->color.order != output::ColorOrder::GRB) {
         return QStringLiteral("Patch-Tabelle: Farbreihenfolge wurde nicht übernommen");
     }
+    // Übersprungene Pixel: ein Verstärkerpixel vorweg verschiebt den Adressraum um drei Kanäle
+    const QString rangeBefore = item(row, Range)->text();
+    qobject_cast<QSpinBox*>(cellWidget(row, SkipFirst))->setValue(1);
+    if (patchOf() == nullptr || patchOf()->skipFirst != 1 || item(row, Range)->text() == rangeBefore) {
+        return QStringLiteral("Patch-Tabelle: Überspringen wurde nicht übernommen oder ändert den Adressraum nicht");
+    }
+    qobject_cast<QSpinBox*>(cellWidget(row, SkipFirst))->setValue(0);
     // Spalte verschieben: die logischen Spalten bleiben, die Zellen finden ihre Widgets weiter
     const int originalVisual = horizontalHeader()->visualIndex(Order);
     horizontalHeader()->moveSection(originalVisual, 0);

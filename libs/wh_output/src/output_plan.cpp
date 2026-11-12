@@ -32,6 +32,9 @@ Result<void> validate(const FixturePatch& patch) {
         return Error{ErrorCode::InvalidArgument,
                      "Der Startkanal muss zwischen 1 und 510 liegen, damit mindestens eine LED passt"};
     }
+    if (patch.skipEvery > 0 && patch.skipCount == 0) {
+        return Error{ErrorCode::InvalidArgument, "Überspringen: nach je N LEDs muss mindestens ein Pixel ausgelassen werden"};
+    }
     return {};
 }
 
@@ -49,6 +52,8 @@ Result<OutputPlan> OutputPlan::create(const mapping::LedMap& map,
     std::set<std::uint64_t> patched;
     // Schlüssel: Protokoll, Ziel, Universe. DDP-Ströme brauchen keinen Schlüssel.
     std::map<std::tuple<Protocol, std::uint32_t, std::uint32_t>, std::size_t> slotIndex;
+    // Belegte Byte-Bereiche je Slot (auch die übersprungener Pixel, die keinen Lauf bekommen).
+    std::map<std::tuple<Protocol, std::uint32_t, std::uint32_t>, std::vector<std::pair<std::uint32_t, std::uint32_t>>> occupied;
 
     for (const FixturePatch& patch : patches) {
         if (Result<void> ok = validate(patch); !ok.ok()) {
@@ -69,14 +74,16 @@ Result<OutputPlan> OutputPlan::create(const mapping::LedMap& map,
         const auto encoderIndex = static_cast<std::uint32_t>(plan.encoders_.size());
         plan.encoders_.push_back(std::move(encoder.value()));
 
-        std::uint32_t remaining = range->count;
-        std::uint32_t nextLed = range->first;
+        const std::uint32_t count = range->count;
+        if (count == 0) {
+            continue;
+        }
+        // LEDs in Gruppen, zwischen denen übersprungene Pixel liegen (FixturePatch::skipEvery); ohne Überspringen
+        // ist das Fixture eine Gruppe. Jede Gruppe beginnt an ihrem Platz im Datenstrom (dataSlot).
+        const std::uint32_t groupSize = patch.skipEvery == 0 ? count : patch.skipEvery;
 
         if (patch.protocol == Protocol::Ddp) {
-            if (remaining == 0) {
-                continue;
-            }
-            const std::uint64_t end = std::uint64_t{patch.ddpOffset} + std::uint64_t{remaining} * kBytesPerLed;
+            const std::uint64_t end = std::uint64_t{patch.ddpOffset} + std::uint64_t{dataSlots(patch, count)} * kBytesPerLed;
             if (end > std::numeric_limits<std::uint32_t>::max()) {
                 return Error{ErrorCode::InvalidArgument, "Der DDP-Strom überschreitet 32 Bit"};
             }
@@ -84,44 +91,78 @@ Result<OutputPlan> OutputPlan::create(const mapping::LedMap& map,
             slot.protocol = Protocol::Ddp;
             slot.destination = patch.destination;
             slot.address = patch.ddpOffset;
-            slot.length = remaining * kBytesPerLed;
-            slot.runs.push_back({nextLed, remaining, 0, encoderIndex});
+            slot.length = dataSlots(patch, count) * kBytesPerLed;
+            for (std::uint32_t first = 0; first < count; first += groupSize) {
+                const std::uint32_t size = std::min(groupSize, count - first);
+                slot.runs.push_back({range->first + first, size, dataSlot(patch, first) * kBytesPerLed, encoderIndex});
+            }
             plan.slots_.push_back(std::move(slot));
             continue;
         }
 
-        std::uint32_t universe = patch.universe;
-        std::uint32_t byteOffset = static_cast<std::uint32_t>(patch.channel - 1);
-        while (remaining > 0) {
-            if (universe > maxUniverse(patch.protocol)) {
-                return Error{ErrorCode::InvalidArgument, "Das Fixture läuft über das letzte Universe hinaus"};
-            }
-            const std::uint32_t fit = std::min<std::uint32_t>(
-                remaining, (static_cast<std::uint32_t>(kDmxMaxChannels) - byteOffset) / kBytesPerLed);
-            const auto key = std::make_tuple(patch.protocol, patch.destination, universe);
-            auto [it, inserted] = slotIndex.try_emplace(key, plan.slots_.size());
-            if (inserted) {
-                OutputSlot slot;
-                slot.protocol = patch.protocol;
-                slot.destination = patch.destination;
-                slot.address = universe;
-                plan.slots_.push_back(std::move(slot));
-            }
-            OutputSlot& slot = plan.slots_[it->second];
-            const std::uint32_t bytes = fit * kBytesPerLed;
-            for (const OutputRun& other : slot.runs) {
-                const std::uint32_t otherEnd = other.byteOffset + other.ledCount * kBytesPerLed;
-                if (byteOffset < otherEnd && other.byteOffset < byteOffset + bytes) {
-                    return Error{ErrorCode::AlreadyExists, "Zwei Fixtures belegen dieselben Kanäle"};
+        // Belegte Kanäle prüfen: alle Plätze des Datenstroms, übersprungene Pixel eingeschlossen (sie hängen am selben
+        // Kabel, ein anderes Fixture darf ihre Kanäle nicht bekommen). Danach entstehen die Läufe je LED-Gruppe.
+        {
+            std::uint32_t remaining = dataSlots(patch, count);
+            std::uint32_t universe = patch.universe;
+            std::uint32_t byteOffset = static_cast<std::uint32_t>(patch.channel - 1);
+            while (remaining > 0) {
+                if (universe > maxUniverse(patch.protocol)) {
+                    return Error{ErrorCode::InvalidArgument, "Das Fixture läuft über das letzte Universe hinaus"};
                 }
+                const std::uint32_t fit = std::min<std::uint32_t>(
+                    remaining, (static_cast<std::uint32_t>(kDmxMaxChannels) - byteOffset) / kBytesPerLed);
+                const auto key = std::make_tuple(patch.protocol, patch.destination, universe);
+                auto [it, inserted] = slotIndex.try_emplace(key, plan.slots_.size());
+                if (inserted) {
+                    OutputSlot slot;
+                    slot.protocol = patch.protocol;
+                    slot.destination = patch.destination;
+                    slot.address = universe;
+                    plan.slots_.push_back(std::move(slot));
+                }
+                const std::uint32_t bytes = fit * kBytesPerLed;
+                std::vector<std::pair<std::uint32_t, std::uint32_t>>& taken = occupied[key];
+                for (const auto& [from, to] : taken) {
+                    if (byteOffset < to && from < byteOffset + bytes) {
+                        return Error{ErrorCode::AlreadyExists, "Zwei Fixtures belegen dieselben Kanäle"};
+                    }
+                }
+                taken.emplace_back(byteOffset, byteOffset + bytes);
+                plan.slots_[it->second].length = std::max(plan.slots_[it->second].length, byteOffset + bytes);
+                remaining -= fit;
+                byteOffset = 0;
+                ++universe;
             }
-            slot.runs.push_back({nextLed, fit, byteOffset, encoderIndex});
-            slot.length = std::max(slot.length, byteOffset + bytes);
-
-            remaining -= fit;
-            nextLed += fit;
-            byteOffset = 0;
-            ++universe;
+        }
+        for (std::uint32_t first = 0; first < count; first += groupSize) {
+            std::uint32_t remaining = std::min(groupSize, count - first);
+            std::uint32_t nextLed = range->first + first;
+            // Universe und Byte des ersten Platzes der Gruppe, nach derselben Rechnung wie ledAddress().
+            const std::uint32_t slotInStream = dataSlot(patch, first);
+            const auto total = static_cast<std::uint32_t>(kDmxMaxChannels);
+            const std::uint32_t startByte = static_cast<std::uint32_t>(patch.channel - 1);
+            const std::uint32_t firstFit = (total - startByte) / kBytesPerLed;
+            std::uint32_t universe = patch.universe;
+            std::uint32_t byteOffset = startByte;
+            if (slotInStream < firstFit) {
+                byteOffset += slotInStream * kBytesPerLed;
+            } else {
+                const std::uint32_t rest = slotInStream - firstFit;
+                const std::uint32_t perUniverse = total / kBytesPerLed;
+                universe += 1U + rest / perUniverse;
+                byteOffset = (rest % perUniverse) * kBytesPerLed;
+            }
+            while (remaining > 0) {
+                const std::uint32_t fit = std::min<std::uint32_t>(
+                    remaining, (static_cast<std::uint32_t>(kDmxMaxChannels) - byteOffset) / kBytesPerLed);
+                OutputSlot& slot = plan.slots_[slotIndex.at(std::make_tuple(patch.protocol, patch.destination, universe))];
+                slot.runs.push_back({nextLed, fit, byteOffset, encoderIndex});
+                remaining -= fit;
+                nextLed += fit;
+                byteOffset = 0;
+                ++universe;
+            }
         }
     }
     return plan;

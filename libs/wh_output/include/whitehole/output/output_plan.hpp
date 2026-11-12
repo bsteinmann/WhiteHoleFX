@@ -52,7 +52,24 @@ struct FixturePatch {
     std::uint16_t channel{1};      // erster Kanal 1..510; bei DDP unbenutzt
     std::uint32_t ddpOffset{0};    // nur DDP: Byte-Offset des Stroms
     ColorSettings color;
+    /// Pixel am Datenkabel, die nicht leuchten (zum Beispiel ein Pixel als Signalverstärker): `skipFirst` Pixel vor der
+    /// ersten LED, dazu nach je `skipEvery` LEDs (0 = nie) `skipCount` Pixel. Sie bekommen Schwarz, belegen aber ihre
+    /// Kanäle; die Adressen der LEDs dahinter rücken entsprechend weiter.
+    std::uint16_t skipFirst{0};
+    std::uint32_t skipEvery{0};
+    std::uint16_t skipCount{1};
 };
+
+/// Platz der LED `led` (0-basiert, Kabelreihenfolge) im Datenstrom, mit übersprungenen Pixeln (siehe FixturePatch).
+[[nodiscard]] constexpr std::uint32_t dataSlot(const FixturePatch& patch, std::uint32_t led) noexcept {
+    const std::uint32_t skipped = patch.skipEvery == 0 ? 0U : (led / patch.skipEvery) * patch.skipCount;
+    return patch.skipFirst + led + skipped;
+}
+
+/// Zahl der Plätze im Datenstrom für `ledCount` LEDs (letzter Platz + 1); 0 ohne LEDs.
+[[nodiscard]] constexpr std::uint32_t dataSlots(const FixturePatch& patch, std::uint32_t ledCount) noexcept {
+    return ledCount == 0 ? 0U : dataSlot(patch, ledCount - 1) + 1U;
+}
 
 /// Ein zusammenhängender Teil eines Fixtures innerhalb eines Slots.
 struct OutputRun {

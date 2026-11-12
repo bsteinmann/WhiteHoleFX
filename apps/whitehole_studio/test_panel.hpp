@@ -10,29 +10,37 @@
 #include <QString>
 #include <QWidget>
 
+#include <vector>
+
 #include "whitehole/runtime/player.hpp"
 
 class QCheckBox;
 class QComboBox;
 class QDoubleSpinBox;
 class QLabel;
+class QListWidget;
 class QPushButton;
 
 namespace whitehole::studio {
-
-class LayoutPanel;
 
 class TestPanel : public QWidget {
     Q_OBJECT
 
 public:
-    TestPanel(runtime::Player& player, LayoutPanel& layoutPanel, QWidget* parent = nullptr);
+    explicit TestPanel(runtime::Player& player, QWidget* parent = nullptr);
 
     /// Stellt die Bedienelemente auf "Aus" (nach dem Laden eines Projekts; der Player hat das
     /// Testbild dann schon verworfen).
     void reset();
     /// Das aktive Testbild als Text für Banner und Statuszeile, leer ohne Testbild.
     [[nodiscard]] QString description() const;
+
+    /// Liest die Fixtures des Projekts neu in die Liste (nach Laden, Anlegen, Entfernen). Die Auswahl bleibt, wo es sie noch gibt.
+    void rebuild();
+    /// Die im Testfenster gewählten Fixtures (Liste und Klick in die Ansicht), in Projektreihenfolge.
+    [[nodiscard]] std::vector<mapping::FixtureId> selectedIds() const;
+    /// Ein Klick auf eine LED in der Test-Ansicht: wählt ihr Fixture (mit `extend` dazu bzw. weg, wie Strg+Klick).
+    void pickFixture(mapping::FixtureId id, bool extend);
 
     /// Rauchtest für die CI: jede Art einschalten, prüfen, dass der Player sie kennt, und wieder
     /// ausschalten. Leer bei Erfolg.
@@ -43,6 +51,8 @@ public:
 Q_SIGNALS:
     /// Ein Testbild wurde ein-, aus- oder umgeschaltet.
     void patternChanged();
+    /// Die Auswahl der Fixtures im Testfenster hat sich geändert (Liste oder Klick in die Ansicht).
+    void selectionChanged();
     void failed(const QString& message);
 
 private:
@@ -54,12 +64,12 @@ private:
     [[nodiscard]] runtime::TestPatternKind currentKind() const;
 
     runtime::Player& player_;
-    LayoutPanel& layout_;
     QComboBox* kind_{nullptr};
     QComboBox* color_{nullptr};
     QComboBox* axis_{nullptr};
     QDoubleSpinBox* rate_{nullptr};
     QCheckBox* onlySelected_{nullptr};
+    QListWidget* fixtures_{nullptr};  // eigene Auswahl fürs Testen, unabhängig von der Layout-Liste
     QPushButton* stop_{nullptr};
     QLabel* hint_{nullptr};
     bool updating_{false};  // Bedienelemente werden gerade vom Programm gesetzt

@@ -42,6 +42,10 @@ Startkanal (1..510), Farbeinstellungen. Regeln:
   je Universe. Der Rest läuft ab Kanal 1 im nächsten Universe weiter.
 - Mehrere Fixtures dürfen sich ein Universe teilen, solange ihre Kanäle frei sind.
 - DDP kennt keine Universen: ein Fixture ist ein Strom ab `ddpOffset`.
+- Übersprungene Pixel (`skipFirst`, `skipEvery`/`skipCount`): Pixel am Kabel, die nicht leuchten, zum Beispiel
+  ein Pixel als Signalverstärker vor dem Strip oder nach jeder Reihe. Sie bekommen Schwarz, belegen aber ihre
+  Kanäle (auch beim Prüfen auf Überlappung), und die Adressen der LEDs dahinter rücken weiter. Die Rechnung steht
+  einmal in `dataSlot()` (output_plan.hpp) und gilt für den Plan, `ledAddress()` und `channelBlocks()`.
 - Fixtures ohne Patch werden nicht ausgegeben.
 - Alle Fehler (unbekanntes Fixture, doppelter Patch, Überlappung, Universe außerhalb
   des Bereichs) fallen beim Erstellen des Plans auf, nicht im laufenden Betrieb.

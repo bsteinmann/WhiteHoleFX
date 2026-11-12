@@ -1,11 +1,11 @@
-// layout_panel_types.cpp: Exemplare einer Bauform aus der Bibliothek auf der Bühne anlegen (Knopf "Aus Bauform").
+// layout_panel_types.cpp: Bauformen der Show im Reiter Layout: Liste oben und Exemplare daraus auf der Bühne anlegen.
 //
 // Warum eine eigene Datei: layout_panel.cpp und layout_panel_add.cpp sind an der 400-Zeilen-Grenze. Die Bauformen selbst
 // entstehen im Reiter Fixtures; hier wird nur ein Exemplar mit eigener Lage, Drehung und Patch daraus gemacht.
 #include "layout_panel.hpp"
 
-#include <QAction>
-#include <QMenu>
+#include <QListWidget>
+#include <QSignalBlocker>
 
 #include <algorithm>
 
@@ -13,20 +13,37 @@ namespace whitehole::studio {
 
 using form::fromStd;
 
-void LayoutPanel::fillTypeMenu(QMenu* menu) {
-    menu->clear();
-    if (player_.fixtureTypes().empty()) {
-        menu->addAction(tr("Noch keine Bauform (Stage Config → Fixtures)"))->setEnabled(false);
-        return;
-    }
+void LayoutPanel::fillTypeList() {
+    const QString keep = selectedTypeName();
+    const QSignalBlocker blocker{types_};
+    types_->clear();
     for (const project::FixtureType& type : player_.fixtureTypes()) {
         const QString name = fromStd(type.name);
-        QAction* action = menu->addAction(tr("%1 (%2 LEDs)").arg(name).arg(mapping::ledCount(type.shape)));
-        connect(action, &QAction::triggered, this, [this, name]() { addFromType(name); });
+        auto* item = new QListWidgetItem{tr("%1 (%2 LEDs)").arg(name).arg(mapping::ledCount(type.shape))};
+        item->setData(Qt::UserRole, name);
+        types_->addItem(item);
+        if (name == keep) {
+            types_->setCurrentItem(item);
+        }
+    }
+    if (types_->count() == 0) {
+        auto* none = new QListWidgetItem{tr("Noch keine Bauform (Stage Config → Fixtures → Neu)")};
+        none->setFlags(Qt::NoItemFlags);
+        types_->addItem(none);
+    } else if (types_->currentRow() < 0) {
+        types_->setCurrentRow(0);
     }
 }
 
+QString LayoutPanel::selectedTypeName() const {
+    const QListWidgetItem* item = types_->currentItem();
+    return item != nullptr ? item->data(Qt::UserRole).toString() : QString{};
+}
+
 bool LayoutPanel::addFromType(const QString& typeName) {
+    if (typeName.isEmpty()) {
+        return false;  // nichts gewählt (zum Beispiel der Platzhalter „Noch keine Bauform“)
+    }
     if (player_.project() == nullptr) {
         Q_EMIT failed(tr("Es ist kein Projekt geladen. Mit Strg+N ein neues anlegen oder mit Strg+O eins öffnen."));
         return false;
@@ -63,10 +80,9 @@ QString LayoutPanel::exerciseTypes() {
     if (added.type != "Rauchtest-Kreis" || std::get_if<mapping::RingShape>(&added.shape) == nullptr) {
         return QStringLiteral("Aus Bauform: Exemplar hat nicht die Form der Bauform");
     }
-    QMenu menu;
-    fillTypeMenu(&menu);
-    if (menu.actions().isEmpty()) {
-        return QStringLiteral("Aus Bauform: das Menü ist leer");
+    fillTypeList();
+    if (selectedTypeName().isEmpty()) {
+        return QStringLiteral("Aus Bauform: die Liste der Bauformen ist leer");
     }
     setSelectedIds({added.id});
     if (const QString note = fixture_->exerciseTyped(); !note.isEmpty()) {

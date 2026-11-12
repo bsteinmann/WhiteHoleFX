@@ -72,3 +72,18 @@ TEST_CASE("LED-Adresse: Universe-Wechsel nach 170 LEDs", "[output][address]") {
     patch.ddpOffset = 30;
     CHECK(output::ledAddress(patch, 2)->firstChannel == 36);
 }
+
+TEST_CASE("LED-Adresse: übersprungene Pixel rücken die Adressen weiter", "[output][address][skip]") {
+    output::FixturePatch patch;
+    patch.protocol = output::Protocol::ArtNet;
+    patch.universe = 0;
+    patch.channel = 1;
+    patch.skipFirst = 1;  // ein Verstärkerpixel vor der ersten LED
+    patch.skipEvery = 3;  // und eines nach je 3 LEDs
+    CHECK(output::ledAddress(patch, 0)->firstChannel == 4);
+    CHECK(output::ledAddress(patch, 2)->firstChannel == 10);
+    CHECK(output::ledAddress(patch, 3)->firstChannel == 16);  // Kanal 13..15 gehört dem Verstärker
+    patch.protocol = output::Protocol::Ddp;
+    patch.ddpOffset = 0;
+    CHECK(output::ledAddress(patch, 3)->firstChannel == 15);
+}

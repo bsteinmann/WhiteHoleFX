@@ -31,6 +31,21 @@ LayoutPanel::LayoutPanel(runtime::Player& player, QWidget* parent) : QTabWidget{
     auto* page = new QWidget;
     auto* pageLayout = new QVBoxLayout{page};
 
+    // Oben die Bauformen der Show (Stage Config → Fixtures): Doppelklick oder „Auf die Bühne“ legt ein Exemplar an.
+    auto* typeRow = new QHBoxLayout;
+    types_ = new QListWidget;
+    types_->setMaximumHeight(72);
+    types_->setToolTip(tr("Bauformen dieser Show (Stage Config → Fixtures). Doppelklick stellt ein Exemplar auf die Bühne."));
+    auto* typeButton = new QPushButton{tr("Auf die Bühne")};
+    typeButton->setToolTip(tr("Exemplar der gewählten Bauform mit dem nächsten freien Patch auf der Bühne anlegen"));
+    typeRow->addWidget(types_, 1);
+    typeRow->addWidget(typeButton, 0, Qt::AlignTop);
+    pageLayout->addWidget(new QLabel{tr("Bauformen in dieser Show")});
+    pageLayout->addLayout(typeRow);
+    connect(types_, &QListWidget::itemDoubleClicked, this, [this](QListWidgetItem*) { addFromType(selectedTypeName()); });
+    connect(typeButton, &QPushButton::clicked, this, [this]() { addFromType(selectedTypeName()); });
+
+    pageLayout->addWidget(new QLabel{tr("Fixtures auf der Bühne")});
     list_ = new QListWidget;
     list_->setMaximumHeight(140);
     list_->setSelectionMode(QAbstractItemView::ExtendedSelection);
@@ -39,11 +54,6 @@ LayoutPanel::LayoutPanel(runtime::Player& player, QWidget* parent) : QTabWidget{
     auto* buttons = new QHBoxLayout;
     auto* addButton = new QPushButton{tr("Hinzufügen …")};
     addButton->setToolTip(tr("Matrix, Strip oder 3D-Gitter mit Größe, Lage, Verkabelung und Patch anlegen"));
-    auto* typeButton = new QPushButton{tr("Aus Bauform")};
-    typeButton->setToolTip(tr("Exemplar einer Bauform aus der Bibliothek (Stage Config → Fixtures) auf der Bühne anlegen"));
-    auto* typeMenu = new QMenu{typeButton};
-    typeButton->setMenu(typeMenu);
-    connect(typeMenu, &QMenu::aboutToShow, this, [this, typeMenu]() { fillTypeMenu(typeMenu); });
     auto* libraryButton = new QPushButton{tr("Vorlagen")};
     libraryButton->setToolTip(tr("Eigene Fixture-Bibliothek: Fixtures als Vorlage speichern und wieder anlegen"));
     auto* libraryMenu = new QMenu{libraryButton};
@@ -56,7 +66,6 @@ LayoutPanel::LayoutPanel(runtime::Player& player, QWidget* parent) : QTabWidget{
     connect(groupMenu, &QMenu::aboutToShow, this, [this, groupMenu]() { fillGroupMenu(groupMenu); });
     auto* removeButton = new QPushButton{tr("Entfernen")};
     buttons->addWidget(addButton);
-    buttons->addWidget(typeButton);
     buttons->addWidget(libraryButton);
     buttons->addWidget(groupButton);
     buttons->addWidget(removeButton);
@@ -91,6 +100,7 @@ mapping::FixtureId LayoutPanel::selectedId() const {
 }
 
 void LayoutPanel::rebuild() {
+    fillTypeList();
     fillList(selectedId());
 }
 

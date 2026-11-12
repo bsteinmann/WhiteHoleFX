@@ -237,11 +237,16 @@ entfernen, nicht nur der letzte: Fixtures auf höheren Controllern rücken mit i
 Fixture sendet, bleibt stehen und die Statuszeile nennt das Fixture. Darunter Bildrate und Abbildung auf den Würfel (Stretch oder
 KeepAspect); **sACN-Priorität und Quellname** erscheinen nur, wenn mindestens ein Controller sACN spricht. Unten steht die
 **Patch-Tabelle**, eine Zeile je Fixture: Senden an/aus, Controller (Auswahl), Protokoll (nur Anzeige, kommt vom Controller),
-Universe, erster Kanal, DDP-Offset, Farbreihenfolge, Gamma, Helligkeit. Nur was zum Protokoll des Controllers gehört, ist aktiv:
+Universe, erster Kanal, DDP-Offset, Überspringen (siehe unten), Farbreihenfolge, Gamma, Helligkeit. Nur was zum Protokoll des Controllers gehört, ist aktiv:
 Universe und erster Kanal bei Art-Net und sACN (Bereich 0 bis 32767 bzw. 1 bis 63999), der DDP-Offset bei DDP. Die Spalten lassen
 sich an der Kopfzeile verschieben (auch bei der Controller-Tabelle); die Reihenfolge der Patch-Tabelle wird gemerkt.
 Die Spalte **Adressraum** zeigt, welche Kanäle ein Fixture belegt: `U1: 1–297` heißt Universe 1, Kanal 1 bis 297 (eine LED belegt
 drei Kanäle, bei einer Matrix aus 9 × 11 LEDs also 297); läuft das Fixture über, steht `U1: 1 – U3: 180` da, bei DDP die Bytes.
+**Pixel überspringen:** Sitzt am Kabel ein Pixel, das nicht leuchten soll (zum Beispiel eines als Signalverstärker vor dem
+Strip oder am Ende jeder Reihe), trägt man es in **Vorweg überspringen** (Pixel vor der ersten LED) bzw. **Überspringen nach je**
+(nach je so vielen LEDs, bei einer Matrix die Spaltenzahl) und **Übersprungene Pixel** (wie viele) ein. Die Pixel bekommen
+Schwarz, belegen aber ihre Kanäle, und die Adressen der LEDs dahinter rücken weiter; der Adressraum und die LED-Adresse beim
+Klick in die Bühnenansicht rechnen das mit. In der Projektdatei: `skip-first`, `skip-every`, `skip-count`.
 **Mehrere Fixtures im selben Universe:** Sie dürfen sich ein Universe teilen, solange sich die Kanäle nicht überlappen. Ändert man
 bei einem Fixture das Universe auf eines, in dem der gewählte Kanal schon belegt ist, rückt es automatisch hinter das letzte belegte
 Fixture (eine Matrix und dahinter ein einzelner Pixel am selben Controller: Universe 1 eintragen, der Pixel liegt auf Kanal 298).
@@ -264,7 +269,7 @@ Die erste Seite im Fenster Stage Config (Menü Stage Config → Fixtures …) is
 
 ### Layout: Exemplare verteilen und drehen
 
-Im Reiter Layout legst du Exemplare einer Bauform mit **Aus Bauform** an und stellst Lage (Ursprung x y z) und **Drehung x y z** (Grad, um die Mitte des Fixtures) im Formular ein. Das Feld **Bauform** wechselt die Bauform eines Fixtures oder löst es mit „(eigene Form)“ von der Bibliothek. Die Drehung wirkt in der Abtastung (Effekt), in der Vorschau und in der Stage-Ansicht.
+Im Reiter Layout stehen die Bauformen der Show oben in einer eigenen Liste („Bauformen in dieser Show“); ein Doppelklick oder **Auf die Bühne** legt ein Exemplar mit dem nächsten freien Patch an. Lage (Ursprung x y z) und **Drehung x y z** (Grad, um die Mitte des Fixtures) stellst du im Formular ein. Das Feld **Bauform** wechselt die Bauform eines Fixtures oder löst es mit „(eigene Form)“ von der Bibliothek. Die Drehung wirkt in der Abtastung (Effekt), in der Vorschau und in der Stage-Ansicht.
 
 ### Reiter Test: Testbilder über die ganze Bühne
 
@@ -515,13 +520,14 @@ nicht gespeichert, nicht rückgängig gemacht und beim Öffnen eines anderen Pro
 | Testbild | Zeigt | Prüft |
 |---|---|---|
 | Farbe | alle LEDs in Weiß, Rot, Grün, Blau, Gelb, Cyan oder Magenta | Netzteile, Farbtreue |
-| Auswahl hervorheben | die in der Layout-Liste (oder per Klick in der Vorschau) gewählten Fixtures zu 100 % Weiß, der Rest aus | welches Fixture ist welches |
+| Auswahl hervorheben | die im Testfenster gewählten Fixtures (Liste unter den Reglern oder Klick auf eine LED in der Ansicht rechts, Strg+Klick für mehrere) zu 100 % Weiß, der Rest aus | welches Fixture ist welches |
 | Laufbalken | ein Balken läuft entlang x, y oder z | Lage und Ausrichtung im Raum |
 | Farbreihenfolge | Rot, Grün, Blau, Weiß nacheinander | stimmt die Farbreihenfolge des Patches? Zeigt die Wand etwas anderes als die Vorschau, ist sie falsch eingestellt |
 | Lauflicht | ein Lichtpunkt mit Schweif läuft je Fixture in Kabelreihenfolge | Richtung des Kabels, defekte oder vertauschte Abschnitte |
 
 „Nur auf gewählten Fixtures“ beschränkt Farbe, Laufbalken, Farbreihenfolge und Lauflicht auf die
-Auswahl; ohne Auswahl leuchtet dann nichts. „Testmodus beenden“ (oder die Art „Aus“) stellt den
+Auswahl; ohne Auswahl leuchtet dann nichts. Die Auswahl fürs Testen ist eine eigene (Liste im Testfenster, Klick in
+die Test-Ansicht), unabhängig von der Layout-Liste. „Testmodus beenden“ (oder die Art „Aus“) stellt den
 Effekt wieder her. Achtung: Weiß und Farbe leuchten mit voller Helligkeit; vorher prüfen, ob die
 Netzteile die ganze Wand auf 100 % tragen.
 

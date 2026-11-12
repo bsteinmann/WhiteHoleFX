@@ -109,9 +109,17 @@ QString FixtureLibraryPage::exercise() {
             return QStringLiteral("Fixture-Bibliothek: Entfernen aus der Show schlägt fehl");
         }
         fillList(QString{});
+        // Wie der Nutzer: zuerst die gespeicherte Bauform anklicken (dann ist das Formular versteckt), dann übernehmen.
+        fillStored(QString::fromStdString(gone));
         if (!takeOverStored(QString::fromStdString(gone)) || player_.fixtureTypes().size() != before + kinds + 1 ||
             takeOverStored(QString::fromStdString(gone))) {
             return QStringLiteral("Fixture-Bibliothek: In Show übernehmen schlägt fehl");
+        }
+        // Danach ist die geholte Bauform in der Show gewählt und ihr Formular zu sehen, auch nach einem rebuild()
+        // (das die gespeicherte Liste neu füllt); vorher blieb die gespeicherte Zeile gewählt und versteckte es.
+        rebuild();
+        if (selectedName() != QString::fromStdString(gone) || !form_->isVisibleTo(this) || stored_->currentRow() >= 0) {
+            return QStringLiteral("Fixture-Bibliothek: nach dem Übernehmen fehlen die Parameter der Bauform");
         }
         // Entfernen aus der Show lässt die Bibliothek stehen, Entfernen aus der Bibliothek lässt die Show stehen
         removeSelected();

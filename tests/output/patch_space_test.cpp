@@ -78,3 +78,18 @@ TEST_CASE("fitChannel: kein Platz mehr", "[output][patch_space]") {
     CHECK_FALSE(fitChannel(patchAt(1, 1), 100, blocked).has_value());
     CHECK(fitChannel(patchAt(1, 1), 100, two) == 298);
 }
+
+TEST_CASE("Adressraum: übersprungene Pixel belegen ihre Kanäle mit", "[output][patch_space][skip]") {
+    FixturePatch patch = patchAt(1, 1);
+    patch.skipFirst = 2;
+    patch.skipEvery = 5;
+    patch.skipCount = 1;
+    // 10 LEDs: 2 + 10 + 1 (nach LED 5; nach LED 10 kommt nichts mehr) = 13 Plätze = 39 Kanäle
+    const auto span = addressSpan(patch, 10);
+    REQUIRE(span.has_value());
+    CHECK(span->firstChannel == 1);
+    CHECK(span->lastChannel == 39);
+    const std::vector<ChannelBlock> blocks = channelBlocks(patch, 10);
+    REQUIRE(blocks.size() == 1);
+    CHECK(blocks[0].endByte == 39);
+}

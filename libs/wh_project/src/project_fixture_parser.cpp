@@ -187,6 +187,12 @@ void patch(Reader& r, FixtureDraft& d) {
             p.ddpOffset = r.whole("Offset", 0xFFFFFFFFU);
         } else if (key == "order") {
             p.color.order = readName(r, kColorOrders, "Farbreihenfolge");
+        } else if (key == "skip-first") {
+            p.skipFirst = static_cast<std::uint16_t>(r.whole("Pixel vor der ersten LED", 0xFFFFU));
+        } else if (key == "skip-every") {
+            p.skipEvery = r.whole("LEDs zwischen übersprungenen Pixeln", 0xFFFFFFFFU);
+        } else if (key == "skip-count") {
+            p.skipCount = static_cast<std::uint16_t>(r.whole("übersprungene Pixel", 0xFFFFU));
         } else if (key == "gamma") {
             p.color.gamma = r.number("Gamma");
         } else if (key == "brightness") {

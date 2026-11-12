@@ -71,6 +71,12 @@ void writePatch(std::ostream& out, const output::FixturePatch& p) {
     } else {
         out << " universe " << p.universe << " channel " << p.channel;
     }
+    if (p.skipFirst != 0) {
+        out << " skip-first " << p.skipFirst;
+    }
+    if (p.skipEvery != 0) {
+        out << " skip-every " << p.skipEvery << " skip-count " << p.skipCount;
+    }
     out << " order " << nameOf(detail::kColorOrders, p.color.order) << " gamma " << formatFloat(p.color.gamma)
         << " brightness " << formatFloat(p.color.brightness) << "\n";
 }

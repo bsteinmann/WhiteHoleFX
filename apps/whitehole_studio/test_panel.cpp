@@ -6,13 +6,14 @@
 #include <QDoubleSpinBox>
 #include <QFormLayout>
 #include <QLabel>
+#include <QListWidget>
 #include <QPushButton>
+#include <QSignalBlocker>
 #include <QVBoxLayout>
 
 #include <algorithm>
 #include <iterator>
 
-#include "layout_panel.hpp"
 
 namespace whitehole::studio {
 
@@ -54,8 +55,7 @@ QString rateSuffix(TestPatternKind kind) {
 
 }  // namespace
 
-TestPanel::TestPanel(runtime::Player& player, LayoutPanel& layoutPanel, QWidget* parent)
-    : QWidget{parent}, player_{player}, layout_{layoutPanel} {
+TestPanel::TestPanel(runtime::Player& player, QWidget* parent) : QWidget{parent}, player_{player} {
     auto* column = new QVBoxLayout{this};
     auto* form = new QFormLayout;
 
@@ -84,9 +84,17 @@ TestPanel::TestPanel(runtime::Player& player, LayoutPanel& layoutPanel, QWidget*
     form->addRow(tr("Tempo"), rate_);
 
     onlySelected_ = new QCheckBox{tr("Nur auf gewählten Fixtures"), this};
-    onlySelected_->setToolTip(tr("Die Fixtures in der Layout-Liste; alle anderen bleiben dunkel."));
+    onlySelected_->setToolTip(tr("Die unten gewählten Fixtures; alle anderen bleiben dunkel."));
     form->addRow(QString{}, onlySelected_);
     column->addLayout(form);
+
+    // Die Auswahl fürs Testen ist eine eigene: hier in der Liste (Strg/Umschalt für mehrere) oder per Klick auf eine LED
+    // in der Ansicht rechts. Die Layout-Liste bleibt davon unberührt.
+    column->addWidget(new QLabel{tr("Fixtures (Auswahl für „Auswahl hervorheben“ und „Nur auf gewählten“)"), this});
+    fixtures_ = new QListWidget{this};
+    fixtures_->setSelectionMode(QAbstractItemView::ExtendedSelection);
+    fixtures_->setToolTip(tr("Mehrere mit Strg oder Umschalt wählen. Ein Klick auf eine LED in der Ansicht wählt ihr Fixture."));
+    column->addWidget(fixtures_, 1);
 
     stop_ = new QPushButton{tr("Testmodus beenden"), this};
     column->addWidget(stop_);
@@ -107,8 +115,9 @@ TestPanel::TestPanel(runtime::Player& player, LayoutPanel& layoutPanel, QWidget*
     connect(rate_, &QDoubleSpinBox::valueChanged, this, [this]() { apply(); });
     connect(onlySelected_, &QCheckBox::toggled, this, [this]() { apply(); });
     connect(stop_, &QPushButton::clicked, this, [this]() { kind_->setCurrentIndex(0); });
-    // Das Hervorheben folgt der Auswahl in der Layout-Liste und in der Vorschau.
-    connect(&layout_, &LayoutPanel::selectionChanged, this, [this]() {
+    // Das Hervorheben folgt der Auswahl in dieser Liste (nicht mehr der Layout-Liste).
+    connect(fixtures_, &QListWidget::itemSelectionChanged, this, [this]() {
+        Q_EMIT selectionChanged();
         const TestPatternKind kind = currentKind();
         if (kind == TestPatternKind::Highlight || (kind != TestPatternKind::Off && onlySelected_->isChecked())) {
             apply();
@@ -162,7 +171,7 @@ void TestPanel::apply() {
     pattern.axis = static_cast<runtime::SweepAxis>(std::clamp(axis_->currentIndex(), 0, 2));
     pattern.rate = static_cast<float>(rate_->value());
     if (kind == TestPatternKind::Highlight || onlySelected_->isChecked()) {
-        pattern.fixtures = layout_.selectedIds();
+        pattern.fixtures = selectedIds();
         if (pattern.fixtures.empty() && kind != TestPatternKind::Highlight) {
             // "Nur gewählte" ohne Auswahl: lieber nichts leuchten lassen als alles.
             pattern.fixtures = {mapping::FixtureId{}};
@@ -179,7 +188,46 @@ void TestPanel::apply() {
     Q_EMIT patternChanged();
 }
 
+void TestPanel::rebuild() {
+    const std::vector<mapping::FixtureId> keep = selectedIds();
+    const QSignalBlocker blocker{fixtures_};
+    fixtures_->clear();
+    if (player_.project() == nullptr) {
+        return;
+    }
+    for (const mapping::Fixture& fixture : player_.project()->layout.fixtures()) {
+        auto* item = new QListWidgetItem{tr("%1  (%2 LEDs)").arg(QString::fromStdString(fixture.name)).arg(mapping::ledCount(fixture.shape))};
+        item->setData(Qt::UserRole, static_cast<qulonglong>(fixture.id.value()));
+        item->setSelected(std::find(keep.begin(), keep.end(), fixture.id) != keep.end());
+        fixtures_->addItem(item);
+    }
+}
+
+std::vector<mapping::FixtureId> TestPanel::selectedIds() const {
+    std::vector<mapping::FixtureId> ids;
+    for (int i = 0; i < fixtures_->count(); ++i) {
+        if (fixtures_->item(i)->isSelected()) {
+            ids.push_back(mapping::FixtureId{fixtures_->item(i)->data(Qt::UserRole).toULongLong()});
+        }
+    }
+    return ids;
+}
+
+void TestPanel::pickFixture(mapping::FixtureId id, bool extend) {
+    for (int i = 0; i < fixtures_->count(); ++i) {
+        QListWidgetItem* item = fixtures_->item(i);
+        const bool hit = mapping::FixtureId{item->data(Qt::UserRole).toULongLong()} == id;
+        if (hit) {
+            item->setSelected(extend ? !item->isSelected() : true);
+            fixtures_->scrollToItem(item);
+        } else if (!extend) {
+            item->setSelected(false);
+        }
+    }
+}
+
 void TestPanel::reset() {
+    rebuild();
     updating_ = true;
     kind_->setCurrentIndex(0);
     updating_ = false;
@@ -217,6 +265,25 @@ QString TestPanel::exercise() {
     stop_->click();
     if (player_.testPattern() != nullptr || !description().isEmpty()) {
         return QStringLiteral("Testmodus: \"beenden\" schaltet das Testbild nicht ab");
+    }
+    // Eigene Auswahl fürs Hervorheben: Liste und Klick (pickFixture) bestimmen die Fixtures des Testbilds.
+    rebuild();
+    if (player_.project() != nullptr && !player_.project()->layout.fixtures().empty()) {
+        const auto& fixtures = player_.project()->layout.fixtures();
+        if (fixtures_->count() != static_cast<int>(fixtures.size())) {
+            return QStringLiteral("Testmodus: die Fixture-Liste zählt nicht alle Fixtures");
+        }
+        kind_->setCurrentIndex(static_cast<int>(TestPatternKind::Highlight));
+        pickFixture(fixtures.front().id, false);
+        if (selectedIds() != std::vector<mapping::FixtureId>{fixtures.front().id} || player_.testPattern() == nullptr ||
+            player_.testPattern()->fixtures != selectedIds()) {
+            return QStringLiteral("Testmodus: die Auswahl im Testfenster kommt nicht beim Testbild an");
+        }
+        pickFixture(fixtures.front().id, true);  // Strg+Klick: wieder abwählen
+        if (!selectedIds().empty()) {
+            return QStringLiteral("Testmodus: Strg+Klick wählt nicht ab");
+        }
+        stop_->click();
     }
     return {};
 }

@@ -1,5 +1,13 @@
 # Änderungen
 
+## 0.87.0
+
+- **Pixel überspringen (Signalverstärker).** Im Patch lassen sich Pixel am Kabel auslassen, die nicht leuchten: vor der ersten LED (`Vorweg überspringen`) und nach je N LEDs (`Überspringen nach je` / `Übersprungene Pixel`, bei einer Matrix zum Beispiel die Spaltenzahl). Sie bekommen Schwarz, belegen aber ihre Kanäle; Adressraum, LED-Adresse beim Klick und die Prüfung auf Überlappung rechnen das mit. Projektdatei: `skip-first`, `skip-every`, `skip-count` (nur geschrieben, wenn gesetzt). Tests für Plan, Adressen, Adressraum und Projektdatei.
+- **Neue Show: die Matrix steht jetzt unter Fixtures → „In dieser Show“** (als Bauform „Matrix 16x8“ angelegt), statt als lose Form nur im Layout.
+- **Fixture aus der Bibliothek übernehmen:** Danach zeigte die Seite kein Formular, wenn die Show-Liste vorher leer war (die gespeicherte Zeile blieb gewählt). Jetzt ist die geholte Bauform gewählt und ihre Parameter sind zu sehen; Rauchtest ergänzt.
+- **Layout: Bauformen der Show direkt im Reiter.** Oben steht die Liste „Bauformen in dieser Show“; Doppelklick oder „Auf die Bühne“ legt ein Exemplar an (ersetzt den Menüknopf „Aus Bauform“).
+- **Test: eigene Auswahl im Testfenster.** „Auswahl hervorheben“ und „Nur auf gewählten Fixtures“ beziehen sich jetzt auf die Fixture-Liste im Testfenster und auf Klicks auf LEDs in der Test-Ansicht (Strg+Klick für mehrere), nicht mehr auf die Layout-Liste.
+
 ## 0.86.0
 
 - **Expanding Shapes: mehr Formen, Füllung, One shot.** Neue Formen Triangle, Hexagon, Polygon und Star (Eckenzahl `points`), Cross, Bars horizontal/vertical, dazu `rotation`. Neue Füllungen: *Solid* (innen voll; fortlaufend Streifen mit Tastgrad `thickness`), *Gradient inward* und *Gradient outward* (an der Kante hell, ausklingend), mit `softness` für die Kanten und `invert`. Neuer Lauf *One shot*: eine einzelne Form, deren Größe der Eingang `progress` (0..1) bestimmt, bei 0 und 1 ist nichts zu sehen; `reach` ist die Größe bei 1, `inward` lässt sie von außen zusammenfallen. Den Trigger macht der Shot-Node zum Fortschritt (ein Kabel `progress` → `progress`), weil Field-Nodes keine Flanke merken können. Alte Projekte sehen unverändert aus. Beispiel `effekte/formen.whfx`, Gerätetests, Doku.

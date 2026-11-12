@@ -10,7 +10,8 @@ namespace {
 constexpr std::uint32_t kBytesPerLed = 3;
 }
 
-std::optional<LedAddress> ledAddress(const FixturePatch& patch, std::uint32_t ledInFixture) {
+std::optional<LedAddress> ledAddress(const FixturePatch& patch, std::uint32_t led) {
+    const std::uint32_t ledInFixture = dataSlot(patch, led);  // Platz am Kabel, übersprungene Pixel eingerechnet
     LedAddress address;
     address.protocol = patch.protocol;
     address.destination = patch.destination;

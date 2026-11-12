@@ -264,3 +264,54 @@ TEST_CASE("Ein Plan ohne Patches ist leer und gültig", "[output][plan]") {
     REQUIRE(plan.render(std::vector<ColorRgba>(5), out).ok());
     CHECK(out.empty());
 }
+
+TEST_CASE("Übersprungene Pixel lassen Lücken im Datenstrom und rücken die Adressen weiter", "[output][plan][skip]") {
+    // Ein Verstärkerpixel vor der ersten LED und eines nach je 4 LEDs: 10 LEDs belegen 1 + 10 + 2 = 13 Plätze.
+    FixturePatch p = artnet(1, 0);
+    p.skipFirst = 1;
+    p.skipEvery = 4;
+    p.skipCount = 1;
+    CHECK(dataSlot(p, 0) == 1);
+    CHECK(dataSlot(p, 3) == 4);
+    CHECK(dataSlot(p, 4) == 6);  // nach LED 3 ein Platz frei
+    CHECK(dataSlot(p, 9) == 12);
+    CHECK(dataSlots(p, 10) == 13);
+    const OutputPlan plan = planOf(mapOf({10}), {p});
+    REQUIRE(plan.slots().size() == 1);
+    const OutputSlot& slot = plan.slots()[0];
+    CHECK(slot.length == 39);
+    REQUIRE(slot.runs.size() == 3);
+    CHECK(slot.runs[0].byteOffset == 3);
+    CHECK(slot.runs[0].ledCount == 4);
+    CHECK(slot.runs[1].byteOffset == 18);
+    CHECK(slot.runs[1].firstLed == 4);
+    CHECK(slot.runs[2].byteOffset == 33);
+    CHECK(slot.runs[2].ledCount == 2);
+    // Die übersprungenen Pixel bleiben schwarz, die LEDs bekommen ihre Farbe.
+    std::vector<ColorRgba> colors(10, ColorRgba{1.0F, 1.0F, 1.0F, 1.0F});
+    std::vector<Bytes> out;
+    REQUIRE(plan.render(colors, out).ok());
+    REQUIRE(out.size() == 1);
+    CHECK(out[0][0] == 0);
+    CHECK(out[0][3] == 255);
+    CHECK(out[0][15] == 0);   // Platz 5: übersprungen
+    CHECK(out[0][18] == 255);
+    // Ein zweites Fixture darf die Kanäle eines übersprungenen Pixels nicht benutzen (es hängt ja am selben Kabel).
+    FixturePatch other = artnet(2, 0, 16);  // Kanal 16..18 = Platz 5
+    CHECK(failureOf(mapOf({10, 1}), {p, other}) == ErrorCode::AlreadyExists);
+}
+
+TEST_CASE("Übersprungene Pixel zählen beim Universe-Umbruch mit", "[output][plan][skip]") {
+    // 169 LEDs, ein Pixel vorweg: Platz 169 (die 170. LED) passt noch, die nächste Gruppe beginnt in Universe 1.
+    FixturePatch p = artnet(1, 0);
+    p.skipFirst = 1;
+    p.skipEvery = 169;
+    const OutputPlan plan = planOf(mapOf({200}), {p});
+    REQUIRE(plan.slots().size() == 2);
+    CHECK(plan.slots()[0].runs[0].byteOffset == 3);
+    CHECK(plan.slots()[0].runs[0].ledCount == 169);
+    CHECK(plan.slots()[1].address == 1);
+    CHECK(plan.slots()[1].runs[0].firstLed == 169);
+    CHECK(plan.slots()[1].runs[0].byteOffset == 3);  // Platz 171 = Universe 1, Byte 3 (Platz 170 ist der Verstärker)
+    CHECK(plan.slots()[1].runs[0].ledCount == 31);
+}

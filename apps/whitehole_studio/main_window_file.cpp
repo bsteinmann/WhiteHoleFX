@@ -24,16 +24,19 @@ QString toQString(const std::string& text) {
 }
 
 // Ausgangspunkt für ein neues Projekt: eine 16x8-Matrix mit Art-Net auf den eigenen Rechner
-// (127.0.0.1, also ungefährlich) und ein Farbverlauf als Effekt. Dieselben Zeilen wie in
-// examples/einstieg/wand.whfx, nur ohne Strip und Dreher; so sieht man sofort ein Bild und kann Nodes
-// und Layout nach Wunsch ändern (Ziel-IP und Universen unter "Layout").
+// (127.0.0.1, also ungefährlich) und ein Farbverlauf als Effekt. Die Matrix ist als Bauform (fixturetype) angelegt,
+// damit sie im Reiter Fixtures unter "In dieser Show" steht und sich dort ändern oder noch einmal auf die Bühne
+// stellen lässt. Sonst wie examples/einstieg/wand.whfx ohne Strip und Dreher (Ziel-IP und Universen unter "Layout").
 constexpr const char* kNewProject = R"(whitehole-project 1
 settings fps 40
 
 destination 0 127.0.0.1
 
-fixture Matrix
+fixturetype "Matrix 16x8"
   matrix 16 8 pitch 1 1 start top-left first rows serpentine
+end
+
+fixture Matrix type "Matrix 16x8"
   patch artnet destination 0 universe 0 channel 1 order RGB gamma 2.2 brightness 1
 end
 
