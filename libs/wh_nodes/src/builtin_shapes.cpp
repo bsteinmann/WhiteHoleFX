@@ -1,4 +1,4 @@
-// Formen und Muster: Metaballs, Sternenhimmel, Funkeln, Zufallspixel, wachsende Formen, Sinuslinien.
+// Formen und Muster: Metaballs, Sternenhimmel, Funkeln, Zufallspixel, Sinuslinien (Expanding Shapes: builtin_expanding.cpp).
 //
 // Warum eine eigene Datei: builtin_generators.cpp enthält die Grundgeneratoren (Verlauf, Rauschen,
 // Plasma ...) und bleibt damit kurz genug. Alle Nodes hier sind zustandslos: Das Bild hängt nur
@@ -104,29 +104,6 @@ let pick = wh_cell_hash(cell + vec2<f32>(step * 5.31 + 3.0, step * 2.17 + 41.0))
 let col = mix(@param(colorA), @param(colorB), pick);
 return vec4<f32>(col.rgb, col.a * level * select(0.0, 1.0, lit));)wgsl";
 
-// Wachsende Formen: Kreise, Quadrate oder Rauten, die von einem Punkt nach außen laufen. Der Abstand d
-// ist je nach Form euklidisch, Maximum oder Summe der Beträge; die Ringe liegen im Abstand `spacing`
-// und wandern mit `speed` (negativ: nach innen). `fade` lässt sie nach außen verblassen.
-// Mit space = Volume wachsen daraus Kugelschalen, Würfelschalen und Oktaeder um (cx, cy, cz); Flat lässt
-// z weg und rechnet wie bisher.
-constexpr const char* kShapesBody = R"wgsl(let center = vec3<f32>(@param(cx), @param(cy), @param(cz));
-let d0 = select(vec3<f32>(p.xy - center.xy, 0.0), p - center, ((@param(space) > 0.5 && @param(space) < 1.5) || (@param(space) >= 1.5 && @volume)));
-let shape = i32(floor(@param(shape) + 0.5));
-var d = length(d0);
-if (shape == 1) {
-    d = max(max(abs(d0.x), abs(d0.y)), abs(d0.z));
-}
-if (shape == 2) {
-    d = abs(d0.x) + abs(d0.y) + abs(d0.z);
-}
-let spacing = max(@param(spacing), 0.02);
-let ph = fract((d - @time * @param(speed)) / spacing);
-let w = clamp(@param(thickness), 0.02, 1.0);
-let ring = 1.0 - smoothstep(0.0, w * 0.5, abs(ph - 0.5));
-let v = ring * clamp(1.0 - d * @param(fade), 0.0, 1.0);
-let col = @param(color);
-return vec4<f32>(col.rgb, col.a * v);)wgsl";
-
 // Sinuslinien: bis zu acht Wellen quer über die Leinwand, jede gegen die vorige um `spread` Perioden
 // verschoben. Die Farbe läuft von Linie zu Linie von colorA nach colorB. Überlappende Linien addieren
 // sich (vormultipliziert, wie wh_add_color). `frequencyZ` schiebt die Phase mit z: Aus jeder Linie wird im
@@ -188,15 +165,6 @@ std::vector<compiler::NodeDefinition> shapeNodes() {
          color("colorA", "Color A", ColorRgba{1.0F, 1.0F, 1.0F, 1.0F}),
          color("colorB", "Color B", ColorRgba{0.3F, 0.7F, 1.0F, 1.0F})},
         kRandomPixelsBody, kCellHashPrelude));
-
-    nodes.push_back(fieldNode(
-        "wh.generator.shapes", "Expanding Shapes", "Generators", {fieldOutput()},
-        {choice("shape", "Shape", {"Circle", "Square", "Diamond"}), number("cx", "Center X", 0.5, 0.0, 1.0),
-         number("cy", "Center Y", 0.5, 0.0, 1.0), number("spacing", "Spacing", 0.3, 0.02, 2.0),
-         number("speed", "Speed", 0.2, -5.0, 5.0), number("thickness", "Thickness", 0.3, 0.02, 1.0),
-         number("fade", "Fade out", 0.5, 0.0, 4.0), color("color", "Color", ColorRgba{1.0F, 1.0F, 1.0F, 1.0F}),
-         number("cz", "Center Z", 0.5, 0.0, 1.0), choice("space", "Space", {"Flat (x/y)", "Volume (x/y/z)", "Auto (by layout)"}, 2)},
-        kShapesBody));
 
     nodes.push_back(fieldNode(
         "wh.generator.sinelines", "Sine Lines", "Generators", {fieldOutput()},

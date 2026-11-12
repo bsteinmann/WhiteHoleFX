@@ -174,6 +174,7 @@ if(TARGET wh_gpu_webgpu)
         gpu_device/node_patterns_on_device_test.cpp
         gpu_device/spark_nodes_on_device_test.cpp
         gpu_device/maze_node_on_device_test.cpp
+        gpu_device/expanding_on_device_test.cpp
         gpu_device/pong_display_on_device_test.cpp
         gpu_device/text_on_device_test.cpp
         gpu_device/text_session_on_device_test.cpp

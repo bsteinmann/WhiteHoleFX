@@ -1,5 +1,9 @@
 # Änderungen
 
+## 0.86.0
+
+- **Expanding Shapes: mehr Formen, Füllung, One shot.** Neue Formen Triangle, Hexagon, Polygon und Star (Eckenzahl `points`), Cross, Bars horizontal/vertical, dazu `rotation`. Neue Füllungen: *Solid* (innen voll; fortlaufend Streifen mit Tastgrad `thickness`), *Gradient inward* und *Gradient outward* (an der Kante hell, ausklingend), mit `softness` für die Kanten und `invert`. Neuer Lauf *One shot*: eine einzelne Form, deren Größe der Eingang `progress` (0..1) bestimmt, bei 0 und 1 ist nichts zu sehen; `reach` ist die Größe bei 1, `inward` lässt sie von außen zusammenfallen. Den Trigger macht der Shot-Node zum Fortschritt (ein Kabel `progress` → `progress`), weil Field-Nodes keine Flanke merken können. Alte Projekte sehen unverändert aus. Beispiel `effekte/formen.whfx`, Gerätetests, Doku.
+
 ## 0.85.0
 
 - **Neuer Node „Labyrinth“ (`wh.generator.maze`, Generators).** Leuchtende Läufer ziehen rechtwinklige Bahnen über ein Raster, mit hellem Kopf (Leuchthof) und einem Schweif, der von Farbe A nach Farbe B verblasst. Einstellbar: Zellen über die Breite und Seitenverhältnis (bei `cells` = LED-Breite läuft jede Bahn über ganze LED-Reihen), Läufer (bis 8), Tempo in Zellen pro Sekunde, Schweiflänge, Dicke und Leuchthof in Zellen, Kopfhelligkeit, Abbiegewahrscheinlichkeit und Mindestlänge einer Geraden, Abklingkurve, Palette (entlang des Schweifs, je Läufer, Regenbogen), Hintergrundraster, Seed, Space (im Würfel räumlich). Zustandslos wie Particles: gleiches Bild bei jedem Abspielen. Beispiel `effekte/labyrinth.whfx`, Gerätetests, Doku in `docs/field-nodes.md`.

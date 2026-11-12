@@ -2427,8 +2427,8 @@ msgid "Serpentine (jeder zweite Ring rückwärts)"
 msgstr "Serpentina (un anillo de cada dos hacia atrás)"
 
 #: node_info_texts.cpp:90
-msgid "Sich ausbreitende Formen (Kreis, Quadrat, Raute) von einem Mittelpunkt aus, mit Abstand, Tempo und Ausblenden."
-msgstr "Expanding shapes (circle, square, diamond) from a center, with spacing, speed and fade-out."
+msgid "Sich ausbreitende Formen von einem Mittelpunkt aus: Kreis, Quadrat, Raute, Dreieck, Sechseck, Vieleck, Stern, Kreuz, Balken. Füllung als Ring, voll oder Verlauf; fortlaufend mit Abstand und Tempo oder als One shot über den Eingang „progress“ (vom Shot-Node)."
+msgstr "Formas que se expanden desde un centro: círculo, cuadrado, rombo, triángulo, hexágono, polígono, estrella, cruz, barras. Relleno como anillo, sólido o degradado; continuo con separación y velocidad, o como disparo único mediante la entrada «progress» (del nodo Shot)."
 
 #: parameter_panel.cpp:49
 msgid "Skalierung am Kabel: Wert × Faktor + Offset, danach begrenzt auf den Bereich des Parameters. So steuert ein Wert von 0 bis 1 zum Beispiel einen Winkel von 0 bis 360."

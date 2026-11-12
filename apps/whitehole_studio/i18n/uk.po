@@ -2427,8 +2427,8 @@ msgid "Serpentine (jeder zweite Ring rückwärts)"
 msgstr "Змійкою (кожне друге кільце у зворотному напрямку)"
 
 #: node_info_texts.cpp:90
-msgid "Sich ausbreitende Formen (Kreis, Quadrat, Raute) von einem Mittelpunkt aus, mit Abstand, Tempo und Ausblenden."
-msgstr "Фігури, що розходяться (коло, квадрат, ромб) від центру, з відстанню, темпом і згасанням."
+msgid "Sich ausbreitende Formen von einem Mittelpunkt aus: Kreis, Quadrat, Raute, Dreieck, Sechseck, Vieleck, Stern, Kreuz, Balken. Füllung als Ring, voll oder Verlauf; fortlaufend mit Abstand und Tempo oder als One shot über den Eingang „progress“ (vom Shot-Node)."
+msgstr "Фігури, що розширюються від центру: коло, квадрат, ромб, трикутник, шестикутник, многокутник, зірка, хрест, смуги. Заповнення кільцем, суцільне або градієнт; безперервно з кроком і швидкістю або одноразово через вхід «progress» (від вузла Shot)."
 
 #: parameter_panel.cpp:49
 msgid "Skalierung am Kabel: Wert × Faktor + Offset, danach begrenzt auf den Bereich des Parameters. So steuert ein Wert von 0 bis 1 zum Beispiel einen Winkel von 0 bis 360."

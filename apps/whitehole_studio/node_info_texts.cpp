@@ -87,7 +87,7 @@ std::span<const NodeInfoEntry> nodeInfoEntries() {
     {"wh.generator.rain",
      QT_TR_NOOP("Digitaler Regen: Spalten mit fallenden Leuchtspuren wie in der Matrix. Dichte, Tempo und Länge einstellbar.")},
     {"wh.generator.shapes",
-     QT_TR_NOOP("Sich ausbreitende Formen (Kreis, Quadrat, Raute) von einem Mittelpunkt aus, mit Abstand, Tempo und Ausblenden.")},
+     QT_TR_NOOP("Sich ausbreitende Formen von einem Mittelpunkt aus: Kreis, Quadrat, Raute, Dreieck, Sechseck, Vieleck, Stern, Kreuz, Balken. Füllung als Ring, voll oder Verlauf; fortlaufend mit Abstand und Tempo oder als One shot über den Eingang „progress“ (vom Shot-Node).")},
     {"wh.generator.fading",
      QT_TR_NOOP("Zufällige Zellen, die auf- und abblenden (Fading Pixels), zwischen zwei Farben.")},
     {"wh.generator.fire",

@@ -2427,7 +2427,7 @@ msgid "Serpentine (jeder zweite Ring rückwärts)"
 msgstr ""
 
 #: node_info_texts.cpp:90
-msgid "Sich ausbreitende Formen (Kreis, Quadrat, Raute) von einem Mittelpunkt aus, mit Abstand, Tempo und Ausblenden."
+msgid "Sich ausbreitende Formen von einem Mittelpunkt aus: Kreis, Quadrat, Raute, Dreieck, Sechseck, Vieleck, Stern, Kreuz, Balken. Füllung als Ring, voll oder Verlauf; fortlaufend mit Abstand und Tempo oder als One shot über den Eingang „progress“ (vom Shot-Node)."
 msgstr ""
 
 #: parameter_panel.cpp:49

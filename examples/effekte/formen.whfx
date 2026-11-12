@@ -1,0 +1,51 @@
+whitehole-project 1
+# Beispiel für Expanding Shapes im Modus "One shot": Bei jedem Schlag wächst einmal ein Stern aus der Mitte.
+#
+#   whitehole_studio examples/effekte/formen.whfx --run
+#   whitehole_cli examples/effekte/formen.whfx --snapshot formen.png --frames 30
+#
+# Der Shot-Node macht aus dem Trigger einen Fortschritt 0..1 und geht an den Eingang "progress" der Form. Bei 0 und
+# bei 1 zeigt der Node nichts, darum braucht es hier kein "active" (anders als in schuss.whfx). Füllung "Gradient
+# inward": an der Kante hell, nach innen ausklingend. Die Form bleibt also nur so lange zu sehen, wie der Schuss
+# läuft, und verschwindet danach. Mit Musik: "takt.tick" durch "beat" eines Audio-Trigger-Nodes ersetzen.
+
+settings fps 40
+
+destination 0 127.0.0.1
+
+fixture Wand
+  matrix 32 16 serpentine
+  patch artnet destination 0 universe 0
+end
+
+node takt wh.value.clock
+  set bpm 100
+end
+node schuss wh.value.shot
+  set bpm 100
+  set beats 1
+  set curve 1
+end
+node hintergrund wh.generator.solid
+  set color 0 0 0.03 1
+end
+node stern wh.generator.shapes
+  set shape 6
+  set points 5
+  set fill 2
+  set run 1
+  set reach 0.7
+  set spacing 0.5
+  set thickness 0.5
+  set fade 0
+  set color 1 0.8 0.2 1
+end
+node ueber wh.blend.blend
+  set mode 0
+end
+
+connect takt.tick -> schuss.trigger
+connect schuss.progress -> stern.progress
+connect hintergrund.out -> ueber.a
+connect stern.out -> ueber.b
+output ueber.out
