@@ -882,6 +882,10 @@ msgstr "DDP offset"
 msgid "DDP-Offset (Byte)"
 msgstr "DDP offset (bytes)"
 
+#: main_window_actions.cpp:171
+msgid "DMX"
+msgstr "DMX"
+
 #: cue_panel.cpp:38
 msgid "DMX %1 U%2 K%3 ab %4"
 msgstr "DMX %1 U%2 Ch%3 from %4"
@@ -926,7 +930,7 @@ msgstr "The cable starts on this side instead of the opposite one"
 msgid "Das Kabel läuft ohne Rücksprung von Ring zu Ring: unten vorwärts, den nächsten Ring rückwärts ..."
 msgstr "The cable runs from ring to ring without jumping back: the bottom ring forwards, the next ring backwards ..."
 
-#: node_info_texts.cpp:172
+#: node_info_texts.cpp:176
 msgid "Das Pong-Spiel als Rechen-Node: Ball, Schläger, Punkte und Treffer als Werte. Computer oder Eingang spielen, auch im Takt der Musik. Gezeichnet wird es von „Pong Display“."
 msgstr "The Pong game as a compute node: ball, paddles, score and hits as values. The computer or an input plays, also in time with the music. It is drawn by “Pong Display”."
 
@@ -1058,7 +1062,7 @@ msgstr "The new language applies after WhiteHoleFX restarts. Restart now?\n(Unsa
 msgid "Die unten gewählten Fixtures; alle anderen bleiben dunkel."
 msgstr "The fixtures selected below; all others stay dark."
 
-#: node_info_texts.cpp:180
+#: node_info_texts.cpp:184
 msgid "Die vergangene Zeit in Sekunden, mit Tempo-Faktor und Versatz. Zum Antreiben von Bewegungen."
 msgstr "The elapsed time in seconds, with speed factor and offset. For driving motion."
 
@@ -1166,7 +1170,7 @@ msgstr "A head runs along the chosen axis with a fading tail behind it. “Speed
 msgid "Ein Look ist ein fertiger Effekt (vom Generator bis zum Ausgang). Speichere deine Effekte hier und rufe sie im Live-Modus mit einem Klick ab."
 msgstr "A look is a finished effect (from generator to output). Save your effects here and recall them in live mode with one click."
 
-#: node_info_texts.cpp:174
+#: node_info_texts.cpp:178
 msgid "Ein Trigger startet einen Durchlauf von 0 nach 1, im Tempo der Musik (Schläge oder gemessener Abstand der Trigger). Mehrfach wiederholbar. Mit Map auf Radius, Position oder Helligkeit legen."
 msgstr "A trigger starts a run from 0 to 1 at the tempo of the music (beats or the measured spacing of the triggers). Can repeat several times. Route it through Map to a radius, position or brightness."
 
@@ -1182,7 +1186,7 @@ msgstr "A box (rectangle or cuboid) with a soft edge. Inside and outside color, 
 msgid "Eine Einführung in die Bedienung, in der gewählten Sprache"
 msgstr "An introduction to using the program, in the selected language"
 
-#: node_info_texts.cpp:154
+#: node_info_texts.cpp:158
 msgid "Eine Farbe als Wert, mit Farbton-Verschiebung, Sättigung und Helligkeit. Speist Farb-Eingänge anderer Nodes."
 msgstr "A color as a value, with hue shift, saturation and brightness. Feeds color inputs of other nodes."
 
@@ -1210,7 +1214,7 @@ msgstr "A helix of one or more strands rotating around a vertical axis. For 3D s
 msgid "Eine einfarbige Fläche. Der einfachste Generator, gut als Hintergrund oder Test."
 msgstr "A single solid color. The simplest generator, good as a background or for testing."
 
-#: node_info_texts.cpp:168
+#: node_info_texts.cpp:172
 msgid "Eine feste Zahl. Praktisch, um mehrere Parameter mit demselben Wert zu speisen."
 msgstr "A fixed number. Handy for feeding the same value to several parameters."
 
@@ -1342,7 +1346,7 @@ msgstr "Colored dots in front of the nodes in the palette: what the node deliver
 msgid "Farbreihenfolge"
 msgstr "Color order"
 
-#: node_info_texts.cpp:156
+#: node_info_texts.cpp:160
 msgid "Farbverlauf aus bis zu vier Farben. „Position“ wählt die Stelle, oder er läuft von selbst im eingestellten Tempo."
 msgstr "A color ramp of up to four colors. \"Position\" picks the spot, or it runs by itself at the set speed."
 
@@ -1518,7 +1522,7 @@ msgstr "Selected node: only the node you selected in the editor, plus pinned nod
 msgid "Gewähltes Fixture als Vorlage speichern …"
 msgstr "Save selected fixture as template …"
 
-#: node_info_texts.cpp:178
+#: node_info_texts.cpp:182
 msgid "Glättet einen Wert: Er folgt dem Eingang mit einer Zeitkonstante, statt zu springen."
 msgstr "Smooths a value: it follows the input with a time constant instead of jumping."
 
@@ -1630,7 +1634,7 @@ msgstr "Keeps this node in the window even when you select another one in the ed
 msgid "Höhe"
 msgstr "Height"
 
-#: node_info_texts.cpp:160
+#: node_info_texts.cpp:164
 msgid "Hüllkurve (ADSR): Aus einem Schalter wird ein weicher Verlauf mit Attack, Decay, Sustain und Release. Auch als Einzelimpuls."
 msgstr "Envelope (ADSR): turns a switch into a smooth curve with attack, decay, sustain and release. Also as a one-shot."
 
@@ -2342,11 +2346,11 @@ msgstr "Show grid in the preview"
 msgid "Rasterweite in Layout-Einheiten"
 msgstr "Grid spacing in layout units"
 
-#: node_info_texts.cpp:164
+#: node_info_texts.cpp:168
 msgid "Rechnet einen Wert von einem Bereich in einen anderen um (In min/max auf Out min/max), auf Wunsch begrenzt."
 msgstr "Converts a value from one range to another (In min/max to Out min/max), optionally clamped."
 
-#: node_info_texts.cpp:166
+#: node_info_texts.cpp:170
 msgid "Rechnet mit zwei Zahlen: Addieren, Subtrahieren, Multiplizieren, Dividieren, Minimum, Maximum und weitere."
 msgstr "Calculates with two numbers: add, subtract, multiply, divide, minimum, maximum and more."
 
@@ -2410,11 +2414,19 @@ msgstr "Switch"
 msgid "Schnellwahl"
 msgstr "Quick pick"
 
-#: node_info_texts.cpp:176
+#: node_info_texts.cpp:152
+msgid "Schreibt bis zu acht Werte auf aufeinanderfolgende DMX-Kanäle (Art-Net oder sACN), unabhängig von LEDs. „Low“/„High“ legen die DMX-Werte für 0 und 1 fest, „16 Bit“ belegt je Kanal zwei DMX-Kanäle. Hat keinen Ausgang und wird darum immer ausgewertet."
+msgstr "Writes up to eight values to consecutive DMX channels (Art-Net or sACN), independent of LEDs. “Low”/“High” set the DMX values for 0 and 1, “16 bit” uses two DMX channels per input. Has no output, so it is always evaluated."
+
+#: node_info_texts.cpp:154
+msgid "Schreibt eine Farbe als DMX-Kanäle (Art-Net oder sACN): RGB oder RGBW, davor auf Wunsch ein Dimmer-Kanal. Hat keinen Ausgang und wird darum immer ausgewertet."
+msgstr "Writes a color as DMX channels (Art-Net or sACN): RGB or RGBW, optionally preceded by a dimmer channel. Has no output, so it is always evaluated."
+
+#: node_info_texts.cpp:180
 msgid "Schrittfolge mit bis zu acht Werten. Jedes Einschalten von „Advance“ geht einen Schritt weiter (vorwärts, rückwärts, hin und her oder zufällig)."
 msgstr "A step sequence with up to eight values. Each switch-on of \"Advance\" moves one step (forward, backward, ping-pong or random)."
 
-#: node_info_texts.cpp:162
+#: node_info_texts.cpp:166
 msgid "Schwingung (LFO): Sinus, Dreieck, Sägezahn oder Rechteck mit Frequenz, Phase und Wertebereich. Der Klassiker zum Bewegen von Parametern."
 msgstr "Oscillator (LFO): sine, triangle, saw or square with frequency, phase and value range. The classic for moving parameters."
 
@@ -2602,7 +2614,7 @@ msgstr "Pillar 12x20"
 msgid "TESTMODUS: %1"
 msgstr "TEST MODE: %1"
 
-#: node_info_texts.cpp:152
+#: node_info_texts.cpp:156
 msgid "Taktgeber: Liefert im eingestellten Tempo (BPM) Impulse, Phase und Zähler. Läuft ohne Audio."
 msgstr "Clock: outputs ticks, phase and a counter at the set tempo (BPM). Runs without audio."
 
@@ -2730,7 +2742,7 @@ msgstr "Disconnect"
 msgid "Verdreht das Bild entlang einer Achse, je weiter weg, desto stärker (Winkel pro Einheit)."
 msgstr "Twists the image along an axis, stronger the further away (angle per unit)."
 
-#: node_info_texts.cpp:158
+#: node_info_texts.cpp:162
 msgid "Vergleicht einen Wert mit einer Schwelle (mit Hysterese): darüber, darunter, zwischen zwei Grenzen oder gleich (mit Toleranz). Liefert Ja/Nein sowie Impulse beim Einschalten und Ausschalten."
 msgstr "Compares a value with a threshold (with hysteresis): above, below, between two limits or equal (within a tolerance). Delivers yes/no plus pulses when it switches on and off."
 
@@ -2986,7 +2998,7 @@ msgstr "Create a project (Ctrl+N) or open one (Ctrl+O) first."
 msgid "Zuerst entlang"
 msgstr "First along"
 
-#: node_info_texts.cpp:170
+#: node_info_texts.cpp:174
 msgid "Zufallswert, der sich im eingestellten Takt ändert, auf Wunsch weich überblendet. Mit Seed wiederholbar."
 msgstr "A random value that changes at the set rate, optionally smoothed. Repeatable with a seed."
 

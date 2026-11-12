@@ -183,6 +183,9 @@ Result<void> ValueEvaluator::evaluate(const graph::Graph& graph, const FrameTime
         if (outputs.monitor().has_value()) {
             store.setMonitor(id, *outputs.monitor());
         }
+        if (outputs.channels()) {
+            store.setChannels(id, *outputs.channels());
+        }
     }
     return {};
 }

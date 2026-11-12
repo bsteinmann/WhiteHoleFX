@@ -90,8 +90,8 @@ public:
     /// für jeden Frame. Nur benutzen, wenn sich weder Nodes noch Kabel noch Textparameter geändert haben.
     Result<void> applyParameters(const graph::Graph& graph) { return stage_->setParameters(graph); }
 
-    /// Ein Frame. Siehe RenderEngine::renderFrame.
-    Result<void> renderFrame() { return engine_->renderFrame(); }
+    /// Ein Frame. Siehe RenderEngine::renderFrame. Danach gehen die DMX-Kanäle der Output-Nodes an die Ausgabe.
+    Result<void> renderFrame();
 
     /// Pollt das Gerät, bis alle Readbacks ausgeliefert und vom Ausgabe-Thread verarbeitet sind
     /// (oder das Timeout abläuft). Liefert, ob alles fertig wurde.
@@ -130,6 +130,7 @@ private:
     mapping::LedMap map_;
     std::unique_ptr<output::OutputWorker> worker_;           // zuerst anlegen, zuletzt entfernen
     std::unique_ptr<ColorTap> tap_;                          // nach dem Worker, vor dem Ring
+    bool hadChannels_{false};                                // im letzten Frame gab es DMX-Kanäle (zum Leeren)
     std::shared_ptr<executor::SamplingRenderStage> stage_;
     std::unique_ptr<engine::ReadbackRing> ring_;
     std::unique_ptr<engine::RenderEngine> engine_;           // zuletzt angelegt, zuerst entfernt

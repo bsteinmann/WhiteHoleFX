@@ -78,7 +78,18 @@ public:
                 latest_ = std::move(colors);
             }
         }
+        {
+            // DMX-Kanäle der Output-Nodes: der Stand der letzten Auswertung (höchstens einen Frame alt, weil das Bild
+            // erst nach dem Readback hier ankommt).
+            const std::lock_guard<std::mutex> lock{mutex_};
+            frame.channels = channels_;
+        }
         next_.publish(std::move(frame));
+    }
+
+    void setChannels(std::vector<ChannelWrite> channels) {
+        const std::lock_guard<std::mutex> lock{mutex_};
+        channels_ = std::move(channels);
     }
 
     std::vector<ColorRgba> latest() const {
@@ -106,6 +117,7 @@ private:
     std::atomic<bool> blackout_{false};
     mutable std::mutex mutex_;
     std::vector<ColorRgba> latest_;
+    std::vector<ChannelWrite> channels_;
     TestPattern pattern_;
     std::chrono::steady_clock::time_point since_{std::chrono::steady_clock::now()};
 };
@@ -226,6 +238,22 @@ SessionStats Session::stats() const {
 }
 
 std::vector<ColorRgba> Session::latestColors() const { return tap_->latest(); }
+
+Result<void> Session::renderFrame() {
+    const Result<void> r = engine_->renderFrame();
+    // Die CPU-Nodes sind jetzt ausgewertet: DMX-Kanäle der Output-Nodes für den Ausgabe-Thread bereitlegen.
+    const values::ValueStore::ChannelTable& table = stage_->values().allChannels();
+    if (!table.empty() || hadChannels_) {
+        std::vector<ChannelWrite> channels;
+        channels.reserve(table.size());
+        for (const auto& [node, write] : table) {
+            channels.push_back(write);
+        }
+        tap_->setChannels(std::move(channels));
+        hadChannels_ = !table.empty();
+    }
+    return r;
+}
 
 void Session::setTestPattern(TestPattern pattern) { tap_->setPattern(std::move(pattern)); }
 

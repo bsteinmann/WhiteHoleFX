@@ -17,8 +17,8 @@ TEST_CASE("Mailbox: leer liefert nichts") {
 
 TEST_CASE("Mailbox: ein neuer Frame überschreibt den nicht abgeholten und wird gezählt") {
     LatestFrameMailbox mailbox;
-    mailbox.publish(PixelFrame{1, {}});
-    mailbox.publish(PixelFrame{2, {}});
+    mailbox.publish(PixelFrame{1, {}, {}});
+    mailbox.publish(PixelFrame{2, {}, {}});
 
     CHECK(mailbox.droppedFrames() == 1U);
 
@@ -38,7 +38,7 @@ TEST_CASE("Mailbox: waitForFrame wacht auf, wenn ein anderer Thread veröffentli
 
     std::thread producer{[&mailbox] {
         std::this_thread::sleep_for(std::chrono::milliseconds{20});
-        mailbox.publish(PixelFrame{9, {}});
+        mailbox.publish(PixelFrame{9, {}, {}});
     }};
 
     const auto frame = mailbox.waitForFrame(std::chrono::milliseconds{2000});

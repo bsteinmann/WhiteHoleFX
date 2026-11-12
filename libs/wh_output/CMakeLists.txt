@@ -12,6 +12,7 @@ wh_add_library(wh_output
         src/ddp.cpp
         src/led_address.cpp
         src/output_pipeline.cpp
+        src/output_pipeline_channels.cpp
         src/output_plan.cpp
         src/patch_space.cpp
         src/patch_protocol.cpp

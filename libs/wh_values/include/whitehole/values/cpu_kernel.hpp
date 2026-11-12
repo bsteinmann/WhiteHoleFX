@@ -29,6 +29,7 @@
 #include "whitehole/core/ids.hpp"
 #include "whitehole/core/result.hpp"
 #include "whitehole/core/services.hpp"
+#include "whitehole/core/channel_write.hpp"
 #include "whitehole/core/spectrum.hpp"
 #include "whitehole/core/types.hpp"
 #include "whitehole/graph/node_descriptor.hpp"
@@ -75,10 +76,15 @@ public:
     void setMonitor(const MonitorView& view) { monitor_ = view; }
     [[nodiscard]] const std::optional<MonitorView>& monitor() const noexcept { return monitor_; }
 
+    /// DMX-Kanäle, die der Node in diesem Frame senden will (Senken wie wh.output.dmx). Gehört zu keinem Ausgang.
+    void setChannels(ChannelWrite write) { channels_ = std::move(write); }
+    [[nodiscard]] const std::optional<ChannelWrite>& channels() const noexcept { return channels_; }
+
 private:
     std::map<std::string, graph::ParameterValue, std::less<>> values_;
     std::map<std::string, Spectrum, std::less<>> spectra_;
     std::optional<MonitorView> monitor_;
+    std::optional<ChannelWrite> channels_;
 };
 
 struct KernelContext {

@@ -18,6 +18,7 @@
 #include <unordered_map>
 
 #include "whitehole/core/ids.hpp"
+#include "whitehole/core/channel_write.hpp"
 #include "whitehole/core/spectrum.hpp"
 #include "whitehole/graph/value_lookup.hpp"
 
@@ -40,6 +41,11 @@ public:
     using MonitorTable = std::unordered_map<NodeId, MonitorView>;
     [[nodiscard]] const MonitorTable& allMonitors() const noexcept { return monitors_; }
 
+    /// DMX-Kanäle, die Senken-Nodes in diesem Frame senden wollen (wh.output.dmx); die Session gibt sie an die Ausgabe.
+    void setChannels(NodeId node, ChannelWrite write);
+    using ChannelTable = std::unordered_map<NodeId, ChannelWrite>;
+    [[nodiscard]] const ChannelTable& allChannels() const noexcept { return channels_; }
+
     /// Entfernt alle Werte (Anfang jedes Frames).
     void clear() noexcept;
 
@@ -56,6 +62,7 @@ private:
     ValueTable values_;
     SpectrumTable spectra_;
     MonitorTable monitors_;
+    ChannelTable channels_;
     std::size_t count_{0};
 };
 

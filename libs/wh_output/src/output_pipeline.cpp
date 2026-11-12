@@ -60,6 +60,24 @@ std::uint16_t defaultPort(Protocol protocol) noexcept {
 
 }  // namespace
 
+Result<Endpoint> OutputPipeline::resolveEndpoint(const Destination& dest, Protocol protocol, std::uint32_t universe) {
+    Endpoint endpoint;
+    endpoint.port = dest.port != 0 ? dest.port : defaultPort(protocol);
+    if (dest.address.empty()) {
+        if (protocol != Protocol::Sacn) {
+            return Error{ErrorCode::InvalidArgument, "Art-Net und DDP brauchen eine Zieladresse"};
+        }
+        endpoint.address = sacnMulticastAddress(static_cast<std::uint16_t>(universe));
+        return endpoint;
+    }
+    if (!isIpv4(dest.address)) {
+        return Error{ErrorCode::InvalidArgument,
+                     "Die Zieladresse muss eine IPv4-Zahl sein (Rechnernamen werden nicht aufgelöst)"};
+    }
+    endpoint.address = dest.address;
+    return endpoint;
+}
+
 OutputPipeline::OutputPipeline(OutputPlan plan, OutputConfig config, IPacketSink& sink,
                                std::vector<Endpoint> endpoints)
     : plan_{std::move(plan)},
@@ -86,22 +104,11 @@ Result<std::unique_ptr<OutputPipeline>> OutputPipeline::create(OutputPlan plan, 
         if (slot.destination >= config.destinations.size()) {
             return Error{ErrorCode::InvalidArgument, "Ein Patch verweist auf ein Ziel, das nicht angelegt ist"};
         }
-        const Destination& dest = config.destinations[slot.destination];
-        Endpoint endpoint;
-        endpoint.port = dest.port != 0 ? dest.port : defaultPort(slot.protocol);
-        if (dest.address.empty()) {
-            if (slot.protocol != Protocol::Sacn) {
-                return Error{ErrorCode::InvalidArgument, "Art-Net und DDP brauchen eine Zieladresse"};
-            }
-            endpoint.address = sacnMulticastAddress(static_cast<std::uint16_t>(slot.address));
-        } else {
-            if (!isIpv4(dest.address)) {
-                return Error{ErrorCode::InvalidArgument,
-                             "Die Zieladresse muss eine IPv4-Zahl sein (Rechnernamen werden nicht aufgelöst)"};
-            }
-            endpoint.address = dest.address;
+        Result<Endpoint> endpoint = resolveEndpoint(config.destinations[slot.destination], slot.protocol, slot.address);
+        if (!endpoint.ok()) {
+            return endpoint.error();
         }
-        endpoints.push_back(std::move(endpoint));
+        endpoints.push_back(std::move(endpoint.value()));
     }
     return std::unique_ptr<OutputPipeline>(
         new OutputPipeline(std::move(plan), std::move(config), sink, std::move(endpoints)));
@@ -122,17 +129,42 @@ Result<void> OutputPipeline::process(std::span<const ColorRgba> colors) {
     if (Result<void> ok = plan_.render(colors, slotData_); !ok.ok()) {
         return ok;
     }
-    for (std::size_t i = 0; i < plan_.slots().size(); ++i) {
-        sendSlot(i);
-    }
-    frames_.fetch_add(1, std::memory_order_relaxed);
+    applyChannels({});
+    sendAll();
     return {};
 }
 
-std::uint8_t OutputPipeline::nextSequence(std::size_t slot) {
-    std::uint8_t& s = sequences_[slot];
+Result<void> OutputPipeline::processBytes(std::span<const std::byte> bytes, std::span<const ChannelWrite> channels) {
+    const std::size_t needed = plan_.ledCount() * kInputBytesPerLed;
+    if (bytes.size() < needed) {
+        return Error{ErrorCode::InvalidArgument, "Der Frame enthält weniger Bytes, als das Layout LEDs hat"};
+    }
+    if (needed > 0) {
+        std::memcpy(colors_.data(), bytes.data(), needed);
+    }
+    if (Result<void> ok = plan_.render(colors_, slotData_); !ok.ok()) {
+        return ok;
+    }
+    applyChannels(channels);
+    sendAll();
+    return {};
+}
+
+void OutputPipeline::sendAll() {
+    for (std::size_t i = 0; i < plan_.slots().size(); ++i) {
+        sendSlot(plan_.slots()[i], slotData_[i], endpoints_[i], nextSequence(i));
+    }
+    for (ChannelSlot& extra : channelSlots_) {
+        if (extra.used) {
+            sendSlot(extra.slot, extra.data, extra.endpoint, advanceSequence(extra.slot.protocol, extra.sequence));
+        }
+    }
+    frames_.fetch_add(1, std::memory_order_relaxed);
+}
+
+std::uint8_t OutputPipeline::advanceSequence(Protocol protocol, std::uint8_t& s) {
     const std::uint8_t current = s;
-    switch (plan_.slots()[slot].protocol) {
+    switch (protocol) {
         case Protocol::ArtNet: s = (s == 255) ? 1 : static_cast<std::uint8_t>(s + 1); break;
         case Protocol::Ddp: s = (s >= 15) ? 1 : static_cast<std::uint8_t>(s + 1); break;
         case Protocol::Sacn: s = static_cast<std::uint8_t>(s + 1); break;  // 255 -> 0
@@ -140,12 +172,12 @@ std::uint8_t OutputPipeline::nextSequence(std::size_t slot) {
     return current;
 }
 
-void OutputPipeline::sendSlot(std::size_t index) {
-    const OutputSlot& slot = plan_.slots()[index];
-    const std::vector<std::uint8_t>& data = slotData_[index];
-    const Endpoint& to = endpoints_[index];
-    const std::uint8_t sequence = nextSequence(index);
+std::uint8_t OutputPipeline::nextSequence(std::size_t slot) {
+    return advanceSequence(plan_.slots()[slot].protocol, sequences_[slot]);
+}
 
+void OutputPipeline::sendSlot(const OutputSlot& slot, std::span<const std::uint8_t> data, const Endpoint& to,
+                              std::uint8_t sequence) {
     switch (slot.protocol) {
         case Protocol::ArtNet: {
             ArtDmxParams p;

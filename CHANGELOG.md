@@ -1,5 +1,9 @@
 # Änderungen
 
+## 0.88.0
+
+- **DMX-Ausgabe aus dem Graph.** Zwei neue Nodes (Kategorie „Output“) schreiben Werte des Node-Graphs direkt als DMX-Kanäle, unabhängig von LEDs: **DMX Out** (acht Eingänge `ch1`…`ch8`, 0..1 auf `low`…`high` skaliert, auf Wunsch 16 Bit je Kanal) und **DMX Color Out** (eine Farbe als RGB oder RGBW, davor auf Wunsch ein Dimmer-Kanal). `destination` ist die Controller-Nummer wie im Patch, Universe und erster Kanal sind frei wählbar. Beide Nodes haben keinen Ausgang und werden darum jeden Frame ausgewertet. Die Werte gehen je Frame mit in den Ausgabe-Thread; liegt ihr Kanal im Bereich eines gepatchten Fixtures, wird der Eintrag verworfen und als Sendefehler gezählt (die LED-Daten bleiben unberührt); sonst bekommt das Universe ein eigenes Paket mit laufender Sequenznummer, solange jemand darauf schreibt. Beispiel `dmx/fader.whfx` (Nebel-Dimmer und RGB-Wash ohne eigenes Fixture), Tests für Kernel und Ausgabe-Pipeline, Doku in `docs/value-graph.md` und `docs/output.md`.
+
 ## 0.87.0
 
 - **Pixel überspringen (Signalverstärker).** Im Patch lassen sich Pixel am Kabel auslassen, die nicht leuchten: vor der ersten LED (`Vorweg überspringen`) und nach je N LEDs (`Überspringen nach je` / `Übersprungene Pixel`, bei einer Matrix zum Beispiel die Spaltenzahl). Sie bekommen Schwarz, belegen aber ihre Kanäle; Adressraum, LED-Adresse beim Klick und die Prüfung auf Überlappung rechnen das mit. Projektdatei: `skip-first`, `skip-every`, `skip-count` (nur geschrieben, wenn gesetzt). Tests für Plan, Adressen, Adressraum und Projektdatei.

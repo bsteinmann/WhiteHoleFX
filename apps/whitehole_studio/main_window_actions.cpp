@@ -167,6 +167,9 @@ QString groupTitle(const QString& folder) {
     if (folder == QStringLiteral("3d")) {
         return QObject::tr("3D");
     }
+    if (folder == QStringLiteral("dmx")) {
+        return QObject::tr("DMX");
+    }
     return folder.left(1).toUpper() + folder.mid(1);
 }
 

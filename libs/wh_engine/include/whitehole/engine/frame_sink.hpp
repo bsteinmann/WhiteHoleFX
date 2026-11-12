@@ -4,6 +4,7 @@
 #include <cstddef>
 #include <vector>
 
+#include "whitehole/core/channel_write.hpp"
 #include "whitehole/core/services.hpp"
 
 namespace whitehole::engine {
@@ -14,6 +15,8 @@ namespace whitehole::engine {
 struct PixelFrame {
     FrameIndex frame{0};
     std::vector<std::byte> bytes;
+    /// DMX-Kanäle der Output-Nodes dieses Frames (wh.output.dmx); die Session hängt sie an, die Ausgabe sendet sie.
+    std::vector<ChannelWrite> channels;
 };
 
 /// Empfänger fertiger Frames (z. B. der Output-Thread). publish() wird auf dem

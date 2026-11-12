@@ -41,6 +41,7 @@
 #include <utility>
 #include <vector>
 
+#include "whitehole/core/channel_write.hpp"
 #include "whitehole/core/result.hpp"
 #include "whitehole/core/types.hpp"
 #include "whitehole/output/output_plan.hpp"
@@ -90,6 +91,12 @@ public:
     /// Verarbeitet einen Frame aus fertigen Farben (genau ledCount Einträge).
     [[nodiscard]] Result<void> process(std::span<const ColorRgba> colors);
 
+    /// Wie processBytes, zusätzlich mit DMX-Kanälen der Output-Nodes (ChannelWrite): Sie werden in die Universen der
+    /// Fixtures eingetragen (ohne deren Kanäle zu überschreiben: eine Überschneidung wird gezählt und übersprungen) oder
+    /// bekommen eigene Universen, die wie die der Fixtures je Frame gesendet werden. Ein Universe, das in einem Frame
+    /// keiner mehr beschreibt, wird nicht mehr gesendet.
+    [[nodiscard]] Result<void> processBytes(std::span<const std::byte> bytes, std::span<const ChannelWrite> channels);
+
     [[nodiscard]] OutputStats stats() const noexcept;
     [[nodiscard]] std::optional<Error> lastSendError() const;
     [[nodiscard]] const OutputPlan& plan() const noexcept { return plan_; }
@@ -98,10 +105,24 @@ private:
     OutputPipeline(OutputPlan plan, OutputConfig config, IPacketSink& sink,
                    std::vector<Endpoint> endpoints);
 
-    void sendSlot(std::size_t index);
+    /// Ein Universe eines eigenen DMX-Nodes (ohne Fixture darin); siehe output_pipeline_channels.cpp.
+    struct ChannelSlot {
+        OutputSlot slot;
+        Endpoint endpoint;
+        std::uint8_t sequence{0};
+        std::vector<std::uint8_t> data;
+        bool used{false};
+    };
+
+    void sendSlot(const OutputSlot& slot, std::span<const std::uint8_t> data, const Endpoint& to, std::uint8_t sequence);
+    void sendAll();
     void deliver(const Endpoint& to, std::span<const std::uint8_t> packet);
     void noteError(const Error& error);
     std::uint8_t nextSequence(std::size_t slot);
+    static std::uint8_t advanceSequence(Protocol protocol, std::uint8_t& sequence);
+    static Result<Endpoint> resolveEndpoint(const Destination& destination, Protocol protocol, std::uint32_t universe);
+    /// Trägt die Kanäle der Output-Nodes in die Puffer ein (nach plan_.render, vor dem Senden).
+    void applyChannels(std::span<const ChannelWrite> channels);
 
     OutputPlan plan_;
     OutputConfig config_;
@@ -110,6 +131,7 @@ private:
     std::vector<std::uint8_t> sequences_;  // je Slot
     std::vector<ColorRgba> colors_;        // wiederverwendet
     std::vector<std::vector<std::uint8_t>> slotData_;
+    std::vector<ChannelSlot> channelSlots_;  // Universen nur mit DMX-Nodes, bleiben für die Sequenznummern erhalten
 
     std::atomic<std::uint64_t> frames_{0};
     std::atomic<std::uint64_t> packets_{0};

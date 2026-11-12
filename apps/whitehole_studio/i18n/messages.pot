@@ -882,6 +882,10 @@ msgstr ""
 msgid "DDP-Offset (Byte)"
 msgstr ""
 
+#: main_window_actions.cpp:171
+msgid "DMX"
+msgstr ""
+
 #: cue_panel.cpp:38
 msgid "DMX %1 U%2 K%3 ab %4"
 msgstr ""
@@ -926,7 +930,7 @@ msgstr ""
 msgid "Das Kabel läuft ohne Rücksprung von Ring zu Ring: unten vorwärts, den nächsten Ring rückwärts ..."
 msgstr ""
 
-#: node_info_texts.cpp:172
+#: node_info_texts.cpp:176
 msgid "Das Pong-Spiel als Rechen-Node: Ball, Schläger, Punkte und Treffer als Werte. Computer oder Eingang spielen, auch im Takt der Musik. Gezeichnet wird es von „Pong Display“."
 msgstr ""
 
@@ -1058,7 +1062,7 @@ msgstr ""
 msgid "Die unten gewählten Fixtures; alle anderen bleiben dunkel."
 msgstr ""
 
-#: node_info_texts.cpp:180
+#: node_info_texts.cpp:184
 msgid "Die vergangene Zeit in Sekunden, mit Tempo-Faktor und Versatz. Zum Antreiben von Bewegungen."
 msgstr ""
 
@@ -1166,7 +1170,7 @@ msgstr ""
 msgid "Ein Look ist ein fertiger Effekt (vom Generator bis zum Ausgang). Speichere deine Effekte hier und rufe sie im Live-Modus mit einem Klick ab."
 msgstr ""
 
-#: node_info_texts.cpp:174
+#: node_info_texts.cpp:178
 msgid "Ein Trigger startet einen Durchlauf von 0 nach 1, im Tempo der Musik (Schläge oder gemessener Abstand der Trigger). Mehrfach wiederholbar. Mit Map auf Radius, Position oder Helligkeit legen."
 msgstr ""
 
@@ -1182,7 +1186,7 @@ msgstr ""
 msgid "Eine Einführung in die Bedienung, in der gewählten Sprache"
 msgstr ""
 
-#: node_info_texts.cpp:154
+#: node_info_texts.cpp:158
 msgid "Eine Farbe als Wert, mit Farbton-Verschiebung, Sättigung und Helligkeit. Speist Farb-Eingänge anderer Nodes."
 msgstr ""
 
@@ -1210,7 +1214,7 @@ msgstr ""
 msgid "Eine einfarbige Fläche. Der einfachste Generator, gut als Hintergrund oder Test."
 msgstr ""
 
-#: node_info_texts.cpp:168
+#: node_info_texts.cpp:172
 msgid "Eine feste Zahl. Praktisch, um mehrere Parameter mit demselben Wert zu speisen."
 msgstr ""
 
@@ -1342,7 +1346,7 @@ msgstr ""
 msgid "Farbreihenfolge"
 msgstr ""
 
-#: node_info_texts.cpp:156
+#: node_info_texts.cpp:160
 msgid "Farbverlauf aus bis zu vier Farben. „Position“ wählt die Stelle, oder er läuft von selbst im eingestellten Tempo."
 msgstr ""
 
@@ -1518,7 +1522,7 @@ msgstr ""
 msgid "Gewähltes Fixture als Vorlage speichern …"
 msgstr ""
 
-#: node_info_texts.cpp:178
+#: node_info_texts.cpp:182
 msgid "Glättet einen Wert: Er folgt dem Eingang mit einer Zeitkonstante, statt zu springen."
 msgstr ""
 
@@ -1630,7 +1634,7 @@ msgstr ""
 msgid "Höhe"
 msgstr ""
 
-#: node_info_texts.cpp:160
+#: node_info_texts.cpp:164
 msgid "Hüllkurve (ADSR): Aus einem Schalter wird ein weicher Verlauf mit Attack, Decay, Sustain und Release. Auch als Einzelimpuls."
 msgstr ""
 
@@ -2342,11 +2346,11 @@ msgstr ""
 msgid "Rasterweite in Layout-Einheiten"
 msgstr ""
 
-#: node_info_texts.cpp:164
+#: node_info_texts.cpp:168
 msgid "Rechnet einen Wert von einem Bereich in einen anderen um (In min/max auf Out min/max), auf Wunsch begrenzt."
 msgstr ""
 
-#: node_info_texts.cpp:166
+#: node_info_texts.cpp:170
 msgid "Rechnet mit zwei Zahlen: Addieren, Subtrahieren, Multiplizieren, Dividieren, Minimum, Maximum und weitere."
 msgstr ""
 
@@ -2410,11 +2414,19 @@ msgstr ""
 msgid "Schnellwahl"
 msgstr ""
 
-#: node_info_texts.cpp:176
+#: node_info_texts.cpp:152
+msgid "Schreibt bis zu acht Werte auf aufeinanderfolgende DMX-Kanäle (Art-Net oder sACN), unabhängig von LEDs. „Low“/„High“ legen die DMX-Werte für 0 und 1 fest, „16 Bit“ belegt je Kanal zwei DMX-Kanäle. Hat keinen Ausgang und wird darum immer ausgewertet."
+msgstr ""
+
+#: node_info_texts.cpp:154
+msgid "Schreibt eine Farbe als DMX-Kanäle (Art-Net oder sACN): RGB oder RGBW, davor auf Wunsch ein Dimmer-Kanal. Hat keinen Ausgang und wird darum immer ausgewertet."
+msgstr ""
+
+#: node_info_texts.cpp:180
 msgid "Schrittfolge mit bis zu acht Werten. Jedes Einschalten von „Advance“ geht einen Schritt weiter (vorwärts, rückwärts, hin und her oder zufällig)."
 msgstr ""
 
-#: node_info_texts.cpp:162
+#: node_info_texts.cpp:166
 msgid "Schwingung (LFO): Sinus, Dreieck, Sägezahn oder Rechteck mit Frequenz, Phase und Wertebereich. Der Klassiker zum Bewegen von Parametern."
 msgstr ""
 
@@ -2602,7 +2614,7 @@ msgstr ""
 msgid "TESTMODUS: %1"
 msgstr ""
 
-#: node_info_texts.cpp:152
+#: node_info_texts.cpp:156
 msgid "Taktgeber: Liefert im eingestellten Tempo (BPM) Impulse, Phase und Zähler. Läuft ohne Audio."
 msgstr ""
 
@@ -2730,7 +2742,7 @@ msgstr ""
 msgid "Verdreht das Bild entlang einer Achse, je weiter weg, desto stärker (Winkel pro Einheit)."
 msgstr ""
 
-#: node_info_texts.cpp:158
+#: node_info_texts.cpp:162
 msgid "Vergleicht einen Wert mit einer Schwelle (mit Hysterese): darüber, darunter, zwischen zwei Grenzen oder gleich (mit Toleranz). Liefert Ja/Nein sowie Impulse beim Einschalten und Ausschalten."
 msgstr ""
 
@@ -2986,7 +2998,7 @@ msgstr ""
 msgid "Zuerst entlang"
 msgstr ""
 
-#: node_info_texts.cpp:170
+#: node_info_texts.cpp:174
 msgid "Zufallswert, der sich im eingestellten Takt ändert, auf Wunsch weich überblendet. Mit Seed wiederholbar."
 msgstr ""
 

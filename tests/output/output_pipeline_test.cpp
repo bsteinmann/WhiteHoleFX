@@ -2,6 +2,7 @@
 #include <catch2/catch_test_macros.hpp>
 
 #include <cstring>
+#include <span>
 #include <utility>
 #include <vector>
 
@@ -263,4 +264,86 @@ TEST_CASE("isIpv4 erkennt nur vierteilige Zahlenadressen", "[output][pipeline]")
                             "a.b.c.d", "1.2.3.4 ", "localhost", "1.2.3.-4", "::1"}) {
         CHECK_FALSE(isIpv4(bad));
     }
+}
+
+namespace {
+
+std::span<const std::byte> bytesOf(const std::vector<ColorRgba>& colors) {
+    return std::as_bytes(std::span{colors});
+}
+
+}  // namespace
+
+TEST_CASE("DMX-Nodes: Kanäle landen im Universe des Fixtures, ohne dessen LEDs zu überschreiben", "[output][pipeline][dmx]") {
+    auto r = rig(mapOf({2}), {patch(1, Protocol::ArtNet, 0)}, oneDestination("192.168.1.50"));
+    // Kanal 10..11 ist frei (die LEDs belegen 1..6)
+    ChannelWrite write;
+    write.universe = 0;
+    write.firstChannel = 10;
+    write.data = {7, 9};
+    REQUIRE(r->pipeline->processBytes(bytesOf(kRedBlue), std::vector<ChannelWrite>{write}).ok());
+    auto sent = r->sink.packets();
+    REQUIRE(sent.size() == 1);
+    // Art-Net: 18 Byte Kopf, dann die Kanäle; Länge wächst auf 12 (gerade), Kanal 10 = Index 9
+    CHECK(sent[0].bytes.size() == 18 + 12);
+    CHECK(sent[0].bytes[18 + 9] == 7);
+    CHECK(sent[0].bytes[18 + 10] == 9);
+    CHECK(sent[0].bytes[18 + 0] == 255);  // die LED bleibt rot
+    CHECK(r->pipeline->stats().sendErrors == 0);
+
+    // Überschneidung mit den LEDs: wird gezählt und übersprungen, die LED bleibt
+    write.firstChannel = 2;
+    REQUIRE(r->pipeline->processBytes(bytesOf(kRedBlue), std::vector<ChannelWrite>{write}).ok());
+    sent = r->sink.packets();
+    REQUIRE(sent.size() == 2);
+    CHECK(sent[1].bytes[18 + 1] == 0);
+    CHECK(r->pipeline->stats().sendErrors == 1);
+    REQUIRE(r->pipeline->lastSendError().has_value());
+    CHECK(r->pipeline->lastSendError()->code == ErrorCode::AlreadyExists);
+}
+
+TEST_CASE("DMX-Nodes: ein eigenes Universe wird gesendet, solange jemand schreibt, mit laufender Sequenz", "[output][pipeline][dmx]") {
+    auto r = rig(mapOf({1}), {patch(1, Protocol::ArtNet, 0)}, oneDestination("192.168.1.50"));
+    ChannelWrite write;
+    write.universe = 5;
+    write.firstChannel = 1;
+    write.data = {200};
+    ChannelWrite second;
+    second.universe = 5;
+    second.firstChannel = 3;
+    second.data = {100};
+    const std::vector<ColorRgba> one{{0, 0, 0, 1}};
+    REQUIRE(r->pipeline->processBytes(bytesOf(one), std::vector<ChannelWrite>{write, second}).ok());
+    REQUIRE(r->pipeline->processBytes(bytesOf(one), std::vector<ChannelWrite>{write}).ok());
+    REQUIRE(r->pipeline->processBytes(bytesOf(one), {}).ok());  // niemand schreibt mehr: Universe 5 verstummt
+    const auto sent = r->sink.packets();
+    REQUIRE(sent.size() == 5);  // 3x Universe 0, 2x Universe 5
+    const auto universeOf = [](const Bytes& b) { return b[14] | (b[15] << 8); };
+    CHECK(universeOf(sent[1].bytes) == 5);
+    CHECK(sent[1].bytes[18 + 0] == 200);
+    CHECK(sent[1].bytes[18 + 2] == 100);
+    CHECK(sent[1].bytes[12] == 1);  // Sequenz des eigenen Universes beginnt bei 1
+    CHECK(universeOf(sent[3].bytes) == 5);
+    CHECK(sent[3].bytes[12] == 2);
+    CHECK(sent[3].bytes[18 + 2] == 0);  // der zweite Node schreibt nicht mehr: Kanal 3 zurück auf 0
+    CHECK(universeOf(sent[4].bytes) == 0);
+}
+
+TEST_CASE("DMX-Nodes: falscher Controller, DDP und Kanal 0 werden gezählt und übersprungen", "[output][pipeline][dmx]") {
+    OutputConfig config = oneDestination("192.168.1.50");
+    config.destinations.push_back({"192.168.1.51", 0, Protocol::Ddp});
+    auto r = rig(mapOf({1}), {patch(1, Protocol::ArtNet, 0)}, config);
+    const std::vector<ColorRgba> one{{0, 0, 0, 1}};
+    ChannelWrite bad;
+    bad.destination = 7;
+    bad.data = {1};
+    ChannelWrite ddp;
+    ddp.destination = 1;
+    ddp.data = {1};
+    ChannelWrite zero;
+    zero.firstChannel = 0;
+    zero.data = {1};
+    REQUIRE(r->pipeline->processBytes(bytesOf(one), std::vector<ChannelWrite>{bad, ddp, zero}).ok());
+    CHECK(r->pipeline->stats().sendErrors == 3);
+    CHECK(r->sink.packets().size() == 1);
 }

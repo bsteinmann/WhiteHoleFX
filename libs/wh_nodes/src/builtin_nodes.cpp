@@ -36,7 +36,7 @@ std::vector<values::CpuNodeDefinition> builtinCpuDefinitions(std::shared_ptr<inp
     std::vector<values::CpuNodeDefinition> all = detail::valueNodes();
     std::vector<values::CpuNodeDefinition> inputs = detail::dmxNodes(std::move(dmx));
     all.insert(all.end(), std::make_move_iterator(inputs.begin()), std::make_move_iterator(inputs.end()));
-    for (auto* group : {&detail::mathNodes, &detail::sequenceNodes, &detail::shotNodes, &detail::pongNodes}) {
+    for (auto* group : {&detail::mathNodes, &detail::sequenceNodes, &detail::shotNodes, &detail::pongNodes, &detail::dmxOutNodes}) {
         std::vector<values::CpuNodeDefinition> extra = group();
         all.insert(all.end(), std::make_move_iterator(extra.begin()), std::make_move_iterator(extra.end()));
     }

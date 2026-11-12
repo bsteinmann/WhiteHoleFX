@@ -22,6 +22,7 @@ Die Beispiele liegen in `examples/`, nach Themen in Untergruppen. Im Studio ersc
 | Audio | `audio/audio.whfx` | Equalizer mit pulsierendem Hintergrund |
 | Audio | `audio/takt.whfx` | Effekte im Takt der Musik |
 | Audio | `audio/oszilloskop.whfx` | Wellenform als Oszilloskop |
+| DMX | `dmx/fader.whfx` | DMX Out und DMX Color Out: Nebel-Dimmer und RGB-Wash als reine DMX-Kanäle, ohne eigenes LED-Fixture |
 | 3D | `3d/ausrichtung.whfx` | Position Test: Achsen, Startecke und Verkabelung eines 6×4×8-Quaders prüfen |
 | 3D | `3d/plasma-wuerfel.whfx` | Plasma durch die Tiefe eines 8×8×8-Cubes, Color Map, Rotate 3D |
 | 3D | `3d/scheibe.whfx` | Scan Line als Scheibe, die ein LFO durch den Cube fährt |

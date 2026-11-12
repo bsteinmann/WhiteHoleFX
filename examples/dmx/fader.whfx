@@ -1,0 +1,51 @@
+whitehole-project 1
+# Beispiel für DMX-Ausgabe: Werte aus dem Graph gehen direkt auf DMX-Kanäle, unabhängig von den LEDs.
+#
+#   whitehole_studio examples/dmx/fader.whfx --run
+#   whitehole_cli examples/dmx/fader.whfx --check
+#
+# Die Matrix hängt an Universe 0, Kanal 1..24 (8 LEDs). "DMX Out" schreibt einen Nebelmaschinen-Dimmer auf
+# Universe 0, Kanal 200 — weit außerhalb der LED-Kanäle, keine Überschneidung. "DMX Color Out" schreibt eine
+# feste Farbe (plus Dimmer-Kanal) auf Universe 1, Kanal 1, als RGB-Wash-Scheinwerfer ohne eigenes Fixture; dieses
+# Universe hätte ohne den Node gar keine Ausgabe. Ein LFO fährt beide Dimmer langsam hoch und runter.
+# Mit Musik: den LFO durch den Pulse eines Audio-Trigger- oder Beat-Nodes ersetzen.
+
+settings fps 40
+
+destination 0 127.0.0.1
+
+fixture Wand
+  strip 8 from 0 0 0 to 1 0 0
+  patch artnet destination 0 universe 0 channel 1
+end
+
+node farbe wh.generator.solid
+  set color 0.1 0.3 1 1
+end
+
+node lfo wh.value.lfo
+  set shape 0
+  set frequency 0.1
+  set min 0.1
+  set max 1
+end
+
+node nebel wh.output.dmx
+  set destination 0
+  set universe 0
+  set channel 200
+  set count 1
+end
+
+node wash wh.output.dmxcolor
+  set destination 0
+  set universe 1
+  set channel 1
+  set mode 2
+  set color 1 0.5 0.1 1
+end
+
+connect lfo.out -> nebel.ch1
+connect lfo.out -> wash.dimmer
+
+output farbe.out

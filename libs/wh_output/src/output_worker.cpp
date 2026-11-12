@@ -22,7 +22,7 @@ void OutputWorker::run(const std::atomic<bool>& stop) {
         if (!frame) {
             continue;
         }
-        const Result<void> ok = pipeline_->processBytes(frame->bytes);
+        const Result<void> ok = pipeline_->processBytes(frame->bytes, frame->channels);
         if (!ok.ok()) {
             frameErrors_.fetch_add(1);
             const std::lock_guard<std::mutex> lock{errorMutex_};

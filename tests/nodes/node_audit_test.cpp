@@ -101,6 +101,8 @@ TEST_CASE("Node-Regeln: Ports haben eindeutige Schlüssel und Namen", "[nodes][a
             }
         }
         INFO(node.typeId);
-        CHECK(outputs >= 1);
+        // Senken (DMX-Ausgabe) haben absichtlich keinen Ausgang; der Evaluator wertet sie darum immer aus.
+        const bool sink = node.typeId.starts_with("wh.output.dmx");
+        CHECK((outputs >= 1 || sink));
     }
 }

@@ -12,12 +12,17 @@ SamplingRenderStage (GPU)  ->  16 Byte pro LED, linear RGBA, f32
         v
 LatestFrameMailbox  (OutputWorker, eigener Thread; alte Frames werden übersprungen)
         v
-OutputPipeline::processBytes
+OutputPipeline::processBytes(bytes, channels)
    OutputPlan::render      ->  ColorEncoder (Alpha, Helligkeit, Gamma, Reihenfolge)
+   applyChannels           ->  DMX-Output-Nodes (ChannelWrite) in Fixture- oder eigene Puffer eintragen
    encodeArtDmx / encodeSacn / encodeDdpStream
         v
 IPacketSink::send  (UdpSender im Betrieb, RecordingSink im Test)
 ```
+
+`channels` kommt aus `PixelFrame::channels`: Die Session liest nach jedem gerenderten Frame die Senken-Nodes
+`wh.output.dmx`/`wh.output.dmxcolor` aus dem `ValueStore` (`allChannels()`) und hängt sie an den Frame, bevor er
+zum Ausgabe-Thread geht (`libs/wh_runtime/src/session.cpp`).
 
 ## Bausteine
 
@@ -30,6 +35,7 @@ IPacketSink::send  (UdpSender im Betrieb, RecordingSink im Test)
 | `ddp` | DDP-Pakete zu höchstens 1440 Bytes (Port 4048) |
 | `packet_sink` | Schnittstelle `IPacketSink` und `Endpoint` (Adresse + Port) |
 | `output_pipeline` | pro Frame: rendern, Pakete bauen, senden; Sequenznummern, Zähler |
+| `output_pipeline_channels` | DMX-Output-Nodes (`ChannelWrite`) in Fixture- oder eigene Puffer eintragen |
 | `output_worker` | Thread, der Frames aus dem Briefkasten holt und die Pipeline ausführt |
 | `udp_sender` | nicht blockierender IPv4-UDP-Socket (POSIX und Winsock) |
 
@@ -77,6 +83,23 @@ linear, daher wird potenziert: `out = v^gamma`. Gamma 1 lässt alles unveränder
 ein üblicher Startwert. Das ist eine Konvention; wer lineares Licht will, nimmt Gamma 1.
 Die Vorschau im Studio rechnet genauso (`sRGB(v^gamma)` mit dem Gamma des Patches je Fixture), damit
 sie zeigt, was die LEDs ausgeben. Farbwähler speichern den Wert, den man sieht, ohne Umrechnung.
+
+## DMX-Ausgabe aus dem Graph
+
+Die Nodes `wh.output.dmx` und `wh.output.dmxcolor` (Kategorie „Output", siehe `docs/value-graph.md`,
+Abschnitt „DMX-Ausgabe") schreiben Werte aus dem Node-Graph auf DMX-Kanäle, unabhängig von LEDs. Je Frame
+legt die Session einen `ChannelWrite` je Node in `PixelFrame::channels`; `OutputPipeline::applyChannels`
+trägt sie ein:
+
+- Liegt das Universe schon im Plan (ein Fixture ist dort gepatcht), landen die Bytes in dessen Puffer, außer
+  sie überschneiden sich mit den LEDs des Fixtures — dann wird der Eintrag verworfen und als Sendefehler
+  gezählt; die LED-Kanäle werden nie überschrieben.
+- Sonst bekommt das Universe einen eigenen `ChannelSlot`, der zwischen den Frames bestehen bleibt (für
+  laufende Sequenznummern) und nur gesendet wird, wenn ihn im aktuellen Frame jemand beschrieben hat.
+  Schreibt kein Node mehr in ein solches Universe, verstummt es.
+- Mehrere Nodes im selben freien Universe dürfen sich ergänzen; beschreiben zwei Nodes denselben Kanal,
+  gewinnt der zuletzt verarbeitete.
+- DDP-Ziele kennen keine DMX-Universen: ein Schreibversuch dorthin wird gezählt und übersprungen.
 
 ## Bekannte Grenzen
 
