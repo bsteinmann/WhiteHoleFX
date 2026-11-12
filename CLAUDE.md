@@ -84,9 +84,37 @@ darum.
 - Labyrinth: statischer „Along walls"-Modus.
 - DMX-Output-Nodes (0.88.0): Anzeige als Zeilen in der Patch-Tabelle, Live-Wertanzeige am Node — bewusst
   nicht gebaut, nur als mögliche Erweiterung im Gespräch.
-- MIDI-Eingang/-Ausgang (z. B. Akai APC Mini): nur besprochen, nicht begonnen. Siehe Chat-Verlauf für die
-  Überlegungen (RtMidi, `wh_midi`-Lib analog zu `wh_audio`, Store-Pattern wie bei DMX, Geräte-Farbprofile,
-  MIDI-Learn als UX-Feature, MIDI-Clock als Tempoquelle).
+- **MIDI-Eingang/-Ausgang** (z. B. Akai APC Mini): nur besprochen, nicht begonnen. Überlegungen aus dem
+  Gespräch:
+  - *Bibliothek:* RtMidi — C++, cross-platform (ALSA/WinMM), passt zum bestehenden Muster, mit dem
+    `wh_audio` schon `miniaudio` einbindet. Ein neues `wh_midi` mit einem `MidiStore` (threadsicherer
+    Zwischenspeicher, analog zu `AudioStore`/`DmxStore`) würde demselben Schema folgen. MIDI-Callbacks
+    laufen auf einem eigenen RtMidi-Thread; Übergabe zum Engine-Thread über denselben
+    Lock-free/Atomic-Mechanismus, der für Audio/DMX schon existiert.
+  - *Zwei Richtungen, wie bei DMX:* Eingang — `wh.value.midicc` (Channel, CC-Nummer, min/max) als Scalar;
+    `wh.value.midinote` (Channel, Notennummer) als Trigger/Boolean plus Velocity als Scalar. Ausgang —
+    analog zu `wh.output.dmx` ein `wh.output.midinote`, das Note+Velocity zurückschickt, damit Pads passend
+    zum aktuellen Zustand leuchten (aktiver Cue, Preview-Farbe etc.).
+  - *Haken — Pad-Farben sind herstellerspezifisch:* Ein APC Mini hat keine echte RGB-LED pro Pad, sondern
+    eine kleine Palette, die über die Velocity-Zahl im Note-On gewählt wird. Launchpad-Geräte machen das
+    wieder anders (teils SysEx, echtes RGB). Ein generischer „MIDI Note Out"-Node mit freier Velocity ist
+    machbar und ehrlich, aber eine komfortable „schick dem Pad diese Farbe"-Abstraktion bräuchte pro
+    Geräteklasse eine eigene Übersetzungstabelle/Profil — das ist der aufwendigere Teil, nicht das Protokoll
+    selbst.
+  - *Nicht reproduzierbar:* genau wie bei DMX-Eingang kommen Werte aus externer Hardware, nicht aus der
+    Projektzeit. Offline-Rendern mit MIDI-Nodes liefert je nach Eingabe unterschiedliche Ergebnisse —
+    müsste genauso dokumentiert werden.
+  - *Geräteauswahl:* analog zur „DMX-Eingang"-Seite eine „MIDI"-Seite in den Einstellungen, Dropdown für
+    Eingangs- und (separat) Ausgangsport, standardmäßig aus. USB-Controller können jederzeit ab- und wieder
+    angesteckt werden — Hot-Plug bräuchte Polling oder einen RtMidi-Callback für Port-Änderungen.
+  - *MIDI-Learn:* statt Channel/CC-Nummer von Hand einzutippen — einen Parameter im Studio anklicken, am
+    Controller den Regler bewegen, fertig verbunden. Deutlich mehr UI-Aufwand als die Nodes selbst, aber
+    der Unterschied zwischen „technisch möglich" und „macht wirklich Spaß zu benutzen".
+  - *Bonus, quasi geschenkt:* MIDI-Clock/MTC als Tempoquelle für den bestehenden Clock-Node — eine DAW oder
+    Lichtsoftware könnte den Takt vorgeben, ohne Tap-Tempo.
+  - *Fazit:* technisch ein überschaubarer, dem DMX-Output sehr ähnlicher Baustein (Protokoll, Store, zwei/
+    drei Nodes). Der Aufwand steckt im Drumherum — Geräteprofile für Pad-Farben und MIDI-Learn —, nicht im
+    Kern.
 - Sequencer-Ports: abhängig von `steps` unbenutzte Ausgänge/Parameter ausblenden.
 - „Zonen"-Node, Projektions-/HDMI-Ausgabe, Remote-Web-UI, Headless-Player/Pi-Support, ukrainische
   Muttersprachler-Durchsicht der Übersetzungen, GitHub-Releases ab 0.71.0 und Issue #13 schließen — alle
