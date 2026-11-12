@@ -18,6 +18,7 @@ wh_add_library(wh_nodes
         src/pong_sim.cpp
         src/builtin_shapes.cpp
         src/builtin_sparks.cpp
+        src/builtin_maze.cpp
         src/builtin_text.cpp
         src/builtin_nodes.cpp
         src/builtin_transforms.cpp

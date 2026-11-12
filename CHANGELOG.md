@@ -1,5 +1,9 @@
 # Änderungen
 
+## 0.85.0
+
+- **Neuer Node „Labyrinth“ (`wh.generator.maze`, Generators).** Leuchtende Läufer ziehen rechtwinklige Bahnen über ein Raster, mit hellem Kopf (Leuchthof) und einem Schweif, der von Farbe A nach Farbe B verblasst. Einstellbar: Zellen über die Breite und Seitenverhältnis (bei `cells` = LED-Breite läuft jede Bahn über ganze LED-Reihen), Läufer (bis 8), Tempo in Zellen pro Sekunde, Schweiflänge, Dicke und Leuchthof in Zellen, Kopfhelligkeit, Abbiegewahrscheinlichkeit und Mindestlänge einer Geraden, Abklingkurve, Palette (entlang des Schweifs, je Läufer, Regenbogen), Hintergrundraster, Seed, Space (im Würfel räumlich). Zustandslos wie Particles: gleiches Bild bei jedem Abspielen. Beispiel `effekte/labyrinth.whfx`, Gerätetests, Doku in `docs/field-nodes.md`.
+
 ## 0.84.1
 
 - **Absturz bei „Speichern unter …“ unter Windows entschärft.** Der Absturz erreichte den Absturz-Handler nicht und hinterließ darum keinen Bericht (vermutlich der Windows-Dialog samt Erweiterungen von Fremdprogrammen). „Speichern unter“ nutzt jetzt den Qt-eigenen Dialog. Sollte es weiter krachen, bitte kurz melden, was im Dialog geschah (Ordner, Cloud-Laufwerk).

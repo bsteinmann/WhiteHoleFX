@@ -1,0 +1,40 @@
+whitehole-project 1
+# Beispiel für den Labyrinth-Node: vier Läufer ziehen leuchtende, rechtwinklige Bahnen über ein 32x16-Raster.
+#
+# So ausprobieren:
+#   whitehole_cli examples/effekte/labyrinth.whfx --snapshot labyrinth.png --frames 60
+#
+# Aufbau: `cells` 32 und `aspect` 2 legen je LED eine Zelle an, die Bahnen laufen damit über ganze
+# LED-Reihen. Der Kopf leuchtet weiß auf, der Schweif läuft von Farbe A (Pink) nach Farbe B (Blau) und
+# verblasst über 12 Zellen. `grid` 0.08 zeichnet ein schwaches Labyrinth in den Hintergrund.
+# Mit Musik: `speed` an den Audio-Level hängen, `head` an den Audio Trigger.
+
+settings fps 40
+
+destination 0 127.0.0.1
+
+fixture Wand
+  matrix 32 16 serpentine
+  patch artnet destination 0 universe 0
+end
+
+node schwarz wh.generator.solid
+  set color 0 0 0 1
+end
+node labyrinth wh.generator.maze
+  set cells 32
+  set aspect 2
+  set runners 4
+  set speed 6
+  set trail 12
+  set glow 0.6
+  set turn 0.3
+  set grid 0.08
+end
+node ueber wh.blend.blend
+  set mode 7
+end
+
+connect schwarz.out -> ueber.a
+connect labyrinth.out -> ueber.b
+output ueber.out

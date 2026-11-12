@@ -13,6 +13,7 @@ Die Beispiele liegen in `examples/`, nach Themen in Untergruppen. Im Studio ersc
 | Effekte (2D) | `effekte/schuss.whfx` | Shot-Node: eine Scan-Linie pro Schlag und ein sich ausdehnender Kreis bei jedem vierten Schlag, sonst unsichtbar (Shot `active` als Blend-`amount`) |
 | Effekte (2D) | `effekte/schlag-kreis.whfx` | ein Kreis dehnt sich bei jedem Schlag aus (Clock → Shot → Map → Sphere) |
 | Effekte (2D) | `effekte/funken.whfx` | Funken (Particles) |
+| Effekte (2D) | `effekte/labyrinth.whfx` | Labyrinth: vier Läufer mit Schweif auf einem 32x16-Raster |
 | Effekte (2D) | `effekte/kaleidoskop.whfx` | Metaballs im Kaleidoskop |
 | Effekte (2D) | `effekte/laufschrift.whfx` | Laufschrift |
 | Spiele | `spiele/pong.whfx` | Pong, Rechner gegen Rechner, Punkte als einzelne LEDs |

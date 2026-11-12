@@ -100,6 +100,8 @@ std::span<const NodeInfoEntry> nodeInfoEntries() {
      QT_TR_NOOP("Linearer Farbverlauf von Farbe A nach Farbe B in einem einstellbaren Winkel.")},
     {"wh.generator.metaballs",
      QT_TR_NOOP("Weiche, ineinanderfließende Kugeln (Metaballs), die sich bewegen. Anzahl, Größe und Tempo einstellbar.")},
+    {"wh.generator.maze",
+     QT_TR_NOOP("Labyrinth: Leuchtende Läufer ziehen rechtwinklige Bahnen über ein Raster, mit hellem Kopf und verblassendem Schweif. Zellen, Läufer, Tempo, Schweiflänge, Abbiegehäufigkeit, Farben und ein Hintergrundraster einstellbar; im Würfel laufen sie räumlich.")},
     {"wh.generator.particles",
      QT_TR_NOOP("Partikel von einem Emitter: Lebensdauer, Tempo, Richtung, Streuung, Schwerkraft und Schweif einstellbar.")},
     {"wh.generator.wave",

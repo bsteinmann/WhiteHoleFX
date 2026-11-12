@@ -18,6 +18,7 @@ std::vector<compiler::NodeDefinition> builtinNodeDefinitions() {
     append(detail::generators1dNodes());
     append(detail::shapeNodes());
     append(detail::sparkNodes());
+    append(detail::mazeNodes());
     append(detail::textNodes());
     append(detail::transformNodes());
     append(detail::warpNodes());
