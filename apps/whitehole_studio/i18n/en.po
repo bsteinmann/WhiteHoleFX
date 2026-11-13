@@ -1347,8 +1347,8 @@ msgid "Farbreihenfolge"
 msgstr "Color order"
 
 #: node_info_texts.cpp:160
-msgid "Farbverlauf aus bis zu vier Farben. „Position“ wählt die Stelle, oder er läuft von selbst im eingestellten Tempo."
-msgstr "A color ramp of up to four colors. \"Position\" picks the spot, or it runs by itself at the set speed."
+msgid "Farbverlauf aus bis zu vier Farben. „Position“ wählt die Stelle, oder er läuft von selbst im eingestellten Tempo. Mit „Hard steps“ springt er wie ein Sequencer statt zu überblenden."
+msgstr "Color gradient between up to four colors. “Position” picks the spot, or it runs on its own at the set speed. With “Hard steps” it jumps like a sequencer instead of fading."
 
 #: node_palette.cpp:224
 msgid "Favoriten"

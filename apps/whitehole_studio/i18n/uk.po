@@ -1347,8 +1347,8 @@ msgid "Farbreihenfolge"
 msgstr "Порядок кольорів"
 
 #: node_info_texts.cpp:160
-msgid "Farbverlauf aus bis zu vier Farben. „Position“ wählt die Stelle, oder er läuft von selbst im eingestellten Tempo."
-msgstr "Градієнт із чотирьох кольорів. «Position» обирає місце, або він рухається сам з заданим темпом."
+msgid "Farbverlauf aus bis zu vier Farben. „Position“ wählt die Stelle, oder er läuft von selbst im eingestellten Tempo. Mit „Hard steps“ springt er wie ein Sequencer statt zu überblenden."
+msgstr "Градієнт між до чотирьох кольорів. «Position» вибирає точку, або він рухається сам у заданому темпі. З «Hard steps» він перемикається стрибками, як секвенсор, замість плавного переходу."
 
 #: node_palette.cpp:224
 msgid "Favoriten"

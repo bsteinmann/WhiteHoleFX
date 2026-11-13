@@ -111,6 +111,28 @@ TEST_CASE("Color Ramp: zwischen zwei Farben überblenden") {
     CHECK(colorOf(lab, ramp) == ColorRgba{1.0F, 0.5F, 0.0F, 1.0F});
 }
 
+TEST_CASE("Color Ramp: harte Schritte springen statt zu überblenden") {
+    Lab lab;
+    const NodeId ramp = lab.add("wh.value.colorramp");
+    consume(lab, ramp);
+    lab.set(ramp, "count", std::int64_t{3});
+    lab.set(ramp, "loop", false);
+    lab.set(ramp, "speed", 0.0);
+    lab.set(ramp, "hard", true);
+    lab.set(ramp, "color1", ColorRgba{1.0F, 0.0F, 0.0F, 1.0F});
+    lab.set(ramp, "color2", ColorRgba{0.0F, 1.0F, 0.0F, 1.0F});
+    lab.set(ramp, "color3", ColorRgba{0.0F, 0.0F, 1.0F, 1.0F});
+
+    lab.set(ramp, "position", 0.0);
+    CHECK(colorOf(lab, ramp) == ColorRgba{1.0F, 0.0F, 0.0F, 1.0F});
+    lab.set(ramp, "position", 0.3);  // noch im ersten Segment: keine Mischung mit Grün
+    CHECK(colorOf(lab, ramp) == ColorRgba{1.0F, 0.0F, 0.0F, 1.0F});
+    lab.set(ramp, "position", 0.5);  // zweites Segment beginnt: sofort voll Grün
+    CHECK(colorOf(lab, ramp) == ColorRgba{0.0F, 1.0F, 0.0F, 1.0F});
+    lab.set(ramp, "position", 0.9);  // kurz vor dem Ende noch immer die dritte Farbe, kein Überblenden zurück
+    CHECK(colorOf(lab, ramp) == ColorRgba{0.0F, 0.0F, 1.0F, 1.0F});
+}
+
 TEST_CASE("Color Ramp: drei Farben im Kreis") {
     Lab lab;
     const NodeId ramp = lab.add("wh.value.colorramp");

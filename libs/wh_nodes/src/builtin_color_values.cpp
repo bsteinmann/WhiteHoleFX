@@ -90,7 +90,8 @@ namespace {
 // `loop` geht es von der letzten wieder zur ersten (eine Periode von `position` ist ein voller Umlauf,
 // ein Sägezahn-LFO zyklisiert also ewig durch alle Farben). Ohne LFO läuft der Node von selbst: `speed` sind
 // Umläufe pro Sekunde (die Phase wird aufsummiert und zu `position` addiert; negativ rückwärts, 0 = steht). Ohne
-// `loop` pendelt er dabei zwischen erster und letzter Farbe hin und her.
+// `loop` pendelt er dabei zwischen erster und letzter Farbe hin und her. Mit `hard` springt der Node wie ein
+// Sequencer-Schritt direkt auf die Farbe des aktuellen Segments, statt zur nächsten überzublenden.
 class ColorRampKernel final : public values::ICpuKernel {
 public:
     void evaluate(const KernelContext& context, KernelOutputs& outputs) override {
@@ -118,10 +119,17 @@ public:
         } else {
             p = std::clamp(position, 0.0, 1.0);
         }
+        if (in.boolean("hard", false)) {
+            // Harter Schritt: p gleichmäßig über alle `count` Farben verteilt (wie Sequencer-Schritte),
+            // unabhängig von der Paar-Aufteilung, die das Überblenden unten braucht.
+            const auto hardIndex = std::min(static_cast<std::size_t>(p * static_cast<double>(count)), count - 1);
+            outputs.set("out", colors[hardIndex]);
+            return;
+        }
         const double t = p * segments;
         const auto index = std::min(static_cast<std::size_t>(t), static_cast<std::size_t>(segments) - 1);
-        const auto f = static_cast<float>(t - static_cast<double>(index));
         const ColorRgba& a = colors[index];
+        const auto f = static_cast<float>(t - static_cast<double>(index));
         const ColorRgba& b = colors[(index + 1) % count];
         outputs.set("out", ColorRgba{a.r + (b.r - a.r) * f, a.g + (b.g - a.g) * f, a.b + (b.b - a.b) * f,
                                      a.a + (b.a - a.a) * f});
@@ -138,6 +146,7 @@ values::CpuNodeDefinition colorRampNode() {
                    {integer("count", "Colors", 2, 2.0, 4.0), number("position", "Position", 0.0),
                     number("speed", "Speed (cycles/s)", 0.2, -10.0, 10.0),
                     toggle("loop", "Loop back to first color", true),
+                    toggle("hard", "Hard steps (no fade, like a sequencer)", false),
                     color("color1", "Color 1", ColorRgba{0.0F, 0.2F, 1.0F, 1.0F}),
                     color("color2", "Color 2", ColorRgba{1.0F, 0.3F, 0.0F, 1.0F}),
                     color("color3", "Color 3", ColorRgba{0.0F, 1.0F, 0.3F, 1.0F}),
