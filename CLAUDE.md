@@ -130,6 +130,9 @@ darum.
   Cue/Look-System (`cue_dialog.cpp`, `cue_panel.cpp`) und den DMX-Eingang (`wh_input`, DMX-Eingang-Seite in
   den Einstellungen) — noch nicht untersucht, wie genau Look-Auswahl per DMX-Wert mit der bestehenden
   Cue-Reihenfolge zusammenspielt.
+- **Plasma-Node: Farben erweitern** (`wh.generator.plasma`, `builtin_generators.cpp`): aktuell keine
+  Farbparameter, nur der klassische Fixverlauf (drei phasenverschobene Sinus-Kanäle direkt als RGB, siehe
+  `kPlasmaBody`). Gewünscht: Color-Eingänge dazu plus ein paar fertige Paletten zur Auswahl.
 - **MIDI-Eingang/-Ausgang** (z. B. Akai APC Mini): nur besprochen, nicht begonnen. Überlegungen aus dem
   Gespräch:
   - *Bibliothek:* RtMidi — C++, cross-platform (ALSA/WinMM), passt zum bestehenden Muster, mit dem
