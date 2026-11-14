@@ -108,6 +108,14 @@ darum.
   Eingriff in Compiler/Feld-Node-Kern (neuer eingebauter Wert, der bei der Ausführung die reale
   Leinwandgröße durchreicht), nicht nur an einem einzelnen Node — danach könnten diese Nodes den
   `aspect`-Parameter ggf. ganz los werden (automatisch statt manuell korrekt).
+  - **Auch Random Pixels** (`builtin_shapes.cpp`) gehört in dieselbe Grundlücke, auch ohne `aspect`: Die
+    beiden unabhängigen Werte `columns`/`rows` müssten dann ebenfalls automatisch aus der echten Auflösung
+    kommen statt von Hand gepflegt zu werden. Anders als bei den `aspect`-Nodes führt ein Mismatch dort
+    nicht zu Verzerrung, sondern zu zu grobem/zu feinem Raster (mehrere LEDs je Zufallsfeld oder
+    umgekehrt).
+  - **Spectrum Bars** (`builtin_audio_field.cpp`) ist dagegen **nicht** betroffen — kein `aspect`, keine
+    quadratischen Zellen; Balkenbreite/-lücke sind relativ zur Spaltenbreite definiert, Höhe nutzt `p.y`
+    direkt. Kein Handlungsbedarf dort.
 - DMX-Output-Nodes (0.88.0): Anzeige als Zeilen in der Patch-Tabelle, Live-Wertanzeige am Node — bewusst
   nicht gebaut, nur als mögliche Erweiterung im Gespräch.
 - **MIDI-Eingang/-Ausgang** (z. B. Akai APC Mini): nur besprochen, nicht begonnen. Überlegungen aus dem
