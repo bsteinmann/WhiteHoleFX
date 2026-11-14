@@ -82,6 +82,18 @@ darum.
 
 - Expanding Shapes: Squircle (Formen-Morph 0..1), Spiral, Color B / Hollow-Core-Füllung.
 - Labyrinth: statischer „Along walls"-Modus.
+- **Node `wh.value.color` umbenennen** von „Color" zu „Color Adjust" (Anzeigename, Node-ID bleibt gleich —
+  bestehende Projekte nicht betroffen). Grund: Name war missverständlich, der Node macht HSV-Verstellung
+  (Hue/Saturation/Brightness) auf einer Grundfarbe, nicht nur eine reine Farbwahl; leicht zu verwechseln mit
+  Color Ramp.
+- **Color Ramp: UX-Überarbeitung** (vom Nutzer als unintuitiv empfunden), besprochene Ansatzpunkte:
+  - Ungenutzte Farbfelder (`color3`/`color4`) ausblenden, wenn `count` kleiner ist (gleiche Mechanik wie
+    beim Sequencer-Backlog-Punkt unten).
+  - Default `speed` auf 0 statt 0,2, damit der Node beim Einfügen erst mal stillsteht.
+  - „Loop back to first color" (Haken) durch eine Choice „Pendulum" / „Loop" ersetzen, die das
+    Pendel-Verhalten bei „aus" explizit macht statt implizit.
+  - Größer: Live-Vorschaustreifen im Node-Körper; noch größer: echte Gradient-Stopp-Liste mit frei
+    platzierbaren Stopps statt vier fester Slots.
 - DMX-Output-Nodes (0.88.0): Anzeige als Zeilen in der Patch-Tabelle, Live-Wertanzeige am Node — bewusst
   nicht gebaut, nur als mögliche Erweiterung im Gespräch.
 - **MIDI-Eingang/-Ausgang** (z. B. Akai APC Mini): nur besprochen, nicht begonnen. Überlegungen aus dem
