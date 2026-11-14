@@ -23,6 +23,15 @@
 
 namespace whitehole::studio {
 
+namespace {
+// Generator-Node fuer die Einraste-/Kabel-Tests unten: bewusst ein sehr kleiner Node (ein Farbparameter, ein
+// Ausgang), nicht Plasma & Co. Jeder zusaetzliche modulierbare Parameter eines Nodes bekommt automatisch einen
+// eigenen Eingang (siehe addModulationPorts) und macht die Karte im Editor entsprechend hoeher; ein inhaltsreicher
+// Generator wie Plasma waere hier also keine stabile Wahl und wuerde bei jeder neuen Palette/jedem neuen Parameter
+// erneut die festen Szenen-Koordinaten dieses Rauchtests verschieben.
+constexpr const char* kProbeGenerator = "wh.generator.solid";
+}  // namespace
+
 QString NodeEditor::exercise() {
     if (player_.project() == nullptr) {
         return QStringLiteral("kein Projekt");
@@ -65,9 +74,9 @@ QString NodeEditor::exercise() {
         const QRectF content = scene_.itemsBoundingRect();
         return QPointF{content.left() + 20.0, content.bottom() + 80.0};
     };
-    const std::optional<NodeId> source = addNodeAt("wh.generator.plasma", freeSpot());
+    const std::optional<NodeId> source = addNodeAt(kProbeGenerator, freeSpot());
     if (!source) {
-        return QStringLiteral("Plasma-Node anlegen");
+        return QStringLiteral("Generator-Node anlegen");
     }
     const std::optional<NodeId> sink = addNodeAt("wh.transform.mirror", freeSpot());
     if (!sink) {
@@ -302,7 +311,7 @@ QString NodeEditor::exerciseDocking(NodeId source, NodeId sink) {
     if (sinkItem == nullptr) {
         return QStringLiteral("Einrasten: Ziel-Node fehlt");
     }
-    const auto onLeft = dockPlanAt("wh.generator.plasma", sinkItem->mapToScene(QPointF{30.0, 40.0}), false);
+    const auto onLeft = dockPlanAt(kProbeGenerator, sinkItem->mapToScene(QPointF{30.0, 40.0}), false);
     if (!onLeft.has_value() || onLeft->links.size() != 1 || !(onLeft->links[0].to == graph::PortRef{sink, "source"})) {
         return QStringLiteral("Einrasten: linke Hälfte eines Nodes mit freiem Eingang");
     }
@@ -310,7 +319,7 @@ QString NodeEditor::exerciseDocking(NodeId source, NodeId sink) {
     if (!onRight.has_value() || onRight->links.size() != 1 || !(onRight->links[0].from.node == sink)) {
         return QStringLiteral("Einrasten: rechte Hälfte eines Nodes");
     }
-    if (dockPlanAt("wh.generator.plasma", sinkItem->mapToScene(QPointF{30.0, 40.0}), true).has_value()) {
+    if (dockPlanAt(kProbeGenerator, sinkItem->mapToScene(QPointF{30.0, 40.0}), true).has_value()) {
         return QStringLiteral("Einrasten: mit Alt darf nichts einrasten");
     }
 
