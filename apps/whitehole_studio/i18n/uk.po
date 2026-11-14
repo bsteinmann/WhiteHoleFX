@@ -1771,8 +1771,8 @@ msgid "LIVE   |   "
 msgstr "LIVE   |   "
 
 #: node_info_texts.cpp:104
-msgid "Labyrinth: Leuchtende Läufer ziehen rechtwinklige Bahnen über ein Raster, mit hellem Kopf und verblassendem Schweif. Zellen, Läufer, Tempo, Schweiflänge, Abbiegehäufigkeit, Farben und ein Hintergrundraster einstellbar; im Würfel laufen sie räumlich."
-msgstr "Лабіринт: світні бігуни прокладають прямокутні доріжки по сітці з яскравою головою та згасаючим хвостом. Налаштовуються клітинки, бігуни, швидкість, довжина хвоста, частота поворотів, кольори та фонова сітка; у кубі вони рухаються у просторі."
+msgid "Labyrinth: Leuchtende Läufer ziehen rechtwinklige Bahnen über ein Raster, mit hellem Kopf und verblassendem Schweif. Zellen, Läufer, Tempo, Schweiflänge, Abbiegehäufigkeit, Farben und ein Hintergrundraster einstellbar; im Würfel laufen sie räumlich. „Mode“ „Along walls“ lässt sie stattdessen auf einem festen Rundweg am Rand des Rasters umlaufen."
+msgstr "Лабіринт: світні бігуни прокладають прямокутні шляхи по сітці, з яскравою головою та згасаючим хвостом. Налаштовуються клітинки, бігуни, швидкість, довжина хвоста, частота поворотів, кольори та фонова сітка; у кубі вони рухаються у всіх трьох вимірах. Режим «Along walls» замість цього пускає їх по фіксованому замкненому шляху вздовж краю сітки."
 
 #: test_panel.cpp:40
 msgid "Laufbalken"

@@ -1771,8 +1771,8 @@ msgid "LIVE   |   "
 msgstr "LIVE   |   "
 
 #: node_info_texts.cpp:104
-msgid "Labyrinth: Leuchtende Läufer ziehen rechtwinklige Bahnen über ein Raster, mit hellem Kopf und verblassendem Schweif. Zellen, Läufer, Tempo, Schweiflänge, Abbiegehäufigkeit, Farben und ein Hintergrundraster einstellbar; im Würfel laufen sie räumlich."
-msgstr "Laberinto: corredores luminosos trazan caminos en ángulo recto sobre una rejilla, con cabeza brillante y estela que se desvanece. Celdas, corredores, velocidad, longitud de la estela, frecuencia de giro, colores y rejilla de fondo ajustables; en un cubo se mueven en 3D."
+msgid "Labyrinth: Leuchtende Läufer ziehen rechtwinklige Bahnen über ein Raster, mit hellem Kopf und verblassendem Schweif. Zellen, Läufer, Tempo, Schweiflänge, Abbiegehäufigkeit, Farben und ein Hintergrundraster einstellbar; im Würfel laufen sie räumlich. „Mode“ „Along walls“ lässt sie stattdessen auf einem festen Rundweg am Rand des Rasters umlaufen."
+msgstr "Laberinto: corredores luminosos trazan trayectorias en ángulo recto sobre una cuadrícula, con una cabeza brillante y una estela que se desvanece. Celdas, corredores, velocidad, longitud de la estela, frecuencia de giro, colores y una cuadrícula de fondo ajustables; en el cubo se mueven en las tres dimensiones. El modo «Along walls» hace que recorran en su lugar un camino fijo y cerrado a lo largo del borde de la cuadrícula."
 
 #: test_panel.cpp:40
 msgid "Laufbalken"

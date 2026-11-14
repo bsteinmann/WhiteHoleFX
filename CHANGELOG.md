@@ -2,6 +2,12 @@
 
 ## 0.92.0
 
+- **Labyrinth: Along-walls-Modus.** Neuer Parameter `mode`: „Random walk" (Standard, bitgenau wie bisher)
+  sowie „Along walls" — die Läufer laufen dabei nicht mehr zufällig mit Epochen-Neustart durchs Raster,
+  sondern gleichmäßig auf einem festen, geschlossenen Rundweg am Rand entlang (die Form ändert sich nie,
+  nur die Position) — darum „statisch". `turn`/`straight`/`space` wirken in diesem Modus nicht; bleibt
+  auch bei `space` = Volume 2D (feste mittlere Ebene). Keine Breaking Change — neuer Parameter mit
+  Standardwert 0 (Random walk), bisheriges Verhalten unverändert.
 - **Fix: automatische Node-Anordnung berücksichtigt jetzt die echte Kartenhöhe.** Beim ersten Öffnen eines
   Projekts ohne gespeicherte Node-Positionen (zum Beispiel von Hand geschriebene `.whfx`-Dateien) ordnet der
   Editor die Nodes automatisch in Spalten an. Der Abstand innerhalb einer Spalte war bisher fest (150px) und

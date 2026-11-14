@@ -80,7 +80,6 @@ darum.
 
 ## Offene Backlog-Punkte (nicht angefordert, nicht ohne Rückfrage angehen)
 
-- Labyrinth: statischer „Along walls"-Modus.
 - **Color Ramp** (0.92.0 hat die vier konkreten UX-Punkte des Nutzers umgesetzt, siehe CHANGELOG): offen
   bleiben nur die größeren, später gewünschten Ideen — Live-Vorschaustreifen im Node-Körper; noch später,
   noch größer: echte Gradient-Stopp-Liste mit frei platzierbaren Stopps statt vier fester Slots.

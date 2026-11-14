@@ -17,6 +17,11 @@
 // Leinwand, 2 bei 32x16). Mit Space = Volume laufen die Läufer durch den Würfel (sechs Richtungen).
 // Die Bahn eines Läufers liegt auf Zellmitten: Bei `cells` = Anzahl der LEDs über die Breite liegt jede Bahn genau
 // auf einer LED-Reihe.
+//
+// `mode` = Along walls: kein Zufalls-Weg mit Epochen, sondern ein fester, geschlossener Rundweg entlang des
+// Rasterrands (durch die Randzellen-Mitten), auf dem die Läufer gleichmäßig verteilt umlaufen - "statisch", weil
+// sich die Form nie ändert, nur stetig weiterdreht; `turn`/`straight` wirken dort nicht. Bleibt 2D (durch `wh_maze_
+// wall_pos`), bei Space = Volume liegt der Rundweg fest in der mittleren Ebene.
 #include "builtin_internal.hpp"
 
 namespace whitehole::nodes::detail {
@@ -62,6 +67,30 @@ fn wh_maze_seg(q: vec3<f32>, a: vec3<f32>, b: vec3<f32>) -> vec2<f32> {
     let t = clamp(dot(q - a, ab) / max(dot(ab, ab), 0.0000001), 0.0, 1.0);
     return vec2<f32>(length(q - (a + ab * t)), t);
 }
+
+// Along-walls-Modus: Punkt auf dem festen Rundweg am Rand des Rasters (durch die Mittelpunkte der
+// Randzellen), s in Zellschritten seit Beginn, läuft im Uhrzeigersinn, wraptet nach einer vollen Runde.
+// Anders als der Zufalls-Modus braucht das keine Epochen: Der Weg ist immer derselbe geschlossene Kreis,
+// daher "statisch".
+fn wh_maze_wall_pos(s: f32, w: f32, h: f32) -> vec2<f32> {
+    let sw = max(w - 1.0, 0.0001);
+    let sh = max(h - 1.0, 0.0001);
+    let perim = 2.0 * (sw + sh);
+    var t = s - floor(s / perim) * perim;
+    if (t < sw) {
+        return vec2<f32>(t, 0.0);
+    }
+    t = t - sw;
+    if (t < sh) {
+        return vec2<f32>(sw, t);
+    }
+    t = t - sh;
+    if (t < sw) {
+        return vec2<f32>(sw - t, sh);
+    }
+    t = t - sw;
+    return vec2<f32>(0.0, sh - t);
+}
 )wgsl";
 
 // Je Läufer zwei Epochen (vorige und aktuelle) zu je kEpoch Schritten; der Schweif ist höchstens kEpoch Schritte lang,
@@ -73,6 +102,11 @@ let n = vec3<f32>(ncells, max(floor(ncells / aspect + 0.5), 1.0), select(1.0, nc
 let cs = 1.0 / ncells;
 let q = vec3<f32>(p.x, p.y / aspect, select(0.0, p.z, volume));
 let runners = i32(clamp(floor(@param(runners) + 0.5), 1.0, 8.0));
+let mode = i32(floor(@param(mode) + 0.5));
+// Umfang des Randwegs (Along walls) in Zellschritten, und seine feste Höhenlage (Mitte des Würfels bei
+// Space = Volume; Along walls bleibt sonst 2D, siehe docs/field-nodes.md).
+let wallPerim = 2.0 * (max(n.x - 1.0, 0.0001) + max(n.y - 1.0, 0.0001));
+let pathZ = select(0.0, floor((n.z - 1.0) * 0.5), volume);
 let trail = clamp(@param(trail), 1.0, 24.0);
 // Dicke und Leuchthof in Zellen: LED-Mitten liegen je nach Aufbau nicht genau auf Zellmitten (Position i/(n-1) statt
 // (i+0.5)/n), darum deckt die Standarddicke 0,7 Zellen eine ganze LED-Reihe sicher ab.
@@ -102,15 +136,51 @@ for (var i = 0; i < 8; i = i + 1) {
     if (i < runners) {
         let fi = f32(i);
         let rs = seed + fi * 13.0;
-        let steps = @time * max(@param(speed), 0.0) + wh_maze_hash(vec3<f32>(rs, 1.0, 1.0)) * 24.0;
-        let epoch = floor(steps / 24.0);
-        let m = steps - epoch * 24.0;  // Schritte in der aktuellen Epoche (mit Bruchteil)
         var runner_col = ca.rgb;
         if (palette == 1) {
             runner_col = mix(ca.rgb, cb.rgb, wh_maze_hash(vec3<f32>(rs, 2.0, 2.0)));
         } else if (palette == 2) {
             runner_col = wh_maze_hsv(fi / f32(runners) + seed * 0.01);
         }
+        if (mode == 1) {
+            // Along walls: ein fester, geschlossener Rundweg am Rand statt Zufalls-Epochen - "statisch", weil
+            // sich die Form nie ändert, nur gleichmäßig weiterläuft. Phase verteilt die Läufer gleichmäßig
+            // über den Umfang, plus ein Seed-Versatz für Abwechslung zwischen Presets.
+            let phase = fi / f32(runners) * wallPerim + wh_maze_hash(vec3<f32>(rs, 5.0, 5.0)) * wallPerim;
+            let headS = @time * max(@param(speed), 0.0) + phase;
+            for (var j = 0; j < 24; j = j + 1) {
+                let fj = f32(j);
+                if (fj > trail) {
+                    break;
+                }
+                let sNew = headS - fj;
+                let sOld = sNew - 1.0;
+                let a = (vec3<f32>(wh_maze_wall_pos(sOld, n.x, n.y), pathZ) + 0.5) * cs;
+                let b = (vec3<f32>(wh_maze_wall_pos(sNew, n.x, n.y), pathZ) + 0.5) * cs;
+                let base_age = fj + 1.0;
+                let sd = wh_maze_seg(q, a, b);
+                let age = max(base_age - sd.y, 0.0);
+                let life = clamp(1.0 - age / trail, 0.0, 1.0);
+                let body = (1.0 - smoothstep(thick * 0.6, thick, sd.x)) * pow(life, fade);
+                var col = runner_col;
+                if (palette == 0) {
+                    col = mix(ca.rgb, cb.rgb, 1.0 - life);
+                }
+                var a_px = body * mix(ca.a, cb.a, 1.0 - life);
+                if (j == 0) {
+                    let dh = length(q - b);
+                    let halo = head * exp(-dh / glow) * (1.0 - smoothstep(0.0, glow * 4.0, dh));
+                    col = mix(col, vec3<f32>(1.0, 1.0, 1.0), clamp(halo * 0.6, 0.0, 0.6));
+                    a_px = clamp(a_px + halo * ca.a, 0.0, 1.0);
+                }
+                light = light + col * a_px;
+                asum = asum + a_px;
+            }
+            continue;
+        }
+        let steps = @time * max(@param(speed), 0.0) + wh_maze_hash(vec3<f32>(rs, 1.0, 1.0)) * 24.0;
+        let epoch = floor(steps / 24.0);
+        let m = steps - epoch * 24.0;  // Schritte in der aktuellen Epoche (mit Bruchteil)
         for (var e = 0; e < 2; e = e + 1) {
             let ep = epoch - 1.0 + f32(e);
             let epk = ep - 997.0 * floor(ep / 997.0);
@@ -193,7 +263,9 @@ std::vector<compiler::NodeDefinition> mazeNodes() {
     nodes.push_back(fieldNode(
         "wh.generator.maze", "Labyrinth", "Generators", {fieldOutput()},
         {integer("cells", "Cells across", 8, 2, 64), number("aspect", "Aspect (width / height)", 1.0, 0.1, 8.0),
-         integer("runners", "Runners", 4, 1, 8), number("speed", "Speed (cells per second)", 3.0, 0.0, 30.0),
+         integer("runners", "Runners", 4, 1, 8),
+         choice("mode", "Mode", {"Random walk", "Along walls"}),
+         number("speed", "Speed (cells per second)", 3.0, 0.0, 30.0),
          number("trail", "Trail (cells)", 10.0, 1.0, 24.0), number("thickness", "Thickness (cells)", 0.7, 0.1, 4.0),
          number("glow", "Head glow (cells)", 1.0, 0.1, 8.0), number("head", "Head brightness", 1.0, 0.0, 3.0),
          number("turn", "Turn chance", 0.35, 0.0, 1.0),

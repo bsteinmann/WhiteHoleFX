@@ -357,3 +357,20 @@ TEST_CASE("Built-ins: Expanding Shapes hat Spiral/Squircle sowie Hollow core mit
     CHECK(core->visibleWhenAtLeastKey == "fill");
     CHECK(core->visibleWhenAtLeast == 4.0);
 }
+
+TEST_CASE("Built-ins: Labyrinth hat einen Along-walls-Modus") {
+    Builtins builtins;
+    const graph::NodeDescriptor* maze = builtins.registry->find("wh.generator.maze");
+    REQUIRE(maze != nullptr);
+    const graph::ParameterDescriptor* mode = nullptr;
+    for (const graph::ParameterDescriptor& parameter : maze->parameters) {
+        if (parameter.key == "mode") {
+            mode = &parameter;
+        }
+    }
+    REQUIRE(mode != nullptr);
+    REQUIRE(mode->choices.size() == 2);
+    CHECK(mode->choices[0] == "Random walk");
+    CHECK(mode->choices[1] == "Along walls");
+    CHECK(std::get<std::int64_t>(mode->defaultValue) == 0);  // Random walk bleibt der Standard (abwaertskompatibel)
+}

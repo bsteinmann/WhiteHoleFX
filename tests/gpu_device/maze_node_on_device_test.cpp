@@ -50,6 +50,33 @@ NodeId mazeNode(Lab& lab) {
 
 }  // namespace
 
+TEST_CASE("Labyrinth: Along walls bleibt am Rand des Rasters und bewegt sich mit der Zeit", "[gpu_device][nodes]") {
+    REQUIRE_DEVICE();
+    Lab lab;
+    const NodeId node = mazeNode(lab);
+    lab.set(node, "mode", std::int64_t{1});
+    lab.set(node, "runners", std::int64_t{1});
+    lab.set(node, "head", 0.0);  // kein Leuchthof: einfacher zu pruefen, ob nur der Rand leuchtet
+    const Pixels a = render(*device, lab, node, 16, 8, 1.0);
+    for (std::uint32_t y = 0; y < 8; ++y) {
+        for (std::uint32_t x = 0; x < 16; ++x) {
+            const bool border = x == 0 || x == 15 || y == 0 || y == 7;
+            if (!border) {
+                CHECK(a.at(x, y)[3] < 0.05F);  // innen bleibt dunkel: der Rundweg beruehrt nur die Randzellen
+            }
+        }
+    }
+    CHECK(alphaSum(a, 16, 8) > 1.0F);  // Schweif leuchtet wirklich (nicht alles unter der Schwelle weggerundet)
+    const Pixels b = render(*device, lab, node, 16, 8, 1.5);
+    int changed = 0;
+    for (std::uint32_t y = 0; y < 8; ++y) {
+        for (std::uint32_t x = 0; x < 16; ++x) {
+            changed += closeTo(a.at(x, y)[3], b.at(x, y)[3], 0.02F) ? 0 : 1;
+        }
+    }
+    CHECK(changed > 0);  // laeuft stetig weiter, kein eingefrorenes Bild
+}
+
 TEST_CASE("Labyrinth: Bahnen auf dem Raster, Licht und Durchsichtiges, Bewegung mit der Zeit", "[gpu_device][nodes]") {
     REQUIRE_DEVICE();
     Lab lab;
