@@ -86,14 +86,19 @@ darum.
   bestehende Projekte nicht betroffen). Grund: Name war missverständlich, der Node macht HSV-Verstellung
   (Hue/Saturation/Brightness) auf einer Grundfarbe, nicht nur eine reine Farbwahl; leicht zu verwechseln mit
   Color Ramp.
-- **Color Ramp: UX-Überarbeitung** (vom Nutzer als unintuitiv empfunden), besprochene Ansatzpunkte:
-  - Ungenutzte Farbfelder (`color3`/`color4`) ausblenden, wenn `count` kleiner ist (gleiche Mechanik wie
-    beim Sequencer-Backlog-Punkt unten).
-  - Default `speed` auf 0 statt 0,2, damit der Node beim Einfügen erst mal stillsteht.
-  - „Loop back to first color" (Haken) durch eine Choice „Pendulum" / „Loop" ersetzen, die das
-    Pendel-Verhalten bei „aus" explizit macht statt implizit.
-  - Größer: Live-Vorschaustreifen im Node-Körper; noch größer: echte Gradient-Stopp-Liste mit frei
-    platzierbaren Stopps statt vier fester Slots.
+- **Color Ramp: UX-Überarbeitung** (vom Nutzer als unintuitiv empfunden) — vom Nutzer bestätigt, als
+  Nächstes umzusetzen (konkreter als der Rest dieser Liste, aber noch nicht begonnen):
+  1. Ungenutzte Farbfelder (`color3`/`color4`) ausblenden, wenn `count` kleiner ist (gleiche Mechanik wie
+     beim Sequencer-Backlog-Punkt unten).
+  2. Default `speed` auf 0 statt 0,2, damit der Node beim Einfügen erst mal stillsteht.
+  3. „Loop back to first color" (Haken) durch eine Choice „Pendulum" / „Loop" ersetzen, die das
+     Pendel-Verhalten bei „aus" explizit macht statt implizit.
+  4. Neuer Trigger-Eingang „Advance"/„Click" (Boolean/Trigger-Port): springt bei jeder steigenden Flanke
+     einen Schritt zur nächsten Farbe weiter (wie ein manueller Taster/Button-Press), unabhängig von
+     `position`/`speed` — für Bühnensteuerung per Knopf statt nur Zeit/LFO. Verhält sich wie `hard` (kein
+     Überblenden) und müsste mit `loop`/Pendulum zusammenspielen (am Ende: zurück zum Anfang oder umkehren).
+  - Später, größer: Live-Vorschaustreifen im Node-Körper; noch später, noch größer: echte
+    Gradient-Stopp-Liste mit frei platzierbaren Stopps statt vier fester Slots.
 - DMX-Output-Nodes (0.88.0): Anzeige als Zeilen in der Patch-Tabelle, Live-Wertanzeige am Node — bewusst
   nicht gebaut, nur als mögliche Erweiterung im Gespräch.
 - **MIDI-Eingang/-Ausgang** (z. B. Akai APC Mini): nur besprochen, nicht begonnen. Überlegungen aus dem
