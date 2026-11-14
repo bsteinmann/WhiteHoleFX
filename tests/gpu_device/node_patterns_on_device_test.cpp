@@ -35,6 +35,29 @@ TEST_CASE("Metaballs, Starfield, Fading Pixels, Expanding Shapes und Sine Lines"
             }
         }
     }
+    {  // Starfield Warp: ohne Dichte nichts, mit voller Dichte/Trail sind einige Pixel sichtbar
+        Lab lab;
+        const NodeId stars = lab.add("wh.generator.starfield");
+        lab.set(stars, "motion", std::int64_t{1});  // Warp statt Twinkle
+        lab.set(stars, "cells", 8.0);
+        lab.set(stars, "density", 0.0);
+        const Pixels empty = render(*device, lab, stars, 16, 16, 1.0);
+        for (std::uint32_t y = 0; y < 16; ++y) {
+            for (std::uint32_t x = 0; x < 16; ++x) {
+                CHECK(closeTo(empty.at(x, y)[3], 0.0F));
+            }
+        }
+        lab.set(stars, "density", 1.0);
+        lab.set(stars, "trail", 1.0);
+        const Pixels full = render(*device, lab, stars, 16, 16, 1.0);
+        bool anyLit = false;
+        for (std::uint32_t y = 0; y < 16; ++y) {
+            for (std::uint32_t x = 0; x < 16; ++x) {
+                anyLit = anyLit || full.at(x, y)[3] > 0.01F;
+            }
+        }
+        CHECK(anyLit);
+    }
     {  // Fading Pixels: ohne Dichte nichts
         Lab lab;
         const NodeId fading = lab.add("wh.generator.fading");

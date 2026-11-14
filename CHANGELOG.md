@@ -2,6 +2,12 @@
 
 ## 0.92.0
 
+- **Starfield: Warp-Effekt.** Neuer Parameter `motion`: „Twinkle" (Standard, bitgenau wie bisher) sowie
+  „Warp (streaks from center)" — die Sterne laufen dabei radial von der Bildmitte nach außen und werden
+  zu Streifen, wie beim Sprung auf Warp-/Hyperraum-Geschwindigkeit. `cells` teilt dafür den Kreis in
+  gleich viele Winkel-Spuren (statt Zeilen/Spalten), neue Parameter `warpSpeed` (Tempo) und `trail`
+  (Streifenlänge relativ zum Abstand von der Mitte). Rein 2D (ignoriert `space`/`drift`/`twinkle`/`size`).
+  Keine Breaking Change — neue Parameter mit Standardwerten, die das bisherige Aussehen exakt erhalten.
 - **Plasma: Farben erweitert.** Neuer Parameter `palette`: „Classic" (Standard, bitgenau wie bisher) sowie
   drei fertige Verläufe („Fire", „Ocean", „Neon") und „Custom" für vier eigene Farbeingänge
   (`color1`–`color4`), durch die das Plasma dann zyklisch blendet statt durch den klassischen

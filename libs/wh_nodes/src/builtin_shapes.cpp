@@ -50,7 +50,31 @@ return wh_mix_color(@param(colorA), @param(colorB), v);)wgsl";
 // Der Hintergrund ist durchsichtig, der Himmel lässt sich also über andere Effekte legen.
 // Mit space = Volume sitzen die Sterne in einem Raster aus Würfeln statt Quadraten (die Zelle bekommt ihren
 // Zufall aus x, y und z); Flat ignoriert z und ist damit gleich dem 2D-Himmel von früher.
+//
+// `motion` = Warp: statt zu flimmern, laufen die Sterne von der Mitte (0.5, 0.5) radial nach außen und
+// werden dabei zu Streifen (Sprung auf Warp-/Hyperraum-Geschwindigkeit). `cells` teilt den Kreis in
+// gleich viele Winkel-"Spuren" (eine Spur = ein Stern, der endlos nach außen läuft und am Rand wieder bei
+// der Mitte neu beginnt); `warpSpeed` ist das Tempo, `trail` die Streifenlänge relativ zum aktuellen
+// Abstand von der Mitte (also kurz nahe der Mitte, lang am Rand, wie bei echtem Warp). Ignoriert dabei
+// `space`/`drift`/`twinkle`/`size` (reiner 2D-Effekt in x/y, unabhängig von Flat/Volume).
 constexpr const char* kStarfieldBody = R"wgsl(let cells = max(floor(@param(cells)), 1.0);
+if (@param(motion) > 0.5) {
+    let centered = p.xy - vec2<f32>(0.5, 0.5);
+    let r = length(centered);
+    let theta = atan2(centered.y, centered.x);
+    let lane = floor((theta + 3.14159265) / 6.2831853 * cells);
+    let hp = wh_cell_hash(vec2<f32>(lane, 0.0));
+    let hc = wh_cell_hash(vec2<f32>(lane, 1.0));
+    let hd = wh_cell_hash(vec2<f32>(lane, 2.0));
+    let maxR = 0.75;  // reicht über die Bildecke hinaus (Abstand Mitte -> Ecke ist rund 0.707)
+    let headR = fract(hp + @time * @param(warpSpeed) * (0.5 + hc)) * maxR;
+    let trailLen = max(clamp(@param(trail), 0.0, 1.0) * headR, 0.001);
+    let behind = headR - r;
+    let fade = 1.0 - clamp(behind / trailLen, 0.0, 1.0);
+    let on = select(0.0, 1.0, behind >= 0.0 && behind <= trailLen && hd < @param(density));
+    let col = mix(@param(colorA), @param(colorB), hc);
+    return vec4<f32>(col.rgb, col.a * fade * on);
+}
 let vol = ((@param(space) > 0.5 && @param(space) < 1.5) || (@param(space) >= 1.5 && @volume));
 let q = vec3<f32>(p.x, p.y + @time * @param(drift), select(0.0, p.z, vol)) * cells;
 let cell3 = floor(q);
@@ -148,7 +172,9 @@ std::vector<compiler::NodeDefinition> shapeNodes() {
          number("drift", "Drift (down)", 0.0, -5.0, 5.0),
          color("colorA", "Color A", ColorRgba{1.0F, 1.0F, 1.0F, 1.0F}),
          color("colorB", "Color B", ColorRgba{0.6F, 0.75F, 1.0F, 1.0F}),
-         choice("space", "Space", {"Flat (x/y)", "Volume (x/y/z)", "Auto (by layout)"}, 2)},
+         choice("space", "Space", {"Flat (x/y)", "Volume (x/y/z)", "Auto (by layout)"}, 2),
+         choice("motion", "Motion", {"Twinkle", "Warp (streaks from center)"}),
+         number("warpSpeed", "Warp speed", 0.5, 0.0, 5.0), number("trail", "Warp trail length", 0.5, 0.0, 1.0)},
         kStarfieldBody, kCellHashPrelude));
 
     nodes.push_back(fieldNode(

@@ -138,7 +138,7 @@ std::span<const NodeInfoEntry> nodeInfoEntries() {
     {"wh.generator.sphere",
      QT_TR_NOOP("Eine Kugel (Kreis) mit weichem Rand, Innen- und Außenfarbe. „Space“ wählt flach, Volumen oder automatisch nach Aufbau.")},
     {"wh.generator.starfield",
-     QT_TR_NOOP("Sternenhimmel: Funkelnde Sterne mit einstellbarer Dichte, Größe und Funkeltempo, auf Wunsch langsam abwärts driftend.")},
+     QT_TR_NOOP("Sternenhimmel: Funkelnde Sterne mit einstellbarer Dichte, Größe und Funkeltempo, auf Wunsch langsam abwärts driftend. „Motion“ = Warp lässt die Sterne stattdessen wie beim Sprung auf Warp-Geschwindigkeit radial von der Mitte weg zu Streifen werden („warpSpeed“, „trail“ für die Streifenlänge).")},
     {"wh.generator.text",
      QT_TR_NOOP("Text als Laufschrift oder statisch. Tempo, Ausrichtung, Höhe und Farben einstellbar.")},
     {"wh.generator.noise",

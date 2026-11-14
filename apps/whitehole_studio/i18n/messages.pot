@@ -2567,7 +2567,7 @@ msgid "Statt der Zeit, die beim Look gespeichert ist"
 msgstr ""
 
 #: node_info_texts.cpp:141
-msgid "Sternenhimmel: Funkelnde Sterne mit einstellbarer Dichte, Größe und Funkeltempo, auf Wunsch langsam abwärts driftend."
+msgid "Sternenhimmel: Funkelnde Sterne mit einstellbarer Dichte, Größe und Funkeltempo, auf Wunsch langsam abwärts driftend. „Motion“ = Warp lässt die Sterne stattdessen wie beim Sprung auf Warp-Geschwindigkeit radial von der Mitte weg zu Streifen werden („warpSpeed“, „trail“ für die Streifenlänge)."
 msgstr ""
 
 #: cue_panel.cpp:145

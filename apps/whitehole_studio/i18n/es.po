@@ -2567,8 +2567,8 @@ msgid "Statt der Zeit, die beim Look gespeichert ist"
 msgstr "En lugar del tiempo guardado con el look"
 
 #: node_info_texts.cpp:141
-msgid "Sternenhimmel: Funkelnde Sterne mit einstellbarer Dichte, Größe und Funkeltempo, auf Wunsch langsam abwärts driftend."
-msgstr "Starfield: twinkling stars with adjustable density, size and twinkle speed, optionally drifting down."
+msgid "Sternenhimmel: Funkelnde Sterne mit einstellbarer Dichte, Größe und Funkeltempo, auf Wunsch langsam abwärts driftend. „Motion“ = Warp lässt die Sterne stattdessen wie beim Sprung auf Warp-Geschwindigkeit radial von der Mitte weg zu Streifen werden („warpSpeed“, „trail“ für die Streifenlänge)."
+msgstr "Cielo estrellado: estrellas titilantes con densidad, tamaño y velocidad de parpadeo ajustables, a la deriva lentamente hacia abajo si se desea. «Motion» = Warp hace que las estrellas se extiendan radialmente desde el centro, como un salto a velocidad de curvatura («warpSpeed», «trail» para la longitud de la estela)."
 
 #: cue_panel.cpp:145
 msgid "Stopp"
