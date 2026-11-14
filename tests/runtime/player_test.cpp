@@ -316,6 +316,38 @@ TEST_CASE("Player: nodes() beschreibt Parameter, Bereiche und verbundene Eingän
     CHECK(std::holds_alternative<ColorRgba>(colorA->value));
 }
 
+TEST_CASE("Player: nodes() gibt visibleWhenAtLeastKey/-AtLeast vom Descriptor weiter", "[player][parameters]") {
+    // Reine Weiterleitung graph::ParameterDescriptor -> runtime::ParameterInfo; die eigentliche
+    // Ein-/Ausblend-Logik sitzt im Qt-Parameterfenster und ist hier nicht testbar.
+    static constexpr const char* kSequencerProject = R"(whitehole-project 1
+destination 0 10.0.0.5
+
+fixture Panel
+  matrix 4 2
+  patch artnet destination 0
+end
+
+node q wh.value.sequencer
+end
+)";
+    Rig rig;
+    runtime::Player player{&rig.device, *rig.library, rig.gate};
+    REQUIRE(player.loadText(kSequencerProject).ok());
+    const auto nodes = player.nodes();
+    const auto* sequencer = findNode(nodes, "Sequencer");
+    REQUIRE(sequencer != nullptr);
+
+    const auto* step1 = findParameter(*sequencer, "step1");
+    REQUIRE(step1 != nullptr);
+    CHECK(step1->visibleWhenAtLeastKey.empty());
+
+    const auto* step5 = findParameter(*sequencer, "step5");
+    REQUIRE(step5 != nullptr);
+    CHECK(step5->visibleWhenAtLeastKey == "steps");
+    REQUIRE(step5->visibleWhenAtLeast.has_value());
+    CHECK(*step5->visibleWhenAtLeast == 5.0);
+}
+
 TEST_CASE("Player: setParameter ändert den Wert, begrenzt ihn und meldet Fehler", "[player][parameters]") {
     Rig rig;
     runtime::Player player{&rig.device, *rig.library, rig.gate};

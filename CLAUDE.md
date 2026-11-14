@@ -119,6 +119,12 @@ darum.
     (Default-Verhalten „1:1", nicht grobkörniger).
 - DMX-Output-Nodes (0.88.0): Anzeige als Zeilen in der Patch-Tabelle, Live-Wertanzeige am Node — bewusst
   nicht gebaut, nur als mögliche Erweiterung im Gespräch.
+- **Sequencer: ungenutzte Ausgänge (`trigN`/`onN` im Node-Editor) ausblenden** — der Teil, der noch fehlt
+  (0.92.0 hat bereits die Step-Regler im Parameterfenster ausgeblendet, siehe CHANGELOG). Die Ports selbst
+  sind weiterhin feste Graph-Verbindungspunkte (`NodeDescriptor::ports`); sie nur im Editor optisch
+  auszugrauen wäre einfach, sie wirklich aus dem Node-Körper zu entfernen stellt die Frage, was mit
+  bestehenden Verbindungen auf einem dann wegfallenden Port passiert (z. B. `steps` nachträglich verkleinert) —
+  noch nicht entschieden, bewusst zurückgestellt.
 - **DMX-Fernsteuerung für Live-Modus** (vom Nutzer gewünscht, nächstes größeres Thema nach dem DMX-Out-Umbau):
   Steuerung per eingehendem DMX (nicht Ausgabe) — ein Kanal wählt den aktiven Look anhand seines Werts (je
   DMX-Wert ein Look), ein zweiter Kanal legt die Überblendzeit fest. Dazu: in der Cuelist per DMX (oder
@@ -166,7 +172,6 @@ darum.
   - *Fazit:* technisch ein überschaubarer, dem DMX-Output sehr ähnlicher Baustein (Protokoll, Store, zwei/
     drei Nodes). Der Aufwand steckt im Drumherum — Geräteprofile für Pad-Farben und MIDI-Learn —, nicht im
     Kern.
-- Sequencer-Ports: abhängig von `steps` unbenutzte Ausgänge/Parameter ausblenden.
 - „Zonen"-Node, Projektions-/HDMI-Ausgabe, Remote-Web-UI, Headless-Player/Pi-Support, ukrainische
   Muttersprachler-Durchsicht der Übersetzungen, GitHub-Releases ab 0.71.0 und Issue #13 schließen — alle
   diese Punkte brauchen vorher die ausdrückliche Freigabe des Nutzers (siehe Sicherheitsregel oben).

@@ -2,6 +2,7 @@
 #include <catch2/catch_test_macros.hpp>
 
 #include <algorithm>
+#include <cctype>
 #include <cstdint>
 #include <memory>
 #include <set>
@@ -275,4 +276,27 @@ TEST_CASE("Built-ins: Rotate 3D mit allen Winkeln 0 lässt die Koordinate unver�
         ++angles;
     }
     CHECK(angles == 3);
+}
+
+TEST_CASE("Built-ins: Sequencer blendet Step 2..8 abhängig von steps aus") {
+    // Step 1 gilt immer (steps ist mindestens 1); Step N (N >= 2) soll nur sichtbar sein, wenn
+    // steps >= N - reine Oberflächen-Information fürs Parameterfenster, der Kernel liest sie nicht.
+    Builtins builtins;
+    const graph::NodeDescriptor* sequencer = builtins.registry->find("wh.value.sequencer");
+    REQUIRE(sequencer != nullptr);
+    int checked = 0;
+    for (const graph::ParameterDescriptor& parameter : sequencer->parameters) {
+        if (parameter.key.size() == 5 && parameter.key.rfind("step", 0) == 0 && std::isdigit(parameter.key.back())) {
+            const int n = parameter.key.back() - '0';
+            if (n == 1) {
+                CHECK(parameter.visibleWhenAtLeastKey.empty());
+            } else {
+                CHECK(parameter.visibleWhenAtLeastKey == "steps");
+                REQUIRE(parameter.visibleWhenAtLeast.has_value());
+                CHECK(*parameter.visibleWhenAtLeast == static_cast<double>(n));
+            }
+            ++checked;
+        }
+    }
+    CHECK(checked == 8);
 }

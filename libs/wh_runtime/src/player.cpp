@@ -267,6 +267,8 @@ std::vector<NodeInfo> Player::nodes() const {
             parameter.minValue = p.minValue;
             parameter.maxValue = p.maxValue;
             parameter.choices = p.choices;
+            parameter.visibleWhenAtLeastKey = p.visibleWhenAtLeastKey;
+            parameter.visibleWhenAtLeast = p.visibleWhenAtLeast;
             if (const graph::Connection* wire = g.findInputConnection(node.id, p.key)) {
                 parameter.driven = true;
                 parameter.connection = wire->id;

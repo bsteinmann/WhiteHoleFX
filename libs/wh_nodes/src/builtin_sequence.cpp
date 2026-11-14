@@ -245,8 +245,15 @@ std::vector<values::CpuNodeDefinition> sequenceNodes() {
         choice("direction", "Direction", {"Forward", "Backward", "Ping-pong", "Random"}),
         integer("seed", "Random seed", 0)};
     for (int i = 0; i < kMaxSteps; ++i) {
-        parameters.push_back(number(kStepKeys[static_cast<std::size_t>(i)], "Step " + std::to_string(i + 1),
-                                    kStepDefaults[static_cast<std::size_t>(i)], 0.0, 1.0));
+        auto step = number(kStepKeys[static_cast<std::size_t>(i)], "Step " + std::to_string(i + 1),
+                           kStepDefaults[static_cast<std::size_t>(i)], 0.0, 1.0);
+        // Steps über der aktuellen Schrittzahl werden nicht abgespielt (siehe position()); die Regler
+        // dafür blendet das Parameterfenster darum aus, statt ungenutzte Felder stehen zu lassen.
+        if (i >= 1) {
+            step.visibleWhenAtLeastKey = "steps";
+            step.visibleWhenAtLeast = static_cast<double>(i + 1);
+        }
+        parameters.push_back(std::move(step));
     }
     std::vector<graph::PortDescriptor> sequencerOutputs{
         valueOutput("value", "Value", PortType::Scalar), valueOutput("step", "Step", PortType::Integer),

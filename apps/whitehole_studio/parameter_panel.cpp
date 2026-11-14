@@ -40,6 +40,21 @@ namespace {
 
 QString fromStd(const std::string& text) { return QString::fromUtf8(text.data(), static_cast<qsizetype>(text.size())); }
 
+// Liest einen Parameterwert gleich welchen Typs als Zahl (für visibleWhenAtLeastKey-Vergleiche; bei
+// Typen ohne sinnvolle Zahl wie Vec2/Vec3/Color/String bleibt es bei 0, kommt dort aber nicht vor).
+double parameterNumeric(const graph::ParameterValue& value) {
+    if (std::holds_alternative<bool>(value)) {
+        return std::get<bool>(value) ? 1.0 : 0.0;
+    }
+    if (std::holds_alternative<std::int64_t>(value)) {
+        return static_cast<double>(std::get<std::int64_t>(value));
+    }
+    if (std::holds_alternative<double>(value)) {
+        return std::get<double>(value);
+    }
+    return 0.0;
+}
+
 }  // namespace
 
 QWidget* ParameterPanel::makeScaleRow(const runtime::ParameterInfo& info, QWidget* parent) {
@@ -245,6 +260,10 @@ void ParameterPanel::rebuild(const std::vector<runtime::NodeInfo>& nodes) {
             grid->addWidget(new QLabel{tr("Dieser Node hat keine einstellbaren Parameter."), body}, row++, 0);
         }
         std::unordered_map<std::string, std::shared_ptr<Editor>> holders;
+        // Für visibleWhenAtLeastKey: pro Parameter alle seine Zeilen-Widgets (zum gemeinsamen Ein-/Ausblenden)
+        // und pro steuerndem Parameter, welche abhängigen Parameter bei welcher Mindestzahl sichtbar werden.
+        std::unordered_map<std::string, std::vector<QWidget*>> rowWidgetsByKey;
+        std::unordered_map<std::string, std::vector<std::pair<std::string, double>>> dependentsByController;
         const auto numberOf = [&node](const std::string& name) -> std::optional<double> {
             for (const runtime::ParameterInfo& p : node.parameters) {
                 if (p.key == name && p.value.index() == 2) {
@@ -297,9 +316,16 @@ void ParameterPanel::rebuild(const std::vector<runtime::NodeInfo>& nodes) {
             grid->addWidget(holder->widget, row, 1);
             grid->addWidget(reset, row, 2);
             ++row;
+            auto& rowWidgets = rowWidgetsByKey[key];
+            rowWidgets.insert(rowWidgets.end(), {label, holder->widget, reset});
             if (info.driven && (info.value.index() == 1 || info.value.index() == 2)) {
-                grid->addWidget(makeScaleRow(info, body), row, 0, 1, 3);
+                QWidget* scaleRow = makeScaleRow(info, body);
+                grid->addWidget(scaleRow, row, 0, 1, 3);
+                rowWidgets.push_back(scaleRow);
                 ++row;
+            }
+            if (!info.visibleWhenAtLeastKey.empty() && info.visibleWhenAtLeast) {
+                dependentsByController[info.visibleWhenAtLeastKey].emplace_back(key, *info.visibleWhenAtLeast);
             }
         }
         // "<name>Min" und "<name>Max" stellen den Bereich des Schiebereglers von "<name>" ein.
@@ -322,6 +348,42 @@ void ParameterPanel::rebuild(const std::vector<runtime::NodeInfo>& nodes) {
                 if (target->setSliderRange) {
                     target->setSliderRange((*state)[0], (*state)[1]);
                 }
+            };
+        }
+        // Parameter mit visibleWhenAtLeastKey: Zeile(n) ein-/ausblenden, abhängig vom aktuellen Wert des
+        // steuernden Parameters (z. B. "Step 5" nur sichtbar, solange "steps" >= 5), initial und bei jeder
+        // Änderung. rowWidgetsByKey/deps werden hier per Wert (nicht Referenz) in die Lambdas kopiert,
+        // damit sie auch nach Ende von rebuild() noch gültig sind (onStored lebt am Holder weiter).
+        for (const auto& [controllerKey, deps] : dependentsByController) {
+            const auto controllerHolder = holders.find(controllerKey);
+            if (controllerHolder == holders.end()) {
+                continue;
+            }
+            auto applyVisibility = [rowWidgetsByKey, deps](double value) {
+                for (const auto& [depKey, threshold] : deps) {
+                    const bool visible = value >= threshold;
+                    const auto found = rowWidgetsByKey.find(depKey);
+                    if (found != rowWidgetsByKey.end()) {
+                        for (QWidget* widget : found->second) {
+                            widget->setVisible(visible);
+                        }
+                    }
+                }
+            };
+            double current = 0.0;
+            for (const runtime::ParameterInfo& p : node.parameters) {
+                if (p.key == controllerKey) {
+                    current = parameterNumeric(p.value);
+                    break;
+                }
+            }
+            applyVisibility(current);
+            const auto previousOnStored = controllerHolder->second->onStored;
+            controllerHolder->second->onStored = [applyVisibility, previousOnStored](const graph::ParameterValue& v) {
+                if (previousOnStored) {
+                    previousOnStored(v);
+                }
+                applyVisibility(parameterNumeric(v));
             };
         }
         grid->setColumnStretch(1, 1);

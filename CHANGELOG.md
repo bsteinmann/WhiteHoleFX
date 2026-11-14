@@ -2,6 +2,11 @@
 
 ## 0.92.0
 
+- **Sequencer: ungenutzte Step-Regler ausblenden.** Im Parameterfenster zeigt der Sequencer-Node „Step 2"
+  bis „Step 8" jetzt nur noch, solange `steps` mindestens so groß ist — Schritte über der eingestellten
+  Schrittzahl werden ohnehin nie angespielt. Technisch ein neues, allgemeines Feld
+  `ParameterDescriptor::visibleWhenAtLeastKey`/`visibleWhenAtLeast` (nur Oberfläche, der Kernel ignoriert
+  es), das später auch bei Color Ramp (`color3`/`color4` je nach `count`) wiederverwendet werden kann.
 - **Node „Color" umbenannt zu „Color (HSV)".** Reine Anzeigeänderung bei `wh.value.color` (Node-ID und
   Verhalten unverändert, bestehende Projekte sind nicht betroffen). Grund: Der Node macht eine HSV-Verstellung
   (Farbton/Sättigung/Helligkeit) auf einer Grundfarbe, nicht nur eine reine Farbwahl — der alte Name war

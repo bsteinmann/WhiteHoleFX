@@ -51,6 +51,11 @@ struct ParameterDescriptor {
     /// Bei einer Ganzzahl: Namen der Auswahlmöglichkeiten, der Wert ist der Index (0 = erster Name).
     /// Die Oberfläche zeigt dann ein Auswahlfeld statt einer Zahl. Leer = gewöhnliche Zahl.
     std::vector<std::string> choices{};
+    /// Nur für die Oberfläche (der Kernel ignoriert dies): Dieser Parameter wird im Parameterfenster nur
+    /// angezeigt, wenn der Parameter mit dem Schlüssel `visibleWhenAtLeastKey` einen Wert >= `visibleWhenAtLeast`
+    /// hat (z. B. "Step 5" nur, wenn `steps` >= 5). Leeres `visibleWhenAtLeastKey` = immer sichtbar.
+    std::string visibleWhenAtLeastKey{};
+    std::optional<double> visibleWhenAtLeast{};
 };
 
 /// Ob der Node im Editor einen Anzeigestreifen bekommt (Platz unter den Ports), den sein Kernel füllt (KernelOutputs::setMonitor).
