@@ -79,16 +79,29 @@ let cr = cos(rot);
 let sr = sin(rot);
 d0 = vec3<f32>(d0.x * cr - d0.y * sr, d0.x * sr + d0.y * cr, d0.z);
 let shape = i32(floor(@param(shape) + 0.5));
-let d = wh_exp_dist(d0, shape, clamp(floor(@param(points) + 0.5), 3.0, 12.0));
+var d = wh_exp_dist(d0, shape, clamp(floor(@param(points) + 0.5), 3.0, 12.0));
 let spacing = max(@param(spacing), 0.02);
+if (shape == 10) {
+    // Spiral: der Ring-/Fortschritt-Abstand bekommt einen winkelabhängigen Versatz von bis zu einem
+    // vollen `spacing` pro Umdrehung; der Sprung bei +-pi ist dadurch genau ein Ring und unsichtbar.
+    let ang = atan2(d0.y, d0.x);
+    d = length(d0.xy) - (ang / 6.2831853) * spacing;
+} else if (shape == 11) {
+    // Squircle: Lp-Norm zwischen Kreis (n=2) und Quadrat (n gross), `squareness` 0..1 mischt n 2..12.
+    let ax = abs(d0);
+    let n = 2.0 + clamp(@param(squareness), 0.0, 1.0) * 10.0;
+    d = pow(pow(ax.x, n) + pow(ax.y, n) + pow(ax.z, n), 1.0 / n);
+}
 let w = clamp(@param(thickness), 0.02, 1.0);
 let soft = clamp(@param(softness), 0.0, 1.0);
 let oneshot = @param(run) > 0.5;
 let progress = clamp(@param(progress), 0.0, 1.0);
+// r: aktuelle Reichweite (nur bei One shot sinnvoll, bei Continuous ungenutzt, aber immer berechnet, damit
+// "Hollow core" unten in beiden Laufarten auf eine Tiefe zugreifen kann).
+let r = select(progress, 1.0 - progress, @param(inward) > 0.5) * max(@param(reach), 0.01);
 // u: Abstand zur nächsten Ringkante in Einheiten von spacing, negativ innen (zur Mitte hin), positiv außen.
 var u = 0.0;
 if (oneshot) {
-    let r = select(progress, 1.0 - progress, @param(inward) > 0.5) * max(@param(reach), 0.01);
     u = (d - r) / spacing;
 } else {
     u = fract((d - @time * @param(speed)) / spacing) - 0.5;
@@ -97,12 +110,23 @@ let fill = i32(floor(@param(fill) + 0.5));
 let half = w * 0.5;
 let edge = max(soft * 0.1, 0.0001);  // Kantenbreite der Füllungen: bis zu einem Zehntel des Ringabstands
 var v = 0.0;
+var holeMix = 1.0;  // 1 = color, 0 = colorB (nur bei fill == 4 "Hollow core" je nach Kerntiefe gemischt)
 if (fill == 1) {
     v = 1.0 - smoothstep(-edge, 0.0, u + select(0.0, 0.5 - w, !oneshot));
 } else if (fill == 2) {
     v = clamp(1.0 + u / w, 0.0, 1.0) * (1.0 - smoothstep(0.0, edge, u));
 } else if (fill == 3) {
     v = clamp(1.0 - u / w, 0.0, 1.0) * smoothstep(-edge, 0.0, u);
+} else if (fill == 4) {
+    // Hollow core: wie Solid, aber mit einem hohlen Kern (color -> colorB) zur Mitte hin. `depth` ist die
+    // Tiefe der gefüllten Form in u-Einheiten (bei One shot r/spacing, bei Continuous die Streifenbreite w);
+    // `core` 0..1 legt fest, wie weit der Hohlraum von der Mitte aus nach außen reicht (0 = ganz voll wie
+    // Solid, 1 = nur noch ein dünner Rand der Dicke w übrig, wie bei Ring).
+    let band = u + select(0.0, 0.5 - w, !oneshot);
+    let depth = select(r / spacing, w, !oneshot);
+    let boundary = -depth * (1.0 - clamp(@param(core), 0.0, 1.0));
+    holeMix = smoothstep(boundary - edge, boundary, band);
+    v = 1.0 - smoothstep(-edge, 0.0, band);
 } else {
     v = 1.0 - smoothstep(half * (1.0 - soft), half, abs(u));
 }
@@ -113,20 +137,32 @@ if (oneshot && (progress <= 0.0 || progress >= 1.0)) {
     v = 0.0;
 }
 v = v * clamp(1.0 - d * @param(fade), 0.0, 1.0);
-let col = @param(color);
+let col = mix(@param(colorB), @param(color), holeMix);
 return vec4<f32>(col.rgb, col.a * v);)wgsl";
 
 }  // namespace
 
 std::vector<compiler::NodeDefinition> expandingNodes() {
     std::vector<compiler::NodeDefinition> nodes;
+    // squareness/colorB/core gehören nur zu je einer Form/Füllung; über visibleWhenAtLeastKey im Parameterfenster
+    // ausgeblendet, solange "shape" < 11 (Squircle) bzw. "fill" < 4 (Hollow core) ist — siehe Sequencer/Color Ramp.
+    auto squareness = number("squareness", "Squareness (Squircle)", 0.5, 0.0, 1.0);
+    squareness.visibleWhenAtLeastKey = "shape";
+    squareness.visibleWhenAtLeast = 11.0;
+    auto colorB = color("colorB", "Color B (hollow core)", ColorRgba{0.0F, 0.0F, 0.0F, 0.0F});
+    colorB.visibleWhenAtLeastKey = "fill";
+    colorB.visibleWhenAtLeast = 4.0;
+    auto core = number("core", "Core size (hollow core)", 0.5, 0.0, 1.0);
+    core.visibleWhenAtLeastKey = "fill";
+    core.visibleWhenAtLeast = 4.0;
     nodes.push_back(fieldNode(
         "wh.generator.shapes", "Expanding Shapes", "Generators", {fieldOutput()},
         {choice("shape", "Shape",
                 {"Circle", "Square", "Diamond", "Triangle", "Hexagon", "Polygon (Points)", "Star (Points)", "Cross",
-                 "Bars (horizontal)", "Bars (vertical)"}),
+                 "Bars (horizontal)", "Bars (vertical)", "Spiral", "Squircle"}),
          integer("points", "Points (polygon, star)", 5, 3, 12), number("rotation", "Rotation (degrees)", 0.0, -180.0, 180.0),
-         choice("fill", "Fill", {"Ring", "Solid", "Gradient inward", "Gradient outward"}),
+         std::move(squareness),
+         choice("fill", "Fill", {"Ring", "Solid", "Gradient inward", "Gradient outward", "Hollow core"}),
          number("softness", "Edge softness", 1.0, 0.0, 1.0), toggle("invert", "Invert fill", false),
          choice("run", "Run", {"Continuous", "One shot (progress 0..1)"}),
          number("progress", "Progress (one shot)", 0.0, 0.0, 1.0), toggle("inward", "Inward (one shot)", false),
@@ -134,7 +170,10 @@ std::vector<compiler::NodeDefinition> expandingNodes() {
          number("cx", "Center X", 0.5, 0.0, 1.0), number("cy", "Center Y", 0.5, 0.0, 1.0),
          number("spacing", "Spacing", 0.3, 0.02, 2.0), number("speed", "Speed", 0.2, -5.0, 5.0),
          number("thickness", "Thickness", 0.3, 0.02, 1.0), number("fade", "Fade out", 0.5, 0.0, 4.0),
-         color("color", "Color", ColorRgba{1.0F, 1.0F, 1.0F, 1.0F}), number("cz", "Center Z", 0.5, 0.0, 1.0),
+         color("color", "Color", ColorRgba{1.0F, 1.0F, 1.0F, 1.0F}),
+         std::move(colorB),
+         std::move(core),
+         number("cz", "Center Z", 0.5, 0.0, 1.0),
          choice("space", "Space", {"Flat (x/y)", "Volume (x/y/z)", "Auto (by layout)"}, 2)},
         kExpandingBody, kExpandingPrelude));
     return nodes;

@@ -2,6 +2,15 @@
 
 ## 0.92.0
 
+- **Expanding Shapes: Spiral, Squircle, Hollow core.** Zwei neue Formen: „Spiral" (Ringe mit stetigem
+  Winkel-Versatz von bis zu einem `spacing` pro Umdrehung — der Sprung bei ±180° ist dadurch unsichtbar,
+  ergibt eine echte durchgehende Spirale statt Kreise) und „Squircle" (Lp-Norm-Morph zwischen Kreis und
+  Quadrat, neuer Parameter `squareness` 0..1, der Regler erscheint im Parameterfenster nur bei dieser
+  Form). Neue Füllung „Hollow core": wie Solid, aber mit einem hohlen Kern — `color` außen, zweite Farbe
+  `colorB` im Kern, neuer Parameter `core` (0..1) bestimmt die Kerngröße (0 = ganz voll wie Solid, 1 = nur
+  noch ein dünner Rand wie Ring); `colorB`/`core` erscheinen im Parameterfenster nur bei dieser Füllung.
+  Keine Breaking Change — neue Form-/Füllungs-Einträge und Parameter mit Standardwerten, die das bisherige
+  Aussehen aller anderen Formen/Füllungen exakt erhalten.
 - **Starfield: Warp-Effekt.** Neuer Parameter `motion`: „Twinkle" (Standard, bitgenau wie bisher) sowie
   „Warp (streaks from center)" — die Sterne laufen dabei radial von der Bildmitte nach außen und werden
   zu Streifen, wie beim Sprung auf Warp-/Hyperraum-Geschwindigkeit. `cells` teilt dafür den Kreis in

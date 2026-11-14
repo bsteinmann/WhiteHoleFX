@@ -83,6 +83,57 @@ TEST_CASE("Expanding Shapes: Balken, Kreuz, Dreieck und Stern liegen richtig", "
     CHECK(closeTo(flipped.at(10, 16)[3], 1.0F));  // gedreht zeigt eine Spitze nach unten
 }
 
+TEST_CASE("Expanding Shapes: Squircle morpht zwischen Kreis (n=2) und Quadrat (n gross)", "[gpu_device][nodes]") {
+    REQUIRE_DEVICE();
+    Lab lab;
+    // Diagonalpunkt (0.325, 0.325) von der Mitte: Kreisabstand 0.46 > r=0.4 (aussen), Quadrat-Lp-Abstand bei
+    // squareness=1 (n=12) rund 0.34 < 0.4 (innen) - der Eckpunkt unterscheidet die beiden Extreme eindeutig.
+    const NodeId squircle = solidShape(lab, 11);
+    lab.set(squircle, "squareness", 0.0);
+    const Pixels circleLike = render(*device, lab, squircle, 20, 20);
+    CHECK(closeTo(circleLike.at(16, 3)[3], 0.0F));  // wie ein Kreis: Diagonale liegt ausserhalb
+    lab.set(squircle, "squareness", 1.0);
+    const Pixels squareLike = render(*device, lab, squircle, 20, 20);
+    CHECK(closeTo(squareLike.at(16, 3)[3], 1.0F));  // fast quadratisch: Diagonale liegt innerhalb
+    CHECK(closeTo(squareLike.at(10, 10)[3], 1.0F));  // Mitte bleibt in jedem Fall innen
+}
+
+TEST_CASE("Expanding Shapes: Spiral ist am Winkel 0 eine normale Ringkette, am Winkel pi versetzt", "[gpu_device][nodes]") {
+    REQUIRE_DEVICE();
+    Lab lab;
+    const NodeId spiral = lab.add("wh.generator.shapes");
+    lab.set(spiral, "shape", std::int64_t{10});
+    lab.set(spiral, "thickness", 1.0);
+    lab.set(spiral, "fade", 0.0);
+    lab.set(spiral, "speed", 0.0);
+    lab.set(spiral, "space", std::int64_t{0});
+    lab.set(spiral, "cx", 0.525);  // genau auf der Mitte von Pixel (10, 10), wie beim Ring-Test unten
+    lab.set(spiral, "cy", 0.475);
+    // Die exakte Mitte wird nicht geprüft: atan2(0, 0) ist mathematisch unbestimmt (jede winkelbasierte Form hat
+    // dort einen Pol), das GPU-Ergebnis für diesen einen Pixel ist also nicht portabel vorhersagbar.
+    const Pixels image = render(*device, lab, spiral, 20, 20);
+    CHECK(image.at(13, 10)[3] > 0.95F);                 // Winkel 0 (positive x-Achse): d = 0.15, Ringmitte wie gewohnt
+    CHECK(closeTo(image.at(7, 10)[3], 0.0F, 0.02F));    // Winkel pi, gleicher Abstand 0.15: durch den Versatz jetzt dunkel
+}
+
+TEST_CASE("Expanding Shapes: Hollow core zeigt color aussen und colorB im Kern", "[gpu_device][nodes]") {
+    REQUIRE_DEVICE();
+    Lab lab;
+    const NodeId node = solidShape(lab, 0);
+    lab.set(node, "fill", std::int64_t{4});
+    lab.set(node, "core", 0.5);
+    lab.set(node, "cx", 0.525);
+    lab.set(node, "cy", 0.475);
+    lab.set(node, "color", ColorRgba{1.0F, 1.0F, 1.0F, 1.0F});
+    lab.set(node, "colorB", ColorRgba{1.0F, 0.0F, 0.0F, 1.0F});
+    const Pixels image = render(*device, lab, node, 20, 20);
+    CHECK(isColor(image.at(10, 10), 1.0F, 0.0F, 0.0F));  // Mitte: tief im Kern -> colorB
+    CHECK(isColor(image.at(16, 10), 1.0F, 1.0F, 1.0F));  // nahe am Rand (d = 0.3 von r = 0.4) -> color
+    lab.set(node, "core", 0.0);  // core = 0: wie Solid, ueberall color
+    const Pixels full = render(*device, lab, node, 20, 20);
+    CHECK(isColor(full.at(10, 10), 1.0F, 1.0F, 1.0F));
+}
+
 TEST_CASE("Expanding Shapes: fortlaufend bleibt wie bisher, Füllungen Ring und Verlauf", "[gpu_device][nodes]") {
     REQUIRE_DEVICE();
     Lab lab;

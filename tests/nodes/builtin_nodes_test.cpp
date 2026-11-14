@@ -317,3 +317,43 @@ TEST_CASE("Built-ins: Color Ramp blendet Color 3/4 abhängig von count aus") {
         }
     }
 }
+
+TEST_CASE("Built-ins: Expanding Shapes hat Spiral/Squircle sowie Hollow core mit ausgeblendeten Reglern") {
+    Builtins builtins;
+    const graph::NodeDescriptor* shapes = builtins.registry->find("wh.generator.shapes");
+    REQUIRE(shapes != nullptr);
+    const graph::ParameterDescriptor* shape = nullptr;
+    const graph::ParameterDescriptor* fill = nullptr;
+    const graph::ParameterDescriptor* squareness = nullptr;
+    const graph::ParameterDescriptor* colorB = nullptr;
+    const graph::ParameterDescriptor* core = nullptr;
+    for (const graph::ParameterDescriptor& parameter : shapes->parameters) {
+        if (parameter.key == "shape") {
+            shape = &parameter;
+        } else if (parameter.key == "fill") {
+            fill = &parameter;
+        } else if (parameter.key == "squareness") {
+            squareness = &parameter;
+        } else if (parameter.key == "colorB") {
+            colorB = &parameter;
+        } else if (parameter.key == "core") {
+            core = &parameter;
+        }
+    }
+    REQUIRE(shape != nullptr);
+    REQUIRE(fill != nullptr);
+    REQUIRE(squareness != nullptr);
+    REQUIRE(colorB != nullptr);
+    REQUIRE(core != nullptr);
+    REQUIRE(shape->choices.size() == 12);
+    CHECK(shape->choices[10] == "Spiral");
+    CHECK(shape->choices[11] == "Squircle");
+    REQUIRE(fill->choices.size() == 5);
+    CHECK(fill->choices[4] == "Hollow core");
+    CHECK(squareness->visibleWhenAtLeastKey == "shape");
+    CHECK(squareness->visibleWhenAtLeast == 11.0);
+    CHECK(colorB->visibleWhenAtLeastKey == "fill");
+    CHECK(colorB->visibleWhenAtLeast == 4.0);
+    CHECK(core->visibleWhenAtLeastKey == "fill");
+    CHECK(core->visibleWhenAtLeast == 4.0);
+}

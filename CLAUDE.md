@@ -80,7 +80,6 @@ darum.
 
 ## Offene Backlog-Punkte (nicht angefordert, nicht ohne Rückfrage angehen)
 
-- Expanding Shapes: Squircle (Formen-Morph 0..1), Spiral, Color B / Hollow-Core-Füllung.
 - Labyrinth: statischer „Along walls"-Modus.
 - **Color Ramp** (0.92.0 hat die vier konkreten UX-Punkte des Nutzers umgesetzt, siehe CHANGELOG): offen
   bleiben nur die größeren, später gewünschten Ideen — Live-Vorschaustreifen im Node-Körper; noch später,
