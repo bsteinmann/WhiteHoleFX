@@ -139,6 +139,7 @@ Result<OutputParts> buildOutput(const project::Project& project, output::IPacket
     }
     output::OutputConfig config;
     config.destinations = project.destinations;
+    config.dmxPatches = project.dmxPatches;
     config.cid = senderId(project.sourceName);
     config.sourceName = project.sourceName;
     config.sacnPriority = project.sacnPriority;

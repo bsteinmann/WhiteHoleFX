@@ -160,6 +160,15 @@ std::string writeFixtureTypes(const std::vector<FixtureType>& types) {
     return out.str();
 }
 
+std::string writeDmxPatches(const std::vector<output::DmxChannelPatch>& patches) {
+    std::ostringstream out;
+    for (const output::DmxChannelPatch& p : patches) {
+        out << "dmxpatch " << p.poolChannel << " " << p.count << " " << nameOf(detail::kProtocols, p.protocol)
+            << " destination " << p.destination << " universe " << p.universe << " channel " << p.channel << "\n";
+    }
+    return out.str();
+}
+
 std::string writeDestinations(const std::vector<output::Destination>& destinations) {
     std::ostringstream out;
     for (std::size_t i = 0; i < destinations.size(); ++i) {
@@ -187,6 +196,10 @@ Result<std::string> writeProject(const Project& project) {
 
     out << writeDestinations(project.destinations);
     out << "\n";
+    out << writeDmxPatches(project.dmxPatches);
+    if (!project.dmxPatches.empty()) {
+        out << "\n";
+    }
 
     for (const FixtureType& type : project.types) {
         out << "fixturetype " << quoteWord(type.name) << "\n";

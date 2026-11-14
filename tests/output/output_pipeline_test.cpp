@@ -41,6 +41,18 @@ FixturePatch patch(std::uint64_t fixture, Protocol protocol, std::uint16_t unive
     return p;
 }
 
+DmxChannelPatch dmxpatch(std::uint16_t poolChannel, std::uint16_t count, std::uint16_t universe, std::uint16_t channel,
+                        Protocol protocol = Protocol::ArtNet, std::uint32_t destination = 0) {
+    DmxChannelPatch p;
+    p.poolChannel = poolChannel;
+    p.count = count;
+    p.protocol = protocol;
+    p.destination = destination;
+    p.universe = universe;
+    p.channel = channel;
+    return p;
+}
+
 struct Rig {
     RecordingSink sink;
     std::unique_ptr<OutputPipeline> pipeline;
@@ -274,12 +286,14 @@ std::span<const std::byte> bytesOf(const std::vector<ColorRgba>& colors) {
 
 }  // namespace
 
-TEST_CASE("DMX-Nodes: Kanäle landen im Universe des Fixtures, ohne dessen LEDs zu überschreiben", "[output][pipeline][dmx]") {
-    auto r = rig(mapOf({2}), {patch(1, Protocol::ArtNet, 0)}, oneDestination("192.168.1.50"));
-    // Kanal 10..11 ist frei (die LEDs belegen 1..6)
+TEST_CASE("DMX-Nodes: Pool-Kanäle landen über dmxpatch im Universe des Fixtures, ohne dessen LEDs zu überschreiben",
+         "[output][pipeline][dmx]") {
+    OutputConfig config = oneDestination("192.168.1.50");
+    // Pool 1-2 -> Kanal 10-11 (frei, die LEDs belegen 1..6); Pool 10-11 -> Kanal 2-3 (überschneidet die LEDs)
+    config.dmxPatches = {dmxpatch(1, 2, 0, 10), dmxpatch(10, 2, 0, 2)};
+    auto r = rig(mapOf({2}), {patch(1, Protocol::ArtNet, 0)}, config);
     ChannelWrite write;
-    write.universe = 0;
-    write.firstChannel = 10;
+    write.poolChannel = 1;
     write.data = {7, 9};
     REQUIRE(r->pipeline->processBytes(bytesOf(kRedBlue), std::vector<ChannelWrite>{write}).ok());
     auto sent = r->sink.packets();
@@ -291,8 +305,8 @@ TEST_CASE("DMX-Nodes: Kanäle landen im Universe des Fixtures, ohne dessen LEDs 
     CHECK(sent[0].bytes[18 + 0] == 255);  // die LED bleibt rot
     CHECK(r->pipeline->stats().sendErrors == 0);
 
-    // Überschneidung mit den LEDs: wird gezählt und übersprungen, die LED bleibt
-    write.firstChannel = 2;
+    // Überschneidung mit den LEDs (über den zweiten Patch): wird gezählt und übersprungen, die LED bleibt
+    write.poolChannel = 10;
     REQUIRE(r->pipeline->processBytes(bytesOf(kRedBlue), std::vector<ChannelWrite>{write}).ok());
     sent = r->sink.packets();
     REQUIRE(sent.size() == 2);
@@ -303,14 +317,14 @@ TEST_CASE("DMX-Nodes: Kanäle landen im Universe des Fixtures, ohne dessen LEDs 
 }
 
 TEST_CASE("DMX-Nodes: ein eigenes Universe wird gesendet, solange jemand schreibt, mit laufender Sequenz", "[output][pipeline][dmx]") {
-    auto r = rig(mapOf({1}), {patch(1, Protocol::ArtNet, 0)}, oneDestination("192.168.1.50"));
+    OutputConfig config = oneDestination("192.168.1.50");
+    config.dmxPatches = {dmxpatch(1, 3, 5, 1)};  // Pool 1-3 -> Universe 5, Kanal 1-3 (1:1)
+    auto r = rig(mapOf({1}), {patch(1, Protocol::ArtNet, 0)}, config);
     ChannelWrite write;
-    write.universe = 5;
-    write.firstChannel = 1;
+    write.poolChannel = 1;
     write.data = {200};
     ChannelWrite second;
-    second.universe = 5;
-    second.firstChannel = 3;
+    second.poolChannel = 3;
     second.data = {100};
     const std::vector<ColorRgba> one{{0, 0, 0, 1}};
     REQUIRE(r->pipeline->processBytes(bytesOf(one), std::vector<ChannelWrite>{write, second}).ok());
@@ -329,21 +343,39 @@ TEST_CASE("DMX-Nodes: ein eigenes Universe wird gesendet, solange jemand schreib
     CHECK(universeOf(sent[4].bytes) == 0);
 }
 
-TEST_CASE("DMX-Nodes: falscher Controller, DDP und Kanal 0 werden gezählt und übersprungen", "[output][pipeline][dmx]") {
-    OutputConfig config = oneDestination("192.168.1.50");
-    config.destinations.push_back({"192.168.1.51", 0, Protocol::Ddp});
-    auto r = rig(mapOf({1}), {patch(1, Protocol::ArtNet, 0)}, config);
+TEST_CASE("DMX-Nodes: Pool-Kanäle ohne dmxpatch werden still fallengelassen, wie ein ungepatchtes Fixture",
+         "[output][pipeline][dmx]") {
+    auto r = rig(mapOf({1}), {patch(1, Protocol::ArtNet, 0)}, oneDestination("192.168.1.50"));  // kein dmxPatches
     const std::vector<ColorRgba> one{{0, 0, 0, 1}};
-    ChannelWrite bad;
-    bad.destination = 7;
-    bad.data = {1};
-    ChannelWrite ddp;
-    ddp.destination = 1;
-    ddp.data = {1};
-    ChannelWrite zero;
-    zero.firstChannel = 0;
-    zero.data = {1};
-    REQUIRE(r->pipeline->processBytes(bytesOf(one), std::vector<ChannelWrite>{bad, ddp, zero}).ok());
-    CHECK(r->pipeline->stats().sendErrors == 3);
-    CHECK(r->sink.packets().size() == 1);
+    ChannelWrite write;
+    write.poolChannel = 1;
+    write.data = {1};
+    REQUIRE(r->pipeline->processBytes(bytesOf(one), std::vector<ChannelWrite>{write}).ok());
+    CHECK(r->pipeline->stats().sendErrors == 0);
+    CHECK(r->sink.packets().size() == 1);  // nur das LED-Universe, kein eigenes für den Pool-Kanal
+}
+
+TEST_CASE("dmxpatch wird beim Erstellen geprüft: unbekanntes Ziel, DDP, Bereich, Überschneidung", "[output][pipeline][dmx]") {
+    const LedMap map = mapOf({1});
+    RecordingSink sink;
+    auto create = [&](std::vector<DmxChannelPatch> patches, OutputConfig config) {
+        config.dmxPatches = std::move(patches);
+        Result<OutputPlan> plan = OutputPlan::create(map, std::vector<FixturePatch>{patch(1, Protocol::ArtNet, 0)});
+        REQUIRE(plan.ok());
+        return OutputPipeline::create(std::move(plan.value()), std::move(config), sink);
+    };
+    const OutputConfig dest = oneDestination("192.168.1.50");
+    OutputConfig withDdp = dest;
+    withDdp.destinations.push_back({"192.168.1.51", 0, Protocol::Ddp});
+
+    CHECK(create({dmxpatch(1, 1, 0, 1, Protocol::ArtNet, 7)}, dest).error().code == ErrorCode::InvalidArgument);  // Ziel 7 fehlt
+    CHECK(create({dmxpatch(1, 1, 0, 1, Protocol::Ddp, 1)}, withDdp).error().code == ErrorCode::InvalidArgument);  // DDP
+    CHECK(create({dmxpatch(1, 1, 40000, 1)}, dest).error().code == ErrorCode::InvalidArgument);  // Art-Net-Universe zu groß
+    CHECK(create({dmxpatch(1, 1, 0, 0)}, dest).error().code == ErrorCode::InvalidArgument);  // Kanal 0
+    CHECK(create({dmxpatch(1, 1, 0, 512)}, dest).ok());
+    CHECK(create({dmxpatch(1, 2, 0, 512)}, dest).error().code == ErrorCode::InvalidArgument);  // Kanal 512+513 passt nicht
+    CHECK(create({dmxpatch(0, 1, 0, 1)}, dest).error().code == ErrorCode::InvalidArgument);  // Pool-Kanal 0
+    CHECK(create({dmxpatch(1, 4, 0, 1), dmxpatch(3, 1, 0, 100)}, dest).error().code ==
+          ErrorCode::AlreadyExists);  // Pool 1-4 und 3 überschneiden sich
+    CHECK(create({dmxpatch(1, 2, 0, 1), dmxpatch(3, 2, 0, 100)}, dest).ok());  // getrennte Pool-Bereiche sind erlaubt
 }

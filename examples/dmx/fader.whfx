@@ -4,15 +4,20 @@ whitehole-project 1
 #   whitehole_studio examples/dmx/fader.whfx --run
 #   whitehole_cli examples/dmx/fader.whfx --check
 #
-# Die Matrix hängt an Universe 0, Kanal 1..24 (8 LEDs). "DMX Out" schreibt einen Nebelmaschinen-Dimmer auf
-# Universe 0, Kanal 200 — weit außerhalb der LED-Kanäle, keine Überschneidung. "DMX Color Out" schreibt eine
-# feste Farbe (plus Dimmer-Kanal) auf Universe 1, Kanal 1, als RGB-Wash-Scheinwerfer ohne eigenes Fixture; dieses
-# Universe hätte ohne den Node gar keine Ausgabe. Ein LFO fährt beide Dimmer langsam hoch und runter.
-# Mit Musik: den LFO durch den Pulse eines Audio-Trigger- oder Beat-Nodes ersetzen.
+# Die Matrix hängt an Universe 0, Kanal 1..24 (8 LEDs). Die DMX-Output-Nodes kennen seit 0.91.0 keinen
+# Controller/Universe mehr selbst, sie schreiben nur noch in einen internen Kanal-Pool (1..512); "dmxpatch"
+# unten sagt, wohin die Pool-Kanäle wirklich gehen. "DMX Out" (Pool-Kanal 1) geht auf Universe 0, Kanal 200 —
+# weit außerhalb der LED-Kanäle, keine Überschneidung. "DMX Color Out" (Pool-Kanal 2..5) geht auf Universe 1,
+# Kanal 1, als RGB-Wash-Scheinwerfer ohne eigenes Fixture; dieses Universe hätte ohne den Patch gar keine
+# Ausgabe. Ein LFO fährt beide Dimmer langsam hoch und runter. Mit Musik: den LFO durch den Pulse eines
+# Audio-Trigger- oder Beat-Nodes ersetzen.
 
 settings fps 40
 
 destination 0 127.0.0.1
+
+dmxpatch 1 1 artnet destination 0 universe 0 channel 200
+dmxpatch 2 4 artnet destination 0 universe 1 channel 1
 
 fixture Wand
   strip 8 from 0 0 0 to 1 0 0
@@ -31,16 +36,12 @@ node lfo wh.value.lfo
 end
 
 node nebel wh.output.dmx
-  set destination 0
-  set universe 0
-  set channel 200
+  set channel 1
   set count 1
 end
 
 node wash wh.output.dmxcolor
-  set destination 0
-  set universe 1
-  set channel 1
+  set channel 2
   set mode 2
   set color 1 0.5 0.1 1
 end

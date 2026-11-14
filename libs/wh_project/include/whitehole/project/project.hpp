@@ -80,6 +80,9 @@ struct Project {
     std::vector<FixtureGroup> groups;
     std::vector<StageRegion> regions;
     std::vector<output::FixturePatch> patches;
+    /// Patches des internen DMX-Kanal-Pools auf echte Controller/Universe/Kanal (Datei: `dmxpatch`-Zeilen), siehe
+    /// output_plan.hpp. Nicht an ein Fixture gebunden, darum eine eigene Liste statt in `patches`.
+    std::vector<output::DmxChannelPatch> dmxPatches;
 
     graph::Graph graph;
     /// Field-Ausgang, der auf die LEDs abgetastet wird.

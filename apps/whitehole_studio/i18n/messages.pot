@@ -2415,11 +2415,11 @@ msgid "Schnellwahl"
 msgstr ""
 
 #: node_info_texts.cpp:153
-msgid "Schreibt bis zu acht Werte auf aufeinanderfolgende DMX-Kanäle (Art-Net oder sACN), unabhängig von LEDs. „Low“/„High“ legen die DMX-Werte für 0 und 1 fest, „16 Bit“ belegt je Kanal zwei DMX-Kanäle. Hat keinen Ausgang und wird darum immer ausgewertet."
+msgid "Schreibt bis zu acht Werte auf aufeinanderfolgende Kanäle eines internen Kanal-Pools (nicht mehr direkt auf Controller/Universe). „Low“/„High“ legen die DMX-Werte für 0 und 1 fest, „16 Bit“ belegt je Kanal zwei Pool-Kanäle. Wohin der Pool wirklich geht, legt „dmxpatch“ in der Projektdatei fest. Hat keinen Ausgang und wird darum immer ausgewertet."
 msgstr ""
 
 #: node_info_texts.cpp:155
-msgid "Schreibt eine Farbe als DMX-Kanäle (Art-Net oder sACN): RGB oder RGBW, davor auf Wunsch ein Dimmer-Kanal. Hat keinen Ausgang und wird darum immer ausgewertet."
+msgid "Schreibt eine Farbe in den internen Kanal-Pool: RGB oder RGBW, davor auf Wunsch ein Dimmer-Kanal. Wohin der Pool wirklich geht, legt „dmxpatch“ in der Projektdatei fest. Hat keinen Ausgang und wird darum immer ausgewertet."
 msgstr ""
 
 #: node_info_texts.cpp:181

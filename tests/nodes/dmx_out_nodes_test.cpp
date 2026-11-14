@@ -23,17 +23,13 @@ const ChannelWrite& writeOf(const Lab& lab, NodeId node) {
 TEST_CASE("DMX Out: läuft ohne Verbraucher, skaliert 0..1 auf low..high, 16 Bit belegt zwei Kanäle", "[nodes][dmx]") {
     Lab lab;
     const NodeId node = lab.add("wh.output.dmx");
-    lab.set(node, "destination", std::int64_t{2});
-    lab.set(node, "universe", std::int64_t{7});
     lab.set(node, "channel", std::int64_t{100});
     lab.set(node, "count", std::int64_t{3});
     lab.set(node, "ch1", 1.0);
     lab.set(node, "ch2", 0.5);
     lab.run(0.0);
     const ChannelWrite& w = writeOf(lab, node);
-    CHECK(w.destination == 2);
-    CHECK(w.universe == 7);
-    CHECK(w.firstChannel == 100);
+    CHECK(w.poolChannel == 100);
     CHECK(w.data == std::vector<std::uint8_t>{255, 128, 0});
 
     lab.set(node, "low", 10.0);

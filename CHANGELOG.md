@@ -1,5 +1,19 @@
 # Änderungen
 
+## 0.91.0
+
+- **DMX-Ausgabe: interner Kanal-Pool statt Controller im Node.** `wh.output.dmx` und `wh.output.dmxcolor`
+  kennen jetzt keinen Controller und kein Universe mehr (Parameter `destination`/`universe` entfallen);
+  `channel` ist nur noch der erste Kanal in einem internen, projektweiten Kanal-Pool (1..512). Welcher
+  Pool-Bereich wirklich wohin geht, legt die neue Projektdatei-Zeile `dmxpatch <Pool-Kanal> <Anzahl>
+  <Protokoll> destination <Nummer> universe <Universe> channel <Kanal>` fest (top-level, wie `destination`) —
+  frei aufteilbar auf mehrere Controller/Universen, genau wie beim Fixture-Patch. Pool-Kanäle ohne `dmxpatch`
+  werden einfach nicht gesendet; zwei `dmxpatch`-Einträge dürfen sich im Pool-Bereich nicht überschneiden
+  (Fehler beim Erstellen der Ausgabe statt wie bisher eine Prüfung pro Frame). **Bricht bestehende
+  Projektdateien**, die `destination`/`universe` auf `wh.output.dmx`/`wh.output.dmxcolor` setzen — diese
+  Zeilen entfernen und stattdessen eine `dmxpatch`-Zeile ergänzen (siehe `examples/dmx/fader.whfx`). Eine
+  Einstellungen-Seite zum Patchen per Oberfläche (statt nur per Textdatei) ist der nächste Schritt.
+
 ## 0.90.0
 
 - **Sine Lines: Phasenversatz in Grad, eigene Farbe pro Linie.** `spread` ist jetzt in Grad angegeben (vorher Perioden/Umdrehungen; Standard 54° statt 0,15, entspricht derselben Phasenverschiebung wie bisher) — wie bei der Rotation bei Expanding Shapes. Statt `colorA`/`colorB` (nur Überblendung erster/letzter Linie) haben jetzt alle acht möglichen Linien eine eigene, fest einstellbare Farbe (`color1`…`color8`); bei `count` kleiner als 8 werden einfach die ersten `count` Farben benutzt. **Achtung Projektdateien:** Bestehende `.whfx`-Dateien, die `spread`, `colorA` oder `colorB` auf `wh.generator.sinelines` setzen, lassen sich nicht mehr laden (Parameter umbenannt/entfernt) — vor dem nächsten Öffnen in diesen Projekten anpassen (`spread` in Grad, `colorA`/`colorB` durch `color1…color8` ersetzen).

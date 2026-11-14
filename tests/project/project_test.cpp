@@ -354,3 +354,25 @@ TEST_CASE("Projekt: übersprungene Pixel im Patch werden gelesen und geschrieben
     REQUIRE(plain.ok());
     CHECK(writeProject(plain.value()).value().find("skip") == std::string::npos);
 }
+
+TEST_CASE("Projekt: dmxpatch wird gelesen und geschrieben (interner Kanal-Pool auf echtes Ziel)", "[project][dmx]") {
+    const Library lib;
+    const std::string text =
+        withHeader("destination 0 127.0.0.1\ndmxpatch 1 8 artnet destination 0 universe 0 channel 200\n");
+    const auto parsed = parseProject(text, lib.registry);
+    REQUIRE(parsed.ok());
+    REQUIRE(parsed.value().dmxPatches.size() == 1);
+    const output::DmxChannelPatch& p = parsed.value().dmxPatches[0];
+    CHECK(p.poolChannel == 1);
+    CHECK(p.count == 8);
+    CHECK(p.protocol == output::Protocol::ArtNet);
+    CHECK(p.destination == 0);
+    CHECK(p.universe == 0);
+    CHECK(p.channel == 200);
+    const auto written = writeProject(parsed.value());
+    REQUIRE(written.ok());
+    CHECK(written.value().find("dmxpatch 1 8 artnet destination 0 universe 0 channel 200") != std::string::npos);
+    // ohne destination <Nummer> ist dmxpatch ein Fehler, wie beim Fixture-Patch
+    CHECK(ErrorOf(withHeader("dmxpatch 1 8 artnet universe 0 channel 1\n"), lib).find("dmxpatch braucht \"destination") !=
+          std::string::npos);
+}

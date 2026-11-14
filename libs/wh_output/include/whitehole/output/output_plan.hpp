@@ -60,6 +60,20 @@ struct FixturePatch {
     std::uint16_t skipCount{1};
 };
 
+/// Bildet einen Bereich des internen DMX-Kanal-Pools (siehe channel_write.hpp) auf einen echten Controller/
+/// Universe/Kanal ab. Anders als FixturePatch nicht an ein Fixture gebunden: DMX-Output-Nodes schreiben nur noch
+/// in den Pool (1..512), die Projektdatei (Anweisung `dmxpatch`) sagt, wohin die Kanäle wirklich gehen - frei
+/// aufteilbar auf mehrere Ziele. Pool-Bereiche verschiedener Patches dürfen sich nicht überschneiden (sonst wäre
+/// nicht eindeutig, wohin ein Pool-Kanal geht); Pool-Kanäle ohne Patch werden einfach nicht gesendet.
+struct DmxChannelPatch {
+    std::uint16_t poolChannel{1};  // erster Pool-Kanal 1..512
+    std::uint16_t count{1};        // wie viele Pool-Kanäle ab poolChannel
+    Protocol protocol{Protocol::ArtNet};
+    std::uint32_t destination{0};  // Nummer im Zielverzeichnis des Transports
+    std::uint16_t universe{0};     // Art-Net: 0..32767, sACN: 1..63999
+    std::uint16_t channel{1};      // erster echter Kanal 1..512
+};
+
 /// Platz der LED `led` (0-basiert, Kabelreihenfolge) im Datenstrom, mit übersprungenen Pixeln (siehe FixturePatch).
 [[nodiscard]] constexpr std::uint32_t dataSlot(const FixturePatch& patch, std::uint32_t led) noexcept {
     const std::uint32_t skipped = patch.skipEvery == 0 ? 0U : (led / patch.skipEvery) * patch.skipCount;

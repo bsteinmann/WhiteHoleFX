@@ -229,12 +229,17 @@ Strobe, ein Fader-Regler auf den Nebel).
 
 - **Senken ohne Ausgang:** Beide Nodes haben keinen Ausgangs-Port; sie werden deshalb jeden Frame
   ausgewertet, auch ohne angeschlossenen Verbraucher.
-- **Ziel:** `destination` ist die Controller-Nummer wie im Reiter Ausgabe (Patch-Tabelle); das Protokoll
-  (Art-Net oder sACN) bestimmt der Controller, nicht der Node. `universe` und `channel` (ab 1) legen fest,
-  wo die Werte ankommen.
+- **Kein Controller im Node (seit 0.91.0):** `channel` (ab 1) ist der erste Kanal in einem internen,
+  projektweiten Kanal-Pool (1..512) — nicht mehr der echte DMX-Kanal, und der Node kennt weder Controller
+  noch Universe. Welcher Pool-Bereich auf welchen echten Controller/Universe/Kanal geht, legt die
+  Projektdatei-Zeile `dmxpatch <Pool-Kanal> <Anzahl> <Protokoll> destination <Nummer> universe <Universe>
+  channel <Kanal>` fest (top-level, nicht in einem `fixture`-Block) — frei aufteilbar auf mehrere Ziele, zum
+  Beispiel die ersten vier Pool-Kanäle auf Controller 0 und die nächsten vier auf Controller 1. Pool-Kanäle
+  ohne `dmxpatch` werden einfach nicht gesendet (wie ein ungepatchtes Fixture); zwei `dmxpatch`-Zeilen dürfen
+  sich im Pool-Bereich nicht überschneiden (Fehler beim Erstellen der Ausgabe).
 - **DMX Out:** acht Eingänge `ch1`…`ch8` (0..1, `count` wählt, wie viele davon benutzt werden) landen ab
-  `channel` auf aufeinanderfolgenden DMX-Kanälen. `low`/`high` sind die DMX-Werte (0..255) für 0 bzw. 1, zum
-  Beispiel 10..200, wenn ein Gerät unter 10 nicht reagiert. Mit `bits16` belegt jeder Eingang zwei Kanäle
+  `channel` auf aufeinanderfolgenden Pool-Kanälen. `low`/`high` sind die DMX-Werte (0..255) für 0 bzw. 1, zum
+  Beispiel 10..200, wenn ein Gerät unter 10 nicht reagiert. Mit `bits16` belegt jeder Eingang zwei Pool-Kanäle
   (grob zuerst, dann fein) für 16-Bit-Auflösung.
 - **DMX Color Out:** eine Farbe auf RGB oder RGBW (`mode`), davor auf Wunsch ein Dimmer-Kanal. Der
   Weiß-Kanal ist der gemeinsame Anteil von Rot, Grün und Blau, damit Weiß auch wirklich über den Weiß-Kanal
@@ -245,9 +250,9 @@ Strobe, ein Fader-Regler auf den Nebel).
   ein eigenes Datenpaket und wird mit der Projekt-Framerate gesendet, solange „Ausgabe senden“ an ist.
   Schreibt in einem Frame niemand mehr in dieses Universe (zum Beispiel weil der Node gelöscht wurde), hört
   es auf zu senden.
-- **Überschneidung mit LEDs:** Liegt `channel` im Bereich, den ein gepatchtes Fixture im selben Universe
-  belegt, wird der Eintrag verworfen und als Sendefehler gezählt (Statuszeile „Sendefehler“); die LED-Daten
-  werden nie überschrieben.
+- **Überschneidung mit LEDs:** Liegt der über `dmxpatch` aufgelöste echte Kanal im Bereich, den ein
+  gepatchtes Fixture im selben Universe belegt, wird der Eintrag verworfen und als Sendefehler gezählt
+  (Statuszeile „Sendefehler“); die LED-Daten werden nie überschrieben.
 
 ## Grenzen (Stand Schritt 4b, Teil A)
 

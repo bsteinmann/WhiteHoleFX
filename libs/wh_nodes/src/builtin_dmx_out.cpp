@@ -4,13 +4,17 @@
 // Relais hängen an DMX-Kanälen, und ihre Werte sollen aus demselben Graph kommen wie die Effekte (LFO auf den Dimmer,
 // Audio-Trigger auf den Strobe, Fader-Regler auf den Nebel). Die beiden Nodes hier sind Senken: keine Ausgänge, darum
 // wertet der Evaluator sie immer aus (value_evaluator.hpp). Je Frame legen sie einen ChannelWrite in den ValueStore;
-// die Session reicht ihn an die Ausgabe-Pipeline weiter (output_pipeline_channels.cpp), die ihn in die Universen
-// einträgt und mit der Frame-Rate sendet, solange "Ausgabe senden" an ist.
+// die Session reicht ihn an die Ausgabe-Pipeline weiter (output_pipeline_channels.cpp).
 //
 //   wh.output.dmx      "DMX Out":   acht Eingänge 0..1 auf acht Kanäle ab `channel` (16 Bit: je zwei Kanäle, grob/fein),
 //                                    `low`/`high` legen fest, welche DMX-Werte 0 und 1 entsprechen (zum Beispiel 10..200).
 //   wh.output.dmxcolor "DMX Color": eine Farbe auf RGB oder RGBW, davor auf Wunsch ein Dimmer-Kanal.
-// `destination` ist die Controller-Nummer wie im Patch (Reiter Ausgabe); das Protokoll bestimmt der Controller.
+//
+// Der Node kennt keinen Controller und kein Universe mehr (0.91.0): `channel` ist der erste Kanal in einem internen,
+// projektweiten Kanal-Pool (1..512), nicht mehr der echte DMX-Kanal. Welcher Pool-Bereich auf welchen echten
+// Controller/Universe/Kanal geht, legt die Projektdatei-Anweisung `dmxpatch` fest (frei aufteilbar, siehe
+// docs/output.md); ungepatchte Pool-Kanäle werden einfach nicht gesendet. So lässt sich der Node verkabeln, ohne
+// dass er die physische Patch-Entscheidung kennen muss - genau wie ein Fixture auch nichts von seinem Patch weiß.
 #include <algorithm>
 #include <cmath>
 
@@ -29,12 +33,10 @@ std::uint8_t dmxByte(double value) {
     return static_cast<std::uint8_t>(std::lround(std::clamp(value, 0.0, 255.0)));
 }
 
-/// Kopf eines ChannelWrite aus den gemeinsamen Parametern.
+/// Kopf eines ChannelWrite aus den gemeinsamen Parametern: nur noch der erste Kanal im internen Pool (1..512).
 ChannelWrite header(const values::KernelInputs& in) {
     ChannelWrite write;
-    write.destination = static_cast<std::uint32_t>(std::clamp<std::int64_t>(in.integer("destination", 0), 0, 255));
-    write.universe = static_cast<std::uint32_t>(std::clamp<std::int64_t>(in.integer("universe", 0), 0, 63999));
-    write.firstChannel = static_cast<std::uint16_t>(std::clamp<std::int64_t>(in.integer("channel", 1), 1, 512));
+    write.poolChannel = static_cast<std::uint16_t>(std::clamp<std::int64_t>(in.integer("channel", 1), 1, 512));
     return write;
 }
 
@@ -88,9 +90,7 @@ public:
 };
 
 std::vector<graph::ParameterDescriptor> targetParameters() {
-    return {integer("destination", "Controller (number from Output page)", 0, 0.0, 255.0),
-            integer("universe", "Universe (Art-Net from 0, sACN from 1)", 0, 0.0, 63999.0),
-            integer("channel", "First channel", 1, 1.0, 512.0)};
+    return {integer("channel", "Internal channel (patched to a controller via \"dmxpatch\")", 1, 1.0, 512.0)};
 }
 
 }  // namespace

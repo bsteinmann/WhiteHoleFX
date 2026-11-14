@@ -98,6 +98,34 @@ Result<std::unique_ptr<OutputPipeline>> OutputPipeline::create(OutputPlan plan, 
     if (config.sacnPriority > 200) {
         return Error{ErrorCode::InvalidArgument, "Die sACN-Priorität darf höchstens 200 sein"};
     }
+    for (const DmxChannelPatch& p : config.dmxPatches) {
+        if (p.destination >= config.destinations.size()) {
+            return Error{ErrorCode::InvalidArgument, "dmxpatch verweist auf ein Ziel, das nicht angelegt ist"};
+        }
+        if (p.protocol == Protocol::Ddp) {
+            return Error{ErrorCode::InvalidArgument, "dmxpatch: DDP-Ziele haben keine DMX-Universen"};
+        }
+        const std::uint32_t lastUniverse = p.protocol == Protocol::ArtNet ? kArtNetMaxPortAddress : kSacnMaxUniverse;
+        const std::uint32_t firstUniverse = p.protocol == Protocol::ArtNet ? 0U : 1U;
+        if (p.universe < firstUniverse || p.universe > lastUniverse) {
+            return Error{ErrorCode::InvalidArgument, "dmxpatch: Universe außerhalb des Bereichs"};
+        }
+        if (p.count == 0 || p.channel < 1 || static_cast<std::size_t>(p.channel) + p.count - 1 > kDmxMaxChannels) {
+            return Error{ErrorCode::InvalidArgument, "dmxpatch: Kanal außerhalb des Bereichs"};
+        }
+        if (p.poolChannel < 1 || static_cast<std::size_t>(p.poolChannel) + p.count - 1 > kDmxMaxChannels) {
+            return Error{ErrorCode::InvalidArgument, "dmxpatch: interner Kanal außerhalb des Bereichs"};
+        }
+    }
+    for (std::size_t i = 0; i < config.dmxPatches.size(); ++i) {
+        for (std::size_t j = i + 1; j < config.dmxPatches.size(); ++j) {
+            const DmxChannelPatch& a = config.dmxPatches[i];
+            const DmxChannelPatch& b = config.dmxPatches[j];
+            if (a.poolChannel < b.poolChannel + b.count && b.poolChannel < a.poolChannel + a.count) {
+                return Error{ErrorCode::AlreadyExists, "dmxpatch: zwei Patches überschneiden sich im internen Kanal-Pool"};
+            }
+        }
+    }
     std::vector<Endpoint> endpoints;
     endpoints.reserve(plan.slots().size());
     for (const OutputSlot& slot : plan.slots()) {

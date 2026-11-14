@@ -2415,12 +2415,12 @@ msgid "Schnellwahl"
 msgstr "Choix rapide"
 
 #: node_info_texts.cpp:153
-msgid "Schreibt bis zu acht Werte auf aufeinanderfolgende DMX-Kanäle (Art-Net oder sACN), unabhängig von LEDs. „Low“/„High“ legen die DMX-Werte für 0 und 1 fest, „16 Bit“ belegt je Kanal zwei DMX-Kanäle. Hat keinen Ausgang und wird darum immer ausgewertet."
-msgstr "Écrit jusqu'à huit valeurs sur des canaux DMX consécutifs (Art-Net ou sACN), indépendamment des LED. « Low »/« High » fixent les valeurs DMX pour 0 et 1, « 16 bits » utilise deux canaux DMX par entrée. N'a pas de sortie et est donc toujours évalué."
+msgid "Schreibt bis zu acht Werte auf aufeinanderfolgende Kanäle eines internen Kanal-Pools (nicht mehr direkt auf Controller/Universe). „Low“/„High“ legen die DMX-Werte für 0 und 1 fest, „16 Bit“ belegt je Kanal zwei Pool-Kanäle. Wohin der Pool wirklich geht, legt „dmxpatch“ in der Projektdatei fest. Hat keinen Ausgang und wird darum immer ausgewertet."
+msgstr "Écrit jusqu'à huit valeurs sur des canaux consécutifs d'un pool de canaux interne (plus directement sur un contrôleur/univers). « Low »/« High » définissent les valeurs DMX pour 0 et 1, « 16 bit » utilise deux canaux du pool par entrée. La destination réelle du pool est définie par « dmxpatch » dans le fichier projet. N'a pas de sortie, donc toujours évalué."
 
 #: node_info_texts.cpp:155
-msgid "Schreibt eine Farbe als DMX-Kanäle (Art-Net oder sACN): RGB oder RGBW, davor auf Wunsch ein Dimmer-Kanal. Hat keinen Ausgang und wird darum immer ausgewertet."
-msgstr "Écrit une couleur comme canaux DMX (Art-Net ou sACN) : RGB ou RGBW, précédée au choix d'un canal de gradateur. N'a pas de sortie et est donc toujours évalué."
+msgid "Schreibt eine Farbe in den internen Kanal-Pool: RGB oder RGBW, davor auf Wunsch ein Dimmer-Kanal. Wohin der Pool wirklich geht, legt „dmxpatch“ in der Projektdatei fest. Hat keinen Ausgang und wird darum immer ausgewertet."
+msgstr "Écrit une couleur dans le pool de canaux interne : RVB ou RVBB (blanc), avec en option un canal de gradateur avant. La destination réelle du pool est définie par « dmxpatch » dans le fichier projet. N'a pas de sortie, donc toujours évalué."
 
 #: node_info_texts.cpp:181
 msgid "Schrittfolge mit bis zu acht Werten. Jedes Einschalten von „Advance“ geht einen Schritt weiter (vorwärts, rückwärts, hin und her oder zufällig)."

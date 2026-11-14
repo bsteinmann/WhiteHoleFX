@@ -65,8 +65,9 @@ struct Destination {
 
 struct OutputConfig {
     std::vector<Destination> destinations;
-    std::array<std::uint8_t, 16> cid{};     // sACN: eindeutige Sender-ID
-    std::string sourceName{"WhiteHoleFX"};  // sACN
+    std::vector<DmxChannelPatch> dmxPatches;  // Pool-Kanäle der DMX-Output-Nodes auf echte Ziele abbilden
+    std::array<std::uint8_t, 16> cid{};       // sACN: eindeutige Sender-ID
+    std::string sourceName{"WhiteHoleFX"};    // sACN
     std::uint8_t sacnPriority{100};
 };
 
@@ -79,7 +80,9 @@ struct OutputStats {
 class OutputPipeline {
 public:
     /// Fehler: InvalidArgument (Ziel-Nummer unbekannt, Adresse fehlt oder ist keine
-    /// IPv4-Zahl, sACN-Priorität über 200). `sink` muss die Pipeline überleben.
+    /// IPv4-Zahl, sACN-Priorität über 200; bei `dmxPatches` zusätzlich: Ziel-Nummer unbekannt, DDP-Ziel,
+    /// Universe/Kanal/Pool-Kanal außerhalb des Bereichs), AlreadyExists (zwei `dmxPatches`-Einträge mit
+    /// überschneidendem Pool-Bereich). `sink` muss die Pipeline überleben.
     [[nodiscard]] static Result<std::unique_ptr<OutputPipeline>> create(OutputPlan plan,
                                                                         OutputConfig config,
                                                                         IPacketSink& sink);
@@ -91,10 +94,12 @@ public:
     /// Verarbeitet einen Frame aus fertigen Farben (genau ledCount Einträge).
     [[nodiscard]] Result<void> process(std::span<const ColorRgba> colors);
 
-    /// Wie processBytes, zusätzlich mit DMX-Kanälen der Output-Nodes (ChannelWrite): Sie werden in die Universen der
-    /// Fixtures eingetragen (ohne deren Kanäle zu überschreiben: eine Überschneidung wird gezählt und übersprungen) oder
-    /// bekommen eigene Universen, die wie die der Fixtures je Frame gesendet werden. Ein Universe, das in einem Frame
-    /// keiner mehr beschreibt, wird nicht mehr gesendet.
+    /// Wie processBytes, zusätzlich mit DMX-Kanälen der Output-Nodes (ChannelWrite): `write.poolChannel` wird über
+    /// `config.dmxPatches` auf echte(s) Ziel(e) abgebildet (ein Write kann über mehrere Patches gestreut sein, siehe
+    /// output_plan.hpp). Pool-Kanäle ohne Patch werden stillschweigend nicht gesendet. Die übersetzten Bytes landen
+    /// in den Universen der Fixtures (ohne deren Kanäle zu überschreiben: eine Überschneidung wird gezählt und
+    /// übersprungen) oder bekommen eigene Universen, die wie die der Fixtures je Frame gesendet werden. Ein Universe,
+    /// das in einem Frame keiner mehr beschreibt, wird nicht mehr gesendet.
     [[nodiscard]] Result<void> processBytes(std::span<const std::byte> bytes, std::span<const ChannelWrite> channels);
 
     [[nodiscard]] OutputStats stats() const noexcept;
@@ -121,8 +126,12 @@ private:
     std::uint8_t nextSequence(std::size_t slot);
     static std::uint8_t advanceSequence(Protocol protocol, std::uint8_t& sequence);
     static Result<Endpoint> resolveEndpoint(const Destination& destination, Protocol protocol, std::uint32_t universe);
-    /// Trägt die Kanäle der Output-Nodes in die Puffer ein (nach plan_.render, vor dem Senden).
+    /// Trägt die Kanäle der Output-Nodes in die Puffer ein (nach plan_.render, vor dem Senden): übersetzt jeden
+    /// Write über config_.dmxPatches in ein oder mehrere echte Ziele (applyResolvedWrite).
     void applyChannels(std::span<const ChannelWrite> channels);
+    /// Ein schon aufgelöster Kanalblock (echter Controller/Universe/Kanal) wird wie ein Fixture-Kanal einsortiert.
+    void applyResolvedWrite(std::uint32_t destination, Protocol protocol, std::uint32_t universe,
+                            std::uint16_t firstChannel, std::span<const std::uint8_t> data);
 
     OutputPlan plan_;
     OutputConfig config_;

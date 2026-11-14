@@ -87,19 +87,32 @@ sie zeigt, was die LEDs ausgeben. Farbwähler speichern den Wert, den man sieht,
 ## DMX-Ausgabe aus dem Graph
 
 Die Nodes `wh.output.dmx` und `wh.output.dmxcolor` (Kategorie „Output", siehe `docs/value-graph.md`,
-Abschnitt „DMX-Ausgabe") schreiben Werte aus dem Node-Graph auf DMX-Kanäle, unabhängig von LEDs. Je Frame
-legt die Session einen `ChannelWrite` je Node in `PixelFrame::channels`; `OutputPipeline::applyChannels`
-trägt sie ein:
+Abschnitt „DMX-Ausgabe") schreiben Werte aus dem Node-Graph auf DMX-Kanäle, unabhängig von LEDs. Ein Node
+kennt dabei (seit 0.91.0) keinen Controller und kein Universe mehr, nur einen internen, projektweiten
+Kanal-Pool (1..512, siehe `channel_write.hpp`): Je Frame legt die Session einen `ChannelWrite{poolChannel,
+data}` je Node in `PixelFrame::channels`.
 
-- Liegt das Universe schon im Plan (ein Fixture ist dort gepatcht), landen die Bytes in dessen Puffer, außer
-  sie überschneiden sich mit den LEDs des Fixtures — dann wird der Eintrag verworfen und als Sendefehler
-  gezählt; die LED-Kanäle werden nie überschrieben.
-- Sonst bekommt das Universe einen eigenen `ChannelSlot`, der zwischen den Frames bestehen bleibt (für
+`OutputPipeline::applyChannels` (`output_pipeline_channels.cpp`) übersetzt das über `config.dmxPatches`
+(`DmxChannelPatch`, Projektdatei-Zeile `dmxpatch`, siehe `docs/value-graph.md`) in echte Ziele, bevor es
+einträgt:
+
+- Jeder Write wird gegen alle `dmxPatches`-Einträge geprüft; ein Write kann über mehrere Patches gestreut
+  sein, wenn der Nutzer den Pool aufgeteilt hat (jeder überlappende Bereich wird einzeln aufgelöst und
+  eingetragen).
+- Pool-Kanäle, die kein `dmxpatch` abdeckt, werden stillschweigend nicht gesendet (wie ein ungepatchtes
+  Fixture).
+- Für jeden aufgelösten Block gilt wie zuvor: Liegt das Ziel-Universe schon im Plan (ein Fixture ist dort
+  gepatcht), landen die Bytes in dessen Puffer, außer sie überschneiden sich mit den LEDs des Fixtures —
+  dann wird der Eintrag verworfen und als Sendefehler gezählt; die LED-Kanäle werden nie überschrieben.
+  Sonst bekommt das Universe einen eigenen `ChannelSlot`, der zwischen den Frames bestehen bleibt (für
   laufende Sequenznummern) und nur gesendet wird, wenn ihn im aktuellen Frame jemand beschrieben hat.
   Schreibt kein Node mehr in ein solches Universe, verstummt es.
 - Mehrere Nodes im selben freien Universe dürfen sich ergänzen; beschreiben zwei Nodes denselben Kanal,
   gewinnt der zuletzt verarbeitete.
-- DDP-Ziele kennen keine DMX-Universen: ein Schreibversuch dorthin wird gezählt und übersprungen.
+- `dmxpatch`-Einträge mit DDP-Ziel oder außerhalb des gültigen Bereichs (Universe, Kanal, Pool-Kanal) sowie
+  zwei Einträge mit überschneidendem Pool-Bereich lässt `OutputPipeline::create` gar nicht erst zu
+  (`ErrorCode::InvalidArgument`/`AlreadyExists`) — anders als früher ist das keine Laufzeitprüfung mehr pro
+  Frame, sondern eine einmalige Prüfung beim Erstellen der Ausgabe.
 
 ## Bekannte Grenzen
 

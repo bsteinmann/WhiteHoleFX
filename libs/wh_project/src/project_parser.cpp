@@ -44,6 +44,7 @@ private:
     std::optional<Error> handleNodeGroup(const Line& line);
     std::optional<Error> settings(Reader& r);
     void destination(Reader& r);
+    void dmxpatch(Reader& r);
     std::optional<Error> beginNode(Reader& r);
     std::optional<Error> setParameter(Reader& r);
     std::optional<Error> connect(Reader& r);
@@ -118,13 +119,15 @@ std::optional<Error> Parser::handleOutside(const Line& line) {
     Reader r{line, 0};
     const std::string key = r.word("Schlüsselwort");
     std::optional<Error> error;
-    if (look_ && (key == "settings" || key == "destination" || key == "fixture" || key == "fixturetype" || key == "cue" || key == "group" ||
-                  key == "region")) {
+    if (look_ && (key == "settings" || key == "destination" || key == "dmxpatch" || key == "fixture" ||
+                  key == "fixturetype" || key == "cue" || key == "group" || key == "region")) {
         r.fail("\"" + key + "\" gehört nicht in einen look-Block");
     } else if (key == "settings") {
         error = settings(r);
     } else if (key == "destination") {
         destination(r);
+    } else if (key == "dmxpatch") {
+        dmxpatch(r);
     } else if (key == "fixture" || key == "fixturetype") {
         fixture_ = detail::beginFixture(r, key == "fixturetype");
         blockStart_ = line.number;
@@ -237,6 +240,36 @@ void Parser::destination(Reader& r) {
     if (r.ok()) {
         project_.destinations.push_back(std::move(d));
         explicitProtocol_.push_back(explicitProtocol);
+    }
+}
+
+// Patcht einen Bereich des internen DMX-Kanal-Pools (ChannelWrite::poolChannel, siehe channel_write.hpp) auf einen
+// echten Controller/Universe/Kanal. Nicht an ein Fixture gebunden, darum top-level statt im fixture-Block.
+//   dmxpatch <interner Kanal> <Anzahl> <Protokoll> destination <Nummer> universe <Universe> channel <Kanal>
+void Parser::dmxpatch(Reader& r) {
+    output::DmxChannelPatch p;
+    p.poolChannel = static_cast<std::uint16_t>(r.whole("interner Kanal", 65535));
+    p.count = static_cast<std::uint16_t>(r.whole("Anzahl", 65535));
+    p.protocol = detail::readName(r, detail::kProtocols, "Protokoll");
+    bool haveDestination = false;
+    while (r.ok() && !r.atEnd()) {
+        const std::string key = r.word("Option");
+        if (key == "destination") {
+            p.destination = r.whole("Ziel", 65535);
+            haveDestination = true;
+        } else if (key == "universe") {
+            p.universe = static_cast<std::uint16_t>(r.whole("Universe", 65535));
+        } else if (key == "channel") {
+            p.channel = static_cast<std::uint16_t>(r.whole("Kanal", 65535));
+        } else if (r.ok()) {
+            r.fail("Unbekannte Option \"" + key + "\" bei dmxpatch");
+        }
+    }
+    if (r.ok() && !haveDestination) {
+        r.fail("dmxpatch braucht \"destination <Nummer>\"");
+    }
+    if (r.ok()) {
+        project_.dmxPatches.push_back(p);
     }
 }
 
