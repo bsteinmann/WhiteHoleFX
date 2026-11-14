@@ -123,6 +123,13 @@ darum.
     (Default-Verhalten „1:1", nicht grobkörniger).
 - DMX-Output-Nodes (0.88.0): Anzeige als Zeilen in der Patch-Tabelle, Live-Wertanzeige am Node — bewusst
   nicht gebaut, nur als mögliche Erweiterung im Gespräch.
+- **DMX-Fernsteuerung für Live-Modus** (vom Nutzer gewünscht, nächstes größeres Thema nach dem DMX-Out-Umbau):
+  Steuerung per eingehendem DMX (nicht Ausgabe) — ein Kanal wählt den aktiven Look anhand seines Werts (je
+  DMX-Wert ein Look), ein zweiter Kanal legt die Überblendzeit fest. Dazu: in der Cuelist per DMX (oder
+  allgemein) zu einem bestimmten Cue springen können, nicht nur linear vor/zurück. Berührt das bestehende
+  Cue/Look-System (`cue_dialog.cpp`, `cue_panel.cpp`) und den DMX-Eingang (`wh_input`, DMX-Eingang-Seite in
+  den Einstellungen) — noch nicht untersucht, wie genau Look-Auswahl per DMX-Wert mit der bestehenden
+  Cue-Reihenfolge zusammenspielt.
 - **MIDI-Eingang/-Ausgang** (z. B. Akai APC Mini): nur besprochen, nicht begonnen. Überlegungen aus dem
   Gespräch:
   - *Bibliothek:* RtMidi — C++, cross-platform (ALSA/WinMM), passt zum bestehenden Muster, mit dem
