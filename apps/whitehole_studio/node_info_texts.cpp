@@ -131,7 +131,8 @@ std::span<const NodeInfoEntry> nodeInfoEntries() {
     {"wh.generator.scan",
      QT_TR_NOOP("Eine Scan-Linie, die über das Bild läuft. Position, Breite, Weichheit und Winkel einstellbar; mit „Position“ lässt sie sich steuern.")},
     {"wh.generator.sinelines",
-     QT_TR_NOOP("Linien als Sinuswellen, die sich bewegen (Anzahl, Amplitude, Frequenz, Tempo, Phasenversatz).")},
+     QT_TR_NOOP("Linien als Sinuswellen, die sich bewegen (Anzahl, Amplitude, Frequenz, Tempo, Phasenversatz in "
+                "Grad, eigene Farbe je Linie).")},
     {"wh.generator.solid",
      QT_TR_NOOP("Eine einfarbige Fläche. Der einfachste Generator, gut als Hintergrund oder Test.")},
     {"wh.generator.sphere",

@@ -104,19 +104,22 @@ let pick = wh_cell_hash(cell + vec2<f32>(step * 5.31 + 3.0, step * 2.17 + 41.0))
 let col = mix(@param(colorA), @param(colorB), pick);
 return vec4<f32>(col.rgb, col.a * level * select(0.0, 1.0, lit));)wgsl";
 
-// Sinuslinien: bis zu acht Wellen quer über die Leinwand, jede gegen die vorige um `spread` Perioden
-// verschoben. Die Farbe läuft von Linie zu Linie von colorA nach colorB. Überlappende Linien addieren
-// sich (vormultipliziert, wie wh_add_color). `frequencyZ` schiebt die Phase mit z: Aus jeder Linie wird im
-// Würfel eine gewellte Fläche (0 = in z überall gleich, wie auf der 2D-Leinwand).
+// Sinuslinien: bis zu acht Wellen quer über die Leinwand, jede gegen die vorige um `spread` Grad
+// phasenverschoben (intuitiv in Grad statt Perioden, wie die Rotation bei Expanding Shapes). Jede Linie
+// hat ihre eigene feste Farbe (`color1`..`color8`, nicht mehr von/bis interpoliert). Überlappende Linien
+// addieren sich (vormultipliziert, wie wh_add_color). `frequencyZ` schiebt die Phase mit z: Aus jeder
+// Linie wird im Würfel eine gewellte Fläche (0 = in z überall gleich, wie auf der 2D-Leinwand).
 constexpr const char* kSineLinesBody = R"wgsl(let n = clamp(floor(@param(count)), 1.0, 8.0);
+let colors = array<vec4<f32>, 8>(@param(color1), @param(color2), @param(color3), @param(color4), @param(color5), @param(color6), @param(color7), @param(color8));
+let spreadRad = radians(@param(spread));
 var light = vec3<f32>(0.0, 0.0, 0.0);
 var asum = 0.0;
 for (var i = 0; i < 8; i = i + 1) {
     let fi = f32(i);
     if (fi < n) {
-        let y = 0.5 + @param(amplitude) * sin(6.2831853 * (@param(frequency) * p.x + @param(frequencyZ) * p.z + fi * @param(spread)) + @time * @param(speed));
+        let y = 0.5 + @param(amplitude) * sin(6.2831853 * (@param(frequency) * p.x + @param(frequencyZ) * p.z) + @time * @param(speed) + fi * spreadRad);
         let v = 1.0 - smoothstep(0.0, max(@param(thickness), 0.002), abs(p.y - y));
-        let col = mix(@param(colorA), @param(colorB), select(0.0, fi / max(n - 1.0, 1.0), n > 1.0));
+        let col = colors[i];
         light = light + col.rgb * col.a * v;
         asum = asum + col.a * v;
     }
@@ -170,9 +173,15 @@ std::vector<compiler::NodeDefinition> shapeNodes() {
         "wh.generator.sinelines", "Sine Lines", "Generators", {fieldOutput()},
         {integer("count", "Lines", 3, 1, 8), number("amplitude", "Amplitude", 0.25, 0.0, 0.5),
          number("frequency", "Frequency", 1.5, 0.0, 16.0), number("speed", "Speed", 1.0, -10.0, 10.0),
-         number("spread", "Phase spread", 0.15, -2.0, 2.0), number("thickness", "Thickness", 0.06, 0.002, 0.5),
-         color("colorA", "First line", ColorRgba{1.0F, 0.3F, 0.1F, 1.0F}),
-         color("colorB", "Last line", ColorRgba{0.2F, 0.6F, 1.0F, 1.0F}),
+         number("spread", "Phase spread (deg)", 54.0, -720.0, 720.0), number("thickness", "Thickness", 0.06, 0.002, 0.5),
+         color("color1", "Line 1 color", ColorRgba{1.00F, 0.30F, 0.10F, 1.0F}),
+         color("color2", "Line 2 color", ColorRgba{0.89F, 0.34F, 0.23F, 1.0F}),
+         color("color3", "Line 3 color", ColorRgba{0.77F, 0.39F, 0.36F, 1.0F}),
+         color("color4", "Line 4 color", ColorRgba{0.66F, 0.43F, 0.49F, 1.0F}),
+         color("color5", "Line 5 color", ColorRgba{0.54F, 0.47F, 0.61F, 1.0F}),
+         color("color6", "Line 6 color", ColorRgba{0.43F, 0.51F, 0.74F, 1.0F}),
+         color("color7", "Line 7 color", ColorRgba{0.31F, 0.56F, 0.87F, 1.0F}),
+         color("color8", "Line 8 color", ColorRgba{0.20F, 0.60F, 1.00F, 1.0F}),
          number("frequencyZ", "Frequency along z", 0.0, -16.0, 16.0)},
         kSineLinesBody));
 

@@ -70,19 +70,22 @@ TEST_CASE("Metaballs, Starfield, Fading Pixels, Expanding Shapes und Sine Lines"
         CHECK(closeTo(diamond.at(15, 9)[3], 0.0F, 0.02F));   // Raute: d = 0.3 liegt genau zwischen zwei Ringen
         CHECK(square.at(15, 9)[3] > 0.05F);                   // Quadrat: d = 0.275
     }
-    {  // Sine Lines: auf der Linie die erste Farbe, daneben nichts; zwei gleiche Linien addieren sich
+    {  // Sine Lines: auf der Linie die eigene Farbe (color1), daneben nichts; zwei gleichphasige Linien
+       // mit je eigener Farbe addieren sich (color1 + color2)
         Lab lab;
         const NodeId lines = lab.add("wh.generator.sinelines");
         lab.set(lines, "frequency", 1.0);
         lab.set(lines, "speed", 0.0);
         lab.set(lines, "spread", 0.0);
+        lab.set(lines, "color1", ColorRgba{1.0F, 0.0F, 0.0F, 1.0F});
+        lab.set(lines, "color2", ColorRgba{0.0F, 1.0F, 0.0F, 1.0F});
         lab.set(lines, "count", std::int64_t{1});
         const Pixels one = render(*device, lab, lines, 2, 2);
-        CHECK(isColor(one.at(0, 0), 1.0F, 0.3F, 0.1F, 1.0F));
+        CHECK(isColor(one.at(0, 0), 1.0F, 0.0F, 0.0F, 1.0F));
         CHECK(closeTo(one.at(0, 1)[3], 0.0F));
         lab.set(lines, "count", std::int64_t{2});
         const Pixels two = render(*device, lab, lines, 2, 2);
-        CHECK(isColor(two.at(0, 0), 1.0F, 0.9F, 1.0F, 1.0F));
+        CHECK(isColor(two.at(0, 0), 1.0F, 1.0F, 0.0F, 1.0F));
     }
 }
 

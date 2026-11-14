@@ -1,5 +1,9 @@
 # Änderungen
 
+## 0.90.0
+
+- **Sine Lines: Phasenversatz in Grad, eigene Farbe pro Linie.** `spread` ist jetzt in Grad angegeben (vorher Perioden/Umdrehungen; Standard 54° statt 0,15, entspricht derselben Phasenverschiebung wie bisher) — wie bei der Rotation bei Expanding Shapes. Statt `colorA`/`colorB` (nur Überblendung erster/letzter Linie) haben jetzt alle acht möglichen Linien eine eigene, fest einstellbare Farbe (`color1`…`color8`); bei `count` kleiner als 8 werden einfach die ersten `count` Farben benutzt. **Achtung Projektdateien:** Bestehende `.whfx`-Dateien, die `spread`, `colorA` oder `colorB` auf `wh.generator.sinelines` setzen, lassen sich nicht mehr laden (Parameter umbenannt/entfernt) — vor dem nächsten Öffnen in diesen Projekten anpassen (`spread` in Grad, `colorA`/`colorB` durch `color1…color8` ersetzen).
+
 ## 0.89.0
 
 - **Color Ramp: harte Schritte.** Neuer Schalter `hard` (Studio: „Hard steps"): Statt zwischen den Farben zu überblenden, springt der Node wie ein Sequencer-Schritt direkt auf die jeweils aktuelle Farbe. Gilt für Loop- und Pendel-Betrieb gleichermaßen; Standard ist aus (bestehende Projekte bleiben unverändert).
