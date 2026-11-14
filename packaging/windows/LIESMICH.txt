@@ -13,11 +13,18 @@ Sicherheit
   sACN oder DDP-Pakete an die im Projekt eingetragenen Adressen. Die Beispiele zeigen auf 127.0.0.1 (den
   eigenen Rechner).
 
-Das ist eine Testversion
-  Auf echter Hardware (GPU-Treiber, Controller im Netz) ist sie noch wenig erprobt. Rückmeldungen sind willkommen:
+Rückmeldungen willkommen
+  GPU-Rendering und die Ausgabe an echte Controller (Art-Net/sACN/DDP) sind erprobt und laufen. Trotzdem ist
+  WhiteHoleFX noch jung — Fehlermeldungen und Vorschläge sind weiterhin willkommen:
   https://github.com/bsteinmann/WhiteHoleFX/issues
   Bitte nenne dabei Windows-Version, Grafikkarte und was du getan hast.
 
 Lizenz
   PolyForm Shield License 1.0.0 (siehe LICENSE): kostenlos für jeden Zweck, auch auf bezahlten Veranstaltungen.
   Nicht erlaubt ist, daraus ein konkurrierendes Produkt oder einen Dienst zu machen. Drittbibliotheken: NOTICE.
+
+Haftungsausschluss
+  Die Software wird ohne jede Gewährleistung bereitgestellt ("as is"), soweit gesetzlich zulässig. Für
+  Schäden, die aus der Nutzung entstehen - etwa Ausfälle während einer Veranstaltung, fehlerhafte
+  DMX-Ausgabe oder Datenverlust - wird keine Haftung übernommen. Einsatz auf eigenes Risiko; vor einem
+  Live-Einsatz gründlich testen.

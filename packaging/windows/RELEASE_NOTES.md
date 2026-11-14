@@ -39,9 +39,14 @@ Stimmt die Prüfsumme nicht, bitte nicht starten und melden.
 eingetragenen Adressen. Die Suche nach Updates fragt GitHub nur, wenn du sie einschaltest oder anstößt.
 
 **Stand:** Das Programm wird automatisch auf Linux und Windows gebaut und getestet, in der CI auch in einem
-unsichtbaren Fenster bedient. Auf echter Hardware (GPU-Treiber, Controller im Netz, Maus und Bildschirm) ist es noch
-wenig erprobt. **Rückmeldungen sind willkommen** (Issues): bitte mit Windows-Version, Grafikkarte und den Schritten
-bis zum Problem.
+unsichtbaren Fenster bedient. GPU-Rendering und die Ausgabe an echte Controller (Art-Net/sACN/DDP) sind erprobt und
+laufen. **Rückmeldungen sind weiterhin willkommen** (Issues): bitte mit Windows-Version, Grafikkarte und den
+Schritten bis zum Problem.
+
+**Haftungsausschluss:** Die Software wird ohne jede Gewährleistung bereitgestellt ("as is"), soweit gesetzlich
+zulässig. Für Schäden, die aus der Nutzung entstehen — etwa Ausfälle während einer Veranstaltung, fehlerhafte
+DMX-Ausgabe oder Datenverlust —, wird keine Haftung übernommen (siehe auch `LICENSE`, Abschnitt „No Liability“).
+Einsatz auf eigenes Risiko; vor einem Live-Einsatz gründlich testen.
 
 **Bekannt:** Der Text-Node zeigt unter Vulkan auf NVIDIA-Karten der Kepler-Generation (GTX 600/700) keinen Text (#13);
 dort nimmt WhiteHoleFX automatisch OpenGL. Bei anderen Karten mit dem gleichen Problem lohnt ein Versuch mit der
