@@ -6,7 +6,10 @@
 //
 // Regel: Spalten von links nach rechts. Ein Node steht eine Spalte rechts von seinem am
 // weitesten rechts stehenden Zulieferer; Quellen stehen in Spalte 0. Innerhalb einer Spalte gilt
-// die Reihenfolge im Graphen.
+// die Reihenfolge im Graphen, mit so viel Abstand untereinander, wie der jeweils vorherige Node
+// (geschätzt aus seiner Portzahl) tatsächlich hoch ist - sonst überlappen sich Nodes mit vielen
+// Parametern (jeder bekommt automatisch einen Eingangsport, siehe addModulationPorts) mit ihrem
+// Nachbarn in derselben Spalte.
 #pragma once
 
 #include <vector>
@@ -18,7 +21,7 @@ namespace whitehole::runtime {
 
 struct LayoutSpacing {
     float column{260.0F};
-    float row{150.0F};
+    float row{24.0F};  // Lücke UNTER einem Node, zusätzlich zu seiner geschätzten Höhe (nicht mehr die volle Zeile)
 };
 
 /// Position je Node, in der Reihenfolge von graph.nodes().

@@ -2,6 +2,13 @@
 
 ## 0.92.0
 
+- **Fix: automatische Node-Anordnung berücksichtigt jetzt die echte Kartenhöhe.** Beim ersten Öffnen eines
+  Projekts ohne gespeicherte Node-Positionen (zum Beispiel von Hand geschriebene `.whfx`-Dateien) ordnet der
+  Editor die Nodes automatisch in Spalten an. Der Abstand innerhalb einer Spalte war bisher fest (150px) und
+  hat die tatsächliche Höhe der Node-Karte ignoriert — bei Nodes mit vielen Parametern (jeder bekommt
+  automatisch einen Eingangsport) konnte die Karte den nächsten Node in derselben Spalte überlappen; durch
+  Plasmas neue Farbparameter (siehe unten) sichtbar geworden, betrifft aber grundsätzlich jeden Node-Typ.
+  Der Abstand wird jetzt aus der geschätzten Kartenhöhe (Portzahl) plus einer kleinen festen Lücke berechnet.
 - **Expanding Shapes: Spiral, Squircle, Hollow core.** Zwei neue Formen: „Spiral" (Ringe mit stetigem
   Winkel-Versatz von bis zu einem `spacing` pro Umdrehung — der Sprung bei ±180° ist dadurch unsichtbar,
   ergibt eine echte durchgehende Spirale statt Kreise) und „Squircle" (Lp-Norm-Morph zwischen Kreis und

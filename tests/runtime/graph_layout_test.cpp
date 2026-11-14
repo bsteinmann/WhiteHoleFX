@@ -35,7 +35,28 @@ TEST_CASE("Layout: Quellen links, Verbraucher rechts, gleiche Spalte untereinand
     CHECK(positions[2].x == 520.0F);               // scale
     CHECK(positions[3].x == 0.0F);                 // lfo: Quelle
     CHECK(positions[0].y == 0.0F);
-    CHECK(positions[3].y == 150.0F);               // unter plasma
+    // unter plasma, mit genug Abstand fuer dessen tatsaechliche Kartenhoehe (8 Parameter -> 8 Portzeilen):
+    // 26 (Titel) + 12 + 8 * 22 (Zeilen) + 24 (Luecke) = 238. Ein fester Wert haette plasma (oder jeden anderen,
+    // spaeter gewachsenen Quell-Node) ueberlappt - siehe die eigene Ueberlappungs-Pruefung unten.
+    CHECK(positions[3].y == 238.0F);
+}
+
+TEST_CASE("Layout: Nodes derselben Spalte überlappen sich nie, auch bei vielen Parametern", "[layout]") {
+    // Regression: Plasma wuchs 0.92.0 von 3 auf 8 Parameter (Farbpaletten); eine feste Zeilenhoehe liess die
+    // Karte dann in ihren Nachbarn (hier: lfo, beide Spalte 0) hineinragen. Prueft das allgemein und nicht nur
+    // fuer Plasmas aktuelle Parameterzahl, falls weitere Nodes spaeter aehnlich wachsen.
+    Chain c;
+    const auto positions = runtime::layerLayout(c.graph);
+    const graph::NodeDescriptor* plasmaType = c.graph.registry().find("wh.generator.plasma");
+    REQUIRE(plasmaType != nullptr);
+    int plasmaPorts = 0;
+    for (const auto& port : plasmaType->ports) {
+        if (port.direction == graph::PortDirection::Input) {
+            ++plasmaPorts;
+        }
+    }
+    const float plasmaHeight = 26.0F + 12.0F + static_cast<float>(std::max(1, plasmaPorts)) * 22.0F;
+    CHECK(positions[3].y >= positions[0].y + plasmaHeight);  // lfo beginnt erst, wenn plasma fertig ist
 }
 
 TEST_CASE("Layout: nur wenn alle Positionen fehlen", "[layout]") {
