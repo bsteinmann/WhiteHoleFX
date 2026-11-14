@@ -2,6 +2,15 @@
 
 ## 0.92.0
 
+- **Color Ramp: UX-Überarbeitung.** `color3`/`color4` blendet das Parameterfenster aus, solange `count`
+  kleiner ist (wie bei den Sequencer-Step-Reglern). Standard-`speed` jetzt 0 statt 0,2, damit der Node
+  beim Einfügen erst mal stillsteht. Der Haken „Loop back to first color" ist jetzt die Auswahl **`mode`**
+  (Pendulum/Loop) — macht das bisher implizite Pendel-Verhalten bei „aus" explizit. Neuer Trigger-Eingang
+  **`advance`**: schaltet per Taster einen Schritt weiter, unabhängig von `position`/`speed`, immer hart
+  (kein Überblenden); spielt dabei genauso mit `mode` zusammen (Loop/Pendulum am Ende). **Achtung
+  Projektdateien:** Der Parameter `loop` (Boolean) heißt jetzt `mode` (Ganzzahl, 0 Pendulum/1 Loop) —
+  bestehende `.whfx`-Dateien mit `set loop ...` auf `wh.value.colorramp` lassen sich nicht mehr laden,
+  vor dem nächsten Öffnen anpassen (`loop false` → `mode 0`, `loop true` oder kein `loop` → `mode 1`).
 - **Sequencer: ungenutzte Step-Regler ausblenden.** Im Parameterfenster zeigt der Sequencer-Node „Step 2"
   bis „Step 8" jetzt nur noch, solange `steps` mindestens so groß ist — Schritte über der eingestellten
   Schrittzahl werden ohnehin nie angespielt. Technisch ein neues, allgemeines Feld

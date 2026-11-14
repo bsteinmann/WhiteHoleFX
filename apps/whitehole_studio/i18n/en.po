@@ -478,7 +478,7 @@ msgstr "Save current effect as look …"
 msgid "Alle LEDs aus; die Pakete laufen weiter (Strg+B)"
 msgstr "All LEDs off; packets keep flowing (Ctrl+B)"
 
-#: parameter_panel.cpp:111
+#: parameter_panel.cpp:126
 msgid "Alle Nodes"
 msgstr "All nodes"
 
@@ -514,7 +514,7 @@ msgstr "Save as preset …"
 msgid "Als Vorlage speichern"
 msgstr "Save as template"
 
-#: parameter_panel.cpp:80
+#: parameter_panel.cpp:95
 msgid "An Bereich anpassen"
 msgstr "Fit to range"
 
@@ -534,7 +534,7 @@ msgstr "Start and end relative to the position; the first LED sits at the start.
 msgid "Anfang x y z"
 msgstr "Start x y z"
 
-#: parameter_panel.cpp:223
+#: parameter_panel.cpp:238
 msgid "Anheften"
 msgstr "Pin"
 
@@ -598,7 +598,7 @@ msgstr "Audio wave"
 msgid "Auf &Updates prüfen …"
 msgstr "Check for &Updates …"
 
-#: parameter_panel.cpp:286
+#: parameter_panel.cpp:305
 msgid "Auf Standardwert zurücksetzen"
 msgstr "Reset to default"
 
@@ -1074,7 +1074,7 @@ msgstr "The change takes effect immediately after “OK”."
 msgid "Diese Form ist ungültig."
 msgstr "This shape is invalid."
 
-#: main_window.cpp:189 parameter_panel.cpp:245
+#: main_window.cpp:189 parameter_panel.cpp:260
 msgid "Dieser Node hat keine einstellbaren Parameter."
 msgstr "This node has no adjustable parameters."
 
@@ -1082,7 +1082,7 @@ msgstr "This node has no adjustable parameters."
 msgid "Dieses Programm wurde ohne GPU-Backend gebaut (-DWHITEHOLEFX_WEBGPU=ON); es zeigt nur das Layout."
 msgstr "This program was built without the GPU backend (-DWHITEHOLEFX_WEBGPU=ON); it only shows the layout."
 
-#: parameter_panel.cpp:209
+#: parameter_panel.cpp:224
 msgid "Dieses Projekt hat keine einstellbaren Parameter."
 msgstr "This project has no adjustable parameters."
 
@@ -1347,8 +1347,8 @@ msgid "Farbreihenfolge"
 msgstr "Color order"
 
 #: node_info_texts.cpp:161
-msgid "Farbverlauf aus bis zu vier Farben. „Position“ wählt die Stelle, oder er läuft von selbst im eingestellten Tempo. Mit „Hard steps“ springt er wie ein Sequencer statt zu überblenden."
-msgstr "Color gradient between up to four colors. “Position” picks the spot, or it runs on its own at the set speed. With “Hard steps” it jumps like a sequencer instead of fading."
+msgid "Farbverlauf aus bis zu vier Farben. „Position“ wählt die Stelle, oder er läuft von selbst im eingestellten Tempo. „Mode“ legt fest, was am Ende passiert: Pendulum kehrt um, Loop springt zurück zum Anfang. Mit „Hard steps“ springt er wie ein Sequencer statt zu überblenden. „Advance“ schaltet per Taster einen Schritt weiter, unabhängig von Position/Tempo, immer hart."
+msgstr "Gradient of up to four colors. \"Position\" picks the spot, or it runs on its own at the set speed. \"Mode\" decides what happens at the end: Pendulum reverses, Loop jumps back to the start. With \"Hard steps\" it jumps like a sequencer instead of fading. \"Advance\" steps forward via a button, independent of position/speed, always hard."
 
 #: node_palette.cpp:224
 msgid "Favoriten"
@@ -1366,7 +1366,7 @@ msgstr "Window layout reset: it applies from the next start."
 msgid "Field"
 msgstr "Field"
 
-#: parameter_panel.cpp:117
+#: parameter_panel.cpp:132
 msgid "Filtert die Gruppen nach Node- oder Parametername (über alle Nodes)"
 msgstr "Filters the groups by node or parameter name (across all nodes)"
 
@@ -1510,11 +1510,11 @@ msgstr "Line up the selected fixtures horizontally (the leftmost one stays)"
 msgid "Gewählten Controller −"
 msgstr "Remove selected controller −"
 
-#: parameter_panel.cpp:110
+#: parameter_panel.cpp:125
 msgid "Gewählter Node"
 msgstr "Selected node"
 
-#: parameter_panel.cpp:112
+#: parameter_panel.cpp:127
 msgid "Gewählter Node: nur der Node, den du im Editor gewählt hast, und angeheftete Nodes. Alle Nodes: jede Gruppe, aufgeklappt nur die des gewählten und der angehefteten Nodes."
 msgstr "Selected node: only the node you selected in the editor, plus pinned nodes. All nodes: every group, expanded only for the selected and pinned nodes."
 
@@ -1626,7 +1626,7 @@ msgstr "Brings in all stored fixture types that are missing in this show"
 msgid "Holt die gewählte gespeicherte Bauform in diese Show"
 msgstr "Brings the selected stored fixture type into this show"
 
-#: parameter_panel.cpp:226
+#: parameter_panel.cpp:241
 msgid "Hält diesen Node im Fenster, auch wenn du im Editor einen anderen wählst"
 msgstr "Keeps this node in the window even when you select another one in the editor"
 
@@ -1678,7 +1678,7 @@ msgstr "Yes, check on startup"
 msgid "Kabel beginnt"
 msgstr "Cable starts"
 
-#: parameter_panel.cpp:51
+#: parameter_panel.cpp:66
 msgid "Kabel:"
 msgstr "Cable:"
 
@@ -1710,7 +1710,7 @@ msgstr "No GPU adapter: %1"
 msgid "Kein Projekt"
 msgstr "No project"
 
-#: parameter_panel.cpp:124 stage_view.cpp:166
+#: parameter_panel.cpp:139 stage_view.cpp:166
 msgid "Kein Projekt geladen."
 msgstr "No project loaded."
 
@@ -1722,7 +1722,7 @@ msgstr "No target (free rectangle)"
 msgid "Keine Aufnahmegeräte gefunden. Ein Audio-Interface anschließen und das Fenster neu öffnen."
 msgstr "No capture devices found. Connect an audio interface and reopen the window."
 
-#: parameter_panel.cpp:193
+#: parameter_panel.cpp:208
 msgid "Keine Treffer."
 msgstr "No matches."
 
@@ -2206,7 +2206,7 @@ msgstr "Colored &palette"
 msgid "Parameter"
 msgstr "Parameters"
 
-#: parameter_panel.cpp:221
+#: parameter_panel.cpp:236
 msgid "Parameter dieses Nodes auf- oder zuklappen"
 msgstr "Expand or collapse this node's parameters"
 
@@ -2470,11 +2470,11 @@ msgstr "Serpentine (every second ring backwards)"
 msgid "Sich ausbreitende Formen von einem Mittelpunkt aus: Kreis, Quadrat, Raute, Dreieck, Sechseck, Vieleck, Stern, Kreuz, Balken. Füllung als Ring, voll oder Verlauf; fortlaufend mit Abstand und Tempo oder als One shot über den Eingang „progress“ (vom Shot-Node)."
 msgstr "Expanding shapes from a center point: circle, square, diamond, triangle, hexagon, polygon, star, cross, bars. Fill as ring, solid or gradient; continuous with spacing and speed, or as a one shot via the “progress” input (from the Shot node)."
 
-#: parameter_panel.cpp:49
+#: parameter_panel.cpp:64
 msgid "Skalierung am Kabel: Wert × Faktor + Offset, danach begrenzt auf den Bereich des Parameters. So steuert ein Wert von 0 bis 1 zum Beispiel einen Winkel von 0 bis 360."
 msgstr "Scaling on the cable: value × factor + offset, then limited to the parameter's range. This way a value from 0 to 1 can drive an angle from 0 to 360, for example."
 
-#: parameter_panel.cpp:92
+#: parameter_panel.cpp:107
 msgid "Skalierung zurücksetzen (× 1, + 0)"
 msgstr "Reset scaling (× 1, + 0)"
 
@@ -2502,7 +2502,7 @@ msgstr "Columns (vertical)"
 msgid "Spalten lassen sich an der Kopfzeile verschieben"
 msgstr "Columns can be moved by dragging the header"
 
-#: parameter_panel.cpp:81
+#: parameter_panel.cpp:96
 msgid "Spannt einen Wert von 0 bis 1 über den ganzen Bereich des Parameters"
 msgstr "Stretches a value from 0 to 1 over the parameter's whole range"
 
@@ -2598,7 +2598,7 @@ msgstr "Strip 30"
 msgid "Suche nach Updates …"
 msgstr "Checking for updates …"
 
-#: parameter_panel.cpp:115
+#: parameter_panel.cpp:130
 msgid "Suchen …"
 msgstr "Search …"
 
@@ -2886,11 +2886,11 @@ msgstr "Angle of the first LED: 0 = right, 90 = up"
 msgid "Wirbel: Dreht das Bild um einen Mittelpunkt, in der Mitte am stärksten, nach außen abklingend (Radius)."
 msgstr "Vortex: swirls the image around a center, strongest in the middle and fading outward (radius)."
 
-#: parameter_panel.cpp:293
+#: parameter_panel.cpp:312
 msgid "Wird durch eine Verbindung im Graphen gesteuert."
 msgstr "Controlled by a connection in the graph."
 
-#: parameter_panel.cpp:191
+#: parameter_panel.cpp:206
 msgid "Wähle einen Node im Node-Editor, um seine Parameter zu sehen. Mit „Anheften“ bleibt ein Node hier stehen."
 msgstr "Select a node in the node editor to see its parameters. \"Pin\" keeps a node here."
 

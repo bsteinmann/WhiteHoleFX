@@ -478,7 +478,7 @@ msgstr ""
 msgid "Alle LEDs aus; die Pakete laufen weiter (Strg+B)"
 msgstr ""
 
-#: parameter_panel.cpp:111
+#: parameter_panel.cpp:126
 msgid "Alle Nodes"
 msgstr ""
 
@@ -514,7 +514,7 @@ msgstr ""
 msgid "Als Vorlage speichern"
 msgstr ""
 
-#: parameter_panel.cpp:80
+#: parameter_panel.cpp:95
 msgid "An Bereich anpassen"
 msgstr ""
 
@@ -534,7 +534,7 @@ msgstr ""
 msgid "Anfang x y z"
 msgstr ""
 
-#: parameter_panel.cpp:223
+#: parameter_panel.cpp:238
 msgid "Anheften"
 msgstr ""
 
@@ -598,7 +598,7 @@ msgstr ""
 msgid "Auf &Updates prüfen …"
 msgstr ""
 
-#: parameter_panel.cpp:286
+#: parameter_panel.cpp:305
 msgid "Auf Standardwert zurücksetzen"
 msgstr ""
 
@@ -1074,7 +1074,7 @@ msgstr ""
 msgid "Diese Form ist ungültig."
 msgstr ""
 
-#: main_window.cpp:189 parameter_panel.cpp:245
+#: main_window.cpp:189 parameter_panel.cpp:260
 msgid "Dieser Node hat keine einstellbaren Parameter."
 msgstr ""
 
@@ -1082,7 +1082,7 @@ msgstr ""
 msgid "Dieses Programm wurde ohne GPU-Backend gebaut (-DWHITEHOLEFX_WEBGPU=ON); es zeigt nur das Layout."
 msgstr ""
 
-#: parameter_panel.cpp:209
+#: parameter_panel.cpp:224
 msgid "Dieses Projekt hat keine einstellbaren Parameter."
 msgstr ""
 
@@ -1347,7 +1347,7 @@ msgid "Farbreihenfolge"
 msgstr ""
 
 #: node_info_texts.cpp:161
-msgid "Farbverlauf aus bis zu vier Farben. „Position“ wählt die Stelle, oder er läuft von selbst im eingestellten Tempo. Mit „Hard steps“ springt er wie ein Sequencer statt zu überblenden."
+msgid "Farbverlauf aus bis zu vier Farben. „Position“ wählt die Stelle, oder er läuft von selbst im eingestellten Tempo. „Mode“ legt fest, was am Ende passiert: Pendulum kehrt um, Loop springt zurück zum Anfang. Mit „Hard steps“ springt er wie ein Sequencer statt zu überblenden. „Advance“ schaltet per Taster einen Schritt weiter, unabhängig von Position/Tempo, immer hart."
 msgstr ""
 
 #: node_palette.cpp:224
@@ -1366,7 +1366,7 @@ msgstr ""
 msgid "Field"
 msgstr ""
 
-#: parameter_panel.cpp:117
+#: parameter_panel.cpp:132
 msgid "Filtert die Gruppen nach Node- oder Parametername (über alle Nodes)"
 msgstr ""
 
@@ -1510,11 +1510,11 @@ msgstr ""
 msgid "Gewählten Controller −"
 msgstr ""
 
-#: parameter_panel.cpp:110
+#: parameter_panel.cpp:125
 msgid "Gewählter Node"
 msgstr ""
 
-#: parameter_panel.cpp:112
+#: parameter_panel.cpp:127
 msgid "Gewählter Node: nur der Node, den du im Editor gewählt hast, und angeheftete Nodes. Alle Nodes: jede Gruppe, aufgeklappt nur die des gewählten und der angehefteten Nodes."
 msgstr ""
 
@@ -1626,7 +1626,7 @@ msgstr ""
 msgid "Holt die gewählte gespeicherte Bauform in diese Show"
 msgstr ""
 
-#: parameter_panel.cpp:226
+#: parameter_panel.cpp:241
 msgid "Hält diesen Node im Fenster, auch wenn du im Editor einen anderen wählst"
 msgstr ""
 
@@ -1678,7 +1678,7 @@ msgstr ""
 msgid "Kabel beginnt"
 msgstr ""
 
-#: parameter_panel.cpp:51
+#: parameter_panel.cpp:66
 msgid "Kabel:"
 msgstr ""
 
@@ -1710,7 +1710,7 @@ msgstr ""
 msgid "Kein Projekt"
 msgstr ""
 
-#: parameter_panel.cpp:124 stage_view.cpp:166
+#: parameter_panel.cpp:139 stage_view.cpp:166
 msgid "Kein Projekt geladen."
 msgstr ""
 
@@ -1722,7 +1722,7 @@ msgstr ""
 msgid "Keine Aufnahmegeräte gefunden. Ein Audio-Interface anschließen und das Fenster neu öffnen."
 msgstr ""
 
-#: parameter_panel.cpp:193
+#: parameter_panel.cpp:208
 msgid "Keine Treffer."
 msgstr ""
 
@@ -2206,7 +2206,7 @@ msgstr ""
 msgid "Parameter"
 msgstr ""
 
-#: parameter_panel.cpp:221
+#: parameter_panel.cpp:236
 msgid "Parameter dieses Nodes auf- oder zuklappen"
 msgstr ""
 
@@ -2470,11 +2470,11 @@ msgstr ""
 msgid "Sich ausbreitende Formen von einem Mittelpunkt aus: Kreis, Quadrat, Raute, Dreieck, Sechseck, Vieleck, Stern, Kreuz, Balken. Füllung als Ring, voll oder Verlauf; fortlaufend mit Abstand und Tempo oder als One shot über den Eingang „progress“ (vom Shot-Node)."
 msgstr ""
 
-#: parameter_panel.cpp:49
+#: parameter_panel.cpp:64
 msgid "Skalierung am Kabel: Wert × Faktor + Offset, danach begrenzt auf den Bereich des Parameters. So steuert ein Wert von 0 bis 1 zum Beispiel einen Winkel von 0 bis 360."
 msgstr ""
 
-#: parameter_panel.cpp:92
+#: parameter_panel.cpp:107
 msgid "Skalierung zurücksetzen (× 1, + 0)"
 msgstr ""
 
@@ -2502,7 +2502,7 @@ msgstr ""
 msgid "Spalten lassen sich an der Kopfzeile verschieben"
 msgstr ""
 
-#: parameter_panel.cpp:81
+#: parameter_panel.cpp:96
 msgid "Spannt einen Wert von 0 bis 1 über den ganzen Bereich des Parameters"
 msgstr ""
 
@@ -2598,7 +2598,7 @@ msgstr ""
 msgid "Suche nach Updates …"
 msgstr ""
 
-#: parameter_panel.cpp:115
+#: parameter_panel.cpp:130
 msgid "Suchen …"
 msgstr ""
 
@@ -2886,11 +2886,11 @@ msgstr ""
 msgid "Wirbel: Dreht das Bild um einen Mittelpunkt, in der Mitte am stärksten, nach außen abklingend (Radius)."
 msgstr ""
 
-#: parameter_panel.cpp:293
+#: parameter_panel.cpp:312
 msgid "Wird durch eine Verbindung im Graphen gesteuert."
 msgstr ""
 
-#: parameter_panel.cpp:191
+#: parameter_panel.cpp:206
 msgid "Wähle einen Node im Node-Editor, um seine Parameter zu sehen. Mit „Anheften“ bleibt ein Node hier stehen."
 msgstr ""
 

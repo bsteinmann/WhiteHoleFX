@@ -96,7 +96,7 @@ TEST_CASE("Color Ramp: zwischen zwei Farben überblenden") {
     consume(lab, ramp);
     lab.set(ramp, "color1", ColorRgba{0.0F, 0.0F, 0.0F, 1.0F});
     lab.set(ramp, "color2", ColorRgba{1.0F, 0.5F, 0.0F, 1.0F});
-    lab.set(ramp, "loop", false);
+    lab.set(ramp, "mode", std::int64_t{0});  // 0 = Pendulum
     lab.set(ramp, "speed", 0.0);
 
     lab.set(ramp, "position", 0.0);
@@ -116,7 +116,7 @@ TEST_CASE("Color Ramp: harte Schritte springen statt zu überblenden") {
     const NodeId ramp = lab.add("wh.value.colorramp");
     consume(lab, ramp);
     lab.set(ramp, "count", std::int64_t{3});
-    lab.set(ramp, "loop", false);
+    lab.set(ramp, "mode", std::int64_t{0});  // 0 = Pendulum
     lab.set(ramp, "speed", 0.0);
     lab.set(ramp, "hard", true);
     lab.set(ramp, "color1", ColorRgba{1.0F, 0.0F, 0.0F, 1.0F});
@@ -163,7 +163,7 @@ TEST_CASE("Color Ramp: ein LFO am Positionseingang wechselt die Farben") {
     consume(lab, ramp);
     lab.set(ramp, "color1", ColorRgba{0.0F, 0.0F, 1.0F, 1.0F});
     lab.set(ramp, "color2", ColorRgba{1.0F, 0.0F, 0.0F, 1.0F});
-    lab.set(ramp, "loop", false);
+    lab.set(ramp, "mode", std::int64_t{0});  // 0 = Pendulum
     lab.set(ramp, "speed", 0.0);
     const NodeId lfo = lab.add("wh.value.lfo");
     lab.set(lfo, "frequency", 0.25);  // Sinus über 4 s
@@ -208,7 +208,7 @@ TEST_CASE("Color Ramp: Tempo 0 hält die Farbe, negatives Tempo läuft rückwär
     consume(lab, ramp);
     lab.set(ramp, "color1", ColorRgba{0.0F, 0.0F, 0.0F, 1.0F});
     lab.set(ramp, "color2", ColorRgba{1.0F, 1.0F, 1.0F, 1.0F});
-    lab.set(ramp, "loop", false);
+    lab.set(ramp, "mode", std::int64_t{0});  // 0 = Pendulum
     lab.set(ramp, "speed", 0.5);  // ein Umlauf in 2 s: 1 s hin, 1 s zurück
     ColorRgba c{};
     for (int i = 0; i < 8; ++i) {
@@ -219,4 +219,54 @@ TEST_CASE("Color Ramp: Tempo 0 hält die Farbe, negatives Tempo läuft rückwär
         c = colorStep(lab, ramp, 0.125 * (i + 1), 0.125);
     }
     CHECK(c.r == Approx(0.0F).margin(1e-3));  // nach 2 s wieder am Anfang (kein Sprung)
+}
+
+TEST_CASE("Color Ramp: advance schaltet unabhängig von Position/Tempo hart weiter (Loop)") {
+    Lab lab;
+    const NodeId ramp = lab.add("wh.value.colorramp");
+    consume(lab, ramp);
+    lab.set(ramp, "count", std::int64_t{3});
+    lab.set(ramp, "mode", std::int64_t{1});  // Loop
+    lab.set(ramp, "color1", ColorRgba{1.0F, 0.0F, 0.0F, 1.0F});
+    lab.set(ramp, "color2", ColorRgba{0.0F, 1.0F, 0.0F, 1.0F});
+    lab.set(ramp, "color3", ColorRgba{0.0F, 0.0F, 1.0F, 1.0F});
+
+    // "Loslassen" (advance false) zwischen den Drücken, mit je einem Frame dazwischen, damit die Flanke
+    // beim nächsten Druck wirklich neu entsteht (sonst sieht der Kernel nur den letzten gesetzten Wert).
+    const auto click = [&]() {
+        lab.set(ramp, "advance", false);
+        colorOf(lab, ramp);
+        lab.set(ramp, "advance", true);
+        return colorOf(lab, ramp);
+    };
+    CHECK(click() == ColorRgba{0.0F, 1.0F, 0.0F, 1.0F});  // Grün
+    CHECK(click() == ColorRgba{0.0F, 0.0F, 1.0F, 1.0F});  // Blau
+    CHECK(click() == ColorRgba{1.0F, 0.0F, 0.0F, 1.0F});  // Loop: wieder Rot
+
+    // Ab dem ersten advance zählen position/speed nicht mehr.
+    lab.set(ramp, "position", 0.5);
+    lab.set(ramp, "speed", 1.0);
+    CHECK(colorOf(lab, ramp) == ColorRgba{1.0F, 0.0F, 0.0F, 1.0F});
+}
+
+TEST_CASE("Color Ramp: advance kehrt am Ende um (Pendulum)") {
+    Lab lab;
+    const NodeId ramp = lab.add("wh.value.colorramp");
+    consume(lab, ramp);
+    lab.set(ramp, "count", std::int64_t{3});
+    lab.set(ramp, "mode", std::int64_t{0});  // Pendulum
+    lab.set(ramp, "color1", ColorRgba{1.0F, 0.0F, 0.0F, 1.0F});
+    lab.set(ramp, "color2", ColorRgba{0.0F, 1.0F, 0.0F, 1.0F});
+    lab.set(ramp, "color3", ColorRgba{0.0F, 0.0F, 1.0F, 1.0F});
+
+    const auto click = [&]() {
+        lab.set(ramp, "advance", false);
+        colorOf(lab, ramp);
+        lab.set(ramp, "advance", true);
+        return colorOf(lab, ramp);
+    };
+    CHECK(click() == ColorRgba{0.0F, 1.0F, 0.0F, 1.0F});  // Grün
+    CHECK(click() == ColorRgba{0.0F, 0.0F, 1.0F, 1.0F});  // Blau (Ende erreicht)
+    CHECK(click() == ColorRgba{0.0F, 1.0F, 0.0F, 1.0F});  // umgekehrt zurück: Grün
+    CHECK(click() == ColorRgba{1.0F, 0.0F, 0.0F, 1.0F});  // Rot
 }

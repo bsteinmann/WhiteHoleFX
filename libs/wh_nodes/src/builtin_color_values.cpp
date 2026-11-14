@@ -86,12 +86,18 @@ ColorRgba adjustColor(const ColorRgba& color, double hueShift, double saturation
 
 namespace {
 
-// Überblendet zwischen 2 bis 4 Farben. `position` 0..1 läuft von der ersten zur letzten Farbe; mit
-// `loop` geht es von der letzten wieder zur ersten (eine Periode von `position` ist ein voller Umlauf,
-// ein Sägezahn-LFO zyklisiert also ewig durch alle Farben). Ohne LFO läuft der Node von selbst: `speed` sind
-// Umläufe pro Sekunde (die Phase wird aufsummiert und zu `position` addiert; negativ rückwärts, 0 = steht). Ohne
-// `loop` pendelt er dabei zwischen erster und letzter Farbe hin und her. Mit `hard` springt der Node wie ein
-// Sequencer-Schritt direkt auf die Farbe des aktuellen Segments, statt zur nächsten überzublenden.
+// Überblendet zwischen 2 bis 4 Farben. `position` 0..1 läuft von der ersten zur letzten Farbe; im Modus
+// "Loop" geht es von der letzten wieder zur ersten (eine Periode von `position` ist ein voller Umlauf, ein
+// Sägezahn-LFO zyklisiert also ewig durch alle Farben), im Modus "Pendulum" pendelt er stattdessen zwischen
+// erster und letzter Farbe hin und her. Ohne LFO läuft der Node von selbst: `speed` sind Umläufe pro Sekunde
+// (die Phase wird aufsummiert und zu `position` addiert; negativ rückwärts, 0 = steht, Standard). Mit `hard`
+// springt der Node wie ein Sequencer-Schritt direkt auf die Farbe des aktuellen Segments, statt zur nächsten
+// überzublenden.
+//
+// `advance` ist ein zweiter, unabhängiger Weg, den Node zu steuern: eine steigende Flanke schaltet wie ein
+// Taster einen Schritt weiter, unabhängig von `position`/`speed`, immer hart (kein Überblenden). Sobald
+// `advance` einmal benutzt wurde, übernimmt dieser Schrittzähler dauerhaft die Ausgabe (für Bühnensteuerung
+// per Knopf statt nur Zeit/LFO); `mode` entscheidet dabei genauso über Loop/Pendulum am Ende.
 class ColorRampKernel final : public values::ICpuKernel {
 public:
     void evaluate(const KernelContext& context, KernelOutputs& outputs) override {
@@ -101,7 +107,18 @@ public:
                                               in.color("color3", ColorRgba{0.0F, 1.0F, 0.3F, 1.0F}),
                                               in.color("color4", ColorRgba{1.0F, 1.0F, 1.0F, 1.0F})};
         const auto count = static_cast<std::size_t>(std::clamp<std::int64_t>(in.integer("count", 2), 2, 4));
-        const bool loop = in.boolean("loop", true);
+        const bool loop = in.integer("mode", 1) == 1;  // 0 Pendulum, 1 Loop
+
+        advanceEdge_.update(in.boolean("advance", false));
+        if (advanceEdge_.rose()) {
+            manualActive_ = true;
+            ++manualCounter_;
+        }
+        if (manualActive_) {
+            outputs.set("out", colors[manualIndex(manualCounter_, count, loop)]);
+            return;
+        }
+
         const double speed = in.number("speed", 0.0);
         if (std::isfinite(speed)) {
             phase_ += speed * context.time.delta.count();
@@ -136,21 +153,46 @@ public:
     }
 
 private:
+    // Loop: schlicht modulo. Pendulum: dieselbe periodische Spiegelung wie beim Sequencer (direction 2),
+    // zustandslos aus dem reinen Zähler berechnet statt eine eigene Richtung mitzuführen.
+    static std::size_t manualIndex(std::int64_t counter, std::size_t count, bool loop) {
+        if (count <= 1) {
+            return 0;
+        }
+        const auto n = static_cast<std::int64_t>(count);
+        if (loop) {
+            return static_cast<std::size_t>(((counter % n) + n) % n);
+        }
+        const std::int64_t period = std::max<std::int64_t>(2 * n - 2, 1);
+        const std::int64_t p = ((counter % period) + period) % period;
+        return static_cast<std::size_t>(p < n ? p : period - p);
+    }
+
     double phase_{0.0};  // aufsummierter Umlauf durch `speed`, 0..1
+    std::int64_t manualCounter_{0};
+    bool manualActive_{false};
+    EdgeDetector advanceEdge_;
 };
 
 }  // namespace
 
 values::CpuNodeDefinition colorRampNode() {
-    return cpuNode("wh.value.colorramp", "Color Ramp", "Value", {valueOutput("out", "Out", graph::PortType::Color)},
+    auto color3 = color("color3", "Color 3", ColorRgba{0.0F, 1.0F, 0.3F, 1.0F});
+    color3.visibleWhenAtLeastKey = "count";
+    color3.visibleWhenAtLeast = 3.0;
+    auto color4 = color("color4", "Color 4", ColorRgba{1.0F, 1.0F, 1.0F, 1.0F});
+    color4.visibleWhenAtLeastKey = "count";
+    color4.visibleWhenAtLeast = 4.0;
+    return cpuNode("wh.value.colorramp", "Color Ramp", "Value",
+                   {valueOutput("out", "Out", graph::PortType::Color)},
                    {integer("count", "Colors", 2, 2.0, 4.0), number("position", "Position", 0.0),
-                    number("speed", "Speed (cycles/s)", 0.2, -10.0, 10.0),
-                    toggle("loop", "Loop back to first color", true),
+                    number("speed", "Speed (cycles/s)", 0.0, -10.0, 10.0),
+                    choice("mode", "Mode", {"Pendulum", "Loop"}, 1),
                     toggle("hard", "Hard steps (no fade, like a sequencer)", false),
+                    toggle("advance", "Advance (each switch on steps, like a button)", false),
                     color("color1", "Color 1", ColorRgba{0.0F, 0.2F, 1.0F, 1.0F}),
-                    color("color2", "Color 2", ColorRgba{1.0F, 0.3F, 0.0F, 1.0F}),
-                    color("color3", "Color 3", ColorRgba{0.0F, 1.0F, 0.3F, 1.0F}),
-                    color("color4", "Color 4", ColorRgba{1.0F, 1.0F, 1.0F, 1.0F})},
+                    color("color2", "Color 2", ColorRgba{1.0F, 0.3F, 0.0F, 1.0F}), std::move(color3),
+                    std::move(color4)},
                    kernelFactory<ColorRampKernel>());
 }
 

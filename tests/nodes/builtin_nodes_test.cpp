@@ -300,3 +300,20 @@ TEST_CASE("Built-ins: Sequencer blendet Step 2..8 abhängig von steps aus") {
     }
     CHECK(checked == 8);
 }
+
+TEST_CASE("Built-ins: Color Ramp blendet Color 3/4 abhängig von count aus") {
+    Builtins builtins;
+    const graph::NodeDescriptor* ramp = builtins.registry->find("wh.value.colorramp");
+    REQUIRE(ramp != nullptr);
+    for (const graph::ParameterDescriptor& parameter : ramp->parameters) {
+        if (parameter.key == "color1" || parameter.key == "color2") {
+            CHECK(parameter.visibleWhenAtLeastKey.empty());
+        } else if (parameter.key == "color3") {
+            CHECK(parameter.visibleWhenAtLeastKey == "count");
+            CHECK(parameter.visibleWhenAtLeast == 3.0);
+        } else if (parameter.key == "color4") {
+            CHECK(parameter.visibleWhenAtLeastKey == "count");
+            CHECK(parameter.visibleWhenAtLeast == 4.0);
+        }
+    }
+}

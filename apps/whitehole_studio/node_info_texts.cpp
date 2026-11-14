@@ -158,7 +158,7 @@ std::span<const NodeInfoEntry> nodeInfoEntries() {
     {"wh.value.color",
      QT_TR_NOOP("Eine Farbe als Wert, mit Farbton-Verschiebung, Sättigung und Helligkeit. Speist Farb-Eingänge anderer Nodes.")},
     {"wh.value.colorramp",
-     QT_TR_NOOP("Farbverlauf aus bis zu vier Farben. „Position“ wählt die Stelle, oder er läuft von selbst im eingestellten Tempo. Mit „Hard steps“ springt er wie ein Sequencer statt zu überblenden.")},
+     QT_TR_NOOP("Farbverlauf aus bis zu vier Farben. „Position“ wählt die Stelle, oder er läuft von selbst im eingestellten Tempo. „Mode“ legt fest, was am Ende passiert: Pendulum kehrt um, Loop springt zurück zum Anfang. Mit „Hard steps“ springt er wie ein Sequencer statt zu überblenden. „Advance“ schaltet per Taster einen Schritt weiter, unabhängig von Position/Tempo, immer hart.")},
     {"wh.value.compare",
      QT_TR_NOOP("Vergleicht einen Wert mit einer Schwelle (mit Hysterese): darüber, darunter, zwischen zwei Grenzen oder gleich (mit Toleranz). Liefert Ja/Nein sowie Impulse beim Einschalten und Ausschalten.")},
     {"wh.value.envelope",

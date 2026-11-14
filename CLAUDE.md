@@ -82,19 +82,9 @@ darum.
 
 - Expanding Shapes: Squircle (Formen-Morph 0..1), Spiral, Color B / Hollow-Core-Füllung.
 - Labyrinth: statischer „Along walls"-Modus.
-- **Color Ramp: UX-Überarbeitung** (vom Nutzer als unintuitiv empfunden) — vom Nutzer bestätigt, als
-  Nächstes umzusetzen (konkreter als der Rest dieser Liste, aber noch nicht begonnen):
-  1. Ungenutzte Farbfelder (`color3`/`color4`) ausblenden, wenn `count` kleiner ist (gleiche Mechanik wie
-     beim Sequencer-Backlog-Punkt unten).
-  2. Default `speed` auf 0 statt 0,2, damit der Node beim Einfügen erst mal stillsteht.
-  3. „Loop back to first color" (Haken) durch eine Choice „Pendulum" / „Loop" ersetzen, die das
-     Pendel-Verhalten bei „aus" explizit macht statt implizit.
-  4. Neuer Trigger-Eingang „Advance"/„Click" (Boolean/Trigger-Port): springt bei jeder steigenden Flanke
-     einen Schritt zur nächsten Farbe weiter (wie ein manueller Taster/Button-Press), unabhängig von
-     `position`/`speed` — für Bühnensteuerung per Knopf statt nur Zeit/LFO. Verhält sich wie `hard` (kein
-     Überblenden) und müsste mit `loop`/Pendulum zusammenspielen (am Ende: zurück zum Anfang oder umkehren).
-  - Später, größer: Live-Vorschaustreifen im Node-Körper; noch später, noch größer: echte
-    Gradient-Stopp-Liste mit frei platzierbaren Stopps statt vier fester Slots.
+- **Color Ramp** (0.92.0 hat die vier konkreten UX-Punkte des Nutzers umgesetzt, siehe CHANGELOG): offen
+  bleiben nur die größeren, später gewünschten Ideen — Live-Vorschaustreifen im Node-Körper; noch später,
+  noch größer: echte Gradient-Stopp-Liste mit frei platzierbaren Stopps statt vier fester Slots.
 - **Echte Leinwandgröße als eingebauter Shader-Wert** (analog zu `@time`/`@volume`), damit Nodes das
   tatsächliche Breite/Höhe-Verhältnis kennen, statt es per Hand im Parameter `aspect` nachpflegen zu
   müssen. Auslöser: Nutzer bemerkte, dass **Labyrinth** sich bei falsch gepflegtem `aspect` je nach
