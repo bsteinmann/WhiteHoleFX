@@ -99,6 +99,15 @@ darum.
      Überblenden) und müsste mit `loop`/Pendulum zusammenspielen (am Ende: zurück zum Anfang oder umkehren).
   - Später, größer: Live-Vorschaustreifen im Node-Körper; noch später, noch größer: echte
     Gradient-Stopp-Liste mit frei platzierbaren Stopps statt vier fester Slots.
+- **Echte Leinwandgröße als eingebauter Shader-Wert** (analog zu `@time`/`@volume`), damit Nodes das
+  tatsächliche Breite/Höhe-Verhältnis kennen, statt es per Hand im Parameter `aspect` nachpflegen zu
+  müssen. Auslöser: Nutzer bemerkte, dass **Labyrinth** sich bei falsch gepflegtem `aspect` je nach
+  Auflösung verzieht (quadratische Zellen werden zu Rechtecken) — das ist aber kein Einzelfall, sondern
+  betrifft alle Nodes mit manuellem `aspect`-Parameter: **Kaleidoscope, Tunnel, Vortex** (`builtin_warps.cpp`),
+  **Text** (`builtin_text.cpp`), **Pong** (`builtin_pong.cpp`) und **Labyrinth** (`builtin_maze.cpp`). Wäre ein
+  Eingriff in Compiler/Feld-Node-Kern (neuer eingebauter Wert, der bei der Ausführung die reale
+  Leinwandgröße durchreicht), nicht nur an einem einzelnen Node — danach könnten diese Nodes den
+  `aspect`-Parameter ggf. ganz los werden (automatisch statt manuell korrekt).
 - DMX-Output-Nodes (0.88.0): Anzeige als Zeilen in der Patch-Tabelle, Live-Wertanzeige am Node — bewusst
   nicht gebaut, nur als mögliche Erweiterung im Gespräch.
 - **MIDI-Eingang/-Ausgang** (z. B. Akai APC Mini): nur besprochen, nicht begonnen. Überlegungen aus dem
