@@ -116,6 +116,11 @@ darum.
   - **Spectrum Bars** (`builtin_audio_field.cpp`) ist dagegen **nicht** betroffen — kein `aspect`, keine
     quadratischen Zellen; Balkenbreite/-lücke sind relativ zur Spaltenbreite definiert, Höhe nutzt `p.y`
     direkt. Kein Handlungsbedarf dort.
+  - **Auch Digital Rain** (`wh.generator.rain`, `builtin_generators.cpp`) gehört dazu: genau dasselbe Muster
+    wie Random Pixels — unabhängiger Parameter `columns` (Default 16), der von Hand zur echten Spaltenzahl
+    passen muss, sonst mehrere LEDs pro Tropfen-Spalte oder umgekehrt. Zusätzlich vom Nutzer gewünscht:
+    Sobald `columns` automatisch aus der echten Auflösung kommt, soll **ein Pixel pro Spalte Standard sein**
+    (Default-Verhalten „1:1", nicht grobkörniger).
 - DMX-Output-Nodes (0.88.0): Anzeige als Zeilen in der Patch-Tabelle, Live-Wertanzeige am Node — bewusst
   nicht gebaut, nur als mögliche Erweiterung im Gespräch.
 - **MIDI-Eingang/-Ausgang** (z. B. Akai APC Mini): nur besprochen, nicht begonnen. Überlegungen aus dem
