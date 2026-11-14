@@ -2247,8 +2247,8 @@ msgid "Pixel am Kabel vor der ersten LED, die nicht leuchten (zum Beispiel ein P
 msgstr "Píxeles en el cable antes del primer LED que no se encienden (por ejemplo un píxel usado como amplificador). Reciben negro y ocupan sus canales."
 
 #: node_info_texts.cpp:112
-msgid "Plasma: Weich ineinanderfließende, wabernde Farbflächen. Skalierung, Tempo und Tiefe einstellbar."
-msgstr "Plasma: softly flowing, wobbling color fields. Scale, speed and depth are adjustable."
+msgid "Plasma: Weich ineinanderfließende, wabernde Farbflächen. Skalierung, Tempo und Tiefe einstellbar. „Palette“ wählt die Farbgebung: „Classic“ ist der klassische Fixverlauf, dazu drei fertige Verläufe („Fire“, „Ocean“, „Neon“) sowie „Custom“ für die vier eigenen Farben color1..color4."
+msgstr "Plasma: superficies de color onduladas que fluyen suavemente. Escala, velocidad y profundidad ajustables. «Palette» elige la coloración: «Classic» es el degradado fijo original, además de tres degradados listos («Fire», «Ocean», «Neon») y «Custom» para tus propios cuatro colores, color1..color4."
 
 #: output_form.cpp:30
 msgid "Port (leer = Standard)"

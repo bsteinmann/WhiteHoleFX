@@ -32,7 +32,7 @@ beliebigen Koordinaten abtastet.
 |---|---|---|
 | `wh.generator.gradient` | Verlauf entlang einer Richtung; `angle` dreht sie in der xy-Ebene, `elevation` kippt sie zur z-Achse (90° = von hinten nach vorn) | 2D, 3D |
 | `wh.generator.noise` | Value-Noise, die Zeit läuft über die z-Achse. Alle Regler gehen von 0 bis 1 (direkt mit einem LFO fahrbar): `scale` (2 bis 64 Zellen über die Leinwand, nie die ganze Wand als eine Zelle), `speed` (0 bis 3 Zellen pro Sekunde, quadratisch: unten fein einstellbar), **`density`** (Anteil der Pixel, die an sind: 0 alles aus, 1 alles an, 0,5 die Hälfte), `softness` (0 harte Kante, 1 weich), `colorA` (aus) und `colorB` (an), beide auch von Color-Nodes speisbar | 3D |
-| `wh.generator.plasma` | klassisches Plasma; `depth` > 0 legt die Wellen auch durch z (0 = in jeder Ebene gleich) | 2D, 3D |
+| `wh.generator.plasma` | klassisches Plasma; `depth` > 0 legt die Wellen auch durch z (0 = in jeder Ebene gleich); `palette` wählt die Farbgebung (Classic, Fire, Ocean, Neon, oder Custom mit `color1`–`color4`) | 2D, 3D |
 | `wh.generator.sphere` | Kugel mit weichem Rand, Mittelpunkt und Radius einstellbar; `space` *Auto* (Standard) zeigt auf einer flachen Matrix einen Kreis, bei räumlicher Anlage eine Kugel | 2D, 3D |
 | `wh.generator.wave` | ebene Welle entlang einer 3D-Richtung | 3D |
 | `wh.generator.rain` | „Digital Rain“: fallende Pixel mit Spur (Spalten, Tempo, Spurlänge, Dichte, Kopf-/Spurfarbe); die Spur ist durchsichtig und lässt sich über andere Effekte legen. Im Cube fallen Säulen in x/z | 3D |

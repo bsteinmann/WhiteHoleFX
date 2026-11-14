@@ -2247,8 +2247,8 @@ msgid "Pixel am Kabel vor der ersten LED, die nicht leuchten (zum Beispiel ein P
 msgstr "Pixels on the cable before the first LED that do not light up (for example a pixel used as a signal booster). They receive black and occupy their channels."
 
 #: node_info_texts.cpp:112
-msgid "Plasma: Weich ineinanderfließende, wabernde Farbflächen. Skalierung, Tempo und Tiefe einstellbar."
-msgstr "Plasma: softly flowing, wobbling color fields. Scale, speed and depth are adjustable."
+msgid "Plasma: Weich ineinanderfließende, wabernde Farbflächen. Skalierung, Tempo und Tiefe einstellbar. „Palette“ wählt die Farbgebung: „Classic“ ist der klassische Fixverlauf, dazu drei fertige Verläufe („Fire“, „Ocean“, „Neon“) sowie „Custom“ für die vier eigenen Farben color1..color4."
+msgstr "Plasma: softly flowing, undulating color fields. Scale, speed and depth adjustable. \"Palette\" picks the coloring: \"Classic\" is the original fixed gradient, plus three ready-made gradients (\"Fire\", \"Ocean\", \"Neon\") and \"Custom\" for your own four colors, color1..color4."
 
 #: output_form.cpp:30
 msgid "Port (leer = Standard)"

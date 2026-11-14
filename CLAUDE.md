@@ -128,9 +128,6 @@ darum.
   Star Trek/Star Wars — Sterne, die radial von der Mitte weg zu langen Strichen/Streifen werden, statt
   Punkte, die nur drehen/funkeln. Wahrscheinlich ein neuer Modus oder eigener Parameter-Satz (Richtung radial
   statt linear, Streifenlänge abhängig von Geschwindigkeit/Abstand zur Mitte), noch nicht durchdacht.
-- **Plasma-Node: Farben erweitern** (`wh.generator.plasma`, `builtin_generators.cpp`): aktuell keine
-  Farbparameter, nur der klassische Fixverlauf (drei phasenverschobene Sinus-Kanäle direkt als RGB, siehe
-  `kPlasmaBody`). Gewünscht: Color-Eingänge dazu plus ein paar fertige Paletten zur Auswahl.
 - **MIDI-Eingang/-Ausgang** (z. B. Akai APC Mini): nur besprochen, nicht begonnen. Überlegungen aus dem
   Gespräch:
   - *Bibliothek:* RtMidi — C++, cross-platform (ALSA/WinMM), passt zum bestehenden Muster, mit dem

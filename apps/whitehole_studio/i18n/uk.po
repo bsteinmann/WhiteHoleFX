@@ -2247,8 +2247,8 @@ msgid "Pixel am Kabel vor der ersten LED, die nicht leuchten (zum Beispiel ein P
 msgstr "Пікселі на кабелі перед першим світлодіодом, які не світяться (наприклад, піксель-підсилювач сигналу). Вони отримують чорний і займають свої канали."
 
 #: node_info_texts.cpp:112
-msgid "Plasma: Weich ineinanderfließende, wabernde Farbflächen. Skalierung, Tempo und Tiefe einstellbar."
-msgstr "Плазма: м'яко перетікаючі, хвилясті кольорові плями. Масштаб, темп і глибина налаштовуються."
+msgid "Plasma: Weich ineinanderfließende, wabernde Farbflächen. Skalierung, Tempo und Tiefe einstellbar. „Palette“ wählt die Farbgebung: „Classic“ ist der klassische Fixverlauf, dazu drei fertige Verläufe („Fire“, „Ocean“, „Neon“) sowie „Custom“ für die vier eigenen Farben color1..color4."
+msgstr "Плазма: м'яко перетікаючі, хвилясті кольорові поля. Масштаб, швидкість і глибина регулюються. «Palette» вибирає розфарбування: «Classic» — це первинний фіксований градієнт, а також три готові градієнти («Fire», «Ocean», «Neon») і «Custom» для власних чотирьох кольорів, color1..color4."
 
 #: output_form.cpp:30
 msgid "Port (leer = Standard)"

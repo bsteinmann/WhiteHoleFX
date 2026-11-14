@@ -109,7 +109,7 @@ std::span<const NodeInfoEntry> nodeInfoEntries() {
     {"wh.generator.pong",
      QT_TR_NOOP("Zeichnet ein Pong-Spiel (Ball, Schläger, Mittellinie, Punkte als einzelne LEDs) aus den Werten des Nodes „Pong“. Seitenverhältnis und Randweichheit einstellbar.")},
     {"wh.generator.plasma",
-     QT_TR_NOOP("Plasma: Weich ineinanderfließende, wabernde Farbflächen. Skalierung, Tempo und Tiefe einstellbar.")},
+     QT_TR_NOOP("Plasma: Weich ineinanderfließende, wabernde Farbflächen. Skalierung, Tempo und Tiefe einstellbar. „Palette“ wählt die Farbgebung: „Classic“ ist der klassische Fixverlauf, dazu drei fertige Verläufe („Fire“, „Ocean“, „Neon“) sowie „Custom“ für die vier eigenen Farben color1..color4.")},
     {"wh.generator.position",
      QT_TR_NOOP("Testbild für den Aufbau: x wird rot, y grün, z blau. So sieht man, welche Seite wo liegt und ob Verkabelung und Startecke stimmen.")},
     {"wh.generator.randompixels",

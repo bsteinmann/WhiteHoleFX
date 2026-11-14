@@ -2,6 +2,11 @@
 
 ## 0.92.0
 
+- **Plasma: Farben erweitert.** Neuer Parameter `palette`: „Classic" (Standard, bitgenau wie bisher) sowie
+  drei fertige Verläufe („Fire", „Ocean", „Neon") und „Custom" für vier eigene Farbeingänge
+  (`color1`–`color4`), durch die das Plasma dann zyklisch blendet statt durch den klassischen
+  Fixverlauf. Keine bestehenden Projektdateien betroffen (neue Parameter mit Standardwerten, die das
+  bisherige Aussehen exakt erhalten).
 - **Color Ramp: UX-Überarbeitung.** `color3`/`color4` blendet das Parameterfenster aus, solange `count`
   kleiner ist (wie bei den Sequencer-Step-Reglern). Standard-`speed` jetzt 0 statt 0,2, damit der Node
   beim Einfügen erst mal stillsteht. Der Haken „Loop back to first color" ist jetzt die Auswahl **`mode`**

@@ -75,9 +75,15 @@ let cb = @param(colorB);
 let mixed = mix(vec4<f32>(ca.rgb * ca.a, ca.a), vec4<f32>(cb.rgb * cb.a, cb.a), m);
 return vec4<f32>(mixed.rgb / max(mixed.a, 0.000001), mixed.a);)wgsl";
 
-// Klassisches Plasma: Summe mehrerer Sinuswellen, in drei phasenverschobene Kanäle gelegt.
-// `depth` legt die Wellen auch durch die z-Achse: z = p.z * scale * depth verschiebt die Phase der Sinusterme,
-// bei 0 (Standard) ist das Plasma überall in z gleich, also wie auf einer 2D-Leinwand.
+// Klassisches Plasma: Summe mehrerer Sinuswellen. `depth` legt die Wellen auch durch die z-Achse:
+// z = p.z * scale * depth verschiebt die Phase der Sinusterme, bei 0 (Standard) ist das Plasma überall
+// in z gleich, also wie auf einer 2D-Leinwand.
+//
+// `palette` wählt die Farbgebung: "Classic" ist der ursprüngliche Fixverlauf (drei phasenverschobene
+// Sinus-Kanäle direkt als RGB, Standard, bitgenau wie vorher) sowie drei weitere fertige Verläufe
+// ("Fire", "Ocean", "Neon"); "Custom" blendet stattdessen zyklisch durch die vier Farbeingänge
+// color1..color4 (wie bei Color Ramp im Loop-Modus). Der Wellenwert wird dafür auf eine Phase 0..1
+// abgebildet (ein Sinus-Durchlauf = ein voller Umlauf durch die vier Farben).
 constexpr const char* kPlasmaBody =
     R"wgsl(let s = @param(scale);
 let t = @time * @param(speed);
@@ -85,7 +91,26 @@ let q = p * s;
 let z = q.z * @param(depth);
 let v = sin(q.x + t + z) + sin(q.y * 1.3 + t * 1.1 + z * 0.7) + sin((q.x + q.y + t + z) * 0.7) + sin(length(q.xy - vec2<f32>(0.5 * s)) + t - z);
 let w = v * 1.5707963;
-return vec4<f32>(0.5 + 0.5 * sin(w), 0.5 + 0.5 * sin(w + 2.0943951), 0.5 + 0.5 * sin(w + 4.1887902), 1.0);)wgsl";
+let palette = i32(@param(palette));
+if (palette == 0) {
+    return vec4<f32>(0.5 + 0.5 * sin(w), 0.5 + 0.5 * sin(w + 2.0943951), 0.5 + 0.5 * sin(w + 4.1887902), 1.0);
+}
+var stops = array<vec4<f32>, 4>(vec4<f32>(0.15, 0.0, 0.0, 1.0), vec4<f32>(0.8, 0.15, 0.0, 1.0),
+                                vec4<f32>(1.0, 0.6, 0.0, 1.0), vec4<f32>(1.0, 0.95, 0.5, 1.0));  // Fire
+if (palette == 2) {
+    stops = array<vec4<f32>, 4>(vec4<f32>(0.0, 0.05, 0.25, 1.0), vec4<f32>(0.0, 0.35, 0.55, 1.0),
+                                vec4<f32>(0.0, 0.75, 0.7, 1.0), vec4<f32>(0.75, 1.0, 0.95, 1.0));  // Ocean
+} else if (palette == 3) {
+    stops = array<vec4<f32>, 4>(vec4<f32>(0.6, 0.0, 0.7, 1.0), vec4<f32>(0.0, 0.9, 0.9, 1.0),
+                                vec4<f32>(0.1, 0.9, 0.2, 1.0), vec4<f32>(1.0, 0.95, 0.1, 1.0));  // Neon
+} else if (palette == 4) {
+    stops = array<vec4<f32>, 4>(@param(color1), @param(color2), @param(color3), @param(color4));  // Custom
+}
+let tt = fract(w / 6.2831853) * 4.0;
+let i0 = u32(tt) % 4u;
+let i1 = (i0 + 1u) % 4u;
+let f = tt - floor(tt);
+return mix(stops[i0], stops[i1], f);)wgsl";
 
 // Kugel im Raum: innen colorInside, außen colorOutside, dazwischen ein weicher Rand.
 // Der Abstand wird in Einheitswürfel-Koordinaten gemessen; bei der Normalisierung
@@ -211,10 +236,16 @@ std::vector<compiler::NodeDefinition> generatorNodes() {
                                color("colorB", "Color B (on)", ColorRgba{1.0F, 1.0F, 1.0F, 1.0F})},
                               kNoiseBody, kNoisePrelude));
 
-    nodes.push_back(fieldNode("wh.generator.plasma", "Plasma", "Generators", {fieldOutput()},
-                              {number("scale", "Scale", 3.0, 0.1, 64.0), number("speed", "Speed", 1.0, -20.0, 20.0),
-                               number("depth", "Depth (waves along z)", 0.0, 0.0, 4.0)},
-                              kPlasmaBody));
+    nodes.push_back(fieldNode(
+        "wh.generator.plasma", "Plasma", "Generators", {fieldOutput()},
+        {number("scale", "Scale", 3.0, 0.1, 64.0), number("speed", "Speed", 1.0, -20.0, 20.0),
+         number("depth", "Depth (waves along z)", 0.0, 0.0, 4.0),
+         choice("palette", "Palette", {"Classic", "Fire", "Ocean", "Neon", "Custom"}),
+         color("color1", "Custom color 1", ColorRgba{0.0F, 0.2F, 1.0F, 1.0F}),
+         color("color2", "Custom color 2", ColorRgba{1.0F, 0.0F, 0.6F, 1.0F}),
+         color("color3", "Custom color 3", ColorRgba{1.0F, 0.6F, 0.0F, 1.0F}),
+         color("color4", "Custom color 4", ColorRgba{1.0F, 1.0F, 1.0F, 1.0F})},
+        kPlasmaBody, kColorPrelude));
 
     nodes.push_back(fieldNode(
         "wh.generator.sphere", "Sphere", "Generators", {fieldOutput()},

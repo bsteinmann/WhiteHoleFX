@@ -2247,7 +2247,7 @@ msgid "Pixel am Kabel vor der ersten LED, die nicht leuchten (zum Beispiel ein P
 msgstr ""
 
 #: node_info_texts.cpp:112
-msgid "Plasma: Weich ineinanderfließende, wabernde Farbflächen. Skalierung, Tempo und Tiefe einstellbar."
+msgid "Plasma: Weich ineinanderfließende, wabernde Farbflächen. Skalierung, Tempo und Tiefe einstellbar. „Palette“ wählt die Farbgebung: „Classic“ ist der klassische Fixverlauf, dazu drei fertige Verläufe („Fire“, „Ocean“, „Neon“) sowie „Custom“ für die vier eigenen Farben color1..color4."
 msgstr ""
 
 #: output_form.cpp:30

@@ -246,3 +246,24 @@ TEST_CASE("Plasma: depth 0 ist in z überall gleich, depth > 0 unterscheidet die
     CHECK(spread(0.0) < 1e-4F);
     CHECK(spread(2.0) > 0.01F);
 }
+
+TEST_CASE("Plasma: Custom-Palette benutzt die vier Farbeingänge", "[gpu_device][nodes][volume]") {
+    // Alle vier Stützfarben gleich: welcher Index/Blendfaktor auch gewählt wird, das Ergebnis muss
+    // überall exakt diese Farbe sein. Prüft, dass "palette" wirklich auf color1..color4 umschaltet.
+    REQUIRE_DEVICE();
+    auto rig = cubeRig();
+    const NodeId plasma = rig->lab.add("wh.generator.plasma");
+    rig->lab.set(plasma, "palette", std::int64_t{4});  // Custom
+    const ColorRgba flat{0.2F, 0.6F, 0.9F, 1.0F};
+    rig->lab.set(plasma, "color1", flat);
+    rig->lab.set(plasma, "color2", flat);
+    rig->lab.set(plasma, "color3", flat);
+    rig->lab.set(plasma, "color4", flat);
+    const std::vector<ColorRgba> colors = sample(*device, *rig, plasma, 0.5);
+    REQUIRE_FALSE(colors.empty());
+    for (const ColorRgba& c : colors) {
+        CHECK(closeEnough(c.r, flat.r));
+        CHECK(closeEnough(c.g, flat.g));
+        CHECK(closeEnough(c.b, flat.b));
+    }
+}
