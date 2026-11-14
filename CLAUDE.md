@@ -82,10 +82,6 @@ darum.
 
 - Expanding Shapes: Squircle (Formen-Morph 0..1), Spiral, Color B / Hollow-Core-Füllung.
 - Labyrinth: statischer „Along walls"-Modus.
-- **Node `wh.value.color` umbenennen** von „Color" zu „Color Adjust" (Anzeigename, Node-ID bleibt gleich —
-  bestehende Projekte nicht betroffen). Grund: Name war missverständlich, der Node macht HSV-Verstellung
-  (Hue/Saturation/Brightness) auf einer Grundfarbe, nicht nur eine reine Farbwahl; leicht zu verwechseln mit
-  Color Ramp.
 - **Color Ramp: UX-Überarbeitung** (vom Nutzer als unintuitiv empfunden) — vom Nutzer bestätigt, als
   Nächstes umzusetzen (konkreter als der Rest dieser Liste, aber noch nicht begonnen):
   1. Ungenutzte Farbfelder (`color3`/`color4`) ausblenden, wenn `count` kleiner ist (gleiche Mechanik wie

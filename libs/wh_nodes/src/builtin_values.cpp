@@ -154,7 +154,7 @@ std::vector<values::CpuNodeDefinition> valueNodes() {
                             {valueOutput("out", "Out", PortType::Scalar)},
                             {number("value", "Value", 0.0)}, kernelFactory<NumberKernel>()));
 
-    nodes.push_back(cpuNode("wh.value.color", "Color", "Value",
+    nodes.push_back(cpuNode("wh.value.color", "Color (HSV)", "Value",
                             {valueOutput("out", "Out", PortType::Color)},
                             {color("color", "Color", ColorRgba{1.0F, 1.0F, 1.0F, 1.0F}),
                              number("hue", "Hue shift (turns)", 0.0), number("saturation", "Saturation", 1.0, 0.0, 1.0),

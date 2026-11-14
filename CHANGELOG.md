@@ -1,5 +1,13 @@
 # Änderungen
 
+## 0.92.0
+
+- **Node „Color" umbenannt zu „Color (HSV)".** Reine Anzeigeänderung bei `wh.value.color` (Node-ID und
+  Verhalten unverändert, bestehende Projekte sind nicht betroffen). Grund: Der Node macht eine HSV-Verstellung
+  (Farbton/Sättigung/Helligkeit) auf einer Grundfarbe, nicht nur eine reine Farbwahl — der alte Name war
+  leicht mit Color Ramp zu verwechseln. „Color Adjust" war bereits durch den gleichnamigen Field-Node
+  (`wh.modifier.coloradjust`, Effects) belegt, darum der abweichende Name gegenüber dem ursprünglichen Plan.
+
 ## 0.91.0
 
 - **DMX-Ausgabe: interner Kanal-Pool statt Controller im Node.** `wh.output.dmx` und `wh.output.dmxcolor`
