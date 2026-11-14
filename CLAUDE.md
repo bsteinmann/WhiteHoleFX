@@ -130,6 +130,12 @@ darum.
   Cue/Look-System (`cue_dialog.cpp`, `cue_panel.cpp`) und den DMX-Eingang (`wh_input`, DMX-Eingang-Seite in
   den Einstellungen) — noch nicht untersucht, wie genau Look-Auswahl per DMX-Wert mit der bestehenden
   Cue-Reihenfolge zusammenspielt.
+- **Starfield: Warp-Effekt** (`wh.generator.starfield`, `builtin_shapes.cpp`): aktuell ein statisches
+  Punktraster mit Funkeln und einer einfachen Drift in eine Richtung (`kStarfieldBody`, Parameter
+  `cells`/`density`/`twinkle`/`drift`). Gewünscht: eher wie der Sprung auf Warp-/Hyperraum-Geschwindigkeit in
+  Star Trek/Star Wars — Sterne, die radial von der Mitte weg zu langen Strichen/Streifen werden, statt
+  Punkte, die nur drehen/funkeln. Wahrscheinlich ein neuer Modus oder eigener Parameter-Satz (Richtung radial
+  statt linear, Streifenlänge abhängig von Geschwindigkeit/Abstand zur Mitte), noch nicht durchdacht.
 - **Plasma-Node: Farben erweitern** (`wh.generator.plasma`, `builtin_generators.cpp`): aktuell keine
   Farbparameter, nur der klassische Fixverlauf (drei phasenverschobene Sinus-Kanäle direkt als RGB, siehe
   `kPlasmaBody`). Gewünscht: Color-Eingänge dazu plus ein paar fertige Paletten zur Auswahl.
