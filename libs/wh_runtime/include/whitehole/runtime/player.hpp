@@ -286,6 +286,12 @@ public:
     /// Fehler: NotFound (keine solche Nummer), InvalidArgument (Ziel in Benutzung).
     Result<void> removeDestination(std::size_t index);
 
+    /// Ersetzt die Liste der dmxpatch-Einträge (interner Kanal-Pool der DMX-Output-Nodes auf echte Ziele
+    /// abgebildet, siehe docs/output.md). Validiert wie beim Laden: Ziel muss existieren, kein DDP, Universe/Kanal/
+    /// interner Kanal im gültigen Bereich, keine zwei Einträge mit überschneidendem Pool-Bereich
+    /// (OutputPipeline::create, Fehler InvalidArgument/AlreadyExists); bei Ablehnung bleibt alles unverändert.
+    Result<void> setDmxPatches(std::vector<output::DmxChannelPatch> patches);
+
     /// Ein Patch mit dem ersten freien Universe hinter allen Art-Net/sACN-Patches auf Ziel 0
     /// (Art-Net, Reihenfolge RGB). `leds` ist die Zahl der LEDs des neuen Fixtures; der Vorschlag
     /// geht davon aus, dass je Universe 170 LEDs passen. Ohne Projekt Universe 0.

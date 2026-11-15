@@ -1,8 +1,9 @@
 // output_page.hpp: Seite "Ausgabe" im Stage-Config-Fenster: Ziele, Einstellungen und der Patch aller Fixtures.
 //
-// Warum es diese Datei gibt: Wohin die Daten gehen (Controller-Adressen) und welches Fixture auf welches Universe sendet,
-// gehört zusammen und wird beim Einrichten der Ausgabe gebraucht, nicht beim Anordnen der Fixtures. Die Seite fasst das
-// bisherige Ausgabeformular (Ziele, Bildrate ...) und die neue Patch-Tabelle (ein Fixture je Zeile) zusammen.
+// Warum es diese Datei gibt: Wohin die Daten gehen (Controller-Adressen), welches Fixture auf welches Universe sendet und
+// wohin der interne DMX-Kanal-Pool der Output-Nodes gepatcht ist, gehört zusammen und wird beim Einrichten der Ausgabe
+// gebraucht, nicht beim Anordnen der Fixtures. Die Seite fasst das Ausgabeformular (Ziele, Bildrate ...), die
+// Fixture-Patch-Tabelle (ein Fixture je Zeile) und die DMX-Kanal-Pool-Tabelle (dmx_patch_table.hpp) zusammen.
 #pragma once
 
 #include <QString>
@@ -14,6 +15,7 @@ namespace whitehole::studio {
 
 class OutputForm;
 class PatchTable;
+class DmxPatchTable;
 
 class OutputPage : public QWidget {
     Q_OBJECT
@@ -41,6 +43,7 @@ protected:
 private:
     OutputForm* form_;
     PatchTable* patches_;
+    DmxPatchTable* dmxPatches_;
     bool dirty_{false};
     bool editing_{false};  // Änderung kommt von dieser Seite: die Zellen nicht unter dem Cursor austauschen
 };

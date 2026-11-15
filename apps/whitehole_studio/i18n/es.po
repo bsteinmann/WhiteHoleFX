@@ -550,6 +550,10 @@ msgstr "Vista"
 msgid "Ansicht von vorn: Fixtures verschieben, Bereich aufziehen"
 msgstr "Vista frontal: mover fixtures, arrastrar un área"
 
+#: dmx_patch_table.cpp:44
+msgid "Anzahl"
+msgstr "Cantidad"
+
 #: fixture_form.cpp:182 shape_form.cpp:134
 msgid "Anzahl x y z"
 msgstr "Cantidad x y z"
@@ -561,6 +565,10 @@ msgstr "Art-Net"
 #: settings_dialog.cpp:97
 msgid "Art-Net empfangen"
 msgstr "Recibir Art-Net"
+
+#: dmx_patch_table.cpp:51
+msgid "Art-Net zählt Universen ab 0 (bis 32767), sACN ab 1 (bis 63999)."
+msgstr "Art-Net cuenta los universos desde 0 (hasta 32767), sACN desde 1 (hasta 63999)."
 
 #: patch_table.cpp:60
 msgid "Art-Net zählt Universen ab 0 (bis 32767), sACN ab 1 (bis 63999). Bei DDP gibt es keine Universen."
@@ -830,7 +838,7 @@ msgstr "Byte %1–%2"
 msgid "Bänder aus Licht laufen die gewählte Achse entlang. „Frequency“ ist die Zahl der Wellen über die Länge, „Sharpness“ macht aus der weichen Welle schmale Pulse. Für Strips."
 msgstr "Bandas de luz recorren el eje elegido. «Frequency» es el número de ondas a lo largo, «Sharpness» convierte la onda suave en pulsos estrechos. Para tiras."
 
-#: output_form.cpp:26 patch_table.cpp:48
+#: dmx_patch_table.cpp:44 output_form.cpp:26 patch_table.cpp:48
 msgid "Controller"
 msgstr "Controlador"
 
@@ -977,6 +985,10 @@ msgstr "Añadir el efecto actual a la lista como look (Ctrl+L)"
 #: node_info_texts.cpp:151
 msgid "Der Ausgang: Was hier ankommt, wird auf die LEDs gesendet. Mit „Mode“ in einen Bereich skalieren oder als Fenster ausschneiden, plus Helligkeit."
 msgstr "The output: whatever arrives here is sent to the LEDs. \"Mode\" scales into an area or cuts a window; plus brightness."
+
+#: dmx_patch_table.cpp:50
+msgid "Der Controller bestimmt das Protokoll. Pool-Kanäle ohne Patch werden nicht gesendet."
+msgstr "El controlador determina el protocolo. Los canales del grupo sin patch no se envían."
 
 #: patch_table.cpp:57
 msgid "Der Controller bestimmt das Protokoll. Wechselst du auf einen Controller mit anderem Protokoll, wird die Universe-Nummer zwischen Art-Net und sACN um 1 verschoben."
@@ -1266,6 +1278,10 @@ msgstr "Quitar"
 msgid "Entfernt den gewählten Controller (ohne Auswahl den letzten). Benutzte Controller bleiben stehen."
 msgstr "Elimina el controlador seleccionado (el último si no hay selección). Los controladores en uso se quedan."
 
+#: dmx_patch_table.cpp:63
+msgid "Entfernt den gewählten Patch (ohne Auswahl den letzten)."
+msgstr "Elimina el patch seleccionado (el último si no hay selección)."
+
 #: output_form.cpp:62
 msgid "Entfernt einen Controller aus der Bibliothek (das Projekt bleibt unverändert)"
 msgstr "Elimina un controlador de la biblioteca (el proyecto no cambia)"
@@ -1286,9 +1302,17 @@ msgstr "Primer eje = el que avanza más rápido a lo largo del cable"
 msgid "Erste LED bei (Grad)"
 msgstr "Primer LED en (grados)"
 
-#: add_fixture_dialog.cpp:177 patch_table.cpp:49
+#: add_fixture_dialog.cpp:177 dmx_patch_table.cpp:45 patch_table.cpp:49
 msgid "Erster Kanal"
 msgstr "Primer canal"
+
+#: dmx_patch_table.cpp:47
+msgid "Erster Kanal im internen Kanal-Pool der DMX-Output-Nodes (1..512, siehe deren Parameter \"ch\")."
+msgstr "Primer canal del grupo de canales interno de los nodos de salida DMX (1..512, véase su parámetro «ch»)."
+
+#: dmx_patch_table.cpp:52
+msgid "Erster echter DMX-Kanal am Ziel (1..512)."
+msgstr "Primer canal DMX real en el destino (1..512)."
 
 #: layout_panel_types.cpp:54
 msgid "Es gibt keine Bauform \"%1\""
@@ -1509,6 +1533,10 @@ msgstr "Colocar los fixtures seleccionados uno junto a otro (el de la izquierda 
 #: output_form.cpp:47
 msgid "Gewählten Controller −"
 msgstr "Quitar controlador elegido −"
+
+#: dmx_patch_table.cpp:62
+msgid "Gewählten Patch −"
+msgstr "Patch seleccionado −"
 
 #: parameter_panel.cpp:125
 msgid "Gewählter Node"
@@ -1982,7 +2010,7 @@ msgstr "Centro"
 msgid "Modus"
 msgstr "Modo"
 
-#: output_form_library.cpp:133 patch_table.cpp:134
+#: dmx_patch_table.cpp:81 output_form_library.cpp:133 patch_table.cpp:134
 msgid "Multicast"
 msgstr "Multicast"
 
@@ -2222,6 +2250,10 @@ msgstr "Particles from an emitter: lifetime, speed, direction, spread, gravity a
 msgid "Patch (Ausgabe)"
 msgstr "Patch (salida)"
 
+#: dmx_patch_table.cpp:61
+msgid "Patch +"
+msgstr "Patch +"
+
 #: cue_dialog.cpp:83
 msgid "Pause zwischen Auslöser und Beginn der Überblendung"
 msgstr "Pausa entre el disparador y el inicio del fundido"
@@ -2249,6 +2281,10 @@ msgstr "Píxeles en el cable antes del primer LED que no se encienden (por ejemp
 #: node_info_texts.cpp:112
 msgid "Plasma: Weich ineinanderfließende, wabernde Farbflächen. Skalierung, Tempo und Tiefe einstellbar. „Palette“ wählt die Farbgebung: „Classic“ ist der klassische Fixverlauf, dazu drei fertige Verläufe („Fire“, „Ocean“, „Neon“) sowie „Custom“ für die vier eigenen Farben color1..color4."
 msgstr "Plasma: superficies de color onduladas que fluyen suavemente. Escala, velocidad y profundidad ajustables. «Palette» elige la coloración: «Classic» es el degradado fijo original, además de tres degradados listos («Fire», «Ocean», «Neon») y «Custom» para tus propios cuatro colores, color1..color4."
+
+#: dmx_patch_table.cpp:44
+msgid "Pool-Kanal (von)"
+msgstr "Canal del grupo (desde)"
 
 #: output_form.cpp:30
 msgid "Port (leer = Standard)"
@@ -2310,7 +2346,7 @@ msgstr "Guardar proyecto como"
 msgid "Projekt öffnen"
 msgstr "Abrir proyecto"
 
-#: add_fixture_dialog.cpp:174 output_form.cpp:30 patch_table.cpp:48
+#: add_fixture_dialog.cpp:174 dmx_patch_table.cpp:44 output_form.cpp:30
 msgid "Protokoll"
 msgstr "Protocolo"
 
@@ -2702,7 +2738,7 @@ msgstr "Final inesperado la última vez"
 msgid "Ungespeicherte Änderungen"
 msgstr "Cambios sin guardar"
 
-#: add_fixture_dialog.cpp:176
+#: add_fixture_dialog.cpp:176 dmx_patch_table.cpp:45
 msgid "Universe"
 msgstr "Universo"
 
@@ -2865,6 +2901,10 @@ msgstr "Cuántas vueltas da la espiral alrededor de la columna (0 = recto hacia 
 #: patch_table.cpp:56
 msgid "Wie viele Pixel nach je N LEDs übersprungen werden."
 msgstr "Cuántos píxeles se saltan tras cada N LED."
+
+#: dmx_patch_table.cpp:48
+msgid "Wie viele Pool-Kanäle ab dieser Stelle hierher gehen."
+msgstr "Cuántos canales del grupo a partir de aquí van a este patch."
 
 #: node_info_texts.cpp:78
 msgid "Wiederholt das Bild als Kacheln (Tiles X/Y/Z), auf Wunsch jede zweite gespiegelt."

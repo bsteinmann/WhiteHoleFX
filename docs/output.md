@@ -118,9 +118,15 @@ einträgt:
   Anzeigestreifen im Node-Körper selbst (`KernelOutputs::setMonitor`, Descriptor `liveView =
   graph::LiveView::Channels`, siehe `builtin_dmx_out.cpp`): ein Balken je gerade gesendetem Byte (0..255 auf
   0..1 skaliert), mit Kanalnummern statt der sonst üblichen Frequenzachse. Reine Anzeige, ohne Einfluss auf
-  die gesendeten Werte. Die Patch-Tabelle im Studio zeigt diese Nodes bisher nicht als eigene Zeilen (der
-  interne Kanal-Pool wird nur über die Projektdatei-Zeile `dmxpatch` gepflegt) — das ist ein eigener, noch
-  offener Schritt.
+  die gesendeten Werte.
+- **Eigene Tabelle für den Kanal-Pool im Studio (0.92.0):** Die Fixture-Patch-Tabelle (`patch_table.cpp`)
+  zeigt weiterhin nur Fixtures — der interne DMX-Kanal-Pool ist nicht an ein Fixture gebunden und bekommt
+  eine eigene Tabelle direkt darunter (`dmx_patch_table.hpp/cpp`, in `output_page.cpp` eingebunden). Anders
+  als bei Fixtures (eine Zeile je Fixture, immer vorhanden) legt der Nutzer hier beliebig viele, beliebig
+  geschnittene Pool-Bereiche per „Patch +"/„Gewählten Patch −" selbst an; jede Änderung schickt die ganze
+  Liste über `Player::setDmxPatches` (validiert wie beim Laden über `OutputPipeline::create`, siehe oben).
+  Spalten: Pool-Kanal (von), Anzahl, Controller, Protokoll (folgt dem gewählten Controller, nicht editierbar
+  — wie bei der Fixture-Patch-Tabelle), Universe, Erster Kanal.
 
 ## Bekannte Grenzen
 

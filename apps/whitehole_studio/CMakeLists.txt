@@ -22,6 +22,8 @@ add_executable(whitehole_studio
     output_page.hpp
     patch_table.cpp
     patch_table.hpp
+    dmx_patch_table.cpp
+    dmx_patch_table.hpp
     layout_panel_types.cpp
     layout_panel_grid.cpp
     layout_panel_library.cpp

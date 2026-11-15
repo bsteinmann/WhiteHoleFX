@@ -252,6 +252,13 @@ bei einem Fixture das Universe auf eines, in dem der gewählte Kanal schon beleg
 Fixture (eine Matrix und dahinter ein einzelner Pixel am selben Controller: Universe 1 eintragen, der Pixel liegt auf Kanal 298).
 Den Kanal kann man danach von Hand ändern; liegt er auf einem anderen Fixture, lehnt der Ausgabeplan es ab und nennt den Grund.
 
+**DMX-Kanal-Pool-Tabelle**, unter der Patch-Tabelle: der interne Kanal-Pool der DMX-Output-Nodes (`wh.output.dmx`,
+`wh.output.dmxcolor`, siehe docs/output.md) ist nicht an ein Fixture gebunden, darum eine eigene Tabelle statt eigener Zeilen
+in der Patch-Tabelle. Jede Zeile ist ein Pool-Bereich: **Pool-Kanal (von)**, **Anzahl**, **Controller** (Protokoll folgt dem
+Controller, wie bei Fixtures), **Universe**, **Erster Kanal**. „Patch +“ legt einen neuen Bereich an, „Gewählten Patch −“
+entfernt ihn (ohne Auswahl den letzten); beliebig viele, beliebig geschnittene Bereiche sind möglich. Pool-Kanäle ohne
+passenden Eintrag werden einfach nicht gesendet.
+
 **Controller-Bibliothek.** Unter der Controller-Tabelle speichert **In Bibliothek speichern** den gewählten Controller (Name, Protokoll, Adresse, Port) in `controller-library.whfx` im Benutzerverzeichnis (neben der Bauform-Bibliothek; Pfad im Tooltip; Umgebungsvariable `WHITEHOLEFX_CONTROLLER_LIBRARY` ersetzt ihn). Ohne Namen fragt das Studio danach; ein gleichnamiger Eintrag wird ersetzt. **Aus Bibliothek +** listet die gespeicherten Controller und fügt den gewählten als neuen Controller ein, **Auf gewählten anwenden** überschreibt stattdessen den in der Tabelle gewählten Controller (dasselbe Gerät mit anderen Einstellungen; die Patches bleiben darauf), **Aus Bibliothek löschen** entfernt einen Eintrag aus der Bibliothek, nicht aus dem Projekt. So hältst du verschiedene Aufbauten (zum Beispiel „Bühne“, „Proberaum“) bereit.
 
 Zahlenfelder übernehmen einen Wert bei Enter, Pfeiltasten oder Fokuswechsel. Jede Änderung wird

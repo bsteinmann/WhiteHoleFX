@@ -2,12 +2,19 @@
 
 ## 0.92.0
 
+- **DMX-Kanal-Pool: eigene Tabelle in der Ausgabe-Seite.** Zweiter und letzter Teil des Backlog-Punkts
+  „DMX-Output-Nodes": Der interne DMX-Kanal-Pool (`dmxpatch`-Einträge, auf echte Controller/Universe/Kanäle
+  abgebildet) ließ sich bisher nur per Hand in der Projektdatei pflegen. Jetzt gibt es dafür eine eigene
+  Tabelle unter der Fixture-Patch-Tabelle (`dmx_patch_table.hpp/cpp`): Zeilen für Pool-Bereiche per „Patch
+  +"/„Gewählten Patch −" anlegen und entfernen, Pool-Kanal, Anzahl, Controller, Universe und Kanal direkt
+  bearbeiten (Protokoll folgt dem gewählten Controller, wie bei Fixtures). Neuer `Player::setDmxPatches`
+  dafür; Validierung (Ziel muss existieren, kein DDP, Bereiche, keine Überschneidungen) kommt unverändert
+  aus `OutputPipeline::create`.
 - **DMX Out, DMX Color Out: Live-Wertanzeige im Node.** Beide Senken-Nodes (kein eigener Ausgang) zeigen
   jetzt im Node-Körper einen Anzeigestreifen mit einem Balken je gerade gesendetem DMX-Byte (Kanalnummern
   statt der sonst üblichen Frequenzachse) — analog zum Spektrum-Streifen der Audio-Nodes, nur ohne
   Ausgangsport als Anker (neuer `graph::LiveView::Channels`). Reine Anzeige, ohne Einfluss auf die
-  gesendeten Werte. Erster Teil des Backlog-Punkts „DMX-Output-Nodes"; die zweite Hälfte (eigene Zeilen in
-  der Patch-Tabelle für den internen Kanal-Pool) folgt in einem eigenen Schritt.
+  gesendeten Werte.
 - **Random Pixels, Digital Rain: `columns`/`rows` standardmäßig automatisch.** Letzter Schritt der
   „echte Leinwandgröße"-Umstellung: `columns`/`rows` (Random Pixels) bzw. `columns` (Digital Rain) stehen
   jetzt standardmäßig auf 0 und nehmen dann automatisch die echte Spalten-/Zeilenzahl der Leinwand

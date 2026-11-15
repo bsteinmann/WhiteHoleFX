@@ -550,6 +550,10 @@ msgstr ""
 msgid "Ansicht von vorn: Fixtures verschieben, Bereich aufziehen"
 msgstr ""
 
+#: dmx_patch_table.cpp:44
+msgid "Anzahl"
+msgstr ""
+
 #: fixture_form.cpp:182 shape_form.cpp:134
 msgid "Anzahl x y z"
 msgstr ""
@@ -560,6 +564,10 @@ msgstr ""
 
 #: settings_dialog.cpp:97
 msgid "Art-Net empfangen"
+msgstr ""
+
+#: dmx_patch_table.cpp:51
+msgid "Art-Net zählt Universen ab 0 (bis 32767), sACN ab 1 (bis 63999)."
 msgstr ""
 
 #: patch_table.cpp:60
@@ -830,7 +838,7 @@ msgstr ""
 msgid "Bänder aus Licht laufen die gewählte Achse entlang. „Frequency“ ist die Zahl der Wellen über die Länge, „Sharpness“ macht aus der weichen Welle schmale Pulse. Für Strips."
 msgstr ""
 
-#: output_form.cpp:26 patch_table.cpp:48
+#: dmx_patch_table.cpp:44 output_form.cpp:26 patch_table.cpp:48
 msgid "Controller"
 msgstr ""
 
@@ -976,6 +984,10 @@ msgstr ""
 
 #: node_info_texts.cpp:151
 msgid "Der Ausgang: Was hier ankommt, wird auf die LEDs gesendet. Mit „Mode“ in einen Bereich skalieren oder als Fenster ausschneiden, plus Helligkeit."
+msgstr ""
+
+#: dmx_patch_table.cpp:50
+msgid "Der Controller bestimmt das Protokoll. Pool-Kanäle ohne Patch werden nicht gesendet."
 msgstr ""
 
 #: patch_table.cpp:57
@@ -1266,6 +1278,10 @@ msgstr ""
 msgid "Entfernt den gewählten Controller (ohne Auswahl den letzten). Benutzte Controller bleiben stehen."
 msgstr ""
 
+#: dmx_patch_table.cpp:63
+msgid "Entfernt den gewählten Patch (ohne Auswahl den letzten)."
+msgstr ""
+
 #: output_form.cpp:62
 msgid "Entfernt einen Controller aus der Bibliothek (das Projekt bleibt unverändert)"
 msgstr ""
@@ -1286,8 +1302,16 @@ msgstr ""
 msgid "Erste LED bei (Grad)"
 msgstr ""
 
-#: add_fixture_dialog.cpp:177 patch_table.cpp:49
+#: add_fixture_dialog.cpp:177 dmx_patch_table.cpp:45 patch_table.cpp:49
 msgid "Erster Kanal"
+msgstr ""
+
+#: dmx_patch_table.cpp:47
+msgid "Erster Kanal im internen Kanal-Pool der DMX-Output-Nodes (1..512, siehe deren Parameter \"ch\")."
+msgstr ""
+
+#: dmx_patch_table.cpp:52
+msgid "Erster echter DMX-Kanal am Ziel (1..512)."
 msgstr ""
 
 #: layout_panel_types.cpp:54
@@ -1508,6 +1532,10 @@ msgstr ""
 
 #: output_form.cpp:47
 msgid "Gewählten Controller −"
+msgstr ""
+
+#: dmx_patch_table.cpp:62
+msgid "Gewählten Patch −"
 msgstr ""
 
 #: parameter_panel.cpp:125
@@ -1982,7 +2010,7 @@ msgstr ""
 msgid "Modus"
 msgstr ""
 
-#: output_form_library.cpp:133 patch_table.cpp:134
+#: dmx_patch_table.cpp:81 output_form_library.cpp:133 patch_table.cpp:134
 msgid "Multicast"
 msgstr ""
 
@@ -2222,6 +2250,10 @@ msgstr ""
 msgid "Patch (Ausgabe)"
 msgstr ""
 
+#: dmx_patch_table.cpp:61
+msgid "Patch +"
+msgstr ""
+
 #: cue_dialog.cpp:83
 msgid "Pause zwischen Auslöser und Beginn der Überblendung"
 msgstr ""
@@ -2248,6 +2280,10 @@ msgstr ""
 
 #: node_info_texts.cpp:112
 msgid "Plasma: Weich ineinanderfließende, wabernde Farbflächen. Skalierung, Tempo und Tiefe einstellbar. „Palette“ wählt die Farbgebung: „Classic“ ist der klassische Fixverlauf, dazu drei fertige Verläufe („Fire“, „Ocean“, „Neon“) sowie „Custom“ für die vier eigenen Farben color1..color4."
+msgstr ""
+
+#: dmx_patch_table.cpp:44
+msgid "Pool-Kanal (von)"
 msgstr ""
 
 #: output_form.cpp:30
@@ -2310,7 +2346,7 @@ msgstr ""
 msgid "Projekt öffnen"
 msgstr ""
 
-#: add_fixture_dialog.cpp:174 output_form.cpp:30 patch_table.cpp:48
+#: add_fixture_dialog.cpp:174 dmx_patch_table.cpp:44 output_form.cpp:30
 msgid "Protokoll"
 msgstr ""
 
@@ -2702,7 +2738,7 @@ msgstr ""
 msgid "Ungespeicherte Änderungen"
 msgstr ""
 
-#: add_fixture_dialog.cpp:176
+#: add_fixture_dialog.cpp:176 dmx_patch_table.cpp:45
 msgid "Universe"
 msgstr ""
 
@@ -2864,6 +2900,10 @@ msgstr ""
 
 #: patch_table.cpp:56
 msgid "Wie viele Pixel nach je N LEDs übersprungen werden."
+msgstr ""
+
+#: dmx_patch_table.cpp:48
+msgid "Wie viele Pool-Kanäle ab dieser Stelle hierher gehen."
 msgstr ""
 
 #: node_info_texts.cpp:78

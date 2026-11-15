@@ -135,6 +135,15 @@ Result<void> Player::setDestinations(std::vector<output::Destination> destinatio
     });
 }
 
+Result<void> Player::setDmxPatches(std::vector<output::DmxChannelPatch> patches) {
+    // Validierung (Ziel, Protokoll, Universe/Kanal/Pool-Bereich, Überschneidungen) übernimmt bereits
+    // OutputPipeline::create beim Neuaufbau in editProject; hier nur übernehmen, Rollback regelt den Rest.
+    return editProject({}, [&](project::Project& p) -> Result<void> {
+        p.dmxPatches = std::move(patches);
+        return {};
+    });
+}
+
 output::FixturePatch Player::suggestPatch(std::uint64_t leds) const {
     (void)leds;  // die Größe des neuen Fixtures bestimmt nur, was hinter ihm frei ist
     output::FixturePatch patch;

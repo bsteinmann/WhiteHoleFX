@@ -550,6 +550,10 @@ msgstr "Вигляд"
 msgid "Ansicht von vorn: Fixtures verschieben, Bereich aufziehen"
 msgstr "Вигляд спереду: переміщуйте фікстури, виділяйте область"
 
+#: dmx_patch_table.cpp:44
+msgid "Anzahl"
+msgstr "Кількість"
+
 #: fixture_form.cpp:182 shape_form.cpp:134
 msgid "Anzahl x y z"
 msgstr "Кількість x y z"
@@ -561,6 +565,10 @@ msgstr "Art-Net"
 #: settings_dialog.cpp:97
 msgid "Art-Net empfangen"
 msgstr "Приймати Art-Net"
+
+#: dmx_patch_table.cpp:51
+msgid "Art-Net zählt Universen ab 0 (bis 32767), sACN ab 1 (bis 63999)."
+msgstr "Art-Net рахує універси з 0 (до 32767), sACN з 1 (до 63999)."
 
 #: patch_table.cpp:60
 msgid "Art-Net zählt Universen ab 0 (bis 32767), sACN ab 1 (bis 63999). Bei DDP gibt es keine Universen."
@@ -830,7 +838,7 @@ msgstr "Байт %1–%2"
 msgid "Bänder aus Licht laufen die gewählte Achse entlang. „Frequency“ ist die Zahl der Wellen über die Länge, „Sharpness“ macht aus der weichen Welle schmale Pulse. Für Strips."
 msgstr "Смуги світла біжать уздовж вибраної осі. «Frequency» — кількість хвиль на довжині, «Sharpness» перетворює м’яку хвилю на вузькі імпульси. Для стрічок."
 
-#: output_form.cpp:26 patch_table.cpp:48
+#: dmx_patch_table.cpp:44 output_form.cpp:26 patch_table.cpp:48
 msgid "Controller"
 msgstr "Контролер"
 
@@ -977,6 +985,10 @@ msgstr "Додати поточний ефект до списку як Look (Ct
 #: node_info_texts.cpp:151
 msgid "Der Ausgang: Was hier ankommt, wird auf die LEDs gesendet. Mit „Mode“ in einen Bereich skalieren oder als Fenster ausschneiden, plus Helligkeit."
 msgstr "Вихід: усе, що сюди надходить, надсилається на LED. Через «Mode» масштабується в область або вирізається як вікно, плюс яскравість."
+
+#: dmx_patch_table.cpp:50
+msgid "Der Controller bestimmt das Protokoll. Pool-Kanäle ohne Patch werden nicht gesendet."
+msgstr "Протокол визначає контролер. Канали пулу без патчу не надсилаються."
 
 #: patch_table.cpp:57
 msgid "Der Controller bestimmt das Protokoll. Wechselst du auf einen Controller mit anderem Protokoll, wird die Universe-Nummer zwischen Art-Net und sACN um 1 verschoben."
@@ -1266,6 +1278,10 @@ msgstr "Прибрати"
 msgid "Entfernt den gewählten Controller (ohne Auswahl den letzten). Benutzte Controller bleiben stehen."
 msgstr "Видаляє вибраний контролер (останній, якщо нічого не вибрано). Використані контролери залишаються."
 
+#: dmx_patch_table.cpp:63
+msgid "Entfernt den gewählten Patch (ohne Auswahl den letzten)."
+msgstr "Видаляє вибраний патч (останній, якщо нічого не вибрано)."
+
 #: output_form.cpp:62
 msgid "Entfernt einen Controller aus der Bibliothek (das Projekt bleibt unverändert)"
 msgstr "Видаляє контролер з бібліотеки (проєкт не змінюється)"
@@ -1286,9 +1302,17 @@ msgstr "Перша вісь = біжить найшвидше вздовж ка�
 msgid "Erste LED bei (Grad)"
 msgstr "Перший світлодіод на (градусів)"
 
-#: add_fixture_dialog.cpp:177 patch_table.cpp:49
+#: add_fixture_dialog.cpp:177 dmx_patch_table.cpp:45 patch_table.cpp:49
 msgid "Erster Kanal"
 msgstr "Перший канал"
+
+#: dmx_patch_table.cpp:47
+msgid "Erster Kanal im internen Kanal-Pool der DMX-Output-Nodes (1..512, siehe deren Parameter \"ch\")."
+msgstr "Перший канал у внутрішньому пулі каналів вузлів виводу DMX (1..512, див. їх параметр «ch»)."
+
+#: dmx_patch_table.cpp:52
+msgid "Erster echter DMX-Kanal am Ziel (1..512)."
+msgstr "Перший справжній канал DMX на пристрої (1..512)."
 
 #: layout_panel_types.cpp:54
 msgid "Es gibt keine Bauform \"%1\""
@@ -1509,6 +1533,10 @@ msgstr "Розмістити вибрані фікстури в ряд по го
 #: output_form.cpp:47
 msgid "Gewählten Controller −"
 msgstr "Видалити вибраний контролер −"
+
+#: dmx_patch_table.cpp:62
+msgid "Gewählten Patch −"
+msgstr "Вибраний патч −"
 
 #: parameter_panel.cpp:125
 msgid "Gewählter Node"
@@ -1982,7 +2010,7 @@ msgstr "Центр"
 msgid "Modus"
 msgstr "Режим"
 
-#: output_form_library.cpp:133 patch_table.cpp:134
+#: dmx_patch_table.cpp:81 output_form_library.cpp:133 patch_table.cpp:134
 msgid "Multicast"
 msgstr "Multicast"
 
@@ -2222,6 +2250,10 @@ msgstr "Частинки від емітера: тривалість життя,
 msgid "Patch (Ausgabe)"
 msgstr "Patch (вивід)"
 
+#: dmx_patch_table.cpp:61
+msgid "Patch +"
+msgstr "Патч +"
+
 #: cue_dialog.cpp:83
 msgid "Pause zwischen Auslöser und Beginn der Überblendung"
 msgstr "Пауза між тригером і початком переходу"
@@ -2249,6 +2281,10 @@ msgstr "Пікселі на кабелі перед першим світлод�
 #: node_info_texts.cpp:112
 msgid "Plasma: Weich ineinanderfließende, wabernde Farbflächen. Skalierung, Tempo und Tiefe einstellbar. „Palette“ wählt die Farbgebung: „Classic“ ist der klassische Fixverlauf, dazu drei fertige Verläufe („Fire“, „Ocean“, „Neon“) sowie „Custom“ für die vier eigenen Farben color1..color4."
 msgstr "Плазма: м'яко перетікаючі, хвилясті кольорові поля. Масштаб, швидкість і глибина регулюються. «Palette» вибирає розфарбування: «Classic» — це первинний фіксований градієнт, а також три готові градієнти («Fire», «Ocean», «Neon») і «Custom» для власних чотирьох кольорів, color1..color4."
+
+#: dmx_patch_table.cpp:44
+msgid "Pool-Kanal (von)"
+msgstr "Канал пулу (від)"
 
 #: output_form.cpp:30
 msgid "Port (leer = Standard)"
@@ -2310,7 +2346,7 @@ msgstr "Зберегти проєкт як"
 msgid "Projekt öffnen"
 msgstr "Відкрити проєкт"
 
-#: add_fixture_dialog.cpp:174 output_form.cpp:30 patch_table.cpp:48
+#: add_fixture_dialog.cpp:174 dmx_patch_table.cpp:44 output_form.cpp:30
 msgid "Protokoll"
 msgstr "Протокол"
 
@@ -2702,7 +2738,7 @@ msgstr "Несподіване завершення минулого разу"
 msgid "Ungespeicherte Änderungen"
 msgstr "Незбережені зміни"
 
-#: add_fixture_dialog.cpp:176
+#: add_fixture_dialog.cpp:176 dmx_patch_table.cpp:45
 msgid "Universe"
 msgstr "Universe"
 
@@ -2865,6 +2901,10 @@ msgstr "Скільки разів спіраль обвиває колону (0 
 #: patch_table.cpp:56
 msgid "Wie viele Pixel nach je N LEDs übersprungen werden."
 msgstr "Скільки пікселів пропускається після кожних N світлодіодів."
+
+#: dmx_patch_table.cpp:48
+msgid "Wie viele Pool-Kanäle ab dieser Stelle hierher gehen."
+msgstr "Скільки каналів пулу, починаючи з цього місця, йде сюди."
 
 #: node_info_texts.cpp:78
 msgid "Wiederholt das Bild als Kacheln (Tiles X/Y/Z), auf Wunsch jede zweite gespiegelt."
