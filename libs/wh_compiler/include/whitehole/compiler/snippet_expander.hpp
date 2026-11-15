@@ -28,10 +28,14 @@ struct SnippetBindings {
     std::string time;
     /// @volume: WGSL-Ausdruck vom Typ bool, wahr bei einer räumlichen LED-Karte (Auto-Einstellung von "Space").
     std::string volume;
+    /// @aspect: WGSL-Ausdruck vom Typ f32, echtes Breite/Höhe-Verhältnis der Leinwand (x/y).
+    std::string aspect;
+    /// @aspectZ: WGSL-Ausdruck vom Typ f32, echtes Breite/Tiefe-Verhältnis der Leinwand (x/z), für Volume-Nodes.
+    std::string aspectZ;
 };
 
 /// Platzhalter: @in(port, koordinate), @param(schluessel), @spectrum(port, band), @text(schluessel),
-/// @textlen(schluessel), @time, @volume.
+/// @textlen(schluessel), @time, @volume, @aspect, @aspectZ.
 /// - Klammern in `koordinate` dürfen verschachtelt sein, auch weitere Platzhalter.
 /// - Alles außerhalb von Platzhaltern bleibt unverändert.
 /// Fehler (InvalidArgument): unbekannter Platzhalter, fehlende oder unpassende

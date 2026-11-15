@@ -2,6 +2,15 @@
 
 ## 0.92.0
 
+- **Compiler-Kern: echte Leinwandgröße als `@aspect`/`@aspectZ`.** Erster Schritt zum Verschwinden der
+  manuell gepflegten `aspect`-Parameter (Kaleidoscope, Tunnel, Vortex, Text, Pong, Labyrinth): Zwei neue,
+  für Node-Autoren eingebaute Shader-Werte (analog zu `@time`/`@volume`) liefern das tatsächliche
+  Breite/Höhe- bzw. Breite/Tiefe-Verhältnis der Leinwand — bei einer LED-Karte aus der umschließenden Box
+  aller Fixtures in Weltkoordinaten, bei der Canvas-Textur/Vorschau exakt aus deren Pixelauflösung. Ohne
+  bekannte Ausdehnung auf einer Achse bleibt das Verhältnis bei 1 (unverändertes Verhalten). Dieser Schritt
+  führt die Werte nur im Compiler/Executor ein und ändert noch keinen bestehenden Node — keine Breaking
+  Change. Die Umstellung der einzelnen `aspect`-Nodes (und von Random Pixels/Digital Rain auf eine echte
+  Spalten-/Zeilenzahl) folgt in eigenen, kleineren Schritten.
 - **Labyrinth: Along-walls-Modus.** Neuer Parameter `mode`: „Random walk" (Standard, bitgenau wie bisher)
   sowie „Along walls" — die Läufer laufen dabei nicht mehr zufällig mit Epochen-Neustart durchs Raster,
   sondern gleichmäßig auf einem festen, geschlossenen Rundweg am Rand entlang (die Form ändert sich nie,

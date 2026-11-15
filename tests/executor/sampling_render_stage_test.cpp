@@ -61,6 +61,20 @@ struct SamplingFixture {
 
 }  // namespace
 
+TEST_CASE("setMap meldet das echte Breite/Höhe-Verhältnis der Fixture-Box an den Shader") {
+    SamplingFixture fx{64};
+    REQUIRE(fx.stage->setGraph(fx.lab.graph).ok());
+    REQUIRE(fx.stage->setMap(bake(8, 4)).ok());  // Box 8x4x0 -> aspect 2, aspectZ 1 (flach)
+    fx.render(0.0);
+    compiler::FrameUniforms frame{};
+    const std::vector<std::byte> bytes =
+        fx.device.bufferBytes(bufferAt(fx.last(), compiler::kFieldBindGroup, compiler::kFrameBinding));
+    REQUIRE(bytes.size() == sizeof frame);
+    std::memcpy(&frame, bytes.data(), sizeof frame);
+    CHECK(frame.aspect == 2.0F);
+    CHECK(frame.aspectZ == 1.0F);
+}
+
 TEST_CASE("create legt Positions-, Farb-, Info- und Frame-Puffer an") {
     SamplingFixture fx{100};
     CHECK(fx.device.liveBufferCount() == 4U);

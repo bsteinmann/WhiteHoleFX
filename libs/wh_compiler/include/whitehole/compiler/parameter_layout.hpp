@@ -59,15 +59,22 @@ struct ParameterLayout {
     std::uint32_t sizeBytes{0};
 };
 
-/// Frame-Daten am Binding 0 (WGSL: struct WhFrame { time, delta, frame, volume }).
+/// Frame-Daten am Binding 0 (WGSL: struct WhFrame { time, delta, frame, volume, aspect, aspectZ }).
 struct FrameUniforms {
     float time{0.0F};
     float delta{0.0F};
     std::uint32_t frame{0};
     /// 1, wenn die LED-Karte räumlich ist (Ausdehnung in z); sonst 0. Der Platzhalter @volume liest es.
     std::uint32_t volume{0};
+    /// Echtes Breite/Höhe-Verhältnis der Leinwand in Weltkoordinaten (x/y der umschließenden Box bzw. der
+    /// Canvas-Textur), 1 ohne bekannte Ausdehnung. Der Platzhalter @aspect liest es - löst `aspect`-Parameter
+    /// ab, die das bisher von Hand nachpflegen mussten (siehe docs/field-nodes.md).
+    float aspect{1.0F};
+    /// Dasselbe für Breite/Tiefe (x/z), nur für Nodes im Würfel relevant; 1 bei einer flachen Karte.
+    /// Der Platzhalter @aspectZ liest es.
+    float aspectZ{1.0F};
 };
-static_assert(sizeof(FrameUniforms) == 16, "FrameUniforms muss dem WGSL-Struct WhFrame entsprechen");
+static_assert(sizeof(FrameUniforms) == 24, "FrameUniforms muss dem WGSL-Struct WhFrame entsprechen");
 
 /// Vergibt die Offsets nach den Layout-Regeln von WGSL (f32: 4/4, vec2: 8/8,
 /// vec3: 12 Bytes mit Ausrichtung 16, vec4: 16/16; Größe/Ausrichtung).

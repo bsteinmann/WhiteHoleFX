@@ -80,6 +80,16 @@ Result<std::string> expandSnippet(std::string_view body, const SnippetBindings& 
             i = nameEnd;
             continue;
         }
+        if (name == "aspect") {
+            result += bindings.aspect;
+            i = nameEnd;
+            continue;
+        }
+        if (name == "aspectZ") {
+            result += bindings.aspectZ;
+            i = nameEnd;
+            continue;
+        }
         if (name != "in" && name != "param" && name != "spectrum" && name != "text" && name != "textlen") {
             return invalid("unbekannter Platzhalter '@" + std::string{name} + "'");
         }

@@ -90,6 +90,14 @@ public:
     /// Meldet dem Shader, ob die LED-Karte räumlich ist (WhFrame.volume, Platzhalter @volume). Standard: nein.
     void setVolume(bool volume) noexcept { volume_ = volume; }
 
+    /// Meldet dem Shader die echten Seitenverhältnisse der Leinwand (WhFrame.aspect/aspectZ, Platzhalter
+    /// @aspect/@aspectZ). `aspectXY` = Breite/Höhe, `aspectXZ` = Breite/Tiefe (nur für Volume-Nodes
+    /// relevant). Standard: beide 1 (quadratisch/flach), wie vor Einführung dieser Werte.
+    void setAspect(float aspectXY, float aspectXZ) noexcept {
+        aspect_ = aspectXY;
+        aspectZ_ = aspectXZ;
+    }
+
     [[nodiscard]] bool ready() const noexcept { return pipeline_.has_value() && graph_.has_value(); }
     [[nodiscard]] const std::optional<Error>& graphError() const noexcept { return graphError_; }
     [[nodiscard]] const std::optional<Error>& frameError() const noexcept { return frameError_; }
@@ -115,6 +123,8 @@ private:
 
     gpu::BufferHandle frameBuffer_;
     bool volume_{false};
+    float aspect_{1.0F};
+    float aspectZ_{1.0F};
 
     std::optional<graph::Graph> graph_;
     compiler::ParameterLayout layout_;

@@ -14,6 +14,12 @@ fn wh_field(p: vec3<f32>) -> vec4<f32>
 
 - `p` liegt in [0,1]³. Bei einem 2D-Canvas ist `p.z = 0`.
 - `@volume` (nur für Node-Autoren) ist wahr, wenn die LED-Karte Ausdehnung in z hat. Nodes mit `space` *Auto* (Sphere, Box, Ripples, Metaballs, Starfield, Fading Pixels, Expanding Shapes) wählen damit selbst zwischen 2D und 3D.
+- `@aspect`/`@aspectZ` (nur für Node-Autoren) sind die echten Seitenverhältnisse der Leinwand (Breite/Höhe
+  bzw. Breite/Tiefe), aus der tatsächlichen Ausdehnung der LED-Karte in Weltkoordinaten berechnet (bei der
+  Canvas-Textur/Vorschau exakt aus der Pixelauflösung). Ohne bekannte Ausdehnung auf einer Achse (eine
+  einzelne Reihe, ein flaches Fixture in z) bleibt das jeweilige Verhältnis bei 1. Löst nach und nach die
+  Nodes ab, die bisher einen Parameter `aspect` von Hand nachpflegen mussten (siehe deren Beschreibung
+  unten, z. B. Kaleidoscope/Tunnel/Vortex/Text/Pong/Labyrinth).
 - Die Farbe ist linear RGBA mit „geradem“ Alpha (RGB und Alpha getrennt). Gamma und Farbreihenfolge
   setzt erst der Ausgabe-Pass, der die Farbe zuletzt mit Alpha multipliziert (transparent = LED aus).
   Wer Farben überblendet oder addiert, nimmt `wh_mix_color` und `wh_add_color` (Prelude
@@ -138,7 +144,7 @@ Muster damit als Säule durch den Würfel; Outline und Text bleiben zweidimensio
 ### Regeln für das Snippet
 
 `body` ist der Rumpf von `fn wh_f<ID>(p: vec3<f32>) -> vec4<f32>` und endet mit `return`.
-Es gibt sieben Platzhalter:
+Es gibt neun Platzhalter:
 
 | Platzhalter | Wird ersetzt durch |
 |---|---|
@@ -148,6 +154,9 @@ Es gibt sieben Platzhalter:
 | `@text(schluessel)` | ein Textparameter als `array<u32, N>(...)` aus Unicode-Codepunkten (höchstens 256, N mindestens 1) |
 | `@textlen(schluessel)` | die Zeichenzahl des Textparameters als `u32`-Literal (`5u`, bei leerem Text `0u`) |
 | `@time` | `wh_frame.time` |
+| `@volume` | `(wh_frame.volume != 0u)` |
+| `@aspect` | `wh_frame.aspect` (echtes Breite/Höhe-Verhältnis der Leinwand) |
+| `@aspectZ` | `wh_frame.aspectZ` (echtes Breite/Tiefe-Verhältnis, nur im Würfel relevant) |
 
 - Platzhalter dürfen verschachtelt werden: `@in(a, p + vec3<f32>(@param(shift), 0.0, 0.0))`.
 - Ein **nicht verbundener optionaler** Eingang liefert `vec4<f32>(0.0, 0.0, 0.0, 0.0)`.

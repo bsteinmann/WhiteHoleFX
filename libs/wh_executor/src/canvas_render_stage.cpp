@@ -51,8 +51,14 @@ Result<std::unique_ptr<CanvasRenderStage>> CanvasRenderStage::create(
         return pass.error();
     }
 
-    return std::unique_ptr<CanvasRenderStage>(new CanvasRenderStage(
+    // Echtes Breite/Höhe-Verhaeltnis ist hier exakt bekannt (die Pixelzahl der Textur selbst) - siehe
+    // @aspect in docs/field-nodes.md. Die Canvas-Stage rastert nur 2D (Tiefe 1), @aspectZ bleibt bei 1.
+    auto result = std::unique_ptr<CanvasRenderStage>(new CanvasRenderStage(
         device, std::move(config), texture.value(), std::move(pass.value())));
+    result->pass_->setAspect(static_cast<float>(result->config_.extent.width) /
+                                 static_cast<float>(result->config_.extent.height),
+                             1.0F);
+    return result;
 }
 
 void CanvasRenderStage::record(const FrameTime& time, gpu::ICommandRecorder& recorder) {

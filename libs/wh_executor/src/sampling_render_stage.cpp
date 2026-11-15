@@ -124,6 +124,15 @@ Result<void> SamplingRenderStage::setMap(const mapping::LedMap& map) {
     ledCount_ = count;
     // Räumlich, sobald irgendeine LED z > 0 hat (flache Anlagen bleiben bei z = 0, siehe LedMap::unit).
     pass_->setVolume(std::any_of(map.unit.begin(), map.unit.end(), [](const Vec3& p) { return p.z > 0.0F; }));
+    // Echte Seitenverhältnisse aus der umschließenden Box aller Fixtures (Weltkoordinaten) - siehe @aspect/
+    // @aspectZ in docs/field-nodes.md. Ohne Ausdehnung auf einer Achse (0, z. B. eine flache Matrix in z oder
+    // ein einzelner Strip in y) bleibt das jeweilige Verhältnis bei 1, wie vor Einführung dieser Werte.
+    const float sizeX = map.volume.max.x - map.volume.min.x;
+    const float sizeY = map.volume.max.y - map.volume.min.y;
+    const float sizeZ = map.volume.max.z - map.volume.min.z;
+    const float aspectXY = (sizeX > 0.0F && sizeY > 0.0F) ? sizeX / sizeY : 1.0F;
+    const float aspectXZ = (sizeX > 0.0F && sizeZ > 0.0F) ? sizeX / sizeZ : 1.0F;
+    pass_->setAspect(aspectXY, aspectXZ);
     return {};
 }
 

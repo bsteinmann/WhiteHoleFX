@@ -147,6 +147,15 @@ TEST_CASE("Frame-Daten: Zeit, Delta und Frame-Nummer kommen an") {
     CHECK(frame.frame == 2U);
 }
 
+TEST_CASE("Frame-Daten: Aspect kommt exakt aus der Textur-Auflösung, AspectZ bleibt 1 (nur 2D)") {
+    StageFixture fx{Extent3{16, 4, 1}};  // 4:1, keine quadratische Textur
+    REQUIRE(fx.stage->setGraph(fx.lab.graph).ok());
+    fx.render(0.0);
+    const compiler::FrameUniforms frame = frameOf(fx);
+    CHECK(frame.aspect == 4.0F);
+    CHECK(frame.aspectZ == 1.0F);
+}
+
 TEST_CASE("Durchstich: Time steuert Rotate.angle im Parameterpuffer") {
     StageFixture fx;
     const NodeId time = fx.lab.add("wh.value.time");
