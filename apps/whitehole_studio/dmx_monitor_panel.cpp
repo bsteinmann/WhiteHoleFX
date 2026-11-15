@@ -251,8 +251,18 @@ QString DmxMonitorPanel::exercise() {
         return QStringLiteral("DMX-Monitor: Kontextmenü löst requestMasterDmx nicht mit den richtigen Werten aus");
     }
 
+    // Ab hier Kanal 2 statt Kanal 1 verwenden: der obige Trigger hat die echte requestMasterDmx-Verbindung
+    // (siehe buildDmxMonitor) ausgelöst und Kanal 1/Universe 777 wirklich als Masterdimmer-Kanal gesetzt -
+    // der Aufrufer von exercise() (MainWindow::exerciseDmxMonitor) stellt appSettings_ erst NACH dieser
+    // Funktion wieder zurück. Auf Kanal 1 selbst weiterzutesten würde buildContextMenu in den "schon
+    // belegt"-Zweig (ein einziger deaktivierter Eintrag) laufen lassen statt in die drei Kategorien.
+
     // "DMX Out" ohne passenden Node: nur ein deaktivierter Hinweis.
-    QMenu* emptyMenu = buildContextMenu(1, input::DmxProtocol::ArtNet, 777);
+    QMenu* emptyMenu = buildContextMenu(2, input::DmxProtocol::ArtNet, 777);
+    if (emptyMenu->actions().size() != 3 || emptyMenu->actions()[2]->menu() == nullptr) {
+        delete emptyMenu;
+        return QStringLiteral("DMX-Monitor: Kontextmenü für Kanal 2 bietet nicht die drei Kategorien an");
+    }
     QMenu* emptyDmxOut = emptyMenu->actions()[2]->menu();
     const bool emptyOk =
         emptyDmxOut != nullptr && emptyDmxOut->actions().size() == 1 && !emptyDmxOut->actions().first()->isEnabled();
@@ -276,8 +286,9 @@ QString DmxMonitorPanel::exercise() {
             requestedPatch = true;
             requestedNode = node;
         });
-    QMenu* filledMenu = buildContextMenu(1, input::DmxProtocol::ArtNet, 777);
-    QMenu* filledDmxOut = filledMenu->actions()[2]->menu();
+    QMenu* filledMenu = buildContextMenu(2, input::DmxProtocol::ArtNet, 777);
+    const bool filledMenuOk = filledMenu->actions().size() == 3 && filledMenu->actions()[2]->menu() != nullptr;
+    QMenu* filledDmxOut = filledMenuOk ? filledMenu->actions()[2]->menu() : nullptr;
     const bool filledOk = filledDmxOut != nullptr && filledDmxOut->actions().size() == 1;
     if (filledOk) {
         filledDmxOut->actions().first()->trigger();
@@ -292,7 +303,7 @@ QString DmxMonitorPanel::exercise() {
         player_.removeNode(added.value());
         return QStringLiteral("DMX-Monitor: Kontextmenü löst requestPatchNode nicht mit dem richtigen Node aus");
     }
-    const auto patched = player_.dmxListenerAt(input::DmxProtocol::ArtNet, 777, 1);
+    const auto patched = player_.dmxListenerAt(input::DmxProtocol::ArtNet, 777, 2);
     player_.removeNode(added.value());
     if (!patched) {
         return QStringLiteral("DMX-Monitor: \"DMX Out\" patcht die Adresse des Nodes nicht wirklich (MainWindow-Verbindung?)");
