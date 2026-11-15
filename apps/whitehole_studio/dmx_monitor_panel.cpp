@@ -107,7 +107,7 @@ void DmxMonitorPanel::refresh() {
 
 QString DmxMonitorPanel::exercise() {
     protocol_->setCurrentIndex(0);
-    universe_->setValue(9);
+    universe_->setValue(777);
     refresh();
     if (status_->text() != tr("Kein Signal auf diesem Universe.")) {
         return QStringLiteral("DMX-Monitor: zeigt ohne Paket kein \"kein Signal\"");
@@ -115,17 +115,17 @@ QString DmxMonitorPanel::exercise() {
     std::vector<std::uint8_t> packet(512, 0);
     packet[0] = 42;
     packet[511] = 200;
-    store_->write(input::DmxProtocol::ArtNet, 9, packet);
+    store_->write(input::DmxProtocol::ArtNet, 777, packet);
     refresh();
     if (grid_->item(0, 0)->text() != QStringLiteral("42") || grid_->item(31, 15)->text() != QStringLiteral("200")) {
         return QStringLiteral("DMX-Monitor: zeigt die geschriebenen Werte nicht an den richtigen Zellen");
     }
-    universe_->setValue(10);  // anderes Universe: muss wieder "-" zeigen, nicht die alten Werte von Universe 9
+    universe_->setValue(778);  // anderes Universe: muss wieder "-" zeigen, nicht die alten Werte von Universe 777
     refresh();
     if (grid_->item(0, 0)->text() != QStringLiteral("–")) {
         return QStringLiteral("DMX-Monitor: Wechsel des Universe behält alte Werte");
     }
-    universe_->setValue(9);
+    universe_->setValue(777);
     refresh();
     return {};
 }
