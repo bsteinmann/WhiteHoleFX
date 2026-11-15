@@ -313,13 +313,13 @@ QString DmxOutputMonitorPanel::exercise() {
         return QStringLiteral("DMX-Ausgangs-Monitor: der testweise angelegte Node steht nicht in dmxOutputValueNodes()");
     }
     bool requestedOutputPatch = false;
-    std::uint16_t requestedPoolChannel = 0;
+    std::uint16_t requestedOutputPoolChannel = 0;
     std::uint16_t requestedCount = 0;
     const QMetaObject::Connection outputPatchProbe = connect(
         this, &DmxOutputMonitorPanel::requestPatchOutputNode, this,
         [&](std::uint16_t poolChannel, std::uint16_t count, output::Protocol, std::uint32_t, std::uint32_t) {
             requestedOutputPatch = true;
-            requestedPoolChannel = poolChannel;
+            requestedOutputPoolChannel = poolChannel;
             requestedCount = count;
         });
     QMenu* filledMenu = buildContextMenu(2, output::Protocol::ArtNet, 30000);
@@ -335,7 +335,7 @@ QString DmxOutputMonitorPanel::exercise() {
         player_.removeNode(addedNode.value());
         return QStringLiteral("DMX-Ausgangs-Monitor: \"Node\" bietet den angelegten Node nicht an");
     }
-    if (!requestedOutputPatch || requestedPoolChannel != match->poolChannel || requestedCount != match->count) {
+    if (!requestedOutputPatch || requestedOutputPoolChannel != match->poolChannel || requestedCount != match->count) {
         player_.removeNode(addedNode.value());
         return QStringLiteral("DMX-Ausgangs-Monitor: Kontextmenü löst requestPatchOutputNode nicht mit dem richtigen Pool-Bereich aus");
     }
