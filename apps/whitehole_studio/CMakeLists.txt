@@ -26,6 +26,8 @@ add_executable(whitehole_studio
     dmx_patch_table.hpp
     dmx_monitor_panel.cpp
     dmx_monitor_panel.hpp
+    dmx_output_monitor_panel.cpp
+    dmx_output_monitor_panel.hpp
     layout_panel_types.cpp
     layout_panel_grid.cpp
     layout_panel_library.cpp

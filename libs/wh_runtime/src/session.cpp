@@ -122,7 +122,8 @@ private:
     std::chrono::steady_clock::time_point since_{std::chrono::steady_clock::now()};
 };
 
-Result<OutputParts> buildOutput(const project::Project& project, output::IPacketSink& sink) {
+Result<OutputParts> buildOutput(const project::Project& project, output::IPacketSink& sink,
+                                output::SentDmxStore* sentDmx) {
     if (project.layout.fixtures().empty()) {
         return Error{ErrorCode::InvalidArgument, "Das Projekt enthält kein Fixture"};
     }
@@ -143,6 +144,7 @@ Result<OutputParts> buildOutput(const project::Project& project, output::IPacket
     config.cid = senderId(project.sourceName);
     config.sourceName = project.sourceName;
     config.sacnPriority = project.sacnPriority;
+    config.sentDmx = sentDmx;
     auto pipeline = output::OutputPipeline::create(std::move(plan).value(), std::move(config), sink);
     if (!pipeline.ok()) {
         return pipeline.error();
@@ -155,7 +157,7 @@ Result<std::unique_ptr<Session>> Session::create(const project::Project& project
     if (!project.target) {
         return Error{ErrorCode::InvalidArgument, "Das Projekt hat keine \"output\"-Zeile (welcher Ausgang soll leuchten?)"};
     }
-    auto parts = buildOutput(project, deps.sink);
+    auto parts = buildOutput(project, deps.sink, deps.sentDmx);
     if (!parts.ok()) {
         return parts.error();
     }

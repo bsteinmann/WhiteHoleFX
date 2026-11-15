@@ -97,6 +97,7 @@ void MainWindow::buildActions() {
     view->addAction(lookDock_->toggleViewAction());
     view->addAction(cueDock_->toggleViewAction());
     view->addAction(dmxMonitorDock_->toggleViewAction());
+    view->addAction(dmxOutputMonitorDock_->toggleViewAction());
     view->addSeparator();
     QAction* coloredPalette = view->addAction(tr("Palette &farbig"));
     coloredPalette->setCheckable(true);

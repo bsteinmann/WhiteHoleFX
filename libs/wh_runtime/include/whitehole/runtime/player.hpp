@@ -34,6 +34,7 @@
 #include "whitehole/graph/node_placement.hpp"
 #include "whitehole/nodes/builtin_library.hpp"
 #include "whitehole/output/packet_sink.hpp"
+#include "whitehole/output/sent_dmx_store.hpp"
 #include "whitehole/preview/preview.hpp"
 #include "whitehole/preview/view3d.hpp"
 #include "whitehole/project/project.hpp"
@@ -97,7 +98,7 @@ class Player {
 public:
     /// `device` darf nullptr sein. Gerät, Bibliothek und Sink müssen den Player überleben.
     Player(gpu::IGpuDevice* device, const nodes::BuiltinLibrary& library, output::IPacketSink& sink)
-        : device_{device}, library_{library}, sink_{sink} {}
+        : device_{device}, library_{library}, sink_{sink}, outputMonitor_{std::make_shared<output::SentDmxStore>()} {}
     ~Player() { stop(); }
     Player(const Player&) = delete;
     Player& operator=(const Player&) = delete;
@@ -121,6 +122,10 @@ public:
 
     /// Die Node-Typen, mit denen dieser Player arbeitet (für Presets).
     [[nodiscard]] std::shared_ptr<const graph::INodeRegistry> registry() const { return library_.registry; }
+
+    /// Für den DMX-Ausgangs-Monitor (Studio): zuletzt gesendete Art-Net/sACN-Universen, überlebt den
+    /// Wechsel von Projekten/Sessions (anders als die Pipeline selbst). Leer, solange nicht gesendet wird.
+    [[nodiscard]] std::shared_ptr<output::SentDmxStore> outputMonitor() const noexcept { return outputMonitor_; }
 
     /// Alle Nodes mit mindestens einem Parameter, in Graph-Reihenfolge. Leer ohne Projekt.
     [[nodiscard]] std::vector<NodeInfo> nodes() const;
@@ -490,6 +495,7 @@ private:
     gpu::IGpuDevice* device_;
     const nodes::BuiltinLibrary& library_;
     output::IPacketSink& sink_;
+    std::shared_ptr<output::SentDmxStore> outputMonitor_;  // überlebt Session-Neubauten, siehe outputMonitor()
 
     std::optional<project::Project> project_;
     std::string path_;

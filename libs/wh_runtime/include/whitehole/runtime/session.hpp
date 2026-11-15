@@ -43,8 +43,10 @@ struct OutputParts {
 };
 
 /// Fehler: InvalidArgument (Layout leer, nichts gepatcht, Ziel fehlt), sonst die Fehler von
-/// Layout::bake, OutputPlan::create und OutputPipeline::create.
-[[nodiscard]] Result<OutputParts> buildOutput(const project::Project& project, output::IPacketSink& sink);
+/// Layout::bake, OutputPlan::create und OutputPipeline::create. `sentDmx` optional (siehe
+/// output::OutputConfig::sentDmx) für den DMX-Ausgangs-Monitor der Studio-Oberfläche.
+[[nodiscard]] Result<OutputParts> buildOutput(const project::Project& project, output::IPacketSink& sink,
+                                              output::SentDmxStore* sentDmx = nullptr);
 
 struct SessionDeps {
     gpu::IGpuDevice& device;
@@ -52,6 +54,8 @@ struct SessionDeps {
     const values::ICpuKernelLibrary& kernels;
     output::IPacketSink& sink;
     IFrameClock& clock;
+    /// Optional (Standard nullptr): DMX-Ausgangs-Monitor, siehe output::OutputConfig::sentDmx.
+    output::SentDmxStore* sentDmx{nullptr};
 };
 
 struct SessionOptions {

@@ -46,6 +46,7 @@
 #include "whitehole/core/types.hpp"
 #include "whitehole/output/output_plan.hpp"
 #include "whitehole/output/packet_sink.hpp"
+#include "whitehole/output/sent_dmx_store.hpp"
 
 namespace whitehole::output {
 
@@ -69,6 +70,9 @@ struct OutputConfig {
     std::array<std::uint8_t, 16> cid{};       // sACN: eindeutige Sender-ID
     std::string sourceName{"WhiteHoleFX"};    // sACN
     std::uint8_t sacnPriority{100};
+    /// Für den DMX-Ausgangs-Monitor (Studio): bekommt, wenn gesetzt, vor jedem gesendeten Art-Net/sACN-Slot
+    /// dessen Rohbytes (nicht besessen, muss die Pipeline überleben). nullptr (Standard) kostet nichts.
+    SentDmxStore* sentDmx{nullptr};
 };
 
 struct OutputStats {

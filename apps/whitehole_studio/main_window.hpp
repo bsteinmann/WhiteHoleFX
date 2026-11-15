@@ -43,6 +43,7 @@ class PortLegend;
 class LayoutPanel;
 class CuePanel;
 class DmxMonitorPanel;
+class DmxOutputMonitorPanel;
 class LivePanel;
 class LookPanel;
 class NodeEditor;
@@ -114,6 +115,8 @@ public:
     QString exerciseCues();
     /// Rauchtest: DMX-Monitor-Dock (main_window_dmx_monitor.cpp) zeigt geschriebene Werte an der richtigen Zelle.
     QString exerciseDmxMonitor();
+    /// Rauchtest: DMX-Ausgangs-Monitor-Dock zeigt gesendete Werte an der richtigen Zelle.
+    QString exerciseDmxOutputMonitor();
     /// Rauchtest: Einstellungsdialog (Rundlauf der Felder), Netzwerkkarte wählen, DMX/Audio anwenden.
     QString exerciseSettings();
     QString exerciseNodeDefaults();  // Teil von exerciseSettings (main_window_settings.cpp)
@@ -164,7 +167,8 @@ private:
     void showEditDocks();  // ... und danach wieder zeigen
     /// Dock "Nodes": Palette und Node-Editor (main_window_editor.cpp).
     void buildEditorDock();
-    /// Dock "DMX-Monitor" (main_window_dmx_monitor.cpp): reine Anzeige aller 512 Kanäle eines Universe.
+    /// Docks "DMX-Monitor" und "DMX-Ausgangs-Monitor" (main_window_dmx_monitor.cpp): reine Anzeige aller
+    /// 512 Kanäle eines Universe, je einmal für Eingang und Ausgang.
     void buildDmxMonitor();
     /// Füllt das Menü "Beispiele" aus den Ordnern neben dem Programm; leer, wenn es keine gibt.
     void fillExamplesMenu(QMenu* menu);
@@ -284,6 +288,8 @@ private:
     QDockWidget* cueDock_{nullptr};
     DmxMonitorPanel* dmxMonitorPanel_{nullptr};
     QDockWidget* dmxMonitorDock_{nullptr};
+    DmxOutputMonitorPanel* dmxOutputMonitorPanel_{nullptr};
+    QDockWidget* dmxOutputMonitorDock_{nullptr};
     QDockWidget* liveDock_{nullptr};
     QAction* liveAction_{nullptr};
     QAction* saveLookAction_{nullptr};

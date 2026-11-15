@@ -132,7 +132,8 @@ Result<void> Player::start() {
         liveProject->target = live_->target();
     }
     auto session = Session::create(
-        liveProject ? *liveProject : *project_, SessionDeps{*device_, library_.snippets, library_.kernels, sink_, *clock}, options);
+        liveProject ? *liveProject : *project_,
+        SessionDeps{*device_, library_.snippets, library_.kernels, sink_, *clock, outputMonitor_.get()}, options);
     if (!session.ok()) {
         return session.error();
     }

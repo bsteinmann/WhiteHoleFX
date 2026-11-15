@@ -379,3 +379,26 @@ TEST_CASE("dmxpatch wird beim Erstellen geprüft: unbekanntes Ziel, DDP, Bereich
           ErrorCode::AlreadyExists);  // Pool 1-4 und 3 überschneiden sich
     CHECK(create({dmxpatch(1, 2, 0, 1), dmxpatch(3, 2, 0, 100)}, dest).ok());  // getrennte Pool-Bereiche sind erlaubt
 }
+
+TEST_CASE("sentDmx: Art-Net/sACN landen im Monitor-Speicher, DDP nicht", "[output][pipeline][monitor]") {
+    SentDmxStore sentDmx;
+    OutputConfig config = oneDestination("192.168.1.50");
+    config.destinations.push_back({"192.168.1.51", 0, Protocol::Sacn});
+    config.destinations.push_back({"192.168.1.52", 0, Protocol::Ddp});
+    config.sentDmx = &sentDmx;
+    FixturePatch ddp = patch(3, Protocol::Ddp, 0, 2);
+    ddp.ddpOffset = 100;
+    auto r = rig(mapOf({1, 1, 1}), {patch(1, Protocol::ArtNet, 3, 0), patch(2, Protocol::Sacn, 7, 1), ddp}, config);
+    const std::vector<ColorRgba> colors{{1, 0, 0, 1}, {0, 1, 0, 1}, {0, 0, 1, 1}};
+    REQUIRE(r->pipeline->process(colors).ok());
+
+    const auto artnet = sentDmx.readAll(Protocol::ArtNet, 3);
+    REQUIRE(artnet.has_value());
+    CHECK(artnet->channels[0] == 255);  // rot -> Kanal 1
+
+    const auto sacn = sentDmx.readAll(Protocol::Sacn, 7);
+    REQUIRE(sacn.has_value());
+    CHECK(sacn->channels[1] == 255);  // grün -> Kanal 2
+
+    CHECK_FALSE(sentDmx.readAll(Protocol::Ddp, 100).has_value());  // DDP-Ziel hat kein Universe-Konzept, wird nie geschrieben
+}

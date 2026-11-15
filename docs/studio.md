@@ -587,7 +587,14 @@ Darüber steht, ob das Signal aktiv ist oder vor mehr als 5 Sekunden zuletzt kam
 stehen). Das Dock ist beim Start versteckt (512 Zellen jeden Frame neu zu zeichnen lohnt nur, solange man
 hinschaut) und aktualisiert sich nur, während es sichtbar ist. Reine Anzeige zur Fehlersuche — noch keine
 Zuordnung zu einem Fixture-Patch oder dem DMX-Kanal-Pool per Rechtsklick (geplanter nächster Schritt, siehe
-CLAUDE.md) und kein eigener Ausgangs-Monitor.
+CLAUDE.md).
+
+**DMX-Ausgangs-Monitor (Schritt 2 des DMX-Patch/Monitor-Gitters):** Ansicht → DMX-Ausgangs-Monitor zeigt
+dasselbe Gitter wie der DMX-Monitor, aber für die zuletzt **gesendeten** Art-Net/sACN-Universen statt der
+empfangenen — dieselbe Protokoll-/Universe-Auswahl, dieselbe „aktiv/veraltet"-Anzeige nach 5 Sekunden, dieselbe
+Sichtbarkeits-Aktualisierung. DDP erscheint hier nicht, da DDP byteweise statt per Universe adressiert wird und
+damit kein Universe-Raster hat. Auch dies ist reine Anzeige — die Rechtsklick-Zuordnung (Schritt 3) und das
+„Wer hört zu"-Overlay (Schritt 4) fehlen noch, siehe CLAUDE.md.
 
 ## Audio-Eingang
 

@@ -10,6 +10,15 @@
   (ganzes Universe in einer Sperre statt 128 einzelner `read()`-Aufrufe) mit eigenen Tests
   (`tests/input/dmx_store_test.cpp`). Noch keine Zuordnung per Rechtsklick zu Fixture-Patch oder
   DMX-Kanal-Pool (Schritt 3 des größeren Vorhabens) und noch kein eigener Ausgangs-Monitor (Schritt 2).
+- **DMX-Ausgangs-Monitor (Ansicht → DMX-Ausgangs-Monitor), Schritt 2 des DMX-Patch/Monitor-Gitters.**
+  Dasselbe Gitter wie der DMX-Monitor, aber für die zuletzt gesendeten statt empfangenen Art-Net/sACN-Werte;
+  DDP bleibt außen vor (byteweise statt per Universe adressiert, kein Universe-Raster). Dafür neues
+  `output::SentDmxStore` in `wh_output` (thread-sicherer Zwischenspeicher nach demselben Muster wie
+  `input::DmxStore`, aber unabhängig davon und mit eigenen Tests, `tests/output/sent_dmx_store_test.cpp`),
+  geschrieben von `OutputPipeline::sendSlot` über ein neues `OutputConfig::sentDmx` (eigener Test in
+  `output_pipeline_test.cpp`) und durchgereicht über `SessionDeps`/`buildOutput` bis zum `Player`, der ihn
+  session-übergreifend hält (`Player::outputMonitor()`). Noch keine Zuordnung per Rechtsklick (Schritt 3)
+  und noch kein „Wer hört zu"-Overlay (Schritt 4).
 - **DMX-Fernsteuerung für Live-Modus, Teil 1: Look-Auswahl per DMX-Kanal.** Einstellungen, Seite
   DMX-Eingang: ein Kanal wählt im laufenden Live-Betrieb den aktiven Look (wie an einem
   Szenen-Wahl-Kanal — er teilt sich in so viele gleich große Stufen auf, wie das Projekt Looks hat; 0 =

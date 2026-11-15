@@ -144,8 +144,20 @@ darum.
   zeigt aktiv/veraltet (> 5 s). Beim Start versteckt, aktualisiert sich nur, solange sichtbar
   (`MainWindow::tick()`, Muster von `editor_->refreshLive()`). Dafür neues `DmxStore::readAll(protocol,
   universe)` (ganzes Universe in einer Sperre statt 128 einzelner `read()`-Aufrufe), eigene Tests
-  (`tests/input/dmx_store_test.cpp`). Noch keine Zuweisung, kein Ausgangs-Monitor, kein Overlay — das sind
-  die noch offenen Schritte 2–4, jeweils eigene kleine Schritte.
+  (`tests/input/dmx_store_test.cpp`).
+  **Erledigt (0.92.0), Schritt 2 (Ausgangs-Monitor):** Neues Dock "DMX-Ausgangs-Monitor" (dieselbe Stelle,
+  `dmx_output_monitor_panel.hpp/cpp`), strukturell dasselbe Gitter wie Schritt 1, aber für die zuletzt
+  **gesendeten** statt empfangenen Art-Net/sACN-Werte. Dafür neues `output::SentDmxStore` in `wh_output`
+  (eigene Datei, nicht in `BuiltinLibrary`/`wh_nodes` — reines UI-Anzeige-Anliegen, keine neue
+  `wh_nodes`→`wh_output`-Abhängigkeit nötig), geschrieben vom einzigen Sende-Aufruf in
+  `OutputPipeline::sendSlot` über ein neues, optionales `OutputConfig::sentDmx`-Feld; DDP wird dabei
+  bewusst übersprungen (byteweise statt per Universe adressiert, kein Universe-Raster). Durchgereicht über
+  `SessionDeps`/`buildOutput` (neuer optionaler Parameter, alle anderen `buildOutput()`-Aufrufer bleiben
+  über den Default unverändert) bis zum `Player`, der den Speicher session-übergreifend als
+  `std::shared_ptr` hält (`Player::outputMonitor()`) — anders als die `OutputPipeline` selbst überlebt er
+  einen Projekt-/Session-Neuaufbau. Eigene Tests (`tests/output/sent_dmx_store_test.cpp`,
+  `output_pipeline_test.cpp`). Noch keine Zuweisung, kein Overlay — das sind die noch offenen Schritte 3–4,
+  jeweils eigene kleine Schritte.
 - **MIDI-Eingang/-Ausgang** (z. B. Akai APC Mini): nur besprochen, nicht begonnen. Überlegungen aus dem
   Gespräch:
   - *Bibliothek:* RtMidi — C++, cross-platform (ALSA/WinMM), passt zum bestehenden Muster, mit dem

@@ -79,6 +79,7 @@ add_executable(wh_tests
     output/patch_space_test.cpp
     output/patch_protocol_test.cpp
     output/output_worker_test.cpp
+    output/sent_dmx_store_test.cpp
     output/sacn_test.cpp
     output/udp_sender_test.cpp
     preview/gizmo_test.cpp

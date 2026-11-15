@@ -16,6 +16,7 @@ wh_add_library(wh_output
         src/output_plan.cpp
         src/patch_space.cpp
         src/patch_protocol.cpp
+        src/sent_dmx_store.cpp
         src/output_worker.cpp
         src/sacn.cpp
         src/udp_sender.cpp

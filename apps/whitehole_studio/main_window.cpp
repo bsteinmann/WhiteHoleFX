@@ -34,6 +34,7 @@
 
 #include "cue_panel.hpp"
 #include "dmx_monitor_panel.hpp"
+#include "dmx_output_monitor_panel.hpp"
 #include "layout_panel.hpp"
 #include "live_panel.hpp"
 #include "look_panel.hpp"
@@ -349,6 +350,9 @@ void MainWindow::tick() {
     cuePanel_->refresh();
     if (dmxMonitorDock_->isVisible()) {
         dmxMonitorPanel_->refresh();
+    }
+    if (dmxOutputMonitorDock_->isVisible()) {
+        dmxOutputMonitorPanel_->refresh();
     }
     refreshImage();
     lastTick = Clock::now();

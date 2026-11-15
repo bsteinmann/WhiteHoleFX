@@ -206,6 +206,11 @@ std::uint8_t OutputPipeline::nextSequence(std::size_t slot) {
 
 void OutputPipeline::sendSlot(const OutputSlot& slot, std::span<const std::uint8_t> data, const Endpoint& to,
                               std::uint8_t sequence) {
+    // Für den DMX-Ausgangs-Monitor: DDP hat kein Universe-Konzept (Byte-Offset statt Kanalnummer), bleibt
+    // darum außen vor (siehe sent_dmx_store.hpp).
+    if (config_.sentDmx != nullptr && slot.protocol != Protocol::Ddp) {
+        config_.sentDmx->write(slot.protocol, slot.address, data);
+    }
     switch (slot.protocol) {
         case Protocol::ArtNet: {
             ArtDmxParams p;
