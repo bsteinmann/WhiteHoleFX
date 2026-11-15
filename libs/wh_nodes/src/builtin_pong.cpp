@@ -7,8 +7,10 @@
 // und beide Nodes sind einzeln testbar.
 //
 // Zeichnung: x und y laufen von 0 bis 1 wie bei allen Feldern. `aspect` (Breite / Höhe der Leinwand, 32×16 = 2)
-// macht Ball und Punkte rund und gibt Abstände in Höheneinheiten. Die Ränder sind weich (`soft`); auf kleinen
-// Matrizen setzt man `soft` auf etwa die Größe einer LED, damit sich der Ball zwischen den Pixeln bewegt.
+// macht Ball und Punkte rund und gibt Abstände in Höheneinheiten; `aspect` = 0 (Standard) nimmt dafür
+// automatisch das echte Verhältnis der Leinwand (`@aspect`), ein Wert > 0 bleibt als manueller Override
+// erhalten. Die Ränder sind weich (`soft`); auf kleinen Matrizen setzt man `soft` auf etwa die Größe einer
+// LED, damit sich der Ball zwischen den Pixeln bewegt.
 #include <cstdint>
 
 #include "builtin_internal.hpp"
@@ -86,7 +88,7 @@ fn wh_pong_box(q: vec2<f32>, c: vec2<f32>, h: vec2<f32>) -> f32 {
 )wgsl";
 
 // Schichten werden addiert (wie bei Lightning): Licht = Summe Farbe * Deckung, Deckung = Summe, begrenzt auf 1.
-constexpr const char* kPongBody = R"wgsl(let asp = max(@param(aspect), 0.1);
+constexpr const char* kPongBody = R"wgsl(let asp = select(@aspect, max(@param(aspect), 0.1), @param(aspect) > 0.0);
 let q = vec2<f32>(p.x * asp, p.y);
 let soft = max(@param(soft), 0.001);
 let thick = max(@param(thickness), 0.002);
@@ -185,7 +187,7 @@ std::vector<compiler::NodeDefinition> pongFieldNodes() {
          number("margin", "Paddle margin", 0.05, 0.0, 0.3), number("scoreLeft", "Score left", 0.0, 0.0, 15.0),
          number("scoreRight", "Score right", 0.0, 0.0, 15.0), number("maxScore", "Points to win", 7.0, 0.0, 15.0),
          number("winner", "Winner (0 none, 1 left, 2 right)", 0.0, 0.0, 2.0), number("flash", "Winner flash", 1.0, 0.0, 1.0),
-         number("aspect", "Aspect (width / height)", 1.0, 0.1, 10.0), number("soft", "Edge softness", 0.02, 0.001, 0.3),
+         number("aspect", "Aspect (width / height, 0 = automatic)", 0.0, 0.0, 10.0), number("soft", "Edge softness", 0.02, 0.001, 0.3),
          number("thickness", "Paddle thickness", 0.04, 0.002, 0.2), color("ball", "Ball", white),
          color("paddleLeft", "Left paddle color", white), color("paddleRight", "Right paddle color", white),
          color("net", "Net", ColorRgba{1.0F, 1.0F, 1.0F, 0.25F}), number("dashes", "Net dashes", 12.0, 1.0, 40.0),

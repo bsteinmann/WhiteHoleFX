@@ -14,7 +14,9 @@
 // bei jedem Abspielen heraus.
 //
 // Raster: `cells` Zellen über die Breite; die Höhe bekommt `cells / aspect` Zellen (aspect = Breite/Höhe der
-// Leinwand, 2 bei 32x16). Mit Space = Volume laufen die Läufer durch den Würfel (sechs Richtungen).
+// Leinwand, 2 bei 32x16; `aspect` = 0, Standard, nimmt dafür automatisch das echte Verhältnis der Leinwand
+// über `@aspect`, ein Wert > 0 bleibt als manueller Override erhalten). Mit Space = Volume laufen die Läufer
+// durch den Würfel (sechs Richtungen).
 // Die Bahn eines Läufers liegt auf Zellmitten: Bei `cells` = Anzahl der LEDs über die Breite liegt jede Bahn genau
 // auf einer LED-Reihe.
 //
@@ -97,7 +99,7 @@ fn wh_maze_wall_pos(s: f32, w: f32, h: f32) -> vec2<f32> {
 // darum reichen die beiden aus. Die Schleifen haben feste Grenzen (WGSL), `runners` und `trail` schalten innen.
 constexpr const char* kMazeBody = R"wgsl(let volume = ((@param(space) > 0.5 && @param(space) < 1.5) || (@param(space) >= 1.5 && @volume));
 let ncells = clamp(floor(@param(cells) + 0.5), 2.0, 64.0);
-let aspect = max(@param(aspect), 0.1);
+let aspect = select(@aspect, max(@param(aspect), 0.1), @param(aspect) > 0.0);
 let n = vec3<f32>(ncells, max(floor(ncells / aspect + 0.5), 1.0), select(1.0, ncells, volume));
 let cs = 1.0 / ncells;
 let q = vec3<f32>(p.x, p.y / aspect, select(0.0, p.z, volume));
@@ -262,7 +264,8 @@ std::vector<compiler::NodeDefinition> mazeNodes() {
     std::vector<compiler::NodeDefinition> nodes;
     nodes.push_back(fieldNode(
         "wh.generator.maze", "Labyrinth", "Generators", {fieldOutput()},
-        {integer("cells", "Cells across", 8, 2, 64), number("aspect", "Aspect (width / height)", 1.0, 0.1, 8.0),
+        {integer("cells", "Cells across", 8, 2, 64),
+         number("aspect", "Aspect (width / height, 0 = automatic)", 0.0, 0.0, 8.0),
          integer("runners", "Runners", 4, 1, 8),
          choice("mode", "Mode", {"Random walk", "Along walls"}),
          number("speed", "Speed (cells per second)", 3.0, 0.0, 30.0),

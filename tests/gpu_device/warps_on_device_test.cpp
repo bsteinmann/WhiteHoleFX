@@ -63,6 +63,37 @@ TEST_CASE("Vortex: ohne Drehung identisch, am Rand und in der Mitte unverändert
     CHECK(std::abs(swirled.at(14, 9)[0] - centerX(14, 20)) > 0.1F);  // wirklich verändert
 }
 
+TEST_CASE("Vortex: aspect = 0 (Standard) nimmt automatisch das echte Seitenverhältnis der Leinwand",
+         "[gpu_device][nodes][warps]") {
+    REQUIRE_DEVICE();
+    Lab lab;
+    const NodeId ramp = rampX(lab);
+    const NodeId vortex = lab.add("wh.transform.vortex");
+    lab.connect(ramp, "out", vortex, "source");
+    lab.set(vortex, "turns", 1.0);
+    // Leinwand 32x16 (echtes Verhaeltnis 2): automatisch (Standard 0) soll dasselbe herauskommen wie von Hand
+    // auf 2.0 gesetzt - und etwas anderes als auf einer quadratischen Leinwand (dort waere @aspect = 1).
+    const Pixels autoWide = render(*device, lab, vortex, 32, 16);
+    lab.set(vortex, "aspect", 2.0);
+    const Pixels manualWide = render(*device, lab, vortex, 32, 16);
+    lab.set(vortex, "aspect", 0.0);
+    const Pixels autoSquare = render(*device, lab, vortex, 16, 16);
+    int differentFromManual = 0;
+    int differentFromSquare = 0;
+    for (std::uint32_t y = 0; y < 16; ++y) {
+        for (std::uint32_t x = 0; x < 32; ++x) {
+            differentFromManual += closeTo(autoWide.at(x, y)[0], manualWide.at(x, y)[0], 1e-4F) ? 0 : 1;
+        }
+    }
+    for (std::uint32_t y = 0; y < 16; ++y) {
+        for (std::uint32_t x = 0; x < 16; ++x) {
+            differentFromSquare += closeTo(autoWide.at(x, y)[0], autoSquare.at(x, y)[0], 1e-3F) ? 0 : 1;
+        }
+    }
+    CHECK(differentFromManual == 0);   // automatisch = von Hand auf den echten Wert gesetzt: bitgenau
+    CHECK(differentFromSquare > 0);    // wirklich von der echten Leinwandgroesse abhaengig, kein fester Wert
+}
+
 TEST_CASE("Tunnel: der Winkel um die Mitte wird zur x-Koordinate des Eingangs, die Mitte blendet aus", "[gpu_device][nodes][warps]") {
     REQUIRE_DEVICE();
     Lab lab;

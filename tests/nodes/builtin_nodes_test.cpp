@@ -374,3 +374,22 @@ TEST_CASE("Built-ins: Labyrinth hat einen Along-walls-Modus") {
     CHECK(mode->choices[1] == "Along walls");
     CHECK(std::get<std::int64_t>(mode->defaultValue) == 0);  // Random walk bleibt der Standard (abwaertskompatibel)
 }
+
+TEST_CASE("Built-ins: aspect-Parameter sind standardmaessig 0 (automatisch aus der echten Leinwandgroesse)") {
+    Builtins builtins;
+    for (const char* typeId : {"wh.transform.kaleidoscope", "wh.transform.tunnel", "wh.transform.vortex",
+                              "wh.generator.text", "wh.generator.pong", "wh.generator.maze"}) {
+        INFO("Node-Typ " << typeId);
+        const graph::NodeDescriptor* descriptor = builtins.registry->find(typeId);
+        REQUIRE(descriptor != nullptr);
+        const graph::ParameterDescriptor* aspect = nullptr;
+        for (const graph::ParameterDescriptor& parameter : descriptor->parameters) {
+            if (parameter.key == "aspect") {
+                aspect = &parameter;
+            }
+        }
+        REQUIRE(aspect != nullptr);
+        CHECK(std::get<double>(aspect->defaultValue) == 0.0);  // 0 = automatisch (@aspect), > 0 = manueller Override
+        CHECK(aspect->minValue == 0.0);
+    }
+}

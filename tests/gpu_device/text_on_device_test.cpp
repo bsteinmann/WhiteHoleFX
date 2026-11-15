@@ -27,6 +27,33 @@ bool on(const Pixels& image, std::uint32_t x, std::uint32_t y) { return image.at
 
 }  // namespace
 
+TEST_CASE("Text: aspect = 0 (Standard) nimmt automatisch das echte Seitenverhältnis der Leinwand",
+         "[gpu_device][nodes][text]") {
+    REQUIRE_DEVICE();
+    Lab lab;
+    const NodeId node = textNode(lab, "HI", 1);  // aspect 1,5, passend zu 12x8
+    const Pixels manual = render(*device, lab, node, 12, 8);
+    lab.set(node, "aspect", 0.0);
+    const Pixels automatic = render(*device, lab, node, 12, 8);
+    for (std::uint32_t y = 0; y < 8; ++y) {
+        for (std::uint32_t x = 0; x < 12; ++x) {
+            CHECK(closeTo(automatic.at(x, y)[3], manual.at(x, y)[3], 1e-4F));
+        }
+    }
+    // Auf einer quadratischen 8x8-Leinwand ist das echte Verhaeltnis 1.0 statt 1.5: automatisch (0) und von
+    // Hand auf 1.5 belassen muessen sich jetzt unterscheiden - sonst haette der Parameter keine Wirkung mehr.
+    const Pixels autoSquare = render(*device, lab, node, 8, 8);
+    lab.set(node, "aspect", 1.5);
+    const Pixels manualSquare = render(*device, lab, node, 8, 8);
+    int different = 0;
+    for (std::uint32_t y = 0; y < 8; ++y) {
+        for (std::uint32_t x = 0; x < 8; ++x) {
+            different += on(autoSquare, x, y) == on(manualSquare, x, y) ? 0 : 1;
+        }
+    }
+    CHECK(different > 0);
+}
+
 TEST_CASE("Text: Punkte der Buchstaben H und I stehen an der richtigen Stelle", "[gpu_device][nodes][text]") {
     REQUIRE_DEVICE();
     Lab lab;

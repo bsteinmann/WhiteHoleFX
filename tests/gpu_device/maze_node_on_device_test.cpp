@@ -50,6 +50,21 @@ NodeId mazeNode(Lab& lab) {
 
 }  // namespace
 
+TEST_CASE("Labyrinth: aspect = 0 (Standard) nimmt automatisch das echte Seitenverhältnis der Leinwand",
+         "[gpu_device][nodes]") {
+    REQUIRE_DEVICE();
+    Lab lab;
+    const NodeId node = mazeNode(lab);  // aspect 2.0, passend zu 16x8
+    const Pixels manual = render(*device, lab, node, 16, 8, 1.0);
+    lab.set(node, "aspect", 0.0);
+    const Pixels automatic = render(*device, lab, node, 16, 8, 1.0);
+    for (std::uint32_t y = 0; y < 8; ++y) {
+        for (std::uint32_t x = 0; x < 16; ++x) {
+            CHECK(closeTo(automatic.at(x, y)[3], manual.at(x, y)[3], 1e-4F));
+        }
+    }
+}
+
 TEST_CASE("Labyrinth: Along walls bleibt am Rand des Rasters und bewegt sich mit der Zeit", "[gpu_device][nodes]") {
     REQUIRE_DEVICE();
     Lab lab;

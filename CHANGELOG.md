@@ -2,6 +2,16 @@
 
 ## 0.92.0
 
+- **Kaleidoscope, Tunnel, Vortex, Text, Pong, Labyrinth: `aspect` standardmäßig automatisch.** Der
+  Parameter `aspect` (Seitenverhältnis Breite/Höhe der Leinwand) steht jetzt standardmäßig auf 0 und nimmt
+  dann automatisch das echte Verhältnis der Leinwand (`@aspect`, siehe Compiler-Kern-Eintrag unten); ein
+  Wert größer 0 bleibt als manueller Override erhalten (z. B. für eine bewusste Verzerrung). Löst den
+  eigentlichen Auslöser dieses Umbaus: Labyrinth (und die anderen genannten Nodes) verzog sich bisher, wenn
+  man `aspect` nach einer Auflösungsänderung zu pflegen vergaß. **Mögliche Verhaltensänderung:** Ein Projekt,
+  das `aspect` nie gesetzt hat (alter Standardwert 1.0 bzw. bei Text 2.0), zeigt jetzt automatisch das echte
+  Verhältnis statt der alten festen Zahl — bei den meisten Projekten eine stille Korrektur eines bisherigen
+  Verzerrungsfehlers; ein Projekt mit ausdrücklich gesetztem `aspect` ist unverändert. Random Pixels und
+  Digital Rain (Spalten-/Zeilenzahl statt Seitenverhältnis) folgen in einem eigenen, späteren Schritt.
 - **Compiler-Kern: echte Leinwandgröße als `@aspect`/`@aspectZ`.** Erster Schritt zum Verschwinden der
   manuell gepflegten `aspect`-Parameter (Kaleidoscope, Tunnel, Vortex, Text, Pong, Labyrinth): Zwei neue,
   für Node-Autoren eingebaute Shader-Werte (analog zu `@time`/`@volume`) liefern das tatsächliche

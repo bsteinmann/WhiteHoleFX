@@ -7,8 +7,9 @@
 // (bei 16 Zeilen: height 0.5 = ein Schriftpunkt je LED), werden die Punkte gleich groß wie die LEDs.
 //
 // Der Text kommt als Parameter (UTF-8) und wird beim Kompilieren in den Shader geschrieben (@text, @textlen);
-// ein neuer Text baut die Pipeline neu, ein neues Tempo nur den Puffer. Der Shader weiß nicht, wie breit die
-// Leinwand ist; `aspect` (Breite / Höhe, 32x16 = 2) gleicht das aus, damit die Punkte quadratisch bleiben.
+// ein neuer Text baut die Pipeline neu, ein neues Tempo nur den Puffer. `aspect` (Breite / Höhe, 32x16 = 2)
+// gleicht das aus, damit die Punkte quadratisch bleiben; `aspect` = 0 (Standard) nimmt dafür automatisch
+// das echte Verhältnis der Leinwand (`@aspect`), ein Wert > 0 bleibt als manueller Override erhalten.
 // Rollen und Stillstand: mode Scroll schiebt den Text mit `speed` Schriftpunkten pro Sekunde durch (negativ:
 // nach rechts) und beginnt nach `gap` Punkten Pause von vorn; Static setzt ihn links, mittig oder rechts.
 // Die Position ist auf ganze Schriftpunkte gerundet, die Schrift bleibt scharf.
@@ -29,7 +30,8 @@ if (n == 0) {
     return @param(background);
 }
 let fy = clamp(@param(height), 0.05, 4.0) / 8.0;
-let fx = fy / max(@param(aspect), 0.1);
+let aspect = select(@aspect, max(@param(aspect), 0.1), @param(aspect) > 0.0);
+let fx = fy / aspect;
 let canvasW = 1.0 / fx;
 let spacing = max(floor(@param(spacing) + 0.5), 0.0);
 let advance = 5.0 + spacing;
@@ -76,7 +78,8 @@ std::vector<compiler::NodeDefinition> textNodes() {
          number("gap", "Pause before repeat (dots)", 8.0, 0.0, 200.0),
          choice("align", "Align (static)", {"Left", "Center", "Right"}, 1),
          number("height", "Height", 0.5, 0.05, 4.0), number("y", "Vertical center", 0.5, -1.0, 2.0),
-         number("aspect", "Canvas aspect (w/h)", 2.0, 0.1, 20.0), integer("spacing", "Letter spacing (dots)", 1, 0, 8),
+         number("aspect", "Canvas aspect (w/h, 0 = automatic)", 0.0, 0.0, 20.0),
+         integer("spacing", "Letter spacing (dots)", 1, 0, 8),
          color("color", "Color", ColorRgba{1.0F, 1.0F, 1.0F, 1.0F}),
          color("background", "Background", ColorRgba{0.0F, 0.0F, 0.0F, 0.0F})},
         textBodyVariant(kTextBody), textPreludeVariant(kTextPrelude)));

@@ -2,9 +2,11 @@
 //
 // Warum eine eigene Datei: builtin_transforms.cpp hat die einfachen Koordinatentricks (Drehen, Spiegeln,
 // Kacheln ...). Diese drei rechnen um einen Mittelpunkt in Winkel und Abstand und brauchen alle denselben
-// Hinweis zum Seitenverhältnis: Der Shader kennt die Leinwandgröße nicht, `aspect` (Breite / Höhe, 32x16 = 2)
-// streckt x vor der Umrechnung, damit Kreise Kreise bleiben, und staucht zurück, bevor der Eingang abgetastet
-// wird. Wie alle Transformationen ändern sie nur die Abtastkoordinate und sind zustandslos.
+// Hinweis zum Seitenverhältnis: `aspect` (Breite / Höhe, 32x16 = 2) streckt x vor der Umrechnung, damit
+// Kreise Kreise bleiben, und staucht zurück, bevor der Eingang abgetastet wird. `aspect` = 0 (Standard) nimmt
+// dafür automatisch das echte Verhältnis der Leinwand (`@aspect`, siehe docs/field-nodes.md); ein Wert > 0
+// bleibt als manueller Override erhalten, z. B. für eine bewusste Verzerrung. Wie alle Transformationen
+// ändern sie nur die Abtastkoordinate und sind zustandslos.
 #include "builtin_internal.hpp"
 
 namespace whitehole::nodes::detail {
@@ -14,7 +16,7 @@ namespace {
 // Kaleidoskop: Die Ebene wird um (cx, cy) in `segments` Keile geteilt; jeder zweite Keil ist das Spiegelbild
 // seines Nachbarn, dazwischen liegt die Vorlage. `angle` dreht das Ausschnittsfenster, `zoom` vergrößert.
 // Mit n Keilen und einem Winkel a ist a' = |mod(a, w) - w/2| mit w = 2π/n der gefaltete Winkel.
-constexpr const char* kKaleidoscopeBody = R"wgsl(let asp = max(@param(aspect), 0.1);
+constexpr const char* kKaleidoscopeBody = R"wgsl(let asp = select(@aspect, max(@param(aspect), 0.1), @param(aspect) > 0.0);
 let c = vec2<f32>(@param(cx), @param(cy));
 let d = (p.xy - c) * vec2<f32>(asp, 1.0);
 let r = length(d) / max(@param(zoom), 0.01);
@@ -30,7 +32,7 @@ return @in(source, vec3<f32>(q.x, q.y, p.z));)wgsl";
 // `repeat`-mal um den Tunnel herum und läuft mit `speed` Kacheln pro Sekunde in die Tiefe (negativ: heraus).
 // `twist` dreht den Tunnel mit der Tiefe, `depth` bestimmt, wie schnell die Kacheln zur Mitte hin kleiner
 // werden, `fade` blendet die Mitte aus (Anteil des Radius, 0 = nicht).
-constexpr const char* kTunnelBody = R"wgsl(let asp = max(@param(aspect), 0.1);
+constexpr const char* kTunnelBody = R"wgsl(let asp = select(@aspect, max(@param(aspect), 0.1), @param(aspect) > 0.0);
 let c = vec2<f32>(@param(cx), @param(cy));
 let d = (p.xy - c) * vec2<f32>(asp, 1.0);
 let r = max(length(d), 0.0001);
@@ -43,7 +45,7 @@ return vec4<f32>(src.rgb, src.a * f);)wgsl";
 // Wirbel: Die Koordinate wird um (cx, cy) gedreht, und zwar umso stärker, je näher sie der Mitte liegt:
 // im Mittelpunkt `turns` volle Umdrehungen, bei `radius` und außerhalb keine. Die Kurve (1 - r/radius)^2
 // macht den Rand sanft.
-constexpr const char* kVortexBody = R"wgsl(let asp = max(@param(aspect), 0.1);
+constexpr const char* kVortexBody = R"wgsl(let asp = select(@aspect, max(@param(aspect), 0.1), @param(aspect) > 0.0);
 let c = vec2<f32>(@param(cx), @param(cy));
 let d = (p.xy - c) * vec2<f32>(asp, 1.0);
 let r = length(d);
@@ -59,7 +61,7 @@ std::vector<compiler::NodeDefinition> warpNodes() {
     const auto centerAndAspect = [](std::vector<graph::ParameterDescriptor> own) {
         own.push_back(number("cx", "Center X", 0.5, 0.0, 1.0));
         own.push_back(number("cy", "Center Y", 0.5, 0.0, 1.0));
-        own.push_back(number("aspect", "Canvas aspect (w/h)", 1.0, 0.1, 20.0));
+        own.push_back(number("aspect", "Canvas aspect (w/h, 0 = automatic)", 0.0, 0.0, 20.0));
         return own;
     };
 

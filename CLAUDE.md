@@ -87,12 +87,11 @@ darum.
   tatsächliche Breite/Höhe-Verhältnis kennen, statt es per Hand im Parameter `aspect` nachpflegen zu
   müssen. Auslöser: Nutzer bemerkte, dass **Labyrinth** sich bei falsch gepflegtem `aspect` je nach
   Auflösung verzieht (quadratische Zellen werden zu Rechtecken) — das ist aber kein Einzelfall, sondern
-  betrifft alle Nodes mit manuellem `aspect`-Parameter: **Kaleidoscope, Tunnel, Vortex** (`builtin_warps.cpp`),
+  betraf alle Nodes mit manuellem `aspect`-Parameter: **Kaleidoscope, Tunnel, Vortex** (`builtin_warps.cpp`),
   **Text** (`builtin_text.cpp`), **Pong** (`builtin_pong.cpp`) und **Labyrinth** (`builtin_maze.cpp`).
-  **Compiler-Kern erledigt (0.92.0):** `@aspect`/`@aspectZ` existieren und liefern das echte Verhältnis
-  (siehe CHANGELOG). **Noch offen:** die Umstellung der einzelnen oben genannten Nodes auf `@aspect` (und
-  die Frage, ob/wie ihr `aspect`-Parameter dabei entfällt oder nur noch ein optionaler manueller
-  Override bleibt) — jeweils eigene, kleine Schritte.
+  **Erledigt (0.92.0):** `@aspect`/`@aspectZ` existieren (Compiler-Kern), und alle sechs genannten Nodes
+  nutzen sie jetzt automatisch (`aspect` = 0, neuer Standard); ein Wert > 0 bleibt als manueller Override
+  erhalten (siehe CHANGELOG, beide Einträge).
   - **Auch Random Pixels** (`builtin_shapes.cpp`) gehört in dieselbe Grundlücke, auch ohne `aspect`: Die
     beiden unabhängigen Werte `columns`/`rows` müssten dann ebenfalls automatisch aus der echten Auflösung
     kommen statt von Hand gepflegt zu werden. Anders als bei den `aspect`-Nodes führt ein Mismatch dort

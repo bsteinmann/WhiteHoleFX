@@ -53,6 +53,22 @@ TEST_CASE("Pong Display: aspect macht den Ball bei breiter Leinwand rund", "[gpu
     CHECK(closeTo(image.at(40, 20 + 8)[3], 0.0F));
 }
 
+TEST_CASE("Pong Display: aspect = 0 (Standard) nimmt automatisch das echte Seitenverhältnis der Leinwand",
+         "[gpu_device][nodes][pong]") {
+    REQUIRE_DEVICE();
+    Lab lab;
+    const NodeId node = plainBall(lab);
+    lab.set(node, "ballX", 0.5);
+    lab.set(node, "ballY", 0.5);
+    // Ohne manuelles aspect (Standard 0) soll die 80x40-Leinwand (real 2.0) denselben runden Ball ergeben
+    // wie der vorige Test mit aspect von Hand auf 2.0.
+    const Pixels image = render(*device, lab, node, 80, 40, 0.0);
+    CHECK(image.at(40 + 2, 20)[3] > 0.9F);
+    CHECK(image.at(40, 20 + 2)[3] > 0.9F);
+    CHECK(closeTo(image.at(40 + 8, 20)[3], 0.0F));
+    CHECK(closeTo(image.at(40, 20 + 8)[3], 0.0F));
+}
+
 TEST_CASE("Pong Display: Schläger stehen am Rand bei left und right", "[gpu_device][nodes][pong]") {
     REQUIRE_DEVICE();
     Lab lab;
