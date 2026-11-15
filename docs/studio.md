@@ -603,9 +603,10 @@ Umbau des bis dahin flachen Menüs):
 - **Live Kanal:** „Als Live-Look-Auswahl-Kanal verwenden” bzw. „Als Live-Überblendzeit-Kanal verwenden” —
   ebenfalls keine neue Funktion, dieselben beiden bestehenden Einstellungen aus „DMX-Eingang”, nur umsortiert.
 - **DMX Out** *(neu)*: listet alle `wh.value.dmx`- und `wh.value.dmxcolor`-Nodes des aktuellen Projekts
-  namentlich auf; Klick auf einen Node setzt dessen Adresse (Protokoll, Universe, Kanal) auf die angeklickte
-  Zelle — dieselben drei Parameter, die auch das Parameterfenster des Nodes zeigt. Enthält das Projekt keinen
-  solchen Node, steht dort nur ein deaktivierter Hinweis.
+  namentlich auf — auch solche, die nur in einem gespeicherten Look stecken statt im gerade offenen
+  Hauptgraphen (dort hinter dem Looknamen in Klammern); Klick auf einen Node setzt dessen Adresse (Protokoll,
+  Universe, Kanal) auf die angeklickte Zelle — dieselben drei Parameter, die auch das Parameterfenster des
+  Nodes zeigt. Enthält das Projekt keinen solchen Node, steht dort nur ein deaktivierter Hinweis.
 
 **Zellenfarben (nachträglich freigegebene Erweiterung, erster Teil des 15.11.-Vorschlags „farbig
 hinterlegen”):** eine belegte Zelle bekommt automatisch eine Farbe nach Kategorie — Master (Orange), Live

@@ -62,7 +62,7 @@ std::vector<DmxValueNodeRef> findDmxValueNodes(const graph::Graph& graph) {
     std::vector<DmxValueNodeRef> result;
     for (const graph::NodeInstance& node : graph.nodes()) {
         if (node.typeId == "wh.value.dmx" || node.typeId == "wh.value.dmxcolor") {
-            result.push_back(DmxValueNodeRef{node.id, node.label});
+            result.push_back(DmxValueNodeRef{node.id, node.label, std::nullopt});
         }
     }
     return result;

@@ -21,8 +21,9 @@
 // (Masterdimmer-Zuordnung, siehe app_settings.hpp - keine eigene Einstellung, nur der bestehende
 // Master-Helligkeit-Kanal), "Live Kanal" (Look-Auswahl, Überblendzeit, ebenfalls app_settings.hpp) und
 // "DMX Out" (patcht die Adresse eines schon im Graphen vorhandenen wh.value.dmx/wh.value.dmxcolor-Nodes
-// direkt auf diesen Kanal, über Player::dmxValueNodes/Player::setParameter, statt das im Node-Editor von
-// Hand einzustellen).
+// direkt auf diesen Kanal, über Player::dmxValueNodes, statt das im Node-Editor von Hand einzustellen; der
+// Node kann auch in einem gespeicherten Look stecken statt im gerade offenen Graphen - requestPatchNode
+// reicht dafür den optionalen Look-Index aus DmxValueNodeRef weiter, siehe MainWindow::patchDmxValueNode).
 //
 // Zellenfarben (nachträglich freigegebene Erweiterung, erster Teil des 15.11.-Vorschlags "farbig
 // hinterlegen"): eine belegte Zelle bekommt automatisch die Standardfarbe ihrer Kategorie
@@ -41,6 +42,7 @@
 #include <QColor>
 
 #include <array>
+#include <cstddef>
 #include <cstdint>
 #include <map>
 #include <memory>
@@ -80,8 +82,11 @@ Q_SIGNALS:
     void requestLiveDmxSelect(input::DmxProtocol protocol, std::uint32_t universe, std::uint32_t channel);
     /// Rechtsklick, "Als Live-Überblendzeit-Kanal verwenden" gewählt.
     void requestLiveDmxFade(input::DmxProtocol protocol, std::uint32_t universe, std::uint32_t channel);
-    /// Rechtsklick, Untermenü "DMX Out", einen Node gewählt: dessen Adresse auf diesen Kanal patchen.
-    void requestPatchNode(NodeId node, input::DmxProtocol protocol, std::uint32_t universe, std::uint32_t channel);
+    /// Rechtsklick, Untermenü "DMX Out", einen Node gewählt: dessen Adresse auf diesen Kanal patchen. lookIndex
+    /// wie DmxValueNodeRef::lookIndex - nullopt: Node steht im gerade offenen Graphen; sonst: Index in
+    /// Player::looks(), der Node steht in diesem (gerade nicht geladenen) Look.
+    void requestPatchNode(NodeId node, std::optional<std::size_t> lookIndex, input::DmxProtocol protocol,
+                           std::uint32_t universe, std::uint32_t channel);
 
 private:
     void onSelectionChanged();  // Protokoll oder Universe gewechselt: Gitter muss neu gezeichnet werden

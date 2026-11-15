@@ -156,8 +156,10 @@ QMenu* DmxMonitorPanel::buildContextMenu(std::uint32_t channel, input::DmxProtoc
         for (const runtime::DmxValueNodeRef& node : nodes) {
             QAction* patch = dmxOutMenu->addAction(QString::fromStdString(node.label));
             const NodeId id = node.id;
-            connect(patch, &QAction::triggered, this,
-                    [this, id, protocol, universe, channel]() { Q_EMIT requestPatchNode(id, protocol, universe, channel); });
+            const std::optional<std::size_t> lookIndex = node.lookIndex;
+            connect(patch, &QAction::triggered, this, [this, id, lookIndex, protocol, universe, channel]() {
+                Q_EMIT requestPatchNode(id, lookIndex, protocol, universe, channel);
+            });
         }
     }
     return menu;
@@ -328,7 +330,7 @@ QString DmxMonitorPanel::exercise() {
     NodeId requestedNode{};
     const QMetaObject::Connection patchProbe = connect(
         this, &DmxMonitorPanel::requestPatchNode, this,
-        [&](NodeId node, input::DmxProtocol, std::uint32_t, std::uint32_t) {
+        [&](NodeId node, std::optional<std::size_t>, input::DmxProtocol, std::uint32_t, std::uint32_t) {
             requestedPatch = true;
             requestedNode = node;
         });

@@ -125,17 +125,29 @@ void MainWindow::assignLiveDmxFade(input::DmxProtocol protocol, std::uint32_t un
     updateStatus();
 }
 
-void MainWindow::patchDmxValueNode(NodeId node, input::DmxProtocol protocol, std::uint32_t universe, std::uint32_t channel) {
+void MainWindow::patchDmxValueNode(NodeId node, std::optional<std::size_t> lookIndex, input::DmxProtocol protocol,
+                                    std::uint32_t universe, std::uint32_t channel) {
     // Dieselben drei Parameter, die runtime::findDmxListenerInGraph liest (dmx_listener.cpp) und die der
     // Node-Editor beim Verstellen von Hand setzt - kein neuer Mechanismus, nur von hier aus statt dort.
+    // lookIndex (Bugfix: "DMX Out" fand einen Node nicht, der nur in einem gespeicherten Look steckt, siehe
+    // CLAUDE.md) entscheidet, welcher Graph den Node tatsächlich enthält: setParameter() setzt immer den
+    // gerade im Editor offenen Graphen voraus und würde einen Look-Node entweder gar nicht finden (Fehler,
+    // kein Crash) oder - schlimmer, falls die NodeId zufällig im offenen Graphen existiert - den falschen
+    // Node verändern. setLookNodeParameter() schreibt dagegen gezielt in den Graphen des betroffenen Looks.
     const auto report = [this](const Result<graph::ParameterValue>& result) {
         if (!result.ok()) {
             statusBar()->showMessage(QString::fromStdString(result.error().message), 8000);
         }
     };
-    report(player_->setParameter(node, "source", graph::ParameterValue{std::int64_t{protocol == input::DmxProtocol::Sacn ? 1 : 0}}));
-    report(player_->setParameter(node, "universe", graph::ParameterValue{static_cast<std::int64_t>(universe)}));
-    report(player_->setParameter(node, "channel", graph::ParameterValue{static_cast<std::int64_t>(channel)}));
+    const auto setOne = [this, &lookIndex](NodeId target, const std::string& key, graph::ParameterValue value) {
+        if (lookIndex.has_value()) {
+            return player_->setLookNodeParameter(*lookIndex, target, key, std::move(value));
+        }
+        return player_->setParameter(target, key, std::move(value));
+    };
+    report(setOne(node, "source", graph::ParameterValue{std::int64_t{protocol == input::DmxProtocol::Sacn ? 1 : 0}}));
+    report(setOne(node, "universe", graph::ParameterValue{static_cast<std::int64_t>(universe)}));
+    report(setOne(node, "channel", graph::ParameterValue{static_cast<std::int64_t>(channel)}));
 }
 
 void MainWindow::followMasterDmx() {

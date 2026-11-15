@@ -2,6 +2,16 @@
 
 ## 0.92.0
 
+- **Fix: „DMX Out" fand einen `wh.value.dmx`/`wh.value.dmxcolor`-Node nicht, der nur in einem gespeicherten
+  Look steckt.** Ein Look (siehe [Looks und Live-Betrieb](docs/studio.md)) hat einen eigenen, kleinen Graphen
+  (`project::Look::graph`) statt des gerade im Editor offenen Hauptgraphen; `Player::dmxValueNodes()` hat
+  bisher nur Letzteren abgesucht, darum zeigte „DMX Out" fälschlich „Keine DMX-Wert-Nodes im Projekt", sobald
+  der betreffende Node nur in einem (gerade nicht geladenen) Look vorkam. Durchsucht jetzt zusätzlich jeden
+  gespeicherten Look (`DmxValueNodeRef::lookIndex` sagt, aus welchem), und das Patchen eines solchen Nodes
+  schreibt über neues `Player::setLookNodeParameter()` gezielt in den Graphen des betroffenen Looks statt in
+  den (dafür falschen) Hauptgraphen - Node-IDs sind je Graph eigenständig, ein Look bekommt beim Speichern
+  frische IDs (`captureLook`). `DmxMonitorPanel::requestPatchNode`/`MainWindow::patchDmxValueNode` reichen den
+  Look-Index entsprechend weiter. Eigene Tests in `player_dmx_listener_test.cpp`.
 - **DMX-Monitor (Ansicht → DMX-Monitor), Schritt 1 des DMX-Patch/Monitor-Gitters.** Neues Dock, reine
   Anzeige: alle 512 Kanäle eines wählbaren Protokolls und Universe als Gitter (16 Spalten, 32 Zeilen),
   Zellwert = zuletzt empfangener DMX-Wert oder „–" ohne Paket; eine Statuszeile sagt, ob das Signal aktiv

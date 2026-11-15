@@ -370,7 +370,36 @@ std::vector<DmxValueNodeRef> Player::dmxValueNodes() const {
     if (!project_) {
         return {};
     }
-    return findDmxValueNodes(project_->graph);
+    // Zuerst der gerade im Editor offene Graph (lookIndex bleibt nullopt), danach jeder gespeicherte Look -
+    // ein Look ist selbst dann ein Treffer, wenn er gerade nicht im Editor geladen ist (siehe Kommentar an
+    // DmxValueNodeRef::lookIndex).
+    std::vector<DmxValueNodeRef> result = findDmxValueNodes(project_->graph);
+    for (std::size_t i = 0; i < project_->looks.size(); ++i) {
+        std::vector<DmxValueNodeRef> fromLook = findDmxValueNodes(project_->looks[i].graph);
+        for (DmxValueNodeRef& ref : fromLook) {
+            ref.lookIndex = i;
+            ref.label += " (Look: " + project_->looks[i].name + ")";
+        }
+        result.insert(result.end(), fromLook.begin(), fromLook.end());
+    }
+    return result;
+}
+
+Result<graph::ParameterValue> Player::setLookNodeParameter(std::size_t lookIndex, NodeId node, const std::string& key,
+                                                            graph::ParameterValue value) {
+    if (!project_) {
+        return noProject();
+    }
+    if (lookIndex >= project_->looks.size()) {
+        return Error{ErrorCode::InvalidArgument, "Kein Look mit diesem Index"};
+    }
+    graph::Graph& lookGraph = project_->looks[lookIndex].graph;
+    const Result<void> set = lookGraph.setParameter(node, key, std::move(value));
+    if (!set.ok()) {
+        return set.error();
+    }
+    modified_ = true;
+    return lookGraph.findNode(node)->parameters.at(key);
 }
 
 }  // namespace whitehole::runtime

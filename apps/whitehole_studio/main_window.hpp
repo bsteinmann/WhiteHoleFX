@@ -12,7 +12,9 @@
 #include <QTimer>
 
 #include <array>
+#include <cstddef>
 #include <memory>
+#include <optional>
 #include <utility>
 #include <vector>
 
@@ -229,7 +231,11 @@ private:
     /// Rechtsklick im DMX-Monitor, Untermenü "DMX Out" (nachträglich freigegebene Erweiterung): setzt
     /// Protokoll/Universe/Kanal eines schon vorhandenen wh.value.dmx/wh.value.dmxcolor-Nodes auf diese
     /// Adresse - dieselben drei Parameter ("source", "universe", "channel"), die der Node-Editor auch setzt.
-    void patchDmxValueNode(NodeId node, input::DmxProtocol protocol, std::uint32_t universe, std::uint32_t channel);
+    /// lookIndex (Bugfix, siehe CLAUDE.md): nullopt heißt, der Node steht im gerade offenen Graphen
+    /// (player_->setParameter greift); sonst steht er in Player::looks()[*lookIndex], einem gerade nicht
+    /// geladenen Look, und player_->setLookNodeParameter() muss den jeweiligen Look-Graphen direkt treffen.
+    void patchDmxValueNode(NodeId node, std::optional<std::size_t> lookIndex, input::DmxProtocol protocol,
+                            std::uint32_t universe, std::uint32_t channel);
     /// Audio-Eingang (main_window_audio.cpp). `choice`: "off", "default", "device:<Name>" oder "file:<Pfad>".
     /// Liefert den Fehlertext (leer = in Ordnung; bei einem Fehler bleibt der Eingang aus).
     QString applyAudioChoice(const QString& choice);

@@ -76,3 +76,81 @@ TEST_CASE("Player::dmxListenerAt: ein Node im Graphen geht vor Master/Live, fall
     CHECK(found->name == "DMX Channel");
     CHECK(found->kind == runtime::DmxInputListener::Kind::Node);
 }
+
+namespace {
+
+// Projekt mit einem Look, der einen eigenen wh.value.dmx-Node enthält - dieser Node existiert NUR im
+// gespeicherten Look (project_->looks[0].graph), nicht im gerade offenen Hauptgraphen project_->graph. Bug-
+// Reproduktion vom 15.11. ("whfx behauptet, kein DMX-Node sei im Projekt, obwohl einer da ist"): der Node war
+// in genau dieser Lage unsichtbar, solange dmxValueNodes() nur project_->graph abgesucht hat.
+const char* const kProjectWithLook = R"(whitehole-project 1
+destination 0 10.0.0.5
+
+fixture Panel
+  matrix 4 2
+  patch artnet destination 0 universe 1
+end
+
+node g wh.generator.gradient
+end
+output g.out
+
+look "LookA" fade 1
+  node lg wh.generator.gradient
+  end
+  node ld wh.value.dmx
+    set channel 5
+  end
+  output lg.out
+endlook
+)";
+
+struct LookRig {
+    std::unique_ptr<nodes::BuiltinLibrary> library = nodes::BuiltinLibrary::create().value();
+    FakeGpuDevice device;
+    RecordingSink recording;
+    runtime::GatedPacketSink gate{recording};
+    runtime::Player player{&device, *library, gate};
+
+    LookRig() { REQUIRE(player.loadText(kProjectWithLook).ok()); }
+};
+
+}  // namespace
+
+TEST_CASE("Player::dmxValueNodes: findet auch Nodes, die nur in einem gespeicherten Look stecken",
+          "[player][dmx]") {
+    LookRig rig;
+    REQUIRE(rig.player.looks().size() == 1);
+
+    const std::vector<runtime::DmxValueNodeRef> nodes = rig.player.dmxValueNodes();
+    REQUIRE(nodes.size() == 1);  // project_->graph hat gar keinen wh.value.dmx-Node, nur der Look
+    CHECK(nodes[0].lookIndex.has_value());
+    REQUIRE(nodes[0].lookIndex.has_value());
+    CHECK(*nodes[0].lookIndex == 0);
+    CHECK(nodes[0].label.find("LookA") != std::string::npos);  // Label nennt den Look, siehe player_edit.cpp
+
+    // Der Node steht wirklich im Look-Graphen, nicht im Hauptgraphen - dieselbe NodeId findet man in
+    // project_->graph gar nicht (andere Graphen, eigener Namensraum für NodeIds).
+    CHECK_FALSE(rig.player.dmxListenerAt(DmxProtocol::ArtNet, 0, 5).has_value());
+}
+
+TEST_CASE("Player::setLookNodeParameter: schreibt in den Graphen eines gespeicherten Looks, nicht in project_->graph",
+          "[player][dmx]") {
+    LookRig rig;
+    const std::vector<runtime::DmxValueNodeRef> nodes = rig.player.dmxValueNodes();
+    REQUIRE(nodes.size() == 1);
+    REQUIRE(nodes[0].lookIndex.has_value());
+    const std::size_t lookIndex = *nodes[0].lookIndex;
+    const NodeId node = nodes[0].id;
+
+    const Result<graph::ParameterValue> set =
+        rig.player.setLookNodeParameter(lookIndex, node, "channel", graph::ParameterValue{std::int64_t{9}});
+    REQUIRE(set.ok());
+
+    const graph::ParameterValue& stored = rig.player.looks()[lookIndex].graph.findNode(node)->parameters.at("channel");
+    REQUIRE(std::holds_alternative<std::int64_t>(stored));
+    CHECK(std::get<std::int64_t>(stored) == 9);
+
+    // Ungültiger Look-Index liefert einen Fehler statt zu crashen.
+    CHECK_FALSE(rig.player.setLookNodeParameter(42, node, "channel", graph::ParameterValue{std::int64_t{1}}).ok());
+}

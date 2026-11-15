@@ -7,9 +7,14 @@
 // Auftritts-Einstellungen, nicht im Graphen, darum nicht hier.
 //
 // findDmxValueNodes (nachträglich freigegebene Erweiterung): listet alle wh.value.dmx/wh.value.dmxcolor-
-// Nodes des Graphen auf, unabhängig davon, wohin sie gerade zeigen - für die Rechtsklick-Kategorie "DMX Out"
-// im DMX-Monitor, die die Adresse eines bestehenden Nodes direkt auf den angeklickten Kanal patcht, statt
-// das im Node-Editor von Hand einzustellen.
+// Nodes EINES Graphen auf, unabhängig davon, wohin sie gerade zeigen - für die Rechtsklick-Kategorie
+// "DMX Out" im DMX-Monitor, die die Adresse eines bestehenden Nodes direkt auf den angeklickten Kanal
+// patcht, statt das im Node-Editor von Hand einzustellen. Player::dmxValueNodes() (player_edit.cpp) ruft
+// das sowohl für den gerade im Editor offenen Graphen (project_->graph) als auch für jeden gespeicherten
+// Look (project_->looks[i].graph) auf - ein Look ist ein eigener kleiner Graph (siehe project.hpp), der nur
+// während der Bearbeitung in den Editor geladen ist; ein Node darin bleibt sonst für findDmxValueNodes(nur
+// project_->graph) unsichtbar, obwohl er zum Projekt gehört. DmxValueNodeRef::lookIndex sagt, aus welchem
+// Look (falls überhaupt) ein Treffer stammt, damit Studio weiß, in welchem Graphen es patchen muss.
 //
 // DmxInputListener::Kind (nachträglich freigegebene Erweiterung, zweiter Teil des 15.11.-Vorschlags "farbig
 // hinterlegen"): grob, WELCHER Art der Hörer ist - Studio-Schicht (dmx_cell_colors.hpp) färbt Zellen danach
@@ -44,6 +49,9 @@ struct DmxInputListener {
 struct DmxValueNodeRef {
     NodeId id;
     std::string label;  // Beschriftung des Nodes (umbenennbar, siehe NodeInstance::label)
+    /// nullopt: Node steht im gerade im Editor offenen Graphen (project_->graph). Sonst: Index in
+    /// project_->looks - der Node steht in diesem Look, der momentan NICHT im Editor geladen ist.
+    std::optional<std::size_t> lookIndex;
 };
 
 /// Alle wh.value.dmx/wh.value.dmxcolor-Nodes des Graphen, in Graph-Reihenfolge - für die Rechtsklick-
