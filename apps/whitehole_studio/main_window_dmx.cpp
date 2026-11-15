@@ -150,6 +150,18 @@ void MainWindow::patchDmxValueNode(NodeId node, std::optional<std::size_t> lookI
     report(setOne(node, "channel", graph::ParameterValue{static_cast<std::int64_t>(channel)}));
 }
 
+void MainWindow::patchDmxOutputValueNode(std::uint16_t poolChannel, std::uint16_t count, output::Protocol protocol,
+                                          std::uint32_t universe, std::uint32_t channel) {
+    // Gegenstück zu patchDmxValueNode, für die Schreib-Richtung: der Node selbst hat keine eigene Adresse
+    // (nur seinen internen Pool-Kanal), die echte Adresse steckt in einem project::DmxChannelPatch. Kein
+    // lookIndex nötig: dmxPatches ist projektweit, nicht Teil des Graphen, also unabhängig davon, ob der
+    // Node gerade im offenen Graphen oder in einem Look steckt (siehe Player::patchDmxOutputValueNode).
+    const Result<void> result = player_->patchDmxOutputValueNode(poolChannel, count, protocol, universe, channel);
+    if (!result.ok()) {
+        statusBar()->showMessage(QString::fromStdString(result.error().message), 8000);
+    }
+}
+
 void MainWindow::followMasterDmx() {
     if (masterSlider_ == nullptr || masterLabel_ == nullptr) {
         return;

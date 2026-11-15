@@ -20,6 +20,7 @@ namespace {
 
 const char* const kProject = R"(whitehole-project 1
 destination 0 10.0.0.5
+destination 1 10.0.0.6
 
 fixture Panel
   matrix 4 2
@@ -79,10 +80,12 @@ TEST_CASE("Player::dmxListenerAt: ein Node im Graphen geht vor Master/Live, fall
 
 namespace {
 
-// Projekt mit einem Look, der einen eigenen wh.value.dmx-Node enthält - dieser Node existiert NUR im
-// gespeicherten Look (project_->looks[0].graph), nicht im gerade offenen Hauptgraphen project_->graph. Bug-
-// Reproduktion vom 15.11. ("whfx behauptet, kein DMX-Node sei im Projekt, obwohl einer da ist"): der Node war
-// in genau dieser Lage unsichtbar, solange dmxValueNodes() nur project_->graph abgesucht hat.
+// Projekt mit einem Look, der einen eigenen wh.value.dmx-Node (Lese-Richtung) UND einen eigenen
+// wh.output.dmx-Node (Schreib-Richtung) enthält - beide existieren NUR im gespeicherten Look
+// (project_->looks[0].graph), nicht im gerade offenen Hauptgraphen project_->graph. Bug-Reproduktion vom
+// 15.11. ("whfx behauptet, kein DMX-Node sei im Projekt, obwohl einer da ist"): der Lese-Node war in genau
+// dieser Lage unsichtbar, solange dmxValueNodes() nur project_->graph abgesucht hat;
+// dmxOutputValueNodes() braucht dieselbe Behandlung für die Schreib-Richtung.
 const char* const kProjectWithLook = R"(whitehole-project 1
 destination 0 10.0.0.5
 
@@ -100,6 +103,8 @@ look "LookA" fade 1
   end
   node ld wh.value.dmx
     set channel 5
+  end
+  node lo wh.output.dmx
   end
   output lg.out
 endlook
@@ -153,4 +158,59 @@ TEST_CASE("Player::setLookNodeParameter: schreibt in den Graphen eines gespeiche
 
     // Ungültiger Look-Index liefert einen Fehler statt zu crashen.
     CHECK_FALSE(rig.player.setLookNodeParameter(42, node, "channel", graph::ParameterValue{std::int64_t{1}}).ok());
+}
+
+TEST_CASE("Player::dmxOutputValueNodes: findet auch Nodes, die nur in einem gespeicherten Look stecken",
+          "[player][dmx]") {
+    LookRig rig;
+    const std::vector<runtime::DmxOutputValueNodeRef> nodes = rig.player.dmxOutputValueNodes();
+    REQUIRE(nodes.size() == 1);  // project_->graph hat keinen wh.output.dmx-Node, nur der Look
+    REQUIRE(nodes[0].lookIndex.has_value());
+    CHECK(*nodes[0].lookIndex == 0);
+    CHECK(nodes[0].label.find("LookA") != std::string::npos);
+    CHECK(nodes[0].poolChannel == 1);  // Standard-Parameter des Nodes (siehe builtin_dmx_out.cpp)
+    CHECK(nodes[0].count == 8);
+}
+
+TEST_CASE("Player::patchDmxOutputValueNode: legt einen neuen Pool-Patch an oder aktualisiert den bestehenden",
+          "[player][dmx]") {
+    Rig rig;
+    const NodeId node = rig.player.addNode("wh.output.dmx", Vec2{}).value();
+    const auto found = rig.player.dmxOutputValueNodes();
+    REQUIRE(found.size() == 1);
+    CHECK(found[0].id == node);
+    const std::uint16_t poolChannel = found[0].poolChannel;
+    const std::uint16_t count = found[0].count;
+
+    // Noch kein Patch für diesen Pool-Bereich: ein neuer Eintrag entsteht, destination 0 (Standard).
+    REQUIRE(rig.player.patchDmxOutputValueNode(poolChannel, count, output::Protocol::ArtNet, 50, 10).ok());
+    REQUIRE(rig.player.project() != nullptr);
+    {
+        const auto& patches = rig.player.project()->dmxPatches;
+        REQUIRE(patches.size() == 1);
+        CHECK(patches[0].poolChannel == poolChannel);
+        CHECK(patches[0].count == count);
+        CHECK(patches[0].protocol == output::Protocol::ArtNet);
+        CHECK(patches[0].universe == 50);
+        CHECK(patches[0].channel == 10);
+        CHECK(patches[0].destination == 0);
+    }
+
+    // Eine nicht standardmäßige destination von Hand setzen (kProject kennt zwei, siehe Rig), um zu prüfen,
+    // dass ein erneutes Patchen desselben Pool-Bereichs sie nicht stillschweigend zurücksetzt.
+    {
+        std::vector<output::DmxChannelPatch> withDestination = rig.player.project()->dmxPatches;
+        withDestination[0].destination = 1;
+        REQUIRE(rig.player.setDmxPatches(withDestination).ok());
+    }
+
+    // Derselbe Pool-Bereich erneut gepatcht (anderes Universe/Kanal): aktualisiert den bestehenden Eintrag,
+    // statt einen zweiten anzulegen - destination bleibt erhalten.
+    REQUIRE(rig.player.patchDmxOutputValueNode(poolChannel, count, output::Protocol::Sacn, 60, 20).ok());
+    const auto& patches = rig.player.project()->dmxPatches;
+    REQUIRE(patches.size() == 1);
+    CHECK(patches[0].protocol == output::Protocol::Sacn);
+    CHECK(patches[0].universe == 60);
+    CHECK(patches[0].channel == 20);
+    CHECK(patches[0].destination == 1);
 }

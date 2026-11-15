@@ -144,6 +144,33 @@ Result<void> Player::setDmxPatches(std::vector<output::DmxChannelPatch> patches)
     });
 }
 
+Result<void> Player::patchDmxOutputValueNode(std::uint16_t poolChannel, std::uint16_t count, output::Protocol protocol,
+                                              std::uint32_t universe, std::uint32_t channel) {
+    // Für die Rechtsklick-Kategorie "Node" im DMX-Ausgangs-Monitor (siehe dmx_listener.hpp): denselben
+    // Pool-Bereich schon gepatcht? Dann nur Protokoll/Universe/Kanal/Zahl aktualisieren (destination bleibt,
+    // wie sie war), sonst einen neuen Eintrag anlegen (destination 0 - derselbe Standard wie überall sonst
+    // beim manuellen Patchen, siehe dmx_patch_table.cpp/AddFixtureDialog).
+    return editProject({}, [&](project::Project& p) -> Result<void> {
+        const auto existing = std::find_if(p.dmxPatches.begin(), p.dmxPatches.end(),
+                                            [poolChannel](const output::DmxChannelPatch& patch) { return patch.poolChannel == poolChannel; });
+        if (existing != p.dmxPatches.end()) {
+            existing->count = count;
+            existing->protocol = protocol;
+            existing->universe = static_cast<std::uint16_t>(universe);
+            existing->channel = static_cast<std::uint16_t>(channel);
+        } else {
+            output::DmxChannelPatch patch;
+            patch.poolChannel = poolChannel;
+            patch.count = count;
+            patch.protocol = protocol;
+            patch.universe = static_cast<std::uint16_t>(universe);
+            patch.channel = static_cast<std::uint16_t>(channel);
+            p.dmxPatches.push_back(patch);
+        }
+        return {};
+    });
+}
+
 output::FixturePatch Player::suggestPatch(std::uint64_t leds) const {
     (void)leds;  // die Größe des neuen Fixtures bestimmt nur, was hinter ihm frei ist
     output::FixturePatch patch;

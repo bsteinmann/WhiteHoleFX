@@ -30,11 +30,11 @@ msgstr "   |   Salida apagada (%1 paquetes sin enviar)"
 msgid "   |   BLACKOUT"
 msgstr "   |   BLACKOUT"
 
-#: main_window_dmx.cpp:187
+#: main_window_dmx.cpp:199
 msgid "   |   DMX-Eingang %1: %2 Pakete"
 msgstr "   |   Entrada DMX %1: %2 paquetes"
 
-#: main_window_dmx.cpp:177
+#: main_window_dmx.cpp:189
 msgid "   |   DMX-Nodes im Projekt, Eingang aus (Einstellungen)"
 msgstr "   |   Nodos DMX en el proyecto, entrada apagada (Ajustes)"
 
@@ -50,7 +50,7 @@ msgstr "   |   Master %1 %"
 msgid "   |   TESTMODUS"
 msgstr "   |   MODO DE PRUEBA"
 
-#: main_window_dmx.cpp:185
+#: main_window_dmx.cpp:197
 msgid " + sACN"
 msgstr " + sACN"
 
@@ -102,7 +102,7 @@ msgstr "%1  (%2 LED)"
 msgid "%1  →  %2"
 msgstr "%1  →  %2"
 
-#: main_window_controls.cpp:62 main_window_dmx.cpp:163
+#: main_window_controls.cpp:62 main_window_dmx.cpp:175
 msgid "%1 %"
 msgstr "%1 %"
 
@@ -174,7 +174,7 @@ msgstr "E&jemplos"
 msgid "&Blackout"
 msgstr "&Blackout"
 
-#: main_window_dmx_monitor.cpp:47
+#: main_window_dmx_monitor.cpp:57
 msgid "&DMX-Monitor …"
 msgstr "&Monitor DMX …"
 
@@ -474,11 +474,11 @@ msgstr "Dirección (vacía = multicast, solo sACN)"
 msgid "Adressraum"
 msgstr "Rango de direcciones"
 
-#: dmx_output_monitor_panel.cpp:180
+#: dmx_output_monitor_panel.cpp:201
 msgid "Aktiv (letzter gesendeter Frame vor %1 s)."
 msgstr "Activo (último fotograma enviado hace %1 s)."
 
-#: dmx_monitor_panel.cpp:200
+#: dmx_monitor_panel.cpp:201
 msgid "Aktiv (letztes Paket vor %1 s)."
 msgstr "Activo (último paquete hace %1 s)."
 
@@ -514,15 +514,15 @@ msgstr "Alfa 0: el LED permanece apagado aquí (el color se conserva)."
 msgid "Als Ausgang setzen (output)"
 msgstr "Establecer como salida (output)"
 
-#: dmx_monitor_panel.cpp:143
+#: dmx_monitor_panel.cpp:144
 msgid "Als Live-Look-Auswahl-Kanal verwenden"
 msgstr "Usar como canal de selección de look en vivo"
 
-#: dmx_monitor_panel.cpp:146
+#: dmx_monitor_panel.cpp:147
 msgid "Als Live-Überblendzeit-Kanal verwenden"
 msgstr "Usar como canal de tiempo de transición en vivo"
 
-#: dmx_monitor_panel.cpp:138
+#: dmx_monitor_panel.cpp:139
 msgid "Als Masterdimmer-Kanal verwenden"
 msgstr "Usar como canal de atenuador maestro"
 
@@ -926,10 +926,6 @@ msgstr "DMX"
 msgid "DMX %1 U%2 K%3 ab %4"
 msgstr "DMX %1 U%2 C%3 desde %4"
 
-#: dmx_monitor_panel.cpp:150
-msgid "DMX Out"
-msgstr "DMX Out"
-
 #: cue_dialog.cpp:78
 msgid "DMX-Auslöser: Kanal"
 msgstr "Disparador DMX: canal"
@@ -958,7 +954,7 @@ msgstr "Entrada DMX: %1"
 msgid "DMX-Kanal"
 msgstr "Canal DMX"
 
-#: dmx_output_monitor_panel.cpp:136
+#: dmx_output_monitor_panel.cpp:137
 msgid "DMX-Kanal-Pool-Patch bearbeiten (Pool-Kanal %1)…"
 msgstr "Editar el patch del pool de canales DMX (canal de pool %1)…"
 
@@ -1050,7 +1046,7 @@ msgstr "El cue se dispara cuando el valor del canal sube a este número o más"
 msgid "Der Kanalwert 0 bis 255 setzt den Master auf 0 bis 100 %. Solange Pakete kommen, folgt der Master-Regler dem Pult; bleibt das Signal weg, hält der Master seinen Wert. Der Empfang oben muss für das gewählte Protokoll eingeschaltet sein."
 msgstr "El valor del canal de 0 a 255 ajusta el master de 0 a 100 %. Mientras lleguen paquetes, el control master sigue a la mesa; si la señal se corta, el master mantiene su valor. La recepción de arriba debe estar activada para el protocolo elegido."
 
-#: main_window_dmx.cpp:168
+#: main_window_dmx.cpp:180
 msgid "Der Master kommt gerade vom DMX-Kanal (Einstellungen → DMX-Eingang)"
 msgstr "El master viene ahora del canal DMX (Ajustes → Entrada DMX)"
 
@@ -1314,7 +1310,7 @@ msgstr "Ajustes"
 msgid "Einstieg"
 msgstr "Primeros pasos"
 
-#: main_window_dmx_monitor.cpp:49
+#: main_window_dmx_monitor.cpp:59
 msgid "Empfangene und gesendete DMX-Kanäle einsehen und direkt patchen (eigenes Fenster)"
 msgstr "Ver los canales DMX recibidos y enviados y asignarles una dirección directamente (ventana propia)"
 
@@ -1386,7 +1382,7 @@ msgstr "Ya existe un look «%1». ¿Sobrescribirlo con el efecto actual?"
 msgid "Es ist kein Projekt geladen. Mit Strg+N ein neues anlegen oder mit Strg+O eins öffnen."
 msgstr "No hay ningún proyecto cargado. Crea uno con Ctrl+N o abre uno con Ctrl+O."
 
-#: dmx_output_monitor_panel.cpp:175
+#: dmx_output_monitor_panel.cpp:196
 msgid "Es wurde noch nichts auf dieses Universe gesendet."
 msgstr "Todavía no se ha enviado nada a este universo."
 
@@ -1410,11 +1406,11 @@ msgstr "Color del grupo"
 msgid "Farbe der Kachel"
 msgstr "Color de la ficha"
 
-#: dmx_monitor_panel.cpp:218 dmx_output_monitor_panel.cpp:198
+#: dmx_monitor_panel.cpp:219 dmx_output_monitor_panel.cpp:219
 msgid "Farbe für Kanal %1"
 msgstr "Color para el canal %1"
 
-#: dmx_monitor_panel.cpp:128 dmx_output_monitor_panel.cpp:129
+#: dmx_monitor_panel.cpp:128 dmx_output_monitor_panel.cpp:130
 msgid "Farbe ändern…"
 msgstr "Cambiar color…"
 
@@ -1474,7 +1470,7 @@ msgstr "Enviar el fixture a la salida"
 msgid "Fixture hinzufügen"
 msgstr "Añadir fixture"
 
-#: dmx_output_monitor_panel.cpp:132
+#: dmx_output_monitor_panel.cpp:133
 msgid "Fixture-Patch bearbeiten: %1…"
 msgstr "Editar el patch del fixture: %1…"
 
@@ -1570,7 +1566,7 @@ msgstr "Amarillo"
 msgid "Gerät:"
 msgstr "Dispositivo:"
 
-#: main_window_controls.cpp:46 main_window_dmx.cpp:169
+#: main_window_controls.cpp:46 main_window_dmx.cpp:181
 msgid "Gesamthelligkeit (wirkt auf Vorschau und Ausgabe, nicht im Projekt gespeichert)"
 msgstr "Brillo global (afecta a la vista previa y a la salida, no se guarda en el proyecto)"
 
@@ -1786,15 +1782,15 @@ msgstr "Mostrar u ocultar el recorrido del cable con flechas, LED de inicio y n�
 msgid "Kaleidoskop: Spiegelt einen Ausschnitt um einen Mittelpunkt zu einem Muster mit mehreren Segmenten."
 msgstr "Kaleidoscope: mirrors a slice around a center into a pattern with several segments."
 
-#: dmx_monitor_panel.cpp:97 dmx_output_monitor_panel.cpp:98
+#: dmx_monitor_panel.cpp:97 dmx_output_monitor_panel.cpp:99
 msgid "Kanal %1"
 msgstr "Canal %1"
 
-#: dmx_output_monitor_panel.cpp:102
+#: dmx_output_monitor_panel.cpp:103
 msgid "Kanal %1 — belegt vom DMX-Kanal-Pool (Pool-Kanal %2)"
 msgstr "Canal %1 — ocupado por el pool de canales DMX (canal de pool %2)"
 
-#: dmx_output_monitor_panel.cpp:101
+#: dmx_output_monitor_panel.cpp:102
 msgid "Kanal %1 — belegt von Fixture: %2"
 msgstr "Canal %1 — ocupado por el fixture: %2"
 
@@ -1826,7 +1822,7 @@ msgstr "Sin proyecto"
 msgid "Kein Projekt geladen."
 msgstr "Ningún proyecto cargado."
 
-#: dmx_monitor_panel.cpp:195
+#: dmx_monitor_panel.cpp:196
 msgid "Kein Signal auf diesem Universe."
 msgstr "Sin señal en este universo."
 
@@ -1838,7 +1834,11 @@ msgstr "Sin destino (rectángulo libre)"
 msgid "Keine Aufnahmegeräte gefunden. Ein Audio-Interface anschließen und das Fenster neu öffnen."
 msgstr "No se encontraron dispositivos de captura. Conecta una interfaz de audio y vuelve a abrir la ventana."
 
-#: dmx_monitor_panel.cpp:153
+#: dmx_output_monitor_panel.cpp:153
+msgid "Keine DMX-Ausgabe-Nodes im Projekt"
+msgstr "No hay nodos de salida DMX en el proyecto"
+
+#: dmx_monitor_panel.cpp:154
 msgid "Keine DMX-Wert-Nodes im Projekt"
 msgstr "No hay nodos de valor DMX en el proyecto"
 
@@ -1930,11 +1930,11 @@ msgstr "Leyenda de los puertos"
 msgid "Legt Bild B über Bild A. Der Modus bestimmt die Verrechnung (Addieren, Multiplizieren, Screen, Subtrahieren, Differenz …), „Amount“ blendet zwischen A und dem Ergebnis."
 msgstr "Lays image B over image A. The mode sets how they combine (add, multiply, screen, subtract, difference ...); \"Amount\" fades between A and the result."
 
-#: dmx_output_monitor_panel.cpp:179
+#: dmx_output_monitor_panel.cpp:200
 msgid "Letzter gesendeter Frame vor %1 s (veraltet)."
 msgstr "Último fotograma enviado hace %1 s (obsoleto)."
 
-#: dmx_monitor_panel.cpp:199
+#: dmx_monitor_panel.cpp:200
 msgid "Letztes Paket vor %1 s (veraltet)."
 msgstr "Último paquete hace %1 s (desactualizado)."
 
@@ -1978,7 +1978,7 @@ msgstr "Vaciar lista"
 msgid "Live"
 msgstr "Live"
 
-#: dmx_monitor_panel.cpp:142
+#: dmx_monitor_panel.cpp:143
 msgid "Live Kanal"
 msgstr "Canal en vivo"
 
@@ -2078,7 +2078,7 @@ msgstr "Magenta"
 msgid "Manuell"
 msgstr "Manual"
 
-#: dmx_monitor_panel.cpp:137
+#: dmx_monitor_panel.cpp:138
 msgid "Master"
 msgstr "Master"
 
@@ -2222,7 +2222,7 @@ msgstr "Nueva versión %1 disponible – Ayuda > Buscar actualizaciones …"
 msgid "Neuer Name:"
 msgstr "Nuevo nombre:"
 
-#: dmx_output_monitor_panel.cpp:141
+#: dmx_output_monitor_panel.cpp:142
 msgid "Neues Fixture hier patchen…"
 msgstr "Parchear un nuevo fixture aquí…"
 
@@ -2261,6 +2261,10 @@ msgstr "Aún no hay plantillas"
 #: fixture_library_page.cpp:261
 msgid "Noch nicht im Layout verwendet."
 msgstr "Aún no se usa en el layout."
+
+#: dmx_monitor_panel.cpp:151 dmx_output_monitor_panel.cpp:150
+msgid "Node"
+msgstr "Nodo"
 
 #: node_editor_menu.cpp:29
 msgid "Node hinzufügen"
@@ -2482,7 +2486,7 @@ msgstr "Abrir proyecto"
 msgid "Protokoll"
 msgstr "Protocolo"
 
-#: dmx_monitor_panel.cpp:39 dmx_output_monitor_panel.cpp:40
+#: dmx_monitor_panel.cpp:39 dmx_output_monitor_panel.cpp:41
 msgid "Protokoll:"
 msgstr "Protocolo:"
 
@@ -2886,7 +2890,7 @@ msgstr "Universo %1 desde el canal 1"
 msgid "Universe (Art-Net ab 0, sACN ab 1)"
 msgstr "Universo (Art-Net desde 0, sACN desde 1)"
 
-#: dmx_monitor_panel.cpp:42 dmx_output_monitor_panel.cpp:43
+#: dmx_monitor_panel.cpp:42 dmx_output_monitor_panel.cpp:44
 msgid "Universe:"
 msgstr "Universo:"
 

@@ -455,20 +455,35 @@ public:
     /// masterDmx()/liveDmx()). Nullopt: nichts im geladenen Projekt bzw. Auftritt hört hier zu.
     [[nodiscard]] std::optional<DmxInputListener> dmxListenerAt(input::DmxProtocol protocol, std::uint32_t universe,
                                                                  std::uint32_t channel) const;
-    /// Für die Rechtsklick-Kategorie "DMX Out" im DMX-Monitor (nachträglich freigegebene Erweiterung): alle
-    /// wh.value.dmx/wh.value.dmxcolor-Nodes des geladenen Projekts, zum Patchen ihrer Adresse von dort aus -
-    /// sowohl im gerade im Editor offenen Graphen als auch in jedem gespeicherten Look (siehe
+    /// Für die Rechtsklick-Kategorie "Node" im DMX-Monitor, Eingang (nachträglich freigegebene Erweiterung):
+    /// alle wh.value.dmx/wh.value.dmxcolor-Nodes des geladenen Projekts, zum Patchen ihrer Adresse von dort
+    /// aus - sowohl im gerade im Editor offenen Graphen als auch in jedem gespeicherten Look (siehe
     /// DmxValueNodeRef::lookIndex, dmx_listener.hpp). Leer ohne Projekt oder ohne passenden Node.
     [[nodiscard]] std::vector<DmxValueNodeRef> dmxValueNodes() const;
     /// Setzt einen Parameter eines Nodes, der NICHT im gerade offenen Graphen steht, sondern in einem
     /// gespeicherten, aktuell nicht geladenen Look (lookIndex wie von dmxValueNodes() geliefert) - für
-    /// "DMX Out" auf einen solchen Node. setParameter() selbst setzt immer project_->graph voraus (das ist
+    /// "Node" auf einen solchen Node. setParameter() selbst setzt immer project_->graph voraus (das ist
     /// der Live-/Editier-Graph) und kann einen Node in einem anderen Look nicht erreichen; diese Methode
     /// schreibt direkt in project_->looks[lookIndex].graph, ohne graphDirty_/valuesDirty_ zu setzen (der
     /// Look läuft gerade nicht live), markiert das Projekt aber als geändert (modified_), damit die
     /// Änderung beim Speichern mitgenommen wird.
     [[nodiscard]] Result<graph::ParameterValue> setLookNodeParameter(std::size_t lookIndex, NodeId node,
                                                                        const std::string& key, graph::ParameterValue value);
+    /// Für dieselbe Rechtsklick-Kategorie "Node", aber im DMX-Ausgangs-Monitor (nachträglich freigegebene
+    /// Erweiterung, 15.11.): alle wh.output.dmx/wh.output.dmxcolor-Nodes des geladenen Projekts, mit ihrem
+    /// aktuellen internen Pool-Kanal (DmxOutputValueNodeRef::poolChannel/count) - ebenfalls Look-aware, wie
+    /// dmxValueNodes(). Leer ohne Projekt oder ohne passenden Node.
+    [[nodiscard]] std::vector<DmxOutputValueNodeRef> dmxOutputValueNodes() const;
+    /// Patcht den Pool-Kanal-Bereich [poolChannel, poolChannel+count) (wie von dmxOutputValueNodes()
+    /// geliefert) auf die angeklickte echte Adresse: legt in project_->dmxPatches einen neuen Eintrag an
+    /// oder aktualisiert den bestehenden für genau diesen Pool-Bereich (eine bestehende destination bleibt
+    /// dabei erhalten, ein neuer Eintrag bekommt 0 - derselbe Standard wie beim manuellen Patchen über Stage
+    /// Config/Ausgabe). Anders als bei den Lese-Nodes gibt es hier keinen lookIndex-Parameter: die Adresse
+    /// steht projektweit in project_->dmxPatches, nicht am Node selbst, der Look spielt also keine Rolle für
+    /// das Schreiben (nur dmxOutputValueNodes() braucht ihn, um poolChannel/count aus dem richtigen Graphen
+    /// zu lesen). Validierung (Überschneidungen, Bereichsgrenzen) wie setDmxPatches().
+    [[nodiscard]] Result<void> patchDmxOutputValueNode(std::uint16_t poolChannel, std::uint16_t count, output::Protocol protocol,
+                                                        std::uint32_t universe, std::uint32_t channel);
 
     /// Bild der LEDs: während des Laufs mit den Farben des letzten Frames (schwarz, solange noch
     /// keiner da ist), sonst das Layout. Fehler: InvalidArgument, wenn nichts geladen ist.

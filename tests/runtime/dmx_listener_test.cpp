@@ -1,6 +1,8 @@
 // findDmxListenerInGraph: welcher Node einen bestimmten empfangenen DMX-Kanal liest.
 // findDmxValueNodes: alle wh.value.dmx/wh.value.dmxcolor-Nodes des Graphen (für die Rechtsklick-Kategorie
-// "DMX Out" im DMX-Monitor).
+// "Node" im DMX-Monitor, Eingang).
+// findDmxOutputValueNodes: dasselbe für wh.output.dmx/wh.output.dmxcolor (Rechtsklick-Kategorie "Node" im
+// DMX-Ausgangs-Monitor), inklusive der berechneten Pool-Kanal-Zahl je Typ/Parameter.
 #include <catch2/catch_test_macros.hpp>
 
 #include "whitehole/graph/graph_model.hpp"
@@ -60,4 +62,42 @@ TEST_CASE("findDmxValueNodes: listet alle DMX-Wert-Nodes, andere Node-Typen nich
     CHECK(nodes[0].label == "DMX Channel");
     CHECK(nodes[1].id == color);
     CHECK(nodes[1].label == "DMX Color");
+}
+
+TEST_CASE("findDmxOutputValueNodes: listet DMX-Ausgabe-Nodes mit ihrem Pool-Kanal/Zahl, andere Typen nicht",
+          "[runtime][dmx]") {
+    auto library = nodes::BuiltinLibrary::create();
+    REQUIRE(library.ok());
+    graph::Graph graph{library.value()->registry};
+
+    CHECK(runtime::findDmxOutputValueNodes(graph).empty());
+
+    // Standard: channel 1, count 8, kein 16 Bit -> 8 Pool-Kanäle ab 1.
+    const NodeId dmxOut = graph.addNode("wh.output.dmx", Vec2{}).value();
+    // channel 10, count 3, 16 Bit -> 6 Pool-Kanäle (3 * 2) ab 10.
+    const NodeId wideOut = graph.addNode("wh.output.dmx", Vec2{}).value();
+    REQUIRE(graph.setParameter(wideOut, "channel", graph::ParameterValue{std::int64_t{10}}).ok());
+    REQUIRE(graph.setParameter(wideOut, "count", graph::ParameterValue{std::int64_t{3}}).ok());
+    REQUIRE(graph.setParameter(wideOut, "bits16", graph::ParameterValue{true}).ok());
+    // channel 20, mode 3 (Dimmer+RGBW) -> 5 Pool-Kanäle ab 20.
+    const NodeId colorOut = graph.addNode("wh.output.dmxcolor", Vec2{}).value();
+    REQUIRE(graph.setParameter(colorOut, "channel", graph::ParameterValue{std::int64_t{20}}).ok());
+    REQUIRE(graph.setParameter(colorOut, "mode", graph::ParameterValue{std::int64_t{3}}).ok());
+    const NodeId other = graph.addNode("wh.generator.gradient", Vec2{}).value();
+    (void)other;
+
+    const auto refs = runtime::findDmxOutputValueNodes(graph);
+    REQUIRE(refs.size() == 3);
+    CHECK(refs[0].id == dmxOut);
+    CHECK(refs[0].label == "DMX Out");
+    CHECK(refs[0].poolChannel == 1);
+    CHECK(refs[0].count == 8);
+    CHECK(refs[1].id == wideOut);
+    CHECK(refs[1].poolChannel == 10);
+    CHECK(refs[1].count == 6);
+    CHECK(refs[2].id == colorOut);
+    CHECK(refs[2].label == "DMX Color Out");
+    CHECK(refs[2].poolChannel == 20);
+    CHECK(refs[2].count == 5);
+    CHECK_FALSE(refs[0].lookIndex.has_value());  // direkt im Graphen, nicht über Player::dmxOutputValueNodes()
 }

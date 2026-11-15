@@ -14,11 +14,18 @@
 // Pool) - analog zum Eingangsmonitor (dmx_monitor_panel.hpp), nur berechnet bei Protokoll-/Universe-
 // Wechsel, nicht in refresh() (siehe dort für die Begründung).
 //
-// Rechtsklick (Schritt 3 des DMX-Patch/Monitor-Gitters): auf einer freien Zelle bietet er an, dort ein
-// neues Fixture zu patchen (öffnet den bestehenden "Fixture hinzufügen"-Dialog vorbefüllt, statt das
-// Patchen hier noch einmal nachzubauen). Auf einer belegten Zelle (nachträglich freigegebene Erweiterung)
-// bietet er zusätzlich "Farbe ändern…" (siehe unten) an und springt sonst direkt zur passenden Zeile in der
-// Fixture-Patch- bzw. DMX-Kanal-Pool-Tabelle auf der Seite Ausgabe
+// Rechtsklick (Schritt 3 des DMX-Patch/Monitor-Gitters): auf einer freien Zelle bietet er "Neues Fixture
+// hier patchen…" an (öffnet den bestehenden "Fixture hinzufügen"-Dialog vorbefüllt, statt das Patchen hier
+// noch einmal nachzubauen), dazu ein neues Untermenü "Node" (Gegenstück zum gleichnamigen Untermenü im
+// Eingangs-Monitor, siehe dmx_monitor_panel.hpp): listet alle wh.output.dmx/wh.output.dmxcolor-Nodes des
+// Projekts (Player::dmxOutputValueNodes) und patcht den gewählten Node-Pool-Bereich auf diesen Kanal
+// (requestPatchOutputNode, siehe MainWindow::patchDmxOutputValueNode) - bewusst getrennt vom
+// Eingangs-Monitor-Untermenü (nicht "egal welcher Monitor", wie zunächst erwogen): Empfangs- und
+// Sende-Adressraum sind unterschiedliche Dinge, auch bei gleicher Universe-Nummer, und Fixtures bleiben
+// bewusst außen vor - sie werden weiterhin ausschließlich über "Neues Fixture hier patchen…" bzw. die
+// Fixture-Patch-Tabelle selbst gepatcht, nie über dieses neue Untermenü. Auf einer belegten Zelle
+// (nachträglich freigegebene Erweiterung) bietet er zusätzlich "Farbe ändern…" (siehe unten) an und springt
+// sonst direkt zur passenden Zeile in der Fixture-Patch- bzw. DMX-Kanal-Pool-Tabelle auf der Seite Ausgabe
 // (StageSetupWindow::openOutputFixture/openOutputPool), statt nur anzuzeigen, wer belegt.
 //
 // Zellenfarben (nachträglich freigegebene Erweiterung, erster Teil des 15.11.-Vorschlags "farbig
@@ -65,7 +72,8 @@ public:
 
     /// Rauchtest für die CI: Protokoll/Universe wählen, einen Wert schreiben, prüfen, dass er erscheint,
     /// Tooltip ohne Belegung prüfen, Rechtsklick auf eine freie, eine Fixture- und eine Pool-Zelle prüfen,
-    /// dazu deren Zellenfarben und dass "Farbe ändern…" bei belegten Zellen angeboten wird.
+    /// dazu deren Zellenfarben, dass "Farbe ändern…" bei belegten Zellen angeboten wird, und das neue
+    /// Untermenü "Node" auf einer freien Zelle (Patchen eines wh.output.dmx-Nodes).
     QString exercise();
 
 Q_SIGNALS:
@@ -75,6 +83,10 @@ Q_SIGNALS:
     void requestEditFixturePatch(mapping::FixtureId id);
     /// Rechtsklick auf eine vom DMX-Kanal-Pool belegte Zelle, "DMX-Kanal-Pool-Patch bearbeiten" gewählt.
     void requestEditPoolPatch(std::uint16_t poolChannel);
+    /// Rechtsklick auf eine freie Zelle, Untermenü "Node", einen wh.output.dmx/wh.output.dmxcolor-Node
+    /// gewählt: dessen Pool-Bereich (poolChannel/count, siehe DmxOutputValueNodeRef) auf diese Adresse patchen.
+    void requestPatchOutputNode(std::uint16_t poolChannel, std::uint16_t count, output::Protocol protocol,
+                                 std::uint32_t universe, std::uint32_t channel);
 
 private:
     void onSelectionChanged();  // Protokoll oder Universe gewechselt: Gitter muss neu gezeichnet werden

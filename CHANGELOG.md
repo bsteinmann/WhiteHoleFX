@@ -2,6 +2,23 @@
 
 ## 0.92.0
 
+- **Vereinheitlichte Node-Adressierung im DMX-Monitor, Richtung passend zum Monitor** (vom Nutzer gewünscht:
+  DMX-Ein/-Aus/-Color-Nodes per Rechtsklick im Monitor adressieren können, Fixtures dabei ausdrücklich außen
+  vor lassen). Das Rechtsklick-Untermenü im Reiter „Eingang", das die Adresse eines schon vorhandenen
+  `wh.value.dmx`/`wh.value.dmxcolor`-Nodes patcht, heißt jetzt **„Node"** statt „DMX Out" - umbenannt, weil
+  ein Node im Graphen selbst „DMX Out" heißen kann (`wh.output.dmx`), was beim Nutzer zu der (berechtigten)
+  Rückmeldung führte, der Monitor „findet keine zuweisbaren Nodes", obwohl ein solcher Node im Projekt stand:
+  er suchte nach dem falschen „DMX Out" (siehe vorheriger Eintrag in dieser Liste zur Look-Suche). Der Reiter
+  „Ausgang" bekommt ein neues, gleichnamiges Untermenü **„Node"** für die Schreib-Richtung: listet alle
+  `wh.output.dmx`/`wh.output.dmxcolor`-Nodes des Projekts (neues `runtime::findDmxOutputValueNodes`/
+  `Player::dmxOutputValueNodes()`, look-aware wie die Lese-Richtung) und patcht beim Anklicken den internen
+  Pool-Bereich des gewählten Nodes auf die angeklickte Adresse (neues `Player::patchDmxOutputValueNode()`,
+  legt einen `DmxChannelPatch` an oder aktualisiert den bestehenden - `destination` bleibt dabei erhalten).
+  Bewusst zwei getrennte Untermenüs/Signale statt eines gemeinsamen: Empfangs- und Sende-Adressraum sind
+  unterschiedliche Dinge, auch bei gleicher Universe-Nummer, und Fixtures patchen weiterhin ausschließlich
+  über „Neues Fixture hier patchen…" bzw. die bestehende Fixture-Patch-Tabelle, nie über das neue Untermenü -
+  diese Trennung war dem Nutzer ausdrücklich wichtig. Eigene Tests in `dmx_listener_test.cpp` und
+  `player_dmx_listener_test.cpp` (Laufzeit-Ebene), Rauchtest-Erweiterung in `DmxOutputMonitorPanel::exercise()`.
 - **DMX-Monitor als eigenes Fenster statt zwei Docks** (vom Nutzer gewünscht). Eingangs- und Ausgangs-Monitor
   liegen jetzt als Reiter „Eingang"/„Ausgang" in einem eigenen, nicht-modalen Fenster (Ansicht → DMX-Monitor,
   F6) - nach demselben Muster wie „Stage Config" (`stage_setup_window.hpp`): lässt sich auf einen zweiten

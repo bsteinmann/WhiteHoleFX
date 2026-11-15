@@ -608,15 +608,17 @@ Umbau des bis dahin flachen Menüs):
   unter einer eigenen Kategorie.
 - **Live Kanal:** „Als Live-Look-Auswahl-Kanal verwenden” bzw. „Als Live-Überblendzeit-Kanal verwenden” —
   ebenfalls keine neue Funktion, dieselben beiden bestehenden Einstellungen aus „DMX-Eingang”, nur umsortiert.
-- **DMX Out** *(neu)*: listet alle `wh.value.dmx`- und `wh.value.dmxcolor`-Nodes des aktuellen Projekts
-  namentlich auf — auch solche, die nur in einem gespeicherten Look stecken statt im gerade offenen
-  Hauptgraphen (dort hinter dem Looknamen in Klammern); Klick auf einen Node setzt dessen Adresse (Protokoll,
-  Universe, Kanal) auf die angeklickte Zelle — dieselben drei Parameter, die auch das Parameterfenster des
-  Nodes zeigt. Enthält das Projekt keinen solchen Node, steht dort nur ein deaktivierter Hinweis.
+- **Node** (bis 15.11. „DMX Out” genannt — umbenannt, weil ein Node im Graphen selbst „DMX Out” heißen kann
+  (`wh.output.dmx`), was zu Verwechslungen führte): listet alle `wh.value.dmx`- und `wh.value.dmxcolor`-Nodes
+  des aktuellen Projekts namentlich auf — auch solche, die nur in einem gespeicherten Look stecken statt im
+  gerade offenen Hauptgraphen (dort hinter dem Looknamen in Klammern); Klick auf einen Node setzt dessen
+  Adresse (Protokoll, Universe, Kanal) auf die angeklickte Zelle — dieselben drei Parameter, die auch das
+  Parameterfenster des Nodes zeigt. Enthält das Projekt keinen solchen Node, steht dort nur ein deaktivierter
+  Hinweis.
 
 **Zellenfarben (nachträglich freigegebene Erweiterung, erster Teil des 15.11.-Vorschlags „farbig
 hinterlegen”):** eine belegte Zelle bekommt automatisch eine Farbe nach Kategorie — Master (Orange), Live
-Kanal (Violett) oder Node (Gelb, auch für per „DMX Out” gepatchte Nodes) — eine freie bleibt neutral. Wie
+Kanal (Violett) oder Node (Gelb, auch für per „Node” gepatchte Nodes) — eine freie bleibt neutral. Wie
 der Tooltip nur bei einem Protokoll-/Universe-Wechsel neu berechnet, nicht jeden Frame. Rechtsklick auf eine
 belegte Zelle bietet zusätzlich „Farbe ändern…” an: ein Farbwahl-Dialog überschreibt die Farbe dieser einen
 Zelle; die Überschreibung ist rein optisch (kein Projekt- oder Einstellungswert) und geht beim nächsten
@@ -633,6 +635,15 @@ Pool-Kanal) — und wird ebenso nur bei einem Protokoll-/Universe-Wechsel neu be
 
 **Rechtsklick-Zuordnung (Schritt 3, Ausgang):** eine freie Zelle bietet „Neues Fixture hier patchen…“ an und
 öffnet den bestehenden Dialog „Fixture hinzufügen“ mit vorbefülltem Protokoll/Universe/Kanal (Modus Manuell).
+Daneben ein zweites Untermenü **Node** *(neu, 15.11., vereinheitlichte Node-Adressierung)*: listet alle
+`wh.output.dmx`- und `wh.output.dmxcolor`-Nodes des aktuellen Projekts namentlich auf (ebenfalls look-aware,
+wie beim Reiter Eingang) und patcht beim Anklicken den internen Pool-Bereich des gewählten Nodes auf die
+angeklickte Adresse — der Node selbst hat ja keine eigene Adresse, nur einen Pool-Kanal; die Zuordnung landet
+als DMX-Kanal-Pool-Patch, genau wie beim Patchen über die Tabelle auf der Seite Ausgabe. Bewusst getrennt vom
+gleichnamigen Untermenü des Eingangs-Monitors: Empfangs- und Sende-Adressraum sind unterschiedliche Dinge,
+auch bei gleicher Universe-Nummer. Fixtures laufen weiterhin ausschließlich über „Neues Fixture hier
+patchen…“ bzw. die Fixture-Patch-Tabelle, nie über dieses Untermenü. Enthält das Projekt keinen passenden
+Node, steht dort nur ein deaktivierter Hinweis.
 Eine schon gepatchte Zelle bietet (nachträglich freigegebene Erweiterung, statt nur die Belegung anzuzeigen)
 direkt „Fixture-Patch bearbeiten …“ bzw. „DMX-Kanal-Pool-Patch bearbeiten …“ an: das öffnet Stage Config auf
 der Seite Ausgabe und springt dort zur passenden Zeile der Fixture-Patch- bzw. der DMX-Kanal-Pool-Tabelle.

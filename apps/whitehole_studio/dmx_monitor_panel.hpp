@@ -20,10 +20,15 @@
 // freigegebene Erweiterung: in Kategorien gegliedert statt einer flachen Liste) drei Untermenüs: "Master"
 // (Masterdimmer-Zuordnung, siehe app_settings.hpp - keine eigene Einstellung, nur der bestehende
 // Master-Helligkeit-Kanal), "Live Kanal" (Look-Auswahl, Überblendzeit, ebenfalls app_settings.hpp) und
-// "DMX Out" (patcht die Adresse eines schon im Graphen vorhandenen wh.value.dmx/wh.value.dmxcolor-Nodes
-// direkt auf diesen Kanal, über Player::dmxValueNodes, statt das im Node-Editor von Hand einzustellen; der
-// Node kann auch in einem gespeicherten Look stecken statt im gerade offenen Graphen - requestPatchNode
-// reicht dafür den optionalen Look-Index aus DmxValueNodeRef weiter, siehe MainWindow::patchDmxValueNode).
+// "Node" (bis 15.11. "DMX Out" genannt - umbenannt, weil ein Node im Graphen selbst "DMX Out" heißen kann
+// (wh.output.dmx), was beim Nutzer für Verwechslung sorgte, siehe CLAUDE.md-Backlog; patcht die Adresse
+// eines schon im Graphen vorhandenen wh.value.dmx/wh.value.dmxcolor-Nodes direkt auf diesen Kanal, über
+// Player::dmxValueNodes, statt das im Node-Editor von Hand einzustellen; der Node kann auch in einem
+// gespeicherten Look stecken statt im gerade offenen Graphen - requestPatchNode reicht dafür den optionalen
+// Look-Index aus DmxValueNodeRef weiter, siehe MainWindow::patchDmxValueNode). Der DMX-Ausgangs-Monitor
+// (dmx_output_monitor_panel.hpp) bekommt sein eigenes, gleichnamiges "Node"-Untermenü für die
+// Schreib-Richtung (wh.output.dmx/wh.output.dmxcolor) - bewusst getrennt, weil Empfangs- und
+// Sende-Adressraum unterschiedliche Dinge sind, auch bei gleicher Universe-Nummer.
 //
 // Zellenfarben (nachträglich freigegebene Erweiterung, erster Teil des 15.11.-Vorschlags "farbig
 // hinterlegen"): eine belegte Zelle bekommt automatisch die Standardfarbe ihrer Kategorie
@@ -71,7 +76,7 @@ public:
     void refresh();
 
     /// Rauchtest für die CI: Protokoll/Universe wählen, einen Wert schreiben, prüfen, dass er erscheint,
-    /// Rechtsklick-Kategorien (Master/Live Kanal/DMX Out), das Patchen eines Nodes über "DMX Out" und die
+    /// Rechtsklick-Kategorien (Master/Live Kanal/Node), das Patchen eines Nodes über "Node" und die
     /// Zellenfarben (Master-/Node-Kategorie, "Farbe ändern…"-Aktion vorhanden) prüfen.
     QString exercise();
 
@@ -82,7 +87,7 @@ Q_SIGNALS:
     void requestLiveDmxSelect(input::DmxProtocol protocol, std::uint32_t universe, std::uint32_t channel);
     /// Rechtsklick, "Als Live-Überblendzeit-Kanal verwenden" gewählt.
     void requestLiveDmxFade(input::DmxProtocol protocol, std::uint32_t universe, std::uint32_t channel);
-    /// Rechtsklick, Untermenü "DMX Out", einen Node gewählt: dessen Adresse auf diesen Kanal patchen. lookIndex
+    /// Rechtsklick, Untermenü "Node", einen Node gewählt: dessen Adresse auf diesen Kanal patchen. lookIndex
     /// wie DmxValueNodeRef::lookIndex - nullopt: Node steht im gerade offenen Graphen; sonst: Index in
     /// Player::looks(), der Node steht in diesem (gerade nicht geladenen) Look.
     void requestPatchNode(NodeId node, std::optional<std::size_t> lookIndex, input::DmxProtocol protocol,

@@ -402,4 +402,21 @@ Result<graph::ParameterValue> Player::setLookNodeParameter(std::size_t lookIndex
     return lookGraph.findNode(node)->parameters.at(key);
 }
 
+std::vector<DmxOutputValueNodeRef> Player::dmxOutputValueNodes() const {
+    if (!project_) {
+        return {};
+    }
+    // Dasselbe Muster wie dmxValueNodes(): erst der gerade offene Graph, dann jeder gespeicherte Look.
+    std::vector<DmxOutputValueNodeRef> result = findDmxOutputValueNodes(project_->graph);
+    for (std::size_t i = 0; i < project_->looks.size(); ++i) {
+        std::vector<DmxOutputValueNodeRef> fromLook = findDmxOutputValueNodes(project_->looks[i].graph);
+        for (DmxOutputValueNodeRef& ref : fromLook) {
+            ref.lookIndex = i;
+            ref.label += " (Look: " + project_->looks[i].name + ")";
+        }
+        result.insert(result.end(), fromLook.begin(), fromLook.end());
+    }
+    return result;
+}
+
 }  // namespace whitehole::runtime

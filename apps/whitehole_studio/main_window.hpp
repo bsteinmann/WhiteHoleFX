@@ -230,7 +230,8 @@ private:
     void assignMasterDmx(input::DmxProtocol protocol, std::uint32_t universe, std::uint32_t channel);
     void assignLiveDmxSelect(input::DmxProtocol protocol, std::uint32_t universe, std::uint32_t channel);
     void assignLiveDmxFade(input::DmxProtocol protocol, std::uint32_t universe, std::uint32_t channel);
-    /// Rechtsklick im DMX-Monitor, Untermenü "DMX Out" (nachträglich freigegebene Erweiterung): setzt
+    /// Rechtsklick im DMX-Monitor, Untermenü "Node" (bis 15.11. "DMX Out" genannt, siehe CLAUDE.md -
+    /// umbenannt wegen der Verwechslung mit dem gleichnamigen Node wh.output.dmx): setzt
     /// Protokoll/Universe/Kanal eines schon vorhandenen wh.value.dmx/wh.value.dmxcolor-Nodes auf diese
     /// Adresse - dieselben drei Parameter ("source", "universe", "channel"), die der Node-Editor auch setzt.
     /// lookIndex (Bugfix, siehe CLAUDE.md): nullopt heißt, der Node steht im gerade offenen Graphen
@@ -238,6 +239,15 @@ private:
     /// geladenen Look, und player_->setLookNodeParameter() muss den jeweiligen Look-Graphen direkt treffen.
     void patchDmxValueNode(NodeId node, std::optional<std::size_t> lookIndex, input::DmxProtocol protocol,
                             std::uint32_t universe, std::uint32_t channel);
+    /// Rechtsklick im DMX-Ausgangs-Monitor, neues Untermenü "Node" (Gegenstück zu patchDmxValueNode, für die
+    /// Schreib-Richtung): patcht den Pool-Bereich eines schon vorhandenen wh.output.dmx/wh.output.dmxcolor-
+    /// Nodes auf diese Adresse, über Player::patchDmxOutputValueNode (legt einen DmxChannelPatch an oder
+    /// aktualisiert den bestehenden - der Node selbst hat keine eigene Adresse, nur einen Pool-Kanal, siehe
+    /// dmx_listener.hpp). Anders als bei patchDmxValueNode kein lookIndex nötig: dmxPatches ist
+    /// projektweit, nicht Teil eines einzelnen Graphen, also unabhängig davon, ob der Node gerade im
+    /// offenen Graphen oder in einem Look steckt.
+    void patchDmxOutputValueNode(std::uint16_t poolChannel, std::uint16_t count, output::Protocol protocol,
+                                  std::uint32_t universe, std::uint32_t channel);
     /// Audio-Eingang (main_window_audio.cpp). `choice`: "off", "default", "device:<Name>" oder "file:<Pfad>".
     /// Liefert den Fehlertext (leer = in Ordnung; bei einem Fehler bleibt der Eingang aus).
     QString applyAudioChoice(const QString& choice);

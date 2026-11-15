@@ -133,7 +133,8 @@ QMenu* DmxMonitorPanel::buildContextMenu(std::uint32_t channel, input::DmxProtoc
     }
     // Drei Kategorien statt einer flachen Liste (nachträglich freigegebene Erweiterung): "Master" und
     // "Live Kanal" zeigen nur die schon bestehenden Zuordnungen aus den Auftritts-Einstellungen (keine neue
-    // Funktion, nur neu gegliedert); "DMX Out" patcht stattdessen die Adresse eines Nodes.
+    // Funktion, nur neu gegliedert); "Node" (bis 15.11. "DMX Out" genannt, siehe Header-Kommentar) patcht
+    // stattdessen die Adresse eines Nodes.
     QMenu* masterMenu = menu->addMenu(tr("Master"));
     QAction* masterDimmer = masterMenu->addAction(tr("Als Masterdimmer-Kanal verwenden"));
     connect(masterDimmer, &QAction::triggered, this,
@@ -147,14 +148,14 @@ QMenu* DmxMonitorPanel::buildContextMenu(std::uint32_t channel, input::DmxProtoc
     connect(fade, &QAction::triggered, this,
             [this, protocol, universe, channel]() { Q_EMIT requestLiveDmxFade(protocol, universe, channel); });
 
-    QMenu* dmxOutMenu = menu->addMenu(tr("DMX Out"));
+    QMenu* nodeMenu = menu->addMenu(tr("Node"));
     const std::vector<runtime::DmxValueNodeRef> nodes = player_.dmxValueNodes();
     if (nodes.empty()) {
-        QAction* none = dmxOutMenu->addAction(tr("Keine DMX-Wert-Nodes im Projekt"));
+        QAction* none = nodeMenu->addAction(tr("Keine DMX-Wert-Nodes im Projekt"));
         none->setEnabled(false);
     } else {
         for (const runtime::DmxValueNodeRef& node : nodes) {
-            QAction* patch = dmxOutMenu->addAction(QString::fromStdString(node.label));
+            QAction* patch = nodeMenu->addAction(QString::fromStdString(node.label));
             const NodeId id = node.id;
             const std::optional<std::size_t> lookIndex = node.lookIndex;
             connect(patch, &QAction::triggered, this, [this, id, lookIndex, protocol, universe, channel]() {
@@ -252,7 +253,7 @@ QString DmxMonitorPanel::exercise() {
         return QStringLiteral("DMX-Monitor: Tooltip zeigt ohne Hörer nicht einfach \"Kanal N\"");
     }
 
-    // Rechtsklick auf eine freie Zelle: drei Kategorien ("Master", "Live Kanal", "DMX Out"), der Masterdimmer-
+    // Rechtsklick auf eine freie Zelle: drei Kategorien ("Master", "Live Kanal", "Node"), der Masterdimmer-
     // Eintrag im ersten Untermenü löst aus. menu.exec() selbst wird nicht aufgerufen (würde im Rauchtest blockieren).
     bool requested = false;
     input::DmxProtocol requestedProtocol{};
@@ -305,21 +306,21 @@ QString DmxMonitorPanel::exercise() {
     // Funktion wieder zurück. Auf Kanal 1 selbst weiterzutesten würde buildContextMenu in den "schon
     // belegt"-Zweig (ein einziger deaktivierter Eintrag) laufen lassen statt in die drei Kategorien.
 
-    // "DMX Out" ohne passenden Node: nur ein deaktivierter Hinweis.
+    // "Node" ohne passenden Node: nur ein deaktivierter Hinweis.
     QMenu* emptyMenu = buildContextMenu(2, input::DmxProtocol::ArtNet, 777);
     if (emptyMenu->actions().size() != 3 || emptyMenu->actions()[2]->menu() == nullptr) {
         delete emptyMenu;
         return QStringLiteral("DMX-Monitor: Kontextmenü für Kanal 2 bietet nicht die drei Kategorien an");
     }
-    QMenu* emptyDmxOut = emptyMenu->actions()[2]->menu();
+    QMenu* emptyNodeMenu = emptyMenu->actions()[2]->menu();
     const bool emptyOk =
-        emptyDmxOut != nullptr && emptyDmxOut->actions().size() == 1 && !emptyDmxOut->actions().first()->isEnabled();
+        emptyNodeMenu != nullptr && emptyNodeMenu->actions().size() == 1 && !emptyNodeMenu->actions().first()->isEnabled();
     delete emptyMenu;
     if (!emptyOk) {
-        return QStringLiteral("DMX-Monitor: \"DMX Out\" zeigt ohne passenden Node nicht den deaktivierten Hinweis");
+        return QStringLiteral("DMX-Monitor: \"Node\" zeigt ohne passenden Node nicht den deaktivierten Hinweis");
     }
 
-    // Mit einem DMX-Wert-Node im Graphen: "DMX Out" bietet ihn an, und das Auslösen patcht wirklich seine
+    // Mit einem DMX-Wert-Node im Graphen: "Node" bietet ihn an, und das Auslösen patcht wirklich seine
     // Adresse (requestPatchNode ist mit MainWindow::patchDmxValueNode verbunden, siehe buildDmxMonitor) -
     // den testweise angelegten Node am Ende wieder entfernen.
     const Result<NodeId> added = player_.addNode("wh.value.dmx", Vec2{});
@@ -336,16 +337,16 @@ QString DmxMonitorPanel::exercise() {
         });
     QMenu* filledMenu = buildContextMenu(2, input::DmxProtocol::ArtNet, 777);
     const bool filledMenuOk = filledMenu->actions().size() == 3 && filledMenu->actions()[2]->menu() != nullptr;
-    QMenu* filledDmxOut = filledMenuOk ? filledMenu->actions()[2]->menu() : nullptr;
-    const bool filledOk = filledDmxOut != nullptr && filledDmxOut->actions().size() == 1;
+    QMenu* filledNodeMenu = filledMenuOk ? filledMenu->actions()[2]->menu() : nullptr;
+    const bool filledOk = filledNodeMenu != nullptr && filledNodeMenu->actions().size() == 1;
     if (filledOk) {
-        filledDmxOut->actions().first()->trigger();
+        filledNodeMenu->actions().first()->trigger();
     }
     delete filledMenu;
     disconnect(patchProbe);
     if (!filledOk) {
         player_.removeNode(added.value());
-        return QStringLiteral("DMX-Monitor: \"DMX Out\" bietet den angelegten Node nicht an");
+        return QStringLiteral("DMX-Monitor: \"Node\" bietet den angelegten Node nicht an");
     }
     if (!requestedPatch || requestedNode != added.value()) {
         player_.removeNode(added.value());
@@ -354,7 +355,7 @@ QString DmxMonitorPanel::exercise() {
     const auto patched = player_.dmxListenerAt(input::DmxProtocol::ArtNet, 777, 2);
     if (!patched) {
         player_.removeNode(added.value());
-        return QStringLiteral("DMX-Monitor: \"DMX Out\" patcht die Adresse des Nodes nicht wirklich (MainWindow-Verbindung?)");
+        return QStringLiteral("DMX-Monitor: \"Node\" patcht die Adresse des Nodes nicht wirklich (MainWindow-Verbindung?)");
     }
     // Zellenfarbe: Kanal 2 gehört jetzt zu einem Node, muss also die Node-Farbe bekommen (auch hier erst
     // nach einer Neuberechnung durch Protokoll-/Universe-Wechsel).
@@ -363,7 +364,7 @@ QString DmxMonitorPanel::exercise() {
     const bool nodeColorOk = grid_->item(0, 1)->background().color() == dmxCellColor(DmxCellCategory::Node);
     player_.removeNode(added.value());
     if (!nodeColorOk) {
-        return QStringLiteral("DMX-Monitor: ein von \"DMX Out\" gepatchter Node bekommt nicht die Node-Farbe");
+        return QStringLiteral("DMX-Monitor: ein von \"Node\" gepatchter Node bekommt nicht die Node-Farbe");
     }
     return {};
 }

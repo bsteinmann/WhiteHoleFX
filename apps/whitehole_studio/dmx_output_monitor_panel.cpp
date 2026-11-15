@@ -14,6 +14,7 @@
 #include <QTableWidget>
 #include <QVBoxLayout>
 
+#include <algorithm>
 #include <vector>
 
 #include "dmx_cell_colors.hpp"
@@ -141,6 +142,26 @@ QMenu* DmxOutputMonitorPanel::buildContextMenu(std::uint32_t channel, output::Pr
         QAction* add = menu->addAction(tr("Neues Fixture hier patchen…"));
         connect(add, &QAction::triggered, this,
                 [this, protocol, universe, channel]() { Q_EMIT requestManualPatch(protocol, universe, channel); });
+
+        // Neues Untermenü "Node" (Gegenstück zum gleichnamigen Untermenü im Eingangs-Monitor, siehe
+        // dmx_monitor_panel.hpp): patcht stattdessen den Pool-Bereich eines schon im Projekt vorhandenen
+        // wh.output.dmx/wh.output.dmxcolor-Nodes auf diesen Kanal. Fixtures laufen bewusst weiterhin nur
+        // über "Neues Fixture hier patchen…" oben, nicht über dieses Menü.
+        QMenu* nodeMenu = menu->addMenu(tr("Node"));
+        const std::vector<runtime::DmxOutputValueNodeRef> nodes = player_.dmxOutputValueNodes();
+        if (nodes.empty()) {
+            QAction* none = nodeMenu->addAction(tr("Keine DMX-Ausgabe-Nodes im Projekt"));
+            none->setEnabled(false);
+        } else {
+            for (const runtime::DmxOutputValueNodeRef& node : nodes) {
+                QAction* patch = nodeMenu->addAction(QString::fromStdString(node.label));
+                const std::uint16_t poolChannel = node.poolChannel;
+                const std::uint16_t count = node.count;
+                connect(patch, &QAction::triggered, this, [this, poolChannel, count, protocol, universe, channel]() {
+                    Q_EMIT requestPatchOutputNode(poolChannel, count, protocol, universe, channel);
+                });
+            }
+        }
     }
     return menu;
 }
@@ -252,16 +273,80 @@ QString DmxOutputMonitorPanel::exercise() {
                     requestedChannel = channel;
                 });
     QMenu* menu = buildContextMenu(1, output::Protocol::ArtNet, 30000);
-    if (menu->actions().size() != 1 || !menu->actions().first()->text().contains(QStringLiteral("Neues Fixture"))) {
+    if (menu->actions().size() != 2 || !menu->actions()[0]->text().contains(QStringLiteral("Neues Fixture")) ||
+        menu->actions()[1]->menu() == nullptr) {
         delete menu;
         disconnect(probe);
-        return QStringLiteral("DMX-Ausgangs-Monitor: Kontextmenü für eine freie Zelle bietet nicht \"Neues Fixture hier patchen\" an");
+        return QStringLiteral(
+            "DMX-Ausgangs-Monitor: Kontextmenü für eine freie Zelle bietet nicht \"Neues Fixture hier patchen\" und \"Node\" an");
     }
-    menu->actions().first()->trigger();
+    // Ohne wh.output.dmx/wh.output.dmxcolor-Node im Projekt: "Node" zeigt nur einen deaktivierten Hinweis.
+    QMenu* emptyNodeMenu = menu->actions()[1]->menu();
+    const bool emptyNodeOk =
+        emptyNodeMenu != nullptr && emptyNodeMenu->actions().size() == 1 && !emptyNodeMenu->actions().first()->isEnabled();
+    if (!emptyNodeOk) {
+        delete menu;
+        disconnect(probe);
+        return QStringLiteral("DMX-Ausgangs-Monitor: \"Node\" zeigt ohne passenden Node nicht den deaktivierten Hinweis");
+    }
+    menu->actions()[0]->trigger();
     delete menu;
     disconnect(probe);
     if (!requested || requestedProtocol != output::Protocol::ArtNet || requestedUniverse != 30000 || requestedChannel != 1) {
         return QStringLiteral("DMX-Ausgangs-Monitor: Kontextmenü löst requestManualPatch nicht mit den richtigen Werten aus");
+    }
+
+    // Mit einem wh.output.dmx-Node im Projekt: "Node" bietet ihn an, und das Auslösen patcht wirklich den
+    // Pool-Bereich dieses Nodes auf die angeklickte Adresse (requestPatchOutputNode ist mit
+    // MainWindow::patchDmxOutputValueNode verbunden, siehe buildDmxMonitor) - den testweise angelegten Node
+    // und den dadurch entstandenen Patch am Ende wieder entfernen.
+    const std::vector<output::DmxChannelPatch> dmxPatchesBeforeNode = player_.project()->dmxPatches;
+    const Result<NodeId> addedNode = player_.addNode("wh.output.dmx", Vec2{});
+    if (!addedNode.ok()) {
+        return QStringLiteral("DMX-Ausgangs-Monitor: testweiser DMX-Ausgabe-Node für den Rauchtest lässt sich nicht anlegen");
+    }
+    const auto outputNodes = player_.dmxOutputValueNodes();
+    const auto match = std::find_if(outputNodes.begin(), outputNodes.end(),
+                                     [&](const runtime::DmxOutputValueNodeRef& ref) { return ref.id == addedNode.value(); });
+    if (match == outputNodes.end()) {
+        player_.removeNode(addedNode.value());
+        return QStringLiteral("DMX-Ausgangs-Monitor: der testweise angelegte Node steht nicht in dmxOutputValueNodes()");
+    }
+    bool requestedOutputPatch = false;
+    std::uint16_t requestedPoolChannel = 0;
+    std::uint16_t requestedCount = 0;
+    const QMetaObject::Connection outputPatchProbe = connect(
+        this, &DmxOutputMonitorPanel::requestPatchOutputNode, this,
+        [&](std::uint16_t poolChannel, std::uint16_t count, output::Protocol, std::uint32_t, std::uint32_t) {
+            requestedOutputPatch = true;
+            requestedPoolChannel = poolChannel;
+            requestedCount = count;
+        });
+    QMenu* filledMenu = buildContextMenu(2, output::Protocol::ArtNet, 30000);
+    const bool filledMenuOk = filledMenu->actions().size() == 2 && filledMenu->actions()[1]->menu() != nullptr;
+    QMenu* filledNodeMenu = filledMenuOk ? filledMenu->actions()[1]->menu() : nullptr;
+    const bool filledOk = filledNodeMenu != nullptr && filledNodeMenu->actions().size() == 1;
+    if (filledOk) {
+        filledNodeMenu->actions().first()->trigger();
+    }
+    delete filledMenu;
+    disconnect(outputPatchProbe);
+    if (!filledOk) {
+        player_.removeNode(addedNode.value());
+        return QStringLiteral("DMX-Ausgangs-Monitor: \"Node\" bietet den angelegten Node nicht an");
+    }
+    if (!requestedOutputPatch || requestedPoolChannel != match->poolChannel || requestedCount != match->count) {
+        player_.removeNode(addedNode.value());
+        return QStringLiteral("DMX-Ausgangs-Monitor: Kontextmenü löst requestPatchOutputNode nicht mit dem richtigen Pool-Bereich aus");
+    }
+    // Das Auslösen der Aktion hat schon die echte requestPatchOutputNode-Verbindung ausgelöst (siehe
+    // buildDmxMonitor: MainWindow::patchDmxOutputValueNode bleibt, anders als requestManualPatch, während
+    // exercise() verbunden - kein modaler Dialog dahinter) und damit wirklich einen DmxChannelPatch angelegt.
+    const auto nodeOccupant = player_.dmxOutputOccupantAt(output::Protocol::ArtNet, 30000, 2);
+    player_.removeNode(addedNode.value());
+    player_.setDmxPatches(dmxPatchesBeforeNode);  // Rauchtest-Projekt wieder in den Ausgangszustand bringen
+    if (!nodeOccupant || nodeOccupant->kind != runtime::DmxOutputOccupant::Kind::Pool) {
+        return QStringLiteral("DMX-Ausgangs-Monitor: \"Node\" patcht die Adresse des Nodes nicht wirklich (MainWindow-Verbindung?)");
     }
 
     // Rechtsklick auf eine belegte Fixture-Zelle: nutzt den ersten echten Fixture-Patch des Rauchtest-
