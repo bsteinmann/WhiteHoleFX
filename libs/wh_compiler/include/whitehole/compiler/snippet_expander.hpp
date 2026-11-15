@@ -32,10 +32,13 @@ struct SnippetBindings {
     std::string aspect;
     /// @aspectZ: WGSL-Ausdruck vom Typ f32, echtes Breite/Tiefe-Verhältnis der Leinwand (x/z), für Volume-Nodes.
     std::string aspectZ;
+    /// @columns/@rows: WGSL-Ausdruck vom Typ f32, echte Zahl der LEDs über Breite/Höhe; 0 = unbekannt.
+    std::string columns;
+    std::string rows;
 };
 
 /// Platzhalter: @in(port, koordinate), @param(schluessel), @spectrum(port, band), @text(schluessel),
-/// @textlen(schluessel), @time, @volume, @aspect, @aspectZ.
+/// @textlen(schluessel), @time, @volume, @aspect, @aspectZ, @columns, @rows.
 /// - Klammern in `koordinate` dürfen verschachtelt sein, auch weitere Platzhalter.
 /// - Alles außerhalb von Platzhaltern bleibt unverändert.
 /// Fehler (InvalidArgument): unbekannter Platzhalter, fehlende oder unpassende

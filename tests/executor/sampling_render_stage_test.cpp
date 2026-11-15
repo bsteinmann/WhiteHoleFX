@@ -75,6 +75,20 @@ TEST_CASE("setMap meldet das echte Breite/Höhe-Verhältnis der Fixture-Box an d
     CHECK(frame.aspectZ == 1.0F);
 }
 
+TEST_CASE("setMap meldet die echte Spalten-/Zeilenzahl der Fixture an den Shader") {
+    SamplingFixture fx{64};
+    REQUIRE(fx.stage->setGraph(fx.lab.graph).ok());
+    REQUIRE(fx.stage->setMap(bake(8, 4)).ok());  // 8x4-Matrix -> columns 8, rows 4
+    fx.render(0.0);
+    compiler::FrameUniforms frame{};
+    const std::vector<std::byte> bytes =
+        fx.device.bufferBytes(bufferAt(fx.last(), compiler::kFieldBindGroup, compiler::kFrameBinding));
+    REQUIRE(bytes.size() == sizeof frame);
+    std::memcpy(&frame, bytes.data(), sizeof frame);
+    CHECK(frame.columns == 8.0F);
+    CHECK(frame.rows == 4.0F);
+}
+
 TEST_CASE("create legt Positions-, Farb-, Info- und Frame-Puffer an") {
     SamplingFixture fx{100};
     CHECK(fx.device.liveBufferCount() == 4U);

@@ -156,6 +156,15 @@ TEST_CASE("Frame-Daten: Aspect kommt exakt aus der Textur-Auflösung, AspectZ bl
     CHECK(frame.aspectZ == 1.0F);
 }
 
+TEST_CASE("Frame-Daten: Columns/Rows kommen exakt aus der Textur-Auflösung") {
+    StageFixture fx{Extent3{16, 4, 1}};
+    REQUIRE(fx.stage->setGraph(fx.lab.graph).ok());
+    fx.render(0.0);
+    const compiler::FrameUniforms frame = frameOf(fx);
+    CHECK(frame.columns == 16.0F);
+    CHECK(frame.rows == 4.0F);
+}
+
 TEST_CASE("Durchstich: Time steuert Rotate.angle im Parameterpuffer") {
     StageFixture fx;
     const NodeId time = fx.lab.add("wh.value.time");

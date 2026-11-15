@@ -2,6 +2,17 @@
 
 ## 0.92.0
 
+- **Random Pixels, Digital Rain: `columns`/`rows` standardmäßig automatisch.** Letzter Schritt der
+  „echte Leinwandgröße"-Umstellung: `columns`/`rows` (Random Pixels) bzw. `columns` (Digital Rain) stehen
+  jetzt standardmäßig auf 0 und nehmen dann automatisch die echte Spalten-/Zeilenzahl der Leinwand
+  (`@columns`/`@rows`, siehe Compiler-Kern-Eintrag); ein Wert größer 0 bleibt als manueller Override
+  erhalten. Löst dieselbe Grundlücke wie der `aspect`-Umbau: ein Mismatch führte hier nicht zu Verzerrung,
+  sondern zu einem zu groben oder zu feinen Raster (mehrere LEDs je Zufallsfeld bzw. je Regentropfen-Spalte,
+  oder umgekehrt). **Mögliche Verhaltensänderung:** Ein Projekt, das `columns`/`rows` nie gesetzt hat, zeigt
+  jetzt automatisch die echte Auflösung statt des alten festen Standards (Random Pixels: 32 x 16; Digital
+  Rain: 16 Spalten) — bei Digital Rain außerdem wie gewünscht neu **1 Pixel pro Spalte** als automatisches
+  Standardverhalten (statt grobkörniger 16 Spalten unabhängig von der echten Breite). Ein Projekt mit
+  ausdrücklich gesetztem `columns`/`rows` ist unverändert.
 - **Kaleidoscope, Tunnel, Vortex, Text, Pong, Labyrinth: `aspect` standardmäßig automatisch.** Der
   Parameter `aspect` (Seitenverhältnis Breite/Höhe der Leinwand) steht jetzt standardmäßig auf 0 und nimmt
   dann automatisch das echte Verhältnis der Leinwand (`@aspect`, siehe Compiler-Kern-Eintrag unten); ein
@@ -11,7 +22,7 @@
   das `aspect` nie gesetzt hat (alter Standardwert 1.0 bzw. bei Text 2.0), zeigt jetzt automatisch das echte
   Verhältnis statt der alten festen Zahl — bei den meisten Projekten eine stille Korrektur eines bisherigen
   Verzerrungsfehlers; ein Projekt mit ausdrücklich gesetztem `aspect` ist unverändert. Random Pixels und
-  Digital Rain (Spalten-/Zeilenzahl statt Seitenverhältnis) folgen in einem eigenen, späteren Schritt.
+  Digital Rain (Spalten-/Zeilenzahl statt Seitenverhältnis) folgen in einem eigenen Schritt, siehe oben.
 - **Compiler-Kern: echte Leinwandgröße als `@aspect`/`@aspectZ`.** Erster Schritt zum Verschwinden der
   manuell gepflegten `aspect`-Parameter (Kaleidoscope, Tunnel, Vortex, Text, Pong, Labyrinth): Zwei neue,
   für Node-Autoren eingebaute Shader-Werte (analog zu `@time`/`@volume`) liefern das tatsächliche
@@ -21,6 +32,13 @@
   führt die Werte nur im Compiler/Executor ein und ändert noch keinen bestehenden Node — keine Breaking
   Change. Die Umstellung der einzelnen `aspect`-Nodes (und von Random Pixels/Digital Rain auf eine echte
   Spalten-/Zeilenzahl) folgt in eigenen, kleineren Schritten.
+- **Compiler-Kern: echte Spalten-/Zeilenzahl als `@columns`/`@rows`.** Zweiter Schritt derselben Umstellung
+  (siehe `@aspect`/`@aspectZ` oben): zwei weitere eingebaute Shader-Werte liefern die tatsächliche Zahl der
+  LEDs über Breite und Höhe — bei der Canvas-Textur/Vorschau exakt aus der Pixelauflösung, bei einer echten
+  LED-Karte geschätzt aus der Box-Größe und dem feinsten LED-Abstand über alle Fixtures. Ohne bekannten
+  Abstand (z. B. eine reine Punktwolke) oder Ausdehnung bleibt der Wert 0 (unbekannt) — anders als bei
+  `@aspect`, wo die unbekannt-Konvention 1 ist, da 0 dort kein gültiges Seitenverhältnis wäre. Führt die
+  Werte nur im Compiler/Executor ein und ändert noch keinen bestehenden Node — keine Breaking Change.
 - **Labyrinth: Along-walls-Modus.** Neuer Parameter `mode`: „Random walk" (Standard, bitgenau wie bisher)
   sowie „Along walls" — die Läufer laufen dabei nicht mehr zufällig mit Epochen-Neustart durchs Raster,
   sondern gleichmäßig auf einem festen, geschlossenen Rundweg am Rand entlang (die Form ändert sich nie,

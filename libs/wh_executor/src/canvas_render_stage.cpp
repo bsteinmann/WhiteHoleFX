@@ -58,6 +58,10 @@ Result<std::unique_ptr<CanvasRenderStage>> CanvasRenderStage::create(
     result->pass_->setAspect(static_cast<float>(result->config_.extent.width) /
                                  static_cast<float>(result->config_.extent.height),
                              1.0F);
+    // Dieselbe Textur kennt auch die echte Spalten-/Zeilenzahl exakt (@columns/@rows), fuer Nodes wie
+    // Random Pixels/Digital Rain.
+    result->pass_->setResolution(static_cast<float>(result->config_.extent.width),
+                                 static_cast<float>(result->config_.extent.height));
     return result;
 }
 

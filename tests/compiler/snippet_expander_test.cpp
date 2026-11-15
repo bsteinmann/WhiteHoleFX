@@ -1,4 +1,5 @@
-// Tests von expandSnippet: Platzhalter (@time, @volume, @aspect, @aspectZ, @param, @in) im Snippet-Rumpf durch WGSL ersetzen.
+// Tests von expandSnippet: Platzhalter (@time, @volume, @aspect, @aspectZ, @columns, @rows, @param, @in)
+// im Snippet-Rumpf durch WGSL ersetzen.
 #include <catch2/catch_test_macros.hpp>
 
 #include <string>
@@ -17,6 +18,8 @@ SnippetBindings testBindings() {
     bindings.volume = "V";
     bindings.aspect = "A";
     bindings.aspectZ = "AZ";
+    bindings.columns = "C";
+    bindings.rows = "R";
     bindings.input = [](std::string_view port, std::string_view coordinate) -> Result<std::string> {
         if (port == "bad") {
             return Error{ErrorCode::NotFound, "kein Port bad"};
@@ -52,6 +55,10 @@ TEST_CASE("expandSnippet: @volume") {
 
 TEST_CASE("expandSnippet: @aspect und @aspectZ") {
     CHECK(expand("let a = @aspect; let az = @aspectZ;") == "let a = A; let az = AZ;");
+}
+
+TEST_CASE("expandSnippet: @columns und @rows") {
+    CHECK(expand("let c = @columns; let r = @rows;") == "let c = C; let r = R;");
 }
 
 TEST_CASE("expandSnippet: @in mit einfacher und verschachtelter Koordinate") {

@@ -81,6 +81,32 @@ TEST_CASE("Metaballs, Starfield, Fading Pixels, Expanding Shapes und Sine Lines"
             }
         }
     }
+    {  // Random Pixels: columns/rows = 0 (Standard) ergibt dasselbe Bild wie columns/rows manuell auf die
+       // echte Canvas-Auflösung gesetzt (4 x 4), und ein anderes Bild bei einer anderen Auflösung.
+       // Density bleibt am Standard (0.15, nicht 0 oder 1), damit das Muster selbst (nicht nur "alles an/aus")
+       // zwischen den Auflösungen vergleichbar ist.
+        Lab lab;
+        const NodeId pixels = lab.add("wh.generator.randompixels");
+        const Pixels autoRes = render(*device, lab, pixels, 4, 4, 1.3);  // columns/rows bleiben 0 = automatisch
+        lab.set(pixels, "columns", std::int64_t{4});
+        lab.set(pixels, "rows", std::int64_t{4});
+        const Pixels manualMatching = render(*device, lab, pixels, 4, 4, 1.3);
+        for (std::uint32_t y = 0; y < 4; ++y) {
+            for (std::uint32_t x = 0; x < 4; ++x) {
+                CHECK(closeTo(autoRes.at(x, y)[3], manualMatching.at(x, y)[3]));
+            }
+        }
+        lab.set(pixels, "columns", std::int64_t{2});
+        lab.set(pixels, "rows", std::int64_t{2});
+        const Pixels manualDiffering = render(*device, lab, pixels, 4, 4, 1.3);
+        bool anyDifferent = false;
+        for (std::uint32_t y = 0; y < 4; ++y) {
+            for (std::uint32_t x = 0; x < 4; ++x) {
+                anyDifferent = anyDifferent || !closeTo(autoRes.at(x, y)[3], manualDiffering.at(x, y)[3]);
+            }
+        }
+        CHECK(anyDifferent);
+    }
     {  // Expanding Shapes: Quadrat und Raute unterscheiden sich an einer Ecke; Mitte ist ein Ring
         Lab lab;
         const NodeId shapes = lab.add("wh.generator.shapes");

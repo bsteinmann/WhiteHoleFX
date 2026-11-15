@@ -3,6 +3,7 @@
 
 #include <algorithm>
 #include <array>
+#include <cmath>
 #include <cstring>
 #include <utility>
 
@@ -133,6 +134,20 @@ Result<void> SamplingRenderStage::setMap(const mapping::LedMap& map) {
     const float aspectXY = (sizeX > 0.0F && sizeY > 0.0F) ? sizeX / sizeY : 1.0F;
     const float aspectXZ = (sizeX > 0.0F && sizeZ > 0.0F) ? sizeX / sizeZ : 1.0F;
     pass_->setAspect(aspectXY, aspectXZ);
+    // Echte Spalten-/Zeilenzahl (@columns/@rows), geschätzt aus Box-Größe und LED-Abstand (das feinste
+    // Raster über alle Fixtures, damit eine grobe Nebenfixture die Schätzung nicht verfälscht). Ohne
+    // bekannten Abstand (Punktwolke) oder Ausdehnung bleibt der Wert 0 (unbekannt) - siehe @columns/@rows
+    // in docs/field-nodes.md. Die Box einer Matrix/eines Gitters spannt genau N*Abstand (volle Zellspanne,
+    // siehe BoxOf in fixture.cpp), daher columns = Boxgröße / Abstand ohne +1.
+    float spacing = 0.0F;
+    for (const float s : map.spacing) {
+        if (s > 0.0F && (spacing == 0.0F || s < spacing)) {
+            spacing = s;
+        }
+    }
+    const float columns = (spacing > 0.0F && sizeX > 0.0F) ? std::round(sizeX / spacing) : 0.0F;
+    const float rows = (spacing > 0.0F && sizeY > 0.0F) ? std::round(sizeY / spacing) : 0.0F;
+    pass_->setResolution(columns, rows);
     return {};
 }
 

@@ -274,6 +274,49 @@ TEST_CASE("Canvas: Digital Rain fällt, hat Spuren und respektiert die Dichte", 
     CHECK(device->takeErrors().empty());
 }
 
+TEST_CASE("Canvas: Digital Rain columns = 0 (Standard) ergibt 1 Pixel pro Spalte wie bei der echten Breite",
+         "[gpu_device][stage]") {
+    const std::unique_ptr<WebGpuDevice> device = makeDevice();
+    if (!device) {
+        SKIP("Kein WebGPU-Adapter verfügbar");
+    }
+    Lab lab;
+    const NodeId rain = lab.add("wh.generator.rain");
+    lab.set(rain, "density", 1.0);  // columns bleibt bei seinem Standard 0 = automatisch
+
+    executor::CanvasStageConfig config;
+    config.extent = Extent3{16, 32, 1};
+    config.format = TextureFormat::Rgba32Float;
+    config.target = graph::PortRef{rain, "out"};
+    auto created = executor::CanvasRenderStage::create(*device, lab.snippets, lab.kernels, config);
+    REQUIRE(created.ok());
+    executor::CanvasRenderStage& stage = *created.value();
+    REQUIRE(stage.setGraph(lab.graph).ok());
+
+    const auto alphas = [&] {
+        const std::vector<std::byte> bytes = renderCanvas(*device, stage, config.extent, config.format, 0.0);
+        std::vector<float> a;
+        for (std::size_t i = 0; i < std::size_t{16} * 32; ++i) {
+            float rgba[4];
+            std::memcpy(rgba, bytes.data() + i * 16, sizeof rgba);
+            a.push_back(rgba[3]);
+        }
+        return a;
+    };
+    const std::vector<float> autoRes = alphas();
+
+    // Dieselbe Breite manuell gesetzt (16 Spalten, 1 Pixel je Spalte) muss ein identisches Bild ergeben.
+    lab.set(rain, "columns", 16.0);
+    REQUIRE(stage.setGraph(lab.graph).ok());
+    CHECK(alphas() == autoRes);
+
+    // Eine andere, grobere Spaltenzahl muss sich dagegen unterscheiden.
+    lab.set(rain, "columns", 4.0);
+    REQUIRE(stage.setGraph(lab.graph).ok());
+    CHECK(alphas() != autoRes);
+    CHECK(device->takeErrors().empty());
+}
+
 TEST_CASE("Canvas: eine geänderte Farbe kommt ohne neue Pipeline an", "[gpu_device][stage]") {
     const std::unique_ptr<WebGpuDevice> device = makeDevice();
     if (!device) {

@@ -98,6 +98,13 @@ public:
         aspectZ_ = aspectXZ;
     }
 
+    /// Meldet dem Shader die echte Zahl der LEDs über Breite/Höhe (WhFrame.columns/rows, Platzhalter
+    /// @columns/@rows). 0 = unbekannt. Standard: beide 0 (unbekannt), wie vor Einführung dieser Werte.
+    void setResolution(float columns, float rows) noexcept {
+        columns_ = columns;
+        rows_ = rows;
+    }
+
     [[nodiscard]] bool ready() const noexcept { return pipeline_.has_value() && graph_.has_value(); }
     [[nodiscard]] const std::optional<Error>& graphError() const noexcept { return graphError_; }
     [[nodiscard]] const std::optional<Error>& frameError() const noexcept { return frameError_; }
@@ -125,6 +132,8 @@ private:
     bool volume_{false};
     float aspect_{1.0F};
     float aspectZ_{1.0F};
+    float columns_{0.0F};
+    float rows_{0.0F};
 
     std::optional<graph::Graph> graph_;
     compiler::ParameterLayout layout_;

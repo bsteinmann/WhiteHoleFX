@@ -20,6 +20,12 @@ fn wh_field(p: vec3<f32>) -> vec4<f32>
   einzelne Reihe, ein flaches Fixture in z) bleibt das jeweilige Verhältnis bei 1. Löst nach und nach die
   Nodes ab, die bisher einen Parameter `aspect` von Hand nachpflegen mussten (siehe deren Beschreibung
   unten, z. B. Kaleidoscope/Tunnel/Vortex/Text/Pong/Labyrinth).
+- `@columns`/`@rows` (nur für Node-Autoren) sind die echte Spalten-/Zeilenzahl (LEDs über Breite/Höhe):
+  bei der Canvas-Textur/Vorschau exakt die Pixelauflösung, bei der echten LED-Karte geschätzt aus der
+  Box-Größe und dem feinsten LED-Abstand über alle Fixtures. Ohne bekannten Abstand (z. B. eine reine
+  Punktwolke) oder Ausdehnung bleibt der Wert 0 (unbekannt) - anders als bei `@aspect`, wo 1 die unbekannt-
+  Konvention ist, da 0 dort kein gültiges Seitenverhältnis wäre. Löst nach und nach die Nodes ab, die
+  bisher `columns`/`rows` von Hand nachpflegen mussten (Random Pixels, Digital Rain).
 - Die Farbe ist linear RGBA mit „geradem“ Alpha (RGB und Alpha getrennt). Gamma und Farbreihenfolge
   setzt erst der Ausgabe-Pass, der die Farbe zuletzt mit Alpha multipliziert (transparent = LED aus).
   Wer Farben überblendet oder addiert, nimmt `wh_mix_color` und `wh_add_color` (Prelude
@@ -41,7 +47,7 @@ beliebigen Koordinaten abtastet.
 | `wh.generator.plasma` | klassisches Plasma; `depth` > 0 legt die Wellen auch durch z (0 = in jeder Ebene gleich); `palette` wählt die Farbgebung (Classic, Fire, Ocean, Neon, oder Custom mit `color1`–`color4`) | 2D, 3D |
 | `wh.generator.sphere` | Kugel mit weichem Rand, Mittelpunkt und Radius einstellbar; `space` *Auto* (Standard) zeigt auf einer flachen Matrix einen Kreis, bei räumlicher Anlage eine Kugel | 2D, 3D |
 | `wh.generator.wave` | ebene Welle entlang einer 3D-Richtung | 3D |
-| `wh.generator.rain` | „Digital Rain“: fallende Pixel mit Spur (Spalten, Tempo, Spurlänge, Dichte, Kopf-/Spurfarbe); die Spur ist durchsichtig und lässt sich über andere Effekte legen. Im Cube fallen Säulen in x/z | 3D |
+| `wh.generator.rain` | „Digital Rain“: fallende Pixel mit Spur (`columns` Spalten, 0 = Standard: automatisch aus der echten Breite `@columns`, dann 1 Pixel pro Spalte; > 0: manueller Override; Tempo, Spurlänge, Dichte, Kopf-/Spurfarbe); die Spur ist durchsichtig und lässt sich über andere Effekte legen. Im Cube fallen Säulen in x/z | 3D |
 | `wh.generator.solid` | Fläche in einer Farbe (zum Einfärben mit Mask/Blend oder als Blitzfläche) | beliebig |
 | `wh.generator.scan` | Scan-Linie / Knight Rider: ein Streifen quer zur Richtung `angle` an der Stelle `position` (0..1), Breite und Weichheit einstellbar; die Position mit einem Dreieck-LFO steuern lässt ihn hin- und herlaufen. Der Rest ist durchsichtig; mit `elevation` wird aus dem Streifen eine Scheibe, die durch den Würfel läuft | 2D, 3D |
 | `wh.generator1d.comet` | Gruppe **Generators 1D** (für Strips; alle mit Auswahl `axis` X/Y/Z): Komet mit verblassendem Schweif, `speed` in Durchläufen pro Sekunde (negativ rückwärts), `length`, `bounce` (Ping-pong), Farbe | 1D (jede Achse) |
@@ -55,7 +61,7 @@ beliebigen Koordinaten abtastet.
 | `wh.generator.metaballs` | Metaballs: 1–6 weiche Kugeln wandern auf eigenen Bahnen und fließen ineinander, wenn sie sich nähern (Anzahl, Größe, Tempo, Randweichheit, Hintergrund- und Blobfarbe); `space` *Volume* gibt jeder Kugel eine z-Bahn | 2D, 3D |
 | `wh.generator.starfield` | Sternenhimmel: `cells` Zellen je Achse, in jeder mit Wahrscheinlichkeit `density` ein flimmernder Stern (Größe, Flimmertempo, `drift` nach unten, zwei Farben nach Zufall); der Himmel ist durchsichtig und lässt sich über andere Effekte legen; `space` *Volume* setzt die Sterne in ein Raster aus Würfeln. `motion` *Warp* schaltet stattdessen auf radiale Streifen von der Mitte weg um (`cells` = Anzahl der Winkel-Spuren, `warpSpeed` das Tempo, `trail` die Streifenlänge relativ zum Abstand von der Mitte); dabei rein 2D, unabhängig von `space`/`drift`/`twinkle`/`size` | 2D, 3D (Warp nur 2D) |
 | `wh.generator.fading` | Fading Pixels: einzelne Zellen leuchten auf und verlöschen, jede in eigenem Takt (Zellen, Rate, Dichte, `sharpness` = Abklingkurve, zwei Farben nach Zufall); der Rest ist durchsichtig; `space` *Volume* gibt jedem Würfel des Raums seinen eigenen Takt | 2D, 3D |
-| `wh.generator.randompixels` | Random Pixels (#24): ein Raster aus `columns` x `rows` Zellen (Standard 32 x 16: ein Feld je LED); jedes Pixel hat einen eigenen Takt (`rate` Schritte pro Sekunde) und leuchtet je Schritt mit der Wahrscheinlichkeit `density` in einer Zufallsfarbe zwischen A und B; `mode` *Blink* schaltet hart, *Fade* klingt ab; der Rest ist durchsichtig | 2D |
+| `wh.generator.randompixels` | Random Pixels (#24): ein Raster aus `columns` x `rows` Zellen (je 0, Standard: automatisch aus der echten Auflösung `@columns`/`@rows`, ein Feld je LED; > 0: manueller Override); jedes Pixel hat einen eigenen Takt (`rate` Schritte pro Sekunde) und leuchtet je Schritt mit der Wahrscheinlichkeit `density` in einer Zufallsfarbe zwischen A und B; `mode` *Blink* schaltet hart, *Fade* klingt ab; der Rest ist durchsichtig | 2D |
 | `wh.generator.shapes` | Expanding Shapes: Formen, die von `cx`/`cy` (`cz`) nach außen laufen. `shape`: Circle, Square, Diamond, Triangle, Hexagon, Polygon und Star (Eckenzahl `points`), Cross (Arme ein Drittel breit), Bars horizontal/vertical (Streifen vom Mittelpunkt nach oben/unten bzw. links/rechts), Spiral (Ringe mit stetigem Winkel-Versatz statt Kreisen), Squircle (Lp-Norm-Morph zwischen Kreis und Quadrat über `squareness` 0..1); `rotation` dreht die Form. `run` *Continuous*: Ringe im Abstand `spacing`, die mit `speed` wandern (negativ nach innen); *One shot*: genau eine Form, deren Größe der Eingang `progress` (0..1, zum Beispiel vom Shot-Node) bestimmt, bei 0 und 1 ist nichts zu sehen, `reach` die Größe bei 1, `inward` lässt sie von außen zusammenfallen. `fill` *Ring* (Linie der Breite `thickness` × spacing), *Solid* (innen voll; fortlaufend Streifen mit Tastgrad `thickness`), *Gradient inward* (an der Kante hell, nach innen über `thickness` × spacing ausklingend), *Gradient outward*, *Hollow core* (wie Solid, aber mit hohlem Kern: `color` außen, `colorB` im Kern, `core` 0..1 legt die Kerngröße fest, 0 = ganz voll, 1 = nur noch ein dünner Rand); `softness` Kantenweichheit, `invert` kehrt die Füllung um (One shot + Solid: Blende, die sich schließt). `fade` verblasst nach außen. Mit `space` = Volume räumlich (Kugel-, Würfel-, Oktaederschalen, Vielecke als Prismen; Spiral nur 2D). Alte Projekte (Ring, fortlaufend) sehen unverändert aus; siehe `examples/effekte/formen.whfx` | 2D/3D |
 | `wh.generator.sinelines` | Sine Lines: 1–8 Sinuswellen quer über die Leinwand, jede um `spread` Grad gegen die vorige phasenverschoben, jede Linie mit eigener fester Farbe (`color1`..`color8`); überlappende Linien addieren sich; `frequencyZ` macht aus jeder Linie eine gewellte Fläche im Würfel | 2D, 3D |
 | `wh.generator.lightning` | Lightning: bis zu drei Blitze (`bolts`) hängen oben an der Leinwand und laufen nach unten. `rate` Schläge pro Sekunde, `duration` Sekunden sichtbar (höchstens ein ganzer Takt), `decay` Abklingen, `width`, `jag` Zackigkeit, `glow` Leuchthof, `branches` Helligkeit eines Seitenastes (0 = keiner), `reach` wie tief der Blitz reicht, `flash` hellt die ganze Fläche mit auf; Farbe `color`. Die Stelle jedes Schlags wird aus der Taktnummer gewürfelt, ein Nachschlag bei etwa 30 % der Sichtbarkeit. Der Rest ist durchsichtig, siehe `examples/effekte/gewitter.whfx` | 2D |
@@ -144,7 +150,7 @@ Muster damit als Säule durch den Würfel; Outline und Text bleiben zweidimensio
 ### Regeln für das Snippet
 
 `body` ist der Rumpf von `fn wh_f<ID>(p: vec3<f32>) -> vec4<f32>` und endet mit `return`.
-Es gibt neun Platzhalter:
+Es gibt elf Platzhalter:
 
 | Platzhalter | Wird ersetzt durch |
 |---|---|
@@ -157,6 +163,8 @@ Es gibt neun Platzhalter:
 | `@volume` | `(wh_frame.volume != 0u)` |
 | `@aspect` | `wh_frame.aspect` (echtes Breite/Höhe-Verhältnis der Leinwand) |
 | `@aspectZ` | `wh_frame.aspectZ` (echtes Breite/Tiefe-Verhältnis, nur im Würfel relevant) |
+| `@columns` | `wh_frame.columns` (echte Spaltenzahl/LEDs über die Breite, 0 = unbekannt) |
+| `@rows` | `wh_frame.rows` (echte Zeilenzahl/LEDs über die Höhe, 0 = unbekannt) |
 
 - Platzhalter dürfen verschachtelt werden: `@in(a, p + vec3<f32>(@param(shift), 0.0, 0.0))`.
 - Ein **nicht verbundener optionaler** Eingang liefert `vec4<f32>(0.0, 0.0, 0.0, 0.0)`.

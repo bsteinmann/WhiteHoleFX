@@ -143,6 +143,9 @@ return wh_mix_color(@param(colorA), @param(colorB), w);)wgsl";
 // einen Tropfen hat. Der Kopf wandert von oben (y = 1) nach unten, dahinter zieht sich die Spur
 // nach oben und wird dabei durchsichtig (Alpha), so lässt sich der Regen über andere Effekte legen.
 // Ein Durchlauf dauert (1 + Spurlänge) / Tempo; danach beginnt dieselbe Spalte von vorn.
+// `columns` = 0 (Standard) nimmt automatisch die echte Spaltenzahl (`@columns`) - ein Pixel pro Spalte,
+// wie es sich gehört; ein Wert > 0 bleibt als manueller Override erhalten, ohne bekannte Auflösung
+// Rückfall auf 16.
 constexpr const char* kRainPrelude = R"wgsl(fn wh_hash21(p: vec2<f32>) -> f32 {
     var q = fract(vec3<f32>(p.x, p.y, p.x) * 0.1031);
     q = q + dot(q, q.yzx + 33.33);
@@ -150,7 +153,8 @@ constexpr const char* kRainPrelude = R"wgsl(fn wh_hash21(p: vec2<f32>) -> f32 {
 }
 )wgsl";
 
-constexpr const char* kRainBody = R"wgsl(let cols = max(floor(@param(columns)), 1.0);
+constexpr const char* kRainBody = R"wgsl(let colsAuto = select(16.0, @columns, @columns > 0.0);
+let cols = select(colsAuto, max(floor(@param(columns)), 1.0), @param(columns) > 0.0);
 let cell = floor(vec2<f32>(p.x, p.z) * cols);
 let r1 = wh_hash21(cell);
 let r2 = wh_hash21(cell + vec2<f32>(17.0, 3.0));
@@ -268,7 +272,7 @@ std::vector<compiler::NodeDefinition> generatorNodes() {
 
     nodes.push_back(fieldNode(
         "wh.generator.rain", "Digital Rain", "Generators", {fieldOutput()},
-        {number("columns", "Columns", 16.0, 1.0, 256.0), number("speed", "Speed", 0.6, 0.0, 10.0),
+        {number("columns", "Columns (0 = automatic)", 0.0, 0.0, 256.0), number("speed", "Speed", 0.6, 0.0, 10.0),
          number("trail", "Trail length", 0.5, 0.05, 4.0), number("density", "Density", 0.7, 0.0, 1.0),
          color("colorHead", "Head", ColorRgba{0.8F, 1.0F, 0.85F, 1.0F}),
          color("colorTail", "Tail", ColorRgba{0.0F, 0.6F, 0.05F, 1.0F})},

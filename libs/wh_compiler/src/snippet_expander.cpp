@@ -90,6 +90,16 @@ Result<std::string> expandSnippet(std::string_view body, const SnippetBindings& 
             i = nameEnd;
             continue;
         }
+        if (name == "columns") {
+            result += bindings.columns;
+            i = nameEnd;
+            continue;
+        }
+        if (name == "rows") {
+            result += bindings.rows;
+            i = nameEnd;
+            continue;
+        }
         if (name != "in" && name != "param" && name != "spectrum" && name != "text" && name != "textlen") {
             return invalid("unbekannter Platzhalter '@" + std::string{name} + "'");
         }

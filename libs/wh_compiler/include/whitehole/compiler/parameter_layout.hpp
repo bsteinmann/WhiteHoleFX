@@ -59,7 +59,7 @@ struct ParameterLayout {
     std::uint32_t sizeBytes{0};
 };
 
-/// Frame-Daten am Binding 0 (WGSL: struct WhFrame { time, delta, frame, volume, aspect, aspectZ }).
+/// Frame-Daten am Binding 0 (WGSL: struct WhFrame { time, delta, frame, volume, aspect, aspectZ, columns, rows }).
 struct FrameUniforms {
     float time{0.0F};
     float delta{0.0F};
@@ -73,8 +73,14 @@ struct FrameUniforms {
     /// Dasselbe für Breite/Tiefe (x/z), nur für Nodes im Würfel relevant; 1 bei einer flachen Karte.
     /// Der Platzhalter @aspectZ liest es.
     float aspectZ{1.0F};
+    /// Echte Zahl der LEDs über die Breite bzw. Höhe (bei der Canvas-Textur exakt die Pixelzahl, bei einer
+    /// LED-Karte aus Box-Größe und LED-Abstand geschätzt); 0, wenn unbekannt (z. B. eine Punktwolke ohne
+    /// festen Abstand). Die Platzhalter @columns/@rows lesen sie - lösen Parameter wie Random Pixels'
+    /// `columns`/`rows` oder Digital Rain's `columns` ab, die das bisher von Hand nachpflegen mussten.
+    float columns{0.0F};
+    float rows{0.0F};
 };
-static_assert(sizeof(FrameUniforms) == 24, "FrameUniforms muss dem WGSL-Struct WhFrame entsprechen");
+static_assert(sizeof(FrameUniforms) == 32, "FrameUniforms muss dem WGSL-Struct WhFrame entsprechen");
 
 /// Vergibt die Offsets nach den Layout-Regeln von WGSL (f32: 4/4, vec2: 8/8,
 /// vec3: 12 Bytes mit Ausrichtung 16, vec4: 16/16; Größe/Ausrichtung).

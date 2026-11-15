@@ -91,20 +91,15 @@ darum.
   **Text** (`builtin_text.cpp`), **Pong** (`builtin_pong.cpp`) und **Labyrinth** (`builtin_maze.cpp`).
   **Erledigt (0.92.0):** `@aspect`/`@aspectZ` existieren (Compiler-Kern), und alle sechs genannten Nodes
   nutzen sie jetzt automatisch (`aspect` = 0, neuer Standard); ein Wert > 0 bleibt als manueller Override
-  erhalten (siehe CHANGELOG, beide Einträge).
-  - **Auch Random Pixels** (`builtin_shapes.cpp`) gehört in dieselbe Grundlücke, auch ohne `aspect`: Die
-    beiden unabhängigen Werte `columns`/`rows` müssten dann ebenfalls automatisch aus der echten Auflösung
-    kommen statt von Hand gepflegt zu werden. Anders als bei den `aspect`-Nodes führt ein Mismatch dort
-    nicht zu Verzerrung, sondern zu zu grobem/zu feinem Raster (mehrere LEDs je Zufallsfeld oder
-    umgekehrt).
-  - **Spectrum Bars** (`builtin_audio_field.cpp`) ist dagegen **nicht** betroffen — kein `aspect`, keine
-    quadratischen Zellen; Balkenbreite/-lücke sind relativ zur Spaltenbreite definiert, Höhe nutzt `p.y`
-    direkt. Kein Handlungsbedarf dort.
-  - **Auch Digital Rain** (`wh.generator.rain`, `builtin_generators.cpp`) gehört dazu: genau dasselbe Muster
-    wie Random Pixels — unabhängiger Parameter `columns` (Default 16), der von Hand zur echten Spaltenzahl
-    passen muss, sonst mehrere LEDs pro Tropfen-Spalte oder umgekehrt. Zusätzlich vom Nutzer gewünscht:
-    Sobald `columns` automatisch aus der echten Auflösung kommt, soll **ein Pixel pro Spalte Standard sein**
-    (Default-Verhalten „1:1", nicht grobkörniger).
+  erhalten (siehe CHANGELOG, beide Einträge). **Ebenfalls erledigt (0.92.0):** `@columns`/`@rows`
+  existieren (Compiler-Kern, Unbekannt-Konvention 0 statt 1 wie bei `@aspect`), und Random Pixels
+  (`builtin_shapes.cpp`, beide Parameter `columns`/`rows`) sowie Digital Rain (`builtin_generators.cpp`,
+  `columns`) nutzen sie jetzt automatisch; ein Wert > 0 bleibt als manueller Override erhalten. Digital
+  Rain hat dabei wie gewünscht automatisch 1 Pixel pro Spalte als neuen Standard (siehe CHANGELOG). Damit
+  ist dieser gesamte Backlog-Punkt abgeschlossen — alle acht betroffenen Nodes (Kaleidoscope, Tunnel,
+  Vortex, Text, Pong, Labyrinth, Random Pixels, Digital Rain) sind umgestellt. **Spectrum Bars**
+  (`builtin_audio_field.cpp`) war von Anfang an **nicht** betroffen — kein `aspect`, keine quadratischen
+  Zellen; Balkenbreite/-lücke sind relativ zur Spaltenbreite definiert, Höhe nutzt `p.y` direkt.
 - DMX-Output-Nodes (0.88.0): Anzeige als Zeilen in der Patch-Tabelle, Live-Wertanzeige am Node — bewusst
   nicht gebaut, nur als mögliche Erweiterung im Gespräch.
 - **Sequencer: ungenutzte Ausgänge (`trigN`/`onN` im Node-Editor) ausblenden** — der Teil, der noch fehlt

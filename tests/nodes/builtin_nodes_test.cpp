@@ -393,3 +393,38 @@ TEST_CASE("Built-ins: aspect-Parameter sind standardmaessig 0 (automatisch aus d
         CHECK(aspect->minValue == 0.0);
     }
 }
+
+TEST_CASE("Built-ins: columns/rows-Parameter sind standardmaessig 0 (automatisch aus der echten Auflösung)") {
+    Builtins builtins;
+    {
+        INFO("Random Pixels");
+        const graph::NodeDescriptor* descriptor = builtins.registry->find("wh.generator.randompixels");
+        REQUIRE(descriptor != nullptr);
+        for (const char* key : {"columns", "rows"}) {
+            const graph::ParameterDescriptor* parameter = nullptr;
+            for (const graph::ParameterDescriptor& candidate : descriptor->parameters) {
+                if (candidate.key == key) {
+                    parameter = &candidate;
+                }
+            }
+            REQUIRE(parameter != nullptr);
+            INFO("Parameter " << key);
+            CHECK(std::get<std::int64_t>(parameter->defaultValue) == 0);
+            CHECK(parameter->minValue == 0.0);
+        }
+    }
+    {
+        INFO("Digital Rain");
+        const graph::NodeDescriptor* descriptor = builtins.registry->find("wh.generator.rain");
+        REQUIRE(descriptor != nullptr);
+        const graph::ParameterDescriptor* columns = nullptr;
+        for (const graph::ParameterDescriptor& candidate : descriptor->parameters) {
+            if (candidate.key == "columns") {
+                columns = &candidate;
+            }
+        }
+        REQUIRE(columns != nullptr);
+        CHECK(std::get<double>(columns->defaultValue) == 0.0);  // 0 = automatisch (@columns), 1 Pixel/Spalte Standard
+        CHECK(columns->minValue == 0.0);
+    }
+}

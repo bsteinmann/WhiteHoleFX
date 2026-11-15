@@ -306,6 +306,8 @@ private:
         bindings.volume = "(wh_frame.volume != 0u)";
         bindings.aspect = "wh_frame.aspect";
         bindings.aspectZ = "wh_frame.aspectZ";
+        bindings.columns = "wh_frame.columns";
+        bindings.rows = "wh_frame.rows";
         bindings.input = [&](std::string_view port, std::string_view coordinate) -> Result<std::string> {
             const auto it = inputCalls.find(port);
             if (it == inputCalls.end()) {
@@ -400,7 +402,7 @@ private:
         result.wgsl =
             "// Von WhiteHoleFX erzeugt (Feldcompiler). Nicht von Hand ändern.\n"
             "struct WhFrame {\n    time: f32,\n    delta: f32,\n    frame: u32,\n    volume: u32,\n    "
-            "aspect: f32,\n    aspectZ: f32,\n}\n" +
+            "aspect: f32,\n    aspectZ: f32,\n    columns: f32,\n    rows: f32,\n}\n" +
             bindingLine(kFrameBinding, "wh_frame: WhFrame") + "\n" +
             wgslParameterStruct(result.layout) +
             bindingLine(kParametersBinding, "wh_params: WhParams") + "\n" + preludes_ + functions_ +
