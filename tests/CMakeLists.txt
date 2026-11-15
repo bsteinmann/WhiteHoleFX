@@ -110,6 +110,9 @@ add_executable(wh_tests
     runtime/player_arrange_test.cpp
     runtime/player_types_test.cpp
     runtime/dmx_usage_test.cpp
+    runtime/dmx_output_usage_test.cpp
+    runtime/dmx_listener_test.cpp
+    runtime/player_dmx_listener_test.cpp
     runtime/node_catalog_test.cpp
     runtime/color_pick_test.cpp
     runtime/master_dmx_test.cpp

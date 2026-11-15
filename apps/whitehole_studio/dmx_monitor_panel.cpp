@@ -1,10 +1,12 @@
 // dmx_monitor_panel.cpp: Umsetzung zu dmx_monitor_panel.hpp.
 #include "dmx_monitor_panel.hpp"
 
+#include <QAction>
 #include <QComboBox>
 #include <QFormLayout>
 #include <QHeaderView>
 #include <QLabel>
+#include <QMenu>
 #include <QSpinBox>
 #include <QStringList>
 #include <QTableWidget>
@@ -22,8 +24,8 @@ constexpr double kStaleAfterSeconds = 5.0;  // wie kMasterDmxTimeoutSeconds/kLiv
 
 }  // namespace
 
-DmxMonitorPanel::DmxMonitorPanel(std::shared_ptr<input::DmxStore> store, QWidget* parent)
-    : QWidget{parent}, store_{std::move(store)} {
+DmxMonitorPanel::DmxMonitorPanel(std::shared_ptr<input::DmxStore> store, runtime::Player& player, QWidget* parent)
+    : QWidget{parent}, store_{std::move(store)}, player_{player} {
     auto* layout = new QVBoxLayout{this};
 
     auto* form = new QFormLayout{};
@@ -53,12 +55,14 @@ DmxMonitorPanel::DmxMonitorPanel(std::shared_ptr<input::DmxStore> store, QWidget
     grid_->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     grid_->setEditTriggers(QTableWidget::NoEditTriggers);
     grid_->setSelectionMode(QTableWidget::NoSelection);
+    grid_->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(grid_, &QTableWidget::customContextMenuRequested, this, [this](const QPoint& pos) { showContextMenu(pos); });
     for (int r = 0; r < kRows; ++r) {
         for (int c = 0; c < kColumns; ++c) {
             auto* item = new QTableWidgetItem{QStringLiteral("–")};
             item->setTextAlignment(Qt::AlignCenter);
             const int channel = r * kColumns + c + 1;
-            item->setToolTip(tr("Kanal %1").arg(channel));
+            item->setToolTip(listenerTooltip(static_cast<std::uint32_t>(channel), std::nullopt));
             grid_->setItem(r, c, item);
         }
     }
@@ -79,7 +83,62 @@ void DmxMonitorPanel::onSelectionChanged() {
         }
     }
     hasData_ = false;
+    updateListenerTooltips();
     refresh();
+}
+
+QString DmxMonitorPanel::listenerTooltip(std::uint32_t channel, const std::optional<runtime::DmxInputListener>& listener) {
+    if (!listener) {
+        return tr("Kanal %1").arg(channel);
+    }
+    return tr("Kanal %1 — gehört zu: %2").arg(channel).arg(QString::fromStdString(listener->name));
+}
+
+void DmxMonitorPanel::updateListenerTooltips() {
+    // Nur bei Protokoll-/Universe-Wechsel (siehe Kommentar am Header), nicht in refresh(): ein Durchlauf
+    // über alle Nodes pro Zelle wäre für jeden Frame unnötig teuer.
+    const auto protocol = protocol_->currentIndex() == 1 ? input::DmxProtocol::Sacn : input::DmxProtocol::ArtNet;
+    const auto universe = static_cast<std::uint32_t>(universe_->value());
+    for (int channel = 1; channel <= static_cast<int>(input::kDmxChannels); ++channel) {
+        const auto listener = player_.dmxListenerAt(protocol, universe, static_cast<std::uint32_t>(channel));
+        const int r = (channel - 1) / kColumns;
+        const int c = (channel - 1) % kColumns;
+        grid_->item(r, c)->setToolTip(listenerTooltip(static_cast<std::uint32_t>(channel), listener));
+    }
+}
+
+QMenu* DmxMonitorPanel::buildContextMenu(std::uint32_t channel, input::DmxProtocol protocol, std::uint32_t universe) {
+    auto* menu = new QMenu{this};
+    const auto listener = player_.dmxListenerAt(protocol, universe, channel);
+    if (listener) {
+        QAction* info = menu->addAction(listenerTooltip(channel, listener));
+        info->setEnabled(false);
+        return menu;
+    }
+    QAction* master = menu->addAction(tr("Als Master-Helligkeit-Kanal verwenden"));
+    connect(master, &QAction::triggered, this,
+            [this, protocol, universe, channel]() { Q_EMIT requestMasterDmx(protocol, universe, channel); });
+    QAction* select = menu->addAction(tr("Als Live-Look-Auswahl-Kanal verwenden"));
+    connect(select, &QAction::triggered, this,
+            [this, protocol, universe, channel]() { Q_EMIT requestLiveDmxSelect(protocol, universe, channel); });
+    QAction* fade = menu->addAction(tr("Als Live-Überblendzeit-Kanal verwenden"));
+    connect(fade, &QAction::triggered, this,
+            [this, protocol, universe, channel]() { Q_EMIT requestLiveDmxFade(protocol, universe, channel); });
+    return menu;
+}
+
+void DmxMonitorPanel::showContextMenu(const QPoint& pos) {
+    const QTableWidgetItem* item = grid_->itemAt(pos);
+    if (item == nullptr) {
+        return;
+    }
+    const auto channel = static_cast<std::uint32_t>(item->row() * kColumns + item->column() + 1);  // 1-basiert
+    const auto protocol = protocol_->currentIndex() == 1 ? input::DmxProtocol::Sacn : input::DmxProtocol::ArtNet;
+    const auto universe = static_cast<std::uint32_t>(universe_->value());
+
+    QMenu* menu = buildContextMenu(channel, protocol, universe);
+    menu->exec(grid_->viewport()->mapToGlobal(pos));
+    menu->deleteLater();
 }
 
 void DmxMonitorPanel::refresh() {
@@ -135,6 +194,41 @@ QString DmxMonitorPanel::exercise() {
     }
     universe_->setValue(777);
     refresh();
+
+    // "Wer hört zu": ohne Hörer der normale Tooltip; onSelectionChanged() (durch setValue oben ausgelöst)
+    // hat ihn schon neu berechnet.
+    if (grid_->item(0, 0)->toolTip() != tr("Kanal %1").arg(1)) {
+        return QStringLiteral("DMX-Monitor: Tooltip zeigt ohne Hörer nicht einfach \"Kanal N\"");
+    }
+
+    // Rechtsklick auf eine freie Zelle: drei Zuweisungen im Menü, der Master-Eintrag löst aus. menu.exec()
+    // selbst wird nicht aufgerufen (würde im Rauchtest blockieren).
+    bool requested = false;
+    input::DmxProtocol requestedProtocol{};
+    std::uint32_t requestedUniverse = 0;
+    std::uint32_t requestedChannel = 0;
+    // Verbindung merken und am Ende wieder lösen: sie hängt sonst über das Ende dieser Funktion hinaus an
+    // `this` und griffe bei einem echten späteren Rechtsklick auf die hier längst ungültigen Stack-Referenzen zu.
+    const QMetaObject::Connection probe =
+        connect(this, &DmxMonitorPanel::requestMasterDmx, this,
+                [&](input::DmxProtocol protocol, std::uint32_t universe, std::uint32_t channel) {
+                    requested = true;
+                    requestedProtocol = protocol;
+                    requestedUniverse = universe;
+                    requestedChannel = channel;
+                });
+    QMenu* menu = buildContextMenu(1, input::DmxProtocol::ArtNet, 777);
+    if (menu->actions().size() != 3) {
+        delete menu;
+        disconnect(probe);
+        return QStringLiteral("DMX-Monitor: Kontextmenü für eine freie Zelle bietet nicht alle drei Zuweisungen an");
+    }
+    menu->actions().first()->trigger();  // "Als Master-Helligkeit-Kanal verwenden"
+    delete menu;
+    disconnect(probe);
+    if (!requested || requestedProtocol != input::DmxProtocol::ArtNet || requestedUniverse != 777 || requestedChannel != 1) {
+        return QStringLiteral("DMX-Monitor: Kontextmenü löst requestMasterDmx nicht mit den richtigen Werten aus");
+    }
     return {};
 }
 

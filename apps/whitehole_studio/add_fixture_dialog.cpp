@@ -238,6 +238,15 @@ mapping::FixtureShape AddFixtureDialog::readShape() const {
     return g;
 }
 
+void AddFixtureDialog::prefillManualPatch(output::Protocol protocol, std::uint32_t universe, std::uint32_t channel) {
+    patchMode_->setCurrentIndex(1);  // löst onPatchMode(1) aus, das universe_/channel_ erst auf den
+                                      // Auto-Vorschlag setzt - die folgenden Zeilen überschreiben ihn gezielt,
+                                      // genau wie exercise() es für den Rauchtest schon tut.
+    protocol_->setCurrentIndex(static_cast<int>(protocol));
+    universe_->setValue(static_cast<int>(universe));
+    channel_->setValue(static_cast<int>(channel));
+}
+
 output::FixturePatch AddFixtureDialog::readPatch() const {
     output::FixturePatch patch;
     patch.protocol = static_cast<output::Protocol>(protocol_->currentIndex());

@@ -39,6 +39,8 @@
 #include "whitehole/preview/view3d.hpp"
 #include "whitehole/project/project.hpp"
 #include "whitehole/runtime/audio_usage.hpp"
+#include "whitehole/runtime/dmx_listener.hpp"
+#include "whitehole/runtime/dmx_output_usage.hpp"
 #include "whitehole/runtime/dmx_usage.hpp"
 #include "whitehole/runtime/led_info.hpp"
 #include "whitehole/runtime/live_signals.hpp"
@@ -444,6 +446,15 @@ public:
     [[nodiscard]] DmxUsage dmxUsage() const;
     /// Wie viele Audio-Nodes das geladene Projekt hat (0, wenn nichts geladen ist).
     [[nodiscard]] AudioUsage audioUsage() const;
+    /// Für den Rechtsklick im DMX-Ausgangs-Monitor (Schritt 3 des DMX-Patch/Monitor-Gitters, siehe
+    /// CLAUDE.md): was auf diesen gesendeten Kanal gepatcht ist, falls etwas. Nullopt ohne Projekt.
+    [[nodiscard]] std::optional<DmxOutputOccupant> dmxOutputOccupantAt(output::Protocol protocol, std::uint32_t universe,
+                                                                        std::uint32_t channel) const;
+    /// Für das "Wer hört zu"-Overlay im DMX-Monitor, Eingang (Schritt 4): wer diesen empfangenen Kanal
+    /// liest - ein Node im Graphen, oder Master-Helligkeit/Live-DMX (Auftritts-Einstellungen, siehe
+    /// masterDmx()/liveDmx()). Nullopt: nichts im geladenen Projekt bzw. Auftritt hört hier zu.
+    [[nodiscard]] std::optional<DmxInputListener> dmxListenerAt(input::DmxProtocol protocol, std::uint32_t universe,
+                                                                 std::uint32_t channel) const;
 
     /// Bild der LEDs: während des Laufs mit den Farben des letzten Frames (schwarz, solange noch
     /// keiner da ist), sonst das Layout. Fehler: InvalidArgument, wenn nichts geladen ist.

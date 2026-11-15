@@ -156,8 +156,29 @@ darum.
   über den Default unverändert) bis zum `Player`, der den Speicher session-übergreifend als
   `std::shared_ptr` hält (`Player::outputMonitor()`) — anders als die `OutputPipeline` selbst überlebt er
   einen Projekt-/Session-Neuaufbau. Eigene Tests (`tests/output/sent_dmx_store_test.cpp`,
-  `output_pipeline_test.cpp`). Noch keine Zuweisung, kein Overlay — das sind die noch offenen Schritte 3–4,
-  jeweils eigene kleine Schritte.
+  `output_pipeline_test.cpp`).
+  **Erledigt (0.92.0), Schritt 3 (Rechtsklick-Zuweisung) und Schritt 4 ("Wer hört zu"-Overlay), zusammen
+  umgesetzt:** Eingang (`DmxMonitorPanel`): Tooltip jeder Zelle nennt per neuem `Player::dmxListenerAt`
+  (→ `runtime::findDmxListenerInGraph` für Nodes `wh.value.dmx`/`wh.value.dmxcolor`, plus Player-seitig
+  `masterDmx()`/`liveDmx()` für die beiden Einstellungs-Kanäle ohne eigenen Node), wer liest - neu
+  berechnet bei Protokoll-/Universe-Wechsel, nicht jeden Frame (ein Nodes-Durchlauf pro Zelle pro Frame
+  wäre unnötig teuer). Rechtsklick auf eine freie Zelle bietet die drei Zuweisungen (Master-Helligkeit,
+  Live-Look-Auswahl, Live-Überblendzeit) an, die direkt `AppSettings`/`applySettings` setzen - dieselbe
+  Stelle wie der Einstellungen-Dialog; eine belegte Zelle zeigt nur den Tooltip-Text, deaktiviert.
+  Ausgang (`DmxOutputMonitorPanel`): Rechtsklick nutzt neues `Player::dmxOutputOccupantAt` (→
+  `runtime::findDmxOutputOccupant`, scannt `FixturePatch`/`DmxChannelPatch` gegen das Layout, folgt dabei
+  demselben Universe-Überlauf wie `OutputPlan::create`) - eine schon gepatchte Zelle zeigt (deaktiviert),
+  was dort sendet, eine freie Zelle bietet "Neues Fixture hier patchen…" an und öffnet den bestehenden
+  Dialog "Fixture hinzufügen" vorbefüllt (neues `AddFixtureDialog::prefillManualPatch`,
+  `LayoutPanel::addFromDialogAt`) statt das Patchen hier noch einmal nachzubauen. Beide Rechtsklick-Signale
+  sind dauerhaft mit echten Programm-Aktionen verbunden (Einstellungen übernehmen bzw. den modalen Dialog
+  öffnen); die Rauchtests der beiden Panels lösen die Menüpunkte deshalb wirklich aus, rufen aber nie
+  `exec()` eines Menüs oder Dialogs selbst auf (würde ohne Publikum blockieren) - `MainWindow` löst dafür
+  die Dialog-Verbindung während ihres eigenen Rauchtests kurz, bzw. sichert/stellt bei der Einstellungen-
+  Verbindung den vorherigen Stand wieder her, nach demselben Muster wie `exerciseSettings`. Damit ist der
+  ursprünglich vereinbarte 4-Schritte-Plan abgeschlossen. Nicht Teil davon und nicht angefragt: dieselbe
+  Rechtsklick-Zuordnung für einen schon bestehenden Ausgangs-Patch (statt nur für ein neues Fixture) und
+  ein "Wer hört zu"-Overlay auch für die Ausgabe.
 - **MIDI-Eingang/-Ausgang** (z. B. Akai APC Mini): nur besprochen, nicht begonnen. Überlegungen aus dem
   Gespräch:
   - *Bibliothek:* RtMidi — C++, cross-platform (ALSA/WinMM), passt zum bestehenden Muster, mit dem

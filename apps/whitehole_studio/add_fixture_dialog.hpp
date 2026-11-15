@@ -47,6 +47,11 @@ public:
     /// Die Eingaben, wie die Felder sie gerade zeigen.
     [[nodiscard]] NewFixture result() const;
 
+    /// Für den Rechtsklick-Patch aus dem DMX-Ausgangs-Monitor (Schritt 3 des DMX-Patch/Monitor-Gitters,
+    /// siehe CLAUDE.md): Modus auf Manuell, Protokoll/Universe/Kanal auf die angeklickte Zelle. Das Ziel
+    /// (Controller) bleibt die Voreinstellung, der Monitor unterscheidet selbst keine Ziele.
+    void prefillManualPatch(output::Protocol protocol, std::uint32_t universe, std::uint32_t channel);
+
     /// Rauchtest für die CI: füllt Matrix, Strip und Gitter wie ein Mensch aus und prüft result() und die
     /// Anzeige. Danach steht ein 4×3×2-Gitter mit Startecke und automatischem Patch im Dialog. Leer bei Erfolg.
     QString exercise();

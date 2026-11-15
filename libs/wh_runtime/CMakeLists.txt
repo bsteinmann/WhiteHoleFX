@@ -6,6 +6,8 @@ wh_add_library(wh_runtime
         src/graph_layout.cpp
         src/audio_usage.cpp
         src/dmx_usage.cpp
+        src/dmx_output_usage.cpp
+        src/dmx_listener.cpp
         src/point_file.cpp
         src/led_info.cpp
         src/live_decks.cpp

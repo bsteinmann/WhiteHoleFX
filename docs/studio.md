@@ -585,16 +585,31 @@ wählbaren Protokolls und Universe als Gitter (16 Spalten, 32 Zeilen; Zeile *n* 
 Zelle zeigt den zuletzt empfangenen Wert (0–255) oder „–“, solange für dieses Universe noch nie ein Paket kam.
 Darüber steht, ob das Signal aktiv ist oder vor mehr als 5 Sekunden zuletzt kam (veraltet, Wert bleibt sichtbar
 stehen). Das Dock ist beim Start versteckt (512 Zellen jeden Frame neu zu zeichnen lohnt nur, solange man
-hinschaut) und aktualisiert sich nur, während es sichtbar ist. Reine Anzeige zur Fehlersuche — noch keine
-Zuordnung zu einem Fixture-Patch oder dem DMX-Kanal-Pool per Rechtsklick (geplanter nächster Schritt, siehe
-CLAUDE.md).
+hinschaut) und aktualisiert sich nur, während es sichtbar ist.
+
+**„Wer hört zu"-Overlay (Schritt 4):** der Tooltip jeder Zelle nennt, wer den Kanal liest — ein Node im Graphen
+(z. B. „DMX Channel“ oder der eigene Name, falls umbenannt) oder, ohne eigenen Node, Master-Helligkeit bzw.
+Live-DMX (Look-Auswahl/Überblendzeit). Wird nur bei einem Protokoll-/Universe-Wechsel neu berechnet, nicht
+jeden Frame — ändert sich der Graph, während der Monitor offen ist, zeigt der Tooltip den alten Stand, bis
+neu gewählt wird.
+
+**Rechtsklick-Zuordnung (Schritt 3, Eingang):** eine schon belegte Zelle zeigt denselben Text wie der Tooltip,
+deaktiviert; eine freie Zelle bietet an, den Kanal als Master-Helligkeit-, Live-Look-Auswahl- oder
+Live-Überblendzeit-Kanal zu verwenden (die einzigen Eingangs-„Patches“ ohne eigenen Node) — wirkt wie die
+gleichnamige Einstellung auf der Seite „DMX-Eingang“ und wird genauso gespeichert.
 
 **DMX-Ausgangs-Monitor (Schritt 2 des DMX-Patch/Monitor-Gitters):** Ansicht → DMX-Ausgangs-Monitor zeigt
 dasselbe Gitter wie der DMX-Monitor, aber für die zuletzt **gesendeten** Art-Net/sACN-Universen statt der
 empfangenen — dieselbe Protokoll-/Universe-Auswahl, dieselbe „aktiv/veraltet"-Anzeige nach 5 Sekunden, dieselbe
 Sichtbarkeits-Aktualisierung. DDP erscheint hier nicht, da DDP byteweise statt per Universe adressiert wird und
-damit kein Universe-Raster hat. Auch dies ist reine Anzeige — die Rechtsklick-Zuordnung (Schritt 3) und das
-„Wer hört zu"-Overlay (Schritt 4) fehlen noch, siehe CLAUDE.md.
+damit kein Universe-Raster hat.
+
+**Rechtsklick-Zuordnung (Schritt 3, Ausgang):** eine schon gepatchte Zelle zeigt (deaktiviert), was dort sendet —
+ein Fixture oder ein Bereich des DMX-Kanal-Pools; eine freie Zelle bietet „Neues Fixture hier patchen…“ an und
+öffnet den bestehenden Dialog „Fixture hinzufügen“ mit vorbefülltem Protokoll/Universe/Kanal (Modus Manuell).
+Noch offen: dasselbe für einen schon bestehenden Patch (statt nur für ein neues Fixture) und das „Wer hört
+zu"-Overlay auch für die Ausgabe — beides nicht Teil des ursprünglich vereinbarten 4-Schritte-Plans, siehe
+CLAUDE.md.
 
 ## Audio-Eingang
 

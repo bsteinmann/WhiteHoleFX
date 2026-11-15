@@ -17,8 +17,19 @@
   `input::DmxStore`, aber unabhängig davon und mit eigenen Tests, `tests/output/sent_dmx_store_test.cpp`),
   geschrieben von `OutputPipeline::sendSlot` über ein neues `OutputConfig::sentDmx` (eigener Test in
   `output_pipeline_test.cpp`) und durchgereicht über `SessionDeps`/`buildOutput` bis zum `Player`, der ihn
-  session-übergreifend hält (`Player::outputMonitor()`). Noch keine Zuordnung per Rechtsklick (Schritt 3)
-  und noch kein „Wer hört zu"-Overlay (Schritt 4).
+  session-übergreifend hält (`Player::outputMonitor()`).
+- **Rechtsklick-Zuordnung in beiden DMX-Monitoren und „Wer hört zu"-Overlay, Schritte 3 und 4 des
+  DMX-Patch/Monitor-Gitters.** Eingang (DMX-Monitor): der Tooltip jeder Zelle nennt jetzt, wer sie liest —
+  ein Node im Graphen oder, ohne eigenen Node, Master-Helligkeit/Live-DMX (neue `runtime::DmxInputListener`/
+  `findDmxListenerInGraph`, `Player::dmxListenerAt`, eigene Tests); Rechtsklick auf eine freie Zelle bietet
+  an, sie als Master-Helligkeit-, Live-Look-Auswahl- oder Live-Überblendzeit-Kanal zu verwenden (wirkt wie
+  die gleichnamige Einstellung und wird genauso gespeichert), eine belegte Zelle zeigt nur den Tooltip-Text,
+  deaktiviert. Ausgang (DMX-Ausgangs-Monitor): Rechtsklick zeigt bei einer schon gepatchten Zelle, was dort
+  sendet (Fixture oder DMX-Kanal-Pool, neue `runtime::DmxOutputOccupant`/`findDmxOutputOccupant`,
+  `Player::dmxOutputOccupantAt`, eigene Tests), bei einer freien Zelle „Neues Fixture hier patchen…" —
+  öffnet den bestehenden Dialog „Fixture hinzufügen" vorbefüllt (neues `AddFixtureDialog::prefillManualPatch`,
+  `LayoutPanel::addFromDialogAt`). Beide Rauchtests lösen die echten Menüpunkte aus, ohne den blockierenden
+  `exec()` eines Menüs oder Dialogs selbst aufzurufen.
 - **DMX-Fernsteuerung für Live-Modus, Teil 1: Look-Auswahl per DMX-Kanal.** Einstellungen, Seite
   DMX-Eingang: ein Kanal wählt im laufenden Live-Betrieb den aktiven Look (wie an einem
   Szenen-Wahl-Kanal — er teilt sich in so viele gleich große Stufen auf, wie das Projekt Looks hat; 0 =

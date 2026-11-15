@@ -337,4 +337,33 @@ DmxUsage Player::dmxUsage() const { return project_ ? findDmxUsage(project_->gra
 
 AudioUsage Player::audioUsage() const { return project_ ? findAudioUsage(project_->graph) : AudioUsage{}; }
 
+std::optional<DmxOutputOccupant> Player::dmxOutputOccupantAt(output::Protocol protocol, std::uint32_t universe,
+                                                               std::uint32_t channel) const {
+    if (!project_) {
+        return std::nullopt;
+    }
+    return findDmxOutputOccupant(project_->layout, project_->patches, project_->dmxPatches, protocol, universe, channel);
+}
+
+std::optional<DmxInputListener> Player::dmxListenerAt(input::DmxProtocol protocol, std::uint32_t universe,
+                                                        std::uint32_t channel) const {
+    if (project_) {
+        if (auto node = findDmxListenerInGraph(project_->graph, protocol, universe, channel)) {
+            return node;
+        }
+    }
+    if (masterDmx_ && masterDmx_->protocol == protocol && masterDmx_->universe == universe && masterDmx_->channel == channel) {
+        return DmxInputListener{"Master-Helligkeit", masterDmx_->channel, 1};
+    }
+    if (liveDmx_ && liveDmx_->protocol == protocol && liveDmx_->universe == universe) {
+        if (liveDmx_->selectChannel == channel) {
+            return DmxInputListener{"Live-Look-Auswahl", liveDmx_->selectChannel, 1};
+        }
+        if (liveDmx_->fadeChannel != 0 && liveDmx_->fadeChannel == channel) {
+            return DmxInputListener{"Live-Überblendzeit", liveDmx_->fadeChannel, 1};
+        }
+    }
+    return std::nullopt;
+}
+
 }  // namespace whitehole::runtime

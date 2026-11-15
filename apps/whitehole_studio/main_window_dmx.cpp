@@ -93,6 +93,38 @@ void MainWindow::applyLiveDmx() {
     player_->setLiveDmx(source);
 }
 
+void MainWindow::assignMasterDmx(input::DmxProtocol protocol, std::uint32_t universe, std::uint32_t channel) {
+    AppSettings wanted = appSettings_;
+    wanted.masterDmx = true;
+    wanted.masterDmxProtocol = protocol == input::DmxProtocol::Sacn ? 1 : 0;
+    wanted.masterDmxUniverse = static_cast<int>(universe);
+    wanted.masterDmxChannel = static_cast<int>(channel);
+    applySettings(wanted, true);
+    updateStatus();
+}
+
+void MainWindow::assignLiveDmxSelect(input::DmxProtocol protocol, std::uint32_t universe, std::uint32_t channel) {
+    AppSettings wanted = appSettings_;
+    wanted.liveDmx = true;
+    wanted.liveDmxProtocol = protocol == input::DmxProtocol::Sacn ? 1 : 0;
+    wanted.liveDmxUniverse = static_cast<int>(universe);
+    wanted.liveDmxSelectChannel = static_cast<int>(channel);
+    applySettings(wanted, true);
+    updateStatus();
+}
+
+void MainWindow::assignLiveDmxFade(input::DmxProtocol protocol, std::uint32_t universe, std::uint32_t channel) {
+    // Protokoll/Universe teilt sich Live-DMX mit dem Auswahl-Kanal (ein LiveDmxSource für beide, siehe
+    // live_dmx.hpp) - ein Rechtsklick hier verschiebt also auch den Auswahl-Kanal auf dieses Universe.
+    AppSettings wanted = appSettings_;
+    wanted.liveDmx = true;
+    wanted.liveDmxProtocol = protocol == input::DmxProtocol::Sacn ? 1 : 0;
+    wanted.liveDmxUniverse = static_cast<int>(universe);
+    wanted.liveDmxFadeChannel = static_cast<int>(channel);
+    applySettings(wanted, true);
+    updateStatus();
+}
+
 void MainWindow::followMasterDmx() {
     if (masterSlider_ == nullptr || masterLabel_ == nullptr) {
         return;

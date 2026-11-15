@@ -1,10 +1,12 @@
 // dmx_output_monitor_panel.cpp: Umsetzung zu dmx_output_monitor_panel.hpp.
 #include "dmx_output_monitor_panel.hpp"
 
+#include <QAction>
 #include <QComboBox>
 #include <QFormLayout>
 #include <QHeaderView>
 #include <QLabel>
+#include <QMenu>
 #include <QSpinBox>
 #include <QStringList>
 #include <QTableWidget>
@@ -22,8 +24,9 @@ constexpr double kStaleAfterSeconds = 5.0;  // wie kMasterDmxTimeoutSeconds/kLiv
 
 }  // namespace
 
-DmxOutputMonitorPanel::DmxOutputMonitorPanel(std::shared_ptr<output::SentDmxStore> store, QWidget* parent)
-    : QWidget{parent}, store_{std::move(store)} {
+DmxOutputMonitorPanel::DmxOutputMonitorPanel(std::shared_ptr<output::SentDmxStore> store, runtime::Player& player,
+                                              QWidget* parent)
+    : QWidget{parent}, store_{std::move(store)}, player_{player} {
     auto* layout = new QVBoxLayout{this};
 
     auto* form = new QFormLayout{};
@@ -53,6 +56,8 @@ DmxOutputMonitorPanel::DmxOutputMonitorPanel(std::shared_ptr<output::SentDmxStor
     grid_->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     grid_->setEditTriggers(QTableWidget::NoEditTriggers);
     grid_->setSelectionMode(QTableWidget::NoSelection);
+    grid_->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(grid_, &QTableWidget::customContextMenuRequested, this, [this](const QPoint& pos) { showContextMenu(pos); });
     for (int r = 0; r < kRows; ++r) {
         for (int c = 0; c < kColumns; ++c) {
             auto* item = new QTableWidgetItem{QStringLiteral("–")};
@@ -80,6 +85,36 @@ void DmxOutputMonitorPanel::onSelectionChanged() {
     }
     hasData_ = false;
     refresh();
+}
+
+QMenu* DmxOutputMonitorPanel::buildContextMenu(std::uint32_t channel, output::Protocol protocol, std::uint32_t universe) {
+    auto* menu = new QMenu{this};
+    const auto occupant = player_.dmxOutputOccupantAt(protocol, universe, channel);
+    if (occupant) {
+        QAction* info = menu->addAction(occupant->kind == runtime::DmxOutputOccupant::Kind::Fixture
+                                             ? tr("Belegt von Fixture: %1").arg(QString::fromStdString(occupant->name))
+                                             : tr("Belegt vom DMX-Kanal-Pool (Pool-Kanal %1)").arg(occupant->poolChannel));
+        info->setEnabled(false);
+    } else {
+        QAction* add = menu->addAction(tr("Neues Fixture hier patchen…"));
+        connect(add, &QAction::triggered, this,
+                [this, protocol, universe, channel]() { Q_EMIT requestManualPatch(protocol, universe, channel); });
+    }
+    return menu;
+}
+
+void DmxOutputMonitorPanel::showContextMenu(const QPoint& pos) {
+    const QTableWidgetItem* item = grid_->itemAt(pos);
+    if (item == nullptr) {
+        return;
+    }
+    const auto channel = static_cast<std::uint32_t>(item->row() * kColumns + item->column() + 1);  // 1-basiert
+    const auto protocol = protocol_->currentIndex() == 1 ? output::Protocol::Sacn : output::Protocol::ArtNet;
+    const auto universe = static_cast<std::uint32_t>(universe_->value());
+
+    QMenu* menu = buildContextMenu(channel, protocol, universe);
+    menu->exec(grid_->viewport()->mapToGlobal(pos));
+    menu->deleteLater();
 }
 
 void DmxOutputMonitorPanel::refresh() {
@@ -138,6 +173,35 @@ QString DmxOutputMonitorPanel::exercise() {
     }
     universe_->setValue(30000);
     refresh();
+
+    // Rechtsklick auf eine freie Zelle (Universe 30000 ist nicht gepatcht): Kontextmenü bietet das Patchen
+    // an, und löst es aus. menu.exec() selbst wird nicht aufgerufen (würde im Rauchtest blockieren).
+    bool requested = false;
+    output::Protocol requestedProtocol{};
+    std::uint32_t requestedUniverse = 0;
+    std::uint32_t requestedChannel = 0;
+    // Verbindung merken und am Ende wieder lösen: sie hängt sonst über das Ende dieser Funktion hinaus an
+    // `this` und griffe bei einem echten späteren Rechtsklick auf die hier längst ungültigen Stack-Referenzen zu.
+    const QMetaObject::Connection probe =
+        connect(this, &DmxOutputMonitorPanel::requestManualPatch, this,
+                [&](output::Protocol protocol, std::uint32_t universe, std::uint32_t channel) {
+                    requested = true;
+                    requestedProtocol = protocol;
+                    requestedUniverse = universe;
+                    requestedChannel = channel;
+                });
+    QMenu* menu = buildContextMenu(1, output::Protocol::ArtNet, 30000);
+    if (menu->actions().size() != 1 || !menu->actions().first()->text().contains(QStringLiteral("Neues Fixture"))) {
+        delete menu;
+        disconnect(probe);
+        return QStringLiteral("DMX-Ausgangs-Monitor: Kontextmenü für eine freie Zelle bietet nicht \"Neues Fixture hier patchen\" an");
+    }
+    menu->actions().first()->trigger();
+    delete menu;
+    disconnect(probe);
+    if (!requested || requestedProtocol != output::Protocol::ArtNet || requestedUniverse != 30000 || requestedChannel != 1) {
+        return QStringLiteral("DMX-Ausgangs-Monitor: Kontextmenü löst requestManualPatch nicht mit den richtigen Werten aus");
+    }
     return {};
 }
 

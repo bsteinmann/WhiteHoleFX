@@ -220,6 +220,12 @@ private:
     /// an den Player; der Kanal wählt den Look, solange der Live-Betrieb läuft.
     void applyLiveDmx();
     [[nodiscard]] QString dmxStatusText() const;
+    /// Rechtsklick im DMX-Monitor (Eingang), Schritt 3 des DMX-Patch/Monitor-Gitters (siehe CLAUDE.md):
+    /// macht den angeklickten Kanal zum Master-Helligkeit- bzw. Live-DMX-Kanal und speichert das wie die
+    /// Wahl im Einstellungen-Dialog (main_window_dmx.cpp).
+    void assignMasterDmx(input::DmxProtocol protocol, std::uint32_t universe, std::uint32_t channel);
+    void assignLiveDmxSelect(input::DmxProtocol protocol, std::uint32_t universe, std::uint32_t channel);
+    void assignLiveDmxFade(input::DmxProtocol protocol, std::uint32_t universe, std::uint32_t channel);
     /// Audio-Eingang (main_window_audio.cpp). `choice`: "off", "default", "device:<Name>" oder "file:<Pfad>".
     /// Liefert den Fehlertext (leer = in Ordnung; bei einem Fehler bleibt der Eingang aus).
     QString applyAudioChoice(const QString& choice);
