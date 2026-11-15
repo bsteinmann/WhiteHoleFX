@@ -28,6 +28,7 @@ TEST_CASE("findDmxListenerInGraph: DMX Channel und DMX Color, 16 Bit/Dimmer-Brei
     REQUIRE(hit1.has_value());
     CHECK(hit1->name == "DMX Channel");
     CHECK(hit1->count == 2);
+    CHECK(hit1->kind == runtime::DmxInputListener::Kind::Node);
     auto hit2 = runtime::findDmxListenerInGraph(graph, input::DmxProtocol::ArtNet, 1, 2);
     CHECK(hit2.has_value());
     CHECK_FALSE(runtime::findDmxListenerInGraph(graph, input::DmxProtocol::ArtNet, 1, 3).has_value());

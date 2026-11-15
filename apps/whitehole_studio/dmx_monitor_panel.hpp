@@ -15,21 +15,34 @@
 // Monitor offen ist, zeigt der Tooltip den alten Stand, bis neu gewählt wird; das ist bewusst einfach
 // gehalten (ein Durchlauf über alle Nodes pro Frame wäre für ein reines Anzeige-Werkzeug unnötig teuer).
 //
-// Rechtsklick (Schritt 3): bei einer schon belegten Zelle eine deaktivierte Zeile "Gehört zu: ..." (aus
-// demselben Tooltip-Text). Bei einer freien Zelle (nachträglich freigegebene Erweiterung: in Kategorien
-// gegliedert statt einer flachen Liste) drei Untermenüs: "Master" (Masterdimmer-Zuordnung, siehe
-// app_settings.hpp - keine eigene Einstellung, nur der bestehende Master-Helligkeit-Kanal), "Live Kanal"
-// (Look-Auswahl, Überblendzeit, ebenfalls app_settings.hpp) und "DMX Out" (patcht die Adresse eines schon
-// im Graphen vorhandenen wh.value.dmx/wh.value.dmxcolor-Nodes direkt auf diesen Kanal, über
-// Player::dmxValueNodes/Player::setParameter, statt das im Node-Editor von Hand einzustellen).
+// Rechtsklick (Schritt 3): bei einer schon belegten Zelle eine Aktion "Farbe ändern…" (siehe unten) und eine
+// deaktivierte Zeile "Gehört zu: ..." (aus demselben Tooltip-Text). Bei einer freien Zelle (nachträglich
+// freigegebene Erweiterung: in Kategorien gegliedert statt einer flachen Liste) drei Untermenüs: "Master"
+// (Masterdimmer-Zuordnung, siehe app_settings.hpp - keine eigene Einstellung, nur der bestehende
+// Master-Helligkeit-Kanal), "Live Kanal" (Look-Auswahl, Überblendzeit, ebenfalls app_settings.hpp) und
+// "DMX Out" (patcht die Adresse eines schon im Graphen vorhandenen wh.value.dmx/wh.value.dmxcolor-Nodes
+// direkt auf diesen Kanal, über Player::dmxValueNodes/Player::setParameter, statt das im Node-Editor von
+// Hand einzustellen).
+//
+// Zellenfarben (nachträglich freigegebene Erweiterung, erster Teil des 15.11.-Vorschlags "farbig
+// hinterlegen"): eine belegte Zelle bekommt automatisch die Standardfarbe ihrer Kategorie
+// (dmx_cell_colors.hpp: Master/Live Kanal/Node), eine freie bleibt neutral. Wie der Tooltip nur bei einem
+// Protokoll-/Universe-Wechsel neu berechnet, nicht jeden Frame (siehe updateListenerTooltips). Per
+// Rechtsklick → "Farbe ändern…" lässt sich die Farbe einer schon belegten Zelle einzeln überschreiben
+// (QColorDialog); die Überschreibung gilt nur für die aktuell gewählte Protokoll-/Universe-Kombination
+// dieses Panels und geht beim Wechsel wieder verloren (keine Projekt- oder Einstellungs-Daten, rein
+// optisch) - bewusst einfach gehalten, wie die übrigen Tooltip-Einschränkungen oben.
 #pragma once
 
 #include <QPoint>
 #include <QString>
 #include <QWidget>
 
+#include <QColor>
+
 #include <array>
 #include <cstdint>
+#include <map>
 #include <memory>
 #include <optional>
 
@@ -56,7 +69,8 @@ public:
     void refresh();
 
     /// Rauchtest für die CI: Protokoll/Universe wählen, einen Wert schreiben, prüfen, dass er erscheint,
-    /// Rechtsklick-Kategorien (Master/Live Kanal/DMX Out) und das Patchen eines Nodes über "DMX Out" prüfen.
+    /// Rechtsklick-Kategorien (Master/Live Kanal/DMX Out), das Patchen eines Nodes über "DMX Out" und die
+    /// Zellenfarben (Master-/Node-Kategorie, "Farbe ändern…"-Aktion vorhanden) prüfen.
     QString exercise();
 
 Q_SIGNALS:
@@ -75,6 +89,10 @@ private:
     void showContextMenu(const QPoint& pos);
     [[nodiscard]] QMenu* buildContextMenu(std::uint32_t channel, input::DmxProtocol protocol, std::uint32_t universe);
     [[nodiscard]] static QString listenerTooltip(std::uint32_t channel, const std::optional<runtime::DmxInputListener>& listener);
+    /// Rechtsklick → "Farbe ändern…" auf einer belegten Zelle: Farbwahl-Dialog, Überschreibung merken, Zelle
+    /// sofort neu einfärben. Öffnet einen echten (modalen) Dialog - exercise() prüft darum nur, dass die
+    /// Aktion existiert, löst sie aber nicht aus (würde im Rauchtest ohne Publikum blockieren).
+    void changeCellColor(std::uint32_t channel);
 
     std::shared_ptr<input::DmxStore> store_;
     runtime::Player& player_;
@@ -84,6 +102,7 @@ private:
     QTableWidget* grid_{nullptr};
     std::array<std::uint8_t, input::kDmxChannels> lastValues_{};
     bool hasData_{false};  // zeigt das Gitter gerade Werte (statt "-") an?
+    std::map<std::uint32_t, QColor> colorOverrides_;  // Kanal -> von Hand gewählte Farbe, siehe Kommentar oben
 };
 
 }  // namespace whitehole::studio

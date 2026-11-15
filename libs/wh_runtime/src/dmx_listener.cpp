@@ -52,7 +52,7 @@ std::optional<DmxInputListener> findDmxListenerInGraph(const graph::Graph& graph
         const std::uint32_t count = isChannel ? (boolParameter(node, "bits16", false) ? 2U : 1U)
                                                : (integerParameter(node, "mode", 0) == 1 ? 4U : 3U);
         if (channel >= nodeChannel && channel < nodeChannel + count) {
-            return DmxInputListener{node.label, nodeChannel, count};
+            return DmxInputListener{DmxInputListener::Kind::Node, node.label, nodeChannel, count};
         }
     }
     return std::nullopt;

@@ -353,14 +353,14 @@ std::optional<DmxInputListener> Player::dmxListenerAt(input::DmxProtocol protoco
         }
     }
     if (masterDmx_ && masterDmx_->protocol == protocol && masterDmx_->universe == universe && masterDmx_->channel == channel) {
-        return DmxInputListener{"Master-Helligkeit", masterDmx_->channel, 1};
+        return DmxInputListener{DmxInputListener::Kind::Master, "Master-Helligkeit", masterDmx_->channel, 1};
     }
     if (liveDmx_ && liveDmx_->protocol == protocol && liveDmx_->universe == universe) {
         if (liveDmx_->selectChannel == channel) {
-            return DmxInputListener{"Live-Look-Auswahl", liveDmx_->selectChannel, 1};
+            return DmxInputListener{DmxInputListener::Kind::LiveSelect, "Live-Look-Auswahl", liveDmx_->selectChannel, 1};
         }
         if (liveDmx_->fadeChannel != 0 && liveDmx_->fadeChannel == channel) {
-            return DmxInputListener{"Live-Überblendzeit", liveDmx_->fadeChannel, 1};
+            return DmxInputListener{DmxInputListener::Kind::LiveFade, "Live-Überblendzeit", liveDmx_->fadeChannel, 1};
         }
     }
     return std::nullopt;

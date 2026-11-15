@@ -1,5 +1,6 @@
 // Player::dmxListenerAt: Graph-Nodes zusätzlich zu Master-Helligkeit/Live-DMX, Schritt 4 des
-// DMX-Patch/Monitor-Gitters ("Wer hört zu"-Overlay, siehe CLAUDE.md).
+// DMX-Patch/Monitor-Gitters ("Wer hört zu"-Overlay, siehe CLAUDE.md). Prüft auch DmxInputListener::Kind
+// (nachträglich freigegebene Erweiterung, Grundlage für die Zellenfarben im DMX-Monitor).
 #include <catch2/catch_test_macros.hpp>
 
 #include <memory>
@@ -50,15 +51,18 @@ TEST_CASE("Player::dmxListenerAt: Master-Helligkeit und Live-DMX werden als Hör
     const auto master = rig.player.dmxListenerAt(DmxProtocol::ArtNet, 2, 3);
     REQUIRE(master.has_value());
     CHECK(master->name == "Master-Helligkeit");
+    CHECK(master->kind == runtime::DmxInputListener::Kind::Master);
     CHECK_FALSE(rig.player.dmxListenerAt(DmxProtocol::ArtNet, 2, 4).has_value());  // Nachbarkanal, nicht betroffen
 
     rig.player.setLiveDmx(runtime::LiveDmxSource{DmxProtocol::Sacn, 9, 1, 2});
     const auto select = rig.player.dmxListenerAt(DmxProtocol::Sacn, 9, 1);
     REQUIRE(select.has_value());
     CHECK(select->name == "Live-Look-Auswahl");
+    CHECK(select->kind == runtime::DmxInputListener::Kind::LiveSelect);
     const auto fade = rig.player.dmxListenerAt(DmxProtocol::Sacn, 9, 2);
     REQUIRE(fade.has_value());
     CHECK(fade->name == "Live-Überblendzeit");
+    CHECK(fade->kind == runtime::DmxInputListener::Kind::LiveFade);
 }
 
 TEST_CASE("Player::dmxListenerAt: ein Node im Graphen geht vor Master/Live, falls sie sich überschneiden", "[player][dmx]") {
@@ -70,4 +74,5 @@ TEST_CASE("Player::dmxListenerAt: ein Node im Graphen geht vor Master/Live, fall
     const auto found = rig.player.dmxListenerAt(DmxProtocol::ArtNet, 1, 3);
     REQUIRE(found.has_value());
     CHECK(found->name == "DMX Channel");
+    CHECK(found->kind == runtime::DmxInputListener::Kind::Node);
 }

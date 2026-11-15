@@ -201,12 +201,12 @@ darum.
   Überblendzeit-Kanal für den Masterdimmer, analog zu Live-DMX) komplett gebaut (Backend, Tests), nach
   einem Rückfragen-Hin-und-Her vom Nutzer aber ausdrücklich wieder verworfen ("Nein, nur Bestehendes") und
   vollständig zurückgenommen — die Kategorie "Master" zeigt nur die schon bestehende Masterdimmer-Zuordnung.
-- **Noch offen, braucht weiterhin ausdrückliche Freigabe — erster Teil des Vorschlags vom 15.11.
-  ("farbig hinterlegen"):** Zellen im DMX-Monitor farbig hinterlegen, je eine Farbe für Matrizen/Fixtures
-  und eine andere für (Pool-)Kanäle, dabei auch den Rechtsklick berücksichtigen. Dieser Teil wurde von der
-  obigen Klärungsrunde nicht mit abgedeckt (die drehte sich nur um "Master dimmer hierher patchen"). Weiterhin
-  unklar: ob damit der Eingangs- oder der Ausgangs-Monitor gemeint ist (oder beide) — vor Beginn der
-  Umsetzung mit dem Nutzer klären.
+- **DMX-Monitor-Vorschlag vom 15.11., erster Teil ("farbig hinterlegen"): erledigt.** Nachträgliche
+  Klärung (derselbe Tag): beide Monitore bekommen Zellenfarben, eine Farbe je Belegungsart (Eingang:
+  Master, Live Kanal, Node; Ausgang: Fixture, DMX-Kanal-Pool) — automatisch gesetzt, bei einer schon
+  belegten Zelle per Rechtsklick → "Farbe ändern…" überschreibbar (reine Anzeige, keine Projekt- oder
+  Einstellungsdaten). Vom Nutzer mit "jetzt umsetzen" freigegeben und umgesetzt; Details siehe CHANGELOG.
+  Damit sind beide Teile des 15.11.-Vorschlags zum DMX-Patch/Monitor-Gitter abgeschlossen.
 - **MIDI-Eingang/-Ausgang** (z. B. Akai APC Mini): nur besprochen, nicht begonnen. Überlegungen aus dem
   Gespräch:
   - *Bibliothek:* RtMidi — C++, cross-platform (ALSA/WinMM), passt zum bestehenden Muster, mit dem

@@ -607,6 +607,14 @@ Umbau des bis dahin flachen Menüs):
   Zelle — dieselben drei Parameter, die auch das Parameterfenster des Nodes zeigt. Enthält das Projekt keinen
   solchen Node, steht dort nur ein deaktivierter Hinweis.
 
+**Zellenfarben (nachträglich freigegebene Erweiterung, erster Teil des 15.11.-Vorschlags „farbig
+hinterlegen”):** eine belegte Zelle bekommt automatisch eine Farbe nach Kategorie — Master (Orange), Live
+Kanal (Violett) oder Node (Gelb, auch für per „DMX Out” gepatchte Nodes) — eine freie bleibt neutral. Wie
+der Tooltip nur bei einem Protokoll-/Universe-Wechsel neu berechnet, nicht jeden Frame. Rechtsklick auf eine
+belegte Zelle bietet zusätzlich „Farbe ändern…” an: ein Farbwahl-Dialog überschreibt die Farbe dieser einen
+Zelle; die Überschreibung ist rein optisch (kein Projekt- oder Einstellungswert) und geht beim nächsten
+Protokoll-/Universe-Wechsel wieder verloren.
+
 **DMX-Ausgangs-Monitor (Schritt 2 des DMX-Patch/Monitor-Gitters):** Ansicht → DMX-Ausgangs-Monitor zeigt
 dasselbe Gitter wie der DMX-Monitor, aber für die zuletzt **gesendeten** Art-Net/sACN-Universen statt der
 empfangenen — dieselbe Protokoll-/Universe-Auswahl, dieselbe „aktiv/veraltet"-Anzeige nach 5 Sekunden, dieselbe
@@ -622,6 +630,9 @@ Pool-Kanal) — und wird ebenso nur bei einem Protokoll-/Universe-Wechsel neu be
 Eine schon gepatchte Zelle bietet (nachträglich freigegebene Erweiterung, statt nur die Belegung anzuzeigen)
 direkt „Fixture-Patch bearbeiten …“ bzw. „DMX-Kanal-Pool-Patch bearbeiten …“ an: das öffnet Stage Config auf
 der Seite Ausgabe und springt dort zur passenden Zeile der Fixture-Patch- bzw. der DMX-Kanal-Pool-Tabelle.
+
+**Zellenfarben (Ausgang):** wie beim Eingang, nur mit zwei Kategorien — Fixture (Blau) und DMX-Kanal-Pool
+(Grün) — und derselben „Farbe ändern…”-Aktion auf einer belegten Zelle.
 
 ## Audio-Eingang
 

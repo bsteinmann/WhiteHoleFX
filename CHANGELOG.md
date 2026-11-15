@@ -53,6 +53,17 @@
   `MainWindow::patchDmxValueNode` (schreibt über `Player::setParameter`, Fehler über die Statuszeile, wie
   beim bestehenden Node-Parameterfenster). Rauchtest legt dafür vorübergehend einen `wh.value.dmx`-Node an,
   löst den neuen Menüpunkt aus und prüft die echte Adressänderung, bevor der Node wieder entfernt wird.
+- **DMX-Monitor und DMX-Ausgangs-Monitor: Zellenfarben nach Belegungsart, überschreibbar per Rechtsklick**
+  (nachträglich freigegebene Erweiterung, erster Teil des 15.11.-Vorschlags „farbig hinterlegen"). Eine
+  belegte Zelle bekommt automatisch eine Standardfarbe nach Kategorie: Eingang - Master (Orange), Live Kanal
+  (Violett), Node (Gelb, auch für per "DMX Out" gepatchte Nodes); Ausgang - Fixture (Blau), DMX-Kanal-Pool
+  (Grün). Wie der Tooltip nur bei einem Protokoll-/Universe-Wechsel neu berechnet, nicht jeden Frame. Neue
+  Rechtsklick-Aktion "Farbe ändern…" auf einer belegten Zelle öffnet einen Farbwahl-Dialog und überschreibt
+  die Farbe dieser einen Zelle; die Überschreibung ist rein optisch (kein Projekt- oder Einstellungswert)
+  und geht beim nächsten Protokoll-/Universe-Wechsel wieder verloren. Dafür neue, kleine Datei
+  `dmx_cell_colors.hpp/cpp` (Kategorie-Farb-Zuordnung, von beiden Panels genutzt) und ein neues
+  `DmxInputListener::Kind` (Node/Master/LiveSelect/LiveFade, eigene Tests) als Grundlage für die
+  Eingangs-Kategorien - die Ausgangs-Kategorien nutzt das schon bestehende `DmxOutputOccupant::Kind`.
 - **DMX-Fernsteuerung für Live-Modus, Teil 1: Look-Auswahl per DMX-Kanal.** Einstellungen, Seite
   DMX-Eingang: ein Kanal wählt im laufenden Live-Betrieb den aktiven Look (wie an einem
   Szenen-Wahl-Kanal — er teilt sich in so viele gleich große Stufen auf, wie das Projekt Looks hat; 0 =

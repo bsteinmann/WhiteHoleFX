@@ -10,6 +10,11 @@
 // Nodes des Graphen auf, unabhängig davon, wohin sie gerade zeigen - für die Rechtsklick-Kategorie "DMX Out"
 // im DMX-Monitor, die die Adresse eines bestehenden Nodes direkt auf den angeklickten Kanal patcht, statt
 // das im Node-Editor von Hand einzustellen.
+//
+// DmxInputListener::Kind (nachträglich freigegebene Erweiterung, zweiter Teil des 15.11.-Vorschlags "farbig
+// hinterlegen"): grob, WELCHER Art der Hörer ist - Studio-Schicht (dmx_cell_colors.hpp) färbt Zellen danach
+// ein. Node für einen Graph-Node (inkl. per "DMX Out" gepatchter Nodes), Master/LiveSelect/LiveFade für die
+// drei Auftritts-Einstellungen ohne eigenen Node.
 #pragma once
 
 #include <cstdint>
@@ -24,6 +29,8 @@
 namespace whitehole::runtime {
 
 struct DmxInputListener {
+    enum class Kind { Node, Master, LiveSelect, LiveFade };
+    Kind kind{Kind::Node};
     std::string name;          // Node-Beschriftung, oder "Master-Helligkeit" / "Live-Look-Auswahl" / "Live-Überblendzeit"
     std::uint32_t channel{1};  // erster gelesener Kanal (1-basiert)
     std::uint32_t count{1};    // wie viele Kanäle ab channel (16 Bit: 2, DMX Color: 3 oder 4)

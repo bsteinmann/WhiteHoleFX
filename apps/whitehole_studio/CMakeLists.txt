@@ -24,6 +24,8 @@ add_executable(whitehole_studio
     patch_table.hpp
     dmx_patch_table.cpp
     dmx_patch_table.hpp
+    dmx_cell_colors.cpp
+    dmx_cell_colors.hpp
     dmx_monitor_panel.cpp
     dmx_monitor_panel.hpp
     dmx_output_monitor_panel.cpp

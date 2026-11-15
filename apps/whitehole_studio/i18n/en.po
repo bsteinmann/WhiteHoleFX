@@ -470,11 +470,11 @@ msgstr "Address (empty = multicast, sACN only)"
 msgid "Adressraum"
 msgstr "Address range"
 
-#: dmx_output_monitor_panel.cpp:164
+#: dmx_output_monitor_panel.cpp:180
 msgid "Aktiv (letzter gesendeter Frame vor %1 s)."
 msgstr "Active (last frame sent %1 s ago)."
 
-#: dmx_monitor_panel.cpp:182
+#: dmx_monitor_panel.cpp:198
 msgid "Aktiv (letztes Paket vor %1 s)."
 msgstr "Active (last packet %1 s ago)."
 
@@ -510,15 +510,15 @@ msgstr "Alpha 0: the LED stays off here (the color is remembered)."
 msgid "Als Ausgang setzen (output)"
 msgstr "Set as output (output)"
 
-#: dmx_monitor_panel.cpp:127
+#: dmx_monitor_panel.cpp:143
 msgid "Als Live-Look-Auswahl-Kanal verwenden"
 msgstr "Use as Live look-select channel"
 
-#: dmx_monitor_panel.cpp:130
+#: dmx_monitor_panel.cpp:146
 msgid "Als Live-Überblendzeit-Kanal verwenden"
 msgstr "Use as Live fade-time channel"
 
-#: dmx_monitor_panel.cpp:122
+#: dmx_monitor_panel.cpp:138
 msgid "Als Masterdimmer-Kanal verwenden"
 msgstr "Use as master dimmer channel"
 
@@ -578,7 +578,7 @@ msgstr "Count"
 msgid "Anzahl x y z"
 msgstr "Count x y z"
 
-#: cue_dialog.cpp:71 cue_panel.cpp:39 dmx_monitor_panel.cpp:33
+#: cue_dialog.cpp:71 cue_panel.cpp:39 dmx_monitor_panel.cpp:37
 msgid "Art-Net"
 msgstr "Art-Net"
 
@@ -918,7 +918,7 @@ msgstr "DMX"
 msgid "DMX %1 U%2 K%3 ab %4"
 msgstr "DMX %1 U%2 Ch%3 from %4"
 
-#: dmx_monitor_panel.cpp:134
+#: dmx_monitor_panel.cpp:150
 msgid "DMX Out"
 msgstr "DMX Out"
 
@@ -954,7 +954,7 @@ msgstr "DMX input: %1"
 msgid "DMX-Kanal"
 msgstr "DMX channel"
 
-#: dmx_output_monitor_panel.cpp:120
+#: dmx_output_monitor_panel.cpp:136
 msgid "DMX-Kanal-Pool-Patch bearbeiten (Pool-Kanal %1)…"
 msgstr "Edit DMX channel pool patch (pool channel %1)…"
 
@@ -1374,7 +1374,7 @@ msgstr "A look “%1” already exists. Overwrite it with the current effect?"
 msgid "Es ist kein Projekt geladen. Mit Strg+N ein neues anlegen oder mit Strg+O eins öffnen."
 msgstr "No project is loaded. Create one with Ctrl+N or open one with Ctrl+O."
 
-#: dmx_output_monitor_panel.cpp:159
+#: dmx_output_monitor_panel.cpp:175
 msgid "Es wurde noch nichts auf dieses Universe gesendet."
 msgstr "Nothing has been sent to this universe yet."
 
@@ -1397,6 +1397,14 @@ msgstr "Group color"
 #: group_dialog.cpp:35
 msgid "Farbe der Kachel"
 msgstr "Tile color"
+
+#: dmx_monitor_panel.cpp:216 dmx_output_monitor_panel.cpp:198
+msgid "Farbe für Kanal %1"
+msgstr "Color for channel %1"
+
+#: dmx_monitor_panel.cpp:128 dmx_output_monitor_panel.cpp:129
+msgid "Farbe ändern…"
+msgstr "Change color…"
 
 #: main_window_help.cpp:51
 msgid "Farben und Formen der Node-Ein- und Ausgänge in einem schwebenden Fenster"
@@ -1454,7 +1462,7 @@ msgstr "Send fixture to the output"
 msgid "Fixture hinzufügen"
 msgstr "Add fixture"
 
-#: dmx_output_monitor_panel.cpp:116
+#: dmx_output_monitor_panel.cpp:132
 msgid "Fixture-Patch bearbeiten: %1…"
 msgstr "Edit fixture patch: %1…"
 
@@ -1766,19 +1774,19 @@ msgstr "Show or hide the cable path with arrows, start LED and LED numbers"
 msgid "Kaleidoskop: Spiegelt einen Ausschnitt um einen Mittelpunkt zu einem Muster mit mehreren Segmenten."
 msgstr "Kaleidoscope: mirrors a slice around a center into a pattern with several segments."
 
-#: dmx_monitor_panel.cpp:92 dmx_output_monitor_panel.cpp:93
+#: dmx_monitor_panel.cpp:97 dmx_output_monitor_panel.cpp:98
 msgid "Kanal %1"
 msgstr "Channel %1"
 
-#: dmx_output_monitor_panel.cpp:97
+#: dmx_output_monitor_panel.cpp:102
 msgid "Kanal %1 — belegt vom DMX-Kanal-Pool (Pool-Kanal %2)"
 msgstr "Channel %1 — occupied by the DMX channel pool (pool channel %2)"
 
-#: dmx_output_monitor_panel.cpp:96
+#: dmx_output_monitor_panel.cpp:101
 msgid "Kanal %1 — belegt von Fixture: %2"
 msgstr "Channel %1 — occupied by fixture: %2"
 
-#: dmx_monitor_panel.cpp:94
+#: dmx_monitor_panel.cpp:99
 msgid "Kanal %1 — gehört zu: %2"
 msgstr "Channel %1 — belongs to: %2"
 
@@ -1806,7 +1814,7 @@ msgstr "No project"
 msgid "Kein Projekt geladen."
 msgstr "No project loaded."
 
-#: dmx_monitor_panel.cpp:177
+#: dmx_monitor_panel.cpp:193
 msgid "Kein Signal auf diesem Universe."
 msgstr "No signal on this universe."
 
@@ -1818,7 +1826,7 @@ msgstr "No target (free rectangle)"
 msgid "Keine Aufnahmegeräte gefunden. Ein Audio-Interface anschließen und das Fenster neu öffnen."
 msgstr "No capture devices found. Connect an audio interface and reopen the window."
 
-#: dmx_monitor_panel.cpp:137
+#: dmx_monitor_panel.cpp:153
 msgid "Keine DMX-Wert-Nodes im Projekt"
 msgstr "No DMX value nodes in the project"
 
@@ -1910,11 +1918,11 @@ msgstr "Port legend"
 msgid "Legt Bild B über Bild A. Der Modus bestimmt die Verrechnung (Addieren, Multiplizieren, Screen, Subtrahieren, Differenz …), „Amount“ blendet zwischen A und dem Ergebnis."
 msgstr "Lays image B over image A. The mode sets how they combine (add, multiply, screen, subtract, difference ...); \"Amount\" fades between A and the result."
 
-#: dmx_output_monitor_panel.cpp:163
+#: dmx_output_monitor_panel.cpp:179
 msgid "Letzter gesendeter Frame vor %1 s (veraltet)."
 msgstr "Last frame sent %1 s ago (stale)."
 
-#: dmx_monitor_panel.cpp:181
+#: dmx_monitor_panel.cpp:197
 msgid "Letztes Paket vor %1 s (veraltet)."
 msgstr "Last packet %1 s ago (stale)."
 
@@ -1958,7 +1966,7 @@ msgstr "Clear list"
 msgid "Live"
 msgstr "Live"
 
-#: dmx_monitor_panel.cpp:126
+#: dmx_monitor_panel.cpp:142
 msgid "Live Kanal"
 msgstr "Live channel"
 
@@ -2058,7 +2066,7 @@ msgstr "Magenta"
 msgid "Manuell"
 msgstr "Manual"
 
-#: dmx_monitor_panel.cpp:121
+#: dmx_monitor_panel.cpp:137
 msgid "Master"
 msgstr "Master"
 
@@ -2202,7 +2210,7 @@ msgstr "New version %1 available – Help > Check for Updates …"
 msgid "Neuer Name:"
 msgstr "New name:"
 
-#: dmx_output_monitor_panel.cpp:125
+#: dmx_output_monitor_panel.cpp:141
 msgid "Neues Fixture hier patchen…"
 msgstr "Patch new fixture here…"
 
@@ -2462,7 +2470,7 @@ msgstr "Open project"
 msgid "Protokoll"
 msgstr "Protocol"
 
-#: dmx_monitor_panel.cpp:35 dmx_output_monitor_panel.cpp:36
+#: dmx_monitor_panel.cpp:39 dmx_output_monitor_panel.cpp:40
 msgid "Protokoll:"
 msgstr "Protocol:"
 
@@ -2866,7 +2874,7 @@ msgstr "Universe %1 from channel 1"
 msgid "Universe (Art-Net ab 0, sACN ab 1)"
 msgstr "Universe (Art-Net from 0, sACN from 1)"
 
-#: dmx_monitor_panel.cpp:38 dmx_output_monitor_panel.cpp:39
+#: dmx_monitor_panel.cpp:42 dmx_output_monitor_panel.cpp:43
 msgid "Universe:"
 msgstr "Universe:"
 
@@ -3242,7 +3250,7 @@ msgstr "top right"
 msgid "rechts (x max)"
 msgstr "right (x max)"
 
-#: cue_dialog.cpp:71 cue_panel.cpp:39 dmx_monitor_panel.cpp:34
+#: cue_dialog.cpp:71 cue_panel.cpp:39 dmx_monitor_panel.cpp:38
 msgid "sACN"
 msgstr "sACN"
 

@@ -2,6 +2,8 @@
 #include "dmx_output_monitor_panel.hpp"
 
 #include <QAction>
+#include <QBrush>
+#include <QColorDialog>
 #include <QComboBox>
 #include <QFormLayout>
 #include <QHeaderView>
@@ -13,6 +15,8 @@
 #include <QVBoxLayout>
 
 #include <vector>
+
+#include "dmx_cell_colors.hpp"
 
 namespace whitehole::studio {
 
@@ -84,6 +88,7 @@ void DmxOutputMonitorPanel::onSelectionChanged() {
         }
     }
     hasData_ = false;
+    colorOverrides_.clear();  // galten für das vorige Protokoll/Universe, siehe Kommentar am Header
     updateOccupantTooltips();
     refresh();
 }
@@ -104,7 +109,16 @@ void DmxOutputMonitorPanel::updateOccupantTooltips() {
         const auto occupant = player_.dmxOutputOccupantAt(protocol, universe, static_cast<std::uint32_t>(channel));
         const int r = (channel - 1) / kColumns;
         const int c = (channel - 1) % kColumns;
-        grid_->item(r, c)->setToolTip(occupantTooltip(static_cast<std::uint32_t>(channel), occupant));
+        QTableWidgetItem* item = grid_->item(r, c);
+        item->setToolTip(occupantTooltip(static_cast<std::uint32_t>(channel), occupant));
+        const auto colorOverride = colorOverrides_.find(static_cast<std::uint32_t>(channel));
+        if (colorOverride != colorOverrides_.end()) {
+            item->setBackground(colorOverride->second);
+        } else if (occupant) {
+            item->setBackground(dmxCellColor(dmxCellCategory(*occupant)));
+        } else {
+            item->setBackground(QBrush{});  // keine Belegung: normaler Tabellenhintergrund
+        }
     }
 }
 
@@ -112,6 +126,8 @@ QMenu* DmxOutputMonitorPanel::buildContextMenu(std::uint32_t channel, output::Pr
     auto* menu = new QMenu{this};
     const auto occupant = player_.dmxOutputOccupantAt(protocol, universe, channel);
     if (occupant) {
+        QAction* color = menu->addAction(tr("Farbe ändern…"));
+        connect(color, &QAction::triggered, this, [this, channel]() { changeCellColor(channel); });
         if (occupant->kind == runtime::DmxOutputOccupant::Kind::Fixture) {
             QAction* edit = menu->addAction(tr("Fixture-Patch bearbeiten: %1…").arg(QString::fromStdString(occupant->name)));
             const mapping::FixtureId id = occupant->fixtureId;
@@ -172,6 +188,19 @@ void DmxOutputMonitorPanel::refresh() {
     }
     lastValues_ = frame->channels;
     hasData_ = true;
+}
+
+void DmxOutputMonitorPanel::changeCellColor(std::uint32_t channel) {
+    const int r = static_cast<int>(channel - 1) / kColumns;
+    const int c = static_cast<int>(channel - 1) % kColumns;
+    QTableWidgetItem* item = grid_->item(r, c);
+    const QColor initial = item->background().color();
+    const QColor chosen = QColorDialog::getColor(initial.isValid() ? initial : Qt::white, this, tr("Farbe für Kanal %1").arg(channel));
+    if (!chosen.isValid()) {
+        return;  // abgebrochen
+    }
+    colorOverrides_[channel] = chosen;
+    item->setBackground(chosen);
 }
 
 QString DmxOutputMonitorPanel::exercise() {
@@ -252,14 +281,29 @@ QString DmxOutputMonitorPanel::exercise() {
                         requestedId = id;
                     });
         QMenu* editMenu = buildContextMenu(patch.channel, patch.protocol, patch.universe);
-        if (editMenu->actions().size() != 1 || !editMenu->actions().first()->text().contains(QStringLiteral("bearbeiten"))) {
+        if (editMenu->actions().size() != 2 || !editMenu->actions()[0]->text().contains(QStringLiteral("Farbe ändern")) ||
+            !editMenu->actions()[1]->text().contains(QStringLiteral("bearbeiten"))) {
             delete editMenu;
             disconnect(editProbe);
-            return QStringLiteral("DMX-Ausgangs-Monitor: Kontextmenü für eine belegte Fixture-Zelle bietet nicht \"bearbeiten\" an");
+            return QStringLiteral(
+                "DMX-Ausgangs-Monitor: Kontextmenü für eine belegte Fixture-Zelle bietet nicht \"Farbe ändern…\" und \"bearbeiten\" an");
         }
-        editMenu->actions().first()->trigger();
+        editMenu->actions()[1]->trigger();
         delete editMenu;
         disconnect(editProbe);
+        // Zellenfarbe: Fixture-Belegung bekommt die Fixture-Farbe. Dafür kurz auf das Protokoll/Universe
+        // des Patches wechseln (Farben werden wie Tooltips nur bei einem solchen Wechsel neu berechnet,
+        // siehe Kommentar am Header), prüfen, danach zurück auf ArtNet/30000 für die restlichen Tests.
+        protocol_->setCurrentIndex(patch.protocol == output::Protocol::Sacn ? 1 : 0);
+        universe_->setValue(static_cast<int>(patch.universe));
+        const int r = static_cast<int>(patch.channel - 1) / kColumns;
+        const int c = static_cast<int>(patch.channel - 1) % kColumns;
+        const bool fixtureColorOk = grid_->item(r, c)->background().color() == dmxCellColor(DmxCellCategory::Fixture);
+        protocol_->setCurrentIndex(0);
+        universe_->setValue(30000);
+        if (!fixtureColorOk) {
+            return QStringLiteral("DMX-Ausgangs-Monitor: Fixture-Belegung bekommt nicht die Fixture-Farbe");
+        }
         if (!requestedEdit || requestedId != occupant->fixtureId) {
             return QStringLiteral("DMX-Ausgangs-Monitor: Kontextmenü löst requestEditFixturePatch nicht mit dem richtigen Fixture aus");
         }
@@ -292,19 +336,30 @@ QString DmxOutputMonitorPanel::exercise() {
                     requestedPoolChannel = poolChannel;
                 });
     QMenu* poolMenu = buildContextMenu(1, output::Protocol::ArtNet, 30002);
-    const bool poolMenuOk =
-        poolMenu->actions().size() == 1 && poolMenu->actions().first()->text().contains(QStringLiteral("bearbeiten"));
+    const bool poolMenuOk = poolMenu->actions().size() == 2 && poolMenu->actions()[0]->text().contains(QStringLiteral("Farbe ändern")) &&
+                             poolMenu->actions()[1]->text().contains(QStringLiteral("bearbeiten"));
     if (poolMenuOk) {
-        poolMenu->actions().first()->trigger();
+        poolMenu->actions()[1]->trigger();
     }
     delete poolMenu;
     disconnect(poolProbe);
-    player_.setDmxPatches(dmxPatchesBefore);  // Rauchtest-Projekt wieder in den Ausgangszustand bringen
     if (!poolMenuOk) {
-        return QStringLiteral("DMX-Ausgangs-Monitor: Kontextmenü für eine belegte Pool-Zelle bietet nicht \"bearbeiten\" an");
+        player_.setDmxPatches(dmxPatchesBefore);
+        return QStringLiteral(
+            "DMX-Ausgangs-Monitor: Kontextmenü für eine belegte Pool-Zelle bietet nicht \"Farbe ändern…\" und \"bearbeiten\" an");
     }
     if (!requestedPoolEdit || requestedPoolChannel != 77) {
+        player_.setDmxPatches(dmxPatchesBefore);
         return QStringLiteral("DMX-Ausgangs-Monitor: Kontextmenü löst requestEditPoolPatch nicht mit dem richtigen Pool-Kanal aus");
+    }
+    // Zellenfarbe: Pool-Belegung bekommt die Pool-Farbe (deckt zugleich die Farbzuordnung für beide
+    // occupant.kind-Werte ab - Fixture siehe oben, derselbe Code-Pfad, nur anderer Zweig).
+    universe_->setValue(30002);
+    const bool poolColorOk = grid_->item(0, 0)->background().color() == dmxCellColor(DmxCellCategory::Pool);
+    universe_->setValue(30000);
+    player_.setDmxPatches(dmxPatchesBefore);  // Rauchtest-Projekt wieder in den Ausgangszustand bringen
+    if (!poolColorOk) {
+        return QStringLiteral("DMX-Ausgangs-Monitor: Pool-Belegung bekommt nicht die Pool-Farbe");
     }
     return {};
 }

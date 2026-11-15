@@ -2,6 +2,8 @@
 #include "dmx_monitor_panel.hpp"
 
 #include <QAction>
+#include <QBrush>
+#include <QColorDialog>
 #include <QComboBox>
 #include <QFormLayout>
 #include <QHeaderView>
@@ -13,6 +15,8 @@
 #include <QVBoxLayout>
 
 #include <vector>
+
+#include "dmx_cell_colors.hpp"
 
 namespace whitehole::studio {
 
@@ -83,6 +87,7 @@ void DmxMonitorPanel::onSelectionChanged() {
         }
     }
     hasData_ = false;
+    colorOverrides_.clear();  // galten für das vorige Protokoll/Universe, siehe Kommentar am Header
     updateListenerTooltips();
     refresh();
 }
@@ -103,7 +108,16 @@ void DmxMonitorPanel::updateListenerTooltips() {
         const auto listener = player_.dmxListenerAt(protocol, universe, static_cast<std::uint32_t>(channel));
         const int r = (channel - 1) / kColumns;
         const int c = (channel - 1) % kColumns;
-        grid_->item(r, c)->setToolTip(listenerTooltip(static_cast<std::uint32_t>(channel), listener));
+        QTableWidgetItem* item = grid_->item(r, c);
+        item->setToolTip(listenerTooltip(static_cast<std::uint32_t>(channel), listener));
+        const auto colorOverride = colorOverrides_.find(static_cast<std::uint32_t>(channel));
+        if (colorOverride != colorOverrides_.end()) {
+            item->setBackground(colorOverride->second);
+        } else if (listener) {
+            item->setBackground(dmxCellColor(dmxCellCategory(*listener)));
+        } else {
+            item->setBackground(QBrush{});  // kein Hörer: normaler Tabellenhintergrund
+        }
     }
 }
 
@@ -111,6 +125,8 @@ QMenu* DmxMonitorPanel::buildContextMenu(std::uint32_t channel, input::DmxProtoc
     auto* menu = new QMenu{this};
     const auto listener = player_.dmxListenerAt(protocol, universe, channel);
     if (listener) {
+        QAction* color = menu->addAction(tr("Farbe ändern…"));
+        connect(color, &QAction::triggered, this, [this, channel]() { changeCellColor(channel); });
         QAction* info = menu->addAction(listenerTooltip(channel, listener));
         info->setEnabled(false);
         return menu;
@@ -192,6 +208,19 @@ void DmxMonitorPanel::refresh() {
     hasData_ = true;
 }
 
+void DmxMonitorPanel::changeCellColor(std::uint32_t channel) {
+    const int r = static_cast<int>(channel - 1) / kColumns;
+    const int c = static_cast<int>(channel - 1) % kColumns;
+    QTableWidgetItem* item = grid_->item(r, c);
+    const QColor initial = item->background().color();
+    const QColor chosen = QColorDialog::getColor(initial.isValid() ? initial : Qt::white, this, tr("Farbe für Kanal %1").arg(channel));
+    if (!chosen.isValid()) {
+        return;  // abgebrochen
+    }
+    colorOverrides_[channel] = chosen;
+    item->setBackground(chosen);
+}
+
 QString DmxMonitorPanel::exercise() {
     protocol_->setCurrentIndex(0);
     universe_->setValue(777);
@@ -251,6 +280,23 @@ QString DmxMonitorPanel::exercise() {
         return QStringLiteral("DMX-Monitor: Kontextmenü löst requestMasterDmx nicht mit den richtigen Werten aus");
     }
 
+    // Zellenfarbe (nachträglich freigegebene Erweiterung): Kanal 1 ist jetzt wirklich Masterdimmer-Kanal,
+    // aber die Farbe wird wie der Tooltip erst beim nächsten Protokoll-/Universe-Wechsel neu berechnet.
+    universe_->setValue(778);
+    universe_->setValue(777);
+    if (grid_->item(0, 0)->background().color() != dmxCellColor(DmxCellCategory::Master)) {
+        return QStringLiteral("DMX-Monitor: Masterdimmer-Kanal bekommt nicht die Master-Farbe");
+    }
+    // Rechtsklick auf diese jetzt belegte Zelle bietet "Farbe ändern…" an (nicht ausgelöst - echter,
+    // modaler QColorDialog würde im Rauchtest ohne Publikum blockieren).
+    QMenu* masterMenu = buildContextMenu(1, input::DmxProtocol::ArtNet, 777);
+    const bool masterMenuOk =
+        masterMenu->actions().size() == 2 && masterMenu->actions()[0]->text().contains(QStringLiteral("Farbe ändern"));
+    delete masterMenu;
+    if (!masterMenuOk) {
+        return QStringLiteral("DMX-Monitor: Kontextmenü für eine belegte Zelle bietet nicht \"Farbe ändern…\" an");
+    }
+
     // Ab hier Kanal 2 statt Kanal 1 verwenden: der obige Trigger hat die echte requestMasterDmx-Verbindung
     // (siehe buildDmxMonitor) ausgelöst und Kanal 1/Universe 777 wirklich als Masterdimmer-Kanal gesetzt -
     // der Aufrufer von exercise() (MainWindow::exerciseDmxMonitor) stellt appSettings_ erst NACH dieser
@@ -304,9 +350,18 @@ QString DmxMonitorPanel::exercise() {
         return QStringLiteral("DMX-Monitor: Kontextmenü löst requestPatchNode nicht mit dem richtigen Node aus");
     }
     const auto patched = player_.dmxListenerAt(input::DmxProtocol::ArtNet, 777, 2);
-    player_.removeNode(added.value());
     if (!patched) {
+        player_.removeNode(added.value());
         return QStringLiteral("DMX-Monitor: \"DMX Out\" patcht die Adresse des Nodes nicht wirklich (MainWindow-Verbindung?)");
+    }
+    // Zellenfarbe: Kanal 2 gehört jetzt zu einem Node, muss also die Node-Farbe bekommen (auch hier erst
+    // nach einer Neuberechnung durch Protokoll-/Universe-Wechsel).
+    universe_->setValue(778);
+    universe_->setValue(777);
+    const bool nodeColorOk = grid_->item(0, 1)->background().color() == dmxCellColor(DmxCellCategory::Node);
+    player_.removeNode(added.value());
+    if (!nodeColorOk) {
+        return QStringLiteral("DMX-Monitor: ein von \"DMX Out\" gepatchter Node bekommt nicht die Node-Farbe");
     }
     return {};
 }
