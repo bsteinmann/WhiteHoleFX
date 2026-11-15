@@ -604,12 +604,15 @@ empfangenen — dieselbe Protokoll-/Universe-Auswahl, dieselbe „aktiv/veraltet
 Sichtbarkeits-Aktualisierung. DDP erscheint hier nicht, da DDP byteweise statt per Universe adressiert wird und
 damit kein Universe-Raster hat.
 
-**Rechtsklick-Zuordnung (Schritt 3, Ausgang):** eine schon gepatchte Zelle zeigt (deaktiviert), was dort sendet —
-ein Fixture oder ein Bereich des DMX-Kanal-Pools; eine freie Zelle bietet „Neues Fixture hier patchen…“ an und
+**„Wer hört zu"-Overlay (Ausgang, nachträglich freigegebene Erweiterung):** wie beim Eingang nennt der Tooltip
+jeder Zelle, was dort gepatcht ist — ein Fixture (mit Namen) oder ein Bereich des DMX-Kanal-Pools (mit erstem
+Pool-Kanal) — und wird ebenso nur bei einem Protokoll-/Universe-Wechsel neu berechnet, nicht jeden Frame.
+
+**Rechtsklick-Zuordnung (Schritt 3, Ausgang):** eine freie Zelle bietet „Neues Fixture hier patchen…“ an und
 öffnet den bestehenden Dialog „Fixture hinzufügen“ mit vorbefülltem Protokoll/Universe/Kanal (Modus Manuell).
-Noch offen: dasselbe für einen schon bestehenden Patch (statt nur für ein neues Fixture) und das „Wer hört
-zu"-Overlay auch für die Ausgabe — beides nicht Teil des ursprünglich vereinbarten 4-Schritte-Plans, siehe
-CLAUDE.md.
+Eine schon gepatchte Zelle bietet (nachträglich freigegebene Erweiterung, statt nur die Belegung anzuzeigen)
+direkt „Fixture-Patch bearbeiten …“ bzw. „DMX-Kanal-Pool-Patch bearbeiten …“ an: das öffnet Stage Config auf
+der Seite Ausgabe und springt dort zur passenden Zeile der Fixture-Patch- bzw. der DMX-Kanal-Pool-Tabelle.
 
 ## Audio-Eingang
 

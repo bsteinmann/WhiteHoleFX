@@ -27,6 +27,12 @@ public:
     /// Liest alle Zeilen neu aus dem Player (nach Laden, Undo, Redo, Zielwechsel).
     void rebuild();
 
+    /// Wählt die Zeile, deren Pool-Bereich mit diesem Pool-Kanal beginnt, und scrollt sie ins Bild - der
+    /// Sprung vom Rechtsklick-Menü des DMX-Ausgangs-Monitors ("DMX-Kanal-Pool-Patch bearbeiten", Schritt 3
+    /// des DMX-Patch/Monitor-Gitters, siehe CLAUDE.md). Ohne passende Zeile (Patch seither entfernt oder
+    /// verschoben) passiert nichts.
+    void selectPoolChannel(std::uint16_t poolChannel);
+
     /// Rauchtest für die CI: Patch anlegen, Werte ändern, einen zweiten anlegen, einen entfernen. Leer bei Erfolg.
     QString exercise();
 

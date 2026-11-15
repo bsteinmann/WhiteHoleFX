@@ -27,6 +27,11 @@ public:
     /// Liest alle Zeilen neu aus dem Player (nach Laden, Undo, Redo, Änderungen am Layout).
     void rebuild();
 
+    /// Wählt die Zeile dieses Fixtures und scrollt sie ins Bild - der Sprung vom Rechtsklick-Menü des
+    /// DMX-Ausgangs-Monitors ("Fixture-Patch bearbeiten", Schritt 3 des DMX-Patch/Monitor-Gitters, siehe
+    /// CLAUDE.md). Ohne passende Zeile (Fixture seither gelöscht) passiert nichts.
+    void selectFixture(mapping::FixtureId id);
+
     /// Rauchtest für die CI: Farbreihenfolge ändern, Senden aus- und einschalten, Spalte verschieben. Leer bei Erfolg.
     QString exercise();
 

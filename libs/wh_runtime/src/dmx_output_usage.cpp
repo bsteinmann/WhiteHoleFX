@@ -58,7 +58,7 @@ std::optional<DmxOutputOccupant> findDmxOutputOccupant(const mapping::Layout& la
             continue;  // z. B. mitten in einem Undo-Zwischenschritt - lieber nichts anzeigen als raten
         }
         if (fixturePatchCovers(patch, mapping::ledCount(fixture->shape), protocol, universe, channel)) {
-            return DmxOutputOccupant{DmxOutputOccupant::Kind::Fixture, fixture->name, 0};
+            return DmxOutputOccupant{DmxOutputOccupant::Kind::Fixture, fixture->name, fixture->id, 0};
         }
     }
     for (const output::DmxChannelPatch& patch : dmxPatches) {
@@ -66,7 +66,7 @@ std::optional<DmxOutputOccupant> findDmxOutputOccupant(const mapping::Layout& la
             continue;
         }
         if (channel >= patch.channel && channel < static_cast<std::uint32_t>(patch.channel) + patch.count) {
-            return DmxOutputOccupant{DmxOutputOccupant::Kind::Pool, std::string{}, patch.poolChannel};
+            return DmxOutputOccupant{DmxOutputOccupant::Kind::Pool, std::string{}, mapping::FixtureId{}, patch.poolChannel};
         }
     }
     return std::nullopt;

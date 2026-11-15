@@ -9,6 +9,9 @@
 #include <QString>
 #include <QWidget>
 
+#include <cstdint>
+
+#include "whitehole/mapping/layout.hpp"
 #include "whitehole/runtime/player.hpp"
 
 namespace whitehole::studio {
@@ -27,6 +30,13 @@ public:
     void rebuild();
     /// Wie rebuild(), aber nur bei sichtbarer Seite; sonst beim nächsten Anzeigen.
     void refresh();
+
+    /// Wählt die Patch-Zeile dieses Fixtures - der Sprung vom DMX-Ausgangs-Monitor (Schritt 3, siehe
+    /// CLAUDE.md). Setzt voraus, dass die Seite schon sichtbar/aktuell ist (das Umschalten übernimmt
+    /// StageSetupWindow::openOutputFixture, bevor es hierher ruft).
+    void selectFixture(mapping::FixtureId id);
+    /// Dasselbe für einen DMX-Kanal-Pool-Patch, über seinen ersten Pool-Kanal.
+    void selectPoolChannel(std::uint16_t poolChannel);
 
     /// Rauchtest für die CI (Ziele und Patch-Tabelle). Leer bei Erfolg.
     QString exercise();

@@ -70,6 +70,10 @@ void OutputPage::refresh() {
     }
 }
 
+void OutputPage::selectFixture(mapping::FixtureId id) { patches_->selectFixture(id); }
+
+void OutputPage::selectPoolChannel(std::uint16_t poolChannel) { dmxPatches_->selectPoolChannel(poolChannel); }
+
 void OutputPage::showEvent(QShowEvent* event) {
     QWidget::showEvent(event);
     if (dirty_) {

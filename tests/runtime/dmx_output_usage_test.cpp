@@ -40,6 +40,7 @@ TEST_CASE("findDmxOutputOccupant: Fixture-Patch wird gefunden, auch im Folge-Uni
     REQUIRE(first.has_value());
     CHECK(first->kind == DmxOutputOccupant::Kind::Fixture);
     CHECK(first->name == "Strip");
+    CHECK(first->fixtureId == id.value());
 
     // 170 LEDs (510 Kanäle) passen ins erste Universe; die restlichen 30 LEDs (90 Kanäle) landen in Universe 6.
     const auto second = findDmxOutputOccupant(layout, patches, dmxPatches, Protocol::ArtNet, 6, 1);

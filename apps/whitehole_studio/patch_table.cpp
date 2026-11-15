@@ -183,6 +183,15 @@ void PatchTable::rebuild() {
     populating_ = false;
 }
 
+void PatchTable::selectFixture(mapping::FixtureId id) {
+    const int row = rowOf(id);
+    if (row < 0) {
+        return;
+    }
+    setCurrentCell(row, Name);
+    scrollToItem(item(row, Name));
+}
+
 output::Protocol PatchTable::protocolAt(int row) const {
     const QTableWidgetItem* item = this->item(row, Protocol);
     return item != nullptr ? static_cast<output::Protocol>(item->data(kProtocolRole).toInt()) : output::Protocol::ArtNet;

@@ -10,9 +10,17 @@
 // Ausgabe (Ziele und Patch) und Test (Testbilder für die ganze Bühne, daneben die Bühne mit den Farben des Testbilds).
 // Das Fenster besitzt die Panels nur als Tabs; Verbindungen, Rückgängig und Speichern laufen
 // unverändert über das Hauptfenster.
+//
+// openOutputFixture/openOutputPool springen gezielt auf die Seite Ausgabe und wählen dort die passende
+// Patch-Zeile - der Rechtsklick "bearbeiten" im DMX-Ausgangs-Monitor (Schritt 3 des DMX-Patch/Monitor-
+// Gitters, siehe CLAUDE.md).
 #pragma once
 
 #include <QWidget>
+
+#include <cstdint>
+
+#include "whitehole/mapping/layout.hpp"
 
 class QTabWidget;
 
@@ -38,11 +46,18 @@ public:
     [[nodiscard]] Page page() const;
     [[nodiscard]] int pageCount() const;
 
+    /// Öffnet die Seite Ausgabe und wählt die Patch-Zeile dieses Fixtures - der Sprung vom Rechtsklick-
+    /// Menü des DMX-Ausgangs-Monitors (Schritt 3 des DMX-Patch/Monitor-Gitters, siehe CLAUDE.md).
+    void openOutputFixture(mapping::FixtureId id);
+    /// Dasselbe für einen DMX-Kanal-Pool-Patch, über seinen ersten Pool-Kanal.
+    void openOutputPool(std::uint16_t poolChannel);
+
 protected:
     void hideEvent(QHideEvent* event) override;
 
 private:
     QTabWidget* tabs_;
+    OutputPage* output_;  // für openOutputFixture/openOutputPool; die Seite selbst gehört dem Tab-Widget
     bool restored_{false};
 };
 

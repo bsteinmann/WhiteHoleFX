@@ -23,7 +23,7 @@ QSettings settings() { return QSettings{QStringLiteral("WhiteHoleFX"), QStringLi
 
 StageSetupWindow::StageSetupWindow(FixtureLibraryPage* fixtures, LayoutPanel* layout, OutputPage* output, TestPanel* test,
                                    StageView* view, StageView* testView, QWidget* parent)
-    : QWidget{parent, Qt::Window}, tabs_{new QTabWidget{this}} {
+    : QWidget{parent, Qt::Window}, tabs_{new QTabWidget{this}}, output_{output} {
     setWindowTitle(tr("Stage Config"));
     auto* box = new QVBoxLayout{this};
     box->setContentsMargins(0, 0, 0, 0);
@@ -68,6 +68,16 @@ StageSetupWindow::Page StageSetupWindow::page() const {
 }
 
 int StageSetupWindow::pageCount() const { return tabs_->count(); }
+
+void StageSetupWindow::openOutputFixture(mapping::FixtureId id) {
+    open(Page::Output);
+    output_->selectFixture(id);
+}
+
+void StageSetupWindow::openOutputPool(std::uint16_t poolChannel) {
+    open(Page::Output);
+    output_->selectPoolChannel(poolChannel);
+}
 
 void StageSetupWindow::hideEvent(QHideEvent* event) {
     QWidget::hideEvent(event);

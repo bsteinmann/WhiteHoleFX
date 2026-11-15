@@ -176,9 +176,29 @@ darum.
   `exec()` eines Menüs oder Dialogs selbst auf (würde ohne Publikum blockieren) - `MainWindow` löst dafür
   die Dialog-Verbindung während ihres eigenen Rauchtests kurz, bzw. sichert/stellt bei der Einstellungen-
   Verbindung den vorherigen Stand wieder her, nach demselben Muster wie `exerciseSettings`. Damit ist der
-  ursprünglich vereinbarte 4-Schritte-Plan abgeschlossen. Nicht Teil davon und nicht angefragt: dieselbe
-  Rechtsklick-Zuordnung für einen schon bestehenden Ausgangs-Patch (statt nur für ein neues Fixture) und
-  ein "Wer hört zu"-Overlay auch für die Ausgabe.
+  ursprünglich vereinbarte 4-Schritte-Plan abgeschlossen.
+  **Erledigt (0.92.0), zwei nachträglich freigegebene Erweiterungen** (vom Nutzer am 15.11. mit "beide
+  genehmigt" freigegeben, nachdem der 4-Schritte-Plan selbst schon fertig war): dieselbe Rechtsklick-
+  Zuordnung jetzt auch für einen schon bestehenden Ausgangs-Patch (statt nur für ein neues Fixture) und ein
+  "Wer hört zu"-Overlay auch für die Ausgabe. Tooltip jeder Zelle im `DmxOutputMonitorPanel` nennt jetzt per
+  `Player::dmxOutputOccupantAt`, was dort gepatcht ist (Fixture-Name oder Pool-Kanal), neu berechnet nur bei
+  Protokoll-/Universe-Wechsel wie beim Eingang. Rechtsklick auf eine belegte Zelle bietet jetzt "Fixture-
+  Patch bearbeiten …" bzw. "DMX-Kanal-Pool-Patch bearbeiten …" an statt nur die Belegung anzuzeigen: öffnet
+  Stage Config auf der Seite Ausgabe und springt zur passenden Zeile (neue
+  `PatchTable::selectFixture`/`DmxPatchTable::selectPoolChannel`, `OutputPage::selectFixture`/
+  `selectPoolChannel`, `StageSetupWindow::openOutputFixture`/`openOutputPool`). Dafür trägt
+  `runtime::DmxOutputOccupant` jetzt zusätzlich die `FixtureId` des gefundenen Fixtures. Rauchtest legt für
+  den Pool-Fall vorübergehend einen Patch auf einem sonst ungenutzten Universe an und entfernt ihn danach
+  wieder (`player_.setDmxPatches`, Stand vorher/nachher).
+- **Neuer, noch nicht freigegebener Vorschlag zum DMX-Patch/Monitor-Gitter** (vom Nutzer am 15.11. als
+  knappe Notiz hinterlassen, noch nicht zur Umsetzung freigegeben — braucht vorher ausdrückliche Freigabe
+  wie jeder andere Punkt hier): Zellen im DMX-Monitor farbig hinterlegen, je eine Farbe für Matrizen/
+  Fixtures und eine andere für (Pool-)Kanäle, dabei auch den Rechtsklick berücksichtigen; außerdem sollen
+  sich von dort auch Master-Helligkeit u. Ä. hierher patchen lassen. Nicht näher ausgeführt: ob "in dmx
+  monitor" den Eingangs- oder den Ausgangs-Monitor meint (oder beide), was genau mit "Master dimmer usw.
+  hierher patchen" gemeint ist (Eingangs-Zuordnung existiert im `DmxMonitorPanel` schon per Rechtsklick,
+  evtl. geht es um eine zusätzliche farbliche/visuelle Markierung dieser Zuordnung statt um neue
+  Funktionalität) — vor Beginn der Umsetzung nachfragen bzw. die genaue Lesart mit dem Nutzer klären.
 - **MIDI-Eingang/-Ausgang** (z. B. Akai APC Mini): nur besprochen, nicht begonnen. Überlegungen aus dem
   Gespräch:
   - *Bibliothek:* RtMidi — C++, cross-platform (ALSA/WinMM), passt zum bestehenden Muster, mit dem

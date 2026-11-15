@@ -116,6 +116,16 @@ void DmxPatchTable::rebuild() {
     populating_ = false;
 }
 
+void DmxPatchTable::selectPoolChannel(std::uint16_t poolChannel) {
+    for (int row = 0; row < table_->rowCount(); ++row) {
+        if (qobject_cast<QSpinBox*>(table_->cellWidget(row, PoolFrom))->value() == static_cast<int>(poolChannel)) {
+            table_->setCurrentCell(row, PoolFrom);
+            table_->scrollTo(table_->model()->index(row, PoolFrom));
+            return;
+        }
+    }
+}
+
 void DmxPatchTable::report(const Result<void>& result) {
     if (result.ok()) {
         Q_EMIT edited();

@@ -30,6 +30,18 @@
   öffnet den bestehenden Dialog „Fixture hinzufügen" vorbefüllt (neues `AddFixtureDialog::prefillManualPatch`,
   `LayoutPanel::addFromDialogAt`). Beide Rauchtests lösen die echten Menüpunkte aus, ohne den blockierenden
   `exec()` eines Menüs oder Dialogs selbst aufzurufen.
+- **DMX-Ausgangs-Monitor: „Wer hört zu"-Overlay und Bearbeiten eines bestehenden Patches per Rechtsklick**
+  (zwei nachträglich freigegebene Erweiterungen des DMX-Patch/Monitor-Gitters, über Schritt 3/4 hinaus).
+  Jede Zelle zeigt jetzt per Tooltip, was dort gepatcht ist (Fixture mit Namen oder DMX-Kanal-Pool mit
+  erstem Pool-Kanal) — analog zum „Wer hört zu"-Overlay des Eingangs, ebenfalls nur bei einem Protokoll-/
+  Universe-Wechsel neu berechnet. Der Rechtsklick auf eine schon gepatchte Zelle bietet jetzt „Fixture-
+  Patch bearbeiten …" bzw. „DMX-Kanal-Pool-Patch bearbeiten …" an, statt nur anzuzeigen, wer belegt: das
+  öffnet Stage Config auf der Seite Ausgabe und springt dort zur passenden Zeile (neues
+  `PatchTable::selectFixture`/`DmxPatchTable::selectPoolChannel`, `OutputPage::selectFixture`/
+  `selectPoolChannel`, `StageSetupWindow::openOutputFixture`/`openOutputPool`). Dafür trägt
+  `runtime::DmxOutputOccupant` jetzt auch die `FixtureId` des gefundenen Fixtures. Rauchtest legt dafür
+  vorübergehend einen DMX-Kanal-Pool-Patch auf einem sonst ungenutzten Universe an und entfernt ihn danach
+  wieder.
 - **DMX-Fernsteuerung für Live-Modus, Teil 1: Look-Auswahl per DMX-Kanal.** Einstellungen, Seite
   DMX-Eingang: ein Kanal wählt im laufenden Live-Betrieb den aktiven Look (wie an einem
   Szenen-Wahl-Kanal — er teilt sich in so viele gleich große Stufen auf, wie das Projekt Looks hat; 0 =
