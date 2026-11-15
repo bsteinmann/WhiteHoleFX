@@ -2,7 +2,7 @@ whitehole-project 1
 # Beispiel für Looks und den Live-Modus: drei fertige Effekte zum Umschalten.
 #
 # So ausprobieren:
-#   whitehole_studio examples/looks.whfx --run
+#   whitehole_studio examples/einstieg/looks.whfx --run
 # Dann im Studio F9 drücken (Live-Modus) und mit den Tasten 1 bis 3 oder per Klick überblenden.
 # Der Hauptgraph (Plasma) ist der Effekt, der im Editor offen ist; die drei Looks stehen unten.
 # Jeder Look hat eigene Node-Namen und eine eigene Überblendzeit.

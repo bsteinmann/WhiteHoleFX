@@ -3,7 +3,7 @@ whitehole-project 1
 # Plasma, gespiegelt, skaliert und von einem LFO gedreht. Die Regler zeigen Zahlen mit und ohne
 # Bereich, Ganzzahlen (LFO-Form), Ja/Nein (Spiegeln) und Farben; der Drehwinkel ist an den LFO
 # angeschlossen und deshalb ausgegraut.
-#   whitehole_studio examples/regler.whfx --run
+#   whitehole_studio examples/einstieg/regler.whfx --run
 
 settings fps 40
 

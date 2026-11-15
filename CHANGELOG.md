@@ -2,6 +2,20 @@
 
 ## 0.92.0
 
+- **Beispiele aufgefrischt** (vom Nutzer angestoßen: „Beispiele sind kaputt/veraltet"). Eine Prüfung ergab,
+  dass kein Beispiel tatsächlich fehlerhaft ist - alle kompilieren weiterhin, der Test `Beispiele: jede Datei
+  in examples/ …` bleibt grün -, aber drei Dinge waren veraltet: (1) Kommentar-Kopfzeilen mit dem
+  Aufrufbefehl zeigten noch auf den alten flachen Pfad (`examples/<datei>.whfx` statt `examples/<gruppe>/
+  <datei>.whfx`) aus der Zeit vor der Aufteilung in Unterordner - betraf `einstieg/looks.whfx`,
+  `einstieg/regler.whfx`, `einstieg/wand.whfx`, `effekte/funken.whfx`, `effekte/gewitter.whfx`,
+  `effekte/kaleidoskop.whfx`, `effekte/laufschrift.whfx`, `audio/audio.whfx`, `audio/oszilloskop.whfx`,
+  `audio/takt.whfx`; (2) `kaleidoskop.whfx`, `labyrinth.whfx`, `laufschrift.whfx`, `pong.whfx` und
+  `pong-takt.whfx` setzten noch von Hand `aspect 2` für ihre 32×16-Wand - seit dem automatischen
+  `@aspect`-Standard (0.92.0, siehe oben) ist das redundant, entfernt und die erklärenden Kommentare
+  entsprechend umformuliert; per Snapshot-Vergleich bestätigt, dass der automatische Standard optisch
+  identisch bleibt; (3) `docs/examples.md` fehlten zwei Zeilen (`einstieg/zwei-ausgaenge.whfx`,
+  `audio/techno.whfx`) - ergänzt. Inhaltlich unverändert bleiben alle anderen Beispiele (Spiele-Logik,
+  DMX-Beispiel, alle fünf 3D-Beispiele, die Bogen-CSV) - dort war nichts veraltet.
 - **Vereinheitlichte Node-Adressierung im DMX-Monitor, Richtung passend zum Monitor** (vom Nutzer gewünscht:
   DMX-Ein/-Aus/-Color-Nodes per Rechtsklick im Monitor adressieren können, Fixtures dabei ausdrücklich außen
   vor lassen). Das Rechtsklick-Untermenü im Reiter „Eingang", das die Adresse eines schon vorhandenen

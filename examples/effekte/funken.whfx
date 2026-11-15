@@ -2,7 +2,7 @@ whitehole-project 1
 # Beispiel für Particles: Funkenfontäne am unteren Rand, dahinter ein Sternenhimmel.
 #
 # So ausprobieren:
-#   whitehole_cli examples/funken.whfx --snapshot funken.png --frames 60
+#   whitehole_cli examples/effekte/funken.whfx --snapshot funken.png --frames 60
 #
 # Aufbau: Starfield als Hintergrund (durchsichtig, daher mit Blend-Modus 7 = Over darübergelegt),
 # Particles schickt 24 Teilchen im Fächer von 90 Grad (nach oben) aus (0.5, 0.05). Schwerkraft zieht

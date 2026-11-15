@@ -2,9 +2,9 @@ whitehole-project 1
 # Beispiel für den Audio-Eingang: ein Equalizer mit pulsierendem Hintergrund.
 #
 # So ausprobieren (ohne Mikrofon, mit einer WAV-Datei in Schleife):
-#   whitehole_cli examples/audio.whfx --audio-in musik.wav
+#   whitehole_cli examples/audio/audio.whfx --audio-in musik.wav
 # oder mit dem Standardmikrofon / einem Gerät aus "whitehole_cli --audio-devices":
-#   whitehole_cli examples/audio.whfx --audio-in default
+#   whitehole_cli examples/audio/audio.whfx --audio-in default
 # In whitehole_studio: Menü Eingang -> Audio.
 #
 # Aufbau: Audio Spectrum liefert 32 Frequenzbänder, Spectrum Bars zeichnet sie als Balken.

@@ -9,6 +9,7 @@ Die Beispiele liegen in `examples/`, nach Themen in Untergruppen. Im Studio ersc
 | Einstieg | `einstieg/regler.whfx` | Plasma mit Spiegeln, Zoom und LFO-Drehung; alle Reglertypen |
 | Einstieg | `einstieg/looks.whfx` | drei gespeicherte Looks für den Live-Modus |
 | Einstieg | `einstieg/cuelist.whfx` | dieselben Looks als Cuelist: GO, Zeit-Auslöser, Taste F5, Delay/Fade, Schwarz am Ende |
+| Einstieg | `einstieg/zwei-ausgaenge.whfx` | zwei unabhängige Output-Nodes auf getrennte Fixtures (Wand, Decke) in einem Graph |
 | Effekte (2D) | `effekte/gewitter.whfx` | Blitze über Plasma-Wolken |
 | Effekte (2D) | `effekte/schuss.whfx` | Shot-Node: eine Scan-Linie pro Schlag und ein sich ausdehnender Kreis bei jedem vierten Schlag, sonst unsichtbar (Shot `active` als Blend-`amount`) |
 | Effekte (2D) | `effekte/schlag-kreis.whfx` | ein Kreis dehnt sich bei jedem Schlag aus (Clock → Shot → Map → Sphere) |
@@ -22,6 +23,7 @@ Die Beispiele liegen in `examples/`, nach Themen in Untergruppen. Im Studio ersc
 | Audio | `audio/audio.whfx` | Equalizer mit pulsierendem Hintergrund |
 | Audio | `audio/takt.whfx` | Effekte im Takt der Musik |
 | Audio | `audio/oszilloskop.whfx` | Wellenform als Oszilloskop |
+| Audio | `audio/techno.whfx` | Kick/Hi-Hat-Erkenner: Hit Flash, Shockwave und Phrasen-Sequencer (jeder vierte Kick) |
 | DMX | `dmx/fader.whfx` | DMX Out und DMX Color Out: Nebel-Dimmer und RGB-Wash als reine DMX-Kanäle, ohne eigenes LED-Fixture |
 | 3D | `3d/ausrichtung.whfx` | Position Test: Achsen, Startecke und Verkabelung eines 6×4×8-Quaders prüfen |
 | 3D | `3d/plasma-wuerfel.whfx` | Plasma durch die Tiefe eines 8×8×8-Cubes, Color Map, Rotate 3D |

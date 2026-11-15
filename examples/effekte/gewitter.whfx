@@ -2,7 +2,7 @@ whitehole-project 1
 # Beispiel für Lightning: Blitze über dunklen, ziehenden Wolken.
 #
 # So ausprobieren:
-#   whitehole_cli examples/gewitter.whfx --snapshot gewitter.png --frames 60
+#   whitehole_cli examples/effekte/gewitter.whfx --snapshot gewitter.png --frames 60
 #
 # Aufbau: Ein dunkles Plasma ist der Himmel, Lightning legt bis zu zwei Blitze darüber (Blend-Modus 7 =
 # Over). `rate` ist die Zahl der Schläge pro Sekunde, `duration` wie lange ein Blitz zu sehen ist.

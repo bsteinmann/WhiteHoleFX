@@ -2,7 +2,7 @@ whitehole-project 1
 # Beispiel für Clock, Sequencer und Envelope: ein Plasma, das im Takt aufleuchtet.
 #
 # So ausprobieren:
-#   whitehole_studio examples/takt.whfx --run
+#   whitehole_studio examples/audio/takt.whfx --run
 #
 # Aufbau: Die Clock gibt 120 Schläge pro Minute als Tick. Der Sequencer schaltet bei jedem Tick einen
 # Schritt weiter; sein Ausgang `hit` feuert nur bei Schritten mit einem Wert über 0 (hier: 1, 0, 0.5, 0 -

@@ -33,7 +33,6 @@ node spiel wh.value.pong
   set ballRadius 0.06
 end
 node bild wh.generator.pong
-  set aspect 2
   set soft 0.07
   set thickness 0.03
   set dotSize 0.035
