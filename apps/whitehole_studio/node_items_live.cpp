@@ -156,16 +156,21 @@ double bandPosition(double hz) { return 32.0 * std::log(hz / 40.0) / std::log(16
 void NodeItem::drawMonitor(QPainter* painter) const {
     const QRectF strip{10.0, monitorTop_, kNodeWidth - 20.0, kMonitorHeight};
     const bool wave = view_ == graph::LiveView::Wave;
+    const bool channels = view_ == graph::LiveView::Channels;
     const double labelRow = wave ? 0.0 : 10.0;
     const QRectF plot{strip.left(), strip.top(), strip.width(), strip.height() - labelRow};
-    const QColor accent = portColor(wave ? graph::PortType::AudioWave : graph::PortType::AudioSpectrum);
+    // DMX-Kanäle (Channels) bekommen eine eigene Akzentfarbe: kein Ausgangsport, dessen Farbe passen würde.
+    const QColor accent = channels ? QColor{255, 176, 64} : portColor(wave ? graph::PortType::AudioWave : graph::PortType::AudioSpectrum);
     painter->save();
     painter->setPen(Qt::NoPen);
     painter->setBrush(QColor{26, 28, 34});
     painter->drawRoundedRect(plot, 3.0, 3.0);
 
-    const double step = plot.width() / 32.0;
     const bool ranged = monitor_.first >= 0 && monitor_.last >= monitor_.first;
+    // Channels füllt die Breite mit genau so vielen Balken, wie tatsächlich gesendet werden, statt mit allen 32
+    // Bändern eines Spektrums (siehe builtin_dmx_out.cpp: rangeFirst/rangeLast = die gesendeten Bytes).
+    const std::size_t totalBars = channels && ranged ? static_cast<std::size_t>(monitor_.last + 1) : monitor_.bars.size();
+    const double step = plot.width() / static_cast<double>(channels ? totalBars : 32);
     if (ranged) {
         // Der ausgewertete Bereich: getönter Hintergrund über die ganze Höhe, auch bei Stille zu sehen.
         QColor tint = accent;
@@ -178,7 +183,7 @@ void NodeItem::drawMonitor(QPainter* painter) const {
         const QColor dim{92, 100, 118};
         QColor bright = accent;
         bright = mixed(bright, QColor{255, 255, 255}, 0.2);
-        for (std::size_t i = 0; i < monitor_.bars.size(); ++i) {
+        for (std::size_t i = 0; i < totalBars; ++i) {
             const double value = std::clamp(static_cast<double>(monitor_.bars[i]), 0.0, 1.0);
             if (value <= 0.01) {
                 continue;
@@ -208,6 +213,17 @@ void NodeItem::drawMonitor(QPainter* painter) const {
             painter->setPen(QPen{mixed(accent, QColor{255, 255, 255}, 0.2), 1.5, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin});
             painter->setBrush(Qt::NoBrush);
             painter->drawPath(curve);
+        }
+    } else if (channels) {
+        // Kanalnummern statt Frequenzachse: eine Marke je Balken (1-basiert, wie an den Parametern ch1 ...).
+        QFont font = painter->font();
+        font.setPixelSize(8);
+        painter->setFont(font);
+        painter->setPen(QColor{120, 126, 140});
+        for (std::size_t i = 0; i < totalBars; ++i) {
+            const double x = plot.left() + (static_cast<double>(i) + 0.5) * step;
+            painter->drawText(QRectF{x - 14.0, plot.bottom() + 1.0, 28.0, labelRow - 1.0}, Qt::AlignHCenter | Qt::AlignVCenter,
+                              QString::number(i + 1));
         }
     } else {
         // Frequenzachse: drei Marken, damit man den Bereich zuordnen kann.

@@ -100,8 +100,14 @@ darum.
   Vortex, Text, Pong, Labyrinth, Random Pixels, Digital Rain) sind umgestellt. **Spectrum Bars**
   (`builtin_audio_field.cpp`) war von Anfang an **nicht** betroffen — kein `aspect`, keine quadratischen
   Zellen; Balkenbreite/-lücke sind relativ zur Spaltenbreite definiert, Höhe nutzt `p.y` direkt.
-- DMX-Output-Nodes (0.88.0): Anzeige als Zeilen in der Patch-Tabelle, Live-Wertanzeige am Node — bewusst
-  nicht gebaut, nur als mögliche Erweiterung im Gespräch.
+- **DMX-Output-Nodes** (0.88.0, vom Nutzer am 15.11. zur konkreten Umsetzung freigegeben): Anzeige als
+  Zeilen in der Patch-Tabelle, Live-Wertanzeige am Node. **Erledigt (0.92.0):** Live-Wertanzeige — beide
+  Nodes (`wh.output.dmx`, `wh.output.dmxcolor`) zeigen den Anzeigestreifen im Node-Körper (siehe CHANGELOG,
+  `graph::LiveView::Channels`). **Noch offen:** eigene Zeilen in der Patch-Tabelle (`patch_table.cpp`) für
+  den internen Kanal-Pool — die bestehende Tabelle ist rein fixture-basiert (`output::FixturePatch`), der
+  DMX-Kanal-Pool wird dagegen über `dmxpatch`-Einträge (`output::DmxChannelPatch`) auf echte
+  Controller/Universe/Kanäle verteilt; eine eigene Darstellung/Bearbeitung dieser Einträge im Studio
+  existiert noch nicht (bisher nur über die Projektdatei von Hand).
 - **Sequencer: ungenutzte Ausgänge (`trigN`/`onN` im Node-Editor) ausblenden** — der Teil, der noch fehlt
   (0.92.0 hat bereits die Step-Regler im Parameterfenster ausgeblendet, siehe CHANGELOG). Die Ports selbst
   sind weiterhin feste Graph-Verbindungspunkte (`NodeDescriptor::ports`); sie nur im Editor optisch

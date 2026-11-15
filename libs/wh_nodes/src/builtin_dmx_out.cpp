@@ -15,6 +15,12 @@
 // Controller/Universe/Kanal geht, legt die Projektdatei-Anweisung `dmxpatch` fest (frei aufteilbar, siehe
 // docs/output.md); ungepatchte Pool-Kanäle werden einfach nicht gesendet. So lässt sich der Node verkabeln, ohne
 // dass er die physische Patch-Entscheidung kennen muss - genau wie ein Fixture auch nichts von seinem Patch weiß.
+//
+// Live-Wertanzeige (0.92.0): Als Senke ohne eigenen Ausgang können die Nodes ihren Pegel nicht wie sonst unter einem
+// Ausgangsnamen zeigen (node_items_live.cpp). Sie nutzen stattdessen den Anzeigestreifen im Node-Körper
+// (KernelOutputs::setMonitor, Descriptor liveView = Channels), einen Balken je gesendetem DMX-Byte (0..255 auf 0..1
+// skaliert), mit Kanalnummern statt der sonst üblichen Frequenzachse (graph::LiveView::Channels,
+// apps/whitehole_studio/node_items_live.cpp).
 #include <algorithm>
 #include <cmath>
 
@@ -40,6 +46,20 @@ ChannelWrite header(const values::KernelInputs& in) {
     return write;
 }
 
+/// Ein Balken je gesendetem Byte (0..255 auf 0..1 skaliert), der ganze Bereich markiert (siehe Dateikopf).
+MonitorView monitorOf(const ChannelWrite& write) {
+    MonitorView view;
+    const std::size_t count = std::min(write.data.size(), view.bands.bands.size());
+    for (std::size_t i = 0; i < count; ++i) {
+        view.bands.bands[i] = static_cast<float>(write.data[i]) / 255.0F;
+    }
+    if (count > 0) {
+        view.rangeFirst = 0;
+        view.rangeLast = static_cast<int>(count) - 1;
+    }
+    return view;
+}
+
 class DmxOutKernel final : public values::ICpuKernel {
 public:
     void evaluate(const KernelContext& context, KernelOutputs& outputs) override {
@@ -61,6 +81,7 @@ public:
                 write.data.push_back(dmxByte(scaled));
             }
         }
+        outputs.setMonitor(monitorOf(write));
         outputs.setChannels(std::move(write));
     }
 };
@@ -85,6 +106,7 @@ public:
             // Weiß: der gemeinsame Anteil der drei Farben (so leuchtet Weiß auch wirklich über den Weiß-Kanal)
             write.data.push_back(channel(std::min({color.r, color.g, color.b})));
         }
+        outputs.setMonitor(monitorOf(write));
         outputs.setChannels(std::move(write));
     }
 };
@@ -107,6 +129,7 @@ std::vector<values::CpuNodeDefinition> dmxOutNodes() {
         outParameters.push_back(number("ch" + std::to_string(i), "Channel " + std::to_string(i), 0.0, 0.0, 1.0));
     }
     nodes.push_back(cpuNode("wh.output.dmx", "DMX Out", "Output", {}, std::move(outParameters), kernelFactory<DmxOutKernel>()));
+    nodes.back().descriptor.liveView = graph::LiveView::Channels;
 
     auto colorParameters = targetParameters();
     colorParameters.push_back(choice("mode", "Channels", {"RGB (3)", "RGBW (4)", "Dimmer + RGB (4)", "Dimmer + RGBW (5)"}));
@@ -114,6 +137,7 @@ std::vector<values::CpuNodeDefinition> dmxOutNodes() {
     colorParameters.push_back(number("dimmer", "Dimmer (with dimmer channel)", 1.0, 0.0, 1.0));
     nodes.push_back(cpuNode("wh.output.dmxcolor", "DMX Color Out", "Output", {}, std::move(colorParameters),
                             kernelFactory<DmxColorOutKernel>()));
+    nodes.back().descriptor.liveView = graph::LiveView::Channels;
     return nodes;
 }
 

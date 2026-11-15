@@ -59,7 +59,8 @@ struct ParameterDescriptor {
 };
 
 /// Ob der Node im Editor einen Anzeigestreifen bekommt (Platz unter den Ports), den sein Kernel füllt (KernelOutputs::setMonitor).
-enum class LiveView { None, Spectrum, Wave };
+/// Channels: Balken ohne Frequenzachse, mit Kanalnummern darunter (DMX-Ausgabe-Senken ohne eigenen Ausgang).
+enum class LiveView { None, Spectrum, Wave, Channels };
 
 struct NodeDescriptor {
     std::string typeId;  // eindeutig, z. B. "whitehole.noise.simplex"

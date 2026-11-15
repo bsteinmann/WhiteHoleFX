@@ -215,6 +215,26 @@ QString NodeEditor::exerciseMonitor() {
     if (render(wave) == still) {
         return QStringLiteral("Anzeigestreifen: die Wellenform malt nichts");
     }
+
+    // Channels (DMX Out/Color Out): Balken ohne eigenen Ausgang, Kanalnummern statt Frequenzachse.
+    stripType.liveView = graph::LiveView::Channels;
+    NodeItem channels{NodeId{3}, stripType, QStringLiteral("DMX")};
+    const QImage channelsEmpty = render(channels);
+    MonitorDisplay channelsDisplay;
+    channelsDisplay.active = true;
+    channelsDisplay.first = 0;
+    channelsDisplay.last = 3;
+    for (std::size_t i = 0; i <= 3; ++i) {
+        channelsDisplay.bars[i] = static_cast<float>(i + 1) / 4.0F;
+    }
+    channels.setMonitor(channelsDisplay);
+    if (render(channels) == channelsEmpty) {
+        return QStringLiteral("Anzeigestreifen: die Kanal-Balken malen nichts");
+    }
+    channels.clearLive();
+    if (channels.monitor().active || render(channels) != channelsEmpty) {
+        return QStringLiteral("Anzeigestreifen: Kanal-Balken räumen nicht auf");
+    }
     return {};
 }
 

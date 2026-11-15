@@ -2415,12 +2415,12 @@ msgid "Schnellwahl"
 msgstr "Selección rápida"
 
 #: node_info_texts.cpp:153
-msgid "Schreibt bis zu acht Werte auf aufeinanderfolgende Kanäle eines internen Kanal-Pools (nicht mehr direkt auf Controller/Universe). „Low“/„High“ legen die DMX-Werte für 0 und 1 fest, „16 Bit“ belegt je Kanal zwei Pool-Kanäle. Wohin der Pool wirklich geht, legt „dmxpatch“ in der Projektdatei fest. Hat keinen Ausgang und wird darum immer ausgewertet."
-msgstr "Escribe hasta ocho valores en canales consecutivos de un pool de canales interno (ya no directamente en un controlador/universo). «Low»/«High» fijan los valores DMX para 0 y 1, «16 bit» usa dos canales del pool por entrada. A dónde va realmente el pool lo define «dmxpatch» en el archivo de proyecto. No tiene salida, así que siempre se evalúa."
+msgid "Schreibt bis zu acht Werte auf aufeinanderfolgende Kanäle eines internen Kanal-Pools (nicht mehr direkt auf Controller/Universe). „Low“/„High“ legen die DMX-Werte für 0 und 1 fest, „16 Bit“ belegt je Kanal zwei Pool-Kanäle. Wohin der Pool wirklich geht, legt „dmxpatch“ in der Projektdatei fest. Hat keinen Ausgang und wird darum immer ausgewertet; der Streifen im Node zeigt die gerade gesendeten Bytes je Kanal."
+msgstr "Escribe hasta ocho valores en canales consecutivos de un pool de canales interno (ya no directamente en un controlador/universo). «Low»/«High» fijan los valores DMX para 0 y 1, «16 bits» usa dos canales del pool por canal. A dónde va realmente el pool lo define «dmxpatch» en el archivo de proyecto. No tiene salida y por eso se evalúa siempre; la franja del nodo muestra los bytes que se están enviando por canal."
 
 #: node_info_texts.cpp:155
-msgid "Schreibt eine Farbe in den internen Kanal-Pool: RGB oder RGBW, davor auf Wunsch ein Dimmer-Kanal. Wohin der Pool wirklich geht, legt „dmxpatch“ in der Projektdatei fest. Hat keinen Ausgang und wird darum immer ausgewertet."
-msgstr "Escribe un color en el pool de canales interno: RGB o RGBW, opcionalmente con un canal de regulador (dimmer) antes. A dónde va realmente el pool lo define «dmxpatch» en el archivo de proyecto. No tiene salida, así que siempre se evalúa."
+msgid "Schreibt eine Farbe in den internen Kanal-Pool: RGB oder RGBW, davor auf Wunsch ein Dimmer-Kanal. Wohin der Pool wirklich geht, legt „dmxpatch“ in der Projektdatei fest. Hat keinen Ausgang und wird darum immer ausgewertet; der Streifen im Node zeigt die gerade gesendeten Bytes je Kanal."
+msgstr "Escribe un color en el pool de canales interno: RGB o RGBW, opcionalmente precedido de un canal de regulador (dimmer). A dónde va realmente el pool lo define «dmxpatch» en el archivo de proyecto. No tiene salida y por eso se evalúa siempre; la franja del nodo muestra los bytes que se están enviando por canal."
 
 #: node_info_texts.cpp:181
 msgid "Schrittfolge mit bis zu acht Werten. Jedes Einschalten von „Advance“ geht einen Schritt weiter (vorwärts, rückwärts, hin und her oder zufällig)."

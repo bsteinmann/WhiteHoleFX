@@ -113,6 +113,14 @@ einträgt:
   zwei Einträge mit überschneidendem Pool-Bereich lässt `OutputPipeline::create` gar nicht erst zu
   (`ErrorCode::InvalidArgument`/`AlreadyExists`) — anders als früher ist das keine Laufzeitprüfung mehr pro
   Frame, sondern eine einmalige Prüfung beim Erstellen der Ausgabe.
+- **Live-Wertanzeige im Node-Editor (0.92.0):** Beide Nodes haben keinen eigenen Ausgang, darum nutzen sie
+  (anders als z. B. die Audio-Nodes) nicht den Pegelbalken unter einem Ausgangsport, sondern den
+  Anzeigestreifen im Node-Körper selbst (`KernelOutputs::setMonitor`, Descriptor `liveView =
+  graph::LiveView::Channels`, siehe `builtin_dmx_out.cpp`): ein Balken je gerade gesendetem Byte (0..255 auf
+  0..1 skaliert), mit Kanalnummern statt der sonst üblichen Frequenzachse. Reine Anzeige, ohne Einfluss auf
+  die gesendeten Werte. Die Patch-Tabelle im Studio zeigt diese Nodes bisher nicht als eigene Zeilen (der
+  interne Kanal-Pool wird nur über die Projektdatei-Zeile `dmxpatch` gepflegt) — das ist ein eigener, noch
+  offener Schritt.
 
 ## Bekannte Grenzen
 
