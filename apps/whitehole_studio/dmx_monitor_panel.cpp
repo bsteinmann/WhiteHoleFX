@@ -70,7 +70,15 @@ DmxMonitorPanel::DmxMonitorPanel(std::shared_ptr<input::DmxStore> store, QWidget
 }
 
 void DmxMonitorPanel::onSelectionChanged() {
-    hasData_ = false;  // anderes Universe: alte Werte sind nicht mehr gültig, Gitter beim nächsten refresh() neu füllen
+    // Anderes Protokoll/Universe: alte Werte sind sofort ungültig. Das Gitter selbst leeren statt nur
+    // hasData_ zurückzusetzen - sonst überspringt refresh() das Leeren, weil sein "kein Signal"-Zweig
+    // genau an hasData_ hängt (der war ja schon false) und die alten Zellen stehen bleiben würden.
+    for (int r = 0; r < kRows; ++r) {
+        for (int c = 0; c < kColumns; ++c) {
+            grid_->item(r, c)->setText(QStringLiteral("–"));
+        }
+    }
+    hasData_ = false;
     refresh();
 }
 
