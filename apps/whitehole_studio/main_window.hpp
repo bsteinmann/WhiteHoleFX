@@ -207,6 +207,9 @@ private:
     /// Master über DMX (main_window_dmx.cpp): gibt die Wahl aus appSettings_ an den Player; der Regler folgt dem Pult.
     void applyMasterDmx();
     void followMasterDmx();
+    /// Live-Look über DMX (main_window_dmx.cpp, DMX-Fernsteuerung für Live-Modus): gibt die Wahl aus appSettings_
+    /// an den Player; der Kanal wählt den Look, solange der Live-Betrieb läuft.
+    void applyLiveDmx();
     [[nodiscard]] QString dmxStatusText() const;
     /// Audio-Eingang (main_window_audio.cpp). `choice`: "off", "default", "device:<Name>" oder "file:<Pfad>".
     /// Liefert den Fehlertext (leer = in Ordnung; bei einem Fehler bleibt der Eingang aus).

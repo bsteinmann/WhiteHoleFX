@@ -30,11 +30,11 @@ msgstr "   |   Вивід вимкнено (%1 пакетів не надісл�
 msgid "   |   BLACKOUT"
 msgstr "   |   BLACKOUT"
 
-#: main_window_dmx.cpp:114
+#: main_window_dmx.cpp:130
 msgid "   |   DMX-Eingang %1: %2 Pakete"
 msgstr "   |   Вхід DMX %1: %2 пакетів"
 
-#: main_window_dmx.cpp:104
+#: main_window_dmx.cpp:120
 msgid "   |   DMX-Nodes im Projekt, Eingang aus (Einstellungen)"
 msgstr "   |   У проєкті є DMX-ноди, вхід вимкнено (Налаштування)"
 
@@ -50,7 +50,7 @@ msgstr "   |   Master %1 %"
 msgid "   |   TESTMODUS"
 msgstr "   |   ТЕСТОВИЙ РЕЖИМ"
 
-#: main_window_dmx.cpp:112
+#: main_window_dmx.cpp:128
 msgid " + sACN"
 msgstr " + sACN"
 
@@ -102,7 +102,7 @@ msgstr "%1  (%2 LED)"
 msgid "%1  →  %2"
 msgstr "%1  →  %2"
 
-#: main_window_controls.cpp:62 main_window_dmx.cpp:90
+#: main_window_controls.cpp:62 main_window_dmx.cpp:106
 msgid "%1 %"
 msgstr "%1 %"
 
@@ -114,11 +114,11 @@ msgstr "%1 (%2 світлодіодів)"
 msgid "%1 (%2)"
 msgstr "%1 (%2)"
 
-#: settings_dialog.cpp:157
+#: settings_dialog.cpp:185
 msgid "%1 (Standard)"
 msgstr "%1 (стандартно)"
 
-#: settings_dialog.cpp:46 settings_dialog.cpp:161
+#: settings_dialog.cpp:46 settings_dialog.cpp:189
 msgid "%1 (nicht gefunden)"
 msgstr "%1 (не знайдено)"
 
@@ -558,7 +558,7 @@ msgstr "Кількість"
 msgid "Anzahl x y z"
 msgstr "Кількість x y z"
 
-#: cue_dialog.cpp:71 cue_panel.cpp:39 main_window_dmx.cpp:109
+#: cue_dialog.cpp:71 cue_panel.cpp:39 main_window_dmx.cpp:125
 msgid "Art-Net"
 msgstr "Art-Net"
 
@@ -634,11 +634,11 @@ msgstr "Перетягніть на поле: додати ноду.\nПерет
 msgid "Auf gewählten anwenden"
 msgstr "Застосувати до вибраного"
 
-#: settings_dialog.cpp:192
+#: settings_dialog.cpp:220
 msgid "Aufnahmegeräte lassen sich nicht auflisten: %1"
 msgstr "Не вдалося отримати список пристроїв запису: %1"
 
-#: settings_dialog.cpp:143 test_panel.cpp:39
+#: settings_dialog.cpp:171 test_panel.cpp:39
 msgid "Aus"
 msgstr "Вимк."
 
@@ -986,6 +986,10 @@ msgstr "Додати поточний ефект до списку як Look (Ct
 msgid "Der Ausgang: Was hier ankommt, wird auf die LEDs gesendet. Mit „Mode“ in einen Bereich skalieren oder als Fenster ausschneiden, plus Helligkeit."
 msgstr "Вихід: усе, що сюди надходить, надсилається на LED. Через «Mode» масштабується в область або вирізається як вікно, плюс яскравість."
 
+#: settings_dialog.cpp:160
+msgid "Der Auswahl-Kanal teilt sich in so viele gleich große Stufen, wie das Projekt Looks hat; 0 heißt kein Wechsel. Ohne Überblendzeit-Kanal (aus) gilt die im Look gespeicherte Zeit, sonst setzt der Kanalwert 0 bis 255 die Zeit auf 0 bis 10 Sekunden. Wirkt nur im laufenden Live-Betrieb; bleibt das Signal weg, bleibt der zuletzt gezeigte Look stehen."
+msgstr "Канал вибору ділиться на стільки рівних ступенів, скільки луків у проєкті; 0 означає без зміни. Без каналу часу переходу (вимкнено) діє власний час луку, інакше значення каналу (0..255) задає час від 0 до 10 секунд. Діє лише під час роботи live-режиму; якщо сигнал зникає, залишається останній показаний лук."
+
 #: dmx_patch_table.cpp:50
 msgid "Der Controller bestimmt das Protokoll. Pool-Kanäle ohne Patch werden nicht gesendet."
 msgstr "Протокол визначає контролер. Канали пулу без патчу не надсилаються."
@@ -1006,7 +1010,7 @@ msgstr "Cue спрацьовує, коли значення каналу зро�
 msgid "Der Kanalwert 0 bis 255 setzt den Master auf 0 bis 100 %. Solange Pakete kommen, folgt der Master-Regler dem Pult; bleibt das Signal weg, hält der Master seinen Wert. Der Empfang oben muss für das gewählte Protokoll eingeschaltet sein."
 msgstr "Значення каналу від 0 до 255 задає Master від 0 до 100 %. Поки надходять пакети, регулятор Master слідує за пультом; якщо сигнал зникає, Master тримає своє значення. Приймання вгорі має бути ввімкнене для обраного протоколу."
 
-#: main_window_dmx.cpp:95
+#: main_window_dmx.cpp:111
 msgid "Der Master kommt gerade vom DMX-Kanal (Einstellungen → DMX-Eingang)"
 msgstr "Master зараз надходить з каналу DMX (Налаштування → Вхід DMX)"
 
@@ -1054,7 +1058,7 @@ msgstr "Яскравість маски визначає, наскільки в�
 msgid "Die Prüfung ist fehlgeschlagen:\n%1"
 msgstr "Перевірка не вдалася:\n%1"
 
-#: settings_dialog.cpp:196
+#: settings_dialog.cpp:224
 msgid "Die Quelle speist die Audio-Nodes (Pegel, Frequenzband, Beat, Spektrum)."
 msgstr "Джерело живить аудіо-ноди (рівень, смуга частот, біт, спектр)."
 
@@ -1498,11 +1502,11 @@ msgstr "Завантажено: %1"
 msgid "Gelb"
 msgstr "Жовтий"
 
-#: settings_dialog.cpp:145
+#: settings_dialog.cpp:173
 msgid "Gerät:"
 msgstr "Пристрій:"
 
-#: main_window_controls.cpp:46 main_window_dmx.cpp:96
+#: main_window_controls.cpp:46 main_window_dmx.cpp:112
 msgid "Gesamthelligkeit (wirkt auf Vorschau und Ausgabe, nicht im Projekt gespeichert)"
 msgstr "Загальна яскравість (діє на попередній перегляд і вивід, у проєкті не зберігається)"
 
@@ -1746,7 +1750,7 @@ msgstr "Проєкт не завантажено."
 msgid "Kein Ziel (freies Rechteck)"
 msgstr "Без цілі (вільний прямокутник)"
 
-#: settings_dialog.cpp:194
+#: settings_dialog.cpp:222
 msgid "Keine Aufnahmegeräte gefunden. Ein Audio-Interface anschließen und das Fenster neu öffnen."
 msgstr "Пристроїв запису не знайдено. Підключіть аудіоінтерфейс і знову відкрийте вікно."
 
@@ -1878,6 +1882,22 @@ msgstr "Очистити список"
 msgid "Live"
 msgstr "Live"
 
+#: settings_dialog.cpp:158
+msgid "Live-Look: Auswahl-Kanal (1 bis 512):"
+msgstr "Live-лук: канал вибору (1..512):"
+
+#: settings_dialog.cpp:156
+msgid "Live-Look: Protokoll:"
+msgstr "Live-лук: протокол:"
+
+#: settings_dialog.cpp:157
+msgid "Live-Look: Universe:"
+msgstr "Live-лук: універс:"
+
+#: settings_dialog.cpp:159
+msgid "Live-Look: Überblendzeit-Kanal (0 = aus):"
+msgstr "Live-лук: канал часу переходу (0 = вимкнено):"
+
 #: look_panel.cpp:73
 msgid "Live-Modus starten  ▶"
 msgstr "Запустити режим Live  ▶"
@@ -1913,6 +1933,10 @@ msgstr "Перейменувати Look"
 #: look_panel.cpp:259
 msgid "Look überschreiben"
 msgstr "Перезаписати Look"
+
+#: settings_dialog.cpp:139
+msgid "Look-Auswahl im Live-Betrieb über einen DMX-Kanal steuern"
+msgstr "Керувати вибором луку в live-режимі через канал DMX"
 
 #: main_window_live.cpp:66
 msgid "Looks"
@@ -2586,7 +2610,7 @@ msgstr "Мова"
 msgid "Stage Config"
 msgstr "Stage Config"
 
-#: settings_dialog.cpp:144
+#: settings_dialog.cpp:172
 msgid "Standardgerät des Systems"
 msgstr "Пристрій системи за замовчуванням"
 
@@ -2822,15 +2846,15 @@ msgstr "Попередній перегляд"
 msgid "Vorweg überspringen"
 msgstr "Пропустити спочатку"
 
-#: settings_dialog.cpp:146
+#: settings_dialog.cpp:174
 msgid "WAV-Datei in Schleife:"
 msgstr "Файл WAV у циклі:"
 
-#: settings_dialog.cpp:205
+#: settings_dialog.cpp:233
 msgid "WAV-Datei wählen"
 msgstr "Оберіть файл WAV"
 
-#: settings_dialog.cpp:205
+#: settings_dialog.cpp:233
 msgid "WAV-Dateien (*.wav)"
 msgstr "Файли WAV (*.wav)"
 
@@ -2950,7 +2974,7 @@ msgstr "Спершу виберіть форму у списку «Фіксту�
 msgid "Wähle zuerst einen Controller in der Tabelle."
 msgstr "Спершу виберіть контролер у таблиці."
 
-#: settings_dialog.cpp:149
+#: settings_dialog.cpp:177
 msgid "Wählen …"
 msgstr "Обрати …"
 
@@ -3074,6 +3098,10 @@ msgstr "Напрямок лічби"
 msgid "an oder aus"
 msgstr "увімк. чи вимк."
 
+#: settings_dialog.cpp:153
+msgid "aus"
+msgstr "вимкнено"
+
 #: add_fixture_dialog.cpp:52
 msgid "automatisch (Matrix 1, Cube 1 …)"
 msgstr "автоматично (Матриця 1, Куб 1 …)"
@@ -3118,7 +3146,7 @@ msgstr "вгорі праворуч"
 msgid "rechts (x max)"
 msgstr "праворуч (x макс)"
 
-#: cue_dialog.cpp:71 cue_panel.cpp:39 main_window_dmx.cpp:112
+#: cue_dialog.cpp:71 cue_panel.cpp:39 main_window_dmx.cpp:128
 msgid "sACN"
 msgstr "sACN"
 

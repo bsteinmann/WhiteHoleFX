@@ -66,7 +66,8 @@ QString MainWindow::applySettings(const AppSettings& wanted, bool persist) {
     const QString audioBefore = appSettings_.audioSource;
     appSettings_ = next;
     applyMasterDmx();
-    syncDmxUniverses();  // sACN: Der Master-Kanal braucht seine Multicast-Gruppe
+    applyLiveDmx();
+    syncDmxUniverses();  // sACN: Der Master- und der Live-Look-Kanal brauchen ihre Multicast-Gruppe
     if (!(player_->nodeDefaults() == next.nodeDefaults)) {
         player_->setNodeDefaults(next.nodeDefaults);
     }

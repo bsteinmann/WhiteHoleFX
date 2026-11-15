@@ -6,7 +6,8 @@
 // Dialogfenster bearbeitet und das Hauptfenster anwendet.
 //
 // Schlüssel in QSettings (Organisation und Anwendung "WhiteHoleFX"): dmx/artnet, dmx/sacn, audio/source
-// wie bisher, neu dmx/artnetPort, dmx/sacnPort, dmx/masterEnabled, dmx/masterProtocol, dmx/masterUniverse, dmx/masterChannel, network/outInterface, network/inInterface,
+// wie bisher, neu dmx/artnetPort, dmx/sacnPort, dmx/masterEnabled, dmx/masterProtocol, dmx/masterUniverse, dmx/masterChannel,
+// dmx/liveEnabled, dmx/liveProtocol, dmx/liveUniverse, dmx/liveSelectChannel, dmx/liveFadeChannel, network/outInterface, network/inInterface,
 // nodeDefaults/<Typ-ID>/<Parameter> (Wert als Text, siehe encodeParameterValue).
 #pragma once
 
@@ -26,6 +27,14 @@ struct AppSettings {
     int masterDmxProtocol{0};
     int masterDmxUniverse{0};
     int masterDmxChannel{1};
+    /// Look-Auswahl im Live-Betrieb über einen DMX-Kanal (DMX-Fernsteuerung für Live-Modus, Teil 1, siehe
+    /// live_dmx.hpp). Protokoll: 0 = Art-Net, 1 = sACN. liveDmxFadeChannel 0 = aus (der Look behält seine
+    /// eigene Überblendzeit).
+    bool liveDmx{false};
+    int liveDmxProtocol{0};
+    int liveDmxUniverse{0};
+    int liveDmxSelectChannel{1};
+    int liveDmxFadeChannel{0};
     /// IPv4-Adresse der Netzwerkkarte zum Senden bzw. Empfangen; leer = das System wählt.
     QString outputInterface;
     QString inputInterface;

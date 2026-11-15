@@ -2,6 +2,16 @@
 
 ## 0.92.0
 
+- **DMX-Fernsteuerung für Live-Modus, Teil 1: Look-Auswahl per DMX-Kanal.** Einstellungen, Seite
+  DMX-Eingang: ein Kanal wählt im laufenden Live-Betrieb den aktiven Look (wie an einem
+  Szenen-Wahl-Kanal — er teilt sich in so viele gleich große Stufen auf, wie das Projekt Looks hat; 0 =
+  kein Wechsel), ein zweiter, optionaler Kanal überschreibt die Überblendzeit (0..255 -> 0..10 s; ohne
+  diesen Kanal gilt die im Look gespeicherte Zeit). Ausgelöst wird nur bei einem Wechsel des Werts, nicht
+  auf jedem Frame erneut (sonst würde eine laufende Überblendung ständig neu beginnen); bleibt das Signal
+  länger als 5 Sekunden weg, bleibt der zuletzt gezeigte Look stehen — genau wie beim bestehenden Master
+  über DMX, dessen Muster diese Funktion übernimmt (neues `runtime::LiveDmxSource`,
+  `Player::setLiveDmx`/`pollLiveDmx`). Zweiter Teil des Backlog-Punkts „DMX-Fernsteuerung für Live-Modus"
+  (per DMX direkt zu einem Cue springen) folgt in einem eigenen Schritt.
 - **DMX-Kanal-Pool: eigene Tabelle in der Ausgabe-Seite.** Zweiter und letzter Teil des Backlog-Punkts
   „DMX-Output-Nodes": Der interne DMX-Kanal-Pool (`dmxpatch`-Einträge, auf echte Controller/Universe/Kanäle
   abgebildet) ließ sich bisher nur per Hand in der Projektdatei pflegen. Jetzt gibt es dafür eine eigene

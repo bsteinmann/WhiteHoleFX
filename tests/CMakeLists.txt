@@ -103,6 +103,7 @@ add_executable(wh_tests
     runtime/graph_layout_test.cpp
     runtime/player_layout_test.cpp
     runtime/player_dmxpatch_test.cpp
+    runtime/live_dmx_test.cpp
     runtime/player_targets_test.cpp
     runtime/player_arrange_test.cpp
     runtime/player_types_test.cpp

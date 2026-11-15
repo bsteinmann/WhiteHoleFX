@@ -134,6 +134,34 @@ QWidget* SettingsDialog::buildDmxPage(const AppSettings& current) {
                          "und 5568 (sACN); nur ändern, wenn ein anderes Programm sie belegt. Nach der Installation ist "
                          "der Empfang aus; unter Windows fragt die Firewall beim ersten Einschalten nach."),
                      page));
+    // Look-Auswahl im Live-Betrieb über einen Kanal (DMX-Fernsteuerung für Live-Modus, Teil 1): ein Kanal
+    // wählt den Look wie an einem Szenen-Wahl-Kanal, ein zweiter (optional) die Überblendzeit.
+    liveDmx_ = new QCheckBox{tr("Look-Auswahl im Live-Betrieb über einen DMX-Kanal steuern"), page};
+    liveDmx_->setChecked(current.liveDmx);
+    liveProtocol_ = new QComboBox{page};
+    liveProtocol_->addItem(tr("Art-Net"));
+    liveProtocol_->addItem(tr("sACN"));
+    liveProtocol_->setCurrentIndex(std::clamp(current.liveDmxProtocol, 0, 1));
+    liveUniverse_ = new QSpinBox{page};
+    liveUniverse_->setRange(0, 32767);
+    liveUniverse_->setValue(current.liveDmxUniverse);
+    liveSelectChannel_ = new QSpinBox{page};
+    liveSelectChannel_->setRange(1, 512);
+    liveSelectChannel_->setValue(current.liveDmxSelectChannel);
+    liveFadeChannel_ = new QSpinBox{page};
+    liveFadeChannel_->setRange(0, 512);
+    liveFadeChannel_->setSpecialValueText(tr("aus"));
+    liveFadeChannel_->setValue(current.liveDmxFadeChannel);
+    form->addRow(liveDmx_);
+    form->addRow(tr("Live-Look: Protokoll:"), liveProtocol_);
+    form->addRow(tr("Live-Look: Universe:"), liveUniverse_);
+    form->addRow(tr("Live-Look: Auswahl-Kanal (1 bis 512):"), liveSelectChannel_);
+    form->addRow(tr("Live-Look: Überblendzeit-Kanal (0 = aus):"), liveFadeChannel_);
+    form->addRow(note(tr("Der Auswahl-Kanal teilt sich in so viele gleich große Stufen, wie das Projekt Looks hat; "
+                         "0 heißt kein Wechsel. Ohne Überblendzeit-Kanal (aus) gilt die im Look gespeicherte Zeit, "
+                         "sonst setzt der Kanalwert 0 bis 255 die Zeit auf 0 bis 10 Sekunden. Wirkt nur im laufenden "
+                         "Live-Betrieb; bleibt das Signal weg, bleibt der zuletzt gezeigte Look stehen."),
+                     page));
     return page;
 }
 
@@ -222,6 +250,11 @@ AppSettings SettingsDialog::settings() const {
     result.masterDmxProtocol = masterProtocol_->currentIndex();
     result.masterDmxUniverse = masterUniverse_->value();
     result.masterDmxChannel = masterChannel_->value();
+    result.liveDmx = liveDmx_->isChecked();
+    result.liveDmxProtocol = liveProtocol_->currentIndex();
+    result.liveDmxUniverse = liveUniverse_->value();
+    result.liveDmxSelectChannel = liveSelectChannel_->value();
+    result.liveDmxFadeChannel = liveFadeChannel_->value();
     if (audioDefault_->isChecked()) {
         result.audioSource = QStringLiteral("default");
     } else if (audioDevice_->isChecked() && audioDevices_->currentIndex() >= 0) {

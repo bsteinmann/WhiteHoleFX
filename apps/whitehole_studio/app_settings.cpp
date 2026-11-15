@@ -26,6 +26,11 @@ AppSettings loadAppSettings() {
     result.masterDmxProtocol = std::clamp(s.value(QStringLiteral("dmx/masterProtocol"), 0).toInt(), 0, 1);
     result.masterDmxUniverse = std::clamp(s.value(QStringLiteral("dmx/masterUniverse"), 0).toInt(), 0, 32767);
     result.masterDmxChannel = std::clamp(s.value(QStringLiteral("dmx/masterChannel"), 1).toInt(), 1, 512);
+    result.liveDmx = s.value(QStringLiteral("dmx/liveEnabled"), result.liveDmx).toBool();
+    result.liveDmxProtocol = std::clamp(s.value(QStringLiteral("dmx/liveProtocol"), 0).toInt(), 0, 1);
+    result.liveDmxUniverse = std::clamp(s.value(QStringLiteral("dmx/liveUniverse"), 0).toInt(), 0, 32767);
+    result.liveDmxSelectChannel = std::clamp(s.value(QStringLiteral("dmx/liveSelectChannel"), 1).toInt(), 1, 512);
+    result.liveDmxFadeChannel = std::clamp(s.value(QStringLiteral("dmx/liveFadeChannel"), 0).toInt(), 0, 512);
     result.outputInterface = s.value(QStringLiteral("network/outInterface")).toString();
     result.inputInterface = s.value(QStringLiteral("network/inInterface")).toString();
     result.audioSource = s.value(QStringLiteral("audio/source"), result.audioSource).toString();
@@ -55,6 +60,11 @@ void saveAppSettings(const AppSettings& settings) {
     s.setValue(QStringLiteral("dmx/masterProtocol"), settings.masterDmxProtocol);
     s.setValue(QStringLiteral("dmx/masterUniverse"), settings.masterDmxUniverse);
     s.setValue(QStringLiteral("dmx/masterChannel"), settings.masterDmxChannel);
+    s.setValue(QStringLiteral("dmx/liveEnabled"), settings.liveDmx);
+    s.setValue(QStringLiteral("dmx/liveProtocol"), settings.liveDmxProtocol);
+    s.setValue(QStringLiteral("dmx/liveUniverse"), settings.liveDmxUniverse);
+    s.setValue(QStringLiteral("dmx/liveSelectChannel"), settings.liveDmxSelectChannel);
+    s.setValue(QStringLiteral("dmx/liveFadeChannel"), settings.liveDmxFadeChannel);
     s.setValue(QStringLiteral("network/outInterface"), settings.outputInterface);
     s.setValue(QStringLiteral("network/inInterface"), settings.inputInterface);
     s.setValue(QStringLiteral("audio/source"), settings.audioSource);

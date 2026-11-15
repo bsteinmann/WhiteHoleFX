@@ -569,6 +569,17 @@ Werkzeugleiste dem Pult und ist gesperrt; bleibt das Signal länger als 5 Sekund
 Regler ist wieder frei. Der Empfang muss für das gewählte Protokoll eingeschaltet sein; bei sACN tritt das Studio der
 Multicast-Gruppe des Master-Universe von selbst bei.
 
+**Live-Look per DMX (DMX-Fernsteuerung für Live-Modus, Teil 1):** Auf derselben Seite lässt sich ein zweites Kanalpaar
+wählen (Protokoll, Universe, Auswahl-Kanal 1 bis 512, Überblendzeit-Kanal 0 bis 512, 0 = aus), das im **laufenden
+Live-Betrieb** zwischen den Looks wechselt — wie an einem Szenen-Wahl-Kanal eines Scheinwerfers. Der Auswahl-Kanal
+teilt sich in so viele gleich große Stufen auf, wie das Projekt gerade Looks hat (0 = kein Wechsel; die Zahl der
+Stufen passt sich der Look-Zahl an, es gibt also keine feste Tabelle). Ohne Überblendzeit-Kanal gilt die im Look
+gespeicherte Zeit; mit Kanal setzt der Wert 0 bis 255 die Zeit auf 0 bis 10 Sekunden. Ausgelöst wird nur bei einem
+Wechsel des Werts, nicht auf jedem Frame erneut, damit eine laufende Überblendung nicht ständig von vorn beginnt;
+bleibt das Signal länger als 5 Sekunden weg, bleibt der zuletzt gezeigte Look stehen. Wirkt nur, solange der
+Live-Betrieb läuft (siehe oben); außerhalb davon passiert nichts. Noch offen (zweiter Teil desselben
+Backlog-Punkts): per DMX in der Cuelist direkt zu einem bestimmten Cue springen, nicht nur linear vor/zurück.
+
 ## Audio-Eingang
 
 Einstellungen, Seite **Audio**: *Aus*, *Standardgerät*, ein Gerät aus der Liste oder *WAV-Datei in Schleife*.

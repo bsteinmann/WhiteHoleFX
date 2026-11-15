@@ -115,12 +115,22 @@ darum.
   auszugrauen wäre einfach, sie wirklich aus dem Node-Körper zu entfernen stellt die Frage, was mit
   bestehenden Verbindungen auf einem dann wegfallenden Port passiert (z. B. `steps` nachträglich verkleinert) —
   noch nicht entschieden, bewusst zurückgestellt.
-- **DMX-Fernsteuerung für Live-Modus** (vom Nutzer gewünscht, nächstes größeres Thema nach dem DMX-Out-Umbau):
-  Steuerung per eingehendem DMX (nicht Ausgabe) — ein Kanal wählt den aktiven Look anhand seines Werts (je
-  DMX-Wert ein Look), ein zweiter Kanal legt die Überblendzeit fest. Dazu: in der Cuelist per DMX (oder
-  allgemein) zu einem bestimmten Cue springen können, nicht nur linear vor/zurück. Berührt das bestehende
-  Cue/Look-System (`cue_dialog.cpp`, `cue_panel.cpp`) und den DMX-Eingang (`wh_input`, DMX-Eingang-Seite in
-  den Einstellungen) — noch nicht untersucht, wie genau Look-Auswahl per DMX-Wert mit der bestehenden
+- **DMX-Fernsteuerung für Live-Modus** (vom Nutzer gewünscht, am 15.11. zur Umsetzung freigegeben): Steuerung
+  per eingehendem DMX (nicht Ausgabe) — ein Kanal wählt den aktiven Look anhand seines Werts (je DMX-Wert
+  ein Look), ein zweiter Kanal legt die Überblendzeit fest. Dazu: in der Cuelist per DMX (oder allgemein) zu
+  einem bestimmten Cue springen können, nicht nur linear vor/zurück.
+  **Erledigt (0.92.0), Teil 1 (Live-Modus-Look-Auswahl):** Neue Dateien `live_dmx.hpp/cpp`
+  (`runtime::LiveDmxSource`, reine Binning-Funktion `lookIndexFromDmxValue`) und `player_live_dmx.cpp`
+  (`Player::setLiveDmx`/`pollLiveDmx`, Muster des bestehenden Masters über DMX, `player_master.cpp`): ein
+  Auswahl-Kanal teilt sich in so viele gleich große Stufen auf, wie das Projekt Looks hat (0 = kein Wechsel),
+  ein optionaler zweiter Kanal setzt die Überblendzeit (0..255 -> 0..10 s). Ausgelöst wird nur bei einem
+  Wechsel des berechneten Index (Umschalter, kein Dauer-Verhalten wie beim Master), wirkt nur im laufenden
+  Live-Betrieb. UI: neue Felder auf der Einstellungen-Seite „DMX-Eingang" (`settings_dialog.cpp`,
+  `AppSettings.liveDmx*`, `MainWindow::applyLiveDmx`), gehört wie der Master zum Auftritt, nicht zum
+  Projekt (nicht gespeichert). **Noch offen (Teil 2):** per DMX direkt zu einem bestimmten Cue springen,
+  nicht nur linear — berührt das bestehende Cue-System (`cue_dialog.cpp`, `cue_panel.cpp`); dafür bietet
+  sich `CueRunner::fire()`/`Player::cueFire()` an (existiert schon für den Doppelklick auf einen Cue), nur
+  die DMX-Wert-zu-Cue-Zuordnung fehlt noch — noch nicht untersucht, wie genau das mit der bestehenden
   Cue-Reihenfolge zusammenspielt.
 - **MIDI-Eingang/-Ausgang** (z. B. Akai APC Mini): nur besprochen, nicht begonnen. Überlegungen aus dem
   Gespräch:

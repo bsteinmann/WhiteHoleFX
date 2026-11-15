@@ -30,11 +30,11 @@ msgstr "   |   Salida apagada (%1 paquetes sin enviar)"
 msgid "   |   BLACKOUT"
 msgstr "   |   BLACKOUT"
 
-#: main_window_dmx.cpp:114
+#: main_window_dmx.cpp:130
 msgid "   |   DMX-Eingang %1: %2 Pakete"
 msgstr "   |   Entrada DMX %1: %2 paquetes"
 
-#: main_window_dmx.cpp:104
+#: main_window_dmx.cpp:120
 msgid "   |   DMX-Nodes im Projekt, Eingang aus (Einstellungen)"
 msgstr "   |   Nodos DMX en el proyecto, entrada apagada (Ajustes)"
 
@@ -50,7 +50,7 @@ msgstr "   |   Master %1 %"
 msgid "   |   TESTMODUS"
 msgstr "   |   MODO DE PRUEBA"
 
-#: main_window_dmx.cpp:112
+#: main_window_dmx.cpp:128
 msgid " + sACN"
 msgstr " + sACN"
 
@@ -102,7 +102,7 @@ msgstr "%1  (%2 LED)"
 msgid "%1  →  %2"
 msgstr "%1  →  %2"
 
-#: main_window_controls.cpp:62 main_window_dmx.cpp:90
+#: main_window_controls.cpp:62 main_window_dmx.cpp:106
 msgid "%1 %"
 msgstr "%1 %"
 
@@ -114,11 +114,11 @@ msgstr "%1 (%2 LED)"
 msgid "%1 (%2)"
 msgstr "%1 (%2)"
 
-#: settings_dialog.cpp:157
+#: settings_dialog.cpp:185
 msgid "%1 (Standard)"
 msgstr "%1 (predeterminado)"
 
-#: settings_dialog.cpp:46 settings_dialog.cpp:161
+#: settings_dialog.cpp:46 settings_dialog.cpp:189
 msgid "%1 (nicht gefunden)"
 msgstr "%1 (no encontrado)"
 
@@ -558,7 +558,7 @@ msgstr "Cantidad"
 msgid "Anzahl x y z"
 msgstr "Cantidad x y z"
 
-#: cue_dialog.cpp:71 cue_panel.cpp:39 main_window_dmx.cpp:109
+#: cue_dialog.cpp:71 cue_panel.cpp:39 main_window_dmx.cpp:125
 msgid "Art-Net"
 msgstr "Art-Net"
 
@@ -634,11 +634,11 @@ msgstr "Arrastra al lienzo: añadir un nodo.\nArrastra un nodo aquí: eliminarlo
 msgid "Auf gewählten anwenden"
 msgstr "Aplicar al seleccionado"
 
-#: settings_dialog.cpp:192
+#: settings_dialog.cpp:220
 msgid "Aufnahmegeräte lassen sich nicht auflisten: %1"
 msgstr "No se pueden listar los dispositivos de captura: %1"
 
-#: settings_dialog.cpp:143 test_panel.cpp:39
+#: settings_dialog.cpp:171 test_panel.cpp:39
 msgid "Aus"
 msgstr "Apagado"
 
@@ -986,6 +986,10 @@ msgstr "Añadir el efecto actual a la lista como look (Ctrl+L)"
 msgid "Der Ausgang: Was hier ankommt, wird auf die LEDs gesendet. Mit „Mode“ in einen Bereich skalieren oder als Fenster ausschneiden, plus Helligkeit."
 msgstr "The output: whatever arrives here is sent to the LEDs. \"Mode\" scales into an area or cuts a window; plus brightness."
 
+#: settings_dialog.cpp:160
+msgid "Der Auswahl-Kanal teilt sich in so viele gleich große Stufen, wie das Projekt Looks hat; 0 heißt kein Wechsel. Ohne Überblendzeit-Kanal (aus) gilt die im Look gespeicherte Zeit, sonst setzt der Kanalwert 0 bis 255 die Zeit auf 0 bis 10 Sekunden. Wirkt nur im laufenden Live-Betrieb; bleibt das Signal weg, bleibt der zuletzt gezeigte Look stehen."
+msgstr "El canal de selección se divide en tantos pasos iguales como looks tenga el proyecto; 0 significa sin cambio. Sin canal de tiempo de fundido (desactivado) se aplica el tiempo propio del look; si no, el valor del canal (0 a 255) ajusta el tiempo de 0 a 10 segundos. Solo actúa mientras el modo en vivo está activo; si la señal desaparece, se mantiene el último look mostrado."
+
 #: dmx_patch_table.cpp:50
 msgid "Der Controller bestimmt das Protokoll. Pool-Kanäle ohne Patch werden nicht gesendet."
 msgstr "El controlador determina el protocolo. Los canales del grupo sin patch no se envían."
@@ -1006,7 +1010,7 @@ msgstr "El cue se dispara cuando el valor del canal sube a este número o más"
 msgid "Der Kanalwert 0 bis 255 setzt den Master auf 0 bis 100 %. Solange Pakete kommen, folgt der Master-Regler dem Pult; bleibt das Signal weg, hält der Master seinen Wert. Der Empfang oben muss für das gewählte Protokoll eingeschaltet sein."
 msgstr "El valor del canal de 0 a 255 ajusta el master de 0 a 100 %. Mientras lleguen paquetes, el control master sigue a la mesa; si la señal se corta, el master mantiene su valor. La recepción de arriba debe estar activada para el protocolo elegido."
 
-#: main_window_dmx.cpp:95
+#: main_window_dmx.cpp:111
 msgid "Der Master kommt gerade vom DMX-Kanal (Einstellungen → DMX-Eingang)"
 msgstr "El master viene ahora del canal DMX (Ajustes → Entrada DMX)"
 
@@ -1054,7 +1058,7 @@ msgstr "The brightness of the mask decides how much of the content is visible. \
 msgid "Die Prüfung ist fehlgeschlagen:\n%1"
 msgstr "La comprobación ha fallado:\n%1"
 
-#: settings_dialog.cpp:196
+#: settings_dialog.cpp:224
 msgid "Die Quelle speist die Audio-Nodes (Pegel, Frequenzband, Beat, Spektrum)."
 msgstr "La fuente alimenta los nodos de audio (nivel, banda de frecuencia, beat, espectro)."
 
@@ -1498,11 +1502,11 @@ msgstr "Cargado: %1"
 msgid "Gelb"
 msgstr "Amarillo"
 
-#: settings_dialog.cpp:145
+#: settings_dialog.cpp:173
 msgid "Gerät:"
 msgstr "Dispositivo:"
 
-#: main_window_controls.cpp:46 main_window_dmx.cpp:96
+#: main_window_controls.cpp:46 main_window_dmx.cpp:112
 msgid "Gesamthelligkeit (wirkt auf Vorschau und Ausgabe, nicht im Projekt gespeichert)"
 msgstr "Brillo global (afecta a la vista previa y a la salida, no se guarda en el proyecto)"
 
@@ -1746,7 +1750,7 @@ msgstr "Ningún proyecto cargado."
 msgid "Kein Ziel (freies Rechteck)"
 msgstr "Sin destino (rectángulo libre)"
 
-#: settings_dialog.cpp:194
+#: settings_dialog.cpp:222
 msgid "Keine Aufnahmegeräte gefunden. Ein Audio-Interface anschließen und das Fenster neu öffnen."
 msgstr "No se encontraron dispositivos de captura. Conecta una interfaz de audio y vuelve a abrir la ventana."
 
@@ -1878,6 +1882,22 @@ msgstr "Vaciar lista"
 msgid "Live"
 msgstr "Live"
 
+#: settings_dialog.cpp:158
+msgid "Live-Look: Auswahl-Kanal (1 bis 512):"
+msgstr "Look en vivo: canal de selección (1 a 512):"
+
+#: settings_dialog.cpp:156
+msgid "Live-Look: Protokoll:"
+msgstr "Look en vivo: protocolo:"
+
+#: settings_dialog.cpp:157
+msgid "Live-Look: Universe:"
+msgstr "Look en vivo: universo:"
+
+#: settings_dialog.cpp:159
+msgid "Live-Look: Überblendzeit-Kanal (0 = aus):"
+msgstr "Look en vivo: canal de tiempo de fundido (0 = desactivado):"
+
 #: look_panel.cpp:73
 msgid "Live-Modus starten  ▶"
 msgstr "Iniciar modo live  ▶"
@@ -1913,6 +1933,10 @@ msgstr "Renombrar look"
 #: look_panel.cpp:259
 msgid "Look überschreiben"
 msgstr "Sobrescribir look"
+
+#: settings_dialog.cpp:139
+msgid "Look-Auswahl im Live-Betrieb über einen DMX-Kanal steuern"
+msgstr "Controlar la selección del look en modo en vivo mediante un canal DMX"
 
 #: main_window_live.cpp:66
 msgid "Looks"
@@ -2586,7 +2610,7 @@ msgstr "Idioma"
 msgid "Stage Config"
 msgstr "Stage Config"
 
-#: settings_dialog.cpp:144
+#: settings_dialog.cpp:172
 msgid "Standardgerät des Systems"
 msgstr "Dispositivo predeterminado del sistema"
 
@@ -2822,15 +2846,15 @@ msgstr "Vista previa"
 msgid "Vorweg überspringen"
 msgstr "Saltar antes"
 
-#: settings_dialog.cpp:146
+#: settings_dialog.cpp:174
 msgid "WAV-Datei in Schleife:"
 msgstr "Archivo WAV en bucle:"
 
-#: settings_dialog.cpp:205
+#: settings_dialog.cpp:233
 msgid "WAV-Datei wählen"
 msgstr "Elegir archivo WAV"
 
-#: settings_dialog.cpp:205
+#: settings_dialog.cpp:233
 msgid "WAV-Dateien (*.wav)"
 msgstr "Archivos WAV (*.wav)"
 
@@ -2950,7 +2974,7 @@ msgstr "Elige primero una forma en la lista «Fixtures»."
 msgid "Wähle zuerst einen Controller in der Tabelle."
 msgstr "Elige primero un controlador en la tabla."
 
-#: settings_dialog.cpp:149
+#: settings_dialog.cpp:177
 msgid "Wählen …"
 msgstr "Elegir …"
 
@@ -3074,6 +3098,10 @@ msgstr "Sentido de recuento"
 msgid "an oder aus"
 msgstr "encendido o apagado"
 
+#: settings_dialog.cpp:153
+msgid "aus"
+msgstr "desactivado"
+
 #: add_fixture_dialog.cpp:52
 msgid "automatisch (Matrix 1, Cube 1 …)"
 msgstr "automático (Matriz 1, Cubo 1 …)"
@@ -3118,7 +3146,7 @@ msgstr "arriba a la derecha"
 msgid "rechts (x max)"
 msgstr "derecha (x máx)"
 
-#: cue_dialog.cpp:71 cue_panel.cpp:39 main_window_dmx.cpp:112
+#: cue_dialog.cpp:71 cue_panel.cpp:39 main_window_dmx.cpp:128
 msgid "sACN"
 msgstr "sACN"
 

@@ -213,6 +213,7 @@ void Player::stopLive() {
     }
     live_.reset();
     liveLast_.reset();
+    liveDmxLastIndex_.reset();  // der nächste Live-Betrieb soll sich wieder frisch auf den Kanal einstellen
     cueRunner_.stop();
     if (session_) {
         rebuildDirty_ = true;

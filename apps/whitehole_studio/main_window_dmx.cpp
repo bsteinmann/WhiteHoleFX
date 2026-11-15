@@ -61,6 +61,9 @@ void MainWindow::syncDmxUniverses() {
         if (appSettings_.masterDmx && appSettings_.masterDmxProtocol == 1) {
             sacn.insert(static_cast<std::uint32_t>(std::max(0, appSettings_.masterDmxUniverse)));  // der Master-Kanal auch
         }
+        if (appSettings_.liveDmx && appSettings_.liveDmxProtocol == 1) {
+            sacn.insert(static_cast<std::uint32_t>(std::max(0, appSettings_.liveDmxUniverse)));  // der Live-Look-Kanal auch
+        }
         dmxReceiver_->setSacnUniverses(sacn);  // tut nichts, solange sich die Menge nicht ändert
     }
 }
@@ -75,6 +78,19 @@ void MainWindow::applyMasterDmx() {
     source.universe = static_cast<std::uint32_t>(std::max(0, appSettings_.masterDmxUniverse));
     source.channel = static_cast<std::uint32_t>(std::clamp(appSettings_.masterDmxChannel, 1, 512));
     player_->setMasterDmx(source);
+}
+
+void MainWindow::applyLiveDmx() {
+    if (!appSettings_.liveDmx) {
+        player_->setLiveDmx(std::nullopt);
+        return;
+    }
+    runtime::LiveDmxSource source;
+    source.protocol = appSettings_.liveDmxProtocol == 1 ? input::DmxProtocol::Sacn : input::DmxProtocol::ArtNet;
+    source.universe = static_cast<std::uint32_t>(std::max(0, appSettings_.liveDmxUniverse));
+    source.selectChannel = static_cast<std::uint32_t>(std::clamp(appSettings_.liveDmxSelectChannel, 1, 512));
+    source.fadeChannel = static_cast<std::uint32_t>(std::clamp(appSettings_.liveDmxFadeChannel, 0, 512));
+    player_->setLiveDmx(source);
 }
 
 void MainWindow::followMasterDmx() {

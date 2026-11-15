@@ -25,6 +25,8 @@ wh_add_library(wh_runtime
         src/player_dock.cpp
         src/player_targets.cpp
         src/player_master.cpp
+        src/live_dmx.cpp
+        src/player_live_dmx.cpp
         src/player_layout.cpp
         src/player_types.cpp
         src/player_destinations.cpp

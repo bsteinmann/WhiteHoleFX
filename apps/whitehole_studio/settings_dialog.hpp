@@ -49,6 +49,11 @@ private:
     QComboBox* masterProtocol_{nullptr};
     QSpinBox* masterUniverse_{nullptr};
     QSpinBox* masterChannel_{nullptr};
+    QCheckBox* liveDmx_{nullptr};
+    QComboBox* liveProtocol_{nullptr};
+    QSpinBox* liveUniverse_{nullptr};
+    QSpinBox* liveSelectChannel_{nullptr};
+    QSpinBox* liveFadeChannel_{nullptr};
     QRadioButton* audioOff_{nullptr};
     QRadioButton* audioDefault_{nullptr};
     QRadioButton* audioDevice_{nullptr};

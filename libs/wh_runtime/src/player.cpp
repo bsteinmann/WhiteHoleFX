@@ -171,6 +171,7 @@ Result<void> Player::step() {
         }
     }
     pollMasterDmx();
+    pollLiveDmx();
     advanceCues();
     bool structural = false;
     if (live_) {

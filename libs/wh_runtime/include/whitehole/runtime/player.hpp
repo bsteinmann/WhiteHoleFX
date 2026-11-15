@@ -43,6 +43,7 @@
 #include "whitehole/runtime/live_signals.hpp"
 #include "whitehole/runtime/cue_runner.hpp"
 #include "whitehole/runtime/live_decks.hpp"
+#include "whitehole/runtime/live_dmx.hpp"
 #include "whitehole/runtime/master_dmx.hpp"
 #include "whitehole/runtime/node_clipboard.hpp"
 #include "whitehole/runtime/node_defaults.hpp"
@@ -392,6 +393,14 @@ public:
     /// Uhr für die Überblendung in Sekunden (Standard: Systemuhr). Nur für Tests austauschbar.
     void setLiveClock(std::function<double()> clock) { liveClock_ = std::move(clock); }
 
+    /// Look-Auswahl im Live-Betrieb per DMX-Kanal (siehe live_dmx.hpp): Solange Pakete kommen, löst jeder step()
+    /// bei einem Wechsel des berechneten Look-Index liveTrigger aus. `std::nullopt` schaltet es ab. Gehört wie
+    /// der Master zum Auftritt, nicht zum Projekt: wird nicht gespeichert.
+    void setLiveDmx(std::optional<LiveDmxSource> source);
+    [[nodiscard]] const std::optional<LiveDmxSource>& liveDmx() const noexcept { return liveDmx_; }
+    /// Wahr, wenn die Look-Auswahl gerade vom DMX-Kanal kommt (eingestellt und das Signal ist frisch).
+    [[nodiscard]] bool liveFromDmx() const noexcept { return liveDmxLive_; }
+
     // --- Live-Anzeige --------------------------------------------------------------------------------------------
     /// Die Werte der CPU-Nodes im zuletzt gerechneten Frame (für Balken und leuchtende Kabel im Editor). Leer ohne
     /// laufende Session. Nur vom GUI-Thread aus rufen (derselbe, der step() ruft). Nur Nodes, die im Frame wirklich
@@ -469,6 +478,7 @@ private:
     void refreshCompleteness();
     void applyOutputLevel();
     void pollMasterDmx();
+    void pollLiveDmx();
     void advanceCues();
     Result<void> executeCue(int index);
     [[nodiscard]] double liveNow() const {
@@ -505,6 +515,9 @@ private:
     float master_{1.0F};
     std::optional<MasterDmxSource> masterDmx_;
     bool masterDmxLive_{false};
+    std::optional<LiveDmxSource> liveDmx_;
+    bool liveDmxLive_{false};
+    std::optional<int> liveDmxLastIndex_;
     CueRunner cueRunner_;
     bool cueGo_{false};
     std::vector<std::string> cueKeys_;
