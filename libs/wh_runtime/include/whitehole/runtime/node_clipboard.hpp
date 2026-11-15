@@ -24,6 +24,7 @@ struct ClipboardNode {
     std::string typeId;
     Vec2 position;  // wie im Quellgraphen; beim Einfügen kommt ein Versatz dazu
     std::vector<std::pair<std::string, graph::ParameterValue>> parameters;  // nach Schlüssel sortiert
+    std::vector<std::string> targets;  // Fixture-/Gruppen-/Region-Ziel eines Output-Nodes (siehe NodeInstance::targets)
 };
 
 struct ClipboardWire {

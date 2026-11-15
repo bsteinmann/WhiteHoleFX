@@ -32,6 +32,7 @@ NodeClipboard copyNodes(const graph::Graph& graph, std::span<const NodeId> selec
             copy.parameters.emplace_back(key, value);
         }
         std::ranges::sort(copy.parameters, {}, &std::pair<std::string, graph::ParameterValue>::first);
+        copy.targets = node.targets;
         index.emplace(node.id.value(), clip.nodes.size());
         clip.nodes.push_back(std::move(copy));
     }
@@ -99,6 +100,11 @@ Result<std::vector<NodeId>> applyClipboard(graph::Graph& graph, const NodeClipbo
         ids.push_back(id.value());
         for (const auto& [key, value] : node.parameters) {
             if (const auto set = graph.setParameter(id.value(), key, value); !set.ok()) {
+                return set.error();
+            }
+        }
+        if (!node.targets.empty()) {
+            if (const auto set = graph.setTargets(id.value(), node.targets); !set.ok()) {
                 return set.error();
             }
         }

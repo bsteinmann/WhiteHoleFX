@@ -2,6 +2,13 @@
 
 ## 0.92.0
 
+- **Fix: Ziel (Fixture/Gruppe/Region) eines Output-Nodes ging beim Kopieren/Duplizieren verloren.** Ein
+  `wh.output.canvas`-Node mit zugewiesenem Ziel (`Player::setOutputTargets`) zeichnete nach dem Duplizieren
+  oder Kopieren/Einfügen (Strg+D bzw. Strg+C/Strg+V) stillschweigend auf die volle Leinwand statt auf das
+  ursprüngliche Ziel - die Zwischenablage (`ClipboardNode`, `node_clipboard.cpp/.hpp`) kopierte bisher nur
+  `typeId`, Position und Parameter, nie das separate `targets`-Feld. Jetzt wird `targets` mitkopiert und beim
+  Einfügen über `Graph::setTargets` wiederhergestellt; betrifft auch Node-Presets, die auf derselben
+  Zwischenablage aufbauen. Neuer Test in `node_clipboard_test.cpp`.
 - **Beispiele aufgefrischt** (vom Nutzer angestoßen: „Beispiele sind kaputt/veraltet"). Eine Prüfung ergab,
   dass kein Beispiel tatsächlich fehlerhaft ist - alle kompilieren weiterhin, der Test `Beispiele: jede Datei
   in examples/ …` bleibt grün -, aber drei Dinge waren veraltet: (1) Kommentar-Kopfzeilen mit dem

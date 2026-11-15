@@ -146,8 +146,8 @@ TEST_CASE("Zwischenablage: Fehler ändern nichts", "[clipboard]") {
     CHECK(rig.player.pasteNodes({}, Vec2{}).error().code == ErrorCode::InvalidArgument);  // leer
 
     runtime::NodeClipboard broken;
-    broken.nodes.push_back(runtime::ClipboardNode{"wh.generator.plasma", Vec2{}, {}});
-    broken.nodes.push_back(runtime::ClipboardNode{"gibt.es.nicht", Vec2{}, {}});
+    broken.nodes.push_back(runtime::ClipboardNode{"wh.generator.plasma", Vec2{}, {}, {}});
+    broken.nodes.push_back(runtime::ClipboardNode{"gibt.es.nicht", Vec2{}, {}, {}});
     const std::size_t nodesBefore = rig.nodeCount();
     const auto r = rig.player.pasteNodes(broken, Vec2{});
     REQUIRE_FALSE(r.ok());
@@ -155,7 +155,7 @@ TEST_CASE("Zwischenablage: Fehler ändern nichts", "[clipboard]") {
     CHECK_FALSE(rig.player.canUndo());
 
     runtime::NodeClipboard badWire;
-    badWire.nodes.push_back(runtime::ClipboardNode{"wh.generator.plasma", Vec2{}, {}});
+    badWire.nodes.push_back(runtime::ClipboardNode{"wh.generator.plasma", Vec2{}, {}, {}});
     badWire.wires.push_back(runtime::ClipboardWire{0, "out", 5, "source"});  // Index außerhalb
     CHECK_FALSE(rig.player.pasteNodes(badWire, Vec2{}).ok());
     CHECK(rig.nodeCount() == nodesBefore);
@@ -178,4 +178,22 @@ TEST_CASE("Zwischenablage: ein eingefügter Ausgangs-Node wird zum Ausgang und l
 
     REQUIRE(rig.player.undo().ok());  // der Ausgang kehrt mit dem Einfügen zurück
     CHECK(*rig.player.project()->target == before);
+}
+
+TEST_CASE("Zwischenablage: das Ziel (Fixture/Gruppe/Region) eines Output-Nodes bleibt beim Kopieren/Duplizieren erhalten",
+          "[clipboard][output][target]") {
+    Rig rig;
+    const NodeId original = rig.player.addNode("wh.output.canvas", Vec2{0.0F, 0.0F}).value();
+    REQUIRE(rig.player.setOutputTargets(original, {"fixture:Panel"}).ok());
+
+    const runtime::NodeClipboard clip = runtime::copyNodes(rig.player.project()->graph, std::vector<NodeId>{original});
+    REQUIRE_FALSE(clip.empty());
+    REQUIRE(clip.nodes.front().targets == std::vector<std::string>{"fixture:Panel"});
+
+    const auto pasted = rig.player.pasteNodes(clip, Vec2{0.0F, 200.0F});
+    REQUIRE(pasted.ok());
+    const NodeId copy = pasted.value().front();
+    const graph::NodeInstance* copied = rig.player.project()->graph.findNode(copy);
+    REQUIRE(copied != nullptr);
+    CHECK(copied->targets == std::vector<std::string>{"fixture:Panel"});  // nicht leer: sonst zeichnet die Kopie auf die volle Leinwand
 }
