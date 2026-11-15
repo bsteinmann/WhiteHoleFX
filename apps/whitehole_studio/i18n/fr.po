@@ -30,11 +30,11 @@ msgstr "   |   Sortie désactivée (%1 paquets non envoyés)"
 msgid "   |   BLACKOUT"
 msgstr "   |   BLACKOUT"
 
-#: main_window_dmx.cpp:175
+#: main_window_dmx.cpp:187
 msgid "   |   DMX-Eingang %1: %2 Pakete"
 msgstr "   |   Entrée DMX %1 : %2 paquets"
 
-#: main_window_dmx.cpp:165
+#: main_window_dmx.cpp:177
 msgid "   |   DMX-Nodes im Projekt, Eingang aus (Einstellungen)"
 msgstr "   |   Nœuds DMX dans le projet, entrée désactivée (Réglages)"
 
@@ -50,7 +50,7 @@ msgstr "   |   Master %1 %"
 msgid "   |   TESTMODUS"
 msgstr "   |   MODE TEST"
 
-#: main_window_dmx.cpp:173
+#: main_window_dmx.cpp:185
 msgid " + sACN"
 msgstr " + sACN"
 
@@ -102,7 +102,7 @@ msgstr "%1  (%2 LED)"
 msgid "%1  →  %2"
 msgstr "%1  →  %2"
 
-#: main_window_controls.cpp:62 main_window_dmx.cpp:151
+#: main_window_controls.cpp:62 main_window_dmx.cpp:163
 msgid "%1 %"
 msgstr "%1 %"
 
@@ -174,6 +174,10 @@ msgstr "E&xemples"
 msgid "&Blackout"
 msgstr "&Blackout"
 
+#: main_window_dmx_monitor.cpp:47
+msgid "&DMX-Monitor …"
+msgstr "&Moniteur DMX …"
+
 #: main_window_actions.cpp:65
 msgid "&Datei"
 msgstr "&Fichier"
@@ -194,7 +198,7 @@ msgstr "&Signaler un bogue ou proposer une idée …"
 msgid "&Fixtures …"
 msgstr "&Fixtures …"
 
-#: main_window_actions.cpp:123
+#: main_window_actions.cpp:122
 msgid "&Hilfe"
 msgstr "&Aide"
 
@@ -210,7 +214,7 @@ msgstr "&Légende des ports …"
 msgid "&Leuchten (additiv)"
 msgstr "&Halo (additif)"
 
-#: main_window_actions.cpp:119
+#: main_window_actions.cpp:118
 msgid "&Live"
 msgstr "&Live"
 
@@ -262,7 +266,7 @@ msgstr "Mode &test …"
 msgid "&Tutorial …"
 msgstr "&Tutoriel …"
 
-#: main_window_actions.cpp:115
+#: main_window_actions.cpp:114
 msgid "&Wiedergabe"
 msgstr "&Lecture"
 
@@ -334,7 +338,7 @@ msgstr "Matrice 2D"
 msgid "2D-Matrix 8x8"
 msgstr "Matrice 2D 8x8"
 
-#: main_window_actions.cpp:170
+#: main_window_actions.cpp:169
 msgid "3D"
 msgstr "3D"
 
@@ -474,7 +478,7 @@ msgstr "Plage d'adresses"
 msgid "Aktiv (letzter gesendeter Frame vor %1 s)."
 msgstr "Actif (dernière trame envoyée il y a %1 s)."
 
-#: dmx_monitor_panel.cpp:198
+#: dmx_monitor_panel.cpp:200
 msgid "Aktiv (letztes Paket vor %1 s)."
 msgstr "Actif (dernier paquet il y a %1 s)."
 
@@ -602,7 +606,7 @@ msgstr "Art-Net, sACN et DDP sortent par cette carte. Avec « Automatique », la
 msgid "Art-Net-Port (UDP):"
 msgstr "Port Art-Net (UDP) :"
 
-#: main_window_actions.cpp:167 settings_dialog.cpp:62
+#: main_window_actions.cpp:166 settings_dialog.cpp:62
 msgid "Audio"
 msgstr "Audio"
 
@@ -690,6 +694,10 @@ msgstr "LED éteintes &masquées"
 msgid "Ausgabe"
 msgstr "Sortie"
 
+#: dmx_monitor_window.cpp:28
+msgid "Ausgang"
+msgstr "Sortie"
+
 #: port_legend.cpp:56
 msgid "Ausgang (gefüllt, rechts am Node)"
 msgstr "Sortie (remplie, à droite du node)"
@@ -738,7 +746,7 @@ msgstr "Barre le long de y"
 msgid "Balken entlang z"
 msgstr "Barre le long de z"
 
-#: main_window_actions.cpp:110
+#: main_window_actions.cpp:109
 msgid "Balken in den Nodes und leuchtende Kabel, solange die Wiedergabe läuft"
 msgstr "Barres dans les nœuds et câbles lumineux pendant la lecture"
 
@@ -806,7 +814,7 @@ msgstr "Prêt : %1 - appuyer sur GO"
 msgid "Beschriftung auf der Kachel"
 msgstr "Libellé sur la tuile"
 
-#: main_window_actions.cpp:130
+#: main_window_actions.cpp:129
 msgid "Betrieb"
 msgstr "Fonctionnement"
 
@@ -910,7 +918,7 @@ msgstr "Décalage DDP"
 msgid "DDP-Offset (Byte)"
 msgstr "Décalage DDP (octets)"
 
-#: main_window_actions.cpp:173
+#: main_window_actions.cpp:172
 msgid "DMX"
 msgstr "DMX"
 
@@ -921,10 +929,6 @@ msgstr "DMX %1 U%2 C%3 dès %4"
 #: dmx_monitor_panel.cpp:150
 msgid "DMX Out"
 msgstr "DMX Out"
-
-#: main_window_dmx_monitor.cpp:36
-msgid "DMX-Ausgangs-Monitor"
-msgstr "Moniteur de sortie DMX"
 
 #: cue_dialog.cpp:78
 msgid "DMX-Auslöser: Kanal"
@@ -958,7 +962,7 @@ msgstr "Canal DMX"
 msgid "DMX-Kanal-Pool-Patch bearbeiten (Pool-Kanal %1)…"
 msgstr "Modifier le patch du pool de canaux DMX (canal de pool %1)…"
 
-#: main_window_dmx_monitor.cpp:26
+#: dmx_monitor_window.cpp:23
 msgid "DMX-Monitor"
 msgstr "Moniteur DMX"
 
@@ -1046,7 +1050,7 @@ msgstr "Le cue se déclenche quand la valeur du canal monte à ce nombre ou plus
 msgid "Der Kanalwert 0 bis 255 setzt den Master auf 0 bis 100 %. Solange Pakete kommen, folgt der Master-Regler dem Pult; bleibt das Signal weg, hält der Master seinen Wert. Der Empfang oben muss für das gewählte Protokoll eingeschaltet sein."
 msgstr "La valeur du canal de 0 à 255 règle le master de 0 à 100 %. Tant que des paquets arrivent, le curseur master suit la console ; si le signal s’arrête, le master garde sa valeur. La réception ci-dessus doit être activée pour le protocole choisi."
 
-#: main_window_dmx.cpp:156
+#: main_window_dmx.cpp:168
 msgid "Der Master kommt gerade vom DMX-Kanal (Einstellungen → DMX-Eingang)"
 msgstr "Le master vient actuellement du canal DMX (Réglages → Entrée DMX)"
 
@@ -1190,7 +1194,7 @@ msgstr "Dupliquer\tCtrl+D"
 msgid "Ebene Welle: Streifen, die in eine Richtung wandern (Frequenz, Tempo, zwei Farben)."
 msgstr "Plane wave: stripes moving in one direction (frequency, speed, two colors)."
 
-#: main_window_actions.cpp:161
+#: main_window_actions.cpp:160
 msgid "Effekte (2D)"
 msgstr "Effets (2D)"
 
@@ -1282,6 +1286,10 @@ msgstr "Insérer"
 msgid "Einfügen\tStrg+V"
 msgstr "Coller\tCtrl+V"
 
+#: dmx_monitor_window.cpp:27
+msgid "Eingang"
+msgstr "Entrée"
+
 #: port_legend.cpp:58
 msgid "Eingang (nur Ring, links am Node)"
 msgstr "Entrée (anneau seul, à gauche du node)"
@@ -1302,9 +1310,13 @@ msgstr "Aimanter"
 msgid "Einstellungen"
 msgstr "Réglages"
 
-#: main_window_actions.cpp:158
+#: main_window_actions.cpp:157
 msgid "Einstieg"
 msgstr "Premiers pas"
+
+#: main_window_dmx_monitor.cpp:49
+msgid "Empfangene und gesendete DMX-Kanäle einsehen und direkt patchen (eigenes Fenster)"
+msgstr "Afficher les canaux DMX reçus et envoyés et les patcher directement (fenêtre propre)"
 
 #: add_fixture_dialog.cpp:124 fixture_form.cpp:151 shape_form.cpp:102
 msgid "Ende x y z"
@@ -1398,7 +1410,7 @@ msgstr "Couleur du groupe"
 msgid "Farbe der Kachel"
 msgstr "Couleur de la tuile"
 
-#: dmx_monitor_panel.cpp:216 dmx_output_monitor_panel.cpp:198
+#: dmx_monitor_panel.cpp:218 dmx_output_monitor_panel.cpp:198
 msgid "Farbe für Kanal %1"
 msgstr "Couleur pour le canal %1"
 
@@ -1414,7 +1426,7 @@ msgstr "Couleurs et formes des entrées et sorties des nodes dans une fenêtre f
 msgid "Farbfolge R G B W"
 msgstr "Séquence de couleurs R V B W"
 
-#: main_window_actions.cpp:105
+#: main_window_actions.cpp:104
 msgid "Farbige Punkte vor den Nodes in der Palette: was der Node liefert"
 msgstr "Points de couleur devant les nodes de la palette : ce que le node fournit"
 
@@ -1430,7 +1442,7 @@ msgstr "Dégradé entre jusqu'à quatre couleurs. « Position » choisit l'endro
 msgid "Favoriten"
 msgstr "Favoris"
 
-#: main_window_actions.cpp:112
+#: main_window_actions.cpp:111
 msgid "Fensteranordnung &zurücksetzen"
 msgstr "Réinitialiser la disposition de la &fenêtre"
 
@@ -1558,7 +1570,7 @@ msgstr "Jaune"
 msgid "Gerät:"
 msgstr "Périphérique :"
 
-#: main_window_controls.cpp:46 main_window_dmx.cpp:157
+#: main_window_controls.cpp:46 main_window_dmx.cpp:169
 msgid "Gesamthelligkeit (wirkt auf Vorschau und Ausgabe, nicht im Projekt gespeichert)"
 msgstr "Luminosité globale (agit sur l'aperçu et la sortie, non enregistrée dans le projet)"
 
@@ -1814,7 +1826,7 @@ msgstr "Aucun projet"
 msgid "Kein Projekt geladen."
 msgstr "Aucun projet chargé."
 
-#: dmx_monitor_panel.cpp:193
+#: dmx_monitor_panel.cpp:195
 msgid "Kein Signal auf diesem Universe."
 msgstr "Aucun signal sur cet univers."
 
@@ -1922,7 +1934,7 @@ msgstr "Lays image B over image A. The mode sets how they combine (add, multiply
 msgid "Letzter gesendeter Frame vor %1 s (veraltet)."
 msgstr "Dernière trame envoyée il y a %1 s (obsolète)."
 
-#: dmx_monitor_panel.cpp:197
+#: dmx_monitor_panel.cpp:199
 msgid "Letztes Paket vor %1 s (veraltet)."
 msgstr "Dernier paquet il y a %1 s (obsolète)."
 
@@ -2346,7 +2358,7 @@ msgstr "Envoyer réellement les paquets (Art-Net, sACN, DDP) sur le réseau"
 msgid "Palette"
 msgstr "Palette"
 
-#: main_window_actions.cpp:102
+#: main_window_actions.cpp:101
 msgid "Palette &farbig"
 msgstr "&Palette en couleur"
 
@@ -2382,7 +2394,7 @@ msgstr "Pause entre le déclencheur et le début du fondu"
 msgid "Pegel eines Frequenzbereichs (Von–Bis in Hz) des Audio-Eingangs, geglättet mit Attack und Release. Gut für Bass- oder Höhen-Effekte. „Signal“ zeigt, ob Audio ankommt."
 msgstr "Level of one frequency band (From–To in Hz) of the audio input, smoothed with attack and release. Good for bass or treble effects. \"Signal\" shows whether audio is arriving."
 
-#: main_window_actions.cpp:107
+#: main_window_actions.cpp:106
 msgid "Pegel im &Editor"
 msgstr "Niveaux dans l'&éditeur"
 
@@ -2690,7 +2702,7 @@ msgstr "Spectrum (32 bands) of the audio input. Connect it to \"Spectrum Bars\".
 msgid "Spiegelt das Bild an einer Linie in x, y und/oder z. Mit „Use other half“ ist die andere Hälfte die Vorlage."
 msgstr "Mirrors the image along a line in x, y and/or z. With \"Use other half\" the other half is the template."
 
-#: main_window_actions.cpp:164
+#: main_window_actions.cpp:163
 msgid "Spiele"
 msgstr "Jeux"
 

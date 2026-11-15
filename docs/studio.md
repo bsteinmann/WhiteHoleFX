@@ -580,12 +580,18 @@ bleibt das Signal länger als 5 Sekunden weg, bleibt der zuletzt gezeigte Look s
 Live-Betrieb läuft (siehe oben); außerhalb davon passiert nichts. Noch offen (zweiter Teil desselben
 Backlog-Punkts): per DMX in der Cuelist direkt zu einem bestimmten Cue springen, nicht nur linear vor/zurück.
 
-**DMX-Monitor (Schritt 1 des DMX-Patch/Monitor-Gitters):** Ansicht → DMX-Monitor zeigt alle 512 Kanäle eines
-wählbaren Protokolls und Universe als Gitter (16 Spalten, 32 Zeilen; Zeile *n* beginnt bei Kanal 16·*n*+1). Jede
-Zelle zeigt den zuletzt empfangenen Wert (0–255) oder „–“, solange für dieses Universe noch nie ein Paket kam.
+**Fenster „DMX-Monitor" (nachträglich freigegebene Erweiterung):** Ansicht → DMX-Monitor (F6) öffnet ein
+eigenes, nicht-modales Fenster mit den Reitern „Eingang" und „Ausgang" — nach demselben Muster wie „Stage
+Config" (eigenes Fenster statt Dock, lässt sich auf einen zweiten Bildschirm ziehen, bleibt bedienbar,
+während die Vorschau im Hauptfenster läuft). Anders als Stage Config schließt der Live-Modus dieses Fenster
+nicht, da ein reiner Monitor die Bühne nicht verändert.
+
+**Reiter „Eingang" (Schritt 1 des DMX-Patch/Monitor-Gitters):** zeigt alle 512 Kanäle eines wählbaren
+Protokolls und Universe als Gitter (16 Spalten, 32 Zeilen; Zeile *n* beginnt bei Kanal 16·*n*+1). Jede Zelle
+zeigt den zuletzt empfangenen Wert (0–255) oder „–“, solange für dieses Universe noch nie ein Paket kam.
 Darüber steht, ob das Signal aktiv ist oder vor mehr als 5 Sekunden zuletzt kam (veraltet, Wert bleibt sichtbar
-stehen). Das Dock ist beim Start versteckt (512 Zellen jeden Frame neu zu zeichnen lohnt nur, solange man
-hinschaut) und aktualisiert sich nur, während es sichtbar ist.
+stehen). Aktualisiert sich nur, während der Reiter sichtbar ist (512 Zellen jeden Frame neu zu zeichnen lohnt
+nur, solange man hinschaut).
 
 **„Wer hört zu"-Overlay (Schritt 4):** der Tooltip jeder Zelle nennt, wer den Kanal liest — ein Node im Graphen
 (z. B. „DMX Channel“ oder der eigene Name, falls umbenannt) oder, ohne eigenen Node, Master-Helligkeit bzw.
@@ -616,11 +622,10 @@ belegte Zelle bietet zusätzlich „Farbe ändern…” an: ein Farbwahl-Dialog 
 Zelle; die Überschreibung ist rein optisch (kein Projekt- oder Einstellungswert) und geht beim nächsten
 Protokoll-/Universe-Wechsel wieder verloren.
 
-**DMX-Ausgangs-Monitor (Schritt 2 des DMX-Patch/Monitor-Gitters):** Ansicht → DMX-Ausgangs-Monitor zeigt
-dasselbe Gitter wie der DMX-Monitor, aber für die zuletzt **gesendeten** Art-Net/sACN-Universen statt der
-empfangenen — dieselbe Protokoll-/Universe-Auswahl, dieselbe „aktiv/veraltet"-Anzeige nach 5 Sekunden, dieselbe
-Sichtbarkeits-Aktualisierung. DDP erscheint hier nicht, da DDP byteweise statt per Universe adressiert wird und
-damit kein Universe-Raster hat.
+**Reiter „Ausgang" (Schritt 2 des DMX-Patch/Monitor-Gitters):** dasselbe Gitter wie der Reiter Eingang, aber
+für die zuletzt **gesendeten** Art-Net/sACN-Universen statt der empfangenen — dieselbe Protokoll-/Universe-
+Auswahl, dieselbe „aktiv/veraltet"-Anzeige nach 5 Sekunden, dieselbe Sichtbarkeits-Aktualisierung. DDP
+erscheint hier nicht, da DDP byteweise statt per Universe adressiert wird und damit kein Universe-Raster hat.
 
 **„Wer hört zu"-Overlay (Ausgang, nachträglich freigegebene Erweiterung):** wie beim Eingang nennt der Tooltip
 jeder Zelle, was dort gepatcht ist — ein Fixture (mit Namen) oder ein Bereich des DMX-Kanal-Pools (mit erstem

@@ -45,6 +45,7 @@ class PortLegend;
 class LayoutPanel;
 class CuePanel;
 class DmxMonitorPanel;
+class DmxMonitorWindow;
 class DmxOutputMonitorPanel;
 class LivePanel;
 class LookPanel;
@@ -115,9 +116,10 @@ public:
     /// Rauchtest: Looks speichern/ordnen/umbenennen, Live-Modus mit Überblendung, GO und Rückkehr.
     QString exerciseLive();
     QString exerciseCues();
-    /// Rauchtest: DMX-Monitor-Dock (main_window_dmx_monitor.cpp) zeigt geschriebene Werte an der richtigen Zelle.
+    /// Rauchtest: Fenster "DMX-Monitor" (main_window_dmx_monitor.cpp) öffnet sich mit den Reitern Eingang/
+    /// Ausgang; der Eingangs-Reiter zeigt geschriebene Werte an der richtigen Zelle.
     QString exerciseDmxMonitor();
-    /// Rauchtest: DMX-Ausgangs-Monitor-Dock zeigt gesendete Werte an der richtigen Zelle.
+    /// Rauchtest: der Ausgangs-Reiter zeigt gesendete Werte an der richtigen Zelle.
     QString exerciseDmxOutputMonitor();
     /// Rauchtest: Einstellungsdialog (Rundlauf der Felder), Netzwerkkarte wählen, DMX/Audio anwenden.
     QString exerciseSettings();
@@ -303,9 +305,9 @@ private:
     CuePanel* cuePanel_{nullptr};
     QDockWidget* cueDock_{nullptr};
     DmxMonitorPanel* dmxMonitorPanel_{nullptr};
-    QDockWidget* dmxMonitorDock_{nullptr};
     DmxOutputMonitorPanel* dmxOutputMonitorPanel_{nullptr};
-    QDockWidget* dmxOutputMonitorDock_{nullptr};
+    DmxMonitorWindow* dmxMonitorWindow_{nullptr};  // eigenes Fenster mit beiden Monitoren als Reiter
+    QAction* dmxMonitorAction_{nullptr};           // "DMX-Monitor …" (F6)
     QDockWidget* liveDock_{nullptr};
     QAction* liveAction_{nullptr};
     QAction* saveLookAction_{nullptr};

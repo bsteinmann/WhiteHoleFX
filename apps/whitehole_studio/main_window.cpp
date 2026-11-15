@@ -348,10 +348,13 @@ void MainWindow::tick() {
         livePanel_->refresh();
     }
     cuePanel_->refresh();
-    if (dmxMonitorDock_->isVisible()) {
+    // isVisible() auf dem jeweiligen Reiter selbst (statt auf dmxMonitorWindow_): QTabWidget versteckt den
+    // gerade nicht gewählten Reiter, isVisible() ist also schon "Fenster offen UND dieser Reiter aktiv" -
+    // genau die Bedingung, die vorher die beiden einzelnen Docks je für sich lieferten.
+    if (dmxMonitorPanel_->isVisible()) {
         dmxMonitorPanel_->refresh();
     }
-    if (dmxOutputMonitorDock_->isVisible()) {
+    if (dmxOutputMonitorPanel_->isVisible()) {
         dmxOutputMonitorPanel_->refresh();
     }
     refreshImage();

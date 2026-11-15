@@ -28,6 +28,8 @@ add_executable(whitehole_studio
     dmx_cell_colors.hpp
     dmx_monitor_panel.cpp
     dmx_monitor_panel.hpp
+    dmx_monitor_window.cpp
+    dmx_monitor_window.hpp
     dmx_output_monitor_panel.cpp
     dmx_output_monitor_panel.hpp
     layout_panel_types.cpp

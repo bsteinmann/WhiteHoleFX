@@ -2,6 +2,13 @@
 
 ## 0.92.0
 
+- **DMX-Monitor als eigenes Fenster statt zwei Docks** (vom Nutzer gewünscht). Eingangs- und Ausgangs-Monitor
+  liegen jetzt als Reiter „Eingang"/„Ausgang" in einem eigenen, nicht-modalen Fenster (Ansicht → DMX-Monitor,
+  F6) - nach demselben Muster wie „Stage Config" (`stage_setup_window.hpp`): lässt sich auf einen zweiten
+  Bildschirm ziehen, bleibt bedienbar, während die Vorschau im Hauptfenster läuft, Geometrie wird gemerkt.
+  Anders als Stage Config schließt der Live-Modus dieses Fenster nicht, da ein reiner Monitor die Bühne nicht
+  verändert. Neue Datei `dmx_monitor_window.hpp/cpp`; die beiden Panels selbst (und ihre Rechtsklick-Logik)
+  sind unverändert, nur ihr Dock-Rahmen ist weg.
 - **Fix: „DMX Out" fand einen `wh.value.dmx`/`wh.value.dmxcolor`-Node nicht, der nur in einem gespeicherten
   Look steckt.** Ein Look (siehe [Looks und Live-Betrieb](docs/studio.md)) hat einen eigenen, kleinen Graphen
   (`project::Look::graph`) statt des gerade im Editor offenen Hauptgraphen; `Player::dmxValueNodes()` hat
