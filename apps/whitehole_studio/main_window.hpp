@@ -226,6 +226,10 @@ private:
     void assignMasterDmx(input::DmxProtocol protocol, std::uint32_t universe, std::uint32_t channel);
     void assignLiveDmxSelect(input::DmxProtocol protocol, std::uint32_t universe, std::uint32_t channel);
     void assignLiveDmxFade(input::DmxProtocol protocol, std::uint32_t universe, std::uint32_t channel);
+    /// Rechtsklick im DMX-Monitor, Untermenü "DMX Out" (nachträglich freigegebene Erweiterung): setzt
+    /// Protokoll/Universe/Kanal eines schon vorhandenen wh.value.dmx/wh.value.dmxcolor-Nodes auf diese
+    /// Adresse - dieselben drei Parameter ("source", "universe", "channel"), die der Node-Editor auch setzt.
+    void patchDmxValueNode(NodeId node, input::DmxProtocol protocol, std::uint32_t universe, std::uint32_t channel);
     /// Audio-Eingang (main_window_audio.cpp). `choice`: "off", "default", "device:<Name>" oder "file:<Pfad>".
     /// Liefert den Fehlertext (leer = in Ordnung; bei einem Fehler bleibt der Eingang aus).
     QString applyAudioChoice(const QString& choice);

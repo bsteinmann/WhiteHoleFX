@@ -5,12 +5,19 @@
 // geht es genauer: welcher einzelne Kanal wird von wem gelesen. Reine Lesefunktion, ändert nichts. Player
 // prüft danach zusätzlich Master-Helligkeit und Live-DMX (siehe Player::dmxListenerAt) - die stehen in den
 // Auftritts-Einstellungen, nicht im Graphen, darum nicht hier.
+//
+// findDmxValueNodes (nachträglich freigegebene Erweiterung): listet alle wh.value.dmx/wh.value.dmxcolor-
+// Nodes des Graphen auf, unabhängig davon, wohin sie gerade zeigen - für die Rechtsklick-Kategorie "DMX Out"
+// im DMX-Monitor, die die Adresse eines bestehenden Nodes direkt auf den angeklickten Kanal patcht, statt
+// das im Node-Editor von Hand einzustellen.
 #pragma once
 
 #include <cstdint>
 #include <optional>
 #include <string>
+#include <vector>
 
+#include "whitehole/core/ids.hpp"  // NodeId
 #include "whitehole/graph/graph_model.hpp"
 #include "whitehole/input/dmx_store.hpp"  // input::DmxProtocol
 
@@ -26,5 +33,14 @@ struct DmxInputListener {
 /// Nullopt: kein Node im Graphen liest ihn.
 [[nodiscard]] std::optional<DmxInputListener> findDmxListenerInGraph(const graph::Graph& graph, input::DmxProtocol protocol,
                                                                       std::uint32_t universe, std::uint32_t channel);
+
+struct DmxValueNodeRef {
+    NodeId id;
+    std::string label;  // Beschriftung des Nodes (umbenennbar, siehe NodeInstance::label)
+};
+
+/// Alle wh.value.dmx/wh.value.dmxcolor-Nodes des Graphen, in Graph-Reihenfolge - für die Rechtsklick-
+/// Kategorie "DMX Out" im DMX-Monitor (siehe oben). Leer, wenn der Graph keinen solchen Node enthält.
+[[nodiscard]] std::vector<DmxValueNodeRef> findDmxValueNodes(const graph::Graph& graph);
 
 }  // namespace whitehole::runtime

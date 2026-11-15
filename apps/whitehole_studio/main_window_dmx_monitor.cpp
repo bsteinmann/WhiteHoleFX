@@ -30,6 +30,7 @@ void MainWindow::buildDmxMonitor() {
     connect(dmxMonitorPanel_, &DmxMonitorPanel::requestMasterDmx, this, &MainWindow::assignMasterDmx);
     connect(dmxMonitorPanel_, &DmxMonitorPanel::requestLiveDmxSelect, this, &MainWindow::assignLiveDmxSelect);
     connect(dmxMonitorPanel_, &DmxMonitorPanel::requestLiveDmxFade, this, &MainWindow::assignLiveDmxFade);
+    connect(dmxMonitorPanel_, &DmxMonitorPanel::requestPatchNode, this, &MainWindow::patchDmxValueNode);
 
     dmxOutputMonitorPanel_ = new DmxOutputMonitorPanel{player_->outputMonitor(), *player_, this};
     dmxOutputMonitorDock_ = new QDockWidget{tr("DMX-Ausgangs-Monitor"), this};

@@ -58,4 +58,14 @@ std::optional<DmxInputListener> findDmxListenerInGraph(const graph::Graph& graph
     return std::nullopt;
 }
 
+std::vector<DmxValueNodeRef> findDmxValueNodes(const graph::Graph& graph) {
+    std::vector<DmxValueNodeRef> result;
+    for (const graph::NodeInstance& node : graph.nodes()) {
+        if (node.typeId == "wh.value.dmx" || node.typeId == "wh.value.dmxcolor") {
+            result.push_back(DmxValueNodeRef{node.id, node.label});
+        }
+    }
+    return result;
+}
+
 }  // namespace whitehole::runtime

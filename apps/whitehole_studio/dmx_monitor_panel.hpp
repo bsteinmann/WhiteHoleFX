@@ -16,8 +16,12 @@
 // gehalten (ein Durchlauf über alle Nodes pro Frame wäre für ein reines Anzeige-Werkzeug unnötig teuer).
 //
 // Rechtsklick (Schritt 3): bei einer schon belegten Zelle eine deaktivierte Zeile "Gehört zu: ..." (aus
-// demselben Tooltip-Text), sonst die Wahl, den Kanal als Master-Helligkeit, Live-Look-Auswahl oder
-// Live-Überblendzeit zu verwenden (die einzigen Eingangs-"Patches" ohne eigenen Node, siehe app_settings.hpp).
+// demselben Tooltip-Text). Bei einer freien Zelle (nachträglich freigegebene Erweiterung: in Kategorien
+// gegliedert statt einer flachen Liste) drei Untermenüs: "Master" (Masterdimmer-Zuordnung, siehe
+// app_settings.hpp - keine eigene Einstellung, nur der bestehende Master-Helligkeit-Kanal), "Live Kanal"
+// (Look-Auswahl, Überblendzeit, ebenfalls app_settings.hpp) und "DMX Out" (patcht die Adresse eines schon
+// im Graphen vorhandenen wh.value.dmx/wh.value.dmxcolor-Nodes direkt auf diesen Kanal, über
+// Player::dmxValueNodes/Player::setParameter, statt das im Node-Editor von Hand einzustellen).
 #pragma once
 
 #include <QPoint>
@@ -29,6 +33,7 @@
 #include <memory>
 #include <optional>
 
+#include "whitehole/core/ids.hpp"  // NodeId
 #include "whitehole/input/dmx_store.hpp"
 #include "whitehole/runtime/player.hpp"
 
@@ -50,7 +55,8 @@ public:
     /// das nur, solange das Dock sichtbar ist - 512 Zellen jeden Frame sind sonst verschwendet.
     void refresh();
 
-    /// Rauchtest für die CI: Protokoll/Universe wählen, einen Wert schreiben, prüfen, dass er erscheint.
+    /// Rauchtest für die CI: Protokoll/Universe wählen, einen Wert schreiben, prüfen, dass er erscheint,
+    /// Rechtsklick-Kategorien (Master/Live Kanal/DMX Out) und das Patchen eines Nodes über "DMX Out" prüfen.
     QString exercise();
 
 Q_SIGNALS:
@@ -60,6 +66,8 @@ Q_SIGNALS:
     void requestLiveDmxSelect(input::DmxProtocol protocol, std::uint32_t universe, std::uint32_t channel);
     /// Rechtsklick, "Als Live-Überblendzeit-Kanal verwenden" gewählt.
     void requestLiveDmxFade(input::DmxProtocol protocol, std::uint32_t universe, std::uint32_t channel);
+    /// Rechtsklick, Untermenü "DMX Out", einen Node gewählt: dessen Adresse auf diesen Kanal patchen.
+    void requestPatchNode(NodeId node, input::DmxProtocol protocol, std::uint32_t universe, std::uint32_t channel);
 
 private:
     void onSelectionChanged();  // Protokoll oder Universe gewechselt: Gitter muss neu gezeichnet werden

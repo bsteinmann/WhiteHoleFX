@@ -30,11 +30,11 @@ msgstr "   |   Вивід вимкнено (%1 пакетів не надісл�
 msgid "   |   BLACKOUT"
 msgstr "   |   BLACKOUT"
 
-#: main_window_dmx.cpp:162
+#: main_window_dmx.cpp:175
 msgid "   |   DMX-Eingang %1: %2 Pakete"
 msgstr "   |   Вхід DMX %1: %2 пакетів"
 
-#: main_window_dmx.cpp:152
+#: main_window_dmx.cpp:165
 msgid "   |   DMX-Nodes im Projekt, Eingang aus (Einstellungen)"
 msgstr "   |   У проєкті є DMX-ноди, вхід вимкнено (Налаштування)"
 
@@ -50,7 +50,7 @@ msgstr "   |   Master %1 %"
 msgid "   |   TESTMODUS"
 msgstr "   |   ТЕСТОВИЙ РЕЖИМ"
 
-#: main_window_dmx.cpp:160
+#: main_window_dmx.cpp:173
 msgid " + sACN"
 msgstr " + sACN"
 
@@ -102,7 +102,7 @@ msgstr "%1  (%2 LED)"
 msgid "%1  →  %2"
 msgstr "%1  →  %2"
 
-#: main_window_controls.cpp:62 main_window_dmx.cpp:138
+#: main_window_controls.cpp:62 main_window_dmx.cpp:151
 msgid "%1 %"
 msgstr "%1 %"
 
@@ -474,7 +474,7 @@ msgstr "Діапазон адрес"
 msgid "Aktiv (letzter gesendeter Frame vor %1 s)."
 msgstr "Активно (останній кадр надіслано %1 с тому)."
 
-#: dmx_monitor_panel.cpp:162
+#: dmx_monitor_panel.cpp:182
 msgid "Aktiv (letztes Paket vor %1 s)."
 msgstr "Активно (останній пакет %1 с тому)."
 
@@ -510,17 +510,17 @@ msgstr "Альфа 0: у цьому місці LED лишається вимкн
 msgid "Als Ausgang setzen (output)"
 msgstr "Зробити виходом (output)"
 
-#: dmx_monitor_panel.cpp:121
+#: dmx_monitor_panel.cpp:127
 msgid "Als Live-Look-Auswahl-Kanal verwenden"
 msgstr "Використовувати як канал вибору луку в прямому ефірі"
 
-#: dmx_monitor_panel.cpp:124
+#: dmx_monitor_panel.cpp:130
 msgid "Als Live-Überblendzeit-Kanal verwenden"
 msgstr "Використовувати як канал часу переходу в прямому ефірі"
 
-#: dmx_monitor_panel.cpp:118
-msgid "Als Master-Helligkeit-Kanal verwenden"
-msgstr "Використовувати як канал загальної яскравості"
+#: dmx_monitor_panel.cpp:122
+msgid "Als Masterdimmer-Kanal verwenden"
+msgstr "Використовувати як канал майстер-диммера"
 
 #: node_editor_presets.cpp:52
 msgid "Als Preset speichern"
@@ -918,7 +918,11 @@ msgstr "DMX"
 msgid "DMX %1 U%2 K%3 ab %4"
 msgstr "DMX %1 U%2 К%3 від %4"
 
-#: main_window_dmx_monitor.cpp:35
+#: dmx_monitor_panel.cpp:134
+msgid "DMX Out"
+msgstr "DMX Out"
+
+#: main_window_dmx_monitor.cpp:36
 msgid "DMX-Ausgangs-Monitor"
 msgstr "Монітор виходу DMX"
 
@@ -1042,7 +1046,7 @@ msgstr "Cue спрацьовує, коли значення каналу зро�
 msgid "Der Kanalwert 0 bis 255 setzt den Master auf 0 bis 100 %. Solange Pakete kommen, folgt der Master-Regler dem Pult; bleibt das Signal weg, hält der Master seinen Wert. Der Empfang oben muss für das gewählte Protokoll eingeschaltet sein."
 msgstr "Значення каналу від 0 до 255 задає Master від 0 до 100 %. Поки надходять пакети, регулятор Master слідує за пультом; якщо сигнал зникає, Master тримає своє значення. Приймання вгорі має бути ввімкнене для обраного протоколу."
 
-#: main_window_dmx.cpp:143
+#: main_window_dmx.cpp:156
 msgid "Der Master kommt gerade vom DMX-Kanal (Einstellungen → DMX-Eingang)"
 msgstr "Master зараз надходить з каналу DMX (Налаштування → Вхід DMX)"
 
@@ -1546,7 +1550,7 @@ msgstr "Жовтий"
 msgid "Gerät:"
 msgstr "Пристрій:"
 
-#: main_window_controls.cpp:46 main_window_dmx.cpp:144
+#: main_window_controls.cpp:46 main_window_dmx.cpp:157
 msgid "Gesamthelligkeit (wirkt auf Vorschau und Ausgabe, nicht im Projekt gespeichert)"
 msgstr "Загальна яскравість (діє на попередній перегляд і вивід, у проєкті не зберігається)"
 
@@ -1802,7 +1806,7 @@ msgstr "Немає проєкту"
 msgid "Kein Projekt geladen."
 msgstr "Проєкт не завантажено."
 
-#: dmx_monitor_panel.cpp:157
+#: dmx_monitor_panel.cpp:177
 msgid "Kein Signal auf diesem Universe."
 msgstr "Немає сигналу в цьому universe."
 
@@ -1813,6 +1817,10 @@ msgstr "Без цілі (вільний прямокутник)"
 #: settings_dialog.cpp:222
 msgid "Keine Aufnahmegeräte gefunden. Ein Audio-Interface anschließen und das Fenster neu öffnen."
 msgstr "Пристроїв запису не знайдено. Підключіть аудіоінтерфейс і знову відкрийте вікно."
+
+#: dmx_monitor_panel.cpp:137
+msgid "Keine DMX-Wert-Nodes im Projekt"
+msgstr "Немає DMX-вузлів значень у проєкті"
 
 #: parameter_panel.cpp:208
 msgid "Keine Treffer."
@@ -1906,7 +1914,7 @@ msgstr "Накладає зображення B на A. Режим визнач�
 msgid "Letzter gesendeter Frame vor %1 s (veraltet)."
 msgstr "Останній кадр надіслано %1 с тому (застарілий)."
 
-#: dmx_monitor_panel.cpp:161
+#: dmx_monitor_panel.cpp:181
 msgid "Letztes Paket vor %1 s (veraltet)."
 msgstr "Останній пакет %1 с тому (застарілий)."
 
@@ -1949,6 +1957,10 @@ msgstr "Очистити список"
 #: main_window_live.cpp:71
 msgid "Live"
 msgstr "Live"
+
+#: dmx_monitor_panel.cpp:126
+msgid "Live Kanal"
+msgstr "Канал прямого ефіру"
 
 #: settings_dialog.cpp:158
 msgid "Live-Look: Auswahl-Kanal (1 bis 512):"
@@ -2045,6 +2057,10 @@ msgstr "Пурпуровий"
 #: add_fixture_dialog.cpp:161
 msgid "Manuell"
 msgstr "Вручну"
+
+#: dmx_monitor_panel.cpp:121
+msgid "Master"
+msgstr "Майстер"
 
 #: settings_dialog.cpp:113
 msgid "Master-Helligkeit über einen DMX-Kanal steuern"

@@ -190,15 +190,23 @@ darum.
   `runtime::DmxOutputOccupant` jetzt zusätzlich die `FixtureId` des gefundenen Fixtures. Rauchtest legt für
   den Pool-Fall vorübergehend einen Patch auf einem sonst ungenutzten Universe an und entfernt ihn danach
   wieder (`player_.setDmxPatches`, Stand vorher/nachher).
-- **Neuer, noch nicht freigegebener Vorschlag zum DMX-Patch/Monitor-Gitter** (vom Nutzer am 15.11. als
-  knappe Notiz hinterlassen, noch nicht zur Umsetzung freigegeben — braucht vorher ausdrückliche Freigabe
-  wie jeder andere Punkt hier): Zellen im DMX-Monitor farbig hinterlegen, je eine Farbe für Matrizen/
-  Fixtures und eine andere für (Pool-)Kanäle, dabei auch den Rechtsklick berücksichtigen; außerdem sollen
-  sich von dort auch Master-Helligkeit u. Ä. hierher patchen lassen. Nicht näher ausgeführt: ob "in dmx
-  monitor" den Eingangs- oder den Ausgangs-Monitor meint (oder beide), was genau mit "Master dimmer usw.
-  hierher patchen" gemeint ist (Eingangs-Zuordnung existiert im `DmxMonitorPanel` schon per Rechtsklick,
-  evtl. geht es um eine zusätzliche farbliche/visuelle Markierung dieser Zuordnung statt um neue
-  Funktionalität) — vor Beginn der Umsetzung nachfragen bzw. die genaue Lesart mit dem Nutzer klären.
+- **DMX-Monitor-Vorschlag vom 15.11., zweiter Teil ("Master dimmer usw. hierher patchen"): erledigt.**
+  Der Nutzer klärte in einem längeren Hin und Her, dass damit das Rechtsklick-Menü auf einer freien Zelle
+  im (Eingangs-)DMX-Monitor gemeint war, neu gegliedert in drei Kategorien: 1. Master (nur Masterdimmer —
+  eine zunächst erwogene, dann ausdrücklich verworfene "Masterfade"-Einstellung ist **nicht** entstanden,
+  siehe unten), 2. Live Kanal (Look-Auswahl/Überblendzeit, wie bisher), 3. DMX Out (**neu**: patcht die
+  Adresse eines schon vorhandenen `wh.value.dmx`/`wh.value.dmxcolor`-Nodes direkt von der Zelle aus, statt
+  nur zu ihm zu navigieren). Umgesetzt wie vom Nutzer mit "jetzt" freigegeben; Details siehe CHANGELOG.
+  **Zwischenstand, nicht mehr aktuell:** Auf dem Weg dahin wurde eine "Masterfade"-Einstellung (neuer
+  Überblendzeit-Kanal für den Masterdimmer, analog zu Live-DMX) komplett gebaut (Backend, Tests), nach
+  einem Rückfragen-Hin-und-Her vom Nutzer aber ausdrücklich wieder verworfen ("Nein, nur Bestehendes") und
+  vollständig zurückgenommen — die Kategorie "Master" zeigt nur die schon bestehende Masterdimmer-Zuordnung.
+- **Noch offen, braucht weiterhin ausdrückliche Freigabe — erster Teil des Vorschlags vom 15.11.
+  ("farbig hinterlegen"):** Zellen im DMX-Monitor farbig hinterlegen, je eine Farbe für Matrizen/Fixtures
+  und eine andere für (Pool-)Kanäle, dabei auch den Rechtsklick berücksichtigen. Dieser Teil wurde von der
+  obigen Klärungsrunde nicht mit abgedeckt (die drehte sich nur um "Master dimmer hierher patchen"). Weiterhin
+  unklar: ob damit der Eingangs- oder der Ausgangs-Monitor gemeint ist (oder beide) — vor Beginn der
+  Umsetzung mit dem Nutzer klären.
 - **MIDI-Eingang/-Ausgang** (z. B. Akai APC Mini): nur besprochen, nicht begonnen. Überlegungen aus dem
   Gespräch:
   - *Bibliothek:* RtMidi — C++, cross-platform (ALSA/WinMM), passt zum bestehenden Muster, mit dem

@@ -1,4 +1,6 @@
 // findDmxListenerInGraph: welcher Node einen bestimmten empfangenen DMX-Kanal liest.
+// findDmxValueNodes: alle wh.value.dmx/wh.value.dmxcolor-Nodes des Graphen (für die Rechtsklick-Kategorie
+// "DMX Out" im DMX-Monitor).
 #include <catch2/catch_test_macros.hpp>
 
 #include "whitehole/graph/graph_model.hpp"
@@ -37,4 +39,24 @@ TEST_CASE("findDmxListenerInGraph: DMX Channel und DMX Color, 16 Bit/Dimmer-Brei
     CHECK_FALSE(runtime::findDmxListenerInGraph(graph, input::DmxProtocol::ArtNet, 5, 14).has_value());
     // Anderes Protokoll (sACN) betrifft denselben Kanal nicht.
     CHECK_FALSE(runtime::findDmxListenerInGraph(graph, input::DmxProtocol::Sacn, 5, 10).has_value());
+}
+
+TEST_CASE("findDmxValueNodes: listet alle DMX-Wert-Nodes, andere Node-Typen nicht", "[runtime][dmx]") {
+    auto library = nodes::BuiltinLibrary::create();
+    REQUIRE(library.ok());
+    graph::Graph graph{library.value()->registry};
+
+    CHECK(runtime::findDmxValueNodes(graph).empty());
+
+    const NodeId channel = graph.addNode("wh.value.dmx", Vec2{}).value();
+    const NodeId color = graph.addNode("wh.value.dmxcolor", Vec2{}).value();
+    const NodeId other = graph.addNode("wh.generator.gradient", Vec2{}).value();
+    (void)other;
+
+    const auto nodes = runtime::findDmxValueNodes(graph);
+    REQUIRE(nodes.size() == 2);
+    CHECK(nodes[0].id == channel);
+    CHECK(nodes[0].label == "DMX Channel");
+    CHECK(nodes[1].id == color);
+    CHECK(nodes[1].label == "DMX Color");
 }

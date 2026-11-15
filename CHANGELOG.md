@@ -42,6 +42,17 @@
   `runtime::DmxOutputOccupant` jetzt auch die `FixtureId` des gefundenen Fixtures. Rauchtest legt dafür
   vorübergehend einen DMX-Kanal-Pool-Patch auf einem sonst ungenutzten Universe an und entfernt ihn danach
   wieder.
+- **DMX-Monitor: Rechtsklick-Menü neu gegliedert (Master/Live Kanal/DMX Out) und neue Kategorie „DMX Out"**
+  (nachträglich freigegebene Erweiterung des DMX-Patch/Monitor-Gitters). Das bisher flache Menü einer
+  freien Zelle gliedert sich jetzt in drei Untermenüs: „Master" (Masterdimmer-Kanal — bestehende Funktion,
+  nur umsortiert) und „Live Kanal" (Live-Look-Auswahl/-Überblendzeit-Kanal — ebenfalls bestehend, nur
+  umsortiert) sowie neu „DMX Out": listet alle `wh.value.dmx`/`wh.value.dmxcolor`-Nodes des Projekts
+  namentlich auf, Klick patcht die Adresse (Protokoll/Universe/Kanal) der angeklickten Zelle direkt auf
+  den gewählten Node — dieselben drei Parameter, die auch das Parameterfenster setzt. Dafür neues
+  `runtime::findDmxValueNodes`/`Player::dmxValueNodes` (listet die Nodes, eigene Tests) und
+  `MainWindow::patchDmxValueNode` (schreibt über `Player::setParameter`, Fehler über die Statuszeile, wie
+  beim bestehenden Node-Parameterfenster). Rauchtest legt dafür vorübergehend einen `wh.value.dmx`-Node an,
+  löst den neuen Menüpunkt aus und prüft die echte Adressänderung, bevor der Node wieder entfernt wird.
 - **DMX-Fernsteuerung für Live-Modus, Teil 1: Look-Auswahl per DMX-Kanal.** Einstellungen, Seite
   DMX-Eingang: ein Kanal wählt im laufenden Live-Betrieb den aktiven Look (wie an einem
   Szenen-Wahl-Kanal — er teilt sich in so viele gleich große Stufen auf, wie das Projekt Looks hat; 0 =

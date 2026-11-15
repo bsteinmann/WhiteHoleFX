@@ -594,9 +594,18 @@ jeden Frame — ändert sich der Graph, während der Monitor offen ist, zeigt de
 neu gewählt wird.
 
 **Rechtsklick-Zuordnung (Schritt 3, Eingang):** eine schon belegte Zelle zeigt denselben Text wie der Tooltip,
-deaktiviert; eine freie Zelle bietet an, den Kanal als Master-Helligkeit-, Live-Look-Auswahl- oder
-Live-Überblendzeit-Kanal zu verwenden (die einzigen Eingangs-„Patches“ ohne eigenen Node) — wirkt wie die
-gleichnamige Einstellung auf der Seite „DMX-Eingang“ und wird genauso gespeichert.
+deaktiviert; eine freie Zelle öffnet ein Menü mit drei Untermenüs (nachträglich freigegebene Erweiterung,
+Umbau des bis dahin flachen Menüs):
+
+- **Master:** „Als Masterdimmer-Kanal verwenden” — wirkt wie die gleichnamige Einstellung auf der Seite
+  „DMX-Eingang” und wird genauso gespeichert. Keine neue Funktion, nur dieselbe bestehende Zuordnung jetzt
+  unter einer eigenen Kategorie.
+- **Live Kanal:** „Als Live-Look-Auswahl-Kanal verwenden” bzw. „Als Live-Überblendzeit-Kanal verwenden” —
+  ebenfalls keine neue Funktion, dieselben beiden bestehenden Einstellungen aus „DMX-Eingang”, nur umsortiert.
+- **DMX Out** *(neu)*: listet alle `wh.value.dmx`- und `wh.value.dmxcolor`-Nodes des aktuellen Projekts
+  namentlich auf; Klick auf einen Node setzt dessen Adresse (Protokoll, Universe, Kanal) auf die angeklickte
+  Zelle — dieselben drei Parameter, die auch das Parameterfenster des Nodes zeigt. Enthält das Projekt keinen
+  solchen Node, steht dort nur ein deaktivierter Hinweis.
 
 **DMX-Ausgangs-Monitor (Schritt 2 des DMX-Patch/Monitor-Gitters):** Ansicht → DMX-Ausgangs-Monitor zeigt
 dasselbe Gitter wie der DMX-Monitor, aber für die zuletzt **gesendeten** Art-Net/sACN-Universen statt der

@@ -455,6 +455,10 @@ public:
     /// masterDmx()/liveDmx()). Nullopt: nichts im geladenen Projekt bzw. Auftritt hört hier zu.
     [[nodiscard]] std::optional<DmxInputListener> dmxListenerAt(input::DmxProtocol protocol, std::uint32_t universe,
                                                                  std::uint32_t channel) const;
+    /// Für die Rechtsklick-Kategorie "DMX Out" im DMX-Monitor (nachträglich freigegebene Erweiterung): alle
+    /// wh.value.dmx/wh.value.dmxcolor-Nodes des geladenen Projekts, zum Patchen ihrer Adresse von dort aus.
+    /// Leer ohne Projekt oder ohne passenden Node.
+    [[nodiscard]] std::vector<DmxValueNodeRef> dmxValueNodes() const;
 
     /// Bild der LEDs: während des Laufs mit den Farben des letzten Frames (schwarz, solange noch
     /// keiner da ist), sonst das Layout. Fehler: InvalidArgument, wenn nichts geladen ist.

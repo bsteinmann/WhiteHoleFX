@@ -30,11 +30,11 @@ msgstr ""
 msgid "   |   BLACKOUT"
 msgstr ""
 
-#: main_window_dmx.cpp:162
+#: main_window_dmx.cpp:175
 msgid "   |   DMX-Eingang %1: %2 Pakete"
 msgstr ""
 
-#: main_window_dmx.cpp:152
+#: main_window_dmx.cpp:165
 msgid "   |   DMX-Nodes im Projekt, Eingang aus (Einstellungen)"
 msgstr ""
 
@@ -50,7 +50,7 @@ msgstr ""
 msgid "   |   TESTMODUS"
 msgstr ""
 
-#: main_window_dmx.cpp:160
+#: main_window_dmx.cpp:173
 msgid " + sACN"
 msgstr ""
 
@@ -102,7 +102,7 @@ msgstr ""
 msgid "%1  →  %2"
 msgstr ""
 
-#: main_window_controls.cpp:62 main_window_dmx.cpp:138
+#: main_window_controls.cpp:62 main_window_dmx.cpp:151
 msgid "%1 %"
 msgstr ""
 
@@ -474,7 +474,7 @@ msgstr ""
 msgid "Aktiv (letzter gesendeter Frame vor %1 s)."
 msgstr ""
 
-#: dmx_monitor_panel.cpp:162
+#: dmx_monitor_panel.cpp:182
 msgid "Aktiv (letztes Paket vor %1 s)."
 msgstr ""
 
@@ -510,16 +510,16 @@ msgstr ""
 msgid "Als Ausgang setzen (output)"
 msgstr ""
 
-#: dmx_monitor_panel.cpp:121
+#: dmx_monitor_panel.cpp:127
 msgid "Als Live-Look-Auswahl-Kanal verwenden"
 msgstr ""
 
-#: dmx_monitor_panel.cpp:124
+#: dmx_monitor_panel.cpp:130
 msgid "Als Live-Überblendzeit-Kanal verwenden"
 msgstr ""
 
-#: dmx_monitor_panel.cpp:118
-msgid "Als Master-Helligkeit-Kanal verwenden"
+#: dmx_monitor_panel.cpp:122
+msgid "Als Masterdimmer-Kanal verwenden"
 msgstr ""
 
 #: node_editor_presets.cpp:52
@@ -918,7 +918,11 @@ msgstr ""
 msgid "DMX %1 U%2 K%3 ab %4"
 msgstr ""
 
-#: main_window_dmx_monitor.cpp:35
+#: dmx_monitor_panel.cpp:134
+msgid "DMX Out"
+msgstr ""
+
+#: main_window_dmx_monitor.cpp:36
 msgid "DMX-Ausgangs-Monitor"
 msgstr ""
 
@@ -1042,7 +1046,7 @@ msgstr ""
 msgid "Der Kanalwert 0 bis 255 setzt den Master auf 0 bis 100 %. Solange Pakete kommen, folgt der Master-Regler dem Pult; bleibt das Signal weg, hält der Master seinen Wert. Der Empfang oben muss für das gewählte Protokoll eingeschaltet sein."
 msgstr ""
 
-#: main_window_dmx.cpp:143
+#: main_window_dmx.cpp:156
 msgid "Der Master kommt gerade vom DMX-Kanal (Einstellungen → DMX-Eingang)"
 msgstr ""
 
@@ -1546,7 +1550,7 @@ msgstr ""
 msgid "Gerät:"
 msgstr ""
 
-#: main_window_controls.cpp:46 main_window_dmx.cpp:144
+#: main_window_controls.cpp:46 main_window_dmx.cpp:157
 msgid "Gesamthelligkeit (wirkt auf Vorschau und Ausgabe, nicht im Projekt gespeichert)"
 msgstr ""
 
@@ -1802,7 +1806,7 @@ msgstr ""
 msgid "Kein Projekt geladen."
 msgstr ""
 
-#: dmx_monitor_panel.cpp:157
+#: dmx_monitor_panel.cpp:177
 msgid "Kein Signal auf diesem Universe."
 msgstr ""
 
@@ -1812,6 +1816,10 @@ msgstr ""
 
 #: settings_dialog.cpp:222
 msgid "Keine Aufnahmegeräte gefunden. Ein Audio-Interface anschließen und das Fenster neu öffnen."
+msgstr ""
+
+#: dmx_monitor_panel.cpp:137
+msgid "Keine DMX-Wert-Nodes im Projekt"
 msgstr ""
 
 #: parameter_panel.cpp:208
@@ -1906,7 +1914,7 @@ msgstr ""
 msgid "Letzter gesendeter Frame vor %1 s (veraltet)."
 msgstr ""
 
-#: dmx_monitor_panel.cpp:161
+#: dmx_monitor_panel.cpp:181
 msgid "Letztes Paket vor %1 s (veraltet)."
 msgstr ""
 
@@ -1948,6 +1956,10 @@ msgstr ""
 
 #: main_window_live.cpp:71
 msgid "Live"
+msgstr ""
+
+#: dmx_monitor_panel.cpp:126
+msgid "Live Kanal"
 msgstr ""
 
 #: settings_dialog.cpp:158
@@ -2044,6 +2056,10 @@ msgstr ""
 
 #: add_fixture_dialog.cpp:161
 msgid "Manuell"
+msgstr ""
+
+#: dmx_monitor_panel.cpp:121
+msgid "Master"
 msgstr ""
 
 #: settings_dialog.cpp:113

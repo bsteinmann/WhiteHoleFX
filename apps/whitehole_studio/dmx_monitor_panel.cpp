@@ -115,15 +115,35 @@ QMenu* DmxMonitorPanel::buildContextMenu(std::uint32_t channel, input::DmxProtoc
         info->setEnabled(false);
         return menu;
     }
-    QAction* master = menu->addAction(tr("Als Master-Helligkeit-Kanal verwenden"));
-    connect(master, &QAction::triggered, this,
+    // Drei Kategorien statt einer flachen Liste (nachträglich freigegebene Erweiterung): "Master" und
+    // "Live Kanal" zeigen nur die schon bestehenden Zuordnungen aus den Auftritts-Einstellungen (keine neue
+    // Funktion, nur neu gegliedert); "DMX Out" patcht stattdessen die Adresse eines Nodes.
+    QMenu* masterMenu = menu->addMenu(tr("Master"));
+    QAction* masterDimmer = masterMenu->addAction(tr("Als Masterdimmer-Kanal verwenden"));
+    connect(masterDimmer, &QAction::triggered, this,
             [this, protocol, universe, channel]() { Q_EMIT requestMasterDmx(protocol, universe, channel); });
-    QAction* select = menu->addAction(tr("Als Live-Look-Auswahl-Kanal verwenden"));
+
+    QMenu* liveMenu = menu->addMenu(tr("Live Kanal"));
+    QAction* select = liveMenu->addAction(tr("Als Live-Look-Auswahl-Kanal verwenden"));
     connect(select, &QAction::triggered, this,
             [this, protocol, universe, channel]() { Q_EMIT requestLiveDmxSelect(protocol, universe, channel); });
-    QAction* fade = menu->addAction(tr("Als Live-Überblendzeit-Kanal verwenden"));
+    QAction* fade = liveMenu->addAction(tr("Als Live-Überblendzeit-Kanal verwenden"));
     connect(fade, &QAction::triggered, this,
             [this, protocol, universe, channel]() { Q_EMIT requestLiveDmxFade(protocol, universe, channel); });
+
+    QMenu* dmxOutMenu = menu->addMenu(tr("DMX Out"));
+    const std::vector<runtime::DmxValueNodeRef> nodes = player_.dmxValueNodes();
+    if (nodes.empty()) {
+        QAction* none = dmxOutMenu->addAction(tr("Keine DMX-Wert-Nodes im Projekt"));
+        none->setEnabled(false);
+    } else {
+        for (const runtime::DmxValueNodeRef& node : nodes) {
+            QAction* patch = dmxOutMenu->addAction(QString::fromStdString(node.label));
+            const NodeId id = node.id;
+            connect(patch, &QAction::triggered, this,
+                    [this, id, protocol, universe, channel]() { Q_EMIT requestPatchNode(id, protocol, universe, channel); });
+        }
+    }
     return menu;
 }
 
@@ -201,8 +221,8 @@ QString DmxMonitorPanel::exercise() {
         return QStringLiteral("DMX-Monitor: Tooltip zeigt ohne Hörer nicht einfach \"Kanal N\"");
     }
 
-    // Rechtsklick auf eine freie Zelle: drei Zuweisungen im Menü, der Master-Eintrag löst aus. menu.exec()
-    // selbst wird nicht aufgerufen (würde im Rauchtest blockieren).
+    // Rechtsklick auf eine freie Zelle: drei Kategorien ("Master", "Live Kanal", "DMX Out"), der Masterdimmer-
+    // Eintrag im ersten Untermenü löst aus. menu.exec() selbst wird nicht aufgerufen (würde im Rauchtest blockieren).
     bool requested = false;
     input::DmxProtocol requestedProtocol{};
     std::uint32_t requestedUniverse = 0;
@@ -218,16 +238,64 @@ QString DmxMonitorPanel::exercise() {
                     requestedChannel = channel;
                 });
     QMenu* menu = buildContextMenu(1, input::DmxProtocol::ArtNet, 777);
-    if (menu->actions().size() != 3) {
+    if (menu->actions().size() != 3 || menu->actions()[0]->menu() == nullptr || menu->actions()[1]->menu() == nullptr ||
+        menu->actions()[2]->menu() == nullptr) {
         delete menu;
         disconnect(probe);
-        return QStringLiteral("DMX-Monitor: Kontextmenü für eine freie Zelle bietet nicht alle drei Zuweisungen an");
+        return QStringLiteral("DMX-Monitor: Kontextmenü für eine freie Zelle bietet nicht die drei Kategorien an");
     }
-    menu->actions().first()->trigger();  // "Als Master-Helligkeit-Kanal verwenden"
+    menu->actions()[0]->menu()->actions().first()->trigger();  // "Master" -> "Als Masterdimmer-Kanal verwenden"
     delete menu;
     disconnect(probe);
     if (!requested || requestedProtocol != input::DmxProtocol::ArtNet || requestedUniverse != 777 || requestedChannel != 1) {
         return QStringLiteral("DMX-Monitor: Kontextmenü löst requestMasterDmx nicht mit den richtigen Werten aus");
+    }
+
+    // "DMX Out" ohne passenden Node: nur ein deaktivierter Hinweis.
+    QMenu* emptyMenu = buildContextMenu(1, input::DmxProtocol::ArtNet, 777);
+    QMenu* emptyDmxOut = emptyMenu->actions()[2]->menu();
+    const bool emptyOk =
+        emptyDmxOut != nullptr && emptyDmxOut->actions().size() == 1 && !emptyDmxOut->actions().first()->isEnabled();
+    delete emptyMenu;
+    if (!emptyOk) {
+        return QStringLiteral("DMX-Monitor: \"DMX Out\" zeigt ohne passenden Node nicht den deaktivierten Hinweis");
+    }
+
+    // Mit einem DMX-Wert-Node im Graphen: "DMX Out" bietet ihn an, und das Auslösen patcht wirklich seine
+    // Adresse (requestPatchNode ist mit MainWindow::patchDmxValueNode verbunden, siehe buildDmxMonitor) -
+    // den testweise angelegten Node am Ende wieder entfernen.
+    const Result<NodeId> added = player_.addNode("wh.value.dmx", Vec2{});
+    if (!added.ok()) {
+        return QStringLiteral("DMX-Monitor: testweiser DMX-Wert-Node für den Rauchtest lässt sich nicht anlegen");
+    }
+    bool requestedPatch = false;
+    NodeId requestedNode{};
+    const QMetaObject::Connection patchProbe = connect(
+        this, &DmxMonitorPanel::requestPatchNode, this,
+        [&](NodeId node, input::DmxProtocol, std::uint32_t, std::uint32_t) {
+            requestedPatch = true;
+            requestedNode = node;
+        });
+    QMenu* filledMenu = buildContextMenu(1, input::DmxProtocol::ArtNet, 777);
+    QMenu* filledDmxOut = filledMenu->actions()[2]->menu();
+    const bool filledOk = filledDmxOut != nullptr && filledDmxOut->actions().size() == 1;
+    if (filledOk) {
+        filledDmxOut->actions().first()->trigger();
+    }
+    delete filledMenu;
+    disconnect(patchProbe);
+    if (!filledOk) {
+        player_.removeNode(added.value());
+        return QStringLiteral("DMX-Monitor: \"DMX Out\" bietet den angelegten Node nicht an");
+    }
+    if (!requestedPatch || requestedNode != added.value()) {
+        player_.removeNode(added.value());
+        return QStringLiteral("DMX-Monitor: Kontextmenü löst requestPatchNode nicht mit dem richtigen Node aus");
+    }
+    const auto patched = player_.dmxListenerAt(input::DmxProtocol::ArtNet, 777, 1);
+    player_.removeNode(added.value());
+    if (!patched) {
+        return QStringLiteral("DMX-Monitor: \"DMX Out\" patcht die Adresse des Nodes nicht wirklich (MainWindow-Verbindung?)");
     }
     return {};
 }

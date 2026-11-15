@@ -125,6 +125,19 @@ void MainWindow::assignLiveDmxFade(input::DmxProtocol protocol, std::uint32_t un
     updateStatus();
 }
 
+void MainWindow::patchDmxValueNode(NodeId node, input::DmxProtocol protocol, std::uint32_t universe, std::uint32_t channel) {
+    // Dieselben drei Parameter, die runtime::findDmxListenerInGraph liest (dmx_listener.cpp) und die der
+    // Node-Editor beim Verstellen von Hand setzt - kein neuer Mechanismus, nur von hier aus statt dort.
+    const auto report = [this](const Result<graph::ParameterValue>& result) {
+        if (!result.ok()) {
+            statusBar()->showMessage(QString::fromStdString(result.error().message), 8000);
+        }
+    };
+    report(player_->setParameter(node, "source", graph::ParameterValue{std::int64_t{protocol == input::DmxProtocol::Sacn ? 1 : 0}}));
+    report(player_->setParameter(node, "universe", graph::ParameterValue{static_cast<std::int64_t>(universe)}));
+    report(player_->setParameter(node, "channel", graph::ParameterValue{static_cast<std::int64_t>(channel)}));
+}
+
 void MainWindow::followMasterDmx() {
     if (masterSlider_ == nullptr || masterLabel_ == nullptr) {
         return;

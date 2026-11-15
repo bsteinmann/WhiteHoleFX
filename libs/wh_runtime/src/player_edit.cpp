@@ -366,4 +366,11 @@ std::optional<DmxInputListener> Player::dmxListenerAt(input::DmxProtocol protoco
     return std::nullopt;
 }
 
+std::vector<DmxValueNodeRef> Player::dmxValueNodes() const {
+    if (!project_) {
+        return {};
+    }
+    return findDmxValueNodes(project_->graph);
+}
+
 }  // namespace whitehole::runtime
