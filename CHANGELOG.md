@@ -2,6 +2,14 @@
 
 ## 0.92.0
 
+- **DMX-Monitor (Ansicht → DMX-Monitor), Schritt 1 des DMX-Patch/Monitor-Gitters.** Neues Dock, reine
+  Anzeige: alle 512 Kanäle eines wählbaren Protokolls und Universe als Gitter (16 Spalten, 32 Zeilen),
+  Zellwert = zuletzt empfangener DMX-Wert oder „–" ohne Paket; eine Statuszeile sagt, ob das Signal aktiv
+  ist oder vor mehr als 5 Sekunden zuletzt kam. Beim Start versteckt, aktualisiert sich nur, solange
+  sichtbar (512 Zellen jeden Frame kostet nur, wenn man hinschaut). Dafür neues `DmxStore::readAll`
+  (ganzes Universe in einer Sperre statt 128 einzelner `read()`-Aufrufe) mit eigenen Tests
+  (`tests/input/dmx_store_test.cpp`). Noch keine Zuordnung per Rechtsklick zu Fixture-Patch oder
+  DMX-Kanal-Pool (Schritt 3 des größeren Vorhabens) und noch kein eigener Ausgangs-Monitor (Schritt 2).
 - **DMX-Fernsteuerung für Live-Modus, Teil 1: Look-Auswahl per DMX-Kanal.** Einstellungen, Seite
   DMX-Eingang: ein Kanal wählt im laufenden Live-Betrieb den aktiven Look (wie an einem
   Szenen-Wahl-Kanal — er teilt sich in so viele gleich große Stufen auf, wie das Projekt Looks hat; 0 =

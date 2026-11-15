@@ -41,6 +41,19 @@ std::optional<DmxSample> DmxStore::read(DmxProtocol protocol, std::uint32_t univ
     return sample;
 }
 
+std::optional<DmxUniverseFrame> DmxStore::readAll(DmxProtocol protocol, std::uint32_t universe) const {
+    const auto stamp = now_();
+    const std::lock_guard<std::mutex> lock{mutex_};
+    const auto it = universes_.find({static_cast<std::uint8_t>(protocol), universe});
+    if (it == universes_.end()) {
+        return std::nullopt;
+    }
+    DmxUniverseFrame frame;
+    frame.channels = it->second.data;
+    frame.ageSeconds = std::chrono::duration<double>(stamp - it->second.updated).count();
+    return frame;
+}
+
 std::map<std::uint32_t, double> DmxStore::universes(DmxProtocol protocol) const {
     const auto stamp = now_();
     std::map<std::uint32_t, double> result;

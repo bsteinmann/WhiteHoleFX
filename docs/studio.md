@@ -580,6 +580,15 @@ bleibt das Signal länger als 5 Sekunden weg, bleibt der zuletzt gezeigte Look s
 Live-Betrieb läuft (siehe oben); außerhalb davon passiert nichts. Noch offen (zweiter Teil desselben
 Backlog-Punkts): per DMX in der Cuelist direkt zu einem bestimmten Cue springen, nicht nur linear vor/zurück.
 
+**DMX-Monitor (Schritt 1 des DMX-Patch/Monitor-Gitters):** Ansicht → DMX-Monitor zeigt alle 512 Kanäle eines
+wählbaren Protokolls und Universe als Gitter (16 Spalten, 32 Zeilen; Zeile *n* beginnt bei Kanal 16·*n*+1). Jede
+Zelle zeigt den zuletzt empfangenen Wert (0–255) oder „–“, solange für dieses Universe noch nie ein Paket kam.
+Darüber steht, ob das Signal aktiv ist oder vor mehr als 5 Sekunden zuletzt kam (veraltet, Wert bleibt sichtbar
+stehen). Das Dock ist beim Start versteckt (512 Zellen jeden Frame neu zu zeichnen lohnt nur, solange man
+hinschaut) und aktualisiert sich nur, während es sichtbar ist. Reine Anzeige zur Fehlersuche — noch keine
+Zuordnung zu einem Fixture-Patch oder dem DMX-Kanal-Pool per Rechtsklick (geplanter nächster Schritt, siehe
+CLAUDE.md) und kein eigener Ausgangs-Monitor.
+
 ## Audio-Eingang
 
 Einstellungen, Seite **Audio**: *Aus*, *Standardgerät*, ein Gerät aus der Liste oder *WAV-Datei in Schleife*.

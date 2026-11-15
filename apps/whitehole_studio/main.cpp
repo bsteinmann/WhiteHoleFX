@@ -245,7 +245,9 @@ int main(int argc, char** argv) {
         std::printf("Menüleiste: %s\n", menus.isEmpty() ? "ok" : "FEHLER");
         const QString cues = menus.isEmpty() ? window.exerciseCues() : QString{};
         std::printf("Cuelist: %s\n", cues.isEmpty() ? "ok" : "FEHLER");
-        const QString languages = cues.isEmpty() ? window.exerciseLanguage() : QString{};
+        const QString dmxMonitor = cues.isEmpty() ? window.exerciseDmxMonitor() : QString{};
+        std::printf("DMX-Monitor: %s\n", dmxMonitor.isEmpty() ? "ok" : "FEHLER");
+        const QString languages = dmxMonitor.isEmpty() ? window.exerciseLanguage() : QString{};
         std::printf("Sprachen/Tutorial: %s\n", languages.isEmpty() ? "ok" : "FEHLER");
         const QString update = languages.isEmpty() ? window.exerciseUpdate() : QString{};
         std::printf("Update-Prüfung: %s\n", update.isEmpty() ? "ok" : "FEHLER");
@@ -255,7 +257,7 @@ int main(int argc, char** argv) {
         std::printf("Gruppen-Regler: %s\n", groupParams.isEmpty() ? "ok" : "FEHLER");
         const QString splashResult = groupParams.isEmpty() ? studio::splashProblem() : QString{};
         std::printf("Startbild: %s\n", splashResult.isEmpty() ? "ok" : "FEHLER");
-        for (const QString& failure : {selection, created, transparency, controls, dmx, audio, palette, live, settingsResult, stage, view3d, menus, cues, languages, update, paramView, groupParams, splashResult}) {
+        for (const QString& failure : {selection, created, transparency, controls, dmx, audio, palette, live, settingsResult, stage, view3d, menus, cues, dmxMonitor, languages, update, paramView, groupParams, splashResult}) {
             if (!failure.isEmpty()) {
                 std::fprintf(stderr, "Rauchtest fehlgeschlagen: %s\n", failure.toUtf8().constData());
                 return 1;

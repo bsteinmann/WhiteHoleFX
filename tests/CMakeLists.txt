@@ -42,6 +42,7 @@ add_executable(wh_tests
     input/dmx_nodes_test.cpp
     input/dmx_packets_test.cpp
     input/dmx_receiver_test.cpp
+    input/dmx_store_test.cpp
     nodes/builtin_nodes_test.cpp
     nodes/pong_test.cpp
     nodes/node_audit_test.cpp

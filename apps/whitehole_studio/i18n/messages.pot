@@ -10,7 +10,7 @@ msgstr ""
 msgid "\nRechtsklick: Favorit umschalten"
 msgstr ""
 
-#: main_window.cpp:289
+#: main_window.cpp:290
 msgid "   |   AUSGABE AN"
 msgstr ""
 
@@ -22,11 +22,11 @@ msgstr ""
 msgid "   |   Audio: %1"
 msgstr ""
 
-#: main_window.cpp:289
+#: main_window.cpp:290
 msgid "   |   Ausgabe aus (%1 Pakete nicht gesendet)"
 msgstr ""
 
-#: main_window.cpp:279
+#: main_window.cpp:280
 msgid "   |   BLACKOUT"
 msgstr ""
 
@@ -38,15 +38,15 @@ msgstr ""
 msgid "   |   DMX-Nodes im Projekt, Eingang aus (Einstellungen)"
 msgstr ""
 
-#: main_window.cpp:284
+#: main_window.cpp:285
 msgid "   |   EINGANG FEHLT – LEDs aus"
 msgstr ""
 
-#: main_window.cpp:281
+#: main_window.cpp:282
 msgid "   |   Master %1 %"
 msgstr ""
 
-#: main_window.cpp:276
+#: main_window.cpp:277
 msgid "   |   TESTMODUS"
 msgstr ""
 
@@ -126,11 +126,11 @@ msgstr ""
 msgid "%1 LEDs · Größe %2 × %3 × %4 · %5 Kanäle (RGB), rund %6 Universe(s)"
 msgstr ""
 
-#: main_window.cpp:265
+#: main_window.cpp:266
 msgid "%1 LEDs, Frame %2 (verworfen %3), Pakete %4, Sendefehler %5"
 msgstr ""
 
-#: main_window.cpp:263
+#: main_window.cpp:264
 msgid "%1 LEDs, angehalten"
 msgstr ""
 
@@ -194,7 +194,7 @@ msgstr ""
 msgid "&Fixtures …"
 msgstr ""
 
-#: main_window_actions.cpp:121
+#: main_window_actions.cpp:122
 msgid "&Hilfe"
 msgstr ""
 
@@ -210,7 +210,7 @@ msgstr ""
 msgid "&Leuchten (additiv)"
 msgstr ""
 
-#: main_window_actions.cpp:117
+#: main_window_actions.cpp:118
 msgid "&Live"
 msgstr ""
 
@@ -242,11 +242,11 @@ msgstr ""
 msgid "&Stage Config"
 msgstr ""
 
-#: main_window.cpp:151 main_window_actions.cpp:55
+#: main_window.cpp:152 main_window_actions.cpp:55
 msgid "&Start"
 msgstr ""
 
-#: main_window.cpp:151
+#: main_window.cpp:152
 msgid "&Stopp"
 msgstr ""
 
@@ -262,7 +262,7 @@ msgstr ""
 msgid "&Tutorial …"
 msgstr ""
 
-#: main_window_actions.cpp:113
+#: main_window_actions.cpp:114
 msgid "&Wiedergabe"
 msgstr ""
 
@@ -334,7 +334,7 @@ msgstr ""
 msgid "2D-Matrix 8x8"
 msgstr ""
 
-#: main_window_actions.cpp:168
+#: main_window_actions.cpp:169
 msgid "3D"
 msgstr ""
 
@@ -470,6 +470,10 @@ msgstr ""
 msgid "Adressraum"
 msgstr ""
 
+#: dmx_monitor_panel.cpp:95
+msgid "Aktiv (letztes Paket vor %1 s)."
+msgstr ""
+
 #: look_panel.cpp:38
 msgid "Aktuellen Effekt als Look speichern …"
 msgstr ""
@@ -558,7 +562,7 @@ msgstr ""
 msgid "Anzahl x y z"
 msgstr ""
 
-#: cue_dialog.cpp:71 cue_panel.cpp:39 main_window_dmx.cpp:125
+#: cue_dialog.cpp:71 cue_panel.cpp:39 dmx_monitor_panel.cpp:31
 msgid "Art-Net"
 msgstr ""
 
@@ -582,7 +586,7 @@ msgstr ""
 msgid "Art-Net-Port (UDP):"
 msgstr ""
 
-#: main_window_actions.cpp:165 settings_dialog.cpp:62
+#: main_window_actions.cpp:166 settings_dialog.cpp:62
 msgid "Audio"
 msgstr ""
 
@@ -718,7 +722,7 @@ msgstr ""
 msgid "Balken entlang z"
 msgstr ""
 
-#: main_window_actions.cpp:108
+#: main_window_actions.cpp:109
 msgid "Balken in den Nodes und leuchtende Kabel, solange die Wiedergabe läuft"
 msgstr ""
 
@@ -786,7 +790,7 @@ msgstr ""
 msgid "Beschriftung auf der Kachel"
 msgstr ""
 
-#: main_window_actions.cpp:128
+#: main_window_actions.cpp:129
 msgid "Betrieb"
 msgstr ""
 
@@ -890,7 +894,7 @@ msgstr ""
 msgid "DDP-Offset (Byte)"
 msgstr ""
 
-#: main_window_actions.cpp:171
+#: main_window_actions.cpp:172
 msgid "DMX"
 msgstr ""
 
@@ -926,6 +930,10 @@ msgstr ""
 msgid "DMX-Kanal"
 msgstr ""
 
+#: main_window_dmx_monitor.cpp:16
+msgid "DMX-Monitor"
+msgstr ""
+
 #: main_window_update.cpp:91
 msgid "Dabei wird nur die öffentliche Seite des neuesten Releases abgefragt. Gesendet werden Programmname und Versionsnummer (und, wie bei jedem Netzwerkzugriff, deine IP-Adresse), nichts über dich oder deine Projekte. Es wird nichts installiert. Du kannst das jederzeit im Menü Hilfe ändern."
 msgstr ""
@@ -942,7 +950,7 @@ msgstr ""
 msgid "Das Pong-Spiel als Rechen-Node: Ball, Schläger, Punkte und Treffer als Werte. Computer oder Eingang spielen, auch im Takt der Musik. Gezeichnet wird es von „Pong Display“."
 msgstr ""
 
-#: main_window.cpp:212
+#: main_window.cpp:213
 msgid "Das Projekt wurde geändert. Änderungen verwerfen?"
 msgstr ""
 
@@ -1090,7 +1098,7 @@ msgstr ""
 msgid "Diese Form ist ungültig."
 msgstr ""
 
-#: main_window.cpp:189 parameter_panel.cpp:260
+#: main_window.cpp:190 parameter_panel.cpp:260
 msgid "Dieser Node hat keine einstellbaren Parameter."
 msgstr ""
 
@@ -1154,7 +1162,7 @@ msgstr ""
 msgid "Ebene Welle: Streifen, die in eine Richtung wandern (Frequenz, Tempo, zwei Farben)."
 msgstr ""
 
-#: main_window_actions.cpp:159
+#: main_window_actions.cpp:160
 msgid "Effekte (2D)"
 msgstr ""
 
@@ -1266,7 +1274,7 @@ msgstr ""
 msgid "Einstellungen"
 msgstr ""
 
-#: main_window_actions.cpp:156
+#: main_window_actions.cpp:157
 msgid "Einstieg"
 msgstr ""
 
@@ -1366,7 +1374,7 @@ msgstr ""
 msgid "Farbfolge R G B W"
 msgstr ""
 
-#: main_window_actions.cpp:103
+#: main_window_actions.cpp:104
 msgid "Farbige Punkte vor den Nodes in der Palette: was der Node liefert"
 msgstr ""
 
@@ -1382,7 +1390,7 @@ msgstr ""
 msgid "Favoriten"
 msgstr ""
 
-#: main_window_actions.cpp:110
+#: main_window_actions.cpp:111
 msgid "Fensteranordnung &zurücksetzen"
 msgstr ""
 
@@ -1442,7 +1450,7 @@ msgstr ""
 msgid "Fragt bei GitHub nach der neuesten Version (nur die Versionsnummer, nichts wird installiert)"
 msgstr ""
 
-#: main_window.cpp:337
+#: main_window.cpp:338
 msgid "Frame"
 msgstr ""
 
@@ -1722,6 +1730,10 @@ msgstr ""
 msgid "Kaleidoskop: Spiegelt einen Ausschnitt um einen Mittelpunkt zu einem Muster mit mehreren Segmenten."
 msgstr ""
 
+#: dmx_monitor_panel.cpp:61
+msgid "Kanal %1"
+msgstr ""
+
 #: settings_dialog.cpp:86
 msgid "Karte zum Empfangen:"
 msgstr ""
@@ -1738,12 +1750,16 @@ msgstr ""
 msgid "Kein GPU-Adapter: %1"
 msgstr ""
 
-#: main_window.cpp:261
+#: main_window.cpp:262
 msgid "Kein Projekt"
 msgstr ""
 
 #: parameter_panel.cpp:139 stage_view.cpp:166
 msgid "Kein Projekt geladen."
+msgstr ""
+
+#: dmx_monitor_panel.cpp:90
+msgid "Kein Signal auf diesem Universe."
 msgstr ""
 
 #: node_editor_targets.cpp:68
@@ -1798,7 +1814,7 @@ msgstr ""
 msgid "LEDs x y z"
 msgstr ""
 
-#: main_window.cpp:273
+#: main_window.cpp:274
 msgid "LIVE   |   "
 msgstr ""
 
@@ -1840,6 +1856,10 @@ msgstr ""
 
 #: node_info_texts.cpp:39
 msgid "Legt Bild B über Bild A. Der Modus bestimmt die Verrechnung (Addieren, Multiplizieren, Screen, Subtrahieren, Differenz …), „Amount“ blendet zwischen A und dem Ergebnis."
+msgstr ""
+
+#: dmx_monitor_panel.cpp:94
+msgid "Letztes Paket vor %1 s (veraltet)."
 msgstr ""
 
 #: main_window_view3d.cpp:119
@@ -2126,7 +2146,7 @@ msgstr ""
 msgid "Neues Projekt (Strg+N)"
 msgstr ""
 
-#: main_window.cpp:133
+#: main_window.cpp:134
 msgid "Neues Projekt (Strg+N), Projekt öffnen (Strg+O) oder eine .whfx-Datei hierher ziehen.\n\n%1"
 msgstr ""
 
@@ -2250,7 +2270,7 @@ msgstr ""
 msgid "Palette"
 msgstr ""
 
-#: main_window_actions.cpp:100
+#: main_window_actions.cpp:101
 msgid "Palette &farbig"
 msgstr ""
 
@@ -2286,7 +2306,7 @@ msgstr ""
 msgid "Pegel eines Frequenzbereichs (Von–Bis in Hz) des Audio-Eingangs, geglättet mit Attack und Release. Gut für Bass- oder Höhen-Effekte. „Signal“ zeigt, ob Audio ankommt."
 msgstr ""
 
-#: main_window_actions.cpp:105
+#: main_window_actions.cpp:106
 msgid "Pegel im &Editor"
 msgstr ""
 
@@ -2372,6 +2392,10 @@ msgstr ""
 
 #: add_fixture_dialog.cpp:174 dmx_patch_table.cpp:44 output_form.cpp:30
 msgid "Protokoll"
+msgstr ""
+
+#: dmx_monitor_panel.cpp:33
+msgid "Protokoll:"
 msgstr ""
 
 #: layout_panel_add.cpp:42
@@ -2590,7 +2614,7 @@ msgstr ""
 msgid "Spiegelt das Bild an einer Linie in x, y und/oder z. Mit „Use other half“ ist die andere Hälfte die Vorlage."
 msgstr ""
 
-#: main_window_actions.cpp:162
+#: main_window_actions.cpp:163
 msgid "Spiele"
 msgstr ""
 
@@ -2614,7 +2638,7 @@ msgstr ""
 msgid "Standardgerät des Systems"
 msgstr ""
 
-#: cue_panel.cpp:67 cue_panel.cpp:145 main_window.cpp:307
+#: cue_panel.cpp:67 cue_panel.cpp:145 main_window.cpp:308
 msgid "Start"
 msgstr ""
 
@@ -2758,7 +2782,7 @@ msgstr ""
 msgid "Unerwartetes Ende beim letzten Mal"
 msgstr ""
 
-#: main_window.cpp:211
+#: main_window.cpp:212
 msgid "Ungespeicherte Änderungen"
 msgstr ""
 
@@ -2772,6 +2796,10 @@ msgstr ""
 
 #: patch_table.cpp:49
 msgid "Universe (Art-Net ab 0, sACN ab 1)"
+msgstr ""
+
+#: dmx_monitor_panel.cpp:36
+msgid "Universe:"
 msgstr ""
 
 #: layout_panel_groups.cpp:189
@@ -2894,11 +2922,11 @@ msgstr ""
 msgid "Wellenringe wie Wassertropfen: Ringe breiten sich von zufälligen Punkten aus (Tropfen pro Sekunde, Tempo, Ringbreite)."
 msgstr ""
 
-#: main_window.cpp:125 main_window.cpp:164
+#: main_window.cpp:126 main_window.cpp:165
 msgid "WhiteHoleFX"
 msgstr ""
 
-#: main_window.cpp:168
+#: main_window.cpp:169
 msgid "WhiteHoleFX – %1%2"
 msgstr ""
 
@@ -3146,7 +3174,7 @@ msgstr ""
 msgid "rechts (x max)"
 msgstr ""
 
-#: cue_dialog.cpp:71 cue_panel.cpp:39 main_window_dmx.cpp:128
+#: cue_dialog.cpp:71 cue_panel.cpp:39 dmx_monitor_panel.cpp:32
 msgid "sACN"
 msgstr ""
 
@@ -3166,7 +3194,7 @@ msgstr ""
 msgid "strecken (Stretch)"
 msgstr ""
 
-#: main_window.cpp:167
+#: main_window.cpp:168
 msgid "unbenannt"
 msgstr ""
 

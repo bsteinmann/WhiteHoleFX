@@ -42,6 +42,7 @@ class PortLegend;
 
 class LayoutPanel;
 class CuePanel;
+class DmxMonitorPanel;
 class LivePanel;
 class LookPanel;
 class NodeEditor;
@@ -111,6 +112,8 @@ public:
     /// Rauchtest: Looks speichern/ordnen/umbenennen, Live-Modus mit Überblendung, GO und Rückkehr.
     QString exerciseLive();
     QString exerciseCues();
+    /// Rauchtest: DMX-Monitor-Dock (main_window_dmx_monitor.cpp) zeigt geschriebene Werte an der richtigen Zelle.
+    QString exerciseDmxMonitor();
     /// Rauchtest: Einstellungsdialog (Rundlauf der Felder), Netzwerkkarte wählen, DMX/Audio anwenden.
     QString exerciseSettings();
     QString exerciseNodeDefaults();  // Teil von exerciseSettings (main_window_settings.cpp)
@@ -161,6 +164,8 @@ private:
     void showEditDocks();  // ... und danach wieder zeigen
     /// Dock "Nodes": Palette und Node-Editor (main_window_editor.cpp).
     void buildEditorDock();
+    /// Dock "DMX-Monitor" (main_window_dmx_monitor.cpp): reine Anzeige aller 512 Kanäle eines Universe.
+    void buildDmxMonitor();
     /// Füllt das Menü "Beispiele" aus den Ordnern neben dem Programm; leer, wenn es keine gibt.
     void fillExamplesMenu(QMenu* menu);
     bool fillExamplesFrom(QMenu* menu, const QDir& dir);  // rekursiv; true, wenn Projekte gefunden wurden
@@ -277,6 +282,8 @@ private:
     LivePanel* livePanel_{nullptr};
     CuePanel* cuePanel_{nullptr};
     QDockWidget* cueDock_{nullptr};
+    DmxMonitorPanel* dmxMonitorPanel_{nullptr};
+    QDockWidget* dmxMonitorDock_{nullptr};
     QDockWidget* liveDock_{nullptr};
     QAction* liveAction_{nullptr};
     QAction* saveLookAction_{nullptr};

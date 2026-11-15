@@ -132,6 +132,20 @@ darum.
   sich `CueRunner::fire()`/`Player::cueFire()` an (existiert schon für den Doppelklick auf einen Cue), nur
   die DMX-Wert-zu-Cue-Zuordnung fehlt noch — noch nicht untersucht, wie genau das mit der bestehenden
   Cue-Reihenfolge zusammenspielt.
+- **DMX-Patch/Monitor-Gitter** (vom Nutzer vorgeschlagen anhand eines Excel-Mockups: grafische Darstellung
+  des DMX-Patch, Rechtsklick auf einen Kanal weist ihm einen Output zu (umgekehrtes Patchen), dasselbe für
+  den Input (inkl. Master-Helligkeit usw.), grafische Anzeige belegter Kanäle, soll auch als DMX-Monitor
+  dienen; vom Nutzer am 15.11. mit "fahre so fort" für den vorgeschlagenen 4-Schritte-Plan freigegeben: 1.
+  reiner Eingangs-Monitor, 2. dasselbe für den Ausgang, 3. Zuweisung per Rechtsklick (Fixture-Patch und
+  Kanal-Pool), 4. "wer hört zu"-Overlay auf der Eingangsseite).
+  **Erledigt (0.92.0), Schritt 1 (reiner Eingangs-Monitor):** Neues Dock "DMX-Monitor" (Ansicht-Menü,
+  `dmx_monitor_panel.hpp/cpp`, Dock-Aufbau in `main_window_dmx_monitor.cpp`): Gitter aller 512 Kanäle eines
+  wählbaren Protokoll+Universe (16 Spalten × 32 Zeilen), Zellwert = letzter empfangener Wert oder „–"; Status
+  zeigt aktiv/veraltet (> 5 s). Beim Start versteckt, aktualisiert sich nur, solange sichtbar
+  (`MainWindow::tick()`, Muster von `editor_->refreshLive()`). Dafür neues `DmxStore::readAll(protocol,
+  universe)` (ganzes Universe in einer Sperre statt 128 einzelner `read()`-Aufrufe), eigene Tests
+  (`tests/input/dmx_store_test.cpp`). Noch keine Zuweisung, kein Ausgangs-Monitor, kein Overlay — das sind
+  die noch offenen Schritte 2–4, jeweils eigene kleine Schritte.
 - **MIDI-Eingang/-Ausgang** (z. B. Akai APC Mini): nur besprochen, nicht begonnen. Überlegungen aus dem
   Gespräch:
   - *Bibliothek:* RtMidi — C++, cross-platform (ALSA/WinMM), passt zum bestehenden Muster, mit dem

@@ -116,6 +116,7 @@ MainWindow::MainWindow(gpu::IGpuDevice* device, const QString& deviceNote, QWidg
 
     buildEditorDock();
     buildLive();
+    buildDmxMonitor();
 
     statusLabel_ = new QLabel{this};
     statusBar()->addPermanentWidget(statusLabel_);
@@ -345,6 +346,9 @@ void MainWindow::tick() {
         livePanel_->refresh();
     }
     cuePanel_->refresh();
+    if (dmxMonitorDock_->isVisible()) {
+        dmxMonitorPanel_->refresh();
+    }
     refreshImage();
     lastTick = Clock::now();
     if (ms(lastTick - begin) > 250) {

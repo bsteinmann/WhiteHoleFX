@@ -10,7 +10,7 @@ msgstr ""
 msgid "\nRechtsklick: Favorit umschalten"
 msgstr "\nПравий клік: додати/прибрати з обраного"
 
-#: main_window.cpp:289
+#: main_window.cpp:290
 msgid "   |   AUSGABE AN"
 msgstr "   |   ВИВІД УВІМКНЕНО"
 
@@ -22,11 +22,11 @@ msgstr "   |   У проєкті є аудіо-ноди, вхід вимкнен
 msgid "   |   Audio: %1"
 msgstr "   |   Аудіо: %1"
 
-#: main_window.cpp:289
+#: main_window.cpp:290
 msgid "   |   Ausgabe aus (%1 Pakete nicht gesendet)"
 msgstr "   |   Вивід вимкнено (%1 пакетів не надіслано)"
 
-#: main_window.cpp:279
+#: main_window.cpp:280
 msgid "   |   BLACKOUT"
 msgstr "   |   BLACKOUT"
 
@@ -38,15 +38,15 @@ msgstr "   |   Вхід DMX %1: %2 пакетів"
 msgid "   |   DMX-Nodes im Projekt, Eingang aus (Einstellungen)"
 msgstr "   |   У проєкті є DMX-ноди, вхід вимкнено (Налаштування)"
 
-#: main_window.cpp:284
+#: main_window.cpp:285
 msgid "   |   EINGANG FEHLT – LEDs aus"
 msgstr "   |   ВХОДУ НЕМАЄ – СВІТЛОДІОДИ ВИМКНЕНО"
 
-#: main_window.cpp:281
+#: main_window.cpp:282
 msgid "   |   Master %1 %"
 msgstr "   |   Master %1 %"
 
-#: main_window.cpp:276
+#: main_window.cpp:277
 msgid "   |   TESTMODUS"
 msgstr "   |   ТЕСТОВИЙ РЕЖИМ"
 
@@ -126,11 +126,11 @@ msgstr "%1 (не знайдено)"
 msgid "%1 LEDs · Größe %2 × %3 × %4 · %5 Kanäle (RGB), rund %6 Universe(s)"
 msgstr "%1 LED · Розмір %2 × %3 × %4 · %5 каналів (RGB), приблизно %6 universe"
 
-#: main_window.cpp:265
+#: main_window.cpp:266
 msgid "%1 LEDs, Frame %2 (verworfen %3), Pakete %4, Sendefehler %5"
 msgstr "%1 LED, кадр %2 (відкинуто %3), пакети %4, помилки надсилання %5"
 
-#: main_window.cpp:263
+#: main_window.cpp:264
 msgid "%1 LEDs, angehalten"
 msgstr "%1 LED, зупинено"
 
@@ -194,7 +194,7 @@ msgstr "&Повідомити про помилку або запропонув�
 msgid "&Fixtures …"
 msgstr "&Фікстури …"
 
-#: main_window_actions.cpp:121
+#: main_window_actions.cpp:122
 msgid "&Hilfe"
 msgstr "&Довідка"
 
@@ -210,7 +210,7 @@ msgstr "&Легенда портів …"
 msgid "&Leuchten (additiv)"
 msgstr "&Світіння (адитивно)"
 
-#: main_window_actions.cpp:117
+#: main_window_actions.cpp:118
 msgid "&Live"
 msgstr "&Live"
 
@@ -242,11 +242,11 @@ msgstr "&Зберегти"
 msgid "&Stage Config"
 msgstr "&Stage Config"
 
-#: main_window.cpp:151 main_window_actions.cpp:55
+#: main_window.cpp:152 main_window_actions.cpp:55
 msgid "&Start"
 msgstr "&Старт"
 
-#: main_window.cpp:151
+#: main_window.cpp:152
 msgid "&Stopp"
 msgstr "&Стоп"
 
@@ -262,7 +262,7 @@ msgstr "&Тестовий режим …"
 msgid "&Tutorial …"
 msgstr "&Туторіал …"
 
-#: main_window_actions.cpp:113
+#: main_window_actions.cpp:114
 msgid "&Wiedergabe"
 msgstr "&Відтворення"
 
@@ -334,7 +334,7 @@ msgstr "2D-матриця"
 msgid "2D-Matrix 8x8"
 msgstr "2D-матриця 8x8"
 
-#: main_window_actions.cpp:168
+#: main_window_actions.cpp:169
 msgid "3D"
 msgstr "3D"
 
@@ -470,6 +470,10 @@ msgstr "Адреса (порожня = multicast, лише sACN)"
 msgid "Adressraum"
 msgstr "Діапазон адрес"
 
+#: dmx_monitor_panel.cpp:95
+msgid "Aktiv (letztes Paket vor %1 s)."
+msgstr "Активно (останній пакет %1 с тому)."
+
 #: look_panel.cpp:38
 msgid "Aktuellen Effekt als Look speichern …"
 msgstr "Зберегти поточний ефект як Look …"
@@ -558,7 +562,7 @@ msgstr "Кількість"
 msgid "Anzahl x y z"
 msgstr "Кількість x y z"
 
-#: cue_dialog.cpp:71 cue_panel.cpp:39 main_window_dmx.cpp:125
+#: cue_dialog.cpp:71 cue_panel.cpp:39 dmx_monitor_panel.cpp:31
 msgid "Art-Net"
 msgstr "Art-Net"
 
@@ -582,7 +586,7 @@ msgstr "Art-Net, sACN і DDP виходять через цю карту. За �
 msgid "Art-Net-Port (UDP):"
 msgstr "Порт Art-Net (UDP):"
 
-#: main_window_actions.cpp:165 settings_dialog.cpp:62
+#: main_window_actions.cpp:166 settings_dialog.cpp:62
 msgid "Audio"
 msgstr "Аудіо"
 
@@ -718,7 +722,7 @@ msgstr "Смуга вздовж y"
 msgid "Balken entlang z"
 msgstr "Смуга вздовж z"
 
-#: main_window_actions.cpp:108
+#: main_window_actions.cpp:109
 msgid "Balken in den Nodes und leuchtende Kabel, solange die Wiedergabe läuft"
 msgstr "Смуги у вузлах і світні кабелі під час відтворення"
 
@@ -786,7 +790,7 @@ msgstr "Готово: %1 - натисніть GO"
 msgid "Beschriftung auf der Kachel"
 msgstr "Підпис на плитці"
 
-#: main_window_actions.cpp:128
+#: main_window_actions.cpp:129
 msgid "Betrieb"
 msgstr "Робота"
 
@@ -890,7 +894,7 @@ msgstr "Зміщення DDP"
 msgid "DDP-Offset (Byte)"
 msgstr "Зміщення DDP (байт)"
 
-#: main_window_actions.cpp:171
+#: main_window_actions.cpp:172
 msgid "DMX"
 msgstr "DMX"
 
@@ -926,6 +930,10 @@ msgstr "Вхід DMX: %1"
 msgid "DMX-Kanal"
 msgstr "Канал DMX"
 
+#: main_window_dmx_monitor.cpp:16
+msgid "DMX-Monitor"
+msgstr "Монітор DMX"
+
 #: main_window_update.cpp:91
 msgid "Dabei wird nur die öffentliche Seite des neuesten Releases abgefragt. Gesendet werden Programmname und Versionsnummer (und, wie bei jedem Netzwerkzugriff, deine IP-Adresse), nichts über dich oder deine Projekte. Es wird nichts installiert. Du kannst das jederzeit im Menü Hilfe ändern."
 msgstr "Запитується лише публічна сторінка останнього релізу. Надсилаються назва програми та номер версії (і, як при будь-якому мережевому доступі, ваша IP-адреса), нічого про вас чи ваші проєкти. Нічого не встановлюється. Ви можете змінити це в будь-який час у меню «Довідка»."
@@ -942,7 +950,7 @@ msgstr "Кабель переходить від кільця до кільця 
 msgid "Das Pong-Spiel als Rechen-Node: Ball, Schläger, Punkte und Treffer als Werte. Computer oder Eingang spielen, auch im Takt der Musik. Gezeichnet wird es von „Pong Display“."
 msgstr "Гра Pong як обчислювальний вузол: м'яч, ракетки, рахунок і удари як значення. Грає комп'ютер або вхід, також у такт музики. Малює її «Pong Display»."
 
-#: main_window.cpp:212
+#: main_window.cpp:213
 msgid "Das Projekt wurde geändert. Änderungen verwerfen?"
 msgstr "Проєкт змінено. Відкинути зміни?"
 
@@ -1090,7 +1098,7 @@ msgstr "Зміна набуде чинності одразу після «OK».
 msgid "Diese Form ist ungültig."
 msgstr "Ця форма недійсна."
 
-#: main_window.cpp:189 parameter_panel.cpp:260
+#: main_window.cpp:190 parameter_panel.cpp:260
 msgid "Dieser Node hat keine einstellbaren Parameter."
 msgstr "Ця нода не має параметрів для налаштування."
 
@@ -1154,7 +1162,7 @@ msgstr "Дублювати\tCtrl+D"
 msgid "Ebene Welle: Streifen, die in eine Richtung wandern (Frequenz, Tempo, zwei Farben)."
 msgstr "Плоска хвиля: смуги, що рухаються в одному напрямку (частота, темп, два кольори)."
 
-#: main_window_actions.cpp:159
+#: main_window_actions.cpp:160
 msgid "Effekte (2D)"
 msgstr "Ефекти (2D)"
 
@@ -1266,7 +1274,7 @@ msgstr "Прилипання"
 msgid "Einstellungen"
 msgstr "Налаштування"
 
-#: main_window_actions.cpp:156
+#: main_window_actions.cpp:157
 msgid "Einstieg"
 msgstr "Початок"
 
@@ -1366,7 +1374,7 @@ msgstr "Кольори та форми входів і виходів нод у 
 msgid "Farbfolge R G B W"
 msgstr "Послідовність кольорів R G B W"
 
-#: main_window_actions.cpp:103
+#: main_window_actions.cpp:104
 msgid "Farbige Punkte vor den Nodes in der Palette: was der Node liefert"
 msgstr "Кольорові точки перед нодами в палітрі: що нода віддає"
 
@@ -1382,7 +1390,7 @@ msgstr "Градієнт з до чотирьох кольорів. «Position»
 msgid "Favoriten"
 msgstr "Обране"
 
-#: main_window_actions.cpp:110
+#: main_window_actions.cpp:111
 msgid "Fensteranordnung &zurücksetzen"
 msgstr "&Скинути розташування вікон"
 
@@ -1442,7 +1450,7 @@ msgstr "Форма"
 msgid "Fragt bei GitHub nach der neuesten Version (nur die Versionsnummer, nichts wird installiert)"
 msgstr "Запитує на GitHub останню версію (лише номер версії; нічого не встановлюється)"
 
-#: main_window.cpp:337
+#: main_window.cpp:338
 msgid "Frame"
 msgstr "Frame"
 
@@ -1722,6 +1730,10 @@ msgstr "Показати чи приховати хід кабелю зі стр
 msgid "Kaleidoskop: Spiegelt einen Ausschnitt um einen Mittelpunkt zu einem Muster mit mehreren Segmenten."
 msgstr "Калейдоскоп: віддзеркалює фрагмент навколо центру в візерунок із кількох сегментів."
 
+#: dmx_monitor_panel.cpp:61
+msgid "Kanal %1"
+msgstr "Канал %1"
+
 #: settings_dialog.cpp:86
 msgid "Karte zum Empfangen:"
 msgstr "Карта для приймання:"
@@ -1738,13 +1750,17 @@ msgstr "Фікстуру не вибрано."
 msgid "Kein GPU-Adapter: %1"
 msgstr "Немає GPU-адаптера: %1"
 
-#: main_window.cpp:261
+#: main_window.cpp:262
 msgid "Kein Projekt"
 msgstr "Немає проєкту"
 
 #: parameter_panel.cpp:139 stage_view.cpp:166
 msgid "Kein Projekt geladen."
 msgstr "Проєкт не завантажено."
+
+#: dmx_monitor_panel.cpp:90
+msgid "Kein Signal auf diesem Universe."
+msgstr "Немає сигналу в цьому universe."
 
 #: node_editor_targets.cpp:68
 msgid "Kein Ziel (freies Rechteck)"
@@ -1798,7 +1814,7 @@ msgstr "Світлодіодів у кільці"
 msgid "LEDs x y z"
 msgstr "LED x y z"
 
-#: main_window.cpp:273
+#: main_window.cpp:274
 msgid "LIVE   |   "
 msgstr "LIVE   |   "
 
@@ -1841,6 +1857,10 @@ msgstr "Легенда портів"
 #: node_info_texts.cpp:39
 msgid "Legt Bild B über Bild A. Der Modus bestimmt die Verrechnung (Addieren, Multiplizieren, Screen, Subtrahieren, Differenz …), „Amount“ blendet zwischen A und dem Ergebnis."
 msgstr "Накладає зображення B на A. Режим визначає змішування (додавання, множення, Screen, віднімання, різниця …), «Amount» перетікає між A та результатом."
+
+#: dmx_monitor_panel.cpp:94
+msgid "Letztes Paket vor %1 s (veraltet)."
+msgstr "Останній пакет %1 с тому (застарілий)."
 
 #: main_window_view3d.cpp:119
 msgid "Leuchtende LEDs mit weichem Schein, Farben addieren sich; nichts verdeckt etwas"
@@ -2126,7 +2146,7 @@ msgstr "Новий проєкт"
 msgid "Neues Projekt (Strg+N)"
 msgstr "Новий проєкт (Ctrl+N)"
 
-#: main_window.cpp:133
+#: main_window.cpp:134
 msgid "Neues Projekt (Strg+N), Projekt öffnen (Strg+O) oder eine .whfx-Datei hierher ziehen.\n\n%1"
 msgstr "Новий проєкт (Ctrl+N), відкрити проєкт (Ctrl+O) або перетягніть сюди файл .whfx.\n\n%1"
 
@@ -2250,7 +2270,7 @@ msgstr "Справді надсилати пакети (Art-Net, sACN, DDP) у �
 msgid "Palette"
 msgstr "Палітра"
 
-#: main_window_actions.cpp:100
+#: main_window_actions.cpp:101
 msgid "Palette &farbig"
 msgstr "Палітра &кольорова"
 
@@ -2286,7 +2306,7 @@ msgstr "Пауза між тригером і початком переходу"
 msgid "Pegel eines Frequenzbereichs (Von–Bis in Hz) des Audio-Eingangs, geglättet mit Attack und Release. Gut für Bass- oder Höhen-Effekte. „Signal“ zeigt, ob Audio ankommt."
 msgstr "Рівень діапазону частот (Від–До в Гц) аудіовходу, згладжений через Attack і Release. Добре для ефектів на баси чи верхи. «Signal» показує, чи надходить аудіо."
 
-#: main_window_actions.cpp:105
+#: main_window_actions.cpp:106
 msgid "Pegel im &Editor"
 msgstr "Рівні в &редакторі"
 
@@ -2373,6 +2393,10 @@ msgstr "Відкрити проєкт"
 #: add_fixture_dialog.cpp:174 dmx_patch_table.cpp:44 output_form.cpp:30
 msgid "Protokoll"
 msgstr "Протокол"
+
+#: dmx_monitor_panel.cpp:33
+msgid "Protokoll:"
+msgstr "Протокол:"
 
 #: layout_panel_add.cpp:42
 msgid "Punkte"
@@ -2590,7 +2614,7 @@ msgstr "Спектр (32 смуги) аудіовходу. Підключаєт�
 msgid "Spiegelt das Bild an einer Linie in x, y und/oder z. Mit „Use other half“ ist die andere Hälfte die Vorlage."
 msgstr "Віддзеркалює зображення відносно лінії по x, y та/або z. З «Use other half» зразком слугує інша половина."
 
-#: main_window_actions.cpp:162
+#: main_window_actions.cpp:163
 msgid "Spiele"
 msgstr "Ігри"
 
@@ -2614,7 +2638,7 @@ msgstr "Stage Config"
 msgid "Standardgerät des Systems"
 msgstr "Пристрій системи за замовчуванням"
 
-#: cue_panel.cpp:67 cue_panel.cpp:145 main_window.cpp:307
+#: cue_panel.cpp:67 cue_panel.cpp:145 main_window.cpp:308
 msgid "Start"
 msgstr "Старт"
 
@@ -2758,7 +2782,7 @@ msgstr "Перейменувати …"
 msgid "Unerwartetes Ende beim letzten Mal"
 msgstr "Несподіване завершення минулого разу"
 
-#: main_window.cpp:211
+#: main_window.cpp:212
 msgid "Ungespeicherte Änderungen"
 msgstr "Незбережені зміни"
 
@@ -2773,6 +2797,10 @@ msgstr "Universe %1 з каналу 1"
 #: patch_table.cpp:49
 msgid "Universe (Art-Net ab 0, sACN ab 1)"
 msgstr "Універс (Art-Net з 0, sACN з 1)"
+
+#: dmx_monitor_panel.cpp:36
+msgid "Universe:"
+msgstr "Universe:"
 
 #: layout_panel_groups.cpp:189
 msgid "Unten"
@@ -2894,11 +2922,11 @@ msgstr "Форма хвилі аудіовходу (короткий часов�
 msgid "Wellenringe wie Wassertropfen: Ringe breiten sich von zufälligen Punkten aus (Tropfen pro Sekunde, Tempo, Ringbreite)."
 msgstr "Хвильові кільця, як краплі води: кільця розходяться від випадкових точок (крапель за секунду, темп, ширина кільця)."
 
-#: main_window.cpp:125 main_window.cpp:164
+#: main_window.cpp:126 main_window.cpp:165
 msgid "WhiteHoleFX"
 msgstr "WhiteHoleFX"
 
-#: main_window.cpp:168
+#: main_window.cpp:169
 msgid "WhiteHoleFX – %1%2"
 msgstr "WhiteHoleFX – %1%2"
 
@@ -3146,7 +3174,7 @@ msgstr "вгорі праворуч"
 msgid "rechts (x max)"
 msgstr "праворуч (x макс)"
 
-#: cue_dialog.cpp:71 cue_panel.cpp:39 main_window_dmx.cpp:128
+#: cue_dialog.cpp:71 cue_panel.cpp:39 dmx_monitor_panel.cpp:32
 msgid "sACN"
 msgstr "sACN"
 
@@ -3166,7 +3194,7 @@ msgstr "Пріоритет sACN"
 msgid "strecken (Stretch)"
 msgstr "розтягнути (Stretch)"
 
-#: main_window.cpp:167
+#: main_window.cpp:168
 msgid "unbenannt"
 msgstr "без назви"
 

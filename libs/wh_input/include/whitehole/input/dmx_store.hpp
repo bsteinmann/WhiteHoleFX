@@ -32,6 +32,13 @@ struct DmxSample {
     double ageSeconds{0.0};                // seit dem letzten Paket dieses Universe
 };
 
+/// Alle 512 Kanäle eines Universe auf einmal (für den DMX-Monitor: eine Sperre statt 128 einzelner read()).
+/// Nicht zu verwechseln mit DmxFrame in dmx_packets.hpp (das ist ein einzelnes Netzwerkpaket beim Einlesen).
+struct DmxUniverseFrame {
+    std::array<std::uint8_t, dmx::kChannelsPerUniverse> channels{};
+    double ageSeconds{0.0};  // seit dem letzten Paket dieses Universe
+};
+
 struct DmxStats {
     std::uint64_t packets{0};          // gespeicherte Pakete
     std::uint64_t ignored{0};          // verworfene (kein DMX, falscher Startcode, defekt)
@@ -55,6 +62,10 @@ public:
     /// Paket kam oder die Kanäle außerhalb von 1..512 liegen.
     [[nodiscard]] std::optional<DmxSample> read(DmxProtocol protocol, std::uint32_t universe, std::uint32_t firstChannel,
                                                 std::uint32_t count = 1) const;
+
+    /// Alle 512 Kanäle eines Universe in einer Sperre (für den DMX-Monitor). Leer wie bei read(), wenn noch
+    /// nie ein Paket für das Universe kam.
+    [[nodiscard]] std::optional<DmxUniverseFrame> readAll(DmxProtocol protocol, std::uint32_t universe) const;
 
     /// Die Universen, von denen irgendwann ein Paket kam, nach Protokoll.
     [[nodiscard]] std::map<std::uint32_t, double> universes(DmxProtocol protocol) const;
