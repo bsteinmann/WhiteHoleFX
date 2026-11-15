@@ -33,6 +33,7 @@
 #include <filesystem>
 
 #include "cue_panel.hpp"
+#include "dmx_monitor_panel.hpp"
 #include "layout_panel.hpp"
 #include "live_panel.hpp"
 #include "look_panel.hpp"
