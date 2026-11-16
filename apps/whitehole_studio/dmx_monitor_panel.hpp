@@ -10,16 +10,13 @@
 // unten) braucht er trotzdem den Player, nur eben zusätzlich.
 //
 // "Wer hört zu"-Overlay (Schritt 4 des DMX-Patch/Monitor-Gitters, siehe CLAUDE.md): der Tooltip einer
-// Zelle nennt den Node (oder Master-Helligkeit/Live-DMX), der sie liest, falls einer das tut. Seit der
-// Namensanzeige unten steht derselbe Name zusätzlich direkt in der Zelle (zweite Zeile), nicht mehr nur
-// im Tooltip beim Hovern. Wird nur bei einem Protokoll-/Universe-Wechsel neu berechnet (nicht jeden
-// Frame) - ändert sich der Graph, während der Monitor offen ist, zeigen Tooltip und Zellentext den alten
-// Stand, bis neu gewählt wird; das ist bewusst einfach gehalten (ein Durchlauf über alle Nodes pro Frame
-// wäre für ein reines Anzeige-Werkzeug unnötig teuer).
-//
-// Namensanzeige in der Zelle (vom Nutzer gewünscht: "den Namen des gepatchten Objekts anzeigen, nicht nur
-// die Farbe"): eine belegte Zelle zeigt den Wert und darunter den Namen (`listenerNames_`, zusammen mit
-// den Tooltips in updateListenerTooltips() befüllt), eine freie nur den Wert wie bisher.
+// Zelle nennt den Node (oder Master-Helligkeit/Live-DMX), der sie liest, falls einer das tut. Wird nur
+// bei einem Protokoll-/Universe-Wechsel neu berechnet (nicht jeden Frame) - ändert sich der Graph, während
+// der Monitor offen ist, zeigt der Tooltip den alten Stand, bis neu gewählt wird; das ist bewusst einfach
+// gehalten (ein Durchlauf über alle Nodes pro Frame wäre für ein reines Anzeige-Werkzeug unnötig teuer).
+// Eine Zeitlang stand dieser Name zusätzlich direkt in der Zelle (zweite Zeile); vom Nutzer wieder
+// zurückgenommen ("nur die Zahlen des Kanals"), weil ein langer Name die Zelle nach dem Umbruch mit "…"
+// abschnitt - die Zelle zeigt jetzt wieder nur die reine Zahl, der Name steht ausschließlich im Tooltip.
 //
 // Rechtsklick (Schritt 3): bei einer schon belegten Zelle eine Aktion "Farbe ändern…" (siehe unten) und eine
 // deaktivierte Zeile "Gehört zu: ..." (aus demselben Tooltip-Text). Bei einer freien Zelle (nachträglich
@@ -117,7 +114,6 @@ private:
     QLabel* status_{nullptr};
     QTableWidget* grid_{nullptr};
     std::array<std::uint8_t, input::kDmxChannels> lastValues_{};
-    std::array<QString, input::kDmxChannels> listenerNames_;  // Kanal -> Name des Hörers, leer = keiner (siehe Kommentar oben)
     bool hasData_{false};  // zeigt das Gitter gerade Werte (statt "-") an?
     std::map<std::uint32_t, QColor> colorOverrides_;  // Kanal -> von Hand gewählte Farbe, siehe Kommentar oben
 };

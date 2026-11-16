@@ -75,14 +75,6 @@ void LayoutPanel::addFromDialog() {
     }
 }
 
-void LayoutPanel::addFromDialogAt(output::Protocol protocol, std::uint32_t universe, std::uint32_t channel) {
-    AddFixtureDialog dialog{player_, nextOrigin(), this};
-    dialog.prefillManualPatch(protocol, universe, channel);
-    if (dialog.exec() == QDialog::Accepted) {
-        addFixture(dialog.result());
-    }
-}
-
 void LayoutPanel::addFixture(const NewFixture& fixture) {
     // Ohne Projekt (Studio frisch gestartet) legt das Hauptfenster ein neues an. Dessen Vorlagen-
     // Matrix wird danach wieder entfernt, damit nur das Fixture übrig bleibt, das der Nutzer wollte.

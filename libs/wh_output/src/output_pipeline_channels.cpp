@@ -28,6 +28,7 @@ namespace whitehole::output {
 
 void OutputPipeline::applyChannels(std::span<const ChannelWrite> channels) {
     for (ChannelSlot& extra : channelSlots_) {
+        extra.wasUsed = extra.used;  // für den einen Nullen-Frame beim Verstummen, siehe sendAll()
         extra.used = false;
         std::fill(extra.data.begin(), extra.data.end(), std::uint8_t{0});
     }

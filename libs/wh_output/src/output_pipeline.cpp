@@ -183,7 +183,10 @@ void OutputPipeline::sendAll() {
         sendSlot(plan_.slots()[i], slotData_[i], endpoints_[i], nextSequence(i));
     }
     for (ChannelSlot& extra : channelSlots_) {
-        if (extra.used) {
+        // Noch senden, wenn jemand schreibt (extra.used) ODER das gerade erst aufgehört hat (extra.wasUsed):
+        // genau ein Nullen-Frame beim Verstummen, sonst bliebe der letzte Wert am Empfänger und im
+        // DMX-Ausgangs-Monitor (SentDmxStore) stehen (vom Nutzer gemeldet).
+        if (extra.used || extra.wasUsed) {
             sendSlot(extra.slot, extra.data, extra.endpoint, advanceSequence(extra.slot.protocol, extra.sequence));
         }
     }

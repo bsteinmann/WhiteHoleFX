@@ -2,6 +2,35 @@
 
 ## 0.92.0
 
+- **DMX-Monitor: vier vom Nutzer gemeldete Fehler/Wünsche behoben.**
+  1. **Zellentext zeigt nur noch die reine Zahl** (0–255) statt zusätzlich des Namens der Belegung in einer
+     zweiten Zeile - der Name führte bei langen Namen zu abgeschnittenem Text ("…") in der schmalen Zelle.
+     Betrifft beide Monitore (`dmx_monitor_panel.cpp`, `dmx_output_monitor_panel.cpp`); der Name steht
+     weiterhin ausschließlich im Tooltip (unverändert). Die zuvor für die Namensanzeige in der Zelle
+     gepflegten `listenerNames_`/`occupantNames_`-Felder sind damit entfallen.
+  2. **Entfernter DMX-Kanal-Pool-Patch blieb im DMX-Ausgangs-Monitor (und am echten Ausgang) auf dem alten
+     Wert stehen**, statt auf 0 zurückzufallen: `OutputPipeline` sendete einen internen Kanal-Pool-Slot
+     bisher nur, solange tatsächlich jemand hineinschrieb, und verstummte danach einfach, ohne je einen
+     Nullen-Frame zu schicken - das ließ sowohl echte Hardware als auch `SentDmxStore` (und damit den
+     Monitor) für immer beim letzten Wert stehen. Neues `wasUsed`-Feld an `OutputPipeline::ChannelSlot`
+     (`output_pipeline.hpp`) sorgt jetzt für genau einen zusätzlichen Nullen-Frame beim Verstummen
+     (`sendAll()`, `output_pipeline.cpp`), danach bleibt der Slot wie gewohnt stumm. Betrifft nicht nur den
+     Monitor, sondern auch echte angeschlossene Geräte (werden jetzt wirklich dunkel statt den letzten Wert
+     zu halten).
+  3. **Neu: "Patch aufheben" für einen DMX-Kanal-Pool-Patch direkt aus dem DMX-Ausgangs-Monitor** -
+     Rechtsklick auf eine vom Pool belegte Zelle → Untermenü "Node" (dasselbe Untermenü, das auf einer
+     freien Zelle das Patchen anbietet) → "Patch bearbeiten (Pool-Kanal N)…" (bisheriges Verhalten, jetzt im
+     Untermenü) oder neu "Patch aufheben" - entfernt den Patch sofort, ohne den Umweg über die DMX-Kanal-
+     Pool-Tabelle (neues Signal `requestRemovePoolPatch`, verdrahtet in `MainWindow::buildDmxMonitor` nach
+     demselben Filter-Muster wie `DmxPatchTable::removeSelectedPatch`, nur nach `poolChannel` statt
+     Zeilenindex).
+  4. **"Neues Fixture hier patchen…" aus dem DMX-Ausgangs-Monitor entfernt** - eine freie Zelle bietet jetzt
+     nur noch das Untermenü "Node" (Patchen eines `wh.output.dmx`/`wh.output.dmxcolor`-Nodes); Fixtures
+     patcht man ausschließlich über den Reiter Fixtures bzw. die Fixture-Patch-Tabelle. Der dafür gebaute
+     Weg (`LayoutPanel::addFromDialogAt`, `AddFixtureDialog::prefillManualPatch`, das Signal
+     `requestManualPatch`) ist komplett entfernt, ebenso die dafür nötige Disconnect/Reconnect-Behandlung im
+     Rauchtest (`MainWindow::exerciseDmxOutputMonitor`) - keiner der verbleibenden Menüpunkte öffnet noch
+     einen modalen Dialog.
 - **Layout-Tab umgebaut: Fixture-Bibliothek oben, „Hinzufügen“- und „Vorlagen“-Knopf entfernt** (vom
   Nutzer vorgegeben, vier Punkte). Oben im Reiter Layout steht jetzt zuerst die **Fixture-Bibliothek**
   (alle gespeicherten Bauformen, dieselbe Benutzerbibliothek wie im Reiter Fixtures unter „Gespeicherte
@@ -12,8 +41,9 @@
   hinter dem frei vergebenen Namen zusätzlich die Original-Bezeichnung der Form (z. B. „Kachel 5x3 —
   2D-Matrix"; neue Datei `fixture_shape_label.hpp/.cpp`), damit ein frei gewählter Name nicht verschleiert,
   was dahintersteckt. Der Knopf „Hinzufügen …" ist aus dem Layout-Tab entfernt (Anlegen geht jetzt nur noch
-  über eine Bauform oder über den Dialog im Menü Stage Config bzw. den Rechtsklick im DMX-Ausgangs-Monitor -
-  beide bleiben unverändert bestehen, `AddFixtureDialog`/`addFromDialog`/`addFromDialogAt` sind unangetastet).
+  über eine Bauform oder über den Dialog im Menü Stage Config - `AddFixtureDialog`/`addFromDialog` sind
+  unangetastet; den damaligen zweiten Zugang, den Rechtsklick im DMX-Ausgangs-Monitor, gibt es seitdem
+  ohnehin nicht mehr, siehe weiter unten „DMX-Monitor: 'Neues Fixture hier patchen…' entfernt").
   Der Knopf „Vorlagen" ist komplett entfernt (`layout_panel_library.cpp` gelöscht): Die alte, separate
   Vorlagen-Bibliothek (`project::FixtureTemplate`/`FixtureLibrary`, je eine `.whfx`-Datei pro Vorlage im
   Ordner `fixtures`) war seit der Benutzerbibliothek (`user_library.hpp`, eine gemeinsame Datei

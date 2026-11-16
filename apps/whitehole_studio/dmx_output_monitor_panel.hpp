@@ -14,19 +14,22 @@
 // Pool) - analog zum Eingangsmonitor (dmx_monitor_panel.hpp), nur berechnet bei Protokoll-/Universe-
 // Wechsel, nicht in refresh() (siehe dort für die Begründung).
 //
-// Rechtsklick (Schritt 3 des DMX-Patch/Monitor-Gitters): auf einer freien Zelle bietet er "Neues Fixture
-// hier patchen…" an (öffnet den bestehenden "Fixture hinzufügen"-Dialog vorbefüllt, statt das Patchen hier
-// noch einmal nachzubauen), dazu ein neues Untermenü "Node" (Gegenstück zum gleichnamigen Untermenü im
-// Eingangs-Monitor, siehe dmx_monitor_panel.hpp): listet alle wh.output.dmx/wh.output.dmxcolor-Nodes des
-// Projekts (Player::dmxOutputValueNodes) und patcht den gewählten Node-Pool-Bereich auf diesen Kanal
-// (requestPatchOutputNode, siehe MainWindow::patchDmxOutputValueNode) - bewusst getrennt vom
-// Eingangs-Monitor-Untermenü (nicht "egal welcher Monitor", wie zunächst erwogen): Empfangs- und
-// Sende-Adressraum sind unterschiedliche Dinge, auch bei gleicher Universe-Nummer, und Fixtures bleiben
-// bewusst außen vor - sie werden weiterhin ausschließlich über "Neues Fixture hier patchen…" bzw. die
-// Fixture-Patch-Tabelle selbst gepatcht, nie über dieses neue Untermenü. Auf einer belegten Zelle
-// (nachträglich freigegebene Erweiterung) bietet er zusätzlich "Farbe ändern…" (siehe unten) an und springt
-// sonst direkt zur passenden Zeile in der Fixture-Patch- bzw. DMX-Kanal-Pool-Tabelle auf der Seite Ausgabe
-// (StageSetupWindow::openOutputFixture/openOutputPool), statt nur anzuzeigen, wer belegt.
+// Rechtsklick (Schritt 3 des DMX-Patch/Monitor-Gitters): auf einer freien Zelle bietet er ein Untermenü
+// "Node" (Gegenstück zum gleichnamigen Untermenü im Eingangs-Monitor, siehe dmx_monitor_panel.hpp): listet
+// alle wh.output.dmx/wh.output.dmxcolor-Nodes des Projekts (Player::dmxOutputValueNodes) und patcht den
+// gewählten Node-Pool-Bereich auf diesen Kanal (requestPatchOutputNode, siehe
+// MainWindow::patchDmxOutputValueNode) - bewusst getrennt vom Eingangs-Monitor-Untermenü (nicht "egal
+// welcher Monitor", wie zunächst erwogen): Empfangs- und Sende-Adressraum sind unterschiedliche Dinge, auch
+// bei gleicher Universe-Nummer, und Fixtures bleiben bewusst außen vor - sie werden ausschließlich über die
+// Fixture-Patch-Tabelle selbst gepatcht, nie über dieses Untermenü. ("Neues Fixture hier patchen…" gab es
+// hier früher zusätzlich flach auf der freien Zelle, vom Nutzer wieder entfernt - Fixtures patcht man über
+// den Reiter Fixtures, nicht hier.) Auf einer belegten Zelle (nachträglich freigegebene Erweiterung) bietet
+// er zusätzlich "Farbe ändern…" (siehe unten) an; bei einem Fixture springt er direkt zur passenden Zeile
+// der Fixture-Patch-Tabelle (StageSetupWindow::openOutputFixture); bei einem DMX-Kanal-Pool-Patch (also
+// einem Node) bietet er stattdessen, wie die freie Zelle, ein Untermenü "Node" mit "Patch bearbeiten…"
+// (springt zur DMX-Kanal-Pool-Tabelle, StageSetupWindow::openOutputPool) und, neu, "Patch aufheben" (entfernt
+// den Patch direkt, ohne den Umweg über die Tabelle - vom Nutzer gewünscht: "rechtklick -> node -> patch
+// aufheben").
 //
 // Zellenfarben (nachträglich freigegebene Erweiterung, erster Teil des 15.11.-Vorschlags "farbig
 // hinterlegen"): eine belegte Zelle bekommt automatisch die Standardfarbe ihrer Kategorie
@@ -37,11 +40,9 @@
 // beim Wechsel wieder verloren (keine Projekt- oder Einstellungs-Daten, rein optisch), genauso wie im
 // Eingangs-Monitor (dmx_monitor_panel.hpp).
 //
-// Namensanzeige in der Zelle (vom Nutzer gewünscht: "den Namen des gepatchten Objekts anzeigen, nicht nur
-// die Farbe"): analog zum Eingangsmonitor zeigt eine belegte Zelle den Wert und darunter den Namen
-// (`occupantNames_`, zusammen mit den Tooltips in updateOccupantTooltips() befüllt), eine freie nur den
-// Wert wie bisher. Bei Kind::Pool ist DmxOutputOccupant::name leer (siehe dmx_output_usage.hpp) - dort
-// steht statt eines Namens der Pool-Kanal ("Pool-Kanal N"), wie im Tooltip-Text.
+// Zellentext: nur die reine Zahl (vom Nutzer so entschieden, siehe dmx_monitor_panel.hpp - eine Zeitlang
+// stand hier zusätzlich der Name der Belegung in einer zweiten Zeile, das schnitt bei langen Namen ab und
+// wurde zurückgenommen); wer die Zelle belegt, steht ausschließlich im Tooltip (occupantTooltip).
 #pragma once
 
 #include <QColor>
@@ -79,17 +80,19 @@ public:
 
     /// Rauchtest für die CI: Protokoll/Universe wählen, einen Wert schreiben, prüfen, dass er erscheint,
     /// Tooltip ohne Belegung prüfen, Rechtsklick auf eine freie, eine Fixture- und eine Pool-Zelle prüfen,
-    /// dazu deren Zellenfarben, dass "Farbe ändern…" bei belegten Zellen angeboten wird, und das neue
-    /// Untermenü "Node" auf einer freien Zelle (Patchen eines wh.output.dmx-Nodes).
+    /// dazu deren Zellenfarben, dass "Farbe ändern…" bei belegten Zellen angeboten wird, das Untermenü
+    /// "Node" auf einer freien Zelle (Patchen eines wh.output.dmx-Nodes) und auf einer belegten Pool-Zelle
+    /// ("Patch bearbeiten…" und "Patch aufheben").
     QString exercise();
 
 Q_SIGNALS:
-    /// Rechtsklick auf eine freie Zelle, "Neues Fixture hier patchen…" gewählt.
-    void requestManualPatch(output::Protocol protocol, std::uint32_t universe, std::uint32_t channel);
     /// Rechtsklick auf eine von einem Fixture belegte Zelle, "Fixture-Patch bearbeiten" gewählt.
     void requestEditFixturePatch(mapping::FixtureId id);
-    /// Rechtsklick auf eine vom DMX-Kanal-Pool belegte Zelle, "DMX-Kanal-Pool-Patch bearbeiten" gewählt.
+    /// Rechtsklick auf eine vom DMX-Kanal-Pool belegte Zelle, Untermenü "Node", "Patch bearbeiten…" gewählt.
     void requestEditPoolPatch(std::uint16_t poolChannel);
+    /// Rechtsklick auf eine vom DMX-Kanal-Pool belegte Zelle, Untermenü "Node", "Patch aufheben" gewählt:
+    /// den Patch auf diesem Pool-Kanal direkt entfernen (siehe MainWindow::buildDmxMonitor).
+    void requestRemovePoolPatch(std::uint16_t poolChannel);
     /// Rechtsklick auf eine freie Zelle, Untermenü "Node", einen wh.output.dmx/wh.output.dmxcolor-Node
     /// gewählt: dessen Pool-Bereich (poolChannel/count, siehe DmxOutputValueNodeRef) auf diese Adresse patchen.
     void requestPatchOutputNode(std::uint16_t poolChannel, std::uint16_t count, output::Protocol protocol,
@@ -116,7 +119,6 @@ private:
     QLabel* status_{nullptr};
     QTableWidget* grid_{nullptr};
     std::array<std::uint8_t, output::kSentDmxChannels> lastValues_{};
-    std::array<QString, output::kSentDmxChannels> occupantNames_;  // Kanal -> Name der Belegung, leer = frei
     bool hasData_{false};  // zeigt das Gitter gerade Werte (statt "-") an?
     std::map<std::uint32_t, QColor> colorOverrides_;  // Kanal -> von Hand gewählte Farbe, siehe Kommentar oben
 };

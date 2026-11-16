@@ -50,10 +50,6 @@ public:
     void addStrip();
     /// Öffnet den Dialog "Fixture hinzufügen" (Form, Größe x y z, Lage, Verkabelung, Patch) und legt das Ergebnis an.
     void addFromDialog();
-    /// Wie addFromDialog, aber der Patch-Abschnitt startet vorbefüllt auf Manuell mit diesem Protokoll/
-    /// Universe/Kanal - der Rechtsklick "Neues Fixture hier patchen…" aus dem DMX-Ausgangs-Monitor
-    /// (Schritt 3 des DMX-Patch/Monitor-Gitters, siehe CLAUDE.md).
-    void addFromDialogAt(output::Protocol protocol, std::uint32_t universe, std::uint32_t channel);
     /// Legt ein Fixture so an, wie der Dialog es beschreibt. Ohne Projekt entsteht zuerst ein neues.
     void addFixture(const NewFixture& fixture);
     /// Wie importPoints, aber mit gegebener Datei und ohne Dialog. Wahr, wenn ein Fixture entstanden ist.

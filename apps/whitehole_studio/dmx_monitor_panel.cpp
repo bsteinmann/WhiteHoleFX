@@ -110,8 +110,6 @@ void DmxMonitorPanel::updateListenerTooltips() {
         const int c = (channel - 1) % kColumns;
         QTableWidgetItem* item = grid_->item(r, c);
         item->setToolTip(listenerTooltip(static_cast<std::uint32_t>(channel), listener));
-        listenerNames_[static_cast<std::size_t>(channel - 1)] =
-            listener ? QString::fromStdString(listener->name) : QString{};
         const auto colorOverride = colorOverrides_.find(static_cast<std::uint32_t>(channel));
         if (colorOverride != colorOverrides_.end()) {
             item->setBackground(colorOverride->second);
@@ -207,9 +205,9 @@ void DmxMonitorPanel::refresh() {
         }
         const int r = i / kColumns;
         const int c = i % kColumns;
-        const QString value = QString::number(frame->channels[static_cast<std::size_t>(i)]);
-        const QString& name = listenerNames_[static_cast<std::size_t>(i)];
-        grid_->item(r, c)->setText(name.isEmpty() ? value : value + QStringLiteral("\n") + name);
+        // Nur die Zahl (vom Nutzer gewünscht: der Name führte bei langen Namen zu abgeschnittenem Text in
+        // der Zelle); wer die Zelle liest, steht weiterhin im Tooltip (siehe listenerTooltip/updateListenerTooltips).
+        grid_->item(r, c)->setText(QString::number(frame->channels[static_cast<std::size_t>(i)]));
     }
     lastValues_ = frame->channels;
     hasData_ = true;
@@ -294,10 +292,11 @@ QString DmxMonitorPanel::exercise() {
     if (grid_->item(0, 0)->background().color() != dmxCellColor(DmxCellCategory::Master)) {
         return QStringLiteral("DMX-Monitor: Masterdimmer-Kanal bekommt nicht die Master-Farbe");
     }
-    // Namensanzeige (vom Nutzer gewünscht: "den Namen des gepatchten Objekts anzeigen"): die Zelle zeigt
-    // jetzt Wert und, in einer zweiten Zeile, den Namen des Hörers ("Master-Helligkeit").
-    if (!grid_->item(0, 0)->text().contains(QStringLiteral("\nMaster-Helligkeit"))) {
-        return QStringLiteral("DMX-Monitor: Zelle zeigt den Namen des Masterdimmer-Kanals nicht in der zweiten Zeile an");
+    // Die Zelle zeigt nur die reine Zahl (vom Nutzer so gewünscht, siehe Kommentar am Header), der Name
+    // des Hörers steht nur im Tooltip - der alte Wert von Kanal 1 (42, siehe oben) bleibt unverändert stehen.
+    if (grid_->item(0, 0)->text() != QStringLiteral("42") ||
+        !grid_->item(0, 0)->toolTip().contains(QStringLiteral("Master-Helligkeit"))) {
+        return QStringLiteral("DMX-Monitor: Zelle zeigt mehr als die reine Zahl an oder der Tooltip nennt den Masterdimmer-Kanal nicht");
     }
     // Rechtsklick auf diese jetzt belegte Zelle bietet "Farbe ändern…" an (nicht ausgelöst - echter,
     // modaler QColorDialog würde im Rauchtest ohne Publikum blockieren).

@@ -103,7 +103,9 @@ public:
     /// output_plan.hpp). Pool-Kanäle ohne Patch werden stillschweigend nicht gesendet. Die übersetzten Bytes landen
     /// in den Universen der Fixtures (ohne deren Kanäle zu überschreiben: eine Überschneidung wird gezählt und
     /// übersprungen) oder bekommen eigene Universen, die wie die der Fixtures je Frame gesendet werden. Ein Universe,
-    /// das in einem Frame keiner mehr beschreibt, wird nicht mehr gesendet.
+    /// das keiner mehr beschreibt, bekommt noch genau einen Frame mit lauter Nullen (sonst bliebe sowohl am
+    /// Empfänger als auch im DMX-Ausgangs-Monitor der letzte Wert stehen, siehe sent_dmx_store.hpp), danach
+    /// verstummt es.
     [[nodiscard]] Result<void> processBytes(std::span<const std::byte> bytes, std::span<const ChannelWrite> channels);
 
     [[nodiscard]] OutputStats stats() const noexcept;
@@ -121,6 +123,10 @@ private:
         std::uint8_t sequence{0};
         std::vector<std::uint8_t> data;
         bool used{false};
+        /// `used` vom letzten Frame, bevor applyChannels() es neu bestimmt - so erkennt sendAll() den
+        /// Übergang "beschrieben -> nicht mehr beschrieben" und sendet noch den einen Nullen-Frame (siehe
+        /// Kommentar an processBytes).
+        bool wasUsed{false};
     };
 
     void sendSlot(const OutputSlot& slot, std::span<const std::uint8_t> data, const Endpoint& to, std::uint8_t sequence);

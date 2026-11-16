@@ -316,7 +316,9 @@ TEST_CASE("DMX-Nodes: Pool-Kanäle landen über dmxpatch im Universe des Fixture
     CHECK(r->pipeline->lastSendError()->code == ErrorCode::AlreadyExists);
 }
 
-TEST_CASE("DMX-Nodes: ein eigenes Universe wird gesendet, solange jemand schreibt, mit laufender Sequenz", "[output][pipeline][dmx]") {
+TEST_CASE("DMX-Nodes: ein eigenes Universe wird gesendet, solange jemand schreibt, mit laufender Sequenz, "
+         "plus genau ein Nullen-Frame beim Verstummen",
+         "[output][pipeline][dmx]") {
     OutputConfig config = oneDestination("192.168.1.50");
     config.dmxPatches = {dmxpatch(1, 3, 5, 1)};  // Pool 1-3 -> Universe 5, Kanal 1-3 (1:1)
     auto r = rig(mapOf({1}), {patch(1, Protocol::ArtNet, 0)}, config);
@@ -329,9 +331,10 @@ TEST_CASE("DMX-Nodes: ein eigenes Universe wird gesendet, solange jemand schreib
     const std::vector<ColorRgba> one{{0, 0, 0, 1}};
     REQUIRE(r->pipeline->processBytes(bytesOf(one), std::vector<ChannelWrite>{write, second}).ok());
     REQUIRE(r->pipeline->processBytes(bytesOf(one), std::vector<ChannelWrite>{write}).ok());
-    REQUIRE(r->pipeline->processBytes(bytesOf(one), {}).ok());  // niemand schreibt mehr: Universe 5 verstummt
+    REQUIRE(r->pipeline->processBytes(bytesOf(one), {}).ok());  // niemand schreibt mehr: ein letzter Nullen-Frame
+    REQUIRE(r->pipeline->processBytes(bytesOf(one), {}).ok());  // und erst danach verstummt Universe 5 wirklich
     const auto sent = r->sink.packets();
-    REQUIRE(sent.size() == 5);  // 3x Universe 0, 2x Universe 5
+    REQUIRE(sent.size() == 7);  // 4x Universe 0, 3x Universe 5 (die ersten beiden Schreibzugriffe, dann der Nullen-Frame)
     const auto universeOf = [](const Bytes& b) { return b[14] | (b[15] << 8); };
     CHECK(universeOf(sent[1].bytes) == 5);
     CHECK(sent[1].bytes[18 + 0] == 200);
@@ -341,6 +344,14 @@ TEST_CASE("DMX-Nodes: ein eigenes Universe wird gesendet, solange jemand schreib
     CHECK(sent[3].bytes[12] == 2);
     CHECK(sent[3].bytes[18 + 2] == 0);  // der zweite Node schreibt nicht mehr: Kanal 3 zurück auf 0
     CHECK(universeOf(sent[4].bytes) == 0);
+    // Dritter Aufruf (niemand schreibt mehr): noch ein letzter Frame für Universe 5, komplett auf Null -
+    // sonst bliebe der letzte Wert am Empfänger und im DMX-Ausgangs-Monitor (SentDmxStore) stehen.
+    CHECK(universeOf(sent[5].bytes) == 5);
+    CHECK(sent[5].bytes[12] == 3);
+    CHECK(sent[5].bytes[18 + 0] == 0);
+    CHECK(sent[5].bytes[18 + 2] == 0);
+    // Vierter Aufruf: Universe 5 bekommt nach seinem Nullen-Frame keinen weiteren mehr, nur noch Universe 0.
+    CHECK(universeOf(sent[6].bytes) == 0);
 }
 
 TEST_CASE("DMX-Nodes: Pool-Kanäle ohne dmxpatch werden still fallengelassen, wie ein ungepatchtes Fixture",

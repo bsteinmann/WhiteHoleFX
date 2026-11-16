@@ -112,15 +112,6 @@ void DmxOutputMonitorPanel::updateOccupantTooltips() {
         const int c = (channel - 1) % kColumns;
         QTableWidgetItem* item = grid_->item(r, c);
         item->setToolTip(occupantTooltip(static_cast<std::uint32_t>(channel), occupant));
-        // occupant->name ist bei Kind::Pool leer (siehe dmx_output_usage.hpp) - dort stattdessen den
-        // Pool-Kanal zeigen, analog zum Tooltip-Text oben.
-        if (!occupant) {
-            occupantNames_[static_cast<std::size_t>(channel - 1)] = QString{};
-        } else if (occupant->kind == runtime::DmxOutputOccupant::Kind::Fixture) {
-            occupantNames_[static_cast<std::size_t>(channel - 1)] = QString::fromStdString(occupant->name);
-        } else {
-            occupantNames_[static_cast<std::size_t>(channel - 1)] = tr("Pool-Kanal %1").arg(occupant->poolChannel);
-        }
         const auto colorOverride = colorOverrides_.find(static_cast<std::uint32_t>(channel));
         if (colorOverride != colorOverrides_.end()) {
             item->setBackground(colorOverride->second);
@@ -143,19 +134,21 @@ QMenu* DmxOutputMonitorPanel::buildContextMenu(std::uint32_t channel, output::Pr
             const mapping::FixtureId id = occupant->fixtureId;
             connect(edit, &QAction::triggered, this, [this, id]() { Q_EMIT requestEditFixturePatch(id); });
         } else {
-            QAction* edit = menu->addAction(tr("DMX-Kanal-Pool-Patch bearbeiten (Pool-Kanal %1)…").arg(occupant->poolChannel));
+            // Untermenü "Node" (wie bei der freien Zelle unten): "Patch bearbeiten…" springt zur DMX-Kanal-
+            // Pool-Tabelle, "Patch aufheben" entfernt den Patch direkt (vom Nutzer gewünscht: "rechtklick ->
+            // node -> patch aufheben").
+            QMenu* nodeMenu = menu->addMenu(tr("Node"));
             const std::uint16_t poolChannel = occupant->poolChannel;
+            QAction* edit = nodeMenu->addAction(tr("Patch bearbeiten (Pool-Kanal %1)…").arg(poolChannel));
             connect(edit, &QAction::triggered, this, [this, poolChannel]() { Q_EMIT requestEditPoolPatch(poolChannel); });
+            QAction* remove = nodeMenu->addAction(tr("Patch aufheben"));
+            connect(remove, &QAction::triggered, this, [this, poolChannel]() { Q_EMIT requestRemovePoolPatch(poolChannel); });
         }
     } else {
-        QAction* add = menu->addAction(tr("Neues Fixture hier patchen…"));
-        connect(add, &QAction::triggered, this,
-                [this, protocol, universe, channel]() { Q_EMIT requestManualPatch(protocol, universe, channel); });
-
-        // Neues Untermenü "Node" (Gegenstück zum gleichnamigen Untermenü im Eingangs-Monitor, siehe
-        // dmx_monitor_panel.hpp): patcht stattdessen den Pool-Bereich eines schon im Projekt vorhandenen
-        // wh.output.dmx/wh.output.dmxcolor-Nodes auf diesen Kanal. Fixtures laufen bewusst weiterhin nur
-        // über "Neues Fixture hier patchen…" oben, nicht über dieses Menü.
+        // Untermenü "Node" (Gegenstück zum gleichnamigen Untermenü im Eingangs-Monitor, siehe
+        // dmx_monitor_panel.hpp): patcht den Pool-Bereich eines schon im Projekt vorhandenen
+        // wh.output.dmx/wh.output.dmxcolor-Nodes auf diesen Kanal. Fixtures laufen bewusst nicht über dieses
+        // Menü, sondern ausschließlich über den Reiter Fixtures bzw. die Fixture-Patch-Tabelle.
         QMenu* nodeMenu = menu->addMenu(tr("Node"));
         const std::vector<runtime::DmxOutputValueNodeRef> nodes = player_.dmxOutputValueNodes();
         if (nodes.empty()) {
@@ -214,9 +207,9 @@ void DmxOutputMonitorPanel::refresh() {
         }
         const int r = i / kColumns;
         const int c = i % kColumns;
-        const QString value = QString::number(frame->channels[static_cast<std::size_t>(i)]);
-        const QString& name = occupantNames_[static_cast<std::size_t>(i)];
-        grid_->item(r, c)->setText(name.isEmpty() ? value : value + QStringLiteral("\n") + name);
+        // Nur die Zahl (vom Nutzer gewünscht: der Name führte bei langen Namen zu abgeschnittenem Text in
+        // der Zelle); wer die Zelle belegt, steht weiterhin im Tooltip (siehe occupantTooltip/updateOccupantTooltips).
+        grid_->item(r, c)->setText(QString::number(frame->channels[static_cast<std::size_t>(i)]));
     }
     lastValues_ = frame->channels;
     hasData_ = true;
@@ -267,44 +260,21 @@ QString DmxOutputMonitorPanel::exercise() {
         return QStringLiteral("DMX-Ausgangs-Monitor: Tooltip zeigt ohne Belegung nicht einfach \"Kanal N\"");
     }
 
-    // Rechtsklick auf eine freie Zelle (Universe 30000 ist nicht gepatcht): Kontextmenü bietet das Patchen
-    // an, und löst es aus. menu.exec() selbst wird nicht aufgerufen (würde im Rauchtest blockieren).
-    bool requested = false;
-    output::Protocol requestedProtocol{};
-    std::uint32_t requestedUniverse = 0;
-    std::uint32_t requestedChannel = 0;
-    // Verbindung merken und am Ende wieder lösen: sie hängt sonst über das Ende dieser Funktion hinaus an
-    // `this` und griffe bei einem echten späteren Rechtsklick auf die hier längst ungültigen Stack-Referenzen zu.
-    const QMetaObject::Connection probe =
-        connect(this, &DmxOutputMonitorPanel::requestManualPatch, this,
-                [&](output::Protocol protocol, std::uint32_t universe, std::uint32_t channel) {
-                    requested = true;
-                    requestedProtocol = protocol;
-                    requestedUniverse = universe;
-                    requestedChannel = channel;
-                });
+    // Rechtsklick auf eine freie Zelle (Universe 30000 ist nicht gepatcht): Kontextmenü bietet nur das
+    // Untermenü "Node" an ("Neues Fixture hier patchen…" gab es hier früher zusätzlich, vom Nutzer wieder
+    // entfernt). menu.exec() selbst wird nicht aufgerufen (würde im Rauchtest blockieren).
     QMenu* menu = buildContextMenu(1, output::Protocol::ArtNet, 30000);
-    if (menu->actions().size() != 2 || !menu->actions()[0]->text().contains(QStringLiteral("Neues Fixture")) ||
-        menu->actions()[1]->menu() == nullptr) {
+    if (menu->actions().size() != 1 || menu->actions()[0]->menu() == nullptr) {
         delete menu;
-        disconnect(probe);
-        return QStringLiteral(
-            "DMX-Ausgangs-Monitor: Kontextmenü für eine freie Zelle bietet nicht \"Neues Fixture hier patchen\" und \"Node\" an");
+        return QStringLiteral("DMX-Ausgangs-Monitor: Kontextmenü für eine freie Zelle bietet nicht \"Node\" an");
     }
     // Ohne wh.output.dmx/wh.output.dmxcolor-Node im Projekt: "Node" zeigt nur einen deaktivierten Hinweis.
-    QMenu* emptyNodeMenu = menu->actions()[1]->menu();
+    QMenu* emptyNodeMenu = menu->actions()[0]->menu();
     const bool emptyNodeOk =
         emptyNodeMenu != nullptr && emptyNodeMenu->actions().size() == 1 && !emptyNodeMenu->actions().first()->isEnabled();
-    if (!emptyNodeOk) {
-        delete menu;
-        disconnect(probe);
-        return QStringLiteral("DMX-Ausgangs-Monitor: \"Node\" zeigt ohne passenden Node nicht den deaktivierten Hinweis");
-    }
-    menu->actions()[0]->trigger();
     delete menu;
-    disconnect(probe);
-    if (!requested || requestedProtocol != output::Protocol::ArtNet || requestedUniverse != 30000 || requestedChannel != 1) {
-        return QStringLiteral("DMX-Ausgangs-Monitor: Kontextmenü löst requestManualPatch nicht mit den richtigen Werten aus");
+    if (!emptyNodeOk) {
+        return QStringLiteral("DMX-Ausgangs-Monitor: \"Node\" zeigt ohne passenden Node nicht den deaktivierten Hinweis");
     }
 
     // Mit einem wh.output.dmx-Node im Projekt: "Node" bietet ihn an, und das Auslösen patcht wirklich den
@@ -334,8 +304,8 @@ QString DmxOutputMonitorPanel::exercise() {
             requestedCount = count;
         });
     QMenu* filledMenu = buildContextMenu(2, output::Protocol::ArtNet, 30000);
-    const bool filledMenuOk = filledMenu->actions().size() == 2 && filledMenu->actions()[1]->menu() != nullptr;
-    QMenu* filledNodeMenu = filledMenuOk ? filledMenu->actions()[1]->menu() : nullptr;
+    const bool filledMenuOk = filledMenu->actions().size() == 1 && filledMenu->actions()[0]->menu() != nullptr;
+    QMenu* filledNodeMenu = filledMenuOk ? filledMenu->actions()[0]->menu() : nullptr;
     const bool filledOk = filledNodeMenu != nullptr && filledNodeMenu->actions().size() == 1;
     if (filledOk) {
         filledNodeMenu->actions().first()->trigger();
@@ -400,19 +370,21 @@ QString DmxOutputMonitorPanel::exercise() {
         if (!fixtureColorOk) {
             return QStringLiteral("DMX-Ausgangs-Monitor: Fixture-Belegung bekommt nicht die Fixture-Farbe");
         }
-        // Namensanzeige: dieselbe Zelle zeigt jetzt den Fixture-Namen in der zweiten Zeile - braucht dafür
-        // einen echten gesendeten Frame auf diesem Universe, sonst bleibt die Zelle beim "–"-Platzhalter.
+        // Zellentext bleibt die reine Zahl (siehe Kommentar am Header), der Fixture-Name steht nur im
+        // Tooltip - braucht dafür einen echten gesendeten Frame auf diesem Universe, sonst bleibt die
+        // Zelle beim "–"-Platzhalter.
         protocol_->setCurrentIndex(patch.protocol == output::Protocol::Sacn ? 1 : 0);
         universe_->setValue(static_cast<int>(patch.universe));
         std::vector<std::uint8_t> fixturePacket(512, 0);
         fixturePacket[patch.channel - 1] = 7;
         store_->write(patch.protocol, patch.universe, fixturePacket);
         refresh();
-        const bool fixtureNameOk = grid_->item(r, c)->text().contains(QStringLiteral("\n") + QString::fromStdString(occupant->name));
+        const bool fixtureNameOk = grid_->item(r, c)->text() == QStringLiteral("7") &&
+                                    grid_->item(r, c)->toolTip().contains(QString::fromStdString(occupant->name));
         protocol_->setCurrentIndex(0);
         universe_->setValue(30000);
         if (!fixtureNameOk) {
-            return QStringLiteral("DMX-Ausgangs-Monitor: Zelle zeigt den Fixture-Namen nicht in der zweiten Zeile an");
+            return QStringLiteral("DMX-Ausgangs-Monitor: Zelle zeigt nicht die reine Zahl oder der Tooltip nennt den Fixture-Namen nicht");
         }
         if (!requestedEdit || requestedId != occupant->fixtureId) {
             return QStringLiteral("DMX-Ausgangs-Monitor: Kontextmenü löst requestEditFixturePatch nicht mit dem richtigen Fixture aus");
@@ -447,40 +419,73 @@ QString DmxOutputMonitorPanel::exercise() {
                 });
     QMenu* poolMenu = buildContextMenu(1, output::Protocol::ArtNet, 30002);
     const bool poolMenuOk = poolMenu->actions().size() == 2 && poolMenu->actions()[0]->text().contains(QStringLiteral("Farbe ändern")) &&
-                             poolMenu->actions()[1]->text().contains(QStringLiteral("bearbeiten"));
-    if (poolMenuOk) {
-        poolMenu->actions()[1]->trigger();
+                             poolMenu->actions()[1]->menu() != nullptr;
+    QMenu* poolNodeMenu = poolMenuOk ? poolMenu->actions()[1]->menu() : nullptr;
+    const bool poolNodeMenuOk = poolNodeMenu != nullptr && poolNodeMenu->actions().size() == 2 &&
+                                 poolNodeMenu->actions()[0]->text().contains(QStringLiteral("bearbeiten")) &&
+                                 poolNodeMenu->actions()[1]->text().contains(QStringLiteral("aufheben"));
+    if (poolNodeMenuOk) {
+        poolNodeMenu->actions()[0]->trigger();
     }
     delete poolMenu;
     disconnect(poolProbe);
-    if (!poolMenuOk) {
+    if (!poolMenuOk || !poolNodeMenuOk) {
         player_.setDmxPatches(dmxPatchesBefore);
         return QStringLiteral(
-            "DMX-Ausgangs-Monitor: Kontextmenü für eine belegte Pool-Zelle bietet nicht \"Farbe ändern…\" und \"bearbeiten\" an");
+            "DMX-Ausgangs-Monitor: Kontextmenü für eine belegte Pool-Zelle bietet nicht \"Farbe ändern…\" und das Untermenü "
+            "\"Node\" mit \"Patch bearbeiten…\"/\"Patch aufheben\" an");
     }
     if (!requestedPoolEdit || requestedPoolChannel != 77) {
         player_.setDmxPatches(dmxPatchesBefore);
         return QStringLiteral("DMX-Ausgangs-Monitor: Kontextmenü löst requestEditPoolPatch nicht mit dem richtigen Pool-Kanal aus");
     }
+
+    // "Patch aufheben": löst requestRemovePoolPatch mit dem richtigen Pool-Kanal aus (das tatsächliche
+    // Entfernen übernimmt MainWindow::buildDmxMonitor, hier nur das Signal selbst).
+    bool requestedRemove = false;
+    std::uint16_t requestedRemoveChannel = 0;
+    const QMetaObject::Connection removeProbe =
+        connect(this, &DmxOutputMonitorPanel::requestRemovePoolPatch, this,
+                [&](std::uint16_t poolChannel) {
+                    requestedRemove = true;
+                    requestedRemoveChannel = poolChannel;
+                });
+    QMenu* removeMenu = buildContextMenu(1, output::Protocol::ArtNet, 30002);
+    QMenu* removeNodeMenu = removeMenu->actions().size() == 2 ? removeMenu->actions()[1]->menu() : nullptr;
+    const bool removeMenuOk = removeNodeMenu != nullptr && removeNodeMenu->actions().size() == 2;
+    if (removeMenuOk) {
+        removeNodeMenu->actions()[1]->trigger();
+    }
+    delete removeMenu;
+    disconnect(removeProbe);
+    if (!removeMenuOk) {
+        player_.setDmxPatches(dmxPatchesBefore);
+        return QStringLiteral("DMX-Ausgangs-Monitor: Kontextmenü bietet \"Patch aufheben\" nicht mehr an");
+    }
+    if (!requestedRemove || requestedRemoveChannel != 77) {
+        player_.setDmxPatches(dmxPatchesBefore);
+        return QStringLiteral("DMX-Ausgangs-Monitor: \"Patch aufheben\" löst requestRemovePoolPatch nicht mit dem richtigen Pool-Kanal aus");
+    }
     // Zellenfarbe: Pool-Belegung bekommt die Pool-Farbe (deckt zugleich die Farbzuordnung für beide
     // occupant.kind-Werte ab - Fixture siehe oben, derselbe Code-Pfad, nur anderer Zweig).
     universe_->setValue(30002);
     const bool poolColorOk = grid_->item(0, 0)->background().color() == dmxCellColor(DmxCellCategory::Pool);
-    // Namensanzeige: ohne echten Namen (DmxOutputOccupant::name ist bei Kind::Pool leer) steht stattdessen
-    // der Pool-Kanal in der zweiten Zeile - braucht dafür einen echten gesendeten Frame auf diesem Universe,
-    // sonst bleibt die Zelle beim "–"-Platzhalter ohne Text.
+    // Zellentext bleibt die reine Zahl; ohne echten Namen (DmxOutputOccupant::name ist bei Kind::Pool leer)
+    // nennt der Tooltip stattdessen den Pool-Kanal - braucht dafür einen echten gesendeten Frame auf diesem
+    // Universe, sonst bleibt die Zelle beim "–"-Platzhalter ohne Text.
     std::vector<std::uint8_t> poolPacket(512, 0);
     poolPacket[0] = 5;
     store_->write(output::Protocol::ArtNet, 30002, poolPacket);
     refresh();
-    const bool poolNameOk = grid_->item(0, 0)->text().contains(QStringLiteral("\nPool-Kanal 77"));
+    const bool poolNameOk =
+        grid_->item(0, 0)->text() == QStringLiteral("5") && grid_->item(0, 0)->toolTip().contains(QStringLiteral("Pool-Kanal 77"));
     universe_->setValue(30000);
     player_.setDmxPatches(dmxPatchesBefore);  // Rauchtest-Projekt wieder in den Ausgangszustand bringen
     if (!poolColorOk) {
         return QStringLiteral("DMX-Ausgangs-Monitor: Pool-Belegung bekommt nicht die Pool-Farbe");
     }
     if (!poolNameOk) {
-        return QStringLiteral("DMX-Ausgangs-Monitor: Zelle zeigt den Pool-Kanal nicht in der zweiten Zeile an");
+        return QStringLiteral("DMX-Ausgangs-Monitor: Zelle zeigt nicht die reine Zahl oder der Tooltip nennt den Pool-Kanal nicht");
     }
     return {};
 }

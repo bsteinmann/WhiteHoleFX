@@ -191,8 +191,7 @@ Effekt, und aktualisiert sich bei jeder Änderung.
 
 Die Seite „Layout“ hat drei Teile.
 
-**Fixture hinzufügen:** Der Dialog (Menü Stage Config → „Fixture hinzufügen …“, oder per Rechtsklick „Neues Fixture
-hier patchen…“ im DMX-Ausgangs-Monitor) fragt alles in einem Schritt:
+**Fixture hinzufügen:** Der Dialog (Menü Stage Config → „Fixture hinzufügen …“) fragt alles in einem Schritt:
 
 - **Form:** Matrix (Fläche), Strip (Linie) oder 3D-Gitter (Cube, Vorhang, Säule).
 - **Größe:** beim Gitter die Anzahl LEDs in x, y und z, dazu der Abstand je Achse. Eine Zeile darunter nennt LED-Zahl, Größe
@@ -643,11 +642,11 @@ belegte Zelle bietet zusätzlich „Farbe ändern…” an: ein Farbwahl-Dialog 
 Zelle; die Überschreibung ist rein optisch (kein Projekt- oder Einstellungswert) und geht beim nächsten
 Protokoll-/Universe-Wechsel wieder verloren.
 
-**Name in der Zelle (nachträglich freigegebene Erweiterung, vom Nutzer gewünscht: „den Namen des
-gepatchten Objekts anzeigen, nicht nur die Farbe”):** eine belegte Zelle zeigt unter dem Wert zusätzlich den
-Namen aus demselben Tooltip-Text (Node-Name, „Master-Helligkeit”, „Live-Look-Auswahl” oder
-„Live-Überblendzeit”) — eine freie Zelle zeigt weiterhin nur den Wert bzw. „–”. Wird wie Tooltip und
-Zellenfarbe nur bei einem Protokoll-/Universe-Wechsel neu berechnet.
+**Zellentext:** eine Zelle zeigt immer nur die reine Zahl (0–255) bzw. „–” ohne Belegung. Eine Zeitlang stand
+hier zusätzlich der Name der Belegung in einer zweiten Zeile (Node-Name, „Master-Helligkeit”,
+„Live-Look-Auswahl” oder „Live-Überblendzeit”) — vom Nutzer wieder zurückgenommen, da ein langer Name die
+Zelle nach dem Umbruch mit „…” abschnitt. Der Name steht weiterhin ausschließlich im Tooltip (siehe
+„Wer hört zu"-Overlay oben).
 
 **Reiter „Ausgang" (Schritt 2 des DMX-Patch/Monitor-Gitters):** dasselbe Gitter wie der Reiter Eingang, aber
 für die zuletzt **gesendeten** Art-Net/sACN-Universen statt der empfangenen — dieselbe Protokoll-/Universe-
@@ -658,27 +657,30 @@ erscheint hier nicht, da DDP byteweise statt per Universe adressiert wird und da
 jeder Zelle, was dort gepatcht ist — ein Fixture (mit Namen) oder ein Bereich des DMX-Kanal-Pools (mit erstem
 Pool-Kanal) — und wird ebenso nur bei einem Protokoll-/Universe-Wechsel neu berechnet, nicht jeden Frame.
 
-**Rechtsklick-Zuordnung (Schritt 3, Ausgang):** eine freie Zelle bietet „Neues Fixture hier patchen…“ an und
-öffnet den bestehenden Dialog „Fixture hinzufügen“ mit vorbefülltem Protokoll/Universe/Kanal (Modus Manuell).
-Daneben ein zweites Untermenü **Node** *(neu, 15.11., vereinheitlichte Node-Adressierung)*: listet alle
-`wh.output.dmx`- und `wh.output.dmxcolor`-Nodes des aktuellen Projekts namentlich auf (ebenfalls look-aware,
-wie beim Reiter Eingang) und patcht beim Anklicken den internen Pool-Bereich des gewählten Nodes auf die
-angeklickte Adresse — der Node selbst hat ja keine eigene Adresse, nur einen Pool-Kanal; die Zuordnung landet
-als DMX-Kanal-Pool-Patch, genau wie beim Patchen über die Tabelle auf der Seite Ausgabe. Bewusst getrennt vom
-gleichnamigen Untermenü des Eingangs-Monitors: Empfangs- und Sende-Adressraum sind unterschiedliche Dinge,
-auch bei gleicher Universe-Nummer. Fixtures laufen weiterhin ausschließlich über „Neues Fixture hier
-patchen…“ bzw. die Fixture-Patch-Tabelle, nie über dieses Untermenü. Enthält das Projekt keinen passenden
-Node, steht dort nur ein deaktivierter Hinweis.
-Eine schon gepatchte Zelle bietet (nachträglich freigegebene Erweiterung, statt nur die Belegung anzuzeigen)
-direkt „Fixture-Patch bearbeiten …“ bzw. „DMX-Kanal-Pool-Patch bearbeiten …“ an: das öffnet Stage Config auf
-der Seite Ausgabe und springt dort zur passenden Zeile der Fixture-Patch- bzw. der DMX-Kanal-Pool-Tabelle.
+**Rechtsklick-Zuordnung (Schritt 3, Ausgang):** eine freie Zelle bietet ein Untermenü **Node** *(neu, 15.11.,
+vereinheitlichte Node-Adressierung)*: listet alle `wh.output.dmx`- und `wh.output.dmxcolor`-Nodes des
+aktuellen Projekts namentlich auf (ebenfalls look-aware, wie beim Reiter Eingang) und patcht beim Anklicken
+den internen Pool-Bereich des gewählten Nodes auf die angeklickte Adresse — der Node selbst hat ja keine
+eigene Adresse, nur einen Pool-Kanal; die Zuordnung landet als DMX-Kanal-Pool-Patch, genau wie beim Patchen
+über die Tabelle auf der Seite Ausgabe. Bewusst getrennt vom gleichnamigen Untermenü des Eingangs-Monitors:
+Empfangs- und Sende-Adressraum sind unterschiedliche Dinge, auch bei gleicher Universe-Nummer. Fixtures
+laufen ausschließlich über die Fixture-Patch-Tabelle, nie über dieses Untermenü — „Neues Fixture hier
+patchen…“ gab es hier früher zusätzlich flach auf der freien Zelle, vom Nutzer wieder entfernt. Enthält das
+Projekt keinen passenden Node, steht dort nur ein deaktivierter Hinweis.
+Eine schon gepatchte Fixture-Zelle bietet (nachträglich freigegebene Erweiterung, statt nur die Belegung
+anzuzeigen) direkt „Fixture-Patch bearbeiten …“ an: das öffnet Stage Config auf der Seite Ausgabe und springt
+dort zur passenden Zeile der Fixture-Patch-Tabelle. Eine schon gepatchte DMX-Kanal-Pool-Zelle bietet
+stattdessen, wie die freie Zelle, ein Untermenü **Node** mit „Patch bearbeiten (Pool-Kanal N)…“ (springt
+ebenso zu Stage Config, zur DMX-Kanal-Pool-Tabelle) und, neu, „Patch aufheben“: entfernt den Patch direkt,
+ohne den Umweg über die Tabelle (vom Nutzer gewünscht: „rechtklick -> node -> patch aufheben“) — dieselbe
+reine Zahlenanzeige bleibt stehen, der Patch ist danach einfach weg und der interne Pool-Kanal wieder frei.
 
 **Zellenfarben (Ausgang):** wie beim Eingang, nur mit zwei Kategorien — Fixture (Blau) und DMX-Kanal-Pool
 (Grün) — und derselben „Farbe ändern…”-Aktion auf einer belegten Zelle.
 
-**Name in der Zelle (Ausgang):** wie beim Eingang zeigt eine belegte Zelle unter dem Wert zusätzlich den
-Namen — bei einem Fixture dessen Namen, beim DMX-Kanal-Pool („Pool-Kanal N”, da ein Pool-Eintrag selbst
-keinen eigenen Namen hat) — eine freie Zelle zeigt weiterhin nur den Wert bzw. „–”.
+**Zellentext (Ausgang):** wie beim Eingang zeigt eine Zelle immer nur die reine Zahl bzw. „–”; der Name der
+Belegung (bei einem Fixture dessen Name, beim DMX-Kanal-Pool „Pool-Kanal N”, da ein Pool-Eintrag selbst
+keinen eigenen Namen hat) steht ausschließlich im Tooltip.
 
 ## Audio-Eingang
 
