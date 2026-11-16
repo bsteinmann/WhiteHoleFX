@@ -90,8 +90,7 @@ void DmxOutputMonitorPanel::onSelectionChanged() {
     }
     hasData_ = false;
     colorOverrides_.clear();  // galten für das vorige Protokoll/Universe, siehe Kommentar am Header
-    updateOccupantTooltips();
-    refresh();
+    refresh();  // berechnet jetzt auch die Tooltips/Farben neu, siehe dort
 }
 
 QString DmxOutputMonitorPanel::occupantTooltip(std::uint32_t channel, const std::optional<runtime::DmxOutputOccupant>& occupant) {
@@ -104,6 +103,9 @@ QString DmxOutputMonitorPanel::occupantTooltip(std::uint32_t channel, const std:
 }
 
 void DmxOutputMonitorPanel::updateOccupantTooltips() {
+    // Wird jetzt aus refresh() heraus bei jedem Bild aufgerufen, solange der Reiter sichtbar ist (vom
+    // Nutzer gemeldet: vorher nur bei Protokoll-/Universe-Wechsel, dadurch zeigte der Monitor nach einem
+    // Patch/Aufheben anderswo die alte Farbe/den alten Tooltip, bis man neu wählte).
     const auto protocol = protocol_->currentIndex() == 1 ? output::Protocol::Sacn : output::Protocol::ArtNet;
     const auto universe = static_cast<std::uint32_t>(universe_->value());
     for (int channel = 1; channel <= static_cast<int>(output::kSentDmxChannels); ++channel) {
@@ -183,6 +185,7 @@ void DmxOutputMonitorPanel::showContextMenu(const QPoint& pos) {
 }
 
 void DmxOutputMonitorPanel::refresh() {
+    updateOccupantTooltips();  // jetzt bei jedem Aufruf, siehe Kommentar dort
     const auto protocol = protocol_->currentIndex() == 1 ? output::Protocol::Sacn : output::Protocol::ArtNet;
     const auto universe = static_cast<std::uint32_t>(universe_->value());
     const std::optional<output::SentDmxFrame> frame = store_->readAll(protocol, universe);

@@ -2,6 +2,22 @@
 
 ## 0.92.0
 
+- **Eigener Node-Name steht jetzt zusätzlich zum Automatiknamen, nicht statt ihm** - z. B.
+  "DMX Channel 2 (Eingangstür)" statt nur "Eingangstür" (vom Nutzer gewünscht: der Automatikname sollte auf
+  einen Blick sichtbar bleiben, auch wenn der Node umbenannt wurde). Format "Automatikname (Beschriftung)",
+  betrifft alle Stellen, die den Anzeigenamen eines Nodes zeigen (Graph-Editor, Parameter-Dock,
+  DMX-Monitor-Tooltip/"Node"-Menü) - zentral in `node_display_name.cpp` (`nodeDisplayNames`). Der
+  Umbenennen-Dialog (`NodeEditor::renameNodeInteractive`) füllt sich jetzt mit dem reinen, eigenen Namen
+  vor (`Graph::findNode`) statt mit dem (jetzt kombinierten) Anzeigenamen - sonst hätte ein unverändertes
+  Bestätigen den Automatiknamen in den eigenen Namen zurückgeschrieben. Neue Tests
+  (`node_display_name_test.cpp`).
+- **DMX-Monitor: Zellenfarbe/Tooltip blieben nach einem Umpatchen anderswo veraltet stehen, bis man das
+  Universe neu auswählte** (vom Nutzer gemeldet: "wenn ich den Node versetze, wird die Farbe nicht mit
+  geändert"). Beide Monitore (`dmx_monitor_panel.cpp`, `dmx_output_monitor_panel.cpp`) berechneten
+  Tooltip und Zellenfarbe bisher nur bei einem Protokoll-/Universe-Wechsel neu, nicht aber wenn sich die
+  Belegung eines Kanals anderswo änderte (Parameterfenster, Umpatchen über das jeweils andere Monitor-
+  Fenster, Entfernen eines Nodes). `refresh()` (läuft schon jeden Frame, solange der Reiter sichtbar ist)
+  berechnet Tooltip/Farbe jetzt bei jedem Aufruf neu, statt nur `onSelectionChanged()` das zu überlassen.
 - **DMX-Monitor: vier vom Nutzer gemeldete Fehler/Wünsche behoben.**
   1. **Zellentext zeigt nur noch die reine Zahl** (0–255) statt zusätzlich des Namens der Belegung in einer
      zweiten Zeile - der Name führte bei langen Namen zu abgeschnittenem Text ("…") in der schmalen Zelle.

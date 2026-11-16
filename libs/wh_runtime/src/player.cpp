@@ -241,7 +241,7 @@ std::vector<NodeInfo> Player::nodes() const {
         return result;
     }
     const graph::Graph& g = project_->graph;
-    const auto names = nodeDisplayNames(g);  // eigener Name oder Typ+Nummer, siehe node_display_name.hpp
+    const auto names = nodeDisplayNames(g);  // Typ+Nummer, plus eigener Name in Klammern, siehe node_display_name.hpp
     for (const graph::NodeInstance& node : g.nodes()) {
         const graph::NodeDescriptor* descriptor = g.registry().find(node.typeId);
         // Auch Nodes ohne Parameter (z. B. Add) erscheinen: Das Dock zeigt dann einen Hinweis, statt sie zu verschweigen.

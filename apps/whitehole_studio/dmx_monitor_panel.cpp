@@ -88,8 +88,7 @@ void DmxMonitorPanel::onSelectionChanged() {
     }
     hasData_ = false;
     colorOverrides_.clear();  // galten für das vorige Protokoll/Universe, siehe Kommentar am Header
-    updateListenerTooltips();
-    refresh();
+    refresh();  // berechnet jetzt auch die Tooltips/Farben neu, siehe dort
 }
 
 QString DmxMonitorPanel::listenerTooltip(std::uint32_t channel, const std::optional<runtime::DmxInputListener>& listener) {
@@ -100,8 +99,10 @@ QString DmxMonitorPanel::listenerTooltip(std::uint32_t channel, const std::optio
 }
 
 void DmxMonitorPanel::updateListenerTooltips() {
-    // Nur bei Protokoll-/Universe-Wechsel (siehe Kommentar am Header), nicht in refresh(): ein Durchlauf
-    // über alle Nodes pro Zelle wäre für jeden Frame unnötig teuer.
+    // Wird jetzt aus refresh() heraus aufgerufen, also bei jedem Bild, solange der Reiter sichtbar ist
+    // (siehe Kommentar am Header) - vorher nur bei Protokoll-/Universe-Wechsel, das hielt Tooltip und Farbe
+    // aber veraltet, wenn sich der Hörer anderswo änderte (Node umgepatcht, Parameter geändert), ohne dass
+    // hier neu gewählt wurde (vom Nutzer gemeldet).
     const auto protocol = protocol_->currentIndex() == 1 ? input::DmxProtocol::Sacn : input::DmxProtocol::ArtNet;
     const auto universe = static_cast<std::uint32_t>(universe_->value());
     for (int channel = 1; channel <= static_cast<int>(input::kDmxChannels); ++channel) {
@@ -181,6 +182,7 @@ void DmxMonitorPanel::showContextMenu(const QPoint& pos) {
 }
 
 void DmxMonitorPanel::refresh() {
+    updateListenerTooltips();  // jetzt bei jedem Aufruf, siehe Kommentar dort
     const auto protocol = protocol_->currentIndex() == 1 ? input::DmxProtocol::Sacn : input::DmxProtocol::ArtNet;
     const auto universe = static_cast<std::uint32_t>(universe_->value());
     const std::optional<input::DmxUniverseFrame> frame = store_->readAll(protocol, universe);
@@ -285,10 +287,9 @@ QString DmxMonitorPanel::exercise() {
         return QStringLiteral("DMX-Monitor: Kontextmenü löst requestMasterDmx nicht mit den richtigen Werten aus");
     }
 
-    // Zellenfarbe (nachträglich freigegebene Erweiterung): Kanal 1 ist jetzt wirklich Masterdimmer-Kanal,
-    // aber die Farbe wird wie der Tooltip erst beim nächsten Protokoll-/Universe-Wechsel neu berechnet.
-    universe_->setValue(778);
-    universe_->setValue(777);
+    // Zellenfarbe (nachträglich freigegebene Erweiterung): Kanal 1 ist jetzt wirklich Masterdimmer-Kanal;
+    // refresh() berechnet Tooltip und Farbe bei jedem Aufruf neu, kein Universe-Wechsel mehr nötig.
+    refresh();
     if (grid_->item(0, 0)->background().color() != dmxCellColor(DmxCellCategory::Master)) {
         return QStringLiteral("DMX-Monitor: Masterdimmer-Kanal bekommt nicht die Master-Farbe");
     }
@@ -365,10 +366,8 @@ QString DmxMonitorPanel::exercise() {
         player_.removeNode(added.value());
         return QStringLiteral("DMX-Monitor: \"Node\" patcht die Adresse des Nodes nicht wirklich (MainWindow-Verbindung?)");
     }
-    // Zellenfarbe: Kanal 2 gehört jetzt zu einem Node, muss also die Node-Farbe bekommen (auch hier erst
-    // nach einer Neuberechnung durch Protokoll-/Universe-Wechsel).
-    universe_->setValue(778);
-    universe_->setValue(777);
+    // Zellenfarbe: Kanal 2 gehört jetzt zu einem Node, muss also die Node-Farbe bekommen.
+    refresh();
     const bool nodeColorOk = grid_->item(0, 1)->background().color() == dmxCellColor(DmxCellCategory::Node);
     player_.removeNode(added.value());
     if (!nodeColorOk) {

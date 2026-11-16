@@ -11,8 +11,9 @@
 //
 // Tooltip (Schritt 4, "Wer hört zu"-Overlay, nachträglich auch für die Ausgabe freigegeben): jede Zelle
 // zeigt per Player::dmxOutputOccupantAt, was auf diesen Kanal schon gepatcht ist (Fixture oder DMX-Kanal-
-// Pool) - analog zum Eingangsmonitor (dmx_monitor_panel.hpp), nur berechnet bei Protokoll-/Universe-
-// Wechsel, nicht in refresh() (siehe dort für die Begründung).
+// Pool) - analog zum Eingangsmonitor (dmx_monitor_panel.hpp), aus refresh() heraus bei jedem Bild neu
+// berechnet, solange der Reiter sichtbar ist (vom Nutzer gemeldet: vorher nur bei Protokoll-/Universe-
+// Wechsel, dadurch zeigte der Monitor nach einem Patch/Aufheben anderswo die alte Farbe/den alten Tooltip).
 //
 // Rechtsklick (Schritt 3 des DMX-Patch/Monitor-Gitters): auf einer freien Zelle bietet er ein Untermenü
 // "Node" (Gegenstück zum gleichnamigen Untermenü im Eingangs-Monitor, siehe dmx_monitor_panel.hpp): listet
@@ -33,8 +34,8 @@
 //
 // Zellenfarben (nachträglich freigegebene Erweiterung, erster Teil des 15.11.-Vorschlags "farbig
 // hinterlegen"): eine belegte Zelle bekommt automatisch die Standardfarbe ihrer Kategorie
-// (dmx_cell_colors.hpp: Fixture oder Pool), eine freie bleibt neutral; wie der Tooltip nur bei einem
-// Protokoll-/Universe-Wechsel neu berechnet (siehe updateOccupantTooltips), nicht jeden Frame. Per
+// (dmx_cell_colors.hpp: Fixture oder Pool), eine freie bleibt neutral; wie der Tooltip bei jedem Bild neu
+// berechnet, solange der Reiter sichtbar ist (siehe updateOccupantTooltips). Per
 // Rechtsklick → "Farbe ändern…" lässt sich die Farbe einer schon belegten Zelle einzeln überschreiben; die
 // Überschreibung gilt nur für die aktuell gewählte Protokoll-/Universe-Kombination dieses Panels und geht
 // beim Wechsel wieder verloren (keine Projekt- oder Einstellungs-Daten, rein optisch), genauso wie im

@@ -12,17 +12,24 @@ std::unordered_map<std::uint64_t, std::string> nodeDisplayNames(const graph::Gra
     std::unordered_map<std::string, std::size_t> seen;
     for (const graph::NodeInstance& node : graph.nodes()) {
         const std::size_t index = ++seen[node.typeId];
-        if (!node.label.empty()) {
-            result.emplace(node.id.value(), node.label);
-            continue;
-        }
         const graph::NodeDescriptor* descriptor = graph.registry().find(node.typeId);
         if (descriptor == nullptr) {
+            // Unbekannter Typ: kein Automatikname zum Anhängen - dann wenigstens der eigene Name, falls
+            // gesetzt, genau wie zuvor.
+            if (!node.label.empty()) {
+                result.emplace(node.id.value(), node.label);
+            }
             continue;
         }
         std::string name = descriptor->displayName;
         if (total[node.typeId] > 1) {
             name += " " + std::to_string(index);
+        }
+        // Eigener Name steht zusätzlich zum Automatiknamen, nicht statt ihm (vom Nutzer gewünscht): "DMX
+        // Channel 2 (Eingangstür)" statt nur "Eingangstür" - man sieht weiterhin auf einen Blick, was für
+        // ein Node das ist, auch mit eigenem Namen.
+        if (!node.label.empty()) {
+            name += " (" + node.label + ")";
         }
         result.emplace(node.id.value(), std::move(name));
     }

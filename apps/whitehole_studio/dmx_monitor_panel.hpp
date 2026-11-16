@@ -10,10 +10,13 @@
 // unten) braucht er trotzdem den Player, nur eben zusätzlich.
 //
 // "Wer hört zu"-Overlay (Schritt 4 des DMX-Patch/Monitor-Gitters, siehe CLAUDE.md): der Tooltip einer
-// Zelle nennt den Node (oder Master-Helligkeit/Live-DMX), der sie liest, falls einer das tut. Wird nur
-// bei einem Protokoll-/Universe-Wechsel neu berechnet (nicht jeden Frame) - ändert sich der Graph, während
-// der Monitor offen ist, zeigt der Tooltip den alten Stand, bis neu gewählt wird; das ist bewusst einfach
-// gehalten (ein Durchlauf über alle Nodes pro Frame wäre für ein reines Anzeige-Werkzeug unnötig teuer).
+// Zelle nennt den Node (oder Master-Helligkeit/Live-DMX), der sie liest, falls einer das tut. Wird aus
+// refresh() heraus bei jedem Bild neu berechnet, solange der Reiter sichtbar ist (vom Nutzer gemeldet:
+// zuvor nur bei einem Protokoll-/Universe-Wechsel, dadurch zeigte der Monitor nach dem Umpatchen eines
+// Nodes anderswo - Parameterfenster, "Node"-Menü des jeweils anderen Monitors - die alte Farbe/den alten
+// Tooltip, bis man neu wählte). Ein Durchlauf über alle Nodes pro Zelle pro Frame ist für die bei weitem
+// meisten Projekte unproblematisch; nur 512 Zellen beim Tabellenaufbau ist deutlich teurer und bleibt
+// darum einmalig.
 // Eine Zeitlang stand dieser Name zusätzlich direkt in der Zelle (zweite Zeile); vom Nutzer wieder
 // zurückgenommen ("nur die Zahlen des Kanals"), weil ein langer Name die Zelle nach dem Umbruch mit "…"
 // abschnitt - die Zelle zeigt jetzt wieder nur die reine Zahl, der Name steht ausschließlich im Tooltip.
@@ -35,8 +38,8 @@
 //
 // Zellenfarben (nachträglich freigegebene Erweiterung, erster Teil des 15.11.-Vorschlags "farbig
 // hinterlegen"): eine belegte Zelle bekommt automatisch die Standardfarbe ihrer Kategorie
-// (dmx_cell_colors.hpp: Master/Live Kanal/Node), eine freie bleibt neutral. Wie der Tooltip nur bei einem
-// Protokoll-/Universe-Wechsel neu berechnet, nicht jeden Frame (siehe updateListenerTooltips). Per
+// (dmx_cell_colors.hpp: Master/Live Kanal/Node), eine freie bleibt neutral. Wie der Tooltip bei jedem Bild
+// neu berechnet, solange der Reiter sichtbar ist (siehe updateListenerTooltips). Per
 // Rechtsklick → "Farbe ändern…" lässt sich die Farbe einer schon belegten Zelle einzeln überschreiben
 // (QColorDialog); die Überschreibung gilt nur für die aktuell gewählte Protokoll-/Universe-Kombination
 // dieses Panels und geht beim Wechsel wieder verloren (keine Projekt- oder Einstellungs-Daten, rein

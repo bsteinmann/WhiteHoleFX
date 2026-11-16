@@ -120,7 +120,7 @@ stehen nicht im Node, sondern im Dock „Parameter“; beide benutzen dieselbe N
 |---|---|
 | Node hinzufügen | aus der **Palette** links im Dock ziehen oder doppelklicken (siehe unten); Rechtsklick auf freie Fläche, Menü nach Kategorien; schneller: Strg+Leertaste, tippen („rain“, „mix“, „blend add“), Pfeiltasten, Enter. Der Node entsteht an der Maus |
 | Node verschieben | ziehen; die Lage wird in der Projektdatei gespeichert (`at`) |
-| Node umbenennen | Rechtsklick → „Node umbenennen …“: eigener Name statt des Node-Typs (vom Nutzer gewünscht, um bei vielen Nodes desselben Typs - etwa 32 DMX-Nodes - den Überblick zu behalten). Erscheint im Node-Editor, im Parameter-Dock und überall sonst, wo der Node namentlich auftaucht (etwa das Menü „Node“ im DMX-Monitor). Leerer Name löscht den eigenen Namen wieder; ohne ihn zeigt die Oberfläche den Anzeigenamen des Typs, durchnummeriert bei mehreren Nodes desselben Typs. Gespeichert als `label` im Projektformat |
+| Node umbenennen | Rechtsklick → „Node umbenennen …“: eigener Name zusätzlich zum Automatiknamen des Node-Typs, nicht statt ihm (vom Nutzer gewünscht, um bei vielen Nodes desselben Typs - etwa 32 DMX-Nodes - den Überblick zu behalten, ohne den Typ aus den Augen zu verlieren). Format „Automatikname (Beschriftung)“, z. B. „DMX Channel 2 (Eingangstür)“ - der Automatikname ist derselbe wie ohne eigenen Namen (Anzeigename des Typs, durchnummeriert bei mehreren Nodes desselben Typs). Erscheint im Node-Editor, im Parameter-Dock und überall sonst, wo der Node namentlich auftaucht (etwa das Menü „Node“ im DMX-Monitor). Leerer Name löscht den eigenen Namen wieder, dann bleibt nur der Automatikname. Gespeichert als `label` im Projektformat |
 | verbinden | von einem Port zu einem passenden anderen ziehen (in beide Richtungen); ein belegter Eingang wird ersetzt. Beim Ziehen werden alle Ports, die das Kabel nicht annehmen würden, abgedunkelt; Ports, die nur nach Umwandlung passen (etwa ein Boolean-Ausgang an einem Zahlenfeld, ein Trigger an einem Schalter), sind etwas dezenter als exakt passende; der Port unter der Maus bekommt einen weißen Ring, wenn er das Kabel annimmt. Die Palette hebt weiterhin die Node-Typen mit passendem Port hervor. Die Passung kommt aus derselben Regel (`isConnectable`), die beim Loslassen gilt |
 | löschen | anklicken (Strg oder Rahmen für mehrere), Entf; oder Rechtsklick; oder den Node auf die Palette ziehen und loslassen (sie färbt sich rot). Steckt der Node in einer Kette (A → X → B), werden A und B danach direkt verbunden |
 | kopieren, einfügen, duplizieren | Strg+C, Strg+V (an der Mausposition), Strg+D; auch im Rechtsklick-Menü. Kabel zwischen den ausgewählten Nodes kommen mit, Kabel nach draußen nicht. Die Kopie ist danach ausgewählt, ein Schritt Rückgängig nimmt sie komplett zurück |
@@ -612,10 +612,11 @@ stehen). Aktualisiert sich nur, während der Reiter sichtbar ist (512 Zellen jed
 nur, solange man hinschaut).
 
 **„Wer hört zu"-Overlay (Schritt 4):** der Tooltip jeder Zelle nennt, wer den Kanal liest — ein Node im Graphen
-(z. B. „DMX Channel“ oder der eigene Name, falls umbenannt) oder, ohne eigenen Node, Master-Helligkeit bzw.
-Live-DMX (Look-Auswahl/Überblendzeit). Wird nur bei einem Protokoll-/Universe-Wechsel neu berechnet, nicht
-jeden Frame — ändert sich der Graph, während der Monitor offen ist, zeigt der Tooltip den alten Stand, bis
-neu gewählt wird.
+(z. B. „DMX Channel 2“ oder, falls umbenannt, zusätzlich der eigene Name in Klammern, z. B.
+„DMX Channel 2 (Eingangstür)“) oder, ohne eigenen Node, Master-Helligkeit bzw. Live-DMX (Look-Auswahl/
+Überblendzeit). Wird bei jedem Bild neu berechnet, solange der Reiter sichtbar ist — ändert sich die Belegung
+eines Kanals, während der Monitor offen ist (Umpatchen anderswo, Parameterfenster, Entfernen eines Nodes),
+zeigt der Tooltip sofort den aktuellen Stand, ohne dass Protokoll/Universe neu gewählt werden müssen.
 
 **Rechtsklick-Zuordnung (Schritt 3, Eingang):** eine schon belegte Zelle zeigt denselben Text wie der Tooltip,
 deaktiviert; eine freie Zelle öffnet ein Menü mit drei Untermenüs (nachträglich freigegebene Erweiterung,
@@ -637,7 +638,7 @@ Umbau des bis dahin flachen Menüs):
 **Zellenfarben (nachträglich freigegebene Erweiterung, erster Teil des 15.11.-Vorschlags „farbig
 hinterlegen”):** eine belegte Zelle bekommt automatisch eine Farbe nach Kategorie — Master (Orange), Live
 Kanal (Violett) oder Node (Gelb, auch für per „Node” gepatchte Nodes) — eine freie bleibt neutral. Wie
-der Tooltip nur bei einem Protokoll-/Universe-Wechsel neu berechnet, nicht jeden Frame. Rechtsklick auf eine
+der Tooltip bei jedem Bild neu berechnet, solange der Reiter sichtbar ist. Rechtsklick auf eine
 belegte Zelle bietet zusätzlich „Farbe ändern…” an: ein Farbwahl-Dialog überschreibt die Farbe dieser einen
 Zelle; die Überschreibung ist rein optisch (kein Projekt- oder Einstellungswert) und geht beim nächsten
 Protokoll-/Universe-Wechsel wieder verloren.
@@ -655,7 +656,7 @@ erscheint hier nicht, da DDP byteweise statt per Universe adressiert wird und da
 
 **„Wer hört zu"-Overlay (Ausgang, nachträglich freigegebene Erweiterung):** wie beim Eingang nennt der Tooltip
 jeder Zelle, was dort gepatcht ist — ein Fixture (mit Namen) oder ein Bereich des DMX-Kanal-Pools (mit erstem
-Pool-Kanal) — und wird ebenso nur bei einem Protokoll-/Universe-Wechsel neu berechnet, nicht jeden Frame.
+Pool-Kanal) — und wird ebenso bei jedem Bild neu berechnet, solange der Reiter sichtbar ist.
 
 **Rechtsklick-Zuordnung (Schritt 3, Ausgang):** eine freie Zelle bietet ein Untermenü **Node** *(neu, 15.11.,
 vereinheitlichte Node-Adressierung)*: listet alle `wh.output.dmx`- und `wh.output.dmxcolor`-Nodes des

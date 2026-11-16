@@ -14,7 +14,6 @@
 #include <cmath>
 
 #include "whitehole/graph/graph_model.hpp"
-#include "whitehole/runtime/node_display_name.hpp"
 
 namespace whitehole::studio {
 
@@ -81,7 +80,11 @@ bool NodeEditor::renameNodeInteractive(NodeId id) {
     if (player_.project() == nullptr) {
         return false;
     }
-    const std::string currentStd = runtime::nodeDisplayName(player_.project()->graph, id);
+    // Vorbefüllt mit dem eigenen Namen allein (nicht runtime::nodeDisplayName): die zeigt jetzt
+    // "Automatikname (Eigener Name)" - das unverändert übernommen würde den Automatiknamen Stück für
+    // Stück in den eigenen Namen hineinschreiben.
+    const graph::NodeInstance* node = player_.project()->graph.findNode(id);
+    const std::string& currentStd = node != nullptr ? node->label : std::string{};
     const QString current = QString::fromUtf8(currentStd.data(), static_cast<qsizetype>(currentStd.size()));
     bool accepted = false;
     const QString name =
