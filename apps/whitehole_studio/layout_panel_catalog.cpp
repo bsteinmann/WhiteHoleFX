@@ -1,9 +1,17 @@
-// layout_panel_catalog.cpp: Fixture-Bibliothek im Reiter Layout: alle gespeicherten Bauformen in diese Show übernehmen.
+// layout_panel_catalog.cpp: Fixture-Bibliothek im Reiter Layout: aus einer gespeicherten Bauform ein Exemplar
+// auf der Bühne anlegen.
 //
 // Warum eine eigene Datei: layout_panel.cpp und layout_panel_add.cpp sind an der 400-Zeilen-Grenze. Anlegen,
 // Bearbeiten und Speichern einer Bauform bleibt Aufgabe des Reiters Fixtures (siehe fixture_library_user.cpp); hier
-// steht nur das Lesen der Benutzerbibliothek (user_library.hpp) und das Übernehmen einer gewählten Bauform in diese
-// Show - dieselbe Bibliotheksdatei wie dort, nur von einer zweiten Stelle aus erreichbar.
+// steht nur das Lesen der Benutzerbibliothek (user_library.hpp) und das Anlegen eines Exemplars aus einer gewählten
+// Bauform - dieselbe Bibliotheksdatei wie dort, nur von einer zweiten Stelle aus erreichbar.
+//
+// "In Show übernehmen" übernahm früher nur die Bauform-Definition in das Projekt; ein zweiter Schritt über die
+// inzwischen entfernte Liste "Fixtures in Show" legte dann erst ein Exemplar an. Auf Wunsch des Nutzers übernimmt
+// diese eine Liste jetzt beides in einem Schritt: fehlt die Bauform im Projekt, wird sie zuerst angelegt (wie
+// bisher); egal ob neu oder schon vorhanden, entsteht danach immer ein weiteres Exemplar auf der Bühne (wie es
+// zuvor "Auf die Bühne" in "Fixtures in Show" tat) - mehrfaches Übernehmen legt also mehrfach Exemplare an, statt
+// ab dem zweiten Mal abgelehnt zu werden.
 #include "layout_panel.hpp"
 
 #include <QByteArray>
@@ -74,16 +82,25 @@ bool LayoutPanel::takeOverFromCatalog(const QString& name) {
         Q_EMIT failed(tr("Es gibt keine gespeicherte Bauform \"%1\"").arg(name));
         return false;
     }
-    if (std::ranges::any_of(player_.fixtureTypes(), [&](const project::FixtureType& t) { return t.name == found->name; })) {
-        Q_EMIT failed(tr("In dieser Show gibt es schon eine Bauform „%1“.").arg(name));
+    // Die Bauform fehlt in dieser Show noch? Erst anlegen (wie bisher); ist sie schon da, einfach weiterverwenden -
+    // anders als früher kein Grund mehr, hier abzubrechen (siehe Kommentar am Dateianfang).
+    const bool missing =
+        std::ranges::none_of(player_.fixtureTypes(), [&](const project::FixtureType& t) { return t.name == found->name; });
+    if (missing) {
+        const Result<void> added = player_.addFixtureType(found->name, found->shape);
+        if (!added.ok()) {
+            Q_EMIT failed(fromStd(added.error().message));
+            return false;
+        }
+    }
+    const QString instanceName = uniqueName(name);
+    const auto id = player_.addFixtureOfType(instanceName.toUtf8().toStdString(), found->name, nextOrigin(), Vec3{},
+                                              player_.suggestPatch(mapping::ledCount(found->shape)));
+    if (!id.ok()) {
+        Q_EMIT failed(fromStd(id.error().message));
         return false;
     }
-    const Result<void> added = player_.addFixtureType(found->name, found->shape);
-    if (!added.ok()) {
-        Q_EMIT failed(fromStd(added.error().message));
-        return false;
-    }
-    fillTypeList();
+    fillList(id.value());
     Q_EMIT edited();
     return true;
 }
@@ -135,14 +152,28 @@ QString LayoutPanel::exerciseCatalog() {
     if (!found) {
         return QStringLiteral("Fixture-Bibliothek: Testbauform erscheint nicht in der Liste");
     }
-    const std::size_t before = player_.fixtureTypes().size();
-    if (!takeOverFromCatalog(selectedCatalogName()) || player_.fixtureTypes().size() != before + 1) {
-        return QStringLiteral("Fixture-Bibliothek: Übernehmen in die Show schlägt fehl");
+    const std::size_t typesBefore = player_.fixtureTypes().size();
+    const std::size_t fixturesBefore = player_.project()->layout.fixtures().size();
+    if (!takeOverFromCatalog(selectedCatalogName()) || player_.fixtureTypes().size() != typesBefore + 1 ||
+        player_.project()->layout.fixtures().size() != fixturesBefore + 1) {
+        return QStringLiteral("Fixture-Bibliothek: Übernehmen in die Show schlägt fehl (Bauform oder Exemplar fehlt)");
     }
-    if (takeOverFromCatalog(selectedCatalogName())) {
-        return QStringLiteral("Fixture-Bibliothek: doppeltes Übernehmen hätte abgelehnt werden müssen");
+    // Zweites Übernehmen: die Bauform gibt es jetzt schon, legt trotzdem ein zweites Exemplar an, statt
+    // abgelehnt zu werden (siehe Kommentar am Dateianfang).
+    if (!takeOverFromCatalog(selectedCatalogName()) || player_.fixtureTypes().size() != typesBefore + 1 ||
+        player_.project()->layout.fixtures().size() != fixturesBefore + 2) {
+        return QStringLiteral("Fixture-Bibliothek: zweites Übernehmen legt kein zweites Exemplar an");
     }
-    if (!player_.removeFixtureType("Rauchtest-Bibliothek").ok() || player_.fixtureTypes().size() != before) {
+    // Ids zuerst einsammeln, nicht währenddessen über den schrumpfenden Vektor iterieren.
+    std::vector<mapping::FixtureId> toRemove;
+    const std::vector<mapping::Fixture>& fixtures = player_.project()->layout.fixtures();
+    for (std::size_t i = fixturesBefore; i < fixtures.size(); ++i) {
+        toRemove.push_back(fixtures[i].id);
+    }
+    for (const mapping::FixtureId id : toRemove) {
+        removeFixture(id);
+    }
+    if (!player_.removeFixtureType("Rauchtest-Bibliothek").ok() || player_.fixtureTypes().size() != typesBefore) {
         return QStringLiteral("Fixture-Bibliothek: Aufräumen in der Show schlägt fehl");
     }
     return {};

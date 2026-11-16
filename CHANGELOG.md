@@ -2,6 +2,14 @@
 
 ## 0.92.0
 
+- **Layout-Tab: Liste „Fixtures in Show" entfernt, Fixture-Bibliothek übernimmt ihre Aufgabe** (vom Nutzer
+  gewünscht: eine Liste weniger). Bisher zwei Schritte - „In Show übernehmen" holte eine Bauform aus der
+  Bibliothek nur in die Projektdatei, erst „Auf die Bühne" in der (jetzt entfernten) Liste „Fixtures in
+  Show" legte ein Exemplar an. Jetzt macht „In Show übernehmen" (Doppelklick oder Knopf auf der
+  Fixture-Bibliothek) beides in einem Schritt: fehlt die Bauform im Projekt, wird sie zuerst angelegt (wie
+  bisher), egal ob neu oder schon vorhanden entsteht danach immer ein weiteres Exemplar auf der Bühne -
+  mehrfaches Übernehmen legt also mehrfach Exemplare an, statt ab dem zweiten Mal abgelehnt zu werden
+  (`layout_panel_catalog.cpp`). `layout_panel_types.cpp` (die alte Liste) ist komplett entfernt.
 - **Eigener Node-Name steht jetzt zusätzlich zum Automatiknamen, nicht statt ihm** - z. B.
   "DMX Channel 2 (Eingangstür)" statt nur "Eingangstür" (vom Nutzer gewünscht: der Automatikname sollte auf
   einen Blick sichtbar bleiben, auch wenn der Node umbenannt wurde). Format "Automatikname (Beschriftung)",

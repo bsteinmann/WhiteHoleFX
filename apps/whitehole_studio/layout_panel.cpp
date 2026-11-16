@@ -33,34 +33,24 @@ LayoutPanel::LayoutPanel(runtime::Player& player, QWidget* parent) : QTabWidget{
     auto* pageLayout = new QVBoxLayout{page};
 
     // Ganz oben die Fixture-Bibliothek (alle gespeicherten Bauformen, siehe user_library.hpp): Doppelklick oder
-    // „In Show übernehmen“ holt eine davon in diese Show. Anlegen und Bearbeiten bleibt Aufgabe des Reiters
-    // Fixtures (siehe layout_panel_catalog.cpp) - dieselbe Liste wie dort unter „Gespeicherte Fixtures“.
+    // „In Show übernehmen“ legt daraus ein Exemplar auf der Bühne an - fehlt die Bauform in dieser Show noch,
+    // wird sie zuerst angelegt (siehe layout_panel_catalog.cpp). Damit übernimmt diese eine Liste jetzt auch die
+    // frühere Aufgabe von „Fixtures in Show“ (entfernt, vom Nutzer gewünscht: eine Liste weniger). Anlegen und
+    // Bearbeiten einer Bauform bleibt Aufgabe des Reiters Fixtures - dieselbe Liste wie dort unter „Gespeicherte
+    // Fixtures“.
     auto* catalogRow = new QHBoxLayout;
     catalog_ = new QListWidget;
     catalog_->setMaximumHeight(72);
-    catalog_->setToolTip(tr("Alle gespeicherten Bauformen (Stage Config → Fixtures). Doppelklick übernimmt eine in diese Show."));
+    catalog_->setToolTip(
+        tr("Alle gespeicherten Bauformen (Stage Config → Fixtures). Doppelklick legt ein Exemplar auf der Bühne an."));
     auto* catalogButton = new QPushButton{tr("In Show übernehmen")};
-    catalogButton->setToolTip(tr("Gewählte Bauform aus der Bibliothek in diese Show übernehmen"));
+    catalogButton->setToolTip(tr("Exemplar der gewählten Bauform mit dem nächsten freien Patch auf der Bühne anlegen"));
     catalogRow->addWidget(catalog_, 1);
     catalogRow->addWidget(catalogButton, 0, Qt::AlignTop);
     pageLayout->addWidget(new QLabel{tr("Fixture-Bibliothek (alle gespeicherten Bauformen)")});
     pageLayout->addLayout(catalogRow);
     connect(catalog_, &QListWidget::itemDoubleClicked, this, [this](QListWidgetItem*) { takeOverFromCatalog(selectedCatalogName()); });
     connect(catalogButton, &QPushButton::clicked, this, [this]() { takeOverFromCatalog(selectedCatalogName()); });
-
-    // Darunter die Bauformen dieser Show: Doppelklick oder „Auf die Bühne“ legt ein Exemplar an.
-    auto* typeRow = new QHBoxLayout;
-    types_ = new QListWidget;
-    types_->setMaximumHeight(72);
-    types_->setToolTip(tr("Bauformen dieser Show (Stage Config → Fixtures). Doppelklick stellt ein Exemplar auf die Bühne."));
-    auto* typeButton = new QPushButton{tr("Auf die Bühne")};
-    typeButton->setToolTip(tr("Exemplar der gewählten Bauform mit dem nächsten freien Patch auf der Bühne anlegen"));
-    typeRow->addWidget(types_, 1);
-    typeRow->addWidget(typeButton, 0, Qt::AlignTop);
-    pageLayout->addWidget(new QLabel{tr("Fixtures in Show")});
-    pageLayout->addLayout(typeRow);
-    connect(types_, &QListWidget::itemDoubleClicked, this, [this](QListWidgetItem*) { addFromType(selectedTypeName()); });
-    connect(typeButton, &QPushButton::clicked, this, [this]() { addFromType(selectedTypeName()); });
 
     pageLayout->addWidget(new QLabel{tr("Fixtures auf der Bühne")});
     list_ = new QListWidget;
@@ -111,7 +101,6 @@ mapping::FixtureId LayoutPanel::selectedId() const {
 
 void LayoutPanel::rebuild() {
     fillCatalogList();
-    fillTypeList();
     fillList(selectedId());
 }
 
@@ -379,9 +368,6 @@ QString LayoutPanel::exercise() {
         return note;
     }
     if (const QString note = exerciseAddDialog(); !note.isEmpty()) {
-        return note;
-    }
-    if (const QString note = exerciseTypes(); !note.isEmpty()) {
         return note;
     }
     if (const QString note = exerciseCatalog(); !note.isEmpty()) {

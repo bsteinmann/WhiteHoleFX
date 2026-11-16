@@ -61,13 +61,10 @@ public:
     void saveGroup();
     void addRegion();
 
-    /// Bauformen dieser Show (Stage Config → Fixtures): Liste füllen und ein Exemplar mit Patch auf der Bühne anlegen.
-    void fillTypeList();
-    bool addFromType(const QString& typeName);
-    [[nodiscard]] QString selectedTypeName() const;
-
     /// Fixture-Bibliothek (alle gespeicherten Bauformen, Benutzerbibliothek auf der Festplatte, siehe
-    /// user_library.hpp): Liste füllen und eine gewählte Bauform in diese Show übernehmen.
+    /// user_library.hpp): Liste füllen und aus einer gewählten Bauform ein Exemplar mit Patch auf der Bühne
+    /// anlegen (fehlt die Bauform in dieser Show noch, wird sie zuerst angelegt) - übernimmt damit auch die
+    /// frühere Aufgabe der entfernten Liste "Fixtures in Show".
     void fillCatalogList();
     bool takeOverFromCatalog(const QString& name);
     [[nodiscard]] QString selectedCatalogName() const;
@@ -106,7 +103,6 @@ private:
     QString exerciseArrange();
     QString exerciseImport();
     QString exerciseAddDialog();
-    QString exerciseTypes();
     QString exerciseCatalog();
     void fillList(mapping::FixtureId select);
     void refreshTexts();
@@ -121,8 +117,7 @@ private:
 
     runtime::Player& player_;
     QListWidget* list_{nullptr};
-    QListWidget* catalog_{nullptr};  // Fixture-Bibliothek (alle gespeicherten Bauformen); Doppelklick übernimmt in die Show
-    QListWidget* types_{nullptr};  // Bauformen der Show; Doppelklick stellt ein Exemplar auf die Bühne
+    QListWidget* catalog_{nullptr};  // Fixture-Bibliothek (alle gespeicherten Bauformen); Doppelklick legt ein Exemplar an
     FixtureForm* fixture_{nullptr};
     QCheckBox* showGrid_{nullptr};
     QCheckBox* snap_{nullptr};

@@ -32,7 +32,6 @@ add_executable(whitehole_studio
     dmx_monitor_window.hpp
     dmx_output_monitor_panel.cpp
     dmx_output_monitor_panel.hpp
-    layout_panel_types.cpp
     layout_panel_grid.cpp
     layout_panel_catalog.cpp
     layout_panel_groups.cpp
