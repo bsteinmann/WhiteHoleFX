@@ -9,6 +9,7 @@
 #include <QByteArray>
 #include <QDir>
 #include <QListWidget>
+#include <QPushButton>
 #include <QTemporaryDir>
 
 #include <algorithm>
