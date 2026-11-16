@@ -439,35 +439,9 @@ QString DmxOutputMonitorPanel::exercise() {
         player_.setDmxPatches(dmxPatchesBefore);
         return QStringLiteral("DMX-Ausgangs-Monitor: Kontextmenü löst requestEditPoolPatch nicht mit dem richtigen Pool-Kanal aus");
     }
-
-    // "Patch aufheben": löst requestRemovePoolPatch mit dem richtigen Pool-Kanal aus (das tatsächliche
-    // Entfernen übernimmt MainWindow::buildDmxMonitor, hier nur das Signal selbst).
-    bool requestedRemove = false;
-    std::uint16_t requestedRemoveChannel = 0;
-    const QMetaObject::Connection removeProbe =
-        connect(this, &DmxOutputMonitorPanel::requestRemovePoolPatch, this,
-                [&](std::uint16_t poolChannel) {
-                    requestedRemove = true;
-                    requestedRemoveChannel = poolChannel;
-                });
-    QMenu* removeMenu = buildContextMenu(1, output::Protocol::ArtNet, 30002);
-    QMenu* removeNodeMenu = removeMenu->actions().size() == 2 ? removeMenu->actions()[1]->menu() : nullptr;
-    const bool removeMenuOk = removeNodeMenu != nullptr && removeNodeMenu->actions().size() == 2;
-    if (removeMenuOk) {
-        removeNodeMenu->actions()[1]->trigger();
-    }
-    delete removeMenu;
-    disconnect(removeProbe);
-    if (!removeMenuOk) {
-        player_.setDmxPatches(dmxPatchesBefore);
-        return QStringLiteral("DMX-Ausgangs-Monitor: Kontextmenü bietet \"Patch aufheben\" nicht mehr an");
-    }
-    if (!requestedRemove || requestedRemoveChannel != 77) {
-        player_.setDmxPatches(dmxPatchesBefore);
-        return QStringLiteral("DMX-Ausgangs-Monitor: \"Patch aufheben\" löst requestRemovePoolPatch nicht mit dem richtigen Pool-Kanal aus");
-    }
     // Zellenfarbe: Pool-Belegung bekommt die Pool-Farbe (deckt zugleich die Farbzuordnung für beide
-    // occupant.kind-Werte ab - Fixture siehe oben, derselbe Code-Pfad, nur anderer Zweig).
+    // occupant.kind-Werte ab - Fixture siehe oben, derselbe Code-Pfad, nur anderer Zweig). Vor "Patch
+    // aufheben" prüfen: danach ist die Zelle nicht mehr belegt (siehe unten).
     universe_->setValue(30002);
     const bool poolColorOk = grid_->item(0, 0)->background().color() == dmxCellColor(DmxCellCategory::Pool);
     // Zellentext bleibt die reine Zahl; ohne echten Namen (DmxOutputOccupant::name ist bei Kind::Pool leer)
@@ -480,12 +454,34 @@ QString DmxOutputMonitorPanel::exercise() {
     const bool poolNameOk =
         grid_->item(0, 0)->text() == QStringLiteral("5") && grid_->item(0, 0)->toolTip().contains(QStringLiteral("Pool-Kanal 77"));
     universe_->setValue(30000);
-    player_.setDmxPatches(dmxPatchesBefore);  // Rauchtest-Projekt wieder in den Ausgangszustand bringen
     if (!poolColorOk) {
+        player_.setDmxPatches(dmxPatchesBefore);
         return QStringLiteral("DMX-Ausgangs-Monitor: Pool-Belegung bekommt nicht die Pool-Farbe");
     }
     if (!poolNameOk) {
+        player_.setDmxPatches(dmxPatchesBefore);
         return QStringLiteral("DMX-Ausgangs-Monitor: Zelle zeigt nicht die reine Zahl oder der Tooltip nennt den Pool-Kanal nicht");
+    }
+
+    // "Patch aufheben": requestRemovePoolPatch ist in MainWindow::buildDmxMonitor echt verbunden (anders als
+    // bei den übrigen Sonden hier, die nur lokal mitzählen) - das Auslösen entfernt den Patch wirklich, kein
+    // Aufräumen danach mehr nötig außer der Sicherheit halber (dmxPatchesBefore enthält ihn ja ohnehin nicht).
+    QMenu* removeMenu = buildContextMenu(1, output::Protocol::ArtNet, 30002);
+    QMenu* removeNodeMenu = removeMenu->actions().size() == 2 ? removeMenu->actions()[1]->menu() : nullptr;
+    const bool removeMenuOk = removeNodeMenu != nullptr && removeNodeMenu->actions().size() == 2 &&
+                               removeNodeMenu->actions()[1]->text().contains(QStringLiteral("aufheben"));
+    if (removeMenuOk) {
+        removeNodeMenu->actions()[1]->trigger();
+    }
+    delete removeMenu;
+    if (!removeMenuOk) {
+        player_.setDmxPatches(dmxPatchesBefore);
+        return QStringLiteral("DMX-Ausgangs-Monitor: Kontextmenü bietet \"Patch aufheben\" nicht mehr an");
+    }
+    const auto removedOccupant = player_.dmxOutputOccupantAt(output::Protocol::ArtNet, 30002, 1);
+    player_.setDmxPatches(dmxPatchesBefore);  // Rauchtest-Projekt wieder in den Ausgangszustand bringen (Sicherheit)
+    if (removedOccupant) {
+        return QStringLiteral("DMX-Ausgangs-Monitor: \"Patch aufheben\" entfernt den Patch nicht wirklich (MainWindow-Verbindung?)");
     }
     return {};
 }
