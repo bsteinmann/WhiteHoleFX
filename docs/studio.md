@@ -202,9 +202,10 @@ Die Seite „Layout“ hat drei Teile.
 - **Patch:** automatisch (nächstes freies Universe), manuell (Protokoll, Ziel, Universe, erster Kanal, Farbreihenfolge) oder
   nicht senden.
 
-**Fixtures:** Liste mit „Hinzufügen …“ und „Entfernen“. Ein Fixture aus dem Dialog landet dort, wo der Dialog es
-hinsetzt; ohne eigene Angabe bekommt es das erste freie Universe (Art-Net, Ziel 0, 170 LEDs je Universe). Für das
-gewählte Fixture gibt es ein Formular:
+**Fixtures:** Liste mit „Hinzufügen …“ und „Entfernen“ (auch per Rechtsklick auf einen Eintrag: entfernt genau das
+Fixture unter dem Mauszeiger, unabhängig von der aktuellen Auswahl). Ein Fixture aus dem Dialog landet dort, wo der
+Dialog es hinsetzt; ohne eigene Angabe bekommt es das erste freie Universe (Art-Net, Ziel 0, 170 LEDs je Universe).
+Für das gewählte Fixture gibt es ein Formular:
 
 - Name, Ursprung (x y z), Drehung (x y z in Grad) und Bauform
 - Bei eigener Form (nicht aus der Bibliothek): Matrix (Spalten, Zeilen, Abstand, Ecke des Kabelanfangs, Laufrichtung,

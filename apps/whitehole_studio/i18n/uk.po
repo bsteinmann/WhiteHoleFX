@@ -94,7 +94,7 @@ msgstr " · не пропатчено"
 msgid "\"%1\" aus der Bibliothek löschen?"
 msgstr "Видалити \"%1\" з бібліотеки?"
 
-#: layout_panel.cpp:257 test_panel.cpp:199
+#: layout_panel.cpp:260 test_panel.cpp:199
 msgid "%1  (%2 LEDs)"
 msgstr "%1  (%2 LED)"
 
@@ -442,7 +442,7 @@ msgstr "<b>WhiteHoleFX Studio</b> %1<br><br>Керування LED-матриц�
 msgid "Abgeblendeter Node mit gestrichelter Durchleitung: überbrückt (Taste B)."
 msgstr "Приглушена нода з пунктирним наскрізним зв'язком: обійдена (клавіша B)."
 
-#: layout_panel.cpp:184
+#: layout_panel.cpp:187
 msgid "Abstand"
 msgstr "Відстань"
 
@@ -454,7 +454,7 @@ msgstr "Відстань x y"
 msgid "Abstand x y z"
 msgstr "Відстань x y z"
 
-#: layout_panel.cpp:183
+#: layout_panel.cpp:186
 msgid "Abstand zwischen den Fixtures beim Aneinanderreihen (0 = dicht an dicht)"
 msgstr "Відстань між фікстурами при розміщенні в ряд (0 = впритул)"
 
@@ -646,7 +646,7 @@ msgstr "Приховати на плитці"
 msgid "Auf der Kachel ausblenden (Kabel nach außen vorhanden)"
 msgstr "Приховати на плитці (є кабель назовні)"
 
-#: layout_panel.cpp:39
+#: layout_panel.cpp:40
 msgid "Auf die Bühne"
 msgstr "На сцену"
 
@@ -766,11 +766,11 @@ msgstr "Видалити тип. Фікстури в розкладці збер
 msgid "Bauform „%1“ in der Bibliothek gespeichert."
 msgstr "Форму «%1» збережено в бібліотеці."
 
-#: layout_panel.cpp:38
+#: layout_panel.cpp:39
 msgid "Bauformen dieser Show (Stage Config → Fixtures). Doppelklick stellt ein Exemplar auf die Bühne."
 msgstr "Типи приладів цього шоу (Stage Config → Fixtures). Подвійний клік ставить екземпляр на сцену."
 
-#: layout_panel.cpp:43
+#: layout_panel.cpp:44
 msgid "Bauformen in dieser Show"
 msgstr "Типи приладів у цьому шоу"
 
@@ -1194,7 +1194,7 @@ msgstr "Плоска хвиля: смуги, що рухаються в одно
 msgid "Effekte (2D)"
 msgstr "Ефекти (2D)"
 
-#: layout_panel.cpp:58
+#: layout_panel.cpp:61
 msgid "Eigene Fixture-Bibliothek: Fixtures als Vorlage speichern und wieder anlegen"
 msgstr "Власна бібліотека фікстур: зберігайте фікстури як шаблон і створюйте їх знову"
 
@@ -1318,7 +1318,7 @@ msgstr "Переглядати отримані та надіслані кана
 msgid "Ende x y z"
 msgstr "Кінець x y z"
 
-#: fixture_library_page.cpp:82 layout_panel.cpp:67
+#: fixture_library_page.cpp:82 layout_panel.cpp:70
 msgid "Entfernen"
 msgstr "Прибрати"
 
@@ -1338,7 +1338,7 @@ msgstr "Видаляє контролер з бібліотеки (проєкт 
 msgid "Erkennt den Takt der Musik und liefert Beat-Impuls, Pulse (klingt ab), Phase und Tempo (BPM). Das Tempo lässt sich auch fest vorgeben."
 msgstr "Визначає такт музики й дає імпульс біта, Pulse (згасає), фазу та темп (BPM). Темп можна також задати фіксовано."
 
-#: layout_panel.cpp:193
+#: layout_panel.cpp:196
 msgid "Erst Fixtures wählen (Strg oder Umschalt halten für mehrere)"
 msgstr "Спершу оберіть фікстури (з Ctrl або Shift — кілька)"
 
@@ -1386,7 +1386,7 @@ msgstr "Проєкт не завантажено. Ctrl+N створює нови
 msgid "Es wurde noch nichts auf dieses Universe gesendet."
 msgstr "На цей юніверс ще нічого не надсилалося."
 
-#: layout_panel.cpp:40
+#: layout_panel.cpp:41
 msgid "Exemplar der gewählten Bauform mit dem nächsten freien Patch auf der Bühne anlegen"
 msgstr "Поставити на сцену екземпляр вибраного типу з наступним вільним патчем"
 
@@ -1470,6 +1470,10 @@ msgstr "Надсилати фікстуру на вивід"
 msgid "Fixture hinzufügen"
 msgstr "Додати фікстуру"
 
+#: layout_panel.cpp:337
+msgid "Fixture „%1“ entfernen"
+msgstr "Видалити прилад «%1»"
+
 #: dmx_output_monitor_panel.cpp:133
 msgid "Fixture-Patch bearbeiten: %1…"
 msgstr "Редагувати патч фікстури: %1…"
@@ -1482,7 +1486,7 @@ msgstr "Фікстури"
 msgid "Fixtures (Auswahl für „Auswahl hervorheben“ und „Nur auf gewählten“)"
 msgstr "Прилади (вибір для «Підсвітити вибір» і «Лише на вибраних»)"
 
-#: layout_panel.cpp:48
+#: layout_panel.cpp:49
 msgid "Fixtures auf der Bühne"
 msgstr "Прилади на сцені"
 
@@ -1586,11 +1590,11 @@ msgstr "Збережено: %1"
 msgid "Gewählte Fixtures als Gruppe speichern …"
 msgstr "Зберегти вибрані фікстури як групу …"
 
-#: layout_panel.cpp:167
+#: layout_panel.cpp:170
 msgid "Gewählte Fixtures senkrecht aufeinanderreihen (das untere bleibt stehen)"
 msgstr "Розмістити вибрані фікстури одну на одній (нижня лишається на місці)"
 
-#: layout_panel.cpp:165
+#: layout_panel.cpp:168
 msgid "Gewählte Fixtures waagrecht aneinanderreihen (das linke bleibt stehen)"
 msgstr "Розмістити вибрані фікстури в ряд по горизонталі (ліва лишається на місці)"
 
@@ -1670,11 +1674,11 @@ msgstr "Зберегти групу"
 msgid "Gruppe zuklappen"
 msgstr "Згорнути групу"
 
-#: layout_panel.cpp:62 node_editor_targets.cpp:56 node_palette.cpp:162
+#: layout_panel.cpp:65 node_editor_targets.cpp:56 node_palette.cpp:162
 msgid "Gruppen"
 msgstr "Групи"
 
-#: layout_panel.cpp:63
+#: layout_panel.cpp:66
 msgid "Gruppen von Fixtures und Regionen der Bühne: Ziele für Output-Nodes"
 msgstr "Групи фікстур і регіони сцени: цілі для Output-нод"
 
@@ -1706,7 +1710,7 @@ msgstr "Яскравість"
 msgid "Hinzufügen"
 msgstr "Додати"
 
-#: layout_panel.cpp:55
+#: layout_panel.cpp:58
 msgid "Hinzufügen …"
 msgstr "Додати …"
 
@@ -1910,7 +1914,7 @@ msgstr "Бігучий вогонь (порядок кабелю)"
 msgid "Lautstärke je Frequenzband"
 msgstr "Гучність за смугами частот"
 
-#: layout_panel.cpp:83 stage_setup_window.cpp:38
+#: layout_panel.cpp:86 stage_setup_window.cpp:38
 msgid "Layout"
 msgstr "Layout"
 
@@ -1958,7 +1962,7 @@ msgstr "Лінійний градієнт від кольору A до коль�
 msgid "Linien als Sinuswellen, die sich bewegen (Anzahl, Amplitude, Frequenz, Tempo, Phasenversatz in Grad, eigene Farbe je Linie)."
 msgstr "Лінії у вигляді синусоїд, що рухаються (кількість, амплітуда, частота, темп, зсув фази у градусах, власний колір для кожної лінії)."
 
-#: layout_panel.cpp:159
+#: layout_panel.cpp:162
 msgid "Linke Kanten ausrichten"
 msgstr "Вирівняти ліві краї"
 
@@ -2110,7 +2114,7 @@ msgstr "Матриця (поверхня)"
 msgid "Matrix, Strip oder 3D-Gitter mit Größe x y z, Lage, Verkabelung und Patch anlegen"
 msgstr "Створити матрицю, стрічку або 3D-сітку з розміром x y z, положенням, підключенням і Patch"
 
-#: layout_panel.cpp:56
+#: layout_panel.cpp:59
 msgid "Matrix, Strip oder 3D-Gitter mit Größe, Lage, Verkabelung und Patch anlegen"
 msgstr "Створити матрицю, стрічку або 3D-сітку з розміром, положенням, підключенням і Patch"
 
@@ -2182,7 +2186,7 @@ msgstr "Назва Look:"
 msgid "Name des Presets:"
 msgstr "Назва пресету:"
 
-#: layout_panel.cpp:165
+#: layout_panel.cpp:168
 msgid "Nebeneinander ↔"
 msgstr "Поруч ↔"
 
@@ -2330,7 +2334,7 @@ msgstr "Угорі"
 msgid "Oben ab"
 msgstr "Вгору від"
 
-#: layout_panel.cpp:162
+#: layout_panel.cpp:165
 msgid "Obere Kanten ausrichten"
 msgstr "Вирівняти верхні краї"
 
@@ -2530,7 +2534,7 @@ msgstr "Перераховує значення з одного діапазон
 msgid "Rechnet mit zwei Zahlen: Addieren, Subtrahieren, Multiplizieren, Dividieren, Minimum, Maximum und weitere."
 msgstr "Рахує з двома числами: додавання, віднімання, множення, ділення, мінімум, максимум та інше."
 
-#: layout_panel.cpp:161
+#: layout_panel.cpp:164
 msgid "Rechte Kanten ausrichten"
 msgstr "Вирівняти праві краї"
 
@@ -2538,7 +2542,7 @@ msgstr "Вирівняти праві краї"
 msgid "Rechts"
 msgstr "Праворуч"
 
-#: layout_panel.cpp:161
+#: layout_panel.cpp:164
 msgid "Rechts ⇥"
 msgstr "Праворуч ⇥"
 
@@ -2622,7 +2626,7 @@ msgstr "Зберігати пропорції (KeepAspect)"
 msgid "Senden"
 msgstr "Надсилати"
 
-#: layout_panel.cpp:163
+#: layout_panel.cpp:166
 msgid "Senkrecht mittig ausrichten"
 msgstr "Вирівняти по центру вертикально"
 
@@ -2898,11 +2902,11 @@ msgstr "Universe:"
 msgid "Unten"
 msgstr "Унизу"
 
-#: layout_panel.cpp:164
+#: layout_panel.cpp:167
 msgid "Unten ⤓"
 msgstr "Вниз ⤓"
 
-#: layout_panel.cpp:164
+#: layout_panel.cpp:167
 msgid "Untere Kanten ausrichten"
 msgstr "Вирівняти нижні краї"
 
@@ -2954,7 +2958,7 @@ msgstr "Доступна версія %1 (встановлена: %2)."
 msgid "Vorlage löschen"
 msgstr "Видалити шаблон"
 
-#: layout_panel.cpp:57
+#: layout_panel.cpp:60
 msgid "Vorlagen"
 msgstr "Шаблони"
 
@@ -2978,7 +2982,7 @@ msgstr "Оберіть файл WAV"
 msgid "WAV-Dateien (*.wav)"
 msgstr "Файли WAV (*.wav)"
 
-#: layout_panel.cpp:160
+#: layout_panel.cpp:163
 msgid "Waagrecht mittig ausrichten"
 msgstr "Вирівняти по центру горизонтально"
 
@@ -3194,7 +3198,7 @@ msgstr "Пікселі, що спалахують випадково, блима
 msgid "Zufällige Zellen, die auf- und abblenden (Fading Pixels), zwischen zwei Farben."
 msgstr "Випадкові клітинки, що наростають і згасають (Fading Pixels), між двома кольорами."
 
-#: layout_panel.cpp:209
+#: layout_panel.cpp:212
 msgid "Zum Aneinanderreihen mindestens zwei Fixtures wählen"
 msgstr "Для розміщення в ряд оберіть щонайменше дві фікстури"
 
@@ -3350,7 +3354,7 @@ msgstr "Обійти\tB"
 msgid "Überbrückung aufheben\tB"
 msgstr "Скасувати обхід\tB"
 
-#: layout_panel.cpp:167
+#: layout_panel.cpp:170
 msgid "Übereinander ↕"
 msgstr "Одне над одним ↕"
 
@@ -3370,15 +3374,15 @@ msgstr "Пропущені пікселі"
 msgid "…"
 msgstr "…"
 
-#: layout_panel.cpp:160
+#: layout_panel.cpp:163
 msgid "↔ Mitte"
 msgstr "↔ Центр"
 
-#: layout_panel.cpp:163
+#: layout_panel.cpp:166
 msgid "↕ Mitte"
 msgstr "↕ Центр"
 
-#: layout_panel.cpp:159
+#: layout_panel.cpp:162
 msgid "⇤ Links"
 msgstr "⇤ Ліворуч"
 
@@ -3394,6 +3398,6 @@ msgstr "▼ вниз"
 msgid "⚠ %1"
 msgstr "⚠ %1"
 
-#: layout_panel.cpp:162
+#: layout_panel.cpp:165
 msgid "⤒ Oben"
 msgstr "⤒ Угору"

@@ -118,6 +118,10 @@ private:
     [[nodiscard]] QString uniqueName(const QString& base) const;
     [[nodiscard]] Vec3 nextOrigin() const;
     [[nodiscard]] mapping::FixtureId selectedId() const;
+    /// Rechtsklick auf die Fixture-Liste: entfernt das Fixture unter dem Mauszeiger, unabhängig von der
+    /// aktuellen Auswahl (auf leerer Fläche ohne Wirkung).
+    void showListContextMenu(const QPoint& pos);
+    void removeFixture(mapping::FixtureId id);
 
     runtime::Player& player_;
     QListWidget* list_{nullptr};

@@ -1,6 +1,7 @@
 // layout_panel.cpp: Fixture-Liste und Seitenaufbau.
 #include "layout_panel.hpp"
 
+#include <QAction>
 #include <QDoubleSpinBox>
 #include <QGridLayout>
 #include <QHBoxLayout>
@@ -49,6 +50,8 @@ LayoutPanel::LayoutPanel(runtime::Player& player, QWidget* parent) : QTabWidget{
     list_ = new QListWidget;
     list_->setMaximumHeight(140);
     list_->setSelectionMode(QAbstractItemView::ExtendedSelection);
+    list_->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(list_, &QListWidget::customContextMenuRequested, this, [this](const QPoint& pos) { showListContextMenu(pos); });
     pageLayout->addWidget(list_);
 
     auto* buttons = new QHBoxLayout;
@@ -306,6 +309,36 @@ void LayoutPanel::removeSelected() {
     Q_EMIT edited();
 }
 
+void LayoutPanel::removeFixture(mapping::FixtureId id) {
+    if (player_.project() == nullptr) {
+        return;
+    }
+    const Result<void> r = player_.removeFixture(id);
+    if (!r.ok()) {
+        Q_EMIT failed(fromStd(r.error().message));
+        return;
+    }
+    fillList(mapping::FixtureId{});
+    Q_EMIT edited();
+}
+
+void LayoutPanel::showListContextMenu(const QPoint& pos) {
+    const QListWidgetItem* item = list_->itemAt(pos);
+    const project::Project* project = player_.project();
+    if (item == nullptr || project == nullptr) {
+        return;  // leere Fläche: kein Menü
+    }
+    const auto id = mapping::FixtureId{item->data(kIdRole).toULongLong()};
+    const mapping::Fixture* fixture = project->layout.find(id);
+    if (fixture == nullptr) {
+        return;
+    }
+    QMenu menu{list_};
+    QAction* remove = menu.addAction(tr("Fixture „%1“ entfernen").arg(fromStd(fixture->name)));
+    connect(remove, &QAction::triggered, this, [this, id]() { removeFixture(id); });
+    menu.exec(list_->mapToGlobal(pos));
+}
+
 QString LayoutPanel::exercise() {
     if (player_.project() == nullptr) {
         return QStringLiteral("Layout: kein Projekt");
@@ -324,6 +357,15 @@ QString LayoutPanel::exercise() {
     removeSelected();
     if (player_.project()->layout.fixtures().size() != fixtures || list_->count() != static_cast<int>(fixtures)) {
         return QStringLiteral("Layout: Strip wurde nicht entfernt");
+    }
+    // Rechtsklick-Entfernen: löscht gezielt das übergebene Fixture, unabhängig von der (aktuellen) Auswahl.
+    // Nur removeFixture() selbst, nicht showListContextMenu(): dessen QMenu::exec() würde ohne Publikum blockieren.
+    addStrip();
+    const mapping::FixtureId added = selectedId();
+    list_->clearSelection();
+    removeFixture(added);
+    if (player_.project()->layout.find(added) != nullptr || list_->count() != static_cast<int>(fixtures)) {
+        return QStringLiteral("Layout: removeFixture() hat das Fixture nicht entfernt");
     }
     if (const QString note = exerciseImport(); !note.isEmpty()) {
         return note;

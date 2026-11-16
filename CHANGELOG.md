@@ -2,6 +2,10 @@
 
 ## 0.92.0
 
+- **Layout: Fixture per Rechtsklick entfernen** (vom Nutzer gewünscht, Teil einer größeren Stage-Config-
+  Auffrischung). Rechtsklick auf einen Eintrag der Fixture-Liste im Reiter Layout entfernt genau das
+  Fixture unter dem Mauszeiger, unabhängig von der aktuellen Auswahl - ergänzt den bestehenden
+  "Entfernen"-Knopf, der nur die aktuelle Auswahl löscht.
 - **Fix: Ziel (Fixture/Gruppe/Region) eines Output-Nodes ging beim Kopieren/Duplizieren verloren.** Ein
   `wh.output.canvas`-Node mit zugewiesenem Ziel (`Player::setOutputTargets`) zeichnete nach dem Duplizieren
   oder Kopieren/Einfügen (Strg+D bzw. Strg+C/Strg+V) stillschweigend auf die volle Leinwand statt auf das
