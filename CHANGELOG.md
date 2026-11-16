@@ -2,6 +2,19 @@
 
 ## 0.92.0
 
+- **Layout: Bauform wird Pflicht, Form nur noch im Reiter Fixtures bearbeitbar** (vom Nutzer entschieden:
+  Fixtures sollen "nur im Fixtures-Tab bearbeitet werden können"). Bisher legten „Matrix“, „Strip“ und der
+  Dialog „Fixture hinzufügen“ ein typloses Fixture mit „eigener Form“ an - bearbeitbar direkt im Reiter
+  Layout, aber unsichtbar im Reiter Fixtures (daher wirkte die Bauform-Bibliothek dort oft leer, obwohl
+  schon Fixtures im Layout standen). Jetzt entsteht beim Anlegen (Matrix/Strip-Knopf, Dialog, Punktwolken-
+  Import) immer zuerst eine neue Bauform in der Bibliothek, das Fixture ist von Anfang an nur noch ein
+  Exemplar davon. Das Formular im Reiter Layout zeigt dafür nur noch Name, Lage, Drehung und die Bauform
+  (als Verweis) - die Felder zur Form selbst (Spalten/Zeilen, LED-Zahl, Verkabelung …) sind daraus komplett
+  entfernt; ändern lässt sich die Form nur noch an der Bauform im Reiter Fixtures. Ein Fixture aus einer
+  älteren Projektdatei ohne Bauform zeigt einen Hinweis statt der Formfelder; der neue letzte Eintrag im
+  Bauform-Feld, „Neue Bauform aus dieser Form …“, legt aus der aktuellen Form eine benannte Bauform an und
+  weist sie zu - der Weg zurück in die Bibliothek für solche Altfälle, und zugleich ein Fork für ein schon
+  zugewiesenes Fixture.
 - **Fix: "Patch +" im DMX-Kanal-Pool (Ausgabe → DMX-Kanal-Pool) funktionierte nur beim ersten Klick**
   (vom Nutzer gemeldet: „ich kann nur einmal einen Patch hinzufügen... danach funktioniert der Button
   nicht mehr"). `DmxPatchTable::addPatch()` fügte jeden neuen Eintrag mit dem Standard-Pool-Kanal 1 ein

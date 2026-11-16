@@ -294,7 +294,7 @@ msgstr "(library is empty)"
 msgid "(Schwarz)"
 msgstr "(Black)"
 
-#: fixture_form.cpp:79 patch_table.cpp:113
+#: patch_table.cpp:113
 msgid "(eigene Form)"
 msgstr "(own shape)"
 
@@ -390,10 +390,6 @@ msgstr "3D: drag = rotate · right-click or Shift+drag = pan · wheel = zoom · 
 msgid "<b>2D-Matrix</b>"
 msgstr "<b>2D matrix</b>"
 
-#: fixture_form.cpp:154
-msgid "<b>3D-Gitter</b>"
-msgstr "<b>3D grid</b>"
-
 #: shape_form.cpp:106
 msgid "<b>3D-Matrix</b>"
 msgstr "<b>3D matrix</b>"
@@ -410,23 +406,15 @@ msgstr "<b>Saved fixtures</b> (all in the library)"
 msgid "<b>Kreis</b>"
 msgstr "<b>Circle</b>"
 
-#: fixture_form.cpp:117
-msgid "<b>Matrix</b>"
-msgstr "<b>Matrix</b>"
-
-#: fixture_form.cpp:189 shape_form.cpp:53
+#: shape_form.cpp:53
 msgid "<b>Punktwolke</b>: %1 Punkte, nur in der Datei änderbar"
 msgstr "<b>Point cloud</b>: %1 points, editable only in the file"
-
-#: fixture_form.cpp:193
-msgid "<b>Ring oder Säule</b>: Form vorerst nur in der Datei änderbar"
-msgstr "<b>Ring or column</b>: shape can only be changed in the file for now"
 
 #: shape_form.cpp:161
 msgid "<b>Spirale</b> (Säule mit einem um das Rohr gewickelten Strip)"
 msgstr "<b>Spiral</b> (pillar with a strip wound around the tube)"
 
-#: fixture_form.cpp:141 shape_form.cpp:92
+#: shape_form.cpp:92
 msgid "<b>Strip</b>"
 msgstr "<b>Strip</b>"
 
@@ -446,11 +434,11 @@ msgstr "Dimmed node with dashed pass-through: bypassed (key B)."
 msgid "Abstand"
 msgstr "Gap"
 
-#: add_fixture_dialog.cpp:109 fixture_form.cpp:135 shape_form.cpp:85
+#: add_fixture_dialog.cpp:109 shape_form.cpp:85
 msgid "Abstand x y"
 msgstr "Spacing x y"
 
-#: add_fixture_dialog.cpp:149 fixture_form.cpp:183 shape_form.cpp:135
+#: add_fixture_dialog.cpp:149 shape_form.cpp:135
 msgid "Abstand x y z"
 msgstr "Spacing x y z"
 
@@ -554,7 +542,7 @@ msgstr "On: an unconnected input of Blend, Mix, Crossfade, Add or Mask turns the
 msgid "Anfang und Ende relativ zur Position; die erste LED sitzt am Anfang."
 msgstr "Start and end relative to the position; the first LED sits at the start."
 
-#: add_fixture_dialog.cpp:123 fixture_form.cpp:150 shape_form.cpp:101
+#: add_fixture_dialog.cpp:123 shape_form.cpp:101
 msgid "Anfang x y z"
 msgstr "Start x y z"
 
@@ -574,11 +562,11 @@ msgstr "View"
 msgid "Ansicht von vorn: Fixtures verschieben, Bereich aufziehen"
 msgstr "View from the front: move fixtures, drag out an area"
 
-#: dmx_patch_table.cpp:44
+#: dmx_patch_table.cpp:45
 msgid "Anzahl"
 msgstr "Count"
 
-#: fixture_form.cpp:182 shape_form.cpp:134
+#: shape_form.cpp:134
 msgid "Anzahl x y z"
 msgstr "Count x y z"
 
@@ -590,7 +578,7 @@ msgstr "Art-Net"
 msgid "Art-Net empfangen"
 msgstr "Receive Art-Net"
 
-#: dmx_patch_table.cpp:51
+#: dmx_patch_table.cpp:52
 msgid "Art-Net zählt Universen ab 0 (bis 32767), sACN ab 1 (bis 63999)."
 msgstr "Art-Net counts universes from 0 (up to 32767), sACN from 1 (up to 63999)."
 
@@ -750,11 +738,11 @@ msgstr "Bar along z"
 msgid "Balken in den Nodes und leuchtende Kabel, solange die Wiedergabe läuft"
 msgstr "Bars in the nodes and glowing wires while playback is running"
 
-#: fixture_form.cpp:90 patch_table.cpp:48
+#: fixture_form.cpp:84 patch_table.cpp:48
 msgid "Bauform"
 msgstr "Fixture type"
 
-#: fixture_form.cpp:88
+#: fixture_form.cpp:82
 msgid "Bauform aus der Bibliothek (Stage Config → Fixtures). Änderungen an der Bauform gelten für alle Exemplare."
 msgstr "Fixture type from the library (Stage Config → Fixtures). Changes to the type apply to all instances."
 
@@ -866,7 +854,7 @@ msgstr "Byte %1–%2"
 msgid "Bänder aus Licht laufen die gewählte Achse entlang. „Frequency“ ist die Zahl der Wellen über die Länge, „Sharpness“ macht aus der weichen Welle schmale Pulse. Für Strips."
 msgstr "Bands of light run along the chosen axis. “Frequency” is the number of waves along the length, “Sharpness” turns the soft wave into narrow pulses. For strips."
 
-#: dmx_patch_table.cpp:44 output_form.cpp:26 patch_table.cpp:48
+#: dmx_patch_table.cpp:45 output_form.cpp:26 patch_table.cpp:48
 msgid "Controller"
 msgstr "Controller"
 
@@ -882,7 +870,7 @@ msgstr "Controller +"
 msgid "Controller „%1“ in der Bibliothek gespeichert."
 msgstr "Controller “%1” saved to the library."
 
-#: layout_panel_add.cpp:40
+#: layout_panel_add.cpp:41
 msgid "Cube"
 msgstr "Cube"
 
@@ -966,7 +954,7 @@ msgstr "DMX Monitor"
 msgid "Dabei wird nur die öffentliche Seite des neuesten Releases abgefragt. Gesendet werden Programmname und Versionsnummer (und, wie bei jedem Netzwerkzugriff, deine IP-Adresse), nichts über dich oder deine Projekte. Es wird nichts installiert. Du kannst das jederzeit im Menü Hilfe ändern."
 msgstr "Only the public page of the latest release is requested. What is sent: the program name and version number (and, as with any network access, your IP address), nothing about you or your projects. Nothing is installed. You can change this at any time in the Help menu."
 
-#: add_fixture_dialog.cpp:146 fixture_form.cpp:171 shape_form.cpp:123
+#: add_fixture_dialog.cpp:146 shape_form.cpp:123
 msgid "Das Kabel beginnt an dieser Seite statt an der gegenüberliegenden"
 msgstr "The cable starts on this side instead of the opposite one"
 
@@ -1026,7 +1014,7 @@ msgstr "The output: whatever arrives here is sent to the LEDs. \"Mode\" scales i
 msgid "Der Auswahl-Kanal teilt sich in so viele gleich große Stufen, wie das Projekt Looks hat; 0 heißt kein Wechsel. Ohne Überblendzeit-Kanal (aus) gilt die im Look gespeicherte Zeit, sonst setzt der Kanalwert 0 bis 255 die Zeit auf 0 bis 10 Sekunden. Wirkt nur im laufenden Live-Betrieb; bleibt das Signal weg, bleibt der zuletzt gezeigte Look stehen."
 msgstr "The select channel divides into as many equal steps as the project has looks; 0 means no change. Without a fade-time channel (off), the look's own fade time applies; otherwise the channel value 0 to 255 sets the time to 0 to 10 seconds. Only works while live mode is running; if the signal disappears, the last shown look stays."
 
-#: dmx_patch_table.cpp:50
+#: dmx_patch_table.cpp:51
 msgid "Der Controller bestimmt das Protokoll. Pool-Kanäle ohne Patch werden nicht gesendet."
 msgstr "The controller determines the protocol. Pool channels without a patch are not sent."
 
@@ -1074,7 +1062,7 @@ msgstr "The cue list is running and switches the looks itself. Press Stop in the
 msgid "Die DMX-Nodes im Projekt lesen ihre Werte aus dem Empfang. Standard-Ports sind 6454 (Art-Net) und 5568 (sACN); nur ändern, wenn ein anderes Programm sie belegt. Nach der Installation ist der Empfang aus; unter Windows fragt die Firewall beim ersten Einschalten nach."
 msgstr "The DMX nodes in the project read their values from the received data. Default ports are 6454 (Art-Net) and 5568 (sACN); only change them if another program uses them. Reception is off after installation; on Windows the firewall asks the first time you switch it on."
 
-#: fixture_form.cpp:93
+#: fixture_form.cpp:87
 msgid "Die Form kommt aus der Bauform und wird im Reiter Fixtures geändert."
 msgstr "The shape comes from the fixture type and is changed in the Fixtures tab."
 
@@ -1130,6 +1118,10 @@ msgstr "This shape is invalid."
 msgid "Dieser Node hat keine einstellbaren Parameter."
 msgstr "This node has no adjustable parameters."
 
+#: fixture_form.cpp:91
+msgid "Dieses Fixture hat keine Bauform (ältere Projektdatei oder die Bauform wurde entfernt). Über \"Bauform\" → \"Neue Bauform aus dieser Form …\" lässt sich wieder eine anlegen."
+msgstr "This fixture has no fixture type (older project file, or the fixture type was removed). Use \"Fixture type\" → \"New fixture type from this shape …\" to create one again."
+
 #: main.cpp:133
 msgid "Dieses Programm wurde ohne GPU-Backend gebaut (-DWHITEHOLEFX_WEBGPU=ON); es zeigt nur das Layout."
 msgstr "This program was built without the GPU backend (-DWHITEHOLEFX_WEBGPU=ON); it only shows the layout."
@@ -1158,19 +1150,19 @@ msgstr "Rotates the image in space around the center, about the X, Y and Z axes 
 msgid "Dreht das Bild um die Mitte (Winkel in Grad)."
 msgstr "Rotates the image around the center (angle in degrees)."
 
-#: fixture_form.cpp:74
+#: fixture_form.cpp:63
 msgid "Drehung um die x-Achse in Grad (um die Mitte des Fixtures)"
 msgstr "Rotation about the x axis in degrees (around the centre of the fixture)"
 
-#: fixture_form.cpp:75
+#: fixture_form.cpp:64
 msgid "Drehung um die y-Achse in Grad"
 msgstr "Rotation about the y axis in degrees"
 
-#: fixture_form.cpp:76
+#: fixture_form.cpp:65
 msgid "Drehung um die z-Achse in Grad"
 msgstr "Rotation about the z axis in degrees"
 
-#: fixture_form.cpp:77
+#: fixture_form.cpp:66
 msgid "Drehung x y z (Grad)"
 msgstr "Rotation x y z (degrees)"
 
@@ -1318,7 +1310,7 @@ msgstr "Getting started"
 msgid "Empfangene und gesendete DMX-Kanäle einsehen und direkt patchen (eigenes Fenster)"
 msgstr "View received and sent DMX channels and patch them directly (own window)"
 
-#: add_fixture_dialog.cpp:124 fixture_form.cpp:151 shape_form.cpp:102
+#: add_fixture_dialog.cpp:124 shape_form.cpp:102
 msgid "Ende x y z"
 msgstr "End x y z"
 
@@ -1330,7 +1322,7 @@ msgstr "Remove"
 msgid "Entfernt den gewählten Controller (ohne Auswahl den letzten). Benutzte Controller bleiben stehen."
 msgstr "Removes the selected controller (the last one if none is selected). Controllers in use stay."
 
-#: dmx_patch_table.cpp:63
+#: dmx_patch_table.cpp:64
 msgid "Entfernt den gewählten Patch (ohne Auswahl den letzten)."
 msgstr "Removes the selected patch (the last one if nothing is selected)."
 
@@ -1354,15 +1346,15 @@ msgstr "First axis = runs fastest along the cable"
 msgid "Erste LED bei (Grad)"
 msgstr "First LED at (degrees)"
 
-#: add_fixture_dialog.cpp:177 dmx_patch_table.cpp:45 patch_table.cpp:49
+#: add_fixture_dialog.cpp:177 dmx_patch_table.cpp:46 patch_table.cpp:49
 msgid "Erster Kanal"
 msgstr "First channel"
 
-#: dmx_patch_table.cpp:47
+#: dmx_patch_table.cpp:48
 msgid "Erster Kanal im internen Kanal-Pool der DMX-Output-Nodes (1..512, siehe deren Parameter \"ch\")."
 msgstr "First channel in the internal channel pool of the DMX output nodes (1..512, see their \"ch\" parameter)."
 
-#: dmx_patch_table.cpp:52
+#: dmx_patch_table.cpp:53
 msgid "Erster echter DMX-Kanal am Ziel (1..512)."
 msgstr "First real DMX channel at the destination (1..512)."
 
@@ -1382,7 +1374,7 @@ msgstr "A preset \"%1\" already exists. Replace it?"
 msgid "Es gibt schon einen Look „%1“. Mit dem aktuellen Effekt überschreiben?"
 msgstr "A look “%1” already exists. Overwrite it with the current effect?"
 
-#: layout_panel_add.cpp:77 layout_panel_types.cpp:48
+#: layout_panel_add.cpp:93 layout_panel_types.cpp:48
 msgid "Es ist kein Projekt geladen. Mit Strg+N ein neues anlegen oder mit Strg+O eins öffnen."
 msgstr "No project is loaded. Create one with Ctrl+N or open one with Ctrl+O."
 
@@ -1606,7 +1598,7 @@ msgstr "Line up the selected fixtures horizontally (the leftmost one stays)"
 msgid "Gewählten Controller −"
 msgstr "Remove selected controller −"
 
-#: dmx_patch_table.cpp:62
+#: dmx_patch_table.cpp:63
 msgid "Gewählten Patch −"
 msgstr "Selected Patch −"
 
@@ -1694,7 +1686,7 @@ msgstr "Group"
 msgid "Gruppieren …\tStrg+G"
 msgstr "Group …\tCtrl+G"
 
-#: fixture_form.cpp:133 shape_form.cpp:84
+#: shape_form.cpp:84
 msgid "Größe"
 msgstr "Size"
 
@@ -1774,7 +1766,7 @@ msgstr "This show already has a fixture type “%1”."
 msgid "Ja, beim Start suchen"
 msgstr "Yes, check on startup"
 
-#: add_fixture_dialog.cpp:110 add_fixture_dialog.cpp:152 fixture_form.cpp:136
+#: add_fixture_dialog.cpp:110 add_fixture_dialog.cpp:152 shape_form.cpp:86
 msgid "Kabel beginnt"
 msgstr "Cable starts"
 
@@ -1814,7 +1806,7 @@ msgstr "Card for receiving:"
 msgid "Karte zum Senden:"
 msgstr "Card for sending:"
 
-#: fixture_form.cpp:55
+#: fixture_form.cpp:44
 msgid "Kein Fixture ausgewählt."
 msgstr "No fixture selected."
 
@@ -1878,7 +1870,7 @@ msgstr "Circle 24"
 msgid "LED-Steuerung für Matrizen, Cubes und Pixelinstallationen"
 msgstr "LED control for matrices, cubes and pixel installations"
 
-#: add_fixture_dialog.cpp:122 fixture_form.cpp:149 patch_table.cpp:48
+#: add_fixture_dialog.cpp:122 patch_table.cpp:48 shape_form.cpp:100
 msgid "LEDs"
 msgstr "LEDs"
 
@@ -2106,7 +2098,7 @@ msgstr "Master: protocol:"
 msgid "Master: Universe:"
 msgstr "Master: universe:"
 
-#: layout_panel_add.cpp:34 layout_panel_add.cpp:120
+#: layout_panel_add.cpp:35 layout_panel_add.cpp:147
 msgid "Matrix"
 msgstr "Matrix"
 
@@ -2146,7 +2138,7 @@ msgstr "Centre"
 msgid "Modus"
 msgstr "Mode"
 
-#: dmx_patch_table.cpp:81 output_form_library.cpp:133 patch_table.cpp:134
+#: dmx_patch_table.cpp:82 output_form_library.cpp:133 patch_table.cpp:134
 msgid "Multicast"
 msgstr "Multicast"
 
@@ -2190,6 +2182,10 @@ msgstr "Name of the look:"
 msgid "Name des Presets:"
 msgstr "Name of the preset:"
 
+#: fixture_form.cpp:137
+msgid "Name:"
+msgstr "Name:"
+
 #: layout_panel.cpp:168
 msgid "Nebeneinander ↔"
 msgstr "Side by side ↔"
@@ -2214,9 +2210,17 @@ msgstr "Network card, DMX input, audio interface and default values for nodes"
 msgid "Neu"
 msgstr "New"
 
+#: fixture_form.cpp:137
+msgid "Neue Bauform"
+msgstr "New fixture type"
+
 #: fixture_library_page.cpp:110
 msgid "Neue Bauform anlegen"
 msgstr "Create new fixture type"
+
+#: fixture_form.cpp:79
+msgid "Neue Bauform aus dieser Form …"
+msgstr "New fixture type from this shape …"
 
 #: node_defaults_page.cpp:36
 msgid "Neue Nodes starten mit diesen Werten statt mit denen der Bibliothek. Bestehende Nodes und geladene Projekte ändern sich nicht. Fett markierte Typen haben eigene Werte."
@@ -2402,7 +2406,7 @@ msgstr "Particles from an emitter: lifetime, speed, direction, spread, gravity a
 msgid "Patch (Ausgabe)"
 msgstr "Patch (output)"
 
-#: dmx_patch_table.cpp:61
+#: dmx_patch_table.cpp:62
 msgid "Patch +"
 msgstr "Patch +"
 
@@ -2438,7 +2442,7 @@ msgstr "Plasma: softly flowing, undulating color fields. Scale, speed and depth 
 msgid "Pool-Kanal %1"
 msgstr "Pool channel %1"
 
-#: dmx_patch_table.cpp:44
+#: dmx_patch_table.cpp:45
 msgid "Pool-Kanal (von)"
 msgstr "Pool channel (from)"
 
@@ -2502,7 +2506,7 @@ msgstr "Save project as"
 msgid "Projekt öffnen"
 msgstr "Open project"
 
-#: add_fixture_dialog.cpp:174 dmx_patch_table.cpp:44 output_form.cpp:30
+#: add_fixture_dialog.cpp:174 dmx_patch_table.cpp:45 output_form.cpp:30
 msgid "Protokoll"
 msgstr "Protocol"
 
@@ -2510,7 +2514,7 @@ msgstr "Protocol"
 msgid "Protokoll:"
 msgstr "Protocol:"
 
-#: layout_panel_add.cpp:42
+#: layout_panel_add.cpp:43
 msgid "Punkte"
 msgstr "Points"
 
@@ -2582,7 +2586,7 @@ msgstr "Delete region"
 msgid "Regionen"
 msgstr "Regions"
 
-#: fixture_form.cpp:184 shape_form.cpp:136
+#: shape_form.cpp:136
 msgid "Reihenfolge (schnellste zuerst)"
 msgstr "Order (fastest first)"
 
@@ -2646,7 +2650,7 @@ msgstr "Send"
 msgid "Senkrecht mittig ausrichten"
 msgstr "Center vertically"
 
-#: fixture_form.cpp:124 fixture_form.cpp:162 shape_form.cpp:73
+#: shape_form.cpp:73 shape_form.cpp:114
 msgid "Serpentine"
 msgstr "Serpentine"
 
@@ -2686,7 +2690,7 @@ msgstr "Should WhiteHoleFX look at GitHub on startup to see whether a newer vers
 msgid "Sonstige"
 msgstr "Other"
 
-#: fixture_form.cpp:123 fixture_form.cpp:134 shape_form.cpp:72
+#: shape_form.cpp:72 shape_form.cpp:84
 msgid "Spalten"
 msgstr "Columns"
 
@@ -2778,7 +2782,7 @@ msgstr "Strict &inputs"
 msgid "Strenge Eingänge"
 msgstr "Strict inputs"
 
-#: fixture_library_page.cpp:102 layout_panel_add.cpp:37 layout_panel_add.cpp:127
+#: fixture_library_page.cpp:102 layout_panel_add.cpp:38 layout_panel_add.cpp:154
 msgid "Strip"
 msgstr "Strip"
 
@@ -2898,7 +2902,7 @@ msgstr "Unexpected end last time"
 msgid "Ungespeicherte Änderungen"
 msgstr "Unsaved changes"
 
-#: add_fixture_dialog.cpp:176 dmx_patch_table.cpp:45
+#: add_fixture_dialog.cpp:176 dmx_patch_table.cpp:46
 msgid "Universe"
 msgstr "Universe"
 
@@ -2930,7 +2934,7 @@ msgstr "Align bottom edges"
 msgid "Update-Prüfung"
 msgstr "Update check"
 
-#: fixture_form.cpp:67
+#: fixture_form.cpp:56
 msgid "Ursprung x y z"
 msgstr "Origin x y z"
 
@@ -3066,7 +3070,7 @@ msgstr "How often the spiral winds around the column (0 = straight up)"
 msgid "Wie viele Pixel nach je N LEDs übersprungen werden."
 msgstr "How many pixels are skipped after every N LEDs."
 
-#: dmx_patch_table.cpp:48
+#: dmx_patch_table.cpp:49
 msgid "Wie viele Pool-Kanäle ab dieser Stelle hierher gehen."
 msgstr "How many pool channels starting here go to this patch."
 
@@ -3146,7 +3150,7 @@ msgstr "Draws only the edges of the image (outline) in a chosen color."
 msgid "Zeigt das Bild nur in einem Ausschnitt (links, oben, Breite, Höhe, Tiefe) und füllt den Rest mit Transparent."
 msgstr "Shows the image only in a section (left, top, width, height, depth); the rest becomes transparent."
 
-#: fixture_form.cpp:123 fixture_form.cpp:134 shape_form.cpp:72
+#: shape_form.cpp:72 shape_form.cpp:84
 msgid "Zeilen"
 msgstr "Rows"
 
@@ -3198,7 +3202,7 @@ msgstr "Add to favorites"
 msgid "Zuerst ein Projekt anlegen (Strg+N) oder öffnen (Strg+O)."
 msgstr "Create a project (Ctrl+N) or open one (Ctrl+O) first."
 
-#: add_fixture_dialog.cpp:111 fixture_form.cpp:137 shape_form.cpp:87
+#: add_fixture_dialog.cpp:111 shape_form.cpp:87
 msgid "Zuerst entlang"
 msgstr "First along"
 
@@ -3270,19 +3274,19 @@ msgstr "a single colour"
 msgid "im Uhrzeigersinn"
 msgstr "clockwise"
 
-#: add_fixture_dialog.cpp:143 fixture_form.cpp:165 shape_form.cpp:117
+#: add_fixture_dialog.cpp:143 shape_form.cpp:117
 msgid "oben (y max)"
 msgstr "top (y max)"
 
-#: add_fixture_dialog.cpp:104 fixture_form.cpp:121 shape_form.cpp:70
+#: add_fixture_dialog.cpp:104 shape_form.cpp:70
 msgid "oben links"
 msgstr "top left"
 
-#: add_fixture_dialog.cpp:104 fixture_form.cpp:121 shape_form.cpp:70
+#: add_fixture_dialog.cpp:104 shape_form.cpp:70
 msgid "oben rechts"
 msgstr "top right"
 
-#: add_fixture_dialog.cpp:142 fixture_form.cpp:164 shape_form.cpp:116
+#: add_fixture_dialog.cpp:142 shape_form.cpp:116
 msgid "rechts (x max)"
 msgstr "right (x max)"
 
@@ -3310,15 +3314,15 @@ msgstr "stretch (Stretch)"
 msgid "unbenannt"
 msgstr "untitled"
 
-#: add_fixture_dialog.cpp:104 fixture_form.cpp:121 shape_form.cpp:70
+#: add_fixture_dialog.cpp:104 shape_form.cpp:70
 msgid "unten links"
 msgstr "bottom left"
 
-#: add_fixture_dialog.cpp:104 fixture_form.cpp:121 shape_form.cpp:70
+#: add_fixture_dialog.cpp:104 shape_form.cpp:70
 msgid "unten rechts"
 msgstr "bottom right"
 
-#: add_fixture_dialog.cpp:144 fixture_form.cpp:166 shape_form.cpp:118
+#: add_fixture_dialog.cpp:144 shape_form.cpp:118
 msgid "vorn (z max)"
 msgstr "front (z max)"
 

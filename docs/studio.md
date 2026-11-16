@@ -209,9 +209,10 @@ Dialog es hinsetzt; ohne eigene Angabe bekommt es das erste freie Universe (Art-
 Für das gewählte Fixture gibt es ein Formular:
 
 - Name, Ursprung (x y z), Drehung (x y z in Grad) und Bauform
-- Bei eigener Form (nicht aus der Bibliothek): Matrix (Spalten, Zeilen, Abstand, Ecke des Kabelanfangs, Laufrichtung,
-  Serpentine), Strip (LED-Zahl, Anfang, Ende) oder 3D-Gitter (Anzahl je Achse, Abstand, Achsenreihenfolge, Serpentine,
-  Startecke). Ring, Säule, Spirale und Punktwolken ändert man in der Bibliothek bzw. in der Datei.
+- Die Form selbst (Spalten/Zeilen, LED-Zahl, Verkabelung …) ändert man nur noch im Reiter Fixtures, an der
+  Bauform, nicht hier - jedes Fixture bekommt beim Anlegen (auch aus diesem Dialog) automatisch eine eigene
+  Bauform. Ein Fixture aus einer älteren Projektdatei ohne Bauform zeigt stattdessen einen Hinweis; über
+  „Bauform“ → „Neue Bauform aus dieser Form …“ lässt sich auch dafür eine anlegen.
 - Der Patch steht nicht mehr hier, sondern im Reiter Ausgabe.
 
 **Import von Positionen:** In der Oberfläche vorerst entfernt (kommt mit dem neuen Stage-Config-Fenster zurück). Punktwolken
@@ -278,7 +279,7 @@ Die erste Seite im Fenster Stage Config (Menü Stage Config → Fixtures …) is
 
 ### Layout: Exemplare verteilen und drehen
 
-Im Reiter Layout stehen die Bauformen der Show oben in einer eigenen Liste („Bauformen in dieser Show“); ein Doppelklick oder **Auf die Bühne** legt ein Exemplar mit dem nächsten freien Patch an. Lage (Ursprung x y z) und **Drehung x y z** (Grad, um die Mitte des Fixtures) stellst du im Formular ein. Das Feld **Bauform** wechselt die Bauform eines Fixtures oder löst es mit „(eigene Form)“ von der Bibliothek. Die Drehung wirkt in der Abtastung (Effekt), in der Vorschau und in der Stage-Ansicht.
+Im Reiter Layout stehen die Bauformen der Show oben in einer eigenen Liste („Bauformen in dieser Show“); ein Doppelklick oder **Auf die Bühne** legt ein Exemplar mit dem nächsten freien Patch an. Lage (Ursprung x y z) und **Drehung x y z** (Grad, um die Mitte des Fixtures) stellst du im Formular ein. Das Feld **Bauform** wechselt die Bauform eines Fixtures; der letzte Eintrag „Neue Bauform aus dieser Form …“ legt aus der aktuellen Form eine neue Bauform in der Bibliothek an und weist sie zu. Jedes Fixture braucht eine Bauform - auch „Matrix“, „Strip“ und der Dialog „Fixture hinzufügen“ legen beim Anlegen automatisch eine an (Reiter Fixtures zeigt sie danach); nur ein Fixture aus einer älteren Projektdatei kann noch ohne Bauform sein, bis man ihm über denselben Weg eine gibt. Die eigentliche Form (Größe, Verkabelung …) ändert man nur noch im Reiter Fixtures. Die Drehung wirkt in der Abtastung (Effekt), in der Vorschau und in der Stage-Ansicht.
 
 ### Reiter Test: Testbilder über die ganze Bühne
 

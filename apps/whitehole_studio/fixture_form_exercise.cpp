@@ -10,8 +10,8 @@ namespace whitehole::studio {
 
 QString FixtureForm::exercise() {
     const mapping::Fixture* fixture = player_.project() != nullptr ? player_.project()->layout.find(id_) : nullptr;
-    if (fixture == nullptr || c_.origin.x == nullptr || c_.count == nullptr) {
-        return QStringLiteral("Formular: kein Strip angezeigt");
+    if (fixture == nullptr || c_.origin.x == nullptr || c_.type == nullptr) {
+        return QStringLiteral("Formular: kein Fixture angezeigt");
     }
     // Ursprung ändern, wie es ein Mensch im Zahlenfeld täte
     const double x0 = fixture->origin.x;
@@ -20,11 +20,10 @@ QString FixtureForm::exercise() {
     if (fixture == nullptr || std::abs(static_cast<double>(fixture->origin.x) - (x0 + 5.0)) > 1.0e-3) {
         return QStringLiteral("Formular: Ursprung wurde nicht übernommen");
     }
-    // Größe ändern: die Zahl der LEDs ändert sich mit
-    const std::uint32_t before = player_.status().ledCount;
-    c_.count->setValue(c_.count->value() + 10);
-    if (player_.status().ledCount != before + 10) {
-        return QStringLiteral("Formular: LED-Zahl %1 statt %2").arg(player_.status().ledCount).arg(before + 10);
+    // "Typ wird Pflicht" (siehe CLAUDE.md): auch dieser frisch angelegte Strip hat sofort eine eigene
+    // Bauform; die Form selbst lässt sich hier nicht mehr bearbeiten (siehe fixture_form.hpp).
+    if (fixture->type.empty() || c_.type->currentText().toUtf8().toStdString() != fixture->type) {
+        return QStringLiteral("Formular: Fixture zeigt keine (oder die falsche) Bauform an");
     }
     return {};
 }
@@ -34,8 +33,8 @@ QString FixtureForm::exerciseTyped() {
     if (fixture == nullptr || c_.rotation.x == nullptr || c_.type == nullptr) {
         return QStringLiteral("Formular: kein Fixture mit Drehung angezeigt");
     }
-    if (fixture->type.empty() || c_.columns != nullptr || c_.count != nullptr || c_.nx != nullptr) {
-        return QStringLiteral("Formular: Fixture aus einer Bauform zeigt trotzdem Formfelder");
+    if (fixture->type.empty()) {
+        return QStringLiteral("Formular: Fixture aus einer Bauform zeigt keine Bauform");
     }
     // Drehung um alle drei Achsen über die Felder
     c_.rotation.y->setValue(45.0);
@@ -45,11 +44,13 @@ QString FixtureForm::exerciseTyped() {
         std::abs(static_cast<double>(fixture->rotation.z) - 30.0) > 1.0e-3) {
         return QStringLiteral("Formular: Drehung wurde nicht übernommen");
     }
-    // Von der Bauform lösen: die Form bleibt als eigene stehen
-    c_.type->setCurrentIndex(0);
-    fixture = player_.project()->layout.find(id_);
-    if (fixture == nullptr || !fixture->type.empty()) {
-        return QStringLiteral("Formular: Fixture lässt sich nicht von der Bauform lösen");
+    // "Typ wird Pflicht": kein Eintrag zum Loslösen mehr - nur noch Bauformen plus "Neue Bauform …" als
+    // letzten Eintrag (den tatsächlich auszulösen bräuchte einen echten QInputDialog, der den Rauchtest
+    // ohne Publikum blockieren würde, siehe exerciseRename in node_editor_exercise_rename.cpp - darum hier
+    // nur die Struktur der Liste geprüft).
+    if (c_.type->itemText(c_.type->count() - 1) != tr("Neue Bauform aus dieser Form …") ||
+        c_.type->currentText().toUtf8().toStdString() != fixture->type) {
+        return QStringLiteral("Formular: Bauform-Liste zeigt die Bauform des Fixtures nicht an");
     }
     return {};
 }

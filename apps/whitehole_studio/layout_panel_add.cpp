@@ -14,6 +14,7 @@
 #include <QFileDialog>
 #include <QFormLayout>
 
+#include <algorithm>
 #include <cmath>
 #include <filesystem>
 #include <fstream>
@@ -40,6 +41,21 @@ QString baseNameOf(const mapping::FixtureShape& shape) {
         return QObject::tr("Cube");
     }
     return QObject::tr("Punkte");
+}
+
+/// Nächster freier Bauform-Name (analog zu LayoutPanel::uniqueName, aber gegen die Bauform-Bibliothek
+/// geprüft statt gegen die Fixture-Liste): "Typ wird Pflicht" (siehe CLAUDE.md) - jedes neu angelegte
+/// Fixture bekommt jetzt immer eine eigene Bauform, auch aus dem Dialog "Fixture hinzufügen" und beim
+/// Punktwolken-Import, die vorher mit einem typlosen Fixture endeten.
+QString uniqueTypeName(const runtime::Player& player, const QString& base) {
+    for (int i = 1;; ++i) {
+        const QString candidate = QStringLiteral("%1 %2").arg(base).arg(i);
+        const std::string name = candidate.toUtf8().toStdString();
+        const bool taken = std::ranges::any_of(player.fixtureTypes(), [&](const project::FixtureType& t) { return t.name == name; });
+        if (!taken) {
+            return candidate;
+        }
+    }
 }
 
 }  // namespace
@@ -89,8 +105,19 @@ void LayoutPanel::addFixture(const NewFixture& fixture) {
     } else if (fixture.patchMode == PatchMode::Manual) {
         first = fixture.patch;
     }
-    const auto id = player_.addFixture(name.toUtf8().toStdString(), fixture.origin, fixture.shape, first);
+    // "Typ wird Pflicht" (siehe CLAUDE.md): die Form entsteht hier als neue Bauform in der Bibliothek, das
+    // Fixture ist von Anfang an nur noch ein Exemplar davon - nie mehr ein typloses Fixture mit "eigener
+    // Form", die sich nur noch im Reiter Fixtures bearbeiten lässt.
+    const QString typeName = uniqueTypeName(player_, baseNameOf(fixture.shape));
+    const std::string typeNameStd = typeName.toUtf8().toStdString();
+    const Result<void> addedType = player_.addFixtureType(typeNameStd, fixture.shape);
+    if (!addedType.ok()) {
+        Q_EMIT failed(fromStd(addedType.error().message));
+        return;
+    }
+    const auto id = player_.addFixtureOfType(name.toUtf8().toStdString(), typeNameStd, fixture.origin, Vec3{}, first);
     if (!id.ok()) {
+        player_.removeFixtureType(typeNameStd);  // keine Bauform ohne Exemplar liegen lassen
         Q_EMIT failed(fromStd(id.error().message));
         return;
     }
@@ -161,9 +188,17 @@ QString LayoutPanel::exerciseImport() {
     if (shape == nullptr || shape->points.size() != 5 || shape->points[3].x < 4.4F || shape->points[3].x > 4.6F) {
         return QStringLiteral("Layout: importierte Punkte stimmen nicht");
     }
+    // "Typ wird Pflicht" (siehe CLAUDE.md): auch ein Punktwolken-Import bekommt sofort eine eigene Bauform.
+    if (added.type.empty()) {
+        return QStringLiteral("Layout: importiertes Fixture hat keine Bauform bekommen");
+    }
+    const std::string typeName = added.type;
     removeSelected();
     if (player_.project()->layout.fixtures().size() != before) {
         return QStringLiteral("Layout: importiertes Fixture ließ sich nicht entfernen");
+    }
+    if (!player_.removeFixtureType(typeName).ok()) {
+        return QStringLiteral("Layout: die beim Import angelegte Bauform ließ sich nicht wieder entfernen");
     }
     return {};
 }
@@ -198,10 +233,19 @@ QString LayoutPanel::exerciseAddDialog() {
     if (!patched) {
         return QStringLiteral("Hinzufügen-Dialog: das Gitter hat keinen Patch bekommen");
     }
+    // "Typ wird Pflicht" (siehe CLAUDE.md): auch aus dem Dialog "Fixture hinzufügen" entsteht sofort eine
+    // eigene Bauform statt eines typlosen Fixtures.
+    if (added.type.empty()) {
+        return QStringLiteral("Hinzufügen-Dialog: das Gitter hat keine Bauform bekommen");
+    }
+    const std::string typeName = added.type;
     setSelectedIds({added.id});
     removeSelected();
     if (player_.project()->layout.fixtures().size() != before) {
         return QStringLiteral("Hinzufügen-Dialog: das Gitter lässt sich nicht wieder entfernen");
+    }
+    if (!player_.removeFixtureType(typeName).ok()) {
+        return QStringLiteral("Hinzufügen-Dialog: die angelegte Bauform ließ sich nicht wieder entfernen");
     }
     return {};
 }
