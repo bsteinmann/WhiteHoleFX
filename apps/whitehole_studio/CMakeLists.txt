@@ -32,11 +32,10 @@ add_executable(whitehole_studio
     dmx_monitor_window.hpp
     dmx_output_monitor_panel.cpp
     dmx_output_monitor_panel.hpp
+    layout_panel_types.cpp
     layout_panel_grid.cpp
     layout_panel_catalog.cpp
     layout_panel_groups.cpp
-    layout_panel_shapes.cpp
-    layout_panel_shapes_exercise.cpp
     fixture_shape_label.cpp
     fixture_shape_label.hpp
     layout_panel.hpp
@@ -138,11 +137,13 @@ add_executable(whitehole_studio
     settings_dialog.hpp
     preview_widget.cpp
     preview_widget.hpp
-    fixtures_page.cpp
-    fixtures_page.hpp
+    fixture_library_exercise.cpp
+    fixture_library_page.cpp
+    fixture_library_user.cpp
     user_controller_library.cpp
     user_library.cpp
     user_library.hpp
+    fixture_library_page.hpp
     shape_form.cpp
     shape_form.hpp
     shape_preview.cpp

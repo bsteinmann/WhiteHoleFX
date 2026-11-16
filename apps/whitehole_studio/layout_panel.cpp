@@ -32,44 +32,35 @@ LayoutPanel::LayoutPanel(runtime::Player& player, QWidget* parent) : QTabWidget{
     auto* page = new QWidget;
     auto* pageLayout = new QVBoxLayout{page};
 
-    // Ganz oben die Bauform-Bearbeitung (früher eigene Seite "Fixtures", siehe layout_panel_shapes.cpp und der
-    // Kommentar am Anfang von layout_panel.hpp).
-    pageLayout->addWidget(buildShapesArea());
-
-    // Darunter die Fixture-Bibliothek (alle gespeicherten Bauformen auf der Festplatte, siehe user_library.hpp):
-    // Doppelklick oder „In Show übernehmen“ legt daraus ein Exemplar auf der Bühne an - fehlt die Bauform in
-    // dieser Show noch, wird sie zuerst angelegt (siehe layout_panel_catalog.cpp). Übernimmt damit auch die
-    // frühere Aufgabe von „Fixtures in Show“ (entfernt, vom Nutzer gewünscht: eine Liste weniger).
+    // Ganz oben die Fixture-Bibliothek (alle gespeicherten Bauformen, siehe user_library.hpp): Doppelklick oder
+    // „In Show übernehmen“ holt eine davon in diese Show. Anlegen und Bearbeiten bleibt Aufgabe des Reiters
+    // Fixtures (siehe layout_panel_catalog.cpp) - dieselbe Liste wie dort unter „Gespeicherte Fixtures“.
     auto* catalogRow = new QHBoxLayout;
     catalog_ = new QListWidget;
     catalog_->setMaximumHeight(72);
-    catalog_->setToolTip(
-        tr("Alle gespeicherten Bauformen. Doppelklick legt ein Exemplar auf der Bühne an."));
-    catalogTakeOver_ = new QPushButton{tr("In Show übernehmen")};
-    catalogTakeOver_->setToolTip(tr("Exemplar der gewählten Bauform mit dem nächsten freien Patch auf der Bühne anlegen"));
-    catalogImport_ = new QPushButton{tr("Alle übernehmen")};
-    catalogImport_->setToolTip(tr("Holt alle gespeicherten Bauformen, die in dieser Show fehlen (legt keine Exemplare an)"));
-    catalogDelete_ = new QPushButton{tr("Aus Bibliothek löschen")};
-    catalogDelete_->setToolTip(tr("Nimmt die gewählte Bauform aus der Bibliothek; die Show bleibt unverändert"));
+    catalog_->setToolTip(tr("Alle gespeicherten Bauformen (Stage Config → Fixtures). Doppelklick übernimmt eine in diese Show."));
+    auto* catalogButton = new QPushButton{tr("In Show übernehmen")};
+    catalogButton->setToolTip(tr("Gewählte Bauform aus der Bibliothek in diese Show übernehmen"));
     catalogRow->addWidget(catalog_, 1);
-    auto* catalogButtons = new QVBoxLayout;
-    catalogButtons->addWidget(catalogTakeOver_);
-    catalogButtons->addWidget(catalogImport_);
-    catalogButtons->addWidget(catalogDelete_);
-    catalogRow->addLayout(catalogButtons);
+    catalogRow->addWidget(catalogButton, 0, Qt::AlignTop);
     pageLayout->addWidget(new QLabel{tr("Fixture-Bibliothek (alle gespeicherten Bauformen)")});
     pageLayout->addLayout(catalogRow);
-    connect(catalog_, &QListWidget::currentRowChanged, this, [this](int row) {
-        if (row >= 0) {
-            const QSignalBlocker blocker{shapeList_};
-            shapeList_->setCurrentRow(-1);  // es ist immer nur eine der beiden Listen gewählt
-        }
-        showSelectedCatalog();
-    });
     connect(catalog_, &QListWidget::itemDoubleClicked, this, [this](QListWidgetItem*) { takeOverFromCatalog(selectedCatalogName()); });
-    connect(catalogTakeOver_, &QPushButton::clicked, this, [this]() { takeOverFromCatalog(selectedCatalogName()); });
-    connect(catalogImport_, &QPushButton::clicked, this, [this]() { importFromUserLibrary(); });
-    connect(catalogDelete_, &QPushButton::clicked, this, [this]() { removeSelectedFromCatalog(); });
+    connect(catalogButton, &QPushButton::clicked, this, [this]() { takeOverFromCatalog(selectedCatalogName()); });
+
+    // Darunter die Bauformen dieser Show: Doppelklick oder „Auf die Bühne“ legt ein Exemplar an.
+    auto* typeRow = new QHBoxLayout;
+    types_ = new QListWidget;
+    types_->setMaximumHeight(72);
+    types_->setToolTip(tr("Bauformen dieser Show (Stage Config → Fixtures). Doppelklick stellt ein Exemplar auf die Bühne."));
+    auto* typeButton = new QPushButton{tr("Auf die Bühne")};
+    typeButton->setToolTip(tr("Exemplar der gewählten Bauform mit dem nächsten freien Patch auf der Bühne anlegen"));
+    typeRow->addWidget(types_, 1);
+    typeRow->addWidget(typeButton, 0, Qt::AlignTop);
+    pageLayout->addWidget(new QLabel{tr("Fixtures in Show")});
+    pageLayout->addLayout(typeRow);
+    connect(types_, &QListWidget::itemDoubleClicked, this, [this](QListWidgetItem*) { addFromType(selectedTypeName()); });
+    connect(typeButton, &QPushButton::clicked, this, [this]() { addFromType(selectedTypeName()); });
 
     pageLayout->addWidget(new QLabel{tr("Fixtures auf der Bühne")});
     list_ = new QListWidget;
@@ -110,7 +101,6 @@ LayoutPanel::LayoutPanel(runtime::Player& player, QWidget* parent) : QTabWidget{
         Q_EMIT edited();
     });
     connect(fixture_, &FixtureForm::failed, this, &LayoutPanel::failed);
-    fillShapeList({});
     fillCatalogList();
 }
 
@@ -120,10 +110,8 @@ mapping::FixtureId LayoutPanel::selectedId() const {
 }
 
 void LayoutPanel::rebuild() {
-    if (!shapeEditing_) {
-        fillShapeList(selectedShapeName());
-    }
     fillCatalogList();
+    fillTypeList();
     fillList(selectedId());
 }
 
@@ -393,7 +381,7 @@ QString LayoutPanel::exercise() {
     if (const QString note = exerciseAddDialog(); !note.isEmpty()) {
         return note;
     }
-    if (const QString note = exerciseShapes(); !note.isEmpty()) {
+    if (const QString note = exerciseTypes(); !note.isEmpty()) {
         return note;
     }
     if (const QString note = exerciseCatalog(); !note.isEmpty()) {

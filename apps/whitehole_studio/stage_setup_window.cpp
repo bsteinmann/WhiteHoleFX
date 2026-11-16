@@ -7,7 +7,7 @@
 #include <QTabWidget>
 #include <QVBoxLayout>
 
-#include "fixtures_page.hpp"
+#include "fixture_library_page.hpp"
 #include "layout_panel.hpp"
 #include "output_page.hpp"
 #include "stage_view.hpp"
@@ -21,7 +21,7 @@ QSettings settings() { return QSettings{QStringLiteral("WhiteHoleFX"), QStringLi
 
 }  // namespace
 
-StageSetupWindow::StageSetupWindow(FixturesPage* fixtures, LayoutPanel* layout, OutputPage* output, TestPanel* test,
+StageSetupWindow::StageSetupWindow(FixtureLibraryPage* fixtures, LayoutPanel* layout, OutputPage* output, TestPanel* test,
                                    StageView* view, StageView* testView, QWidget* parent)
     : QWidget{parent, Qt::Window}, tabs_{new QTabWidget{this}}, output_{output} {
     setWindowTitle(tr("Stage Config"));

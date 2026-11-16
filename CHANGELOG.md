@@ -2,32 +2,6 @@
 
 ## 0.92.0
 
-- **Stage Config: Seite „Fixtures" zeigt jetzt echte Fixture-Exemplare, Bauform-Bearbeitung zieht in den
-  Reiter Layout** (vom Nutzer vorgegeben, zusammen mit der „Fixtures in Show"-Änderung direkt darunter).
-  Die Seite „Fixtures" im Stage-Config-Fenster zeigte bisher die Bauformen (`FixtureLibraryPage`) - jetzt
-  zeigt sie nur noch eine einfache Liste aller Fixture-Exemplare dieser Show (Name, Bauform bzw. „eigene
-  Form“, LED-Zahl; neue Dateien `fixtures_page.hpp/cpp`, ersetzen `fixture_library_page.*`). Die
-  Bauform-Bearbeitung selbst (Anlegen, Maße, Verkabelung, Vorschau, Benutzerbibliothek) ist in den Reiter
-  Layout gezogen, zur dort schon bestehenden Fixture-Bibliothek (neue Dateien `layout_panel_shapes.cpp`,
-  `layout_panel_shapes_exercise.cpp`; `layout_panel_catalog.cpp` um Speichern/Alle-übernehmen/Löschen
-  erweitert; ersetzt `fixture_library_user.cpp`, `fixture_library_exercise.cpp`). „In Show übernehmen“
-  der Fixture-Bibliothek legt dabei immer auch ein Exemplar an (siehe nächster Punkt), nicht mehr nur die
-  Bauform selbst. Die beiden Listen „Bauformen dieser Show“ und „Fixture-Bibliothek“ schließen sich in der
-  Auswahl weiterhin gegenseitig aus und zeigen beim Anklicken wie gewohnt Formular bzw. Vorschau der
-  gewählten Bauform (`LayoutPanel::showSelectedCatalog`, portiert aus dem alten `FixtureLibraryPage::showStored`).
-  „In Bibliothek speichern“, „Alle übernehmen“ und „Aus Bibliothek löschen“ sind ebenfalls originalgetreu
-  aus dem alten `FixtureLibraryPage` übernommen (`saveSelectedShapeToLibrary`, `importFromUserLibrary`,
-  `removeSelectedFromCatalog`, alle in `layout_panel_catalog.cpp`); neues Signal `LayoutPanel::notice` für die
-  Erfolgsmeldung beim Speichern (wie zuvor `FixtureLibraryPage::notice`, in `main_window.cpp` an die
-  Statuszeile verdrahtet).
-- **Layout-Tab: Liste „Fixtures in Show" entfernt, Fixture-Bibliothek übernimmt ihre Aufgabe** (vom Nutzer
-  gewünscht: eine Liste weniger). Bisher zwei Schritte - „In Show übernehmen" holte eine Bauform aus der
-  Bibliothek nur in die Projektdatei, erst „Auf die Bühne" in der (jetzt entfernten) Liste „Fixtures in
-  Show" legte ein Exemplar an. Jetzt macht „In Show übernehmen" (Doppelklick oder Knopf auf der
-  Fixture-Bibliothek) beides in einem Schritt: fehlt die Bauform im Projekt, wird sie zuerst angelegt (wie
-  bisher), egal ob neu oder schon vorhanden entsteht danach immer ein weiteres Exemplar auf der Bühne -
-  mehrfaches Übernehmen legt also mehrfach Exemplare an, statt ab dem zweiten Mal abgelehnt zu werden
-  (`layout_panel_catalog.cpp`). `layout_panel_types.cpp` (die alte Liste) ist komplett entfernt.
 - **Eigener Node-Name steht jetzt zusätzlich zum Automatiknamen, nicht statt ihm** - z. B.
   "DMX Channel 2 (Eingangstür)" statt nur "Eingangstür" (vom Nutzer gewünscht: der Automatikname sollte auf
   einen Blick sichtbar bleiben, auch wenn der Node umbenannt wurde). Format "Automatikname (Beschriftung)",

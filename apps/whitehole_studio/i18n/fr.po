@@ -10,7 +10,7 @@ msgstr ""
 msgid "\nRechtsklick: Favorit umschalten"
 msgstr "\nClic droit : ajouter/retirer des favoris"
 
-#: main_window.cpp:294
+#: main_window.cpp:292
 msgid "   |   AUSGABE AN"
 msgstr "   |   SORTIE ACTIVE"
 
@@ -22,11 +22,11 @@ msgstr "   |   Nœuds audio dans le projet, entrée désactivée (Réglages)"
 msgid "   |   Audio: %1"
 msgstr "   |   Audio : %1"
 
-#: main_window.cpp:294
+#: main_window.cpp:292
 msgid "   |   Ausgabe aus (%1 Pakete nicht gesendet)"
 msgstr "   |   Sortie désactivée (%1 paquets non envoyés)"
 
-#: main_window.cpp:284
+#: main_window.cpp:282
 msgid "   |   BLACKOUT"
 msgstr "   |   BLACKOUT"
 
@@ -38,15 +38,15 @@ msgstr "   |   Entrée DMX %1 : %2 paquets"
 msgid "   |   DMX-Nodes im Projekt, Eingang aus (Einstellungen)"
 msgstr "   |   Nœuds DMX dans le projet, entrée désactivée (Réglages)"
 
-#: main_window.cpp:289
+#: main_window.cpp:287
 msgid "   |   EINGANG FEHLT – LEDs aus"
 msgstr "   |   ENTRÉE MANQUANTE – LED éteintes"
 
-#: main_window.cpp:286
+#: main_window.cpp:284
 msgid "   |   Master %1 %"
 msgstr "   |   Master %1 %"
 
-#: main_window.cpp:281
+#: main_window.cpp:279
 msgid "   |   TESTMODUS"
 msgstr "   |   MODE TEST"
 
@@ -94,7 +94,7 @@ msgstr " · non patchée"
 msgid "\"%1\" aus der Bibliothek löschen?"
 msgstr "Supprimer \"%1\" de la bibliothèque ?"
 
-#: layout_panel.cpp:280 test_panel.cpp:199
+#: layout_panel.cpp:268 test_panel.cpp:199
 msgid "%1  (%2 LEDs)"
 msgstr "%1  (%2 LED)"
 
@@ -106,7 +106,7 @@ msgstr "%1  →  %2"
 msgid "%1 %"
 msgstr "%1 %"
 
-#: layout_panel_shapes.cpp:181 layout_panel_shapes.cpp:330
+#: fixture_library_page.cpp:220 fixture_library_page.cpp:369 fixture_library_user.cpp:49
 msgid "%1 (%2 LEDs)"
 msgstr "%1 (%2 LED)"
 
@@ -126,11 +126,11 @@ msgstr "%1 (introuvable)"
 msgid "%1 LEDs · Größe %2 × %3 × %4 · %5 Kanäle (RGB), rund %6 Universe(s)"
 msgstr "%1 LED · taille %2 × %3 × %4 · %5 canaux (RVB), environ %6 univers"
 
-#: main_window.cpp:270
+#: main_window.cpp:268
 msgid "%1 LEDs, Frame %2 (verworfen %3), Pakete %4, Sendefehler %5"
 msgstr "%1 LED, image %2 (perdues %3), paquets %4, erreurs d'envoi %5"
 
-#: main_window.cpp:268
+#: main_window.cpp:266
 msgid "%1 LEDs, angehalten"
 msgstr "%1 LED, arrêté"
 
@@ -138,7 +138,7 @@ msgstr "%1 LED, arrêté"
 msgid "%1 · LED %2 von %3"
 msgstr "%1 · LED %2 sur %3"
 
-#: fixtures_page.cpp:56 layout_panel_catalog.cpp:48
+#: layout_panel_catalog.cpp:37 layout_panel_types.cpp:27
 msgid "%1 — %2 (%3 LEDs)"
 msgstr "%1 — %2 (%3 LED)"
 
@@ -158,7 +158,7 @@ msgstr "&Affichage"
 msgid "&Ausgabe senden"
 msgstr "Envoyer la &sortie"
 
-#: main_window_stage.cpp:57
+#: main_window_stage.cpp:59
 msgid "&Ausgabe …"
 msgstr "&Sortie …"
 
@@ -198,7 +198,7 @@ msgstr "&Réglages …"
 msgid "&Fehler melden oder Idee vorschlagen …"
 msgstr "&Signaler un bogue ou proposer une idée …"
 
-#: main_window_stage.cpp:66
+#: main_window_stage.cpp:68
 msgid "&Fixtures …"
 msgstr "&Fixtures …"
 
@@ -206,7 +206,7 @@ msgstr "&Fixtures …"
 msgid "&Hilfe"
 msgstr "&Aide"
 
-#: main_window_stage.cpp:53
+#: main_window_stage.cpp:55
 msgid "&Layout …"
 msgstr "&Layout …"
 
@@ -250,11 +250,11 @@ msgstr "Enregi&strer"
 msgid "&Stage Config"
 msgstr "&Stage Config"
 
-#: main_window.cpp:156 main_window_actions.cpp:55
+#: main_window.cpp:154 main_window_actions.cpp:55
 msgid "&Start"
 msgstr "&Démarrer"
 
-#: main_window.cpp:156
+#: main_window.cpp:154
 msgid "&Stopp"
 msgstr "&Arrêter"
 
@@ -262,7 +262,7 @@ msgstr "&Arrêter"
 msgid "&Tastenkürzel …"
 msgstr "&Raccourcis clavier …"
 
-#: main_window_stage.cpp:62
+#: main_window_stage.cpp:64
 msgid "&Testmodus …"
 msgstr "Mode &test …"
 
@@ -334,11 +334,11 @@ msgstr ", niveau %1 %"
 msgid "100 %"
 msgstr "100 %"
 
-#: fixture_shape_label.cpp:10 layout_panel_shapes.cpp:101
+#: fixture_library_page.cpp:101 fixture_shape_label.cpp:10
 msgid "2D-Matrix"
 msgstr "Matrice 2D"
 
-#: layout_panel_shapes.cpp:76
+#: fixture_library_page.cpp:71
 msgid "2D-Matrix 8x8"
 msgstr "Matrice 2D 8x8"
 
@@ -378,11 +378,11 @@ msgstr "Affichage &3D"
 msgid "3D-Gitter (Cube, Vorhang, Säule)"
 msgstr "Grille 3D (cube, rideau, colonne)"
 
-#: fixture_shape_label.cpp:13 layout_panel_shapes.cpp:101
+#: fixture_library_page.cpp:101 fixture_shape_label.cpp:13
 msgid "3D-Matrix"
 msgstr "Matrice 3D"
 
-#: layout_panel_shapes.cpp:45
+#: fixture_library_page.cpp:40
 msgid "3D-Matrix 4x4x4"
 msgstr "Matrice 3D 4x4x4"
 
@@ -398,9 +398,13 @@ msgstr "<b>Matrice 2D</b>"
 msgid "<b>3D-Matrix</b>"
 msgstr "<b>Matrice 3D</b>"
 
-#: layout_panel_shapes.cpp:91
-msgid "<b>Bauformen dieser Show</b>"
-msgstr "<b>Modèles de cette émission</b>"
+#: fixture_library_page.cpp:95
+msgid "<b>Fixtures</b> (in dieser Show)"
+msgstr "<b>Fixtures</b> (dans ce spectacle)"
+
+#: fixture_library_page.cpp:121
+msgid "<b>Gespeicherte Fixtures</b> (alle in der Bibliothek)"
+msgstr "<b>Fixtures enregistrés</b> (tous dans la bibliothèque)"
 
 #: shape_form.cpp:142
 msgid "<b>Kreis</b>"
@@ -430,7 +434,7 @@ msgstr "<b>WhiteHoleFX Studio</b> %1<br><br>Pilotage de matrices LED, de cubes e
 msgid "Abgeblendeter Node mit gestrichelter Durchleitung: überbrückt (Taste B)."
 msgstr "Node estompé avec transmission en pointillés : contourné (touche B)."
 
-#: layout_panel.cpp:207
+#: layout_panel.cpp:195
 msgid "Abstand"
 msgstr "Écart"
 
@@ -442,7 +446,7 @@ msgstr "Écart x y"
 msgid "Abstand x y z"
 msgstr "Écart x y z"
 
-#: layout_panel.cpp:206
+#: layout_panel.cpp:194
 msgid "Abstand zwischen den Fixtures beim Aneinanderreihen (0 = dicht an dicht)"
 msgstr "Écart entre les fixtures lors de l'alignement (0 = bord à bord)"
 
@@ -462,11 +466,11 @@ msgstr "Adresse (vide = multicast, sACN uniquement)"
 msgid "Adressraum"
 msgstr "Plage d'adresses"
 
-#: dmx_output_monitor_panel.cpp:206
+#: dmx_output_monitor_panel.cpp:203
 msgid "Aktiv (letzter gesendeter Frame vor %1 s)."
 msgstr "Actif (dernière trame envoyée il y a %1 s)."
 
-#: dmx_monitor_panel.cpp:203
+#: dmx_monitor_panel.cpp:201
 msgid "Aktiv (letztes Paket vor %1 s)."
 msgstr "Actif (dernier paquet il y a %1 s)."
 
@@ -490,11 +494,11 @@ msgstr "Réinitialiser toutes les valeurs par défaut"
 msgid "Alle Tastenkürzel in einer Liste"
 msgstr "Tous les raccourcis clavier dans une liste"
 
-#: layout_panel.cpp:47
-msgid "Alle gespeicherten Bauformen. Doppelklick legt ein Exemplar auf der Bühne an."
-msgstr "Tous les modèles enregistrés. Double-clic place un exemplaire sur la scène."
+#: layout_panel.cpp:41
+msgid "Alle gespeicherten Bauformen (Stage Config → Fixtures). Doppelklick übernimmt eine in diese Show."
+msgstr "Tous les types de fixtures enregistrés (Config scène → Fixtures). Un double-clic en reprend un dans ce spectacle."
 
-#: layout_panel.cpp:50
+#: fixture_library_page.cpp:83
 msgid "Alle übernehmen"
 msgstr "Tout reprendre"
 
@@ -506,15 +510,15 @@ msgstr "Alpha 0 : la LED reste éteinte ici (la couleur est conservée)."
 msgid "Als Ausgang setzen (output)"
 msgstr "Définir comme sortie (output)"
 
-#: dmx_monitor_panel.cpp:145
+#: dmx_monitor_panel.cpp:144
 msgid "Als Live-Look-Auswahl-Kanal verwenden"
 msgstr "Utiliser comme canal de sélection de look en direct"
 
-#: dmx_monitor_panel.cpp:148
+#: dmx_monitor_panel.cpp:147
 msgid "Als Live-Überblendzeit-Kanal verwenden"
 msgstr "Utiliser comme canal de temps de fondu en direct"
 
-#: dmx_monitor_panel.cpp:140
+#: dmx_monitor_panel.cpp:139
 msgid "Als Masterdimmer-Kanal verwenden"
 msgstr "Utiliser comme canal de gradateur maître"
 
@@ -634,6 +638,10 @@ msgstr "Masquer sur la tuile"
 msgid "Auf der Kachel ausblenden (Kabel nach außen vorhanden)"
 msgstr "Masquer sur la tuile (câble vers l'extérieur présent)"
 
+#: layout_panel.cpp:56
+msgid "Auf die Bühne"
+msgstr "Sur la scène"
+
 #: node_palette.cpp:157 node_palette.cpp:378
 msgid "Auf die Fläche ziehen: Node hinzufügen.\nNode hierher ziehen: entfernen."
 msgstr "Glisser sur la zone : ajouter un nœud.\nGlisser un nœud ici : le supprimer."
@@ -654,7 +662,7 @@ msgstr "Désactivé"
 msgid "Aus Bibliothek +"
 msgstr "Depuis la bibliothèque +"
 
-#: layout_panel.cpp:52 output_form.cpp:57
+#: fixture_library_page.cpp:86 output_form.cpp:57
 msgid "Aus Bibliothek löschen"
 msgstr "Supprimer de la bibliothèque"
 
@@ -742,17 +750,17 @@ msgstr "Type de fixture"
 msgid "Bauform aus der Bibliothek (Stage Config → Fixtures). Änderungen an der Bauform gelten für alle Exemplare."
 msgstr "Type de la bibliothèque (Stage Config → Fixtures). Les modifications du type valent pour toutes les instances."
 
-#: layout_panel_shapes.cpp:112
+#: fixture_library_page.cpp:112
 msgid "Bauform entfernen. Fixtures im Layout behalten ihre Form als eigene."
 msgstr "Supprimer le type. Les fixtures du layout gardent leur forme comme forme propre."
 
-#: fixtures_page.cpp:54
-msgid "Bauform „%1“"
-msgstr "Modèle « %1 »"
-
-#: layout_panel_catalog.cpp:123
+#: fixture_library_user.cpp:113
 msgid "Bauform „%1“ in der Bibliothek gespeichert."
-msgstr "Modèle « %1 » enregistré dans la bibliothèque."
+msgstr "Forme « %1 » enregistrée dans la bibliothèque."
+
+#: layout_panel.cpp:55
+msgid "Bauformen dieser Show (Stage Config → Fixtures). Doppelklick stellt ein Exemplar auf die Bühne."
+msgstr "Types de fixtures de ce show (Stage Config → Fixtures). Un double-clic place un exemplaire sur la scène."
 
 #: cue_panel.cpp:64
 msgid "Bearbeiten …"
@@ -797,6 +805,10 @@ msgstr "Libellé sur la tuile"
 #: main_window_actions.cpp:129
 msgid "Betrieb"
 msgstr "Fonctionnement"
+
+#: main_window_stage.cpp:69
+msgid "Bibliothek der Bauformen: Matrix, Kreis, Strip, Säule mit Vorschau und Test"
+msgstr "Bibliothèque de types : matrice, cercle, strip, colonne avec aperçu et test"
 
 #: port_legend.cpp:64
 msgid "Bild als Textur (z. B. aus einer Datei)"
@@ -950,7 +962,7 @@ msgstr "Le câble passe d'anneau en anneau sans retour : l'anneau du bas en avan
 msgid "Das Pong-Spiel als Rechen-Node: Ball, Schläger, Punkte und Treffer als Werte. Computer oder Eingang spielen, auch im Takt der Musik. Gezeichnet wird es von „Pong Display“."
 msgstr "Le jeu Pong comme nœud de calcul : balle, raquettes, score et coups en valeurs. L'ordinateur ou une entrée joue, aussi en rythme avec la musique. Il est dessiné par « Pong Display »."
 
-#: main_window.cpp:217
+#: main_window.cpp:215
 msgid "Das Projekt wurde geändert. Änderungen verwerfen?"
 msgstr "Le projet a été modifié. Abandonner les modifications ?"
 
@@ -1098,7 +1110,7 @@ msgstr "La modification prend effet immédiatement après « OK »."
 msgid "Diese Form ist ungültig."
 msgstr "Cette forme est invalide."
 
-#: main_window.cpp:194 parameter_panel.cpp:260
+#: main_window.cpp:192 parameter_panel.cpp:260
 msgid "Dieser Node hat keine einstellbaren Parameter."
 msgstr "Ce nœud n'a pas de paramètres réglables."
 
@@ -1154,7 +1166,7 @@ msgstr "Rotation x y z (degrés)"
 msgid "Du hast die neueste Version (%1)."
 msgstr "Vous avez la dernière version (%1)."
 
-#: layout_panel_shapes.cpp:95
+#: fixture_library_page.cpp:81
 msgid "Duplizieren"
 msgstr "Dupliquer"
 
@@ -1174,7 +1186,7 @@ msgstr "Effets (2D)"
 msgid "Eigene Überblendzeit:"
 msgstr "Durée de fondu personnalisée :"
 
-#: node_editor_edit.cpp:91
+#: node_editor_edit.cpp:88
 msgid "Eigener Name (leer für den Standardnamen):"
 msgstr "Nom personnalisé (vide pour le nom par défaut) :"
 
@@ -1294,7 +1306,7 @@ msgstr "Afficher les canaux DMX reçus et envoyés et les patcher directement (f
 msgid "Ende x y z"
 msgstr "Fin x y z"
 
-#: layout_panel.cpp:88 layout_panel_shapes.cpp:96
+#: fixture_library_page.cpp:82 layout_panel.cpp:79
 msgid "Entfernen"
 msgstr "Supprimer"
 
@@ -1314,7 +1326,7 @@ msgstr "Retire un contrôleur de la bibliothèque (le projet reste inchangé)"
 msgid "Erkennt den Takt der Musik und liefert Beat-Impuls, Pulse (klingt ab), Phase und Tempo (BPM). Das Tempo lässt sich auch fest vorgeben."
 msgstr "Detects the beat of the music and outputs a beat trigger, a decaying pulse, phase and tempo (BPM). The tempo can also be fixed by hand."
 
-#: layout_panel.cpp:216
+#: layout_panel.cpp:204
 msgid "Erst Fixtures wählen (Strg oder Umschalt halten für mehrere)"
 msgstr "Sélectionnez d'abord des fixtures (Ctrl ou Maj pour plusieurs)"
 
@@ -1338,7 +1350,11 @@ msgstr "Premier canal dans le pool de canaux interne des nœuds de sortie DMX (1
 msgid "Erster echter DMX-Kanal am Ziel (1..512)."
 msgstr "Premier canal DMX réel sur la destination (1..512)."
 
-#: layout_panel_catalog.cpp:207
+#: layout_panel_types.cpp:59
+msgid "Es gibt keine Bauform \"%1\""
+msgstr "Il n’y a pas de type \"%1\""
+
+#: layout_panel_catalog.cpp:74
 msgid "Es gibt keine gespeicherte Bauform \"%1\""
 msgstr "Il n'existe pas de type de fixture enregistré « %1 »"
 
@@ -1354,19 +1370,15 @@ msgstr "Un préréglage « %1 » existe déjà. Le remplacer ?"
 msgid "Es gibt schon einen Look „%1“. Mit dem aktuellen Effekt überschreiben?"
 msgstr "Un look « %1 » existe déjà. L'écraser avec l'effet actuel ?"
 
-#: layout_panel_add.cpp:85
+#: layout_panel_add.cpp:85 layout_panel_types.cpp:53
 msgid "Es ist kein Projekt geladen. Mit Strg+N ein neues anlegen oder mit Strg+O eins öffnen."
 msgstr "Aucun projet n'est chargé. Créez-en un avec Ctrl+N ou ouvrez-en un avec Ctrl+O."
 
-#: fixtures_page.cpp:45
-msgid "Es ist noch kein Projekt geladen."
-msgstr "Aucun projet n'est encore chargé."
-
-#: dmx_output_monitor_panel.cpp:201
+#: dmx_output_monitor_panel.cpp:198
 msgid "Es wurde noch nichts auf dieses Universe gesendet."
 msgstr "Rien n'a encore été envoyé sur cet univers."
 
-#: layout_panel.cpp:49
+#: layout_panel.cpp:57
 msgid "Exemplar der gewählten Bauform mit dem nächsten freien Patch auf der Bühne anlegen"
 msgstr "Placer sur la scène un exemplaire du type sélectionné avec le prochain patch libre"
 
@@ -1386,11 +1398,11 @@ msgstr "Couleur du groupe"
 msgid "Farbe der Kachel"
 msgstr "Couleur de la tuile"
 
-#: dmx_monitor_panel.cpp:223 dmx_output_monitor_panel.cpp:226
+#: dmx_monitor_panel.cpp:221 dmx_output_monitor_panel.cpp:223
 msgid "Farbe für Kanal %1"
 msgstr "Couleur pour le canal %1"
 
-#: dmx_monitor_panel.cpp:129 dmx_output_monitor_panel.cpp:132
+#: dmx_monitor_panel.cpp:128 dmx_output_monitor_panel.cpp:130
 msgid "Farbe ändern…"
 msgstr "Changer la couleur…"
 
@@ -1438,7 +1450,7 @@ msgstr "Filtre les groupes par nom de node ou de paramètre (sur tous les nodes)
 msgid "Fixture"
 msgstr "Fixture"
 
-#: main_window_stage.cpp:49
+#: main_window_stage.cpp:51
 msgid "Fixture &hinzufügen …"
 msgstr "&Ajouter un fixture …"
 
@@ -1450,15 +1462,15 @@ msgstr "Envoyer le fixture à la sortie"
 msgid "Fixture hinzufügen"
 msgstr "Ajouter un fixture"
 
-#: layout_panel.cpp:357
+#: layout_panel.cpp:345
 msgid "Fixture „%1“ entfernen"
 msgstr "Supprimer le fixture « %1 »"
 
-#: layout_panel.cpp:60
+#: layout_panel.cpp:46
 msgid "Fixture-Bibliothek (alle gespeicherten Bauformen)"
 msgstr "Bibliothèque de fixtures (tous les types enregistrés)"
 
-#: dmx_output_monitor_panel.cpp:135
+#: dmx_output_monitor_panel.cpp:133
 msgid "Fixture-Patch bearbeiten: %1…"
 msgstr "Modifier le patch du projecteur : %1…"
 
@@ -1470,13 +1482,17 @@ msgstr "Fixtures"
 msgid "Fixtures (Auswahl für „Auswahl hervorheben“ und „Nur auf gewählten“)"
 msgstr "Fixtures (sélection pour « Mettre en évidence » et « Seulement sur la sélection »)"
 
-#: layout_panel.cpp:74
+#: layout_panel.cpp:65
 msgid "Fixtures auf der Bühne"
 msgstr "Fixtures sur la scène"
 
-#: main_window_stage.cpp:55
+#: main_window_stage.cpp:57
 msgid "Fixtures auf der Bühne verteilen und drehen (eigenes Fenster)"
 msgstr "Répartir et faire pivoter les fixtures sur la scène (fenêtre propre)"
+
+#: layout_panel.cpp:60
+msgid "Fixtures in Show"
+msgstr "Fixtures dans le spectacle"
 
 #: node_info_texts.cpp:94
 msgid "Flammen: Aufsteigendes, flackerndes Feuer mit einstellbarer Skalierung, Tempo und Flammenhöhe."
@@ -1490,7 +1506,7 @@ msgstr "Forme"
 msgid "Fragt bei GitHub nach der neuesten Version (nur die Versionsnummer, nichts wird installiert)"
 msgstr "Demande à GitHub la dernière version (uniquement le numéro de version ; rien n'est installé)"
 
-#: main_window.cpp:342
+#: main_window.cpp:340
 msgid "Frame"
 msgstr "Image"
 
@@ -1562,23 +1578,27 @@ msgstr "Luminosité globale (agit sur l'aperçu et la sortie, non enregistrée d
 msgid "Gesamtlautstärke des Audio-Eingangs als Pegel und Spitze, linear oder in dB, auf Wunsch mit automatischer Verstärkung. Einzelne Schläge (Kick, Snare, Hi-Hat) erkennt „Audio Trigger“."
 msgstr "Volume global de l'entrée audio en niveau et crête, linéaire ou en dB, avec gain automatique au choix. Les coups isolés (grosse caisse, caisse claire, charleston) sont détectés par « Audio Trigger »."
 
-#: layout_panel_catalog.cpp:101
-msgid "Gespeichert in der Bibliothek. „In Show übernehmen“ (oder Doppelklick) holt ein Exemplar in diese Show."
-msgstr "Enregistré dans la bibliothèque. « Ajouter à l'émission » (ou double-clic) place un exemplaire dans cette émission."
+#: fixture_library_user.cpp:91
+msgid "Gespeichert in der Bibliothek. „In Show übernehmen“ (oder Doppelklick) holt sie in diese Show."
+msgstr "Enregistré dans la bibliothèque. « Reprendre dans le spectacle » (ou double-clic) l'ajoute à ce spectacle."
 
 #: main_window_file.cpp:149 main_window_file.cpp:177
 msgid "Gespeichert: %1"
 msgstr "Enregistré : %1"
 
+#: layout_panel.cpp:43
+msgid "Gewählte Bauform aus der Bibliothek in diese Show übernehmen"
+msgstr "Reprendre dans ce spectacle le type de fixture choisi dans la bibliothèque"
+
 #: layout_panel_groups.cpp:35
 msgid "Gewählte Fixtures als Gruppe speichern …"
 msgstr "Enregistrer les fixtures choisies comme groupe …"
 
-#: layout_panel.cpp:190
+#: layout_panel.cpp:178
 msgid "Gewählte Fixtures senkrecht aufeinanderreihen (das untere bleibt stehen)"
 msgstr "Empiler les fixtures sélectionnées verticalement (la plus basse reste en place)"
 
-#: layout_panel.cpp:188
+#: layout_panel.cpp:176
 msgid "Gewählte Fixtures waagrecht aneinanderreihen (das linke bleibt stehen)"
 msgstr "Aligner les fixtures sélectionnées côte à côte (celle de gauche reste en place)"
 
@@ -1654,11 +1674,11 @@ msgstr "Enregistrer le groupe"
 msgid "Gruppe zuklappen"
 msgstr "Replier le groupe"
 
-#: layout_panel.cpp:83 node_editor_targets.cpp:56 node_palette.cpp:162
+#: layout_panel.cpp:74 node_editor_targets.cpp:56 node_palette.cpp:162
 msgid "Gruppen"
 msgstr "Groupes"
 
-#: layout_panel.cpp:84
+#: layout_panel.cpp:75
 msgid "Gruppen von Fixtures und Regionen der Bühne: Ziele für Output-Nodes"
 msgstr "Groupes de fixtures et régions de la scène : cibles pour les nodes de sortie"
 
@@ -1690,9 +1710,13 @@ msgstr "Luminosité"
 msgid "Hinzufügen"
 msgstr "Ajouter"
 
-#: layout_panel.cpp:51
-msgid "Holt alle gespeicherten Bauformen, die in dieser Show fehlen (legt keine Exemplare an)"
-msgstr "Récupère tous les modèles enregistrés manquants dans cette émission (ne place pas d'exemplaires)"
+#: fixture_library_page.cpp:124
+msgid "Holt alle gespeicherten Bauformen, die in dieser Show fehlen"
+msgstr "Reprend toutes les formes enregistrées qui manquent dans ce spectacle"
+
+#: fixture_library_page.cpp:123
+msgid "Holt die gewählte gespeicherte Bauform in diese Show"
+msgstr "Ajoute la forme enregistrée choisie à ce spectacle"
 
 #: parameter_panel.cpp:241
 msgid "Hält diesen Node im Fenster, auch wenn du im Editor einen anderen wählst"
@@ -1706,7 +1730,7 @@ msgstr "Hauteur"
 msgid "Hüllkurve (ADSR): Aus einem Schalter wird ein weicher Verlauf mit Attack, Decay, Sustain und Release. Auch als Einzelimpuls."
 msgstr "Envelope (ADSR): turns a switch into a smooth curve with attack, decay, sustain and release. Also as a one-shot."
 
-#: layout_panel_shapes.cpp:223
+#: fixture_library_page.cpp:262
 msgid "Im Layout %1 Mal verwendet; Änderungen gelten für alle."
 msgstr "Utilisé %1 fois dans le layout ; les modifications s’appliquent à toutes."
 
@@ -1718,11 +1742,11 @@ msgstr "Image"
 msgid "Impuls"
 msgstr "Impulsion"
 
-#: layout_panel_shapes.cpp:118 output_form.cpp:53 output_form_library.cpp:68
+#: fixture_library_page.cpp:85 output_form.cpp:53 output_form_library.cpp:68
 msgid "In Bibliothek speichern"
 msgstr "Enregistrer dans la bibliothèque"
 
-#: layout_panel.cpp:48
+#: fixture_library_page.cpp:84 layout_panel.cpp:42
 msgid "In Show übernehmen"
 msgstr "Reprendre dans le spectacle"
 
@@ -1733,6 +1757,10 @@ msgstr "Charger dans l'éditeur"
 #: group_dialog.cpp:80
 msgid "In der Bibliothek speichern"
 msgstr "Enregistrer dans la bibliothèque"
+
+#: fixture_library_user.cpp:137 layout_panel_catalog.cpp:78
+msgid "In dieser Show gibt es schon eine Bauform „%1“."
+msgstr "Ce spectacle a déjà une forme « %1 »."
 
 #: main_window_update.cpp:95
 msgid "Ja, beim Start suchen"
@@ -1754,19 +1782,19 @@ msgstr "Afficher ou masquer le chemin du câble avec flèches, LED de départ et
 msgid "Kaleidoskop: Spiegelt einen Ausschnitt um einen Mittelpunkt zu einem Muster mit mehreren Segmenten."
 msgstr "Kaleidoscope: mirrors a slice around a center into a pattern with several segments."
 
-#: dmx_monitor_panel.cpp:96 dmx_output_monitor_panel.cpp:98
+#: dmx_monitor_panel.cpp:97 dmx_output_monitor_panel.cpp:99
 msgid "Kanal %1"
 msgstr "Canal %1"
 
-#: dmx_output_monitor_panel.cpp:102
+#: dmx_output_monitor_panel.cpp:103
 msgid "Kanal %1 — belegt vom DMX-Kanal-Pool (Pool-Kanal %2)"
 msgstr "Canal %1 — occupé par le pool de canaux DMX (canal de pool %2)"
 
-#: dmx_output_monitor_panel.cpp:101
+#: dmx_output_monitor_panel.cpp:102
 msgid "Kanal %1 — belegt von Fixture: %2"
 msgstr "Canal %1 — occupé par le projecteur : %2"
 
-#: dmx_monitor_panel.cpp:98
+#: dmx_monitor_panel.cpp:99
 msgid "Kanal %1 — gehört zu: %2"
 msgstr "Canal %1 — appartient à : %2"
 
@@ -1786,7 +1814,7 @@ msgstr "Aucun fixture sélectionné."
 msgid "Kein GPU-Adapter: %1"
 msgstr "Aucun adaptateur GPU : %1"
 
-#: main_window.cpp:266
+#: main_window.cpp:264
 msgid "Kein Projekt"
 msgstr "Aucun projet"
 
@@ -1794,7 +1822,7 @@ msgstr "Aucun projet"
 msgid "Kein Projekt geladen."
 msgstr "Aucun projet chargé."
 
-#: dmx_monitor_panel.cpp:198
+#: dmx_monitor_panel.cpp:196
 msgid "Kein Signal auf diesem Universe."
 msgstr "Aucun signal sur cet univers."
 
@@ -1806,11 +1834,11 @@ msgstr "Pas de cible (rectangle libre)"
 msgid "Keine Aufnahmegeräte gefunden. Ein Audio-Interface anschließen und das Fenster neu öffnen."
 msgstr "Aucun périphérique de capture trouvé. Branchez une interface audio et rouvrez la fenêtre."
 
-#: dmx_output_monitor_panel.cpp:157
+#: dmx_output_monitor_panel.cpp:155
 msgid "Keine DMX-Ausgabe-Nodes im Projekt"
 msgstr "Aucun nœud de sortie DMX dans le projet"
 
-#: dmx_monitor_panel.cpp:155
+#: dmx_monitor_panel.cpp:154
 msgid "Keine DMX-Wert-Nodes im Projekt"
 msgstr "Aucun nœud de valeur DMX dans le projet"
 
@@ -1822,7 +1850,7 @@ msgstr "Aucun résultat."
 msgid "Klicke eine LED, um ihre Adresse zu sehen."
 msgstr "Cliquez sur une LED pour voir son adresse."
 
-#: layout_panel_shapes.cpp:111
+#: fixture_library_page.cpp:111
 msgid "Kopie der gewählten Bauform anlegen"
 msgstr "Créer une copie du type choisi"
 
@@ -1830,11 +1858,11 @@ msgstr "Créer une copie du type choisi"
 msgid "Kopieren\tStrg+C"
 msgstr "Copier\tCtrl+C"
 
-#: fixture_shape_label.cpp:19 layout_panel_shapes.cpp:102
+#: fixture_library_page.cpp:102 fixture_shape_label.cpp:19
 msgid "Kreis"
 msgstr "Cercle"
 
-#: layout_panel_shapes.cpp:51
+#: fixture_library_page.cpp:46
 msgid "Kreis 24"
 msgstr "Cercle 24"
 
@@ -1858,7 +1886,7 @@ msgstr "LED par anneau"
 msgid "LEDs x y z"
 msgstr "LED x y z"
 
-#: main_window.cpp:278
+#: main_window.cpp:276
 msgid "LIVE   |   "
 msgstr "LIVE   |   "
 
@@ -1882,7 +1910,7 @@ msgstr "Chenillard (ordre du câble)"
 msgid "Lautstärke je Frequenzband"
 msgstr "Volume par bande de fréquences"
 
-#: layout_panel.cpp:101 stage_setup_window.cpp:38
+#: layout_panel.cpp:92 stage_setup_window.cpp:38
 msgid "Layout"
 msgstr "Disposition"
 
@@ -1890,9 +1918,9 @@ msgstr "Disposition"
 msgid "Layout auf Würfel abbilden"
 msgstr "Projeter la disposition sur le cube"
 
-#: layout_panel_shapes.cpp:211
-msgid "Lege mit „Neu“ eine Bauform an. Darunter verteilst du sie auf der Bühne."
-msgstr "Crée un modèle avec « Nouveau ». Plus bas, place-le sur la scène."
+#: fixture_library_page.cpp:250
+msgid "Lege mit „Neu“ eine Bauform an. Im Reiter Layout verteilst du sie dann auf der Bühne."
+msgstr "Crée un type avec « Nouveau ». Place-le ensuite sur la scène dans l’onglet Layout."
 
 #: port_legend.cpp:45
 msgid "Legende der Ports"
@@ -1902,11 +1930,11 @@ msgstr "Légende des ports"
 msgid "Legt Bild B über Bild A. Der Modus bestimmt die Verrechnung (Addieren, Multiplizieren, Screen, Subtrahieren, Differenz …), „Amount“ blendet zwischen A und dem Ergebnis."
 msgstr "Lays image B over image A. The mode sets how they combine (add, multiply, screen, subtract, difference ...); \"Amount\" fades between A and the result."
 
-#: dmx_output_monitor_panel.cpp:205
+#: dmx_output_monitor_panel.cpp:202
 msgid "Letzter gesendeter Frame vor %1 s (veraltet)."
 msgstr "Dernière trame envoyée il y a %1 s (obsolète)."
 
-#: dmx_monitor_panel.cpp:202
+#: dmx_monitor_panel.cpp:200
 msgid "Letztes Paket vor %1 s (veraltet)."
 msgstr "Dernier paquet il y a %1 s (obsolète)."
 
@@ -1930,7 +1958,7 @@ msgstr "Linear gradient from color A to color B at an adjustable angle."
 msgid "Linien als Sinuswellen, die sich bewegen (Anzahl, Amplitude, Frequenz, Tempo, Phasenversatz in Grad, eigene Farbe je Linie)."
 msgstr "Lignes sous forme d'ondes sinusoïdales en mouvement (nombre, amplitude, fréquence, vitesse, décalage de phase en degrés, couleur propre par ligne)."
 
-#: layout_panel.cpp:182
+#: layout_panel.cpp:170
 msgid "Linke Kanten ausrichten"
 msgstr "Aligner les bords gauches"
 
@@ -1942,10 +1970,6 @@ msgstr "Gauche"
 msgid "Links ab"
 msgstr "Bord gauche à"
 
-#: main_window_stage.cpp:67
-msgid "Liste aller Fixture-Exemplare dieser Show"
-msgstr "Liste de tous les exemplaires de fixtures de cette émission"
-
 #: main_window_controls.cpp:154
 msgid "Liste leeren"
 msgstr "Vider la liste"
@@ -1954,7 +1978,7 @@ msgstr "Vider la liste"
 msgid "Live"
 msgstr "Live"
 
-#: dmx_monitor_panel.cpp:144
+#: dmx_monitor_panel.cpp:143
 msgid "Live Kanal"
 msgstr "Canal en direct"
 
@@ -2054,7 +2078,7 @@ msgstr "Magenta"
 msgid "Manuell"
 msgstr "Manuel"
 
-#: dmx_monitor_panel.cpp:139
+#: dmx_monitor_panel.cpp:138
 msgid "Master"
 msgstr "Master"
 
@@ -2082,7 +2106,7 @@ msgstr "Matrice"
 msgid "Matrix (Fläche)"
 msgstr "Matrice (surface)"
 
-#: main_window_stage.cpp:50
+#: main_window_stage.cpp:52
 msgid "Matrix, Strip oder 3D-Gitter mit Größe x y z, Lage, Verkabelung und Patch anlegen"
 msgstr "Créer une matrice, un strip ou une grille 3D avec taille x y z, position, câblage et patch"
 
@@ -2154,7 +2178,7 @@ msgstr "Nom du préréglage :"
 msgid "Name:"
 msgstr "Nom :"
 
-#: layout_panel.cpp:188
+#: layout_panel.cpp:176
 msgid "Nebeneinander ↔"
 msgstr "Côte à côte ↔"
 
@@ -2174,7 +2198,7 @@ msgstr "Carte réseau pour l'envoi : %1"
 msgid "Netzwerkkarte, DMX-Eingang, Audio-Interface und Standardwerte für Nodes"
 msgstr "Carte réseau, entrée DMX, interface audio et valeurs par défaut des nœuds"
 
-#: layout_panel_shapes.cpp:94
+#: fixture_library_page.cpp:81
 msgid "Neu"
 msgstr "Nouveau"
 
@@ -2182,7 +2206,7 @@ msgstr "Nouveau"
 msgid "Neue Bauform"
 msgstr "Nouveau type"
 
-#: layout_panel_shapes.cpp:110
+#: fixture_library_page.cpp:110
 msgid "Neue Bauform anlegen"
 msgstr "Créer un nouveau type"
 
@@ -2210,7 +2234,7 @@ msgstr "Nouveau projet"
 msgid "Neues Projekt (Strg+N)"
 msgstr "Nouveau projet (Ctrl+N)"
 
-#: main_window.cpp:138
+#: main_window.cpp:136
 msgid "Neues Projekt (Strg+N), Projekt öffnen (Strg+O) oder eine .whfx-Datei hierher ziehen.\n\n%1"
 msgstr "Nouveau projet (Ctrl+N), ouvrir un projet (Ctrl+O) ou glisser un fichier .whfx ici.\n\n%1"
 
@@ -2222,23 +2246,23 @@ msgstr "Nouveau projet. Enregistrer avec Ctrl+S."
 msgid "Nicht senden"
 msgstr "Ne pas envoyer"
 
-#: layout_panel.cpp:53
+#: fixture_library_page.cpp:125
 msgid "Nimmt die gewählte Bauform aus der Bibliothek; die Show bleibt unverändert"
 msgstr "Retire la forme choisie de la bibliothèque ; le spectacle reste inchangé"
 
-#: fixtures_page.cpp:62
-msgid "Noch kein Fixture auf der Bühne (Reiter Layout → Fixture-Bibliothek oder „Fixture hinzufügen …“)"
-msgstr "Aucune fixture sur la scène (onglet Agencement → Bibliothèque de fixtures, ou « Ajouter une fixture… »)"
+#: layout_panel_types.cpp:35
+msgid "Noch keine Bauform (Stage Config → Fixtures → Neu)"
+msgstr "Pas encore de type de fixture (Stage Config → Fixtures → Nouveau)"
 
-#: layout_panel_catalog.cpp:58
-msgid "Noch keine gespeicherten Bauformen (oben: Bauformen dieser Show → In Bibliothek speichern)"
-msgstr "Aucun modèle enregistré pour l'instant (ci-dessus : Modèles de cette émission → Enregistrer dans la bibliothèque)"
+#: layout_panel_catalog.cpp:45
+msgid "Noch keine gespeicherten Fixtures (Stage Config → Fixtures)"
+msgstr "Pas encore de fixtures enregistrées (Config scène → Fixtures)"
 
-#: layout_panel_shapes.cpp:222
+#: fixture_library_page.cpp:261
 msgid "Noch nicht im Layout verwendet."
 msgstr "Pas encore utilisé dans le layout."
 
-#: dmx_monitor_panel.cpp:152 dmx_output_monitor_panel.cpp:142 dmx_output_monitor_panel.cpp:154
+#: dmx_monitor_panel.cpp:151 dmx_output_monitor_panel.cpp:140 dmx_output_monitor_panel.cpp:152
 msgid "Node"
 msgstr "Nœud"
 
@@ -2258,7 +2282,7 @@ msgstr "Chercher un nœud …\tCtrl+Espace"
 msgid "Node suchen … (Pfeiltasten, Enter)"
 msgstr "Chercher un nœud … (flèches, Entrée)"
 
-#: node_editor_edit.cpp:91
+#: node_editor_edit.cpp:88
 msgid "Node umbenennen"
 msgstr "Renommer le node"
 
@@ -2314,7 +2338,7 @@ msgstr "Dessus"
 msgid "Oben ab"
 msgstr "Bord supérieur à"
 
-#: layout_panel.cpp:185
+#: layout_panel.cpp:173
 msgid "Obere Kanten ausrichten"
 msgstr "Aligner les bords supérieurs"
 
@@ -2374,11 +2398,11 @@ msgstr "Patch (sortie)"
 msgid "Patch +"
 msgstr "Patch +"
 
-#: dmx_output_monitor_panel.cpp:146
+#: dmx_output_monitor_panel.cpp:144
 msgid "Patch aufheben"
 msgstr "Supprimer le patch"
 
-#: dmx_output_monitor_panel.cpp:144
+#: dmx_output_monitor_panel.cpp:142
 msgid "Patch bearbeiten (Pool-Kanal %1)…"
 msgstr "Modifier le patch (canal de pool %1)…"
 
@@ -2522,7 +2546,7 @@ msgstr "Converts a value from one range to another (In min/max to Out min/max), 
 msgid "Rechnet mit zwei Zahlen: Addieren, Subtrahieren, Multiplizieren, Dividieren, Minimum, Maximum und weitere."
 msgstr "Calculates with two numbers: add, subtract, multiply, divide, minimum, maximum and more."
 
-#: layout_panel.cpp:184
+#: layout_panel.cpp:172
 msgid "Rechte Kanten ausrichten"
 msgstr "Aligner les bords droits"
 
@@ -2530,7 +2554,7 @@ msgstr "Aligner les bords droits"
 msgid "Rechts"
 msgstr "Droite"
 
-#: layout_panel.cpp:184
+#: layout_panel.cpp:172
 msgid "Rechts ⇥"
 msgstr "Droite ⇥"
 
@@ -2614,7 +2638,7 @@ msgstr "Conserver les proportions (KeepAspect)"
 msgid "Senden"
 msgstr "Envoyer"
 
-#: layout_panel.cpp:186
+#: layout_panel.cpp:174
 msgid "Senkrecht mittig ausrichten"
 msgstr "Centrer verticalement"
 
@@ -2686,7 +2710,7 @@ msgstr "Enregistrer &sous …"
 msgid "Speichert den gewählten Controller unter seinem Namen in der Bibliothek (Benutzerverzeichnis), damit du ihn in anderen Projekten wieder holen kannst. Gespeichert in: %1"
 msgstr "Enregistre le contrôleur choisi sous son nom dans la bibliothèque (dossier utilisateur) pour le retrouver dans d'autres projets. Enregistré dans : %1"
 
-#: layout_panel_shapes.cpp:119
+#: fixture_library_page.cpp:118
 msgid "Speichert die gewählte Bauform in der Bibliothek (Benutzerverzeichnis), damit du sie in anderen Shows wieder holen kannst. Gespeichert in: %1"
 msgstr "Enregistre la forme choisie dans la bibliothèque (dossier utilisateur) pour la retrouver dans d'autres spectacles. Enregistré dans : %1"
 
@@ -2706,11 +2730,11 @@ msgstr "Jeux"
 msgid "Spirale"
 msgstr "Spirale"
 
-#: layout_panel_shapes.cpp:103
+#: fixture_library_page.cpp:103
 msgid "Spirale (Säule)"
 msgstr "Spirale (colonne)"
 
-#: layout_panel_shapes.cpp:65
+#: fixture_library_page.cpp:60
 msgid "Spirale 60"
 msgstr "Spirale 60"
 
@@ -2726,7 +2750,7 @@ msgstr "Stage Config"
 msgid "Standardgerät des Systems"
 msgstr "Périphérique par défaut du système"
 
-#: cue_panel.cpp:67 cue_panel.cpp:145 main_window.cpp:312
+#: cue_panel.cpp:67 cue_panel.cpp:145 main_window.cpp:310
 msgid "Start"
 msgstr "Démarrer"
 
@@ -2754,7 +2778,7 @@ msgstr "Entrées &strictes"
 msgid "Strenge Eingänge"
 msgstr "Entrées strictes"
 
-#: fixture_shape_label.cpp:16 layout_panel_add.cpp:38 layout_panel_add.cpp:146
+#: fixture_library_page.cpp:102 fixture_shape_label.cpp:16 layout_panel_add.cpp:38
 msgid "Strip"
 msgstr "Strip"
 
@@ -2762,7 +2786,7 @@ msgstr "Strip"
 msgid "Strip (Linie)"
 msgstr "Strip (ligne)"
 
-#: layout_panel_shapes.cpp:57
+#: fixture_library_page.cpp:52
 msgid "Strip 30"
 msgstr "Strip 30"
 
@@ -2778,11 +2802,11 @@ msgstr "Rechercher …"
 msgid "Säule"
 msgstr "Colonne"
 
-#: layout_panel_shapes.cpp:103
+#: fixture_library_page.cpp:103
 msgid "Säule (Ringe)"
 msgstr "Colonne (anneaux)"
 
-#: layout_panel_shapes.cpp:69
+#: fixture_library_page.cpp:64
 msgid "Säule 12x20"
 msgstr "Colonne 12x20"
 
@@ -2834,7 +2858,7 @@ msgstr "Mire"
 msgid "Testbild für den Aufbau: x wird rot, y grün, z blau. So sieht man, welche Seite wo liegt und ob Verkabelung und Startecke stimmen."
 msgstr "Test image for the setup: x becomes red, y green, z blue, so you can see which side is where and whether cabling and start corner are right."
 
-#: main_window_stage.cpp:63
+#: main_window_stage.cpp:65
 msgid "Testbilder auf die LEDs schicken, um Verkabelung und Patch zu prüfen"
 msgstr "Envoyer des mires aux LED pour vérifier le câblage et le patch"
 
@@ -2874,7 +2898,7 @@ msgstr "Renommer …"
 msgid "Unerwartetes Ende beim letzten Mal"
 msgstr "Fin inattendue la dernière fois"
 
-#: main_window.cpp:216
+#: main_window.cpp:214
 msgid "Ungespeicherte Änderungen"
 msgstr "Modifications non enregistrées"
 
@@ -2898,11 +2922,11 @@ msgstr "Univers :"
 msgid "Unten"
 msgstr "Bas"
 
-#: layout_panel.cpp:187
+#: layout_panel.cpp:175
 msgid "Unten ⤓"
 msgstr "Bas ⤓"
 
-#: layout_panel.cpp:187
+#: layout_panel.cpp:175
 msgid "Untere Kanten ausrichten"
 msgstr "Aligner les bords inférieurs"
 
@@ -2970,7 +2994,7 @@ msgstr "Choisir un fichier WAV"
 msgid "WAV-Dateien (*.wav)"
 msgstr "Fichiers WAV (*.wav)"
 
-#: layout_panel.cpp:183
+#: layout_panel.cpp:171
 msgid "Waagrecht mittig ausrichten"
 msgstr "Centrer horizontalement"
 
@@ -3006,11 +3030,11 @@ msgstr "Waveform of the audio input (a short time window, optionally aligned to 
 msgid "Wellenringe wie Wassertropfen: Ringe breiten sich von zufälligen Punkten aus (Tropfen pro Sekunde, Tempo, Ringbreite)."
 msgstr "Ripples like water drops: rings spread from random points (drops per second, speed, ring width)."
 
-#: main_window.cpp:130 main_window.cpp:169
+#: main_window.cpp:128 main_window.cpp:167
 msgid "WhiteHoleFX"
 msgstr "WhiteHoleFX"
 
-#: main_window.cpp:173
+#: main_window.cpp:171
 msgid "WhiteHoleFX – %1%2"
 msgstr "WhiteHoleFX – %1%2"
 
@@ -3074,9 +3098,9 @@ msgstr "Choisissez un node dans l'éditeur de nodes pour voir ses paramètres. �
 msgid "Wähle zuerst Fixtures in der Liste."
 msgstr "Choisissez d'abord des fixtures dans la liste."
 
-#: layout_panel_catalog.cpp:111
-msgid "Wähle zuerst eine Bauform in „Bauformen dieser Show“."
-msgstr "Sélectionne d’abord un modèle dans « Modèles de cette émission »."
+#: fixture_library_user.cpp:101
+msgid "Wähle zuerst eine Bauform in der Liste „Fixtures“."
+msgstr "Choisissez d'abord une forme dans la liste « Fixtures »."
 
 #: output_form_library.cpp:62 output_form_library.cpp:104
 msgid "Wähle zuerst einen Controller in der Tabelle."
@@ -3150,7 +3174,7 @@ msgstr "Destination n°"
 msgid "Ziel zuweisen"
 msgstr "Assigner une cible"
 
-#: main_window_stage.cpp:58
+#: main_window_stage.cpp:60
 msgid "Ziele (Controller) und Patch: welches Fixture auf welches Universe sendet"
 msgstr "Destinations (contrôleurs) et patch : quel fixture envoie sur quel univers"
 
@@ -3182,7 +3206,7 @@ msgstr "Randomly lighting pixels, blinking or fading, between two colors."
 msgid "Zufällige Zellen, die auf- und abblenden (Fading Pixels), zwischen zwei Farben."
 msgstr "Random cells that fade in and out, between two colors."
 
-#: layout_panel.cpp:232
+#: layout_panel.cpp:220
 msgid "Zum Aneinanderreihen mindestens zwei Fixtures wählen"
 msgstr "Sélectionnez au moins deux fixtures à aligner"
 
@@ -3217,10 +3241,6 @@ msgstr "automatique (Matrice 1, Cube 1 …)"
 #: port_legend.cpp:74
 msgid "die Schwingung des Tons"
 msgstr "l'oscillation du son"
-
-#: fixtures_page.cpp:54
-msgid "eigene Form"
-msgstr "forme propre"
 
 #: port_legend.cpp:69
 msgid "ein Farbverlauf aus mehreren Farben"
@@ -3278,7 +3298,7 @@ msgstr "Priorité sACN"
 msgid "strecken (Stretch)"
 msgstr "étirer (Stretch)"
 
-#: main_window.cpp:172
+#: main_window.cpp:170
 msgid "unbenannt"
 msgstr "sans titre"
 
@@ -3342,7 +3362,7 @@ msgstr "Contourner\tB"
 msgid "Überbrückung aufheben\tB"
 msgstr "Réactiver\tB"
 
-#: layout_panel.cpp:190
+#: layout_panel.cpp:178
 msgid "Übereinander ↕"
 msgstr "Empilées ↕"
 
@@ -3362,15 +3382,15 @@ msgstr "Pixels sautés"
 msgid "…"
 msgstr "…"
 
-#: layout_panel.cpp:183
+#: layout_panel.cpp:171
 msgid "↔ Mitte"
 msgstr "↔ Centre"
 
-#: layout_panel.cpp:186
+#: layout_panel.cpp:174
 msgid "↕ Mitte"
 msgstr "↕ Centre"
 
-#: layout_panel.cpp:182
+#: layout_panel.cpp:170
 msgid "⇤ Links"
 msgstr "⇤ Gauche"
 
@@ -3386,6 +3406,6 @@ msgstr "▼ vers le bas"
 msgid "⚠ %1"
 msgstr "⚠ %1"
 
-#: layout_panel.cpp:185
+#: layout_panel.cpp:173
 msgid "⤒ Oben"
 msgstr "⤒ Haut"

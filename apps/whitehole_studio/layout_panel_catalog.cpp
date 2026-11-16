@@ -1,22 +1,13 @@
-// layout_panel_catalog.cpp: Fixture-Bibliothek im Reiter Layout: aus einer gespeicherten Bauform ein Exemplar
-// auf der Bühne anlegen.
+// layout_panel_catalog.cpp: Fixture-Bibliothek im Reiter Layout: alle gespeicherten Bauformen in diese Show übernehmen.
 //
-// Warum eine eigene Datei: layout_panel.cpp und layout_panel_add.cpp sind an der 400-Zeilen-Grenze. Anlegen und
-// Bearbeiten einer Bauform bleibt Aufgabe des Bereichs "Bauformen dieser Show" (siehe layout_panel_shapes.cpp);
-// hier steht nur das Lesen/Schreiben der Benutzerbibliothek (user_library.hpp) und das Anlegen eines Exemplars
-// aus einer gewählten Bauform.
-//
-// "In Show übernehmen" übernahm früher nur die Bauform-Definition in das Projekt; ein zweiter Schritt über die
-// inzwischen entfernte Liste "Fixtures in Show" legte dann erst ein Exemplar an. Auf Wunsch des Nutzers übernimmt
-// diese eine Liste jetzt beides in einem Schritt: fehlt die Bauform im Projekt, wird sie zuerst angelegt (wie
-// bisher); egal ob neu oder schon vorhanden, entsteht danach immer ein weiteres Exemplar auf der Bühne (wie es
-// zuvor "Auf die Bühne" in "Fixtures in Show" tat) - mehrfaches Übernehmen legt also mehrfach Exemplare an, statt
-// ab dem zweiten Mal abgelehnt zu werden.
+// Warum eine eigene Datei: layout_panel.cpp und layout_panel_add.cpp sind an der 400-Zeilen-Grenze. Anlegen,
+// Bearbeiten und Speichern einer Bauform bleibt Aufgabe des Reiters Fixtures (siehe fixture_library_user.cpp); hier
+// steht nur das Lesen der Benutzerbibliothek (user_library.hpp) und das Übernehmen einer gewählten Bauform in diese
+// Show - dieselbe Bibliotheksdatei wie dort, nur von einer zweiten Stelle aus erreichbar.
 #include "layout_panel.hpp"
 
 #include <QByteArray>
 #include <QListWidget>
-#include <QPushButton>
 #include <QSignalBlocker>
 #include <QTemporaryDir>
 
@@ -29,161 +20,37 @@ namespace whitehole::studio {
 
 using form::fromStd;
 
-void LayoutPanel::fillCatalogList(const QString& select) {
-    const QString keep = select.isEmpty() ? selectedCatalogName() : select;
-    bool hasStoredTypes = false;
-    {
-        const QSignalBlocker blocker{catalog_};
-        catalog_->clear();
-        const auto stored = userlib::load(player_.registry());
-        if (!stored.ok()) {
-            Q_EMIT failed(fromStd(stored.error().message));
-            return;
-        }
-        for (const project::FixtureType& type : stored.value()) {
-            const QString name = fromStd(type.name);
-            // Name zuerst (frei vergeben), dahinter die Original-Bezeichnung der Form: sonst sieht man einem Namen
-            // wie "Kachel 5x3" nicht mehr an, ob dahinter wirklich eine Matrix steckt (siehe fixture_shape_label.hpp).
-            auto* item = new QListWidgetItem{
-                tr("%1 — %2 (%3 LEDs)").arg(name, shapeKindLabel(type.shape)).arg(mapping::ledCount(type.shape))};
-            item->setData(Qt::UserRole, name);
-            catalog_->addItem(item);
-            if (name == keep) {
-                catalog_->setCurrentItem(item);
-            }
-        }
-        hasStoredTypes = catalog_->count() > 0;
-        if (!hasStoredTypes) {
-            auto* none = new QListWidgetItem{
-                tr("Noch keine gespeicherten Bauformen (oben: Bauformen dieser Show → In Bibliothek speichern)")};
-            none->setFlags(Qt::NoItemFlags);
-            catalog_->addItem(none);
+void LayoutPanel::fillCatalogList() {
+    const QString keep = selectedCatalogName();
+    const QSignalBlocker blocker{catalog_};
+    catalog_->clear();
+    const auto stored = userlib::load(player_.registry());
+    if (!stored.ok()) {
+        Q_EMIT failed(fromStd(stored.error().message));
+        return;
+    }
+    for (const project::FixtureType& type : stored.value()) {
+        const QString name = fromStd(type.name);
+        // Name zuerst (frei vergeben), dahinter die Original-Bezeichnung der Form: sonst sieht man einem Namen wie
+        // "Kachel 5x3" nicht mehr an, ob dahinter wirklich eine Matrix steckt (siehe fixture_shape_label.hpp).
+        auto* item = new QListWidgetItem{
+            tr("%1 — %2 (%3 LEDs)").arg(name, shapeKindLabel(type.shape)).arg(mapping::ledCount(type.shape))};
+        item->setData(Qt::UserRole, name);
+        catalog_->addItem(item);
+        if (name == keep) {
+            catalog_->setCurrentItem(item);
         }
     }
-    // Außerhalb des QSignalBlocker: setCurrentItem() oben hat currentRowChanged nicht ausgelöst (siehe
-    // layout_panel.cpp), Knopf-Status und Vorschau also von Hand nachziehen, wie FixtureLibraryPage::fillStored es
-    // tat.
-    catalogTakeOver_->setEnabled(catalog_->currentRow() >= 0);
-    catalogDelete_->setEnabled(catalog_->currentRow() >= 0);
-    catalogImport_->setEnabled(hasStoredTypes);
-    if (catalog_->currentRow() >= 0) {
-        showSelectedCatalog();
+    if (catalog_->count() == 0) {
+        auto* none = new QListWidgetItem{tr("Noch keine gespeicherten Fixtures (Stage Config → Fixtures)")};
+        none->setFlags(Qt::NoItemFlags);
+        catalog_->addItem(none);
     }
 }
 
 QString LayoutPanel::selectedCatalogName() const {
     const QListWidgetItem* item = catalog_->currentItem();
     return item != nullptr ? item->data(Qt::UserRole).toString() : QString{};
-}
-
-void LayoutPanel::showSelectedCatalog() {
-    const QString name = selectedCatalogName();
-    catalogTakeOver_->setEnabled(!name.isEmpty());
-    catalogDelete_->setEnabled(!name.isEmpty());
-    if (name.isEmpty()) {
-        return;
-    }
-    const auto stored = userlib::load(player_.registry());
-    if (!stored.ok()) {
-        return;
-    }
-    for (const project::FixtureType& type : stored.value()) {
-        if (fromStd(type.name) == name) {
-            // Nur ansehen: bearbeitet wird eine Bauform in "Bauformen dieser Show"; "In Bibliothek speichern" legt
-            // sie wieder ab (siehe layout_panel_shapes.cpp).
-            shapeName_->setText(name);
-            shapeName_->setEnabled(false);
-            shapeDuplicate_->setEnabled(false);
-            shapeRemove_->setEnabled(false);
-            catalogSave_->setEnabled(false);
-            shapeForm_->setVisible(false);
-            shapeUsage_->setText(
-                tr("Gespeichert in der Bibliothek. „In Show übernehmen“ (oder Doppelklick) holt ein Exemplar in diese Show."));
-            shapePreview_->setShape(type.shape);
-            return;
-        }
-    }
-}
-
-bool LayoutPanel::saveSelectedShapeToLibrary() {
-    const QString name = selectedShapeName();
-    if (player_.project() == nullptr || name.isEmpty()) {
-        Q_EMIT failed(tr("Wähle zuerst eine Bauform in „Bauformen dieser Show“."));
-        return false;
-    }
-    const std::string key = name.toUtf8().toStdString();
-    for (const project::FixtureType& type : player_.fixtureTypes()) {
-        if (type.name == key) {
-            const Result<void> saved = userlib::upsert(player_.registry(), type);
-            if (!saved.ok()) {
-                Q_EMIT failed(fromStd(saved.error().message));
-                return false;
-            }
-            fillCatalogList(name);
-            Q_EMIT notice(tr("Bauform „%1“ in der Bibliothek gespeichert.").arg(name));
-            return true;
-        }
-    }
-    return false;
-}
-
-int LayoutPanel::importFromUserLibrary() {
-    if (player_.project() == nullptr) {
-        Q_EMIT projectNeeded();
-        if (player_.project() == nullptr) {
-            return 0;
-        }
-    }
-    const auto stored = userlib::load(player_.registry());
-    if (!stored.ok()) {
-        Q_EMIT failed(fromStd(stored.error().message));
-        return 0;
-    }
-    // Holt nur Bauformen, die dieser Show noch fehlen (legt keine Exemplare an); vgl. takeOverFromCatalog für eine
-    // einzelne, gezielt gewählte Bauform.
-    int added = 0;
-    QString last;
-    for (const project::FixtureType& type : stored.value()) {
-        if (std::ranges::any_of(player_.fixtureTypes(), [&](const project::FixtureType& t) { return t.name == type.name; })) {
-            continue;
-        }
-        const Result<void> result = player_.addFixtureType(type.name, type.shape);
-        if (!result.ok()) {
-            Q_EMIT failed(fromStd(result.error().message));
-            break;
-        }
-        ++added;
-        last = fromStd(type.name);
-    }
-    if (added > 0) {
-        shapeEditing_ = true;
-        fillShapeList(last);
-        shapeEditing_ = false;
-        Q_EMIT edited();
-    }
-    return added;
-}
-
-void LayoutPanel::removeSelectedFromCatalog() {
-    const QString name = selectedCatalogName();
-    if (name.isEmpty()) {
-        return;
-    }
-    const int row = catalog_->currentRow();
-    const Result<void> removed = userlib::remove(player_.registry(), name.toUtf8().toStdString());
-    if (!removed.ok()) {
-        Q_EMIT failed(fromStd(removed.error().message));
-        return;
-    }
-    fillCatalogList();
-    // Bleibt mindestens eine echte (nicht nur der Platzhalter „Noch keine gespeicherten Bauformen …“) Bauform
-    // übrig, wählt die nächste; sonst zurück zur Anzeige von „Bauformen dieser Show“ (showSelectedCatalog würde auf
-    // dem nicht wählbaren Platzhalter nichts anzeigen).
-    if (catalog_->count() > 0 && catalog_->item(0)->flags().testFlag(Qt::ItemIsSelectable)) {
-        catalog_->setCurrentRow(std::min(row, catalog_->count() - 1));
-    } else {
-        showSelectedShape();
-    }
 }
 
 bool LayoutPanel::takeOverFromCatalog(const QString& name) {
@@ -207,25 +74,16 @@ bool LayoutPanel::takeOverFromCatalog(const QString& name) {
         Q_EMIT failed(tr("Es gibt keine gespeicherte Bauform \"%1\"").arg(name));
         return false;
     }
-    // Die Bauform fehlt in dieser Show noch? Erst anlegen (wie bisher); ist sie schon da, einfach weiterverwenden -
-    // anders als früher kein Grund mehr, hier abzubrechen (siehe Kommentar am Dateianfang).
-    const bool missing =
-        std::ranges::none_of(player_.fixtureTypes(), [&](const project::FixtureType& t) { return t.name == found->name; });
-    if (missing) {
-        const Result<void> added = player_.addFixtureType(found->name, found->shape);
-        if (!added.ok()) {
-            Q_EMIT failed(fromStd(added.error().message));
-            return false;
-        }
-    }
-    const QString instanceName = uniqueName(name);
-    const auto id = player_.addFixtureOfType(instanceName.toUtf8().toStdString(), found->name, nextOrigin(), Vec3{},
-                                              player_.suggestPatch(mapping::ledCount(found->shape)));
-    if (!id.ok()) {
-        Q_EMIT failed(fromStd(id.error().message));
+    if (std::ranges::any_of(player_.fixtureTypes(), [&](const project::FixtureType& t) { return t.name == found->name; })) {
+        Q_EMIT failed(tr("In dieser Show gibt es schon eine Bauform „%1“.").arg(name));
         return false;
     }
-    fillList(id.value());
+    const Result<void> added = player_.addFixtureType(found->name, found->shape);
+    if (!added.ok()) {
+        Q_EMIT failed(fromStd(added.error().message));
+        return false;
+    }
+    fillTypeList();
     Q_EMIT edited();
     return true;
 }
@@ -233,7 +91,7 @@ bool LayoutPanel::takeOverFromCatalog(const QString& name) {
 namespace {
 
 /// Lenkt die Benutzerbibliothek für die Dauer des Rauchtests in ein Wegwerfverzeichnis (die echte bleibt
-/// unberührt) - dasselbe Muster wie LayoutPanel::exerciseShapes (layout_panel_shapes_exercise.cpp).
+/// unberührt) - dasselbe Muster wie FixtureLibraryPage::exercise (fixture_library_exercise.cpp).
 class ScopedLibraryPath {
 public:
     ScopedLibraryPath()
@@ -277,28 +135,14 @@ QString LayoutPanel::exerciseCatalog() {
     if (!found) {
         return QStringLiteral("Fixture-Bibliothek: Testbauform erscheint nicht in der Liste");
     }
-    const std::size_t typesBefore = player_.fixtureTypes().size();
-    const std::size_t fixturesBefore = player_.project()->layout.fixtures().size();
-    if (!takeOverFromCatalog(selectedCatalogName()) || player_.fixtureTypes().size() != typesBefore + 1 ||
-        player_.project()->layout.fixtures().size() != fixturesBefore + 1) {
-        return QStringLiteral("Fixture-Bibliothek: Übernehmen in die Show schlägt fehl (Bauform oder Exemplar fehlt)");
+    const std::size_t before = player_.fixtureTypes().size();
+    if (!takeOverFromCatalog(selectedCatalogName()) || player_.fixtureTypes().size() != before + 1) {
+        return QStringLiteral("Fixture-Bibliothek: Übernehmen in die Show schlägt fehl");
     }
-    // Zweites Übernehmen: die Bauform gibt es jetzt schon, legt trotzdem ein zweites Exemplar an, statt
-    // abgelehnt zu werden (siehe Kommentar am Dateianfang).
-    if (!takeOverFromCatalog(selectedCatalogName()) || player_.fixtureTypes().size() != typesBefore + 1 ||
-        player_.project()->layout.fixtures().size() != fixturesBefore + 2) {
-        return QStringLiteral("Fixture-Bibliothek: zweites Übernehmen legt kein zweites Exemplar an");
+    if (takeOverFromCatalog(selectedCatalogName())) {
+        return QStringLiteral("Fixture-Bibliothek: doppeltes Übernehmen hätte abgelehnt werden müssen");
     }
-    // Ids zuerst einsammeln, nicht währenddessen über den schrumpfenden Vektor iterieren.
-    std::vector<mapping::FixtureId> toRemove;
-    const std::vector<mapping::Fixture>& fixtures = player_.project()->layout.fixtures();
-    for (std::size_t i = fixturesBefore; i < fixtures.size(); ++i) {
-        toRemove.push_back(fixtures[i].id);
-    }
-    for (const mapping::FixtureId id : toRemove) {
-        removeFixture(id);
-    }
-    if (!player_.removeFixtureType("Rauchtest-Bibliothek").ok() || player_.fixtureTypes().size() != typesBefore) {
+    if (!player_.removeFixtureType("Rauchtest-Bibliothek").ok() || player_.fixtureTypes().size() != before) {
         return QStringLiteral("Fixture-Bibliothek: Aufräumen in der Show schlägt fehl");
     }
     return {};
