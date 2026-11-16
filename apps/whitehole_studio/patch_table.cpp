@@ -45,7 +45,7 @@ QTableWidgetItem* readOnly(const QString& text) {
 }  // namespace
 
 PatchTable::PatchTable(runtime::Player& player, QWidget* parent) : QTableWidget{0, Count, parent}, player_{player} {
-    setHorizontalHeaderLabels({tr("Fixture"), tr("Bauform"), tr("LEDs"), tr("Senden"), tr("Controller"), tr("Protokoll"),
+    setHorizontalHeaderLabels({tr("Fixture"), tr("Fixture-Typ"), tr("LEDs"), tr("Senden"), tr("Controller"), tr("Protokoll"),
                                tr("Universe (Art-Net ab 0, sACN ab 1)"), tr("Erster Kanal"), tr("Adressraum"), tr("DDP-Offset"),
                                tr("Vorweg überspringen"), tr("Überspringen nach je"), tr("Übersprungene Pixel"),
                                tr("Farbreihenfolge"), tr("Gamma"), tr("Helligkeit")});

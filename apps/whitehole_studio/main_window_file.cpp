@@ -24,9 +24,9 @@ QString toQString(const std::string& text) {
 }
 
 // Ausgangspunkt für ein neues Projekt: eine 16x8-Matrix mit Art-Net auf den eigenen Rechner
-// (127.0.0.1, also ungefährlich) und ein Farbverlauf als Effekt. Die Matrix ist als Bauform (fixturetype) angelegt,
-// damit sie im Reiter Fixtures unter "In dieser Show" steht und sich dort ändern oder noch einmal auf die Bühne
-// stellen lässt. Sonst wie examples/einstieg/wand.whfx ohne Strip und Dreher (Ziel-IP und Universen unter "Layout").
+// (127.0.0.1, also ungefährlich) und ein Farbverlauf als Effekt. Die Matrix ist als Fixture (fixturetype) angelegt,
+// damit sie im Reiter Fixtures steht und sich dort ändern oder im Reiter Layout noch einmal auf die Bühne patchen
+// lässt. Sonst wie examples/einstieg/wand.whfx ohne Strip und Dreher (Ziel-IP und Universen unter "Layout").
 constexpr const char* kNewProject = R"(whitehole-project 1
 settings fps 40
 
@@ -94,7 +94,8 @@ bool MainWindow::newProject(bool interactive) {
     }
     const bool wasRunning = player_->status().running;
     timer_.stop();
-    // Ein neues Projekt hat keine Bauformen; gespeicherte holt man im Reiter Fixtures bewusst in die Show.
+    // Ein neues Projekt hat keine eigenen Fixtures; gespeicherte aus der Bibliothek erscheinen dort trotzdem in der
+    // gemeinsamen Liste und werden erst beim Bearbeiten oder Patchen in diese Show übernommen.
     const Result<void> r = player_->loadText(kNewProject);
     if (!r.ok()) {
         reportError(tr("Neues Projekt"), r.error().message, interactive);

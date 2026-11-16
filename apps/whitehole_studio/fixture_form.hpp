@@ -1,11 +1,11 @@
-// fixture_form.hpp: Formular für ein Fixture (Name, Lage, Drehung, Bauform).
+// fixture_form.hpp: Formular für ein Fixture (Name, Lage, Drehung, welches Fixture es ist).
 //
 // "Typ wird Pflicht" (vom Nutzer entschieden, siehe CLAUDE.md): die Form selbst wird hier nicht mehr
-// bearbeitet, nur noch Name, Lage, Drehung und welche Bauform (aus der Bibliothek, Reiter Fixtures)
+// bearbeitet, nur noch Name, Lage, Drehung und welches Fixture (aus der Bibliothek, Reiter Fixtures)
 // gilt - ändern lässt sich die Form nur noch dort. Ein Fixture aus einer älteren Projektdatei ohne
-// Bauform zeigt stattdessen einen Hinweis; "Neue Bauform aus dieser Form …" legt für genau diesen Fall
-// (oder um ein bestehendes Fixture als Vorlage für eine neue Bauform zu nehmen) eine aus der aktuellen
-// Form an und weist sie zu. Jede Änderung geht über den Player, der danach den Ausgabeplan prüft. Wird
+// eigenes Fixture zeigt stattdessen einen Hinweis; "Neues Fixture aus dieser Form …" legt für genau
+// diesen Fall (oder um ein bestehendes Fixture als Vorlage für ein neues zu nehmen) eines aus der
+// aktuellen Form an und weist es zu. Jede Änderung geht über den Player, der danach den Ausgabeplan prüft. Wird
 // sie abgelehnt (Universe belegt, Name vergeben), meldet `failed` den Grund und das Formular springt
 // auf den gespeicherten Wert zurück.
 #pragma once
@@ -34,10 +34,10 @@ public:
     [[nodiscard]] mapping::FixtureId current() const noexcept { return id_; }
 
     /// Rauchtest für die CI: ändert Ursprung und Drehung des angezeigten Fixtures über die Felder und legt
-    /// über "Neue Bauform …" eine Bauform aus dessen Form an. Leer bei Erfolg, sonst der gescheiterte Schritt.
+    /// über "Neues Fixture …" ein Fixture aus dessen Form an. Leer bei Erfolg, sonst der gescheiterte Schritt.
     QString exercise();
-    /// Rauchtest für ein Fixture, das schon eine Bauform hat: dreht um die Achsen y und z und wechselt auf
-    /// eine andere Bauform. Leer bei Erfolg.
+    /// Rauchtest für ein Fixture, das schon ein zugewiesenes Fixture hat: dreht um die Achsen y und z und
+    /// wechselt auf ein anderes Fixture. Leer bei Erfolg.
     QString exerciseTyped();
 
 Q_SIGNALS:
@@ -49,7 +49,7 @@ private:
         QLineEdit* name{nullptr};
         form::Vec3Boxes origin;
         form::Vec3Boxes rotation;  // Drehung in Grad um x, y, z
-        QComboBox* type{nullptr};  // Bauform aus der Bibliothek; letzter Eintrag legt eine neue an
+        QComboBox* type{nullptr};  // Fixture aus der Bibliothek; letzter Eintrag legt ein neues an
     };
 
     void build();

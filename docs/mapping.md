@@ -43,7 +43,7 @@ Matrix, einen Strip, einen Cube und eine Punktwolke. Es wird kein Volumen gerast
 
 Ein Fixture lässt sich außerdem **drehen** (`Fixture::rotation`, Grad um x, y, z, in dieser Reihenfolge, um die Mitte seiner
 lokalen Box). `worldPositions` und `worldBox` liefern Lage und Box nach der Drehung; Abtastung und Vorschau nutzen sie. Fixtures
-können auf eine **Bauform** der Projekt-Bibliothek verweisen (`Fixture::type`).
+können auf ein **Fixture** der Projekt-Bibliothek verweisen (`Fixture::type`).
 
 Jedes Fixture hat einen Ursprung im Raum. Mehrere Fixtures bilden ein `Layout`, z. B. eine
 Wand aus vier Panels und ein Strip an der Decke. Ihre Boxen werden vereinigt und

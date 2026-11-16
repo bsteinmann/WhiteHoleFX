@@ -1,6 +1,6 @@
 // shape_form.hpp: Formular für eine Fixture-Form (Matrix, 3D-Gitter, Ring, Strip, Säule).
 //
-// Warum es diese Datei gibt: Im neuen Stage-Config-Fenster wird die Bauform eines Fixtures in der Bibliothek
+// Warum es diese Datei gibt: Im neuen Stage-Config-Fenster wird die Form eines Fixtures in der Bibliothek
 // beschrieben, ohne dass schon ein Fixture im Raum steht. Das alte FixtureForm war an ein Fixture mit Nummer
 // gebunden; dieses Formular bearbeitet nur den Wert einer Form und meldet jede Änderung mit `shapeEdited`.
 // Was daraus wird (Bibliothek, Prüfung, Rückgängig), entscheidet der Aufrufer. Lehnt er die Form ab, setzt er

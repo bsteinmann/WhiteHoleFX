@@ -1,8 +1,8 @@
 // layout_panel.hpp: Seite "Layout" im Stage Config: Fixtures auf der Bühne verteilen, drehen und ausrichten.
 //
-// Liste der Fixtures (Hinzufügen per Dialog oder aus einer Bauform, Entfernen, Ausrichten) und das Formular zum
-// gewählten Fixture (Lage, Drehung um x y z, Bauform). Patch und Ziele stehen auf der Seite Ausgabe (OutputPage), die große
-// Bühnenansicht daneben im Fenster. Die Liste erlaubt mehrere Fixtures; dieselbe
+// Liste der Fixtures (Hinzufügen per Dialog oder gepatcht aus der Fixture-Liste, Entfernen, Ausrichten) und das
+// Formular zum gewählten Fixture (Lage, Drehung um x y z, Fixture-Form). Patch und Ziele stehen auf der Seite
+// Ausgabe (OutputPage), die große Bühnenansicht daneben im Fenster. Die Liste erlaubt mehrere Fixtures; dieselbe
 // Auswahl zeigt die Vorschau (PreviewController). Das Panel hält keinen eigenen Zustand; alles geht
 // über den Player, der jede Änderung samt Ausgabeplan prüft.
 #pragma once
@@ -23,6 +23,7 @@ class QCheckBox;
 class QComboBox;
 class QDoubleSpinBox;
 class QMenu;
+class QSpinBox;
 
 namespace whitehole::studio {
 
@@ -61,9 +62,11 @@ public:
     void saveGroup();
     void addRegion();
 
-    /// Bauformen dieser Show (Stage Config → Fixtures): Liste füllen und ein Exemplar mit Patch auf der Bühne anlegen.
+    /// Fixtures dieser Show und der Bibliothek (Stage Config → Fixtures, gemeinsame Liste, siehe fixture_catalog.hpp):
+    /// Liste füllen und `count` Exemplare mit je einem eigenen Patch auf der Bühne anlegen. Ist das gewählte Fixture
+    /// nur in der Bibliothek, wird es dafür zuerst in diese Show übernommen. Wahr, wenn mindestens eins entstand.
     void fillTypeList();
-    bool addFromType(const QString& typeName);
+    bool addFromType(const QString& typeName, int count = 1);
     [[nodiscard]] QString selectedTypeName() const;
 
     /// Alle in der Liste gewählten Fixtures (in Listenreihenfolge).
@@ -106,6 +109,9 @@ private:
     void addFixture(const QString& baseName, mapping::FixtureShape shape);
     [[nodiscard]] QString uniqueName(const QString& base) const;
     [[nodiscard]] Vec3 nextOrigin() const;
+    /// Ist `name` schon ein Fixture dieser Show? Wenn nicht, aber in der Bibliothek gespeichert, wird es jetzt dort
+    /// angelegt (dieselbe Form), damit addFromType() daraus patchen kann.
+    bool ensureTypeInProject(const QString& name);
     [[nodiscard]] mapping::FixtureId selectedId() const;
     /// Rechtsklick auf die Fixture-Liste: entfernt das Fixture unter dem Mauszeiger, unabhängig von der
     /// aktuellen Auswahl (auf leerer Fläche ohne Wirkung).
@@ -114,7 +120,8 @@ private:
 
     runtime::Player& player_;
     QListWidget* list_{nullptr};
-    QListWidget* types_{nullptr};  // Bauformen der Show; Doppelklick stellt ein Exemplar auf die Bühne
+    QListWidget* types_{nullptr};   // Fixtures (Show + Bibliothek, gemeinsame Liste); Doppelklick patcht ein Exemplar
+    QSpinBox* quantity_{nullptr};   // Anzahl der Exemplare, die „Patchen“ auf einmal anlegt
     FixtureForm* fixture_{nullptr};
     QCheckBox* showGrid_{nullptr};
     QCheckBox* snap_{nullptr};

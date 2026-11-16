@@ -94,7 +94,7 @@ msgstr " · sin parchear"
 msgid "\"%1\" aus der Bibliothek löschen?"
 msgstr "¿Eliminar \"%1\" de la biblioteca?"
 
-#: layout_panel.cpp:252 test_panel.cpp:199
+#: layout_panel.cpp:264 test_panel.cpp:199
 msgid "%1  (%2 LEDs)"
 msgstr "%1  (%2 LED)"
 
@@ -106,7 +106,7 @@ msgstr "%1  →  %2"
 msgid "%1 %"
 msgstr "%1 %"
 
-#: fixture_library_page.cpp:220 fixture_library_page.cpp:369 fixture_library_user.cpp:49
+#: fixture_library_page.cpp:196 fixture_library_page.cpp:423
 msgid "%1 (%2 LEDs)"
 msgstr "%1 (%2 LED)"
 
@@ -138,7 +138,7 @@ msgstr "%1 LED, detenido"
 msgid "%1 · LED %2 von %3"
 msgstr "%1 · LED %2 de %3"
 
-#: layout_panel_types.cpp:27
+#: layout_panel_types.cpp:32
 msgid "%1 — %2 (%3 LEDs)"
 msgstr "%1 — %2 (%3 LED)"
 
@@ -334,11 +334,11 @@ msgstr ", nivel %1 %"
 msgid "100 %"
 msgstr "100 %"
 
-#: fixture_library_page.cpp:101 fixture_shape_label.cpp:10
+#: fixture_library_page.cpp:100 fixture_shape_label.cpp:10
 msgid "2D-Matrix"
 msgstr "Matriz 2D"
 
-#: fixture_library_page.cpp:71
+#: fixture_library_page.cpp:72
 msgid "2D-Matrix 8x8"
 msgstr "Matriz 2D 8x8"
 
@@ -378,11 +378,11 @@ msgstr "Presentación &3D"
 msgid "3D-Gitter (Cube, Vorhang, Säule)"
 msgstr "Cuadrícula 3D (cubo, cortina, columna)"
 
-#: fixture_library_page.cpp:101 fixture_shape_label.cpp:13
+#: fixture_library_page.cpp:100 fixture_shape_label.cpp:13
 msgid "3D-Matrix"
 msgstr "Matriz 3D"
 
-#: fixture_library_page.cpp:40
+#: fixture_library_page.cpp:41
 msgid "3D-Matrix 4x4x4"
 msgstr "Matriz 3D 4x4x4"
 
@@ -398,13 +398,9 @@ msgstr "<b>Matriz 2D</b>"
 msgid "<b>3D-Matrix</b>"
 msgstr "<b>Matriz 3D</b>"
 
-#: fixture_library_page.cpp:95
-msgid "<b>Fixtures</b> (in dieser Show)"
-msgstr "<b>Fixtures</b> (en este show)"
-
-#: fixture_library_page.cpp:121
-msgid "<b>Gespeicherte Fixtures</b> (alle in der Bibliothek)"
-msgstr "<b>Fixtures guardados</b> (todos en la biblioteca)"
+#: fixture_library_page.cpp:94
+msgid "<b>Fixtures</b>"
+msgstr "<b>Fixtures</b>"
 
 #: shape_form.cpp:142
 msgid "<b>Kreis</b>"
@@ -434,7 +430,7 @@ msgstr "<b>WhiteHoleFX Studio</b> %1<br><br>Control de matrices LED, cubos y pí
 msgid "Abgeblendeter Node mit gestrichelter Durchleitung: überbrückt (Taste B)."
 msgstr "Nodo atenuado con paso discontinuo: puenteado (tecla B)."
 
-#: layout_panel.cpp:179
+#: layout_panel.cpp:191
 msgid "Abstand"
 msgstr "Separación"
 
@@ -446,7 +442,7 @@ msgstr "Separación x y"
 msgid "Abstand x y z"
 msgstr "Separación x y z"
 
-#: layout_panel.cpp:178
+#: layout_panel.cpp:190
 msgid "Abstand zwischen den Fixtures beim Aneinanderreihen (0 = dicht an dicht)"
 msgstr "Separación entre fixtures al alinearlas (0 = borde con borde)"
 
@@ -493,10 +489,6 @@ msgstr "Restablecer todos los valores predeterminados"
 #: main_window_help.cpp:47
 msgid "Alle Tastenkürzel in einer Liste"
 msgstr "Todos los atajos de teclado en una lista"
-
-#: fixture_library_page.cpp:83
-msgid "Alle übernehmen"
-msgstr "Tomar todos"
 
 #: parameter_editors.cpp:311
 msgid "Alpha 0: an dieser Stelle bleibt die LED aus (die Farbe bleibt gemerkt)."
@@ -566,6 +558,10 @@ msgstr "Vista frontal: mover fixtures, arrastrar un área"
 msgid "Anzahl"
 msgstr "Cantidad"
 
+#: layout_panel.cpp:48
+msgid "Anzahl der Exemplare, die „Patchen“ auf einmal anlegt"
+msgstr "Número de instancias que «Patchear» crea a la vez"
+
 #: shape_form.cpp:134
 msgid "Anzahl x y z"
 msgstr "Cantidad x y z"
@@ -634,10 +630,6 @@ msgstr "Ocultar en la ficha"
 msgid "Auf der Kachel ausblenden (Kabel nach außen vorhanden)"
 msgstr "Ocultar en la ficha (hay un cable hacia fuera)"
 
-#: layout_panel.cpp:42
-msgid "Auf die Bühne"
-msgstr "Al escenario"
-
 #: node_palette.cpp:157 node_palette.cpp:378
 msgid "Auf die Fläche ziehen: Node hinzufügen.\nNode hierher ziehen: entfernen."
 msgstr "Arrastra al lienzo: añadir un nodo.\nArrastra un nodo aquí: eliminarlo."
@@ -658,7 +650,7 @@ msgstr "Apagado"
 msgid "Aus Bibliothek +"
 msgstr "Desde la biblioteca +"
 
-#: fixture_library_page.cpp:86 output_form.cpp:57
+#: fixture_library_page.cpp:85 output_form.cpp:57
 msgid "Aus Bibliothek löschen"
 msgstr "Eliminar de la biblioteca"
 
@@ -738,26 +730,6 @@ msgstr "Barra a lo largo de z"
 msgid "Balken in den Nodes und leuchtende Kabel, solange die Wiedergabe läuft"
 msgstr "Barras en los nodos y cables luminosos mientras se reproduce"
 
-#: fixture_form.cpp:84 patch_table.cpp:48
-msgid "Bauform"
-msgstr "Tipo de fixture"
-
-#: fixture_form.cpp:82
-msgid "Bauform aus der Bibliothek (Stage Config → Fixtures). Änderungen an der Bauform gelten für alle Exemplare."
-msgstr "Tipo de la biblioteca (Stage Config → Fixtures). Los cambios del tipo valen para todas las instancias."
-
-#: fixture_library_page.cpp:112
-msgid "Bauform entfernen. Fixtures im Layout behalten ihre Form als eigene."
-msgstr "Quitar el tipo. Los fixtures del layout conservan su forma como propia."
-
-#: fixture_library_user.cpp:113
-msgid "Bauform „%1“ in der Bibliothek gespeichert."
-msgstr "Forma «%1» guardada en la biblioteca."
-
-#: layout_panel.cpp:41
-msgid "Bauformen dieser Show (Stage Config → Fixtures). Doppelklick stellt ein Exemplar auf die Bühne."
-msgstr "Tipos de fixtures de este show (Stage Config → Fixtures). Doble clic coloca un ejemplar en el escenario."
-
 #: cue_panel.cpp:64
 msgid "Bearbeiten …"
 msgstr "Editar …"
@@ -801,10 +773,6 @@ msgstr "Etiqueta en la ficha"
 #: main_window_actions.cpp:129
 msgid "Betrieb"
 msgstr "Funcionamiento"
-
-#: main_window_stage.cpp:69
-msgid "Bibliothek der Bauformen: Matrix, Kreis, Strip, Säule mit Vorschau und Test"
-msgstr "Biblioteca de tipos: matriz, círculo, strip, columna con vista previa y prueba"
 
 #: port_legend.cpp:64
 msgid "Bild als Textur (z. B. aus einer Datei)"
@@ -1055,8 +1023,8 @@ msgid "Die DMX-Nodes im Projekt lesen ihre Werte aus dem Empfang. Standard-Ports
 msgstr "Los nodos DMX del proyecto leen sus valores de los datos recibidos. Los puertos predeterminados son 6454 (Art-Net) y 5568 (sACN); cámbialos solo si otro programa los usa. La recepción está apagada tras la instalación; en Windows el cortafuegos pregunta al activarla por primera vez."
 
 #: fixture_form.cpp:87
-msgid "Die Form kommt aus der Bauform und wird im Reiter Fixtures geändert."
-msgstr "La forma viene del tipo y se cambia en la pestaña Fixtures."
+msgid "Die Form kommt vom Fixture und wird im Reiter Fixtures geändert."
+msgstr "La forma proviene del fixture y se cambia en la pestaña Fixtures."
 
 #: group_dialog.cpp:106
 msgid "Die Gruppe braucht einen Namen."
@@ -1111,8 +1079,8 @@ msgid "Dieser Node hat keine einstellbaren Parameter."
 msgstr "Este nodo no tiene parámetros ajustables."
 
 #: fixture_form.cpp:91
-msgid "Dieses Fixture hat keine Bauform (ältere Projektdatei oder die Bauform wurde entfernt). Über \"Bauform\" → \"Neue Bauform aus dieser Form …\" lässt sich wieder eine anlegen."
-msgstr "Este fixture no tiene tipo (archivo de proyecto antiguo, o el tipo fue eliminado). Use «Tipo» → «Nuevo tipo a partir de esta forma …» para crear uno de nuevo."
+msgid "Dieses Fixture ist mit keinem Fixture aus der Bibliothek verknüpft (ältere Projektdatei oder es wurde entfernt). Über \"Fixture\" → \"Neues Fixture aus dieser Form …\" lässt sich wieder eines anlegen."
+msgstr "Este fixture no está vinculado a ningún fixture de la biblioteca (archivo de proyecto antiguo, o fue eliminado). Usa «Fixture» → «Nuevo fixture a partir de esta forma …» para crear uno de nuevo."
 
 #: main.cpp:133
 msgid "Dieses Programm wurde ohne GPU-Backend gebaut (-DWHITEHOLEFX_WEBGPU=ON); es zeigt nur das Layout."
@@ -1162,7 +1130,7 @@ msgstr "Giro x y z (grados)"
 msgid "Du hast die neueste Version (%1)."
 msgstr "Tienes la última versión (%1)."
 
-#: fixture_library_page.cpp:81
+#: fixture_library_page.cpp:82
 msgid "Duplizieren"
 msgstr "Duplicar"
 
@@ -1302,7 +1270,7 @@ msgstr "Ver los canales DMX recibidos y enviados y asignarles una dirección dir
 msgid "Ende x y z"
 msgstr "Fin x y z"
 
-#: fixture_library_page.cpp:82 layout_panel.cpp:65
+#: fixture_library_page.cpp:83 layout_panel.cpp:77
 msgid "Entfernen"
 msgstr "Quitar"
 
@@ -1322,7 +1290,7 @@ msgstr "Elimina un controlador de la biblioteca (el proyecto no cambia)"
 msgid "Erkennt den Takt der Musik und liefert Beat-Impuls, Pulse (klingt ab), Phase und Tempo (BPM). Das Tempo lässt sich auch fest vorgeben."
 msgstr "Detects the beat of the music and outputs a beat trigger, a decaying pulse, phase and tempo (BPM). The tempo can also be fixed by hand."
 
-#: layout_panel.cpp:188
+#: layout_panel.cpp:200
 msgid "Erst Fixtures wählen (Strg oder Umschalt halten für mehrere)"
 msgstr "Primero selecciona fixtures (mantén Ctrl o Mayús para varios)"
 
@@ -1346,9 +1314,9 @@ msgstr "Primer canal del grupo de canales interno de los nodos de salida DMX (1.
 msgid "Erster echter DMX-Kanal am Ziel (1..512)."
 msgstr "Primer canal DMX real en el destino (1..512)."
 
-#: layout_panel_types.cpp:59
-msgid "Es gibt keine Bauform \"%1\""
-msgstr "No existe el tipo \"%1\""
+#: layout_panel_types.cpp:76 layout_panel_types.cpp:94
+msgid "Es gibt kein Fixture \"%1\""
+msgstr "No existe ningún fixture «%1»"
 
 #: crash_notice.cpp:47
 msgid "Es gibt keinen Absturzbericht: Das Programm wurde von außen beendet oder ist so abgestürzt, dass es nichts mehr schreiben konnte. Hilfreich für den Entwickler: was zuletzt geklickt wurde, und die Datei stack.txt im Ordner:\n%1"
@@ -1362,17 +1330,13 @@ msgstr "Ya existe un preajuste «%1». ¿Sustituirlo?"
 msgid "Es gibt schon einen Look „%1“. Mit dem aktuellen Effekt überschreiben?"
 msgstr "Ya existe un look «%1». ¿Sobrescribirlo con el efecto actual?"
 
-#: layout_panel_add.cpp:85 layout_panel_types.cpp:53
+#: layout_panel_add.cpp:85 layout_panel_types.cpp:85
 msgid "Es ist kein Projekt geladen. Mit Strg+N ein neues anlegen oder mit Strg+O eins öffnen."
 msgstr "No hay ningún proyecto cargado. Crea uno con Ctrl+N o abre uno con Ctrl+O."
 
 #: dmx_output_monitor_panel.cpp:201
 msgid "Es wurde noch nichts auf dieses Universe gesendet."
 msgstr "Todavía no se ha enviado nada a este universo."
-
-#: layout_panel.cpp:43
-msgid "Exemplar der gewählten Bauform mit dem nächsten freien Patch auf der Bühne anlegen"
-msgstr "Colocar en el escenario un ejemplar del tipo seleccionado con el siguiente patch libre"
 
 #: cue_dialog.cpp:88 cue_panel.cpp:53
 msgid "Fade"
@@ -1438,7 +1402,7 @@ msgstr "Field"
 msgid "Filtert die Gruppen nach Node- oder Parametername (über alle Nodes)"
 msgstr "Filtra los grupos por nombre de nodo o de parámetro (en todos los nodos)"
 
-#: patch_table.cpp:48
+#: fixture_form.cpp:84 patch_table.cpp:48
 msgid "Fixture"
 msgstr "Fixture"
 
@@ -1450,19 +1414,35 @@ msgstr "&Añadir fixture …"
 msgid "Fixture an die Ausgabe schicken"
 msgstr "Enviar el fixture a la salida"
 
+#: fixture_form.cpp:82
+msgid "Fixture aus der Bibliothek (Stage Config → Fixtures). Änderungen daran gelten für alle Exemplare."
+msgstr "Fixture de la biblioteca (Stage Config → Fixtures). Los cambios se aplican a todas las instancias."
+
+#: fixture_library_page.cpp:111
+msgid "Fixture aus dieser Show entfernen. Schon platzierte Exemplare im Layout behalten ihre Form als eigene."
+msgstr "Eliminar el fixture de este show. Las instancias ya colocadas en el layout mantienen su forma propia."
+
 #: add_fixture_dialog.cpp:47
 msgid "Fixture hinzufügen"
 msgstr "Añadir fixture"
 
-#: layout_panel.cpp:329
+#: layout_panel.cpp:341
 msgid "Fixture „%1“ entfernen"
 msgstr "Eliminar fixture «%1»"
+
+#: fixture_library_page.cpp:450
+msgid "Fixture „%1“ in der Bibliothek gespeichert."
+msgstr "Fixture «%1» guardado en la biblioteca."
 
 #: dmx_output_monitor_panel.cpp:135
 msgid "Fixture-Patch bearbeiten: %1…"
 msgstr "Editar el patch del fixture: %1…"
 
-#: node_editor_targets.cpp:51 stage_setup_window.cpp:31
+#: patch_table.cpp:48
+msgid "Fixture-Typ"
+msgstr "Tipo de fixture"
+
+#: layout_panel.cpp:56 node_editor_targets.cpp:51 stage_setup_window.cpp:31
 msgid "Fixtures"
 msgstr "Fixtures"
 
@@ -1470,17 +1450,21 @@ msgstr "Fixtures"
 msgid "Fixtures (Auswahl für „Auswahl hervorheben“ und „Nur auf gewählten“)"
 msgstr "Fixtures (selección para «Resaltar selección» y «Solo en los seleccionados»)"
 
-#: layout_panel.cpp:51
+#: layout_panel.cpp:44
+msgid "Fixtures (Stage Config → Fixtures). Doppelklick patcht ein Exemplar auf die Bühne."
+msgstr "Fixtures (Stage Config → Fixtures). Doble clic patchea una instancia en el escenario."
+
+#: main_window_stage.cpp:69
+msgid "Fixtures anlegen: Matrix, Kreis, Strip, Säule mit Vorschau und Test"
+msgstr "Crear fixtures: matriz, círculo, tira, columna con vista previa y prueba"
+
+#: layout_panel.cpp:63
 msgid "Fixtures auf der Bühne"
 msgstr "Fixtures en el escenario"
 
 #: main_window_stage.cpp:57
 msgid "Fixtures auf der Bühne verteilen und drehen (eigenes Fenster)"
 msgstr "Distribuir y girar fixtures en el escenario (ventana propia)"
-
-#: layout_panel.cpp:46
-msgid "Fixtures in Show"
-msgstr "Fixtures en el show"
 
 #: node_info_texts.cpp:94
 msgid "Flammen: Aufsteigendes, flackerndes Feuer mit einstellbarer Skalierung, Tempo und Flammenhöhe."
@@ -1566,11 +1550,7 @@ msgstr "Brillo global (afecta a la vista previa y a la salida, no se guarda en e
 msgid "Gesamtlautstärke des Audio-Eingangs als Pegel und Spitze, linear oder in dB, auf Wunsch mit automatischer Verstärkung. Einzelne Schläge (Kick, Snare, Hi-Hat) erkennt „Audio Trigger“."
 msgstr "Volumen global de la entrada de audio como nivel y pico, lineal o en dB, con ganancia automática si se desea. Los golpes individuales (bombo, caja, hi-hat) los detecta «Audio Trigger»."
 
-#: fixture_library_user.cpp:91
-msgid "Gespeichert in der Bibliothek. „In Show übernehmen“ (oder Doppelklick) holt sie in diese Show."
-msgstr "Guardado en la biblioteca. «Tomar en el show» (o doble clic) lo trae a este show."
-
-#: main_window_file.cpp:149 main_window_file.cpp:177
+#: main_window_file.cpp:150 main_window_file.cpp:178
 msgid "Gespeichert: %1"
 msgstr "Guardado: %1"
 
@@ -1578,11 +1558,11 @@ msgstr "Guardado: %1"
 msgid "Gewählte Fixtures als Gruppe speichern …"
 msgstr "Guardar los fixtures elegidos como grupo …"
 
-#: layout_panel.cpp:162
+#: layout_panel.cpp:174
 msgid "Gewählte Fixtures senkrecht aufeinanderreihen (das untere bleibt stehen)"
 msgstr "Apilar los fixtures seleccionados en vertical (el más bajo se queda)"
 
-#: layout_panel.cpp:160
+#: layout_panel.cpp:172
 msgid "Gewählte Fixtures waagrecht aneinanderreihen (das linke bleibt stehen)"
 msgstr "Colocar los fixtures seleccionados uno junto a otro (el de la izquierda se queda)"
 
@@ -1658,11 +1638,11 @@ msgstr "Guardar grupo"
 msgid "Gruppe zuklappen"
 msgstr "Contraer grupo"
 
-#: layout_panel.cpp:60 node_editor_targets.cpp:56 node_palette.cpp:162
+#: layout_panel.cpp:72 node_editor_targets.cpp:56 node_palette.cpp:162
 msgid "Gruppen"
 msgstr "Grupos"
 
-#: layout_panel.cpp:61
+#: layout_panel.cpp:73
 msgid "Gruppen von Fixtures und Regionen der Bühne: Ziele für Output-Nodes"
 msgstr "Grupos de fixtures y regiones del escenario: destinos para nodos de salida"
 
@@ -1694,14 +1674,6 @@ msgstr "Brillo"
 msgid "Hinzufügen"
 msgstr "Añadir"
 
-#: fixture_library_page.cpp:124
-msgid "Holt alle gespeicherten Bauformen, die in dieser Show fehlen"
-msgstr "Trae todas las formas guardadas que faltan en este show"
-
-#: fixture_library_page.cpp:123
-msgid "Holt die gewählte gespeicherte Bauform in diese Show"
-msgstr "Trae la forma guardada elegida a este show"
-
 #: parameter_panel.cpp:241
 msgid "Hält diesen Node im Fenster, auch wenn du im Editor einen anderen wählst"
 msgstr "Mantiene este nodo en la ventana aunque elijas otro en el editor"
@@ -1714,9 +1686,9 @@ msgstr "Alto"
 msgid "Hüllkurve (ADSR): Aus einem Schalter wird ein weicher Verlauf mit Attack, Decay, Sustain und Release. Auch als Einzelimpuls."
 msgstr "Envelope (ADSR): turns a switch into a smooth curve with attack, decay, sustain and release. Also as a one-shot."
 
-#: fixture_library_page.cpp:262
-msgid "Im Layout %1 Mal verwendet; Änderungen gelten für alle."
-msgstr "Usado %1 veces en el layout; los cambios valen para todos."
+#: fixture_library_page.cpp:268
+msgid "Im Layout %1 Mal gepatcht; Änderungen gelten für alle."
+msgstr "Patcheado %1 veces en el layout; los cambios se aplican a todos."
 
 #: port_legend.cpp:64
 msgid "Image"
@@ -1726,13 +1698,9 @@ msgstr "Imagen"
 msgid "Impuls"
 msgstr "Pulso"
 
-#: fixture_library_page.cpp:85 output_form.cpp:53 output_form_library.cpp:68
+#: fixture_library_page.cpp:84 output_form.cpp:53 output_form_library.cpp:68
 msgid "In Bibliothek speichern"
 msgstr "Guardar en la biblioteca"
-
-#: fixture_library_page.cpp:84
-msgid "In Show übernehmen"
-msgstr "Tomar en el show"
 
 #: look_panel.cpp:60
 msgid "In den Editor laden"
@@ -1742,9 +1710,9 @@ msgstr "Cargar en el editor"
 msgid "In der Bibliothek speichern"
 msgstr "Guardar en la biblioteca"
 
-#: fixture_library_user.cpp:137
-msgid "In dieser Show gibt es schon eine Bauform „%1“."
-msgstr "Este show ya tiene una forma «%1»."
+#: fixture_library_page.cpp:201
+msgid "In dieser Show und in der Bibliothek"
+msgstr "En este show y en la biblioteca"
 
 #: main_window_update.cpp:95
 msgid "Ja, beim Start suchen"
@@ -1834,19 +1802,19 @@ msgstr "Sin resultados."
 msgid "Klicke eine LED, um ihre Adresse zu sehen."
 msgstr "Haz clic en un LED para ver su dirección."
 
-#: fixture_library_page.cpp:111
-msgid "Kopie der gewählten Bauform anlegen"
-msgstr "Crear una copia del tipo elegido"
+#: fixture_library_page.cpp:110
+msgid "Kopie des gewählten Fixtures anlegen"
+msgstr "Crear una copia del fixture seleccionado"
 
 #: node_editor_menu.cpp:67
 msgid "Kopieren\tStrg+C"
 msgstr "Copiar\tCtrl+C"
 
-#: fixture_library_page.cpp:102 fixture_shape_label.cpp:19
+#: fixture_library_page.cpp:101 fixture_shape_label.cpp:19
 msgid "Kreis"
 msgstr "Círculo"
 
-#: fixture_library_page.cpp:46
+#: fixture_library_page.cpp:47
 msgid "Kreis 24"
 msgstr "Círculo 24"
 
@@ -1894,7 +1862,7 @@ msgstr "Secuencia (orden del cable)"
 msgid "Lautstärke je Frequenzband"
 msgstr "Volumen por banda de frecuencia"
 
-#: layout_panel.cpp:78 stage_setup_window.cpp:38
+#: layout_panel.cpp:90 stage_setup_window.cpp:38
 msgid "Layout"
 msgstr "Disposición"
 
@@ -1902,9 +1870,9 @@ msgstr "Disposición"
 msgid "Layout auf Würfel abbilden"
 msgstr "Proyectar la disposición sobre el cubo"
 
-#: fixture_library_page.cpp:250
-msgid "Lege mit „Neu“ eine Bauform an. Im Reiter Layout verteilst du sie dann auf der Bühne."
-msgstr "Crea un tipo con «Nuevo». Luego colócalo en el escenario en la pestaña Layout."
+#: fixture_library_page.cpp:224
+msgid "Lege mit „Neu“ ein Fixture an. Im Reiter Layout patchst du es dann auf die Bühne."
+msgstr "Crea un fixture con «Nuevo». En la pestaña Layout lo patcheas luego en el escenario."
 
 #: port_legend.cpp:45
 msgid "Legende der Ports"
@@ -1942,7 +1910,7 @@ msgstr "Linear gradient from color A to color B at an adjustable angle."
 msgid "Linien als Sinuswellen, die sich bewegen (Anzahl, Amplitude, Frequenz, Tempo, Phasenversatz in Grad, eigene Farbe je Linie)."
 msgstr "Líneas como ondas senoidales en movimiento (cantidad, amplitud, frecuencia, velocidad, desfase de fase en grados, color propio por línea)."
 
-#: layout_panel.cpp:154
+#: layout_panel.cpp:166
 msgid "Linke Kanten ausrichten"
 msgstr "Alinear bordes izquierdos"
 
@@ -2162,7 +2130,7 @@ msgstr "Nombre del preajuste:"
 msgid "Name:"
 msgstr "Nombre:"
 
-#: layout_panel.cpp:160
+#: layout_panel.cpp:172
 msgid "Nebeneinander ↔"
 msgstr "Uno junto a otro ↔"
 
@@ -2182,21 +2150,9 @@ msgstr "Tarjeta de red para enviar: %1"
 msgid "Netzwerkkarte, DMX-Eingang, Audio-Interface und Standardwerte für Nodes"
 msgstr "Tarjeta de red, entrada DMX, interfaz de audio y valores predeterminados de los nodos"
 
-#: fixture_library_page.cpp:81
+#: fixture_library_page.cpp:82
 msgid "Neu"
 msgstr "Nuevo"
-
-#: fixture_form.cpp:137
-msgid "Neue Bauform"
-msgstr "Nuevo tipo"
-
-#: fixture_library_page.cpp:110
-msgid "Neue Bauform anlegen"
-msgstr "Crear un tipo nuevo"
-
-#: fixture_form.cpp:79
-msgid "Neue Bauform aus dieser Form …"
-msgstr "Nuevo tipo a partir de esta forma …"
 
 #: node_defaults_page.cpp:36
 msgid "Neue Nodes starten mit diesen Werten statt mit denen der Bibliothek. Bestehende Nodes und geladene Projekte ändern sich nicht. Fett markierte Typen haben eigene Werte."
@@ -2210,7 +2166,19 @@ msgstr "Nueva versión %1 disponible – Ayuda > Buscar actualizaciones …"
 msgid "Neuer Name:"
 msgstr "Nuevo nombre:"
 
-#: main_window_file.cpp:100
+#: fixture_form.cpp:137
+msgid "Neues Fixture"
+msgstr "Nuevo fixture"
+
+#: fixture_library_page.cpp:109
+msgid "Neues Fixture anlegen"
+msgstr "Crear nuevo fixture"
+
+#: fixture_form.cpp:79
+msgid "Neues Fixture aus dieser Form …"
+msgstr "Nuevo fixture a partir de esta forma …"
+
+#: main_window_file.cpp:101
 msgid "Neues Projekt"
 msgstr "Nuevo proyecto"
 
@@ -2222,7 +2190,7 @@ msgstr "Nuevo proyecto (Ctrl+N)"
 msgid "Neues Projekt (Strg+N), Projekt öffnen (Strg+O) oder eine .whfx-Datei hierher ziehen.\n\n%1"
 msgstr "Nuevo proyecto (Ctrl+N), abrir un proyecto (Ctrl+O) o arrastrar aquí un archivo .whfx.\n\n%1"
 
-#: main_window_file.cpp:104
+#: main_window_file.cpp:105
 msgid "Neues Projekt. Mit Strg+S speichern."
 msgstr "Proyecto nuevo. Guardar con Ctrl+S."
 
@@ -2230,17 +2198,17 @@ msgstr "Proyecto nuevo. Guardar con Ctrl+S."
 msgid "Nicht senden"
 msgstr "No enviar"
 
-#: fixture_library_page.cpp:125
-msgid "Nimmt die gewählte Bauform aus der Bibliothek; die Show bleibt unverändert"
-msgstr "Quita la forma elegida de la biblioteca; el show no cambia"
+#: fixture_library_page.cpp:120
+msgid "Nimmt das gewählte Fixture aus der Bibliothek; die Show bleibt unverändert"
+msgstr "Quita el fixture seleccionado de la biblioteca; el show permanece sin cambios"
 
-#: layout_panel_types.cpp:35
-msgid "Noch keine Bauform (Stage Config → Fixtures → Neu)"
-msgstr "Aún no hay tipos de fixture (Stage Config → Fixtures → Nuevo)"
+#: layout_panel_types.cpp:43
+msgid "Noch kein Fixture (Stage Config → Fixtures → Neu)"
+msgstr "Aún no hay fixture (Stage Config → Fixtures → Nuevo)"
 
-#: fixture_library_page.cpp:261
-msgid "Noch nicht im Layout verwendet."
-msgstr "Aún no se usa en el layout."
+#: fixture_library_page.cpp:267
+msgid "Noch nicht im Layout gepatcht."
+msgstr "Aún no patcheado en el layout."
 
 #: dmx_monitor_panel.cpp:152 dmx_output_monitor_panel.cpp:142 dmx_output_monitor_panel.cpp:154
 msgid "Node"
@@ -2302,6 +2270,22 @@ msgstr "N.º"
 msgid "Nur auf gewählten Fixtures"
 msgstr "Solo en los fixtures seleccionados"
 
+#: fixture_library_page.cpp:203
+msgid "Nur in der Bibliothek - wird beim Bearbeiten in diese Show übernommen"
+msgstr "Solo en la biblioteca - se incorporará a este show al editarlo"
+
+#: layout_panel_types.cpp:35
+msgid "Nur in der Bibliothek - „Patchen“ übernimmt es zuerst in diese Show."
+msgstr "Solo en la biblioteca - «Patchear» lo incorpora primero a este show."
+
+#: fixture_library_page.cpp:270
+msgid "Nur in der Bibliothek gespeichert. Jede Änderung übernimmt es zuerst in diese Show."
+msgstr "Guardado solo en la biblioteca. Cualquier cambio lo incorpora primero a este show."
+
+#: fixture_library_page.cpp:202
+msgid "Nur in dieser Show"
+msgstr "Solo en este show"
+
 #: main_window_view3d.cpp:95
 msgid "Nur leuchtende LEDs zeichnen: man sieht durch den Cube hindurch"
 msgstr "Dibujar solo los LED encendidos: se ve a través del cubo"
@@ -2318,7 +2302,7 @@ msgstr "Superior"
 msgid "Oben ab"
 msgstr "Borde superior en"
 
-#: layout_panel.cpp:157
+#: layout_panel.cpp:169
 msgid "Obere Kanten ausrichten"
 msgstr "Alinear bordes superiores"
 
@@ -2385,6 +2369,10 @@ msgstr "Eliminar patch"
 #: dmx_output_monitor_panel.cpp:144
 msgid "Patch bearbeiten (Pool-Kanal %1)…"
 msgstr "Editar patch (canal del pool %1)…"
+
+#: layout_panel.cpp:49
+msgid "Patchen"
+msgstr "Patchear"
 
 #: cue_dialog.cpp:83
 msgid "Pause zwischen Auslöser und Beginn der Überblendung"
@@ -2470,11 +2458,11 @@ msgstr "Presets"
 msgid "Projekt laden"
 msgstr "Cargar proyecto"
 
-#: main_window_file.cpp:161
+#: main_window_file.cpp:162
 msgid "Projekt speichern unter"
 msgstr "Guardar proyecto como"
 
-#: main_window_file.cpp:118
+#: main_window_file.cpp:119
 msgid "Projekt öffnen"
 msgstr "Abrir proyecto"
 
@@ -2526,7 +2514,7 @@ msgstr "Converts a value from one range to another (In min/max to Out min/max), 
 msgid "Rechnet mit zwei Zahlen: Addieren, Subtrahieren, Multiplizieren, Dividieren, Minimum, Maximum und weitere."
 msgstr "Calculates with two numbers: add, subtract, multiply, divide, minimum, maximum and more."
 
-#: layout_panel.cpp:156
+#: layout_panel.cpp:168
 msgid "Rechte Kanten ausrichten"
 msgstr "Alinear bordes derechos"
 
@@ -2534,7 +2522,7 @@ msgstr "Alinear bordes derechos"
 msgid "Rechts"
 msgstr "Derecha"
 
-#: layout_panel.cpp:156
+#: layout_panel.cpp:168
 msgid "Rechts ⇥"
 msgstr "Derecha ⇥"
 
@@ -2618,7 +2606,7 @@ msgstr "Mantener proporción (KeepAspect)"
 msgid "Senden"
 msgstr "Enviar"
 
-#: layout_panel.cpp:158
+#: layout_panel.cpp:170
 msgid "Senkrecht mittig ausrichten"
 msgstr "Centrar verticalmente"
 
@@ -2654,6 +2642,10 @@ msgstr "Restablecer la escala (× 1, + 0)"
 msgid "So lange dauert das Überblenden zu diesem Look. 0 = hartes Umschalten."
 msgstr "Esto es lo que dura el fundido a este look. 0 = cambio brusco."
 
+#: layout_panel.cpp:50
+msgid "So viele Exemplare des gewählten Fixtures anlegen, jedes mit eigenem, freiem Patch"
+msgstr "Crear tantas instancias del fixture seleccionado, cada una con su propio patch libre"
+
 #: main_window_update.cpp:89
 msgid "Soll WhiteHoleFX beim Start bei GitHub nachsehen, ob es eine neuere Version gibt?"
 msgstr "¿Debe WhiteHoleFX consultar GitHub al iniciar para ver si hay una versión más reciente?"
@@ -2678,7 +2670,7 @@ msgstr "Las columnas se mueven arrastrando la cabecera"
 msgid "Spannt einen Wert von 0 bis 1 über den ganzen Bereich des Parameters"
 msgstr "Extiende un valor de 0 a 1 sobre todo el rango del parámetro"
 
-#: main_window_file.cpp:145 main_window_file.cpp:172
+#: main_window_file.cpp:146 main_window_file.cpp:173
 msgid "Speichern"
 msgstr "Guardar"
 
@@ -2686,13 +2678,13 @@ msgstr "Guardar"
 msgid "Speichern &unter …"
 msgstr "Guardar &como …"
 
+#: fixture_library_page.cpp:118
+msgid "Speichert das gewählte Fixture in der Bibliothek (Benutzerverzeichnis), damit du es in anderen Shows wiederfindest. Gespeichert in: %1"
+msgstr "Guarda el fixture seleccionado en la biblioteca (directorio de usuario), para que lo encuentres de nuevo en otros shows. Guardado en: %1"
+
 #: output_form.cpp:59
 msgid "Speichert den gewählten Controller unter seinem Namen in der Bibliothek (Benutzerverzeichnis), damit du ihn in anderen Projekten wieder holen kannst. Gespeichert in: %1"
 msgstr "Guarda el controlador elegido con su nombre en la biblioteca (carpeta de usuario) para recuperarlo en otros proyectos. Guardado en: %1"
-
-#: fixture_library_page.cpp:118
-msgid "Speichert die gewählte Bauform in der Bibliothek (Benutzerverzeichnis), damit du sie in anderen Shows wieder holen kannst. Gespeichert in: %1"
-msgstr "Guarda la forma elegida en la biblioteca (carpeta de usuario) para recuperarla en otros shows. Guardado en: %1"
 
 #: node_info_texts.cpp:19
 msgid "Spektrum (32 Bänder) des Audio-Eingangs. Wird an „Spectrum Bars“ angeschlossen."
@@ -2710,11 +2702,11 @@ msgstr "Juegos"
 msgid "Spirale"
 msgstr "Espiral"
 
-#: fixture_library_page.cpp:103
+#: fixture_library_page.cpp:102
 msgid "Spirale (Säule)"
 msgstr "Espiral (columna)"
 
-#: fixture_library_page.cpp:60
+#: fixture_library_page.cpp:61
 msgid "Spirale 60"
 msgstr "Espiral 60"
 
@@ -2758,7 +2750,7 @@ msgstr "Entradas &estrictas"
 msgid "Strenge Eingänge"
 msgstr "Entradas estrictas"
 
-#: fixture_library_page.cpp:102 fixture_shape_label.cpp:16 layout_panel_add.cpp:38
+#: fixture_library_page.cpp:101 fixture_shape_label.cpp:16 layout_panel_add.cpp:38
 msgid "Strip"
 msgstr "Strip"
 
@@ -2766,7 +2758,7 @@ msgstr "Strip"
 msgid "Strip (Linie)"
 msgstr "Strip (línea)"
 
-#: fixture_library_page.cpp:52
+#: fixture_library_page.cpp:53
 msgid "Strip 30"
 msgstr "Strip 30"
 
@@ -2782,11 +2774,11 @@ msgstr "Buscar …"
 msgid "Säule"
 msgstr "Columna"
 
-#: fixture_library_page.cpp:103
+#: fixture_library_page.cpp:102
 msgid "Säule (Ringe)"
 msgstr "Columna (anillos)"
 
-#: fixture_library_page.cpp:64
+#: fixture_library_page.cpp:65
 msgid "Säule 12x20"
 msgstr "Columna 12x20"
 
@@ -2902,11 +2894,11 @@ msgstr "Universo:"
 msgid "Unten"
 msgstr "Abajo"
 
-#: layout_panel.cpp:159
+#: layout_panel.cpp:171
 msgid "Unten ⤓"
 msgstr "Abajo ⤓"
 
-#: layout_panel.cpp:159
+#: layout_panel.cpp:171
 msgid "Untere Kanten ausrichten"
 msgstr "Alinear bordes inferiores"
 
@@ -2974,7 +2966,7 @@ msgstr "Elegir archivo WAV"
 msgid "WAV-Dateien (*.wav)"
 msgstr "Archivos WAV (*.wav)"
 
-#: layout_panel.cpp:155
+#: layout_panel.cpp:167
 msgid "Waagrecht mittig ausrichten"
 msgstr "Centrar horizontalmente"
 
@@ -3018,11 +3010,11 @@ msgstr "WhiteHoleFX"
 msgid "WhiteHoleFX – %1%2"
 msgstr "WhiteHoleFX – %1%2"
 
-#: main_window_file.cpp:162
+#: main_window_file.cpp:163
 msgid "WhiteHoleFX-Projekte (*.whfx)"
 msgstr "Proyectos de WhiteHoleFX (*.whfx)"
 
-#: main_window_file.cpp:119
+#: main_window_file.cpp:120
 msgid "WhiteHoleFX-Projekte (*.whfx);;Alle Dateien (*)"
 msgstr "Proyectos de WhiteHoleFX (*.whfx);;Todos los archivos (*)"
 
@@ -3078,9 +3070,9 @@ msgstr "Elige un nodo en el editor de nodos para ver sus parámetros. «Fijar» 
 msgid "Wähle zuerst Fixtures in der Liste."
 msgstr "Elige primero fixtures de la lista."
 
-#: fixture_library_user.cpp:101
-msgid "Wähle zuerst eine Bauform in der Liste „Fixtures“."
-msgstr "Elige primero una forma en la lista «Fixtures»."
+#: fixture_library_page.cpp:436
+msgid "Wähle zuerst ein Fixture in der Liste „Fixtures“."
+msgstr "Primero selecciona un fixture en la lista «Fixtures»."
 
 #: output_form_library.cpp:62 output_form_library.cpp:104
 msgid "Wähle zuerst einen Controller in der Tabelle."
@@ -3186,7 +3178,7 @@ msgstr "Randomly lighting pixels, blinking or fading, between two colors."
 msgid "Zufällige Zellen, die auf- und abblenden (Fading Pixels), zwischen zwei Farben."
 msgstr "Random cells that fade in and out, between two colors."
 
-#: layout_panel.cpp:204
+#: layout_panel.cpp:216
 msgid "Zum Aneinanderreihen mindestens zwei Fixtures wählen"
 msgstr "Selecciona al menos dos fixtures para alinear"
 
@@ -3342,7 +3334,7 @@ msgstr "Puentear\tB"
 msgid "Überbrückung aufheben\tB"
 msgstr "Quitar el puenteo\tB"
 
-#: layout_panel.cpp:162
+#: layout_panel.cpp:174
 msgid "Übereinander ↕"
 msgstr "Apilados ↕"
 
@@ -3362,15 +3354,15 @@ msgstr "Píxeles saltados"
 msgid "…"
 msgstr "…"
 
-#: layout_panel.cpp:155
+#: layout_panel.cpp:167
 msgid "↔ Mitte"
 msgstr "↔ Centro"
 
-#: layout_panel.cpp:158
+#: layout_panel.cpp:170
 msgid "↕ Mitte"
 msgstr "↕ Centro"
 
-#: layout_panel.cpp:154
+#: layout_panel.cpp:166
 msgid "⇤ Links"
 msgstr "⇤ Izquierda"
 
@@ -3386,6 +3378,6 @@ msgstr "▼ bajar"
 msgid "⚠ %1"
 msgstr "⚠ %1"
 
-#: layout_panel.cpp:157
+#: layout_panel.cpp:169
 msgid "⤒ Oben"
 msgstr "⤒ Arriba"

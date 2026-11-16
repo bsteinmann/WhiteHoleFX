@@ -1,11 +1,12 @@
-// user_library.hpp: die Benutzerbibliothek der Bauformen auf der Festplatte.
+// user_library.hpp: die Benutzerbibliothek der Fixtures auf der Festplatte.
 //
-// Warum es diese Datei gibt: Bauformen, die man im Reiter Fixtures anlegt, sollen nicht verschwinden, wenn man ein neues
-// Projekt beginnt oder eine neue Programmversion installiert. Neben den Bauformen im Projekt (dort stehen sie, damit die
+// Warum es diese Datei gibt: Fixtures, die man im Reiter Fixtures anlegt, sollen nicht verschwinden, wenn man ein neues
+// Projekt beginnt oder eine neue Programmversion installiert. Neben den Fixtures im Projekt (dort stehen sie, damit die
 // Projektdatei für sich allein vollständig bleibt) gibt es deshalb eine Datei im Benutzerverzeichnis
 // (Linux ~/.local/share/WhiteHoleFX, Windows %APPDATA%/WhiteHoleFX, Datei fixture-library.whfx). Im Reiter Fixtures
-// steht sie als Liste „Gespeicherte Fixtures“ neben den Fixtures der Show; von dort holt man Bauformen in die Show,
-// und „In Bibliothek speichern“ legt eine Bauform der Show dort ab.
+// erscheinen Projekt- und Bibliothek-Fixtures als eine gemeinsame Liste (siehe fixture_catalog.hpp); „In Bibliothek
+// speichern“ legt ein Fixture der Show dort ab, jede Bearbeitung eines nur dort gespeicherten Fixtures holt es
+// automatisch in die Show zurück.
 //
 // Die Datei wird atomar geschrieben (QSaveFile). Lässt sie sich nicht lesen (defekt oder von einer neueren Version mit
 // Syntax, die dieses Programm nicht kennt), bleibt sie unangetastet und der Fehler wird gemeldet: lieber nichts schreiben
@@ -33,9 +34,9 @@ namespace whitehole::studio::userlib {
 /// Liest die Bibliothek. Fehlt die Datei, ist die Liste leer (kein Fehler).
 [[nodiscard]] Result<std::vector<project::FixtureType>> load(std::shared_ptr<const graph::INodeRegistry> registry);
 
-/// Legt die Bauform an oder ersetzt die gleichnamige.
+/// Legt das Fixture an oder ersetzt das gleichnamige.
 [[nodiscard]] Result<void> upsert(std::shared_ptr<const graph::INodeRegistry> registry, const project::FixtureType& type);
-/// Entfernt die Bauform (nicht vorhanden: nichts zu tun).
+/// Entfernt das Fixture (nicht vorhanden: nichts zu tun).
 [[nodiscard]] Result<void> remove(std::shared_ptr<const graph::INodeRegistry> registry, const std::string& name);
 /// Benennt um (nicht vorhanden: nichts zu tun; Zielname schon belegt: der alte Eintrag wird ersetzt).
 [[nodiscard]] Result<void> rename(std::shared_ptr<const graph::INodeRegistry> registry, const std::string& from,

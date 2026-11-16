@@ -9,6 +9,7 @@
 #include <QMenu>
 #include <QPushButton>
 #include <QScrollArea>
+#include <QSpinBox>
 #include <QTabBar>
 #include <QSignalBlocker>
 #include <QVBoxLayout>
@@ -32,21 +33,32 @@ LayoutPanel::LayoutPanel(runtime::Player& player, QWidget* parent) : QTabWidget{
     auto* page = new QWidget;
     auto* pageLayout = new QVBoxLayout{page};
 
-    // Ganz oben die Bauformen dieser Show: Doppelklick oder „Auf die Bühne“ legt ein Exemplar an. Anlegen und
-    // Bearbeiten der Bauformen selbst (inklusive der Fixture-Bibliothek auf der Festplatte) bleibt Aufgabe des
-    // Reiters Fixtures (siehe fixture_library_page.hpp) - diese Liste hier dient nur dem Platzieren.
+    // Ganz oben alle Fixtures (Show und Bibliothek zusammen, siehe fixture_catalog.hpp): „Patchen“ legt so viele
+    // Exemplare an, wie die Anzahl angibt, jedes mit eigenem Patch. Ein nur in der Bibliothek gespeichertes Fixture
+    // wird dafür zuerst in diese Show übernommen. Anlegen und Bearbeiten der Fixtures selbst (inklusive der
+    // Bibliothek auf der Festplatte) bleibt Aufgabe des Reiters Fixtures (siehe fixture_library_page.hpp) - diese
+    // Liste hier dient nur dem Platzieren.
     auto* typeRow = new QHBoxLayout;
     types_ = new QListWidget;
     types_->setMaximumHeight(72);
-    types_->setToolTip(tr("Bauformen dieser Show (Stage Config → Fixtures). Doppelklick stellt ein Exemplar auf die Bühne."));
-    auto* typeButton = new QPushButton{tr("Auf die Bühne")};
-    typeButton->setToolTip(tr("Exemplar der gewählten Bauform mit dem nächsten freien Patch auf der Bühne anlegen"));
+    types_->setToolTip(tr("Fixtures (Stage Config → Fixtures). Doppelklick patcht ein Exemplar auf die Bühne."));
+    quantity_ = new QSpinBox;
+    quantity_->setRange(1, 999);
+    quantity_->setValue(1);
+    quantity_->setToolTip(tr("Anzahl der Exemplare, die „Patchen“ auf einmal anlegt"));
+    auto* typeButton = new QPushButton{tr("Patchen")};
+    typeButton->setToolTip(tr("So viele Exemplare des gewählten Fixtures anlegen, jedes mit eigenem, freiem Patch"));
     typeRow->addWidget(types_, 1);
-    typeRow->addWidget(typeButton, 0, Qt::AlignTop);
-    pageLayout->addWidget(new QLabel{tr("Fixtures in Show")});
+    auto* typeSide = new QVBoxLayout;
+    typeSide->addWidget(quantity_);
+    typeSide->addWidget(typeButton);
+    typeRow->addLayout(typeSide);
+    pageLayout->addWidget(new QLabel{tr("Fixtures")});
     pageLayout->addLayout(typeRow);
-    connect(types_, &QListWidget::itemDoubleClicked, this, [this](QListWidgetItem*) { addFromType(selectedTypeName()); });
-    connect(typeButton, &QPushButton::clicked, this, [this]() { addFromType(selectedTypeName()); });
+    connect(types_, &QListWidget::itemDoubleClicked, this,
+            [this](QListWidgetItem*) { addFromType(selectedTypeName(), quantity_->value()); });
+    connect(typeButton, &QPushButton::clicked, this,
+            [this]() { addFromType(selectedTypeName(), quantity_->value()); });
 
     pageLayout->addWidget(new QLabel{tr("Fixtures auf der Bühne")});
     list_ = new QListWidget;

@@ -6,7 +6,7 @@
 // zweiten Bildschirm gezogen werden und lässt dem Hauptfenster seinen Platz. Es bleibt bedienbar,
 // während die Vorschau im Hauptfenster sichtbar ist (kein modaler Dialog).
 //
-// Seiten: Fixtures (Bibliothek der Bauformen), Layout (Verteilen und Drehen, daneben die Bühnenansicht, siehe stage_view.hpp),
+// Seiten: Fixtures (anlegen), Layout (Patchen, Verteilen und Drehen, daneben die Bühnenansicht, siehe stage_view.hpp),
 // Ausgabe (Ziele und Patch) und Test (Testbilder für die ganze Bühne, daneben die Bühne mit den Farben des Testbilds).
 // Das Fenster besitzt die Panels nur als Tabs; Verbindungen, Rückgängig und Speichern laufen
 // unverändert über das Hauptfenster.

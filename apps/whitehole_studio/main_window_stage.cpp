@@ -66,7 +66,7 @@ void MainWindow::buildStageConfig(QMenu* menu) {
     connect(testModeAction, &QAction::triggered, this, [this]() { stageSetup_->open(StageSetupWindow::Page::Test); });
 
     auto* fixturesAction = new QAction{tr("&Fixtures …"), this};
-    fixturesAction->setToolTip(tr("Bibliothek der Bauformen: Matrix, Kreis, Strip, Säule mit Vorschau und Test"));
+    fixturesAction->setToolTip(tr("Fixtures anlegen: Matrix, Kreis, Strip, Säule mit Vorschau und Test"));
     connect(fixturesAction, &QAction::triggered, this, [this]() { stageSetup_->open(StageSetupWindow::Page::Fixtures); });
 
     menu->addAction(fixturesAction);

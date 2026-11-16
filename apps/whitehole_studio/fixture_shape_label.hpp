@@ -1,9 +1,9 @@
 // fixture_shape_label.hpp: kurze Bezeichnung der Grundform eines Fixtures (Matrix, Ring, Strip, ...).
 //
-// Warum es das gibt: In den Bauform-Listen (Fixture-Bibliothek, Fixtures in Show) steht als Beschriftung der frei
-// vergebene Name der Bauform (z. B. "Kachel 5x3"); der verrät aber nicht, welche Grundform dahintersteckt, sobald
+// Warum es das gibt: In den Fixture-Listen (Reiter Fixtures, Fixtures im Layout) steht als Beschriftung der frei
+// vergebene Name des Fixtures (z. B. "Kachel 5x3"); der verrät aber nicht, welche Grundform dahintersteckt, sobald
 // der Name nicht mehr danach klingt. Diese kleine Hilfsfunktion liefert die Original-Bezeichnung der Form (dieselben
-// Begriffe wie im Formular der Bauform, siehe shape_form.cpp), damit sie neben dem Namen stehen bleibt und man auch
+// Begriffe wie im Formular des Fixtures, siehe shape_form.cpp), damit sie neben dem Namen stehen bleibt und man auch
 // bei frei gewählten Namen noch sieht, was es ist.
 #pragma once
 

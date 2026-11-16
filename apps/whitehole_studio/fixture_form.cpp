@@ -65,9 +65,9 @@ void FixtureForm::build() {
     c_.rotation.z->setToolTip(tr("Drehung um die z-Achse in Grad"));
     layout->addRow(tr("Drehung x y z (Grad)"), c_.rotation.widget());
 
-    // "Typ wird Pflicht" (siehe CLAUDE.md): die Form selbst ist hier nicht mehr editierbar, nur noch, welche
-    // Bauform gilt. Der letzte Eintrag legt aus der aktuellen Form eine neue Bauform an - der einzige Weg,
-    // ein Fixture ohne Bauform (ältere Projektdatei) wieder in die Bibliothek zu bringen.
+    // "Typ wird Pflicht" (siehe CLAUDE.md): die Form selbst ist hier nicht mehr editierbar, nur noch, welches
+    // Fixture gilt. Der letzte Eintrag legt aus der aktuellen Form ein neues Fixture an - der einzige Weg,
+    // ein Fixture ohne eigenes (ältere Projektdatei) wieder in die Bibliothek zu bringen.
     QStringList typeNames;
     int typeIndex = -1;
     for (const project::FixtureType& type : player_.fixtureTypes()) {
@@ -76,21 +76,21 @@ void FixtureForm::build() {
             typeIndex = static_cast<int>(typeNames.size()) - 1;
         }
     }
-    typeNames.push_back(tr("Neue Bauform aus dieser Form …"));
+    typeNames.push_back(tr("Neues Fixture aus dieser Form …"));
     const int newTypeIndex = static_cast<int>(typeNames.size()) - 1;
     c_.type = combo(typeNames, typeIndex >= 0 ? typeIndex : newTypeIndex);
-    c_.type->setToolTip(tr("Bauform aus der Bibliothek (Stage Config → Fixtures). Änderungen an der Bauform gelten für alle Exemplare."));
+    c_.type->setToolTip(tr("Fixture aus der Bibliothek (Stage Config → Fixtures). Änderungen daran gelten für alle Exemplare."));
     connect(c_.type, qOverload<int>(&QComboBox::currentIndexChanged), this, [this](int) { applyType(); });
-    layout->addRow(tr("Bauform"), form::labeledRow({{QString{}, c_.type}}));
+    layout->addRow(tr("Fixture"), form::labeledRow({{QString{}, c_.type}}));
 
     if (!fixture->type.empty()) {
-        layout->addRow(new QLabel{tr("Die Form kommt aus der Bauform und wird im Reiter Fixtures geändert.")});
+        layout->addRow(new QLabel{tr("Die Form kommt vom Fixture und wird im Reiter Fixtures geändert.")});
     } else {
-        // Typlos: ältere Projektdatei, oder die zugewiesene Bauform wurde im Reiter Fixtures entfernt
+        // Typlos: ältere Projektdatei, oder das zugewiesene Fixture wurde im Reiter Fixtures entfernt
         // (Player::removeFixtureType - Exemplare behalten dann ihre Form als eigene).
-        layout->addRow(new QLabel{tr("Dieses Fixture hat keine Bauform (ältere Projektdatei oder die Bauform "
-                                     "wurde entfernt). Über \"Bauform\" → \"Neue Bauform aus dieser Form …\" "
-                                     "lässt sich wieder eine anlegen.")});
+        layout->addRow(new QLabel{tr("Dieses Fixture ist mit keinem Fixture aus der Bibliothek verknüpft (ältere "
+                                     "Projektdatei oder es wurde entfernt). Über \"Fixture\" → \"Neues Fixture aus "
+                                     "dieser Form …\" lässt sich wieder eines anlegen.")});
     }
 }
 
@@ -131,10 +131,10 @@ void FixtureForm::applyType() {
         return;
     }
     if (index == newTypeIndex) {
-        // "Neue Bauform aus dieser Form …": deckt sowohl den Fork eines schon zugewiesenen Fixtures als
+        // "Neues Fixture aus dieser Form …": deckt sowohl den Fork eines schon zugewiesenen Fixtures als
         // auch das Nachrüsten eines typlosen Fixtures aus einer älteren Projektdatei ab.
         bool accepted = false;
-        const QString name = QInputDialog::getText(this, tr("Neue Bauform"), tr("Name:"), QLineEdit::Normal,
+        const QString name = QInputDialog::getText(this, tr("Neues Fixture"), tr("Name:"), QLineEdit::Normal,
                                                      QString{}, &accepted)
                                  .trimmed();
         if (!accepted || name.isEmpty()) {

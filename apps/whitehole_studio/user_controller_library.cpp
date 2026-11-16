@@ -1,6 +1,6 @@
 // user_controller_library.cpp: Benutzerbibliothek der Controller auf der Festplatte (Teil von user_library.hpp).
 //
-// Warum eine eigene Datei: user_library.cpp bleibt bei den Bauformen; hier steht dieselbe Logik (atomares Schreiben,
+// Warum eine eigene Datei: user_library.cpp bleibt bei den Fixtures; hier steht dieselbe Logik (atomares Schreiben,
 // defekte Datei bleibt unangetastet) für Controller, damit man verschiedene Aufbauten (Wand-ESP, Säule, Studio-Controller)
 // einmal anlegt und in jedem Projekt wiederfindet.
 #include <QDir>

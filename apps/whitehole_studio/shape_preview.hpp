@@ -1,6 +1,6 @@
 // shape_preview.hpp: 3D-Vorschau einer einzelnen Fixture-Form mit Testmuster.
 //
-// Warum es diese Datei gibt: Beim Anlegen einer Bauform (Matrix, Kreis, Säule ...) will man sofort sehen, wie sie
+// Warum es diese Datei gibt: Beim Anlegen eines Fixtures (Matrix, Kreis, Säule ...) will man sofort sehen, wie sie
 // aussieht und wie das Kabel läuft, noch bevor ein Fixture im Raum steht. Das Widget baut aus der Form eine eigene
 // kleine LED-Karte (ohne Projekt, ohne Player) und zeichnet sie durch die drehbare 3D-Ansicht. Ohne Test sind die LEDs
 // entlang des Kabels immer heller (die erste ist weiß); mit "Test" läuft ein Muster darüber: Lauflicht in

@@ -20,10 +20,10 @@ QString FixtureForm::exercise() {
     if (fixture == nullptr || std::abs(static_cast<double>(fixture->origin.x) - (x0 + 5.0)) > 1.0e-3) {
         return QStringLiteral("Formular: Ursprung wurde nicht übernommen");
     }
-    // "Typ wird Pflicht" (siehe CLAUDE.md): auch dieser frisch angelegte Strip hat sofort eine eigene
-    // Bauform; die Form selbst lässt sich hier nicht mehr bearbeiten (siehe fixture_form.hpp).
+    // "Typ wird Pflicht" (siehe CLAUDE.md): auch dieser frisch angelegte Strip hat sofort ein eigenes
+    // Fixture; die Form selbst lässt sich hier nicht mehr bearbeiten (siehe fixture_form.hpp).
     if (fixture->type.empty() || c_.type->currentText().toUtf8().toStdString() != fixture->type) {
-        return QStringLiteral("Formular: Fixture zeigt keine (oder die falsche) Bauform an");
+        return QStringLiteral("Formular: Fixture zeigt kein (oder das falsche) Fixture an");
     }
     return {};
 }
@@ -34,7 +34,7 @@ QString FixtureForm::exerciseTyped() {
         return QStringLiteral("Formular: kein Fixture mit Drehung angezeigt");
     }
     if (fixture->type.empty()) {
-        return QStringLiteral("Formular: Fixture aus einer Bauform zeigt keine Bauform");
+        return QStringLiteral("Formular: Fixture aus einem Fixture zeigt kein Fixture");
     }
     // Drehung um alle drei Achsen über die Felder
     c_.rotation.y->setValue(45.0);
@@ -44,13 +44,13 @@ QString FixtureForm::exerciseTyped() {
         std::abs(static_cast<double>(fixture->rotation.z) - 30.0) > 1.0e-3) {
         return QStringLiteral("Formular: Drehung wurde nicht übernommen");
     }
-    // "Typ wird Pflicht": kein Eintrag zum Loslösen mehr - nur noch Bauformen plus "Neue Bauform …" als
+    // "Typ wird Pflicht": kein Eintrag zum Loslösen mehr - nur noch Fixtures plus "Neues Fixture …" als
     // letzten Eintrag (den tatsächlich auszulösen bräuchte einen echten QInputDialog, der den Rauchtest
     // ohne Publikum blockieren würde, siehe exerciseRename in node_editor_exercise_rename.cpp - darum hier
     // nur die Struktur der Liste geprüft).
-    if (c_.type->itemText(c_.type->count() - 1) != tr("Neue Bauform aus dieser Form …") ||
+    if (c_.type->itemText(c_.type->count() - 1) != tr("Neues Fixture aus dieser Form …") ||
         c_.type->currentText().toUtf8().toStdString() != fixture->type) {
-        return QStringLiteral("Formular: Bauform-Liste zeigt die Bauform des Fixtures nicht an");
+        return QStringLiteral("Formular: Fixture-Liste zeigt das Fixture des Fixtures nicht an");
     }
     return {};
 }

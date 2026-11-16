@@ -2,6 +2,26 @@
 
 ## 0.92.0
 
+- **Fixtures und Layout: eine gemeinsame Fixture-Liste statt getrennter „Bauform“/„Fixture“-Begriffe, Patchen
+  mit Anzahl** (vom Nutzer anhand des GrandMA3-Vorbilds gewünscht: eine Fixture-Bibliothek, aus der man direkt
+  mit Anzahl patcht und jedes Exemplar eine eigene ID bekommt, statt vorher eine „Bauform“ in die Show zu holen).
+  Umgesetzt wie in drei Rückfragen festgelegt: (1) **Terminologie** - durchgängig „Fixture“ für Definition und
+  platziertes Exemplar, kein eigenes Wort mehr für die Definition; Unterscheidung nur noch über den
+  Zusammenhang (z. B. „in der Bibliothek“ vs. „im Layout gepatcht“). (2) **Eine gemeinsame Liste** - neuer
+  Helfer `fixture_catalog.hpp/cpp` (`mergedFixtures()`) führt die Fixtures dieser Show und die der
+  Benutzerbibliothek nach Name eindeutig zusammen; sowohl der Reiter Fixtures (`fixture_library_page.cpp`,
+  vorher zwei getrennte Listen „Fixtures“/„Gespeicherte Fixtures“) als auch der Reiter Layout
+  (`layout_panel_types.cpp`) zeigen jetzt dieselbe eine Liste. Ein nur in der Bibliothek gespeichertes Fixture
+  lässt sich ansehen, aber nicht bearbeiten; jede Bearbeitung (Umbenennen, Maße ändern im Reiter Fixtures,
+  Patchen im Reiter Layout) übernimmt es dafür zuerst automatisch in diese Show (`ensureInProject()` bzw.
+  `LayoutPanel::ensureTypeInProject()`) - der frühere eigene Schritt „In Show übernehmen“ (und „Alle
+  übernehmen“) entfällt, ebenso die zugehörige Datei `fixture_library_user.cpp`. „Entfernen“ (Show) und „Aus
+  Bibliothek löschen“ bleiben zwei unabhängige, je nach Herkunft aktivierte Knöpfe. (3) **Patchen mit Anzahl**
+  - der Reiter Layout hat jetzt ein Anzahl-Feld neben der Liste; „Patchen“ (vorher „Auf die Bühne“, ein
+  Exemplar pro Klick) legt so viele Exemplare an, wie die Anzahl angibt, jedes mit eigenem Namen und freiem
+  Patch (`LayoutPanel::addFromType(name, count)`). Durchgängige Umbenennung „Bauform“ → „Fixture“ in Oberfläche
+  und Doku (`docs/studio.md`, `docs/tutorial/de.md`, `docs/mapping.md`, `docs/project-format.md`), inklusive
+  der Formular-Felder im Reiter Layout („Fixture“ statt „Bauform“, „Neues Fixture aus dieser Form …“).
 - **Layout-Tab: Fixture-Bibliothek nicht mehr von hier aus erreichbar, nur noch im Reiter Fixtures** (vom
   Nutzer gewünscht: Bauformen dürfen ausschließlich im Reiter Fixtures entstehen bzw. aus der Bibliothek
   geholt werden). Die zweite, abkürzende „Fixture-Bibliothek“-Liste im Reiter Layout (`layout_panel_catalog.cpp`,

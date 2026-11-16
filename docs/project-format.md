@@ -124,8 +124,8 @@ Genau eine Form pro Fixture, beliebig viele Patches:
 | `patch <artnet\|sacn\|ddp> destination <n> [universe u] [channel c] [offset o] [order RGB…] [gamma g] [brightness b]` | wohin das Fixture geht |
 | `… [skip-first s] [skip-every n skip-count k]` | Pixel am Kabel, die nicht leuchten (zum Beispiel ein Pixel als Signalverstärker): `s` Pixel vor der ersten LED, nach je `n` LEDs `k` Pixel. Sie bekommen Schwarz, belegen aber ihre Kanäle; die Adressen danach rücken weiter |
 
-`rotate x y z` dreht das ganze Fixture (Grad, um die Mitte seiner Box, Reihenfolge x, y, z). `type "Name"` verweist auf eine
-Bauform aus der Bibliothek (siehe unten); die Form steht dann dort und im Fixture selbst nicht.
+`rotate x y z` dreht das ganze Fixture (Grad, um die Mitte seiner Box, Reihenfolge x, y, z). `type "Name"` verweist auf ein
+Fixture aus der Bibliothek (siehe unten); die Form steht dann dort und im Fixture selbst nicht.
 
 Koordinaten und Reihenfolge der LEDs: siehe [Mapping](mapping.md). Verteilung auf Universen
 und Grenzen (170 LEDs je Universe): siehe [Ausgabe](output.md). `offset` gilt nur für DDP,
@@ -133,8 +133,8 @@ und Grenzen (170 LEDs je Universe): siehe [Ausgabe](output.md). `offset` gilt nu
 
 ### `fixturetype "<name>"` … `end` (Bibliothek)
 
-Eine benannte Bauform mit genau einer Form (`matrix`, `strip`, `grid`, `ring`, `helix`, `point`), ohne Lage und ohne Patch. Sie
-steht vor den Fixtures, die sie mit `type "<name>"` verwenden. Ändert man die Bauform, folgen alle Exemplare; Lage, Drehung und
+Ein benanntes Fixture mit genau einer Form (`matrix`, `strip`, `grid`, `ring`, `helix`, `point`), ohne Lage und ohne Patch. Es
+steht vor den Fixtures, die es mit `type "<name>"` verwenden. Ändert man dieses Fixture, folgen alle Exemplare; Lage, Drehung und
 Patch behält jedes Exemplar. Alte Programmversionen kennen diese Anweisungen nicht (das Format bleibt Version 1).
 
 Die **Benutzerbibliothek** des Studios (`fixture-library.whfx` im Benutzerverzeichnis, siehe [Studio](studio.md)) ist eine
