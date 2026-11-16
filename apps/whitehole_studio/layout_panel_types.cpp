@@ -1,41 +1,51 @@
-// layout_panel_types.cpp: Fixtures der Show und der Bibliothek im Reiter Layout: Liste oben und Exemplare daraus
-// patchen.
+// layout_panel_types.cpp: Fixtures der Show im Reiter Layout: Liste oben und Exemplare daraus patchen.
 //
 // Warum eine eigene Datei: layout_panel.cpp und layout_panel_add.cpp sind an der 400-Zeilen-Grenze. Die Fixtures
 // selbst entstehen im Reiter Fixtures; hier wird nur eine wählbare Anzahl Exemplare mit eigener Lage, Drehung und
-// Patch daraus gemacht - die Liste zeigt dieselbe gemeinsame Fixture-Liste (siehe fixture_catalog.hpp), damit auch
-// ein nur in der Bibliothek gespeichertes Fixture hier direkt gepatcht werden kann, ohne vorher im Reiter Fixtures
-// einen eigenen Übernehmen-Schritt zu machen.
+// Patch daraus gemacht.
 #include "layout_panel.hpp"
 
 #include <QListWidget>
+#include <QShowEvent>
 #include <QSignalBlocker>
 
 #include <algorithm>
 
-#include "fixture_catalog.hpp"
 #include "fixture_shape_label.hpp"
-#include "user_library.hpp"
 
 namespace whitehole::studio {
 
 using form::fromStd;
 
+void LayoutPanel::refreshTypes() {
+    if (isVisible()) {
+        fillTypeList();
+    } else {
+        typesDirty_ = true;
+    }
+}
+
+void LayoutPanel::showEvent(QShowEvent* event) {
+    QTabWidget::showEvent(event);
+    if (typesDirty_) {
+        typesDirty_ = false;
+        fillTypeList();
+    }
+}
+
 void LayoutPanel::fillTypeList() {
     const QString keep = selectedTypeName();
     const QSignalBlocker blocker{types_};
     types_->clear();
-    for (const FixtureEntry& entry : mergedFixtures(player_)) {
+    for (const project::FixtureType& type : player_.fixtureTypes()) {
+        const QString name = fromStd(type.name);
         // Name zuerst (frei vergeben), dahinter die Original-Bezeichnung der Form: sonst sieht man einem Namen wie
         // "Kachel 5x3" nicht mehr an, ob dahinter wirklich eine Matrix steckt (siehe fixture_shape_label.hpp).
         auto* item = new QListWidgetItem{
-            tr("%1 — %2 (%3 LEDs)").arg(entry.name, shapeKindLabel(entry.shape)).arg(mapping::ledCount(entry.shape))};
-        item->setData(Qt::UserRole, entry.name);
-        if (!entry.inProject) {
-            item->setToolTip(tr("Nur in der Bibliothek - „Patchen“ übernimmt es zuerst in diese Show."));
-        }
+            tr("%1 — %2 (%3 LEDs)").arg(name, shapeKindLabel(type.shape)).arg(mapping::ledCount(type.shape))};
+        item->setData(Qt::UserRole, name);
         types_->addItem(item);
-        if (entry.name == keep) {
+        if (name == keep) {
             types_->setCurrentItem(item);
         }
     }
@@ -53,39 +63,12 @@ QString LayoutPanel::selectedTypeName() const {
     return item != nullptr ? item->data(Qt::UserRole).toString() : QString{};
 }
 
-bool LayoutPanel::ensureTypeInProject(const QString& name) {
-    if (std::ranges::any_of(player_.fixtureTypes(),
-                             [&](const project::FixtureType& t) { return fromStd(t.name) == name; })) {
-        return true;
-    }
-    const auto stored = userlib::load(player_.registry());
-    if (!stored.ok()) {
-        Q_EMIT failed(fromStd(stored.error().message));
-        return false;
-    }
-    for (const project::FixtureType& type : stored.value()) {
-        if (fromStd(type.name) == name) {
-            const Result<void> added = player_.addFixtureType(type.name, type.shape);
-            if (!added.ok()) {
-                Q_EMIT failed(fromStd(added.error().message));
-                return false;
-            }
-            return true;
-        }
-    }
-    Q_EMIT failed(tr("Es gibt kein Fixture \"%1\"").arg(name));
-    return false;
-}
-
 bool LayoutPanel::addFromType(const QString& typeName, int count) {
     if (typeName.isEmpty()) {
         return false;  // nichts gewählt (zum Beispiel der Platzhalter „Noch kein Fixture“)
     }
     if (player_.project() == nullptr) {
         Q_EMIT failed(tr("Es ist kein Projekt geladen. Mit Strg+N ein neues anlegen oder mit Strg+O eins öffnen."));
-        return false;
-    }
-    if (!ensureTypeInProject(typeName)) {
         return false;
     }
     const std::string type = typeName.toUtf8().toStdString();
@@ -111,7 +94,6 @@ bool LayoutPanel::addFromType(const QString& typeName, int count) {
     if (!any) {
         return false;
     }
-    fillTypeList();
     fillList(last);
     Q_EMIT edited();
     return true;

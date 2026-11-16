@@ -264,7 +264,7 @@ Controller, wie bei Fixtures), **Universe**, **Erster Kanal**. „Patch +“ leg
 entfernt ihn (ohne Auswahl den letzten); beliebig viele, beliebig geschnittene Bereiche sind möglich. Pool-Kanäle ohne
 passenden Eintrag werden einfach nicht gesendet.
 
-**Controller-Bibliothek.** Unter der Controller-Tabelle speichert **In Bibliothek speichern** den gewählten Controller (Name, Protokoll, Adresse, Port) in `controller-library.whfx` im Benutzerverzeichnis (neben der Fixture-Bibliothek; Pfad im Tooltip; Umgebungsvariable `WHITEHOLEFX_CONTROLLER_LIBRARY` ersetzt ihn). Ohne Namen fragt das Studio danach; ein gleichnamiger Eintrag wird ersetzt. **Aus Bibliothek +** listet die gespeicherten Controller und fügt den gewählten als neuen Controller ein, **Auf gewählten anwenden** überschreibt stattdessen den in der Tabelle gewählten Controller (dasselbe Gerät mit anderen Einstellungen; die Patches bleiben darauf), **Aus Bibliothek löschen** entfernt einen Eintrag aus der Bibliothek, nicht aus dem Projekt. So hältst du verschiedene Aufbauten (zum Beispiel „Bühne“, „Proberaum“) bereit.
+**Controller-Bibliothek.** Unter der Controller-Tabelle speichert **In Bibliothek speichern** den gewählten Controller (Name, Protokoll, Adresse, Port) in `controller-library.whfx` im Benutzerverzeichnis (Pfad im Tooltip; Umgebungsvariable `WHITEHOLEFX_CONTROLLER_LIBRARY` ersetzt ihn). Ohne Namen fragt das Studio danach; ein gleichnamiger Eintrag wird ersetzt. **Aus Bibliothek +** listet die gespeicherten Controller und fügt den gewählten als neuen Controller ein, **Auf gewählten anwenden** überschreibt stattdessen den in der Tabelle gewählten Controller (dasselbe Gerät mit anderen Einstellungen; die Patches bleiben darauf), **Aus Bibliothek löschen** entfernt einen Eintrag aus der Bibliothek, nicht aus dem Projekt. So hältst du verschiedene Aufbauten (zum Beispiel „Bühne“, „Proberaum“) bereit. Diese Bibliothek gibt es nur für Controller - Fixtures werden stattdessen exportiert/importiert (siehe unten). Ein neu angelegter Controller bekommt als Adresse immer `127.0.0.1` (localhost) vorbelegt, damit nicht versehentlich an ein echtes Gerät gesendet wird, bis die Adresse bewusst geändert wird.
 
 Zahlenfelder übernehmen einen Wert bei Enter, Pfeiltasten oder Fokuswechsel. Jede Änderung wird
 samt Ausgabeplan geprüft. Passt etwas nicht (Universe schon belegt, Ziel gibt es nicht, ungültiges
@@ -286,35 +286,32 @@ man ein Fixture, folgen alle gepatchten Exemplare im Layout. Entfernt man es, be
 eigene. Alles ist rückgängig zu machen und steht in der Projektdatei (`fixturetype`, siehe
 [Projektformat](project-format.md)).
 
-**Eine gemeinsame Liste.** Die Liste zeigt alle Fixtures zusammen: die dieser Show (liegen in der Projektdatei, die
-dadurch vollständig bleibt) **und** die in der Benutzerbibliothek gespeicherten (`fixture-library.whfx`; Linux
-`~/.local/share/WhiteHoleFX`, Windows `%APPDATA%\WhiteHoleFX`; der Tooltip von „In Bibliothek speichern“ nennt den
-genauen Pfad), nach Name eindeutig zusammengeführt - ein Fixture, das in beiden existiert, erscheint nur einmal.
-Die Bibliothek ist immer da, auch ohne geladenes Projekt, und bleibt über neue Programmversionen erhalten.
-**In Bibliothek speichern** legt das gewählte Fixture der Show dort ab (ein gleichnamiges wird ersetzt), **Aus
-Bibliothek löschen** nimmt es wieder heraus, ohne die Show zu ändern. Ein Fixture, das es nur in der Bibliothek
-gibt, lässt sich ansehen (Vorschau), aber nicht ändern - jede Bearbeitung (Umbenennen, Maße ändern) übernimmt es
-dafür automatisch zuerst in diese Show; ein einfaches Anklicken tut das nicht. „Entfernen“ wirkt nur, wenn das
-Fixture in der Show ist, „Aus Bibliothek löschen“ nur, wenn es dort gespeichert ist - beides unabhängig
-voneinander, auch bei einem Fixture, das in beiden existiert. Neue Projekte beginnen ohne eigene Fixtures (die
-Bibliothek-Einträge erscheinen trotzdem in der Liste). Lässt sich die Bibliotheksdatei nicht lesen (defekt), bleibt
-sie unangetastet und das Studio meldet es; über die Umgebungsvariable `WHITEHOLEFX_FIXTURE_LIBRARY` lässt sich der
-Pfad ersetzen.
+**Eine Liste - die Fixtures dieser Show.** Die Liste zeigt genau das, was in der Projektdatei steht
+(`fixturetype`, siehe [Projektformat](project-format.md)), keine automatisch geladene oder im Hintergrund
+zusammengeführte Bibliothek mehr. Neue Projekte beginnen ohne eigene Fixtures.
+
+**Export/Import** ersetzen die frühere Bibliothek, um ein Fixture in einem anderen Projekt wiederzuverwenden:
+**Export** schreibt das gewählte Fixture in eine eigene Datei (`*.whfx-fixture`), **Import** liest eine solche
+Datei und legt ihre Fixtures in dieser Show an - der Pfad wird jedes Mal per Dateidialog frei gewählt, nichts
+läuft automatisch im Hintergrund oder landet in einem festen Ordner. Kollidiert der Name eines importierten
+Fixtures mit einem schon vorhandenen, wird der Import automatisch eindeutig umbenannt statt etwas zu überschreiben.
 
 ### Layout: Exemplare patchen, verteilen und drehen
 
-Im Reiter Layout steht oben die gleiche gemeinsame **Fixture**-Liste wie im Reiter Fixtures (angelegt und
-bearbeitet werden Fixtures ausschließlich dort, siehe oben - hier wird nur gepatcht). Die Liste zeigt hinter dem
-frei vergebenen Namen in Gedankenstrichen die Original-Bezeichnung der Form (z. B. „Kachel 5x3 — 2D-Matrix“),
-damit auch ein frei gewählter Name nicht verschleiert, was es eigentlich ist. Daneben steht ein Zahlenfeld
-**Anzahl**: Ein Doppelklick oder **Patchen** legt so viele Exemplare des gewählten Fixtures an, jedes mit einem
-eigenen, freien Patch - für 15 gleiche LED-Wände reicht also eine Anzahl von 15 statt 15 einzelner Klicks. Ist das
-gewählte Fixture nur in der Bibliothek gespeichert, übernimmt „Patchen“ es dafür zuerst automatisch in diese Show.
+Im Reiter Layout steht oben die gleiche **Fixture**-Liste wie im Reiter Fixtures (angelegt und bearbeitet werden
+Fixtures ausschließlich dort, siehe oben - hier wird nur gepatcht); sie aktualisiert sich automatisch, sobald der
+Reiter Layout angezeigt wird, auch wenn das Fixture erst kurz vorher im Reiter Fixtures angelegt wurde. Die Liste
+zeigt hinter dem frei vergebenen Namen in Gedankenstrichen die Original-Bezeichnung der Form (z. B. „Kachel 5x3 —
+2D-Matrix“), damit auch ein frei gewählter Name nicht verschleiert, was es eigentlich ist. Daneben steht ein
+Zahlenfeld **Anzahl**: Ein Doppelklick oder **Patchen** legt so viele Exemplare des gewählten Fixtures an, jedes
+mit einem eigenen, freien Patch - für 15 gleiche LED-Wände reicht also eine Anzahl von 15 statt 15 einzelner
+Klicks. Beide Listen (Fixture-Liste oben, Fixtures auf der Bühne darunter) lassen sich über einen Ziehgriff
+zwischen ihnen in der Höhe verschieben, wenn mehr als die paar anfangs sichtbaren Zeilen gebraucht werden.
 
 Lage (Ursprung x y z) und **Drehung x y z** (Grad, um die Mitte des Fixtures) eines Exemplars auf der Bühne stellst
 du im Formular darunter ein. Das Feld **Fixture** wechselt, von welchem Fixture ein Exemplar seine Form bezieht;
-der letzte Eintrag „Neues Fixture aus dieser Form …“ legt aus der aktuellen Form ein neues Fixture in der
-Bibliothek an und weist es zu. Jedes Exemplar braucht ein Fixture - auch „Matrix“, „Strip“ und der Dialog „Fixture
+der letzte Eintrag „Neues Fixture aus dieser Form …“ legt aus der aktuellen Form ein neues Fixture in dieser Show
+an und weist es zu. Jedes Exemplar braucht ein Fixture - auch „Matrix“, „Strip“ und der Dialog „Fixture
 hinzufügen“ (Menü Stage Config) legen beim Anlegen automatisch eines an (Reiter Fixtures zeigt es danach); nur ein
 Exemplar aus einer älteren Projektdatei kann noch ohne eigenes sein, bis man ihm über denselben Weg eines gibt. Die
 eigentliche Form (Größe, Verkabelung …) ändert man nur noch im Reiter Fixtures. Die Drehung wirkt in der Abtastung

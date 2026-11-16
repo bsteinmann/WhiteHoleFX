@@ -10,6 +10,7 @@
 #include <QPushButton>
 #include <QScrollArea>
 #include <QSpinBox>
+#include <QSplitter>
 #include <QTabBar>
 #include <QSignalBlocker>
 #include <QVBoxLayout>
@@ -33,14 +34,15 @@ LayoutPanel::LayoutPanel(runtime::Player& player, QWidget* parent) : QTabWidget{
     auto* page = new QWidget;
     auto* pageLayout = new QVBoxLayout{page};
 
-    // Ganz oben alle Fixtures (Show und Bibliothek zusammen, siehe fixture_catalog.hpp): „Patchen“ legt so viele
-    // Exemplare an, wie die Anzahl angibt, jedes mit eigenem Patch. Ein nur in der Bibliothek gespeichertes Fixture
-    // wird dafür zuerst in diese Show übernommen. Anlegen und Bearbeiten der Fixtures selbst (inklusive der
-    // Bibliothek auf der Festplatte) bleibt Aufgabe des Reiters Fixtures (siehe fixture_library_page.hpp) - diese
-    // Liste hier dient nur dem Platzieren.
+    // Oben die Fixtures dieser Show (angelegt im Reiter Fixtures, siehe fixture_library_page.hpp): „Patchen“ legt so
+    // viele Exemplare an, wie die Anzahl angibt, jedes mit eigenem Patch - diese Liste hier dient nur dem
+    // Platzieren. Darunter die schon auf der Bühne platzierten Exemplare. Ein Ziehgriff (QSplitter) zwischen beiden
+    // Bereichen macht sie höhenverschiebbar, statt fest auf wenige Zeilen begrenzt zu sein.
+    auto* typeArea = new QWidget;
+    auto* typeColumn = new QVBoxLayout{typeArea};
+    typeColumn->setContentsMargins(0, 0, 0, 0);
     auto* typeRow = new QHBoxLayout;
     types_ = new QListWidget;
-    types_->setMaximumHeight(72);
     types_->setToolTip(tr("Fixtures (Stage Config → Fixtures). Doppelklick patcht ein Exemplar auf die Bühne."));
     quantity_ = new QSpinBox;
     quantity_->setRange(1, 999);
@@ -53,20 +55,30 @@ LayoutPanel::LayoutPanel(runtime::Player& player, QWidget* parent) : QTabWidget{
     typeSide->addWidget(quantity_);
     typeSide->addWidget(typeButton);
     typeRow->addLayout(typeSide);
-    pageLayout->addWidget(new QLabel{tr("Fixtures")});
-    pageLayout->addLayout(typeRow);
+    typeColumn->addWidget(new QLabel{tr("Fixtures")});
+    typeColumn->addLayout(typeRow);
     connect(types_, &QListWidget::itemDoubleClicked, this,
             [this](QListWidgetItem*) { addFromType(selectedTypeName(), quantity_->value()); });
     connect(typeButton, &QPushButton::clicked, this,
             [this]() { addFromType(selectedTypeName(), quantity_->value()); });
 
-    pageLayout->addWidget(new QLabel{tr("Fixtures auf der Bühne")});
+    auto* stageArea = new QWidget;
+    auto* stageColumn = new QVBoxLayout{stageArea};
+    stageColumn->setContentsMargins(0, 0, 0, 0);
+    stageColumn->addWidget(new QLabel{tr("Fixtures auf der Bühne")});
     list_ = new QListWidget;
-    list_->setMaximumHeight(140);
     list_->setSelectionMode(QAbstractItemView::ExtendedSelection);
     list_->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(list_, &QListWidget::customContextMenuRequested, this, [this](const QPoint& pos) { showListContextMenu(pos); });
-    pageLayout->addWidget(list_);
+    stageColumn->addWidget(list_, 1);
+
+    auto* split = new QSplitter{Qt::Vertical};
+    split->addWidget(typeArea);
+    split->addWidget(stageArea);
+    split->setStretchFactor(0, 0);
+    split->setStretchFactor(1, 1);
+    split->setSizes({140, 220});
+    pageLayout->addWidget(split, 1);
 
     auto* buttons = new QHBoxLayout;
     auto* groupButton = new QPushButton{tr("Gruppen")};

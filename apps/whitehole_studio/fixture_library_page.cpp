@@ -1,25 +1,25 @@
-// fixture_library_page.cpp: Umsetzung zu fixture_library_page.hpp.
+// fixture_library_page.cpp: Umsetzung zu fixture_library_page.hpp (Liste, Formular, Anlegen/Ändern/Entfernen).
+//
+// Export/Import (als eigene Datei speichern/laden) stehen wegen der 400-Zeilen-Grenze in fixture_library_export.cpp.
 #include "fixture_library_page.hpp"
 
 #include <QAction>
+#include <QFileDialog>
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QLineEdit>
 #include <QListWidget>
 #include <QMenu>
 #include <QPushButton>
-#include <QShowEvent>
 #include <QSplitter>
 #include <QTimer>
 #include <QVBoxLayout>
 
 #include <algorithm>
 
-#include "fixture_catalog.hpp"
 #include "form_helpers.hpp"
 #include "shape_form.hpp"
 #include "shape_preview.hpp"
-#include "user_library.hpp"
 
 namespace whitehole::studio {
 
@@ -80,9 +80,8 @@ FixtureLibraryPage::FixtureLibraryPage(runtime::Player& player, QWidget* parent)
     : QWidget{parent}, player_{player}, list_{new QListWidget{this}}, name_{new QLineEdit{this}},
       usage_{new QLabel{this}}, form_{new ShapeForm{this}}, preview_{new ShapePreview{this}},
       addButton_{new QPushButton{tr("Neu"), this}}, duplicate_{new QPushButton{tr("Duplizieren"), this}},
-      remove_{new QPushButton{tr("Entfernen"), this}},
-      saveToLibrary_{new QPushButton{tr("In Bibliothek speichern"), this}},
-      deleteFromLibrary_{new QPushButton{tr("Aus Bibliothek löschen"), this}} {
+      remove_{new QPushButton{tr("Entfernen"), this}}, export_{new QPushButton{tr("Export …"), this}},
+      import_{new QPushButton{tr("Import …"), this}} {
     auto* split = new QSplitter{Qt::Horizontal, this};
     auto* outer = new QHBoxLayout{this};
     outer->setContentsMargins(6, 6, 6, 6);
@@ -115,13 +114,13 @@ FixtureLibraryPage::FixtureLibraryPage(runtime::Player& player, QWidget* parent)
     buttons->addWidget(duplicate_);
     buttons->addWidget(remove_);
     leftColumn->addLayout(buttons);
-    saveToLibrary_->setToolTip(tr("Speichert das gewählte Fixture in der Bibliothek (Benutzerverzeichnis), damit du "
-                                  "es in anderen Shows wiederfindest. Gespeichert in: %1").arg(userlib::path()));
-    deleteFromLibrary_->setToolTip(tr("Nimmt das gewählte Fixture aus der Bibliothek; die Show bleibt unverändert"));
-    auto* libraryButtons = new QHBoxLayout;
-    libraryButtons->addWidget(saveToLibrary_);
-    libraryButtons->addWidget(deleteFromLibrary_);
-    leftColumn->addLayout(libraryButtons);
+    export_->setToolTip(tr("Speichert das gewählte Fixture als eigene Datei, um es in einem anderen Projekt wieder "
+                            "zu importieren."));
+    import_->setToolTip(tr("Lädt ein oder mehrere mit „Export …“ gespeicherte Fixtures in diese Show."));
+    auto* fileButtons = new QHBoxLayout;
+    fileButtons->addWidget(export_);
+    fileButtons->addWidget(import_);
+    leftColumn->addLayout(fileButtons);
     split->addWidget(left);
 
     auto* middle = new QWidget;
@@ -142,8 +141,26 @@ FixtureLibraryPage::FixtureLibraryPage(runtime::Player& player, QWidget* parent)
     split->setSizes({230, 320, 400});
 
     connect(list_, &QListWidget::currentRowChanged, this, [this](int) { showSelected(); });
-    connect(saveToLibrary_, &QPushButton::clicked, this, [this]() { saveSelectedToLibrary(); });
-    connect(deleteFromLibrary_, &QPushButton::clicked, this, [this]() { removeFromLibrary(); });
+    connect(export_, &QPushButton::clicked, this, [this]() {
+        const QString name = selectedName();
+        if (name.isEmpty()) {
+            return;
+        }
+        const QString path = QFileDialog::getSaveFileName(
+            this, tr("Fixture exportieren"), name + QStringLiteral(".whfx-fixture"),
+            tr("WhiteHoleFX-Fixture (*.whfx-fixture);;Alle Dateien (*)"));
+        if (!path.isEmpty()) {
+            exportSelectedTo(path);
+        }
+    });
+    connect(import_, &QPushButton::clicked, this, [this]() {
+        const QString path = QFileDialog::getOpenFileName(
+            this, tr("Fixture importieren"), QString{},
+            tr("WhiteHoleFX-Fixture (*.whfx-fixture);;Alle Dateien (*)"));
+        if (!path.isEmpty()) {
+            importFrom(path);
+        }
+    });
     connect(duplicate_, &QPushButton::clicked, this, [this]() { duplicateSelected(); });
     connect(remove_, &QPushButton::clicked, this, [this]() { removeSelected(); });
     connect(name_, &QLineEdit::editingFinished, this, [this]() { renameSelected(name_->text()); });
@@ -191,17 +208,9 @@ void FixtureLibraryPage::showEvent(QShowEvent* event) {
 void FixtureLibraryPage::fillList(const QString& select) {
     const QSignalBlocker blocker{list_};
     list_->clear();
-    for (const FixtureEntry& entry : mergedFixtures(player_)) {
-        auto* item =
-            new QListWidgetItem{tr("%1 (%2 LEDs)").arg(entry.name).arg(mapping::ledCount(entry.shape))};
-        item->setData(Qt::UserRole, entry.name);
-        item->setData(Qt::UserRole + 1, entry.inProject);
-        item->setData(Qt::UserRole + 2, entry.inLibrary);
-        item->setToolTip(entry.inProject && entry.inLibrary
-                              ? tr("In dieser Show und in der Bibliothek")
-                              : entry.inProject ? tr("Nur in dieser Show")
-                                                 : tr("Nur in der Bibliothek - wird beim Bearbeiten in diese Show "
-                                                      "übernommen"));
+    for (const project::FixtureType& type : player_.fixtureTypes()) {
+        auto* item = new QListWidgetItem{tr("%1 (%2 LEDs)").arg(fromStd(type.name)).arg(mapping::ledCount(type.shape))};
+        item->setData(Qt::UserRole, fromStd(type.name));
         list_->addItem(item);
     }
     selectType(select);
@@ -212,71 +221,42 @@ void FixtureLibraryPage::fillList(const QString& select) {
 }
 
 void FixtureLibraryPage::showSelected() {
-    const QListWidgetItem* item = list_->currentItem();
-    if (item == nullptr) {
+    const QString name = selectedName();
+    const project::FixtureType* shown = nullptr;
+    for (const project::FixtureType& type : player_.fixtureTypes()) {
+        if (fromStd(type.name) == name) {
+            shown = &type;
+        }
+    }
+    const bool any = shown != nullptr;
+    name_->setEnabled(any);
+    duplicate_->setEnabled(any);
+    remove_->setEnabled(any);
+    export_->setEnabled(any);
+    form_->setVisible(any);
+    if (!any) {
         name_->clear();
-        name_->setEnabled(false);
-        duplicate_->setEnabled(false);
-        remove_->setEnabled(false);
-        saveToLibrary_->setEnabled(false);
-        deleteFromLibrary_->setEnabled(false);
-        form_->setVisible(false);
         usage_->setText(tr("Lege mit „Neu“ ein Fixture an. Im Reiter Layout patchst du es dann auf die Bühne."));
         mapping::MatrixShape none;
         none.columns = 0;  // ungültig: die Vorschau zeigt dann nichts
         preview_->setShape(none);
         return;
     }
-    const QString name = item->data(Qt::UserRole).toString();
-    const bool inProject = item->data(Qt::UserRole + 1).toBool();
-    const bool inLibrary = item->data(Qt::UserRole + 2).toBool();
-    name_->setEnabled(true);
-    duplicate_->setEnabled(true);
-    remove_->setEnabled(inProject);
-    saveToLibrary_->setEnabled(inProject);
-    deleteFromLibrary_->setEnabled(inLibrary);
-    form_->setVisible(true);
+    int uses = 0;
+    for (const mapping::Fixture& fixture : player_.project()->layout.fixtures()) {
+        uses += fixture.type == shown->name ? 1 : 0;
+    }
     name_->setText(name);
-    mapping::FixtureShape shape;
-    bool found = false;
-    for (const project::FixtureType& type : player_.fixtureTypes()) {
-        if (fromStd(type.name) == name) {
-            shape = type.shape;
-            found = true;
-        }
-    }
-    if (!found) {
-        const auto stored = userlib::load(player_.registry());
-        if (stored.ok()) {
-            for (const project::FixtureType& type : stored.value()) {
-                if (fromStd(type.name) == name) {
-                    shape = type.shape;
-                    found = true;
-                }
-            }
-        }
-    }
-    if (!found) {
-        return;
-    }
-    if (inProject) {
-        int uses = 0;
-        for (const mapping::Fixture& fixture : player_.project()->layout.fixtures()) {
-            uses += fromStd(fixture.type) == name ? 1 : 0;
-        }
-        usage_->setText(uses == 0 ? tr("Noch nicht im Layout gepatcht.")
-                                  : tr("Im Layout %1 Mal gepatcht; Änderungen gelten für alle.").arg(uses));
-    } else {
-        usage_->setText(tr("Nur in der Bibliothek gespeichert. Jede Änderung übernimmt es zuerst in diese Show."));
-    }
-    form_->setShape(shape);
-    preview_->setShape(shape);
+    usage_->setText(uses == 0 ? tr("Noch nicht im Layout gepatcht.")
+                              : tr("Im Layout %1 Mal gepatcht; Änderungen gelten für alle.").arg(uses));
+    form_->setShape(shown->shape);
+    preview_->setShape(shown->shape);
 }
 
 QString FixtureLibraryPage::uniqueName(const QString& base) const {
     const auto taken = [this](const QString& candidate) {
-        return std::ranges::any_of(mergedFixtures(player_),
-                                   [&](const FixtureEntry& e) { return e.name == candidate; });
+        return std::ranges::any_of(player_.fixtureTypes(),
+                                   [&](const project::FixtureType& t) { return fromStd(t.name) == candidate; });
     };
     QString candidate = base;
     for (int n = 2; taken(candidate); ++n) {
@@ -292,35 +272,6 @@ void FixtureLibraryPage::report(const Result<void>& result) {
     }
     Q_EMIT failed(fromStd(result.error().message));
     QTimer::singleShot(0, this, [this]() { showSelected(); });  // Anzeige auf den gespeicherten Wert zurück
-}
-
-bool FixtureLibraryPage::ensureInProject(const QString& name) {
-    if (std::ranges::any_of(player_.fixtureTypes(),
-                             [&](const project::FixtureType& t) { return fromStd(t.name) == name; })) {
-        return true;
-    }
-    if (player_.project() == nullptr) {
-        Q_EMIT projectNeeded();
-        if (player_.project() == nullptr) {
-            return false;
-        }
-    }
-    const auto stored = userlib::load(player_.registry());
-    if (!stored.ok()) {
-        Q_EMIT failed(fromStd(stored.error().message));
-        return false;
-    }
-    for (const project::FixtureType& type : stored.value()) {
-        if (fromStd(type.name) == name) {
-            const Result<void> added = player_.addFixtureType(type.name, type.shape);
-            if (!added.ok()) {
-                Q_EMIT failed(fromStd(added.error().message));
-                return false;
-            }
-            return true;
-        }
-    }
-    return false;
 }
 
 bool FixtureLibraryPage::addType(Kind kind) {
@@ -346,19 +297,10 @@ bool FixtureLibraryPage::addType(Kind kind) {
 
 void FixtureLibraryPage::duplicateSelected() {
     const QString name = selectedName();
-    if (name.isEmpty()) {
-        return;
-    }
-    for (const FixtureEntry& entry : mergedFixtures(player_)) {
-        if (entry.name == name) {
-            if (player_.project() == nullptr) {
-                Q_EMIT projectNeeded();
-                if (player_.project() == nullptr) {
-                    return;
-                }
-            }
+    for (const project::FixtureType& type : player_.fixtureTypes()) {
+        if (fromStd(type.name) == name) {
             const QString copy = uniqueName(name);
-            if (player_.addFixtureType(copy.toUtf8().toStdString(), entry.shape).ok()) {
+            if (player_.addFixtureType(copy.toUtf8().toStdString(), type.shape).ok()) {
                 editing_ = true;
                 fillList(copy);
                 editing_ = false;
@@ -389,11 +331,7 @@ void FixtureLibraryPage::removeSelected() {
 
 void FixtureLibraryPage::renameSelected(const QString& newName) {
     const QString name = selectedName();
-    if (name.isEmpty() || newName == name || newName.isEmpty()) {
-        return;
-    }
-    if (!ensureInProject(name)) {
-        QTimer::singleShot(0, this, [this]() { showSelected(); });
+    if (name.isEmpty() || newName == name) {
         return;
     }
     const Result<void> result = player_.renameFixtureType(name.toUtf8().toStdString(), newName.toUtf8().toStdString());
@@ -412,60 +350,15 @@ void FixtureLibraryPage::applyShape(const mapping::FixtureShape& shape) {
     if (name.isEmpty()) {
         return;
     }
-    if (!ensureInProject(name)) {
-        return;
-    }
     editing_ = true;
     const Result<void> result = player_.replaceFixtureType(name.toUtf8().toStdString(), shape);
     if (result.ok()) {
         preview_->setShape(shape);
-        if (QListWidgetItem* item = list_->currentItem(); item != nullptr && item->data(Qt::UserRole).toString() == name) {
+        if (QListWidgetItem* item = list_->currentItem()) {
             item->setText(tr("%1 (%2 LEDs)").arg(name).arg(mapping::ledCount(shape)));
-            item->setData(Qt::UserRole + 1, true);
         }
-        remove_->setEnabled(true);
-        saveToLibrary_->setEnabled(true);
     }
     report(result);
-    editing_ = false;
-}
-
-bool FixtureLibraryPage::saveSelectedToLibrary() {
-    const QString name = selectedName();
-    if (player_.project() == nullptr || name.isEmpty()) {
-        Q_EMIT failed(tr("Wähle zuerst ein Fixture in der Liste „Fixtures“."));
-        return false;
-    }
-    const std::string key = name.toUtf8().toStdString();
-    for (const project::FixtureType& type : player_.fixtureTypes()) {
-        if (type.name == key) {
-            const Result<void> saved = userlib::upsert(player_.registry(), type);
-            if (!saved.ok()) {
-                Q_EMIT failed(fromStd(saved.error().message));
-                return false;
-            }
-            editing_ = true;
-            fillList(name);
-            editing_ = false;
-            Q_EMIT notice(tr("Fixture „%1“ in der Bibliothek gespeichert.").arg(name));
-            return true;
-        }
-    }
-    return false;
-}
-
-void FixtureLibraryPage::removeFromLibrary() {
-    const QString name = selectedName();
-    if (name.isEmpty()) {
-        return;
-    }
-    const Result<void> removed = userlib::remove(player_.registry(), name.toUtf8().toStdString());
-    if (!removed.ok()) {
-        Q_EMIT failed(fromStd(removed.error().message));
-        return;
-    }
-    editing_ = true;
-    fillList(name);
     editing_ = false;
 }
 

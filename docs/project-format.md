@@ -125,23 +125,26 @@ Genau eine Form pro Fixture, beliebig viele Patches:
 | `… [skip-first s] [skip-every n skip-count k]` | Pixel am Kabel, die nicht leuchten (zum Beispiel ein Pixel als Signalverstärker): `s` Pixel vor der ersten LED, nach je `n` LEDs `k` Pixel. Sie bekommen Schwarz, belegen aber ihre Kanäle; die Adressen danach rücken weiter |
 
 `rotate x y z` dreht das ganze Fixture (Grad, um die Mitte seiner Box, Reihenfolge x, y, z). `type "Name"` verweist auf ein
-Fixture aus der Bibliothek (siehe unten); die Form steht dann dort und im Fixture selbst nicht.
+Fixture dieser Show (`fixturetype`, siehe unten); die Form steht dann dort und im Fixture selbst nicht.
 
 Koordinaten und Reihenfolge der LEDs: siehe [Mapping](mapping.md). Verteilung auf Universen
 und Grenzen (170 LEDs je Universe): siehe [Ausgabe](output.md). `offset` gilt nur für DDP,
 `universe` und `channel` nur für Art-Net und sACN.
 
-### `fixturetype "<name>"` … `end` (Bibliothek)
+### `fixturetype "<name>"` … `end`
 
 Ein benanntes Fixture mit genau einer Form (`matrix`, `strip`, `grid`, `ring`, `helix`, `point`), ohne Lage und ohne Patch. Es
 steht vor den Fixtures, die es mit `type "<name>"` verwenden. Ändert man dieses Fixture, folgen alle Exemplare; Lage, Drehung und
 Patch behält jedes Exemplar. Alte Programmversionen kennen diese Anweisungen nicht (das Format bleibt Version 1).
 
-Die **Benutzerbibliothek** des Studios (`fixture-library.whfx` im Benutzerverzeichnis, siehe [Studio](studio.md)) ist eine
-solche Datei ohne Fixtures und Nodes: Kopfzeile `whitehole-project 1`, Kommentare und nur `fixturetype`-Blöcke. Ein neues
-Projekt bekommt ihre Blöcke vor seinen Fixtures.
+Ein **Export** eines Fixtures (Reiter Fixtures → Export, siehe [Studio](studio.md)) ist eine solche Datei ohne Fixtures
+und Nodes: Kopfzeile `whitehole-project 1`, Kommentare und nur `fixturetype`-Blöcke (ein oder mehrere). Import liest sie
+wieder ein und legt die enthaltenen Fixtures in der aktuellen Show an; es gibt dafür keine automatisch geladene oder im
+Hintergrund zusammengeführte Bibliothek mehr - der Pfad wird jedes Mal per Dateidialog frei gewählt.
 
-Die **Controller-Bibliothek** (`controller-library.whfx`, gleicher Ordner) hat dasselbe Format, enthält aber nur `destination`-Zeilen mit `name`; die Namen müssen eindeutig sein.
+Die **Controller-Bibliothek** (`controller-library.whfx` im Benutzerverzeichnis) hat dasselbe Format, enthält aber nur
+`destination`-Zeilen mit `name`; die Namen müssen eindeutig sein. Anders als bei Fixtures gibt es diese automatisch
+geladene Bibliothek bei Controllern weiterhin (siehe [Studio](studio.md)).
 
 ### `node <name> <typ>` … `end`
 

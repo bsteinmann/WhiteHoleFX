@@ -237,7 +237,7 @@ void OutputForm::addDestination() {
     }
     std::vector<output::Destination> destinations = player_.project()->destinations;
     output::Destination d;
-    d.address = "192.168.0.100";
+    d.address = "127.0.0.1";  // localhost: nicht versehentlich an ein echtes Gerät senden, bis bewusst geändert
     destinations.push_back(std::move(d));
     const Result<void> r = player_.setDestinations(std::move(destinations));
     if (r.ok()) {
@@ -310,12 +310,13 @@ QString OutputForm::exercise() {
             return QStringLiteral("Ausgabe: Name wurde nicht übernommen");
         }
     }
-    // Ein mittleres Ziel entfernen: das davor angelegte Ziel (192.168.0.100) soll bleiben, das gewählte verschwinden
+    // Ein mittleres Ziel entfernen: das davor angelegte Ziel (127.0.0.1, der Standard) soll bleiben, das gewählte
+    // verschwinden
     addDestination();
     table_->setCurrentCell(static_cast<int>(destinations), Address);
     removeSelectedDestination();
     if (player_.project()->destinations.size() != destinations + 1 ||
-        player_.project()->destinations.back().address != "192.168.0.100") {
+        player_.project()->destinations.back().address != "127.0.0.1") {
         return QStringLiteral("Ausgabe: das gewählte Ziel wurde nicht entfernt");
     }
     table_->clearSelection();

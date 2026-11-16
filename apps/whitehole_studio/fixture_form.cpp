@@ -67,7 +67,7 @@ void FixtureForm::build() {
 
     // "Typ wird Pflicht" (siehe CLAUDE.md): die Form selbst ist hier nicht mehr editierbar, nur noch, welches
     // Fixture gilt. Der letzte Eintrag legt aus der aktuellen Form ein neues Fixture an - der einzige Weg,
-    // ein Fixture ohne eigenes (ältere Projektdatei) wieder in die Bibliothek zu bringen.
+    // ein Fixture ohne eigenes (ältere Projektdatei) wieder einem Fixture der Show zuzuordnen.
     QStringList typeNames;
     int typeIndex = -1;
     for (const project::FixtureType& type : player_.fixtureTypes()) {
@@ -79,7 +79,7 @@ void FixtureForm::build() {
     typeNames.push_back(tr("Neues Fixture aus dieser Form …"));
     const int newTypeIndex = static_cast<int>(typeNames.size()) - 1;
     c_.type = combo(typeNames, typeIndex >= 0 ? typeIndex : newTypeIndex);
-    c_.type->setToolTip(tr("Fixture aus der Bibliothek (Stage Config → Fixtures). Änderungen daran gelten für alle Exemplare."));
+    c_.type->setToolTip(tr("Fixture aus dem Reiter Fixtures (Stage Config). Änderungen daran gelten für alle Exemplare."));
     connect(c_.type, qOverload<int>(&QComboBox::currentIndexChanged), this, [this](int) { applyType(); });
     layout->addRow(tr("Fixture"), form::labeledRow({{QString{}, c_.type}}));
 
@@ -88,9 +88,9 @@ void FixtureForm::build() {
     } else {
         // Typlos: ältere Projektdatei, oder das zugewiesene Fixture wurde im Reiter Fixtures entfernt
         // (Player::removeFixtureType - Exemplare behalten dann ihre Form als eigene).
-        layout->addRow(new QLabel{tr("Dieses Fixture ist mit keinem Fixture aus der Bibliothek verknüpft (ältere "
-                                     "Projektdatei oder es wurde entfernt). Über \"Fixture\" → \"Neues Fixture aus "
-                                     "dieser Form …\" lässt sich wieder eines anlegen.")});
+        layout->addRow(new QLabel{tr("Dieses Fixture ist mit keinem Fixture aus dem Reiter Fixtures verknüpft "
+                                     "(ältere Projektdatei oder es wurde entfernt). Über \"Fixture\" → \"Neues "
+                                     "Fixture aus dieser Form …\" lässt sich wieder eines anlegen.")});
     }
 }
 

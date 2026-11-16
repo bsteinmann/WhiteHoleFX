@@ -2,6 +2,26 @@
 
 ## 0.92.0
 
+- **Vier Rückmeldungen zur eben erschienenen Fixture/Layout-Umstellung (siehe unten), alle in einem Schritt
+  umgesetzt** (vom Nutzer so gewünscht: "mach alles auf einmal, ich will aus der testversion endlich raus").
+  1. **Reiter Fixtures: keine Bibliothek mehr, nur noch Export/Import.** Die automatisch geladene, im
+     Hintergrund mit der Show zusammengeführte Fixture-Bibliothek (`fixture-library.whfx`,
+     `fixture_catalog.hpp/cpp`, `mergedFixtures()`) ist komplett entfernt - die Liste zeigt jetzt wieder nur
+     die Fixtures dieser einen Show. Stattdessen **Export** (schreibt das gewählte Fixture als eigene Datei,
+     `*.whfx-fixture`, frei gewählter Pfad per Dateidialog) und **Import** (liest eine solche Datei, legt ihre
+     Fixtures in dieser Show an; ein Namenskonflikt wird automatisch eindeutig gemacht statt zu überschreiben).
+     Neu in `wh_project`: `writeFixtureExport`/`parseFixtureExport` (vorher `writeFixtureLibrary`/
+     `parseFixtureLibrary`, gleiches Format). Die Controller-Bibliothek (`controller-library.whfx`) ist davon
+     **nicht** betroffen und bleibt wie bisher.
+  2. **Layout-Tab: Fixture-Liste aktualisiert sich jetzt beim Öffnen des Tabs** - ein eben im Reiter Fixtures
+     angelegtes Fixture taucht sofort oben im Layout-Tab auf, nicht erst nach "Patchen". Neues
+     `LayoutPanel::refreshTypes()` (dirty-Flag plus `showEvent()`, analog zu `FixtureLibraryPage`/`OutputPage`),
+     aufgerufen aus `MainWindow::refreshStageViews()`.
+  3. **Layout-Tab: beide Listen (Fixtures, Fixtures auf der Bühne) per Ziehgriff höhenverschiebbar** statt
+     fest auf wenige Zeilen begrenzt (`QSplitter`, vertikal, zwischen den beiden Bereichen).
+  4. **Neuer Controller: Adresse immer `127.0.0.1` (localhost) vorbelegt**, um nicht versehentlich an ein
+     echtes Gerät zu senden - gilt für jeden neu angelegten Controller ("Controller +" im Reiter Ausgabe); das
+     Beispielprojekt bei Strg+N nutzte bereits `127.0.0.1`.
 - **Fixtures und Layout: eine gemeinsame Fixture-Liste statt getrennter „Bauform“/„Fixture“-Begriffe, Patchen
   mit Anzahl** (vom Nutzer anhand des GrandMA3-Vorbilds gewünscht: eine Fixture-Bibliothek, aus der man direkt
   mit Anzahl patcht und jedes Exemplar eine eigene ID bekommt, statt vorher eine „Bauform“ in die Show zu holen).

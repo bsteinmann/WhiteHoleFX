@@ -62,10 +62,12 @@ public:
     void saveGroup();
     void addRegion();
 
-    /// Fixtures dieser Show und der Bibliothek (Stage Config → Fixtures, gemeinsame Liste, siehe fixture_catalog.hpp):
-    /// Liste füllen und `count` Exemplare mit je einem eigenen Patch auf der Bühne anlegen. Ist das gewählte Fixture
-    /// nur in der Bibliothek, wird es dafür zuerst in diese Show übernommen. Wahr, wenn mindestens eins entstand.
+    /// Fixtures dieser Show (Stage Config → Fixtures): Liste füllen und `count` Exemplare mit je einem eigenen
+    /// Patch auf der Bühne anlegen. Wahr, wenn mindestens eins entstand.
     void fillTypeList();
+    /// Wie fillTypeList(), aber nur wenn das Layout-Fenster gerade sichtbar ist; sonst beim nächsten Anzeigen
+    /// (ein neues Fixture im Reiter Fixtures soll hier sofort auftauchen, nicht erst nach "Patchen").
+    void refreshTypes();
     bool addFromType(const QString& typeName, int count = 1);
     [[nodiscard]] QString selectedTypeName() const;
 
@@ -85,6 +87,9 @@ public:
     QString exercise();
 
     [[nodiscard]] QSize sizeHint() const override { return {360, 520}; }
+
+protected:
+    void showEvent(QShowEvent* event) override;
 
 Q_SIGNALS:
     void edited();
@@ -109,9 +114,6 @@ private:
     void addFixture(const QString& baseName, mapping::FixtureShape shape);
     [[nodiscard]] QString uniqueName(const QString& base) const;
     [[nodiscard]] Vec3 nextOrigin() const;
-    /// Ist `name` schon ein Fixture dieser Show? Wenn nicht, aber in der Bibliothek gespeichert, wird es jetzt dort
-    /// angelegt (dieselbe Form), damit addFromType() daraus patchen kann.
-    bool ensureTypeInProject(const QString& name);
     [[nodiscard]] mapping::FixtureId selectedId() const;
     /// Rechtsklick auf die Fixture-Liste: entfernt das Fixture unter dem Mauszeiger, unabhängig von der
     /// aktuellen Auswahl (auf leerer Fläche ohne Wirkung).
@@ -120,7 +122,7 @@ private:
 
     runtime::Player& player_;
     QListWidget* list_{nullptr};
-    QListWidget* types_{nullptr};   // Fixtures (Show + Bibliothek, gemeinsame Liste); Doppelklick patcht ein Exemplar
+    QListWidget* types_{nullptr};   // Fixtures dieser Show; Doppelklick patcht ein Exemplar auf die Bühne
     QSpinBox* quantity_{nullptr};   // Anzahl der Exemplare, die „Patchen“ auf einmal anlegt
     FixtureForm* fixture_{nullptr};
     QCheckBox* showGrid_{nullptr};
@@ -128,6 +130,7 @@ private:
     QCheckBox* snapFixtures_{nullptr};
     QComboBox* gridStep_{nullptr};
     QDoubleSpinBox* packGap_{nullptr};  // Abstand für "Nebeneinander"/"Übereinander"
+    bool typesDirty_{false};  // ein Fixture kam im Reiter Fixtures dazu/weg, während dieses Fenster unsichtbar war
 };
 
 }  // namespace whitehole::studio

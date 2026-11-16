@@ -83,6 +83,7 @@ void MainWindow::refreshStageViews() {
     }
     fixturePage_->refresh();
     outputPage_->refresh();
+    layoutPanel_->refreshTypes();  // ein Fixture kam im Reiter Fixtures dazu/weg: oben im Layout-Tab nachziehen
     stageView_->setSelection(layoutPanel_->selectedIds());
     stageView_->refresh();
     testPanel_->rebuild();  // Fixtures können dazugekommen oder weg sein
