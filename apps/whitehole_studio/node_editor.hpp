@@ -146,9 +146,10 @@ public:
     /// überbrückt, sonst alle wieder eingeschaltet.
     bool toggleBypassOfSelection();
 
-    /// Fragt nach einem eigenen Namen für den Node (vorbefüllt mit dem aktuell gezeigten Titel, siehe
-    /// NodeItem) und setzt ihn über Player::renameNode; leer löscht den eigenen Namen wieder. Meldet
-    /// Fehler über `failed` (zu lang), Abbruch tut nichts.
+    /// Fragt nach einem eigenen Namen für den Node (vorbefüllt mit dem reinen eigenen Namen, nicht dem
+    /// im Titel gezeigten Automatikname+eigener-Name - sonst würde ein unverändertes Bestätigen den
+    /// Automatiknamen in den eigenen Namen zurückschreiben) und setzt ihn über Player::renameNode; leer
+    /// löscht den eigenen Namen wieder. Meldet Fehler über `failed` (zu lang), Abbruch tut nichts.
     bool renameNodeInteractive(NodeId id);
 
     /// Zoomt um `factor`. Der Bereich ist 0,25 bis 3; liegt die Ansicht schon außerhalb (etwa nach "Alles

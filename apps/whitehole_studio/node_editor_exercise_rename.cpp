@@ -24,8 +24,11 @@ QString NodeEditor::exerciseRename(NodeId sink, const QString& defaultTitle) {
     }
     rebuild();
     item = itemOf(sink);
-    if (item == nullptr || item->title() != QStringLiteral("Mein Mirror")) {
-        return QStringLiteral("Node-Titel zeigt nach renameNode nicht den eigenen Namen");
+    // Eigener Name steht zusätzlich zum Automatiknamen, nicht statt ihm (vom Nutzer gewünscht, siehe
+    // node_display_name.hpp) - darum hier defaultTitle + " (Mein Mirror)" statt nur "Mein Mirror".
+    const QString expectedWithLabel = defaultTitle + QStringLiteral(" (Mein Mirror)");
+    if (item == nullptr || item->title() != expectedWithLabel) {
+        return QStringLiteral("Node-Titel zeigt nach renameNode nicht den Automatiknamen plus eigenen Namen");
     }
     if (!player_.renameNode(sink, "").ok()) {
         return QStringLiteral("renameNode (leerer Name) schlägt fehl");
