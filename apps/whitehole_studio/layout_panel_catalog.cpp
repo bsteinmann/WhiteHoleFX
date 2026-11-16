@@ -16,6 +16,7 @@
 
 #include <QByteArray>
 #include <QListWidget>
+#include <QPushButton>
 #include <QSignalBlocker>
 #include <QTemporaryDir>
 
