@@ -69,6 +69,8 @@ void NodeEditor::contextMenuEvent(QContextMenuEvent* event) {
                 [this]() { duplicateSelection(); });
         if (!node->isGroupTile()) {
             addTargetMenu(menu, node->nodeId());
+            connect(menu.addAction(tr("Node umbenennen …")), &QAction::triggered, this,
+                    [this, node]() { renameNodeInteractive(node->nodeId()); });
         }
         if (presets_ != nullptr) {
             connect(menu.addAction(tr("Als Preset speichern …")), &QAction::triggered, this,

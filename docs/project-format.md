@@ -160,6 +160,14 @@ alte Dateien unverändert lesen.
 ersten Field-Eingang unverändert weiter; ohne verbundenen Field-Eingang (Generatoren) liefert er Transparent.
 Der Writer schreibt die Zeile nur für überbrückte Nodes. Ältere Programmversionen lehnen sie ab.
 
+`label "<Text>"` (vom Nutzer gewünscht: Nodes müssen benennbar sein, sonst gerät man bei vielen Nodes
+desselben Typs - etwa 32 DMX-Nodes - durcheinander) gibt dem Node einen eigenen, frei wählbaren Namen
+(höchstens 64 Zeichen), den das Studio statt des Node-Typs anzeigt (Node-Editor, Parameter-Dock, Menüs wie
+"Node" im DMX-Monitor). Die Zeile ist optional; ohne sie zeigt die Oberfläche den Anzeigenamen des Typs,
+durchnummeriert bei mehreren Nodes desselben Typs. Anders als `<name>` im Blockkopf (nur eine Lesehilfe für
+diese Datei, siehe oben) ist `label` ein echter, gespeicherter Wert. Der Writer schreibt die Zeile nur für
+Nodes mit eigenem Namen. Ältere Programmversionen lehnen sie ab.
+
 ### `group`, `region` und `target` (mehrere Outputs)
 
 ```

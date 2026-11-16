@@ -530,7 +530,7 @@ msgstr "Використовувати як канал майстер-димме
 msgid "Als Preset speichern"
 msgstr "Зберегти як пресет"
 
-#: node_editor_menu.cpp:74
+#: node_editor_menu.cpp:76
 msgid "Als Preset speichern …"
 msgstr "Зберегти як пресет …"
 
@@ -1202,6 +1202,10 @@ msgstr "Власна бібліотека фікстур: зберігайте �
 msgid "Eigene Überblendzeit:"
 msgstr "Власний час переходу:"
 
+#: node_editor_edit.cpp:88
+msgid "Eigener Name (leer für den Standardnamen):"
+msgstr "Власна назва (порожньо для стандартної назви):"
+
 #: crash_notice.cpp:34
 msgid "Ein Bericht (.txt) und ein Speicherabbild (.dmp) liegen im Ordner:\n%1\n\nBitte schicke beide Dateien an den Entwickler. Das Speicherabbild enthält Teile des Arbeitsspeichers; gib es nur weiter, wenn du damit einverstanden bist."
 msgstr "Звіт (.txt) і дамп пам'яті (.dmp) лежать у теці:\n%1\n\nБудь ласка, надішліть обидва файли розробнику. Дамп містить фрагменти оперативної пам'яті; передавайте його лише якщо ви згодні."
@@ -1278,7 +1282,7 @@ msgstr "Додати збережений контролер до цього п�
 msgid "Einfügen"
 msgstr "Вставити"
 
-#: node_editor_menu.cpp:101
+#: node_editor_menu.cpp:103
 msgid "Einfügen\tStrg+V"
 msgstr "Вставити\tCtrl+V"
 
@@ -1662,7 +1666,7 @@ msgstr "Зберегти групу в бібліотеці"
 msgid "Gruppe löschen"
 msgstr "Видалити групу"
 
-#: node_editor_menu.cpp:83
+#: node_editor_menu.cpp:85
 msgid "Gruppe samt Nodes löschen"
 msgstr "Видалити групу разом із нодами"
 
@@ -2274,17 +2278,25 @@ msgstr "Вузол"
 msgid "Node hinzufügen"
 msgstr "Додати ноду"
 
-#: node_editor_menu.cpp:83
+#: node_editor_menu.cpp:85
 msgid "Node löschen"
 msgstr "Видалити ноду"
 
-#: node_editor_menu.cpp:97
+#: node_editor_menu.cpp:99
 msgid "Node suchen …\tStrg+Leertaste"
 msgstr "Знайти ноду …\tCtrl+Пробіл"
 
 #: node_editor_search.cpp:77
 msgid "Node suchen … (Pfeiltasten, Enter)"
 msgstr "Знайти ноду … (стрілки, Enter)"
+
+#: node_editor_edit.cpp:88
+msgid "Node umbenennen"
+msgstr "Перейменувати вузол"
+
+#: node_editor_menu.cpp:72
+msgid "Node umbenennen …"
+msgstr "Перейменувати вузол …"
 
 #: settings_dialog.cpp:64
 msgid "Node-Standardwerte"
@@ -2922,7 +2934,7 @@ msgstr "Перевірка оновлень"
 msgid "Ursprung x y z"
 msgstr "Початок координат x y z"
 
-#: node_editor_menu.cpp:90
+#: node_editor_menu.cpp:92
 msgid "Verbindung trennen"
 msgstr "Розірвати зв'язок"
 
@@ -3350,11 +3362,11 @@ msgstr "Час переходу %1 с"
 msgid "Überblendzeit:"
 msgstr "Час переходу:"
 
-#: node_editor_menu.cpp:78
+#: node_editor_menu.cpp:80
 msgid "Überbrücken\tB"
 msgstr "Обійти\tB"
 
-#: node_editor_menu.cpp:78
+#: node_editor_menu.cpp:80
 msgid "Überbrückung aufheben\tB"
 msgstr "Скасувати обхід\tB"
 

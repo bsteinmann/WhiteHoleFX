@@ -86,6 +86,7 @@ add_executable(whitehole_studio
     node_editor_drag.cpp
     node_editor_edit.cpp
     node_editor_exercise.cpp
+    node_editor_exercise_rename.cpp
     node_editor.hpp
     node_editor_connect.cpp
     node_editor_menu.cpp

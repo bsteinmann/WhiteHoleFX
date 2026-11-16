@@ -8,6 +8,7 @@ wh_add_library(wh_runtime
         src/dmx_usage.cpp
         src/dmx_output_usage.cpp
         src/dmx_listener.cpp
+        src/node_display_name.cpp
         src/point_file.cpp
         src/led_info.cpp
         src/live_decks.cpp

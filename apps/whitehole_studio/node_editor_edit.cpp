@@ -5,11 +5,16 @@
 // was den Player ändert; Szene, Maus und Tastatur bleiben in node_editor.cpp.
 #include "node_editor.hpp"
 
+#include <QInputDialog>
+#include <QLineEdit>
 #include <QPainterPath>
 #include <QPen>
 
 #include <algorithm>
 #include <cmath>
+
+#include "whitehole/graph/graph_model.hpp"
+#include "whitehole/runtime/node_display_name.hpp"
 
 namespace whitehole::studio {
 
@@ -63,6 +68,30 @@ bool NodeEditor::toggleBypassOfSelection() {
     }
     // Ist irgendeiner noch aktiv, werden alle überbrückt; sind alle überbrückt, werden alle eingeschaltet.
     const auto r = player_.setNodesBypassed(ids, anyActive);
+    if (!r.ok()) {
+        fail(r.error().message);
+        return false;
+    }
+    rebuild();
+    Q_EMIT edited(true);
+    return true;
+}
+
+bool NodeEditor::renameNodeInteractive(NodeId id) {
+    if (player_.project() == nullptr) {
+        return false;
+    }
+    const std::string currentStd = runtime::nodeDisplayName(player_.project()->graph, id);
+    const QString current = QString::fromUtf8(currentStd.data(), static_cast<qsizetype>(currentStd.size()));
+    bool accepted = false;
+    const QString name =
+        QInputDialog::getText(this, tr("Node umbenennen"), tr("Eigener Name (leer für den Standardnamen):"),
+                              QLineEdit::Normal, current, &accepted)
+            .trimmed();
+    if (!accepted) {
+        return false;
+    }
+    const auto r = player_.renameNode(id, name.toStdString());
     if (!r.ok()) {
         fail(r.error().message);
         return false;

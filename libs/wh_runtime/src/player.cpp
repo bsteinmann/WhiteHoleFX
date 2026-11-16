@@ -9,6 +9,7 @@
 
 #include "whitehole/output/packet_sink.hpp"
 #include "whitehole/runtime/graph_layout.hpp"
+#include "whitehole/runtime/node_display_name.hpp"
 
 namespace whitehole::runtime {
 
@@ -240,13 +241,8 @@ std::vector<NodeInfo> Player::nodes() const {
         return result;
     }
     const graph::Graph& g = project_->graph;
-    std::unordered_map<std::string, std::size_t> total;
+    const auto names = nodeDisplayNames(g);  // eigener Name oder Typ+Nummer, siehe node_display_name.hpp
     for (const graph::NodeInstance& node : g.nodes()) {
-        ++total[node.typeId];
-    }
-    std::unordered_map<std::string, std::size_t> seen;
-    for (const graph::NodeInstance& node : g.nodes()) {
-        const std::size_t index = ++seen[node.typeId];
         const graph::NodeDescriptor* descriptor = g.registry().find(node.typeId);
         // Auch Nodes ohne Parameter (z. B. Add) erscheinen: Das Dock zeigt dann einen Hinweis, statt sie zu verschweigen.
         if (descriptor == nullptr) {
@@ -255,10 +251,8 @@ std::vector<NodeInfo> Player::nodes() const {
         NodeInfo info;
         info.id = node.id;
         info.typeId = node.typeId;
-        info.title = descriptor->displayName;
-        if (total[node.typeId] > 1) {
-            info.title += " " + std::to_string(index);
-        }
+        const auto nameIt = names.find(node.id.value());
+        info.title = nameIt != names.end() ? nameIt->second : descriptor->displayName;
         for (const graph::ParameterDescriptor& p : descriptor->parameters) {
             ParameterInfo parameter;
             parameter.key = p.key;

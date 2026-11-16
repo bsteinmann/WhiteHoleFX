@@ -530,7 +530,7 @@ msgstr "Use as master dimmer channel"
 msgid "Als Preset speichern"
 msgstr "Save as preset"
 
-#: node_editor_menu.cpp:74
+#: node_editor_menu.cpp:76
 msgid "Als Preset speichern …"
 msgstr "Save as preset …"
 
@@ -1202,6 +1202,10 @@ msgstr "Your own fixture library: save fixtures as templates and add them again"
 msgid "Eigene Überblendzeit:"
 msgstr "Custom fade time:"
 
+#: node_editor_edit.cpp:88
+msgid "Eigener Name (leer für den Standardnamen):"
+msgstr "Own name (empty for the default name):"
+
 #: crash_notice.cpp:34
 msgid "Ein Bericht (.txt) und ein Speicherabbild (.dmp) liegen im Ordner:\n%1\n\nBitte schicke beide Dateien an den Entwickler. Das Speicherabbild enthält Teile des Arbeitsspeichers; gib es nur weiter, wenn du damit einverstanden bist."
 msgstr "A report (.txt) and a memory dump (.dmp) are in the folder:\n%1\n\nPlease send both files to the developer. The memory dump contains parts of the working memory; only share it if you are fine with that."
@@ -1278,7 +1282,7 @@ msgstr "Add a stored controller to this project as a new controller"
 msgid "Einfügen"
 msgstr "Insert"
 
-#: node_editor_menu.cpp:101
+#: node_editor_menu.cpp:103
 msgid "Einfügen\tStrg+V"
 msgstr "Paste\tCtrl+V"
 
@@ -1662,7 +1666,7 @@ msgstr "Save group to library"
 msgid "Gruppe löschen"
 msgstr "Delete group"
 
-#: node_editor_menu.cpp:83
+#: node_editor_menu.cpp:85
 msgid "Gruppe samt Nodes löschen"
 msgstr "Delete group with its nodes"
 
@@ -2274,17 +2278,25 @@ msgstr "Node"
 msgid "Node hinzufügen"
 msgstr "Add node"
 
-#: node_editor_menu.cpp:83
+#: node_editor_menu.cpp:85
 msgid "Node löschen"
 msgstr "Delete node"
 
-#: node_editor_menu.cpp:97
+#: node_editor_menu.cpp:99
 msgid "Node suchen …\tStrg+Leertaste"
 msgstr "Search node …\tCtrl+Space"
 
 #: node_editor_search.cpp:77
 msgid "Node suchen … (Pfeiltasten, Enter)"
 msgstr "Search node … (arrow keys, Enter)"
+
+#: node_editor_edit.cpp:88
+msgid "Node umbenennen"
+msgstr "Rename node"
+
+#: node_editor_menu.cpp:72
+msgid "Node umbenennen …"
+msgstr "Rename node …"
 
 #: settings_dialog.cpp:64
 msgid "Node-Standardwerte"
@@ -2922,7 +2934,7 @@ msgstr "Update check"
 msgid "Ursprung x y z"
 msgstr "Origin x y z"
 
-#: node_editor_menu.cpp:90
+#: node_editor_menu.cpp:92
 msgid "Verbindung trennen"
 msgstr "Disconnect"
 
@@ -3350,11 +3362,11 @@ msgstr "Fade time %1 s"
 msgid "Überblendzeit:"
 msgstr "Fade time:"
 
-#: node_editor_menu.cpp:78
+#: node_editor_menu.cpp:80
 msgid "Überbrücken\tB"
 msgstr "Bypass\tB"
 
-#: node_editor_menu.cpp:78
+#: node_editor_menu.cpp:80
 msgid "Überbrückung aufheben\tB"
 msgstr "Remove bypass\tB"
 

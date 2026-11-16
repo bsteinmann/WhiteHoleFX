@@ -320,6 +320,21 @@ TEST_CASE("Projekt: Node-Positionen (at) werden gelesen und geschrieben", "[proj
     CHECK(old.value().graph.nodes().at(0).position == Vec2{});
 }
 
+TEST_CASE("Projekt: eigener Node-Name (label) wird gelesen und geschrieben", "[project]") {
+    const Library lib;
+    const auto parsed =
+        parseProject("whitehole-project 1\nnode a wh.generator.gradient\n  label \"Mein Verlauf\"\nend\n", lib.registry);
+    REQUIRE(parsed.ok());
+    CHECK(parsed.value().graph.nodes().at(0).label == "Mein Verlauf");
+    const auto text = writeProject(parsed.value());
+    REQUIRE(text.ok());
+    CHECK(text.value().find("  label \"Mein Verlauf\"\n") != std::string::npos);
+    // Dateien ohne label (Format wie bisher) bleiben lesbar, ohne eigenen Namen
+    const auto old = parseProject("whitehole-project 1\nnode a wh.generator.gradient\nend\n", lib.registry);
+    REQUIRE(old.ok());
+    CHECK(old.value().graph.nodes().at(0).label.empty());
+}
+
 TEST_CASE("Projekt: Dateien in Ordnern mit Umlauten lassen sich schreiben und lesen", "[project][io]") {
     // Unter Windows scheiterte das, solange der UTF-8-Pfad als ANSI-Pfad gedeutet wurde (Speichern unter, Öffnen).
     namespace fs = std::filesystem;

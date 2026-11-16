@@ -89,10 +89,13 @@ TEST_CASE("findDmxOutputValueNodes: listet DMX-Ausgabe-Nodes mit ihrem Pool-Kana
     const auto refs = runtime::findDmxOutputValueNodes(graph);
     REQUIRE(refs.size() == 3);
     CHECK(refs[0].id == dmxOut);
-    CHECK(refs[0].label == "DMX Out");
+    // Zwei wh.output.dmx-Nodes ohne eigenen Namen: durchnummeriert, damit sie im "Node"-Menü des
+    // DMX-Monitors unterscheidbar sind (sonst stünden beide als "DMX Out" da, siehe node_display_name.hpp).
+    CHECK(refs[0].label == "DMX Out 1");
     CHECK(refs[0].poolChannel == 1);
     CHECK(refs[0].count == 8);
     CHECK(refs[1].id == wideOut);
+    CHECK(refs[1].label == "DMX Out 2");
     CHECK(refs[1].poolChannel == 10);
     CHECK(refs[1].count == 6);
     CHECK(refs[2].id == colorOut);

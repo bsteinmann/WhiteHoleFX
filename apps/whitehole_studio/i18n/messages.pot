@@ -530,7 +530,7 @@ msgstr ""
 msgid "Als Preset speichern"
 msgstr ""
 
-#: node_editor_menu.cpp:74
+#: node_editor_menu.cpp:76
 msgid "Als Preset speichern …"
 msgstr ""
 
@@ -1202,6 +1202,10 @@ msgstr ""
 msgid "Eigene Überblendzeit:"
 msgstr ""
 
+#: node_editor_edit.cpp:88
+msgid "Eigener Name (leer für den Standardnamen):"
+msgstr ""
+
 #: crash_notice.cpp:34
 msgid "Ein Bericht (.txt) und ein Speicherabbild (.dmp) liegen im Ordner:\n%1\n\nBitte schicke beide Dateien an den Entwickler. Das Speicherabbild enthält Teile des Arbeitsspeichers; gib es nur weiter, wenn du damit einverstanden bist."
 msgstr ""
@@ -1278,7 +1282,7 @@ msgstr ""
 msgid "Einfügen"
 msgstr ""
 
-#: node_editor_menu.cpp:101
+#: node_editor_menu.cpp:103
 msgid "Einfügen\tStrg+V"
 msgstr ""
 
@@ -1662,7 +1666,7 @@ msgstr ""
 msgid "Gruppe löschen"
 msgstr ""
 
-#: node_editor_menu.cpp:83
+#: node_editor_menu.cpp:85
 msgid "Gruppe samt Nodes löschen"
 msgstr ""
 
@@ -2274,16 +2278,24 @@ msgstr ""
 msgid "Node hinzufügen"
 msgstr ""
 
-#: node_editor_menu.cpp:83
+#: node_editor_menu.cpp:85
 msgid "Node löschen"
 msgstr ""
 
-#: node_editor_menu.cpp:97
+#: node_editor_menu.cpp:99
 msgid "Node suchen …\tStrg+Leertaste"
 msgstr ""
 
 #: node_editor_search.cpp:77
 msgid "Node suchen … (Pfeiltasten, Enter)"
+msgstr ""
+
+#: node_editor_edit.cpp:88
+msgid "Node umbenennen"
+msgstr ""
+
+#: node_editor_menu.cpp:72
+msgid "Node umbenennen …"
 msgstr ""
 
 #: settings_dialog.cpp:64
@@ -2922,7 +2934,7 @@ msgstr ""
 msgid "Ursprung x y z"
 msgstr ""
 
-#: node_editor_menu.cpp:90
+#: node_editor_menu.cpp:92
 msgid "Verbindung trennen"
 msgstr ""
 
@@ -3350,11 +3362,11 @@ msgstr ""
 msgid "Überblendzeit:"
 msgstr ""
 
-#: node_editor_menu.cpp:78
+#: node_editor_menu.cpp:80
 msgid "Überbrücken\tB"
 msgstr ""
 
-#: node_editor_menu.cpp:78
+#: node_editor_menu.cpp:80
 msgid "Überbrückung aufheben\tB"
 msgstr ""
 

@@ -5,6 +5,8 @@
 #include <array>
 #include <variant>
 
+#include "whitehole/runtime/node_display_name.hpp"
+
 namespace whitehole::runtime {
 
 namespace {
@@ -53,7 +55,7 @@ std::optional<DmxInputListener> findDmxListenerInGraph(const graph::Graph& graph
         const std::uint32_t count = isChannel ? (boolParameter(node, "bits16", false) ? 2U : 1U)
                                                : (integerParameter(node, "mode", 0) == 1 ? 4U : 3U);
         if (channel >= nodeChannel && channel < nodeChannel + count) {
-            return DmxInputListener{DmxInputListener::Kind::Node, node.label, nodeChannel, count};
+            return DmxInputListener{DmxInputListener::Kind::Node, nodeDisplayName(graph, node.id), nodeChannel, count};
         }
     }
     return std::nullopt;
@@ -61,9 +63,11 @@ std::optional<DmxInputListener> findDmxListenerInGraph(const graph::Graph& graph
 
 std::vector<DmxValueNodeRef> findDmxValueNodes(const graph::Graph& graph) {
     std::vector<DmxValueNodeRef> result;
+    const auto names = nodeDisplayNames(graph);
     for (const graph::NodeInstance& node : graph.nodes()) {
         if (node.typeId == "wh.value.dmx" || node.typeId == "wh.value.dmxcolor") {
-            result.push_back(DmxValueNodeRef{node.id, node.label, std::nullopt});
+            const auto it = names.find(node.id.value());
+            result.push_back(DmxValueNodeRef{node.id, it != names.end() ? it->second : std::string{}, std::nullopt});
         }
     }
     return result;
@@ -93,11 +97,13 @@ std::uint16_t outputNodeCount(const graph::NodeInstance& node) {
 
 std::vector<DmxOutputValueNodeRef> findDmxOutputValueNodes(const graph::Graph& graph) {
     std::vector<DmxOutputValueNodeRef> result;
+    const auto names = nodeDisplayNames(graph);
     for (const graph::NodeInstance& node : graph.nodes()) {
         if (node.typeId == "wh.output.dmx" || node.typeId == "wh.output.dmxcolor") {
             DmxOutputValueNodeRef ref;
             ref.id = node.id;
-            ref.label = node.label;
+            const auto it = names.find(node.id.value());
+            ref.label = it != names.end() ? it->second : std::string{};
             ref.poolChannel = static_cast<std::uint16_t>(std::clamp<std::int64_t>(integerParameter(node, "channel", 1), 1, 512));
             ref.count = outputNodeCount(node);
             result.push_back(ref);

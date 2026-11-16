@@ -13,6 +13,7 @@
 #include <cmath>
 
 #include "node_info.hpp"
+#include "whitehole/runtime/node_display_name.hpp"
 
 namespace whitehole::studio {
 
@@ -128,13 +129,9 @@ void NodeEditor::buildScene() {
     }
     const graph::Graph& g = project->graph;
 
-    std::unordered_map<std::string, int> total;
+    // Eigener Name oder Typ+Nummer, dieselbe Berechnung wie im Dock "Parameter" (Player::nodes).
+    const auto names = runtime::nodeDisplayNames(g);
     for (const graph::NodeInstance& node : g.nodes()) {
-        ++total[node.typeId];
-    }
-    std::unordered_map<std::string, int> seen;
-    for (const graph::NodeInstance& node : g.nodes()) {
-        const int index = ++seen[node.typeId];
         const graph::NodeDescriptor* descriptor = g.registry().find(node.typeId);
         if (descriptor == nullptr) {
             continue;
@@ -142,11 +139,8 @@ void NodeEditor::buildScene() {
         if (const graph::NodeGroup* group = g.groupOf(node.id); group != nullptr && group->collapsed) {
             continue;  // zugeklappt: die Kachel steht für den Node (buildGroupItems)
         }
-        // Dieselbe Nummerierung wie im Dock "Parameter" (Player::nodes).
-        QString title = fromStd(descriptor->displayName);
-        if (total[node.typeId] > 1) {
-            title += QStringLiteral(" %1").arg(index);
-        }
+        const auto nameIt = names.find(node.id.value());
+        const QString title = fromStd(nameIt != names.end() ? nameIt->second : descriptor->displayName);
         auto* item = new NodeItem{node.id, *descriptor, title};
         item->setBypassed(node.bypassed);
         item->setInfo(nodeInfoText(node.typeId));

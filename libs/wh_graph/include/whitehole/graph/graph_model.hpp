@@ -30,6 +30,9 @@ struct PortRef {
 /// Obergrenze für Faktor und Offset einer Verbindung (verhindert Überläufe im Parameterpuffer).
 inline constexpr double kMaxConnectionScale = 1.0e9;
 
+/// Obergrenze für NodeInstance::label (wie kMaxGroupNameLength für Gruppen).
+inline constexpr std::size_t kMaxNodeLabelLength = 64;
+
 struct Connection {
     ConnectionId id;
     PortRef from;  // Ausgang
@@ -46,6 +49,11 @@ struct Connection {
 struct NodeInstance {
     NodeId id;
     std::string typeId;
+    /// Eigener, vom Nutzer gesetzter Name (vom Nutzer gewünscht: "DMX nodes mussen benamt werden können,
+    /// sonst gerät man schnell durcheinander"). Leer = kein eigener Name - die anzeigende Stelle (Studio-
+    /// Oberfläche, DMX-Monitor-Node-Menü, ...) fällt dann auf den Node-Typ zurück, durchnummeriert bei
+    /// mehreren Nodes desselben Typs (siehe Player::nodes()). Gesetzt über Graph::setLabel bzw.
+    /// Player::renameNode; im Projektformat die optionale `label "..."`-Zeile im node-Block.
     std::string label;
     Vec2 position;  // Lage im Node-Editor
     std::unordered_map<std::string, ParameterValue> parameters;
@@ -96,6 +104,11 @@ public:
     /// Setzt die Ziele eines Nodes (siehe NodeInstance::targets); Duplikate werden entfernt, die Reihenfolge bleibt.
     /// Fehler: NotFound, InvalidArgument (leerer Eintrag).
     Result<void> setTargets(NodeId id, std::vector<std::string> targets);
+
+    /// Setzt den eigenen Namen eines Nodes (siehe NodeInstance::label); wird getrimmt, ein leerer Name
+    /// löscht den eigenen Namen wieder (die anzeigende Stelle fällt dann auf den Node-Typ zurück).
+    /// Fehler: NotFound, InvalidArgument (länger als kMaxNodeLabelLength Zeichen).
+    Result<void> setLabel(NodeId id, std::string label);
 
     /// Lage im Node-Editor. Hat keinen Einfluss auf das Ergebnis des Graphen.
     /// Fehler: NotFound, InvalidArgument (NaN oder Unendlich).

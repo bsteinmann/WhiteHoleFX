@@ -249,6 +249,26 @@ TEST_CASE("Player: moveNode ändert die Lage, nicht den Effekt", "[player][edit]
     CHECK(rig.device.pipelineDescs().size() == pipelines);
 }
 
+TEST_CASE("Player: renameNode setzt und löscht den eigenen Namen, nicht den Effekt, Undo-fähig", "[player][edit]") {
+    Rig rig;
+    REQUIRE(rig.player.start().ok());
+    REQUIRE(rig.player.step().ok());
+    const std::size_t pipelines = rig.device.pipelineDescs().size();
+    const NodeId mirror = rig.id("wh.transform.mirror");
+    REQUIRE(rig.player.renameNode(mirror, "Mein Mirror").ok());
+    CHECK(rig.player.project()->graph.findNode(mirror)->label == "Mein Mirror");
+    CHECK(rig.player.modified());
+    REQUIRE(rig.player.step().ok());
+    CHECK(rig.device.pipelineDescs().size() == pipelines);  // reine Anzeige, kein neuer Shader
+
+    REQUIRE(rig.player.undo().ok());
+    CHECK(rig.player.project()->graph.findNode(mirror)->label.empty());
+
+    CHECK(rig.player.renameNode(mirror, std::string(graph::kMaxNodeLabelLength + 1, 'x')).error().code ==
+          ErrorCode::InvalidArgument);
+    CHECK(rig.player.renameNode(NodeId{999}, "x").error().code == ErrorCode::NotFound);
+}
+
 TEST_CASE("Player: setTarget nimmt nur Field-Ausgänge", "[player][edit]") {
     Rig rig;
     const NodeId lfo = rig.id("wh.value.lfo");
@@ -326,6 +346,7 @@ TEST_CASE("Player: Bearbeiten ohne Projekt ist ein Fehler", "[player][edit]") {
     CHECK_FALSE(player.connect({NodeId{1}, "out"}, {NodeId{2}, "x"}).ok());
     CHECK_FALSE(player.disconnect(ConnectionId{1}).ok());
     CHECK_FALSE(player.moveNode(NodeId{1}, Vec2{}).ok());
+    CHECK_FALSE(player.renameNode(NodeId{1}, "x").ok());
     CHECK_FALSE(player.setTarget({NodeId{1}, "out"}).ok());
 }
 

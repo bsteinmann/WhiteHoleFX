@@ -113,6 +113,9 @@ Result<void> writeGraph(std::ostream& out, const graph::Graph& graph, const std:
         names.emplace(node.id.value(), name);
         out << "node " << name << " " << node.typeId << "\n";
         out << "  at " << vec2(node.position) << "\n";
+        if (!node.label.empty()) {
+            out << "  label " << quoteWord(node.label) << "\n";
+        }
         if (node.bypassed) {
             out << "  bypass\n";
         }

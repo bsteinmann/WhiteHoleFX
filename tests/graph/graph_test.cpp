@@ -38,7 +38,7 @@ TEST_CASE("Graph::addNode: unbekannter Typ, Standardwerte, aufsteigende IDs") {
     const NodeInstance* node = graph.findNode(first);
     REQUIRE(node != nullptr);
     CHECK(node->typeId == "test.source");
-    CHECK(node->label == "Source");
+    CHECK(node->label.empty());  // kein eigener Name: addNode füllt ihn nicht mehr mit dem Anzeigenamen vor
     CHECK(std::get<double>(node->parameters.at("gain")) == 0.5);
     CHECK(std::get<std::int64_t>(node->parameters.at("count")) == 1);
     CHECK(std::get<std::string>(node->parameters.at("name")) == "x");
@@ -220,4 +220,16 @@ TEST_CASE("Graph: setPosition verschiebt den Node und prüft die Eingabe") {
           ErrorCode::InvalidArgument);
     CHECK(g.findNode(id)->position == Vec2{12.0F, -3.5F});
     CHECK(g.setPosition(NodeId{999}, Vec2{}).error().code == ErrorCode::NotFound);
+}
+
+TEST_CASE("Graph: setLabel setzt und löscht den eigenen Namen, prüft Länge und Node") {
+    Graph g{makeTestRegistry()};
+    const NodeId id = add(g, "test.source");
+    CHECK(g.findNode(id)->label.empty());  // kein eigener Name: addNode füllt ihn nicht mehr vor
+    CHECK(g.setLabel(id, "DMX Kanal 7").ok());
+    CHECK(g.findNode(id)->label == "DMX Kanal 7");
+    CHECK(g.setLabel(id, "").ok());  // leer löscht den eigenen Namen wieder
+    CHECK(g.findNode(id)->label.empty());
+    CHECK(g.setLabel(id, std::string(kMaxNodeLabelLength + 1, 'x')).error().code == ErrorCode::InvalidArgument);
+    CHECK(g.setLabel(NodeId{999}, "x").error().code == ErrorCode::NotFound);
 }

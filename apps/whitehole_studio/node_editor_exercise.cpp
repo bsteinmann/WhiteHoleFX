@@ -116,6 +116,11 @@ QString NodeEditor::exercise() {
     if (from == nullptr || from->info().isEmpty() || !from->infoButtonAt(from->mapToScene(QPointF{152.0, 13.0}))) {
         return QStringLiteral("Info-Zeichen fehlt am neuen Node");
     }
+    if (const QString error = exerciseRename(*sink); !error.isEmpty()) {
+        return error;
+    }
+    to = itemOf(*sink);
+    from = itemOf(*source);  // exerciseRename() hat per rebuild() neue Items angelegt - die alten Zeiger müssen aktuell sein
     if (from == nullptr || to == nullptr || from->findPort("out") == nullptr || to->findPort("source") == nullptr) {
         return QStringLiteral("Ports der neuen Nodes nicht gefunden");
     }

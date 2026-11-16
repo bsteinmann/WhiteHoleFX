@@ -69,7 +69,8 @@ Result<NodeId> Graph::addNode(std::string_view typeId, Vec2 position) {
     NodeInstance instance;
     instance.id = nodeIds_.next();
     instance.typeId = descriptor->typeId;
-    instance.label = descriptor->displayName;
+    // label bleibt leer (kein eigener Name) - wer ihn anzeigt, fällt dann auf den Node-Typ zurück, siehe
+    // Kommentar an NodeInstance::label.
     instance.position = position;
     for (const ParameterDescriptor& parameter : descriptor->parameters) {
         instance.parameters.emplace(parameter.key, parameter.defaultValue);
@@ -212,6 +213,20 @@ Result<void> Graph::setTargets(NodeId id, std::vector<std::string> targets) {
         }
     }
     it->targets = std::move(unique);
+    return {};
+}
+
+Result<void> Graph::setLabel(NodeId id, std::string label) {
+    if (label.size() > kMaxNodeLabelLength) {
+        return Error{ErrorCode::InvalidArgument,
+                     "Der Name darf höchstens " + std::to_string(kMaxNodeLabelLength) + " Zeichen haben"};
+    }
+    const auto it = std::find_if(nodes_.begin(), nodes_.end(),
+                                 [id](const NodeInstance& node) { return node.id == id; });
+    if (it == nodes_.end()) {
+        return notFound("Node existiert nicht");
+    }
+    it->label = std::move(label);
     return {};
 }
 

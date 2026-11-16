@@ -176,6 +176,9 @@ public:
     Result<void> setConnectionScale(ConnectionId connection, double scale, double offset);
     /// Lage im Editor; ändert den Effekt nicht.
     Result<void> moveNode(NodeId node, Vec2 position);
+    /// Eigener Name des Nodes (siehe graph::NodeInstance::label); ändert den Effekt nicht. Leer löscht den
+    /// eigenen Namen wieder. Fehler: Graph::setLabel (NotFound, InvalidArgument bei zu langem Namen).
+    Result<void> renameNode(NodeId node, std::string label);
 
     /// Gruppen (siehe graph/node_group.hpp): reine Oberfläche, der Effekt ändert sich nicht. Alle Schritte sind
     /// Rückgängig-fähig. Fehler wie Graph::addGroup / replaceGroup / removeGroup.

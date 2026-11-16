@@ -2,6 +2,16 @@
 
 ## 0.92.0
 
+- **Nodes benennbar** (vom Nutzer gewünscht: "dmx nodes mussen benamt werden können, (anderer nodes am
+  besten auch) sonst gerät man schnell durcheinander wenn man 32 dmx nodes hat"). Rechtsklick auf einen
+  Node im Node-Editor → "Node umbenennen …" gibt ihm einen eigenen Namen statt des Node-Typs; erscheint
+  überall, wo der Node namentlich auftaucht (Node-Editor, Parameter-Dock, das Menü "Node" im DMX-Monitor).
+  Leerer Name löscht den eigenen Namen wieder - ohne ihn zeigt die Oberfläche weiterhin den Anzeigenamen
+  des Typs, durchnummeriert bei mehreren Nodes desselben Typs (bisher nur fürs Parameter-Dock und den
+  Node-Editor berechnet, jetzt auch fürs "Node"-Menü im DMX-Monitor - zwei `wh.output.dmx`-Nodes ohne
+  eigenen Namen heißen dort jetzt "DMX Out 1"/"DMX Out 2" statt beide "DMX Out"). Gespeichert als neue,
+  optionale `label`-Zeile im node-Block der Projektdatei; bleibt beim Kopieren/Duplizieren erhalten
+  (`node_clipboard.cpp`, dieselbe Baustelle wie der `targets`-Fix oben).
 - **DMX-Monitor: Name des gepatchten Objekts direkt in der Zelle** (vom Nutzer gewünscht: „den Namen des
   gepatchten Objekts anzeigen, nicht nur die Farbe"). Beide Monitore (Eingang und Ausgang, Ansicht →
   DMX-Monitor) zeigen eine belegte Zelle jetzt mit Wert **und** Name, statt den Namen nur im Tooltip beim

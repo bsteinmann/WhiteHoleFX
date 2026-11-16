@@ -136,12 +136,20 @@ public:
     /// Maus (Treffer auf Ports), löscht es und die Nodes wieder. Leer, wenn alles wie erwartet war,
     /// sonst eine Meldung, welcher Schritt scheiterte.
     QString exercise();
+    /// Teil von exercise() (node_editor_exercise_rename.cpp, ausgelagert wegen der 400-Zeilen-Grenze):
+    /// eigener Name über renameNode, Titel fällt ohne eigenen Namen auf den Typ zurück.
+    QString exerciseRename(NodeId sink);
 
     /// Schaltet die Überbrückung des Nodes (Schalter im Kopf, Taste B, Kontextmenü). Rückgängig-fähig.
     bool toggleBypass(NodeId id);
     /// Wie toggleBypass für alle ausgewählten Field-Nodes in einem Schritt: Ist der erste noch aktiv, werden alle
     /// überbrückt, sonst alle wieder eingeschaltet.
     bool toggleBypassOfSelection();
+
+    /// Fragt nach einem eigenen Namen für den Node (vorbefüllt mit dem aktuell gezeigten Titel, siehe
+    /// NodeItem) und setzt ihn über Player::renameNode; leer löscht den eigenen Namen wieder. Meldet
+    /// Fehler über `failed` (zu lang), Abbruch tut nichts.
+    bool renameNodeInteractive(NodeId id);
 
     /// Zoomt um `factor`. Der Bereich ist 0,25 bis 3; liegt die Ansicht schon außerhalb (etwa nach "Alles
     /// zeigen" bei vielen Nodes), geht es nur in Richtung des Bereichs - das Rad blockiert nie ganz.

@@ -273,6 +273,20 @@ Result<void> Player::moveNode(NodeId node, Vec2 position) {
     return r;
 }
 
+Result<void> Player::renameNode(NodeId node, std::string label) {
+    if (!project_) {
+        return noProject();
+    }
+    const std::string editKey = "label:" + std::to_string(node.value());
+    auto before = beginEdit(editKey);
+    const Result<void> r = project_->graph.setLabel(node, std::move(label));
+    finishEdit(std::move(before), editKey, r.ok());
+    if (r.ok()) {
+        modified_ = true;
+    }
+    return r;
+}
+
 Result<void> Player::setNodeBypassed(NodeId node, bool bypassed) {
     return setNodesBypassed({node}, bypassed);
 }

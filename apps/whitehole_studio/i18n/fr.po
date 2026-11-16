@@ -530,7 +530,7 @@ msgstr "Utiliser comme canal de gradateur maître"
 msgid "Als Preset speichern"
 msgstr "Enregistrer comme préréglage"
 
-#: node_editor_menu.cpp:74
+#: node_editor_menu.cpp:76
 msgid "Als Preset speichern …"
 msgstr "Enregistrer comme préréglage …"
 
@@ -1202,6 +1202,10 @@ msgstr "Votre bibliothèque de fixtures : enregistrer des fixtures comme modèle
 msgid "Eigene Überblendzeit:"
 msgstr "Durée de fondu personnalisée :"
 
+#: node_editor_edit.cpp:88
+msgid "Eigener Name (leer für den Standardnamen):"
+msgstr "Nom personnalisé (vide pour le nom par défaut) :"
+
 #: crash_notice.cpp:34
 msgid "Ein Bericht (.txt) und ein Speicherabbild (.dmp) liegen im Ordner:\n%1\n\nBitte schicke beide Dateien an den Entwickler. Das Speicherabbild enthält Teile des Arbeitsspeichers; gib es nur weiter, wenn du damit einverstanden bist."
 msgstr "Un rapport (.txt) et un vidage mémoire (.dmp) se trouvent dans le dossier :\n%1\n\nEnvoyez les deux fichiers au développeur. Le vidage contient une partie de la mémoire de travail ; ne le partagez que si cela vous convient."
@@ -1278,7 +1282,7 @@ msgstr "Ajouter un contrôleur enregistré à ce projet comme nouveau contrôleu
 msgid "Einfügen"
 msgstr "Insérer"
 
-#: node_editor_menu.cpp:101
+#: node_editor_menu.cpp:103
 msgid "Einfügen\tStrg+V"
 msgstr "Coller\tCtrl+V"
 
@@ -1662,7 +1666,7 @@ msgstr "Enregistrer le groupe dans la bibliothèque"
 msgid "Gruppe löschen"
 msgstr "Supprimer le groupe"
 
-#: node_editor_menu.cpp:83
+#: node_editor_menu.cpp:85
 msgid "Gruppe samt Nodes löschen"
 msgstr "Supprimer le groupe et ses nodes"
 
@@ -2274,17 +2278,25 @@ msgstr "Nœud"
 msgid "Node hinzufügen"
 msgstr "Ajouter un nœud"
 
-#: node_editor_menu.cpp:83
+#: node_editor_menu.cpp:85
 msgid "Node löschen"
 msgstr "Supprimer le nœud"
 
-#: node_editor_menu.cpp:97
+#: node_editor_menu.cpp:99
 msgid "Node suchen …\tStrg+Leertaste"
 msgstr "Chercher un nœud …\tCtrl+Espace"
 
 #: node_editor_search.cpp:77
 msgid "Node suchen … (Pfeiltasten, Enter)"
 msgstr "Chercher un nœud … (flèches, Entrée)"
+
+#: node_editor_edit.cpp:88
+msgid "Node umbenennen"
+msgstr "Renommer le node"
+
+#: node_editor_menu.cpp:72
+msgid "Node umbenennen …"
+msgstr "Renommer le node …"
 
 #: settings_dialog.cpp:64
 msgid "Node-Standardwerte"
@@ -2922,7 +2934,7 @@ msgstr "Vérification des mises à jour"
 msgid "Ursprung x y z"
 msgstr "Origine x y z"
 
-#: node_editor_menu.cpp:90
+#: node_editor_menu.cpp:92
 msgid "Verbindung trennen"
 msgstr "Déconnecter"
 
@@ -3350,11 +3362,11 @@ msgstr "Durée de fondu %1 s"
 msgid "Überblendzeit:"
 msgstr "Durée de fondu :"
 
-#: node_editor_menu.cpp:78
+#: node_editor_menu.cpp:80
 msgid "Überbrücken\tB"
 msgstr "Contourner\tB"
 
-#: node_editor_menu.cpp:78
+#: node_editor_menu.cpp:80
 msgid "Überbrückung aufheben\tB"
 msgstr "Réactiver\tB"
 
