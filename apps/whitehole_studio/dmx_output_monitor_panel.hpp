@@ -36,10 +36,17 @@
 // Überschreibung gilt nur für die aktuell gewählte Protokoll-/Universe-Kombination dieses Panels und geht
 // beim Wechsel wieder verloren (keine Projekt- oder Einstellungs-Daten, rein optisch), genauso wie im
 // Eingangs-Monitor (dmx_monitor_panel.hpp).
+//
+// Namensanzeige in der Zelle (vom Nutzer gewünscht: "den Namen des gepatchten Objekts anzeigen, nicht nur
+// die Farbe"): analog zum Eingangsmonitor zeigt eine belegte Zelle den Wert und darunter den Namen
+// (`occupantNames_`, zusammen mit den Tooltips in updateOccupantTooltips() befüllt), eine freie nur den
+// Wert wie bisher. Bei Kind::Pool ist DmxOutputOccupant::name leer (siehe dmx_output_usage.hpp) - dort
+// steht statt eines Namens der Pool-Kanal ("Pool-Kanal N"), wie im Tooltip-Text.
 #pragma once
 
 #include <QColor>
 #include <QPoint>
+#include <QString>
 #include <QWidget>
 
 #include <array>
@@ -109,6 +116,7 @@ private:
     QLabel* status_{nullptr};
     QTableWidget* grid_{nullptr};
     std::array<std::uint8_t, output::kSentDmxChannels> lastValues_{};
+    std::array<QString, output::kSentDmxChannels> occupantNames_;  // Kanal -> Name der Belegung, leer = frei
     bool hasData_{false};  // zeigt das Gitter gerade Werte (statt "-") an?
     std::map<std::uint32_t, QColor> colorOverrides_;  // Kanal -> von Hand gewählte Farbe, siehe Kommentar oben
 };

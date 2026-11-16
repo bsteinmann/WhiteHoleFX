@@ -110,6 +110,8 @@ void DmxMonitorPanel::updateListenerTooltips() {
         const int c = (channel - 1) % kColumns;
         QTableWidgetItem* item = grid_->item(r, c);
         item->setToolTip(listenerTooltip(static_cast<std::uint32_t>(channel), listener));
+        listenerNames_[static_cast<std::size_t>(channel - 1)] =
+            listener ? QString::fromStdString(listener->name) : QString{};
         const auto colorOverride = colorOverrides_.find(static_cast<std::uint32_t>(channel));
         if (colorOverride != colorOverrides_.end()) {
             item->setBackground(colorOverride->second);
@@ -205,7 +207,9 @@ void DmxMonitorPanel::refresh() {
         }
         const int r = i / kColumns;
         const int c = i % kColumns;
-        grid_->item(r, c)->setText(QString::number(frame->channels[static_cast<std::size_t>(i)]));
+        const QString value = QString::number(frame->channels[static_cast<std::size_t>(i)]);
+        const QString& name = listenerNames_[static_cast<std::size_t>(i)];
+        grid_->item(r, c)->setText(name.isEmpty() ? value : value + QStringLiteral("\n") + name);
     }
     lastValues_ = frame->channels;
     hasData_ = true;
@@ -289,6 +293,11 @@ QString DmxMonitorPanel::exercise() {
     universe_->setValue(777);
     if (grid_->item(0, 0)->background().color() != dmxCellColor(DmxCellCategory::Master)) {
         return QStringLiteral("DMX-Monitor: Masterdimmer-Kanal bekommt nicht die Master-Farbe");
+    }
+    // Namensanzeige (vom Nutzer gewünscht: "den Namen des gepatchten Objekts anzeigen"): die Zelle zeigt
+    // jetzt Wert und, in einer zweiten Zeile, den Namen des Hörers ("Master-Helligkeit").
+    if (!grid_->item(0, 0)->text().contains(QStringLiteral("\nMaster-Helligkeit"))) {
+        return QStringLiteral("DMX-Monitor: Zelle zeigt den Namen des Masterdimmer-Kanals nicht in der zweiten Zeile an");
     }
     // Rechtsklick auf diese jetzt belegte Zelle bietet "Farbe ändern…" an (nicht ausgelöst - echter,
     // modaler QColorDialog würde im Rauchtest ohne Publikum blockieren).

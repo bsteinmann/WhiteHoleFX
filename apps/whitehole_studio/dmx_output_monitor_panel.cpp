@@ -112,6 +112,15 @@ void DmxOutputMonitorPanel::updateOccupantTooltips() {
         const int c = (channel - 1) % kColumns;
         QTableWidgetItem* item = grid_->item(r, c);
         item->setToolTip(occupantTooltip(static_cast<std::uint32_t>(channel), occupant));
+        // occupant->name ist bei Kind::Pool leer (siehe dmx_output_usage.hpp) - dort stattdessen den
+        // Pool-Kanal zeigen, analog zum Tooltip-Text oben.
+        if (!occupant) {
+            occupantNames_[static_cast<std::size_t>(channel - 1)] = QString{};
+        } else if (occupant->kind == runtime::DmxOutputOccupant::Kind::Fixture) {
+            occupantNames_[static_cast<std::size_t>(channel - 1)] = QString::fromStdString(occupant->name);
+        } else {
+            occupantNames_[static_cast<std::size_t>(channel - 1)] = tr("Pool-Kanal %1").arg(occupant->poolChannel);
+        }
         const auto colorOverride = colorOverrides_.find(static_cast<std::uint32_t>(channel));
         if (colorOverride != colorOverrides_.end()) {
             item->setBackground(colorOverride->second);
@@ -205,7 +214,9 @@ void DmxOutputMonitorPanel::refresh() {
         }
         const int r = i / kColumns;
         const int c = i % kColumns;
-        grid_->item(r, c)->setText(QString::number(frame->channels[static_cast<std::size_t>(i)]));
+        const QString value = QString::number(frame->channels[static_cast<std::size_t>(i)]);
+        const QString& name = occupantNames_[static_cast<std::size_t>(i)];
+        grid_->item(r, c)->setText(name.isEmpty() ? value : value + QStringLiteral("\n") + name);
     }
     lastValues_ = frame->channels;
     hasData_ = true;
@@ -389,6 +400,20 @@ QString DmxOutputMonitorPanel::exercise() {
         if (!fixtureColorOk) {
             return QStringLiteral("DMX-Ausgangs-Monitor: Fixture-Belegung bekommt nicht die Fixture-Farbe");
         }
+        // Namensanzeige: dieselbe Zelle zeigt jetzt den Fixture-Namen in der zweiten Zeile - braucht dafür
+        // einen echten gesendeten Frame auf diesem Universe, sonst bleibt die Zelle beim "–"-Platzhalter.
+        protocol_->setCurrentIndex(patch.protocol == output::Protocol::Sacn ? 1 : 0);
+        universe_->setValue(static_cast<int>(patch.universe));
+        std::vector<std::uint8_t> fixturePacket(512, 0);
+        fixturePacket[patch.channel - 1] = 7;
+        store_->write(patch.protocol, patch.universe, fixturePacket);
+        refresh();
+        const bool fixtureNameOk = grid_->item(r, c)->text().contains(QStringLiteral("\n") + QString::fromStdString(occupant->name));
+        protocol_->setCurrentIndex(0);
+        universe_->setValue(30000);
+        if (!fixtureNameOk) {
+            return QStringLiteral("DMX-Ausgangs-Monitor: Zelle zeigt den Fixture-Namen nicht in der zweiten Zeile an");
+        }
         if (!requestedEdit || requestedId != occupant->fixtureId) {
             return QStringLiteral("DMX-Ausgangs-Monitor: Kontextmenü löst requestEditFixturePatch nicht mit dem richtigen Fixture aus");
         }
@@ -441,10 +466,21 @@ QString DmxOutputMonitorPanel::exercise() {
     // occupant.kind-Werte ab - Fixture siehe oben, derselbe Code-Pfad, nur anderer Zweig).
     universe_->setValue(30002);
     const bool poolColorOk = grid_->item(0, 0)->background().color() == dmxCellColor(DmxCellCategory::Pool);
+    // Namensanzeige: ohne echten Namen (DmxOutputOccupant::name ist bei Kind::Pool leer) steht stattdessen
+    // der Pool-Kanal in der zweiten Zeile - braucht dafür einen echten gesendeten Frame auf diesem Universe,
+    // sonst bleibt die Zelle beim "–"-Platzhalter ohne Text.
+    std::vector<std::uint8_t> poolPacket(512, 0);
+    poolPacket[0] = 5;
+    store_->write(output::Protocol::ArtNet, 30002, poolPacket);
+    refresh();
+    const bool poolNameOk = grid_->item(0, 0)->text().contains(QStringLiteral("\nPool-Kanal 77"));
     universe_->setValue(30000);
     player_.setDmxPatches(dmxPatchesBefore);  // Rauchtest-Projekt wieder in den Ausgangszustand bringen
     if (!poolColorOk) {
         return QStringLiteral("DMX-Ausgangs-Monitor: Pool-Belegung bekommt nicht die Pool-Farbe");
+    }
+    if (!poolNameOk) {
+        return QStringLiteral("DMX-Ausgangs-Monitor: Zelle zeigt den Pool-Kanal nicht in der zweiten Zeile an");
     }
     return {};
 }

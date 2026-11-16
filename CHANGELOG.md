@@ -2,6 +2,13 @@
 
 ## 0.92.0
 
+- **DMX-Monitor: Name des gepatchten Objekts direkt in der Zelle** (vom Nutzer gewünscht: „den Namen des
+  gepatchten Objekts anzeigen, nicht nur die Farbe"). Beide Monitore (Eingang und Ausgang, Ansicht →
+  DMX-Monitor) zeigen eine belegte Zelle jetzt mit Wert **und** Name, statt den Namen nur im Tooltip beim
+  Hovern zu nennen: Eingang zeigt Node-Name, „Master-Helligkeit", „Live-Look-Auswahl" oder
+  „Live-Überblendzeit"; Ausgang zeigt den Fixture-Namen bzw. „Pool-Kanal N" (ein DMX-Kanal-Pool-Eintrag hat
+  selbst keinen Namen). Wird wie Tooltip und Zellenfarbe nur bei einem Protokoll-/Universe-Wechsel neu
+  berechnet, nicht jeden Frame. Eine freie Zelle zeigt weiterhin nur den Wert bzw. „–".
 - **Layout: Fixture per Rechtsklick entfernen** (vom Nutzer gewünscht, Teil einer größeren Stage-Config-
   Auffrischung). Rechtsklick auf einen Eintrag der Fixture-Liste im Reiter Layout entfernt genau das
   Fixture unter dem Mauszeiger, unabhängig von der aktuellen Auswahl - ergänzt den bestehenden

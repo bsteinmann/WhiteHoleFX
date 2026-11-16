@@ -474,11 +474,11 @@ msgstr "Address (empty = multicast, sACN only)"
 msgid "Adressraum"
 msgstr "Address range"
 
-#: dmx_output_monitor_panel.cpp:201
+#: dmx_output_monitor_panel.cpp:210
 msgid "Aktiv (letzter gesendeter Frame vor %1 s)."
 msgstr "Active (last frame sent %1 s ago)."
 
-#: dmx_monitor_panel.cpp:201
+#: dmx_monitor_panel.cpp:203
 msgid "Aktiv (letztes Paket vor %1 s)."
 msgstr "Active (last packet %1 s ago)."
 
@@ -514,15 +514,15 @@ msgstr "Alpha 0: the LED stays off here (the color is remembered)."
 msgid "Als Ausgang setzen (output)"
 msgstr "Set as output (output)"
 
-#: dmx_monitor_panel.cpp:144
+#: dmx_monitor_panel.cpp:146
 msgid "Als Live-Look-Auswahl-Kanal verwenden"
 msgstr "Use as Live look-select channel"
 
-#: dmx_monitor_panel.cpp:147
+#: dmx_monitor_panel.cpp:149
 msgid "Als Live-Überblendzeit-Kanal verwenden"
 msgstr "Use as Live fade-time channel"
 
-#: dmx_monitor_panel.cpp:139
+#: dmx_monitor_panel.cpp:141
 msgid "Als Masterdimmer-Kanal verwenden"
 msgstr "Use as master dimmer channel"
 
@@ -954,7 +954,7 @@ msgstr "DMX input: %1"
 msgid "DMX-Kanal"
 msgstr "DMX channel"
 
-#: dmx_output_monitor_panel.cpp:137
+#: dmx_output_monitor_panel.cpp:146
 msgid "DMX-Kanal-Pool-Patch bearbeiten (Pool-Kanal %1)…"
 msgstr "Edit DMX channel pool patch (pool channel %1)…"
 
@@ -1382,7 +1382,7 @@ msgstr "A look “%1” already exists. Overwrite it with the current effect?"
 msgid "Es ist kein Projekt geladen. Mit Strg+N ein neues anlegen oder mit Strg+O eins öffnen."
 msgstr "No project is loaded. Create one with Ctrl+N or open one with Ctrl+O."
 
-#: dmx_output_monitor_panel.cpp:196
+#: dmx_output_monitor_panel.cpp:205
 msgid "Es wurde noch nichts auf dieses Universe gesendet."
 msgstr "Nothing has been sent to this universe yet."
 
@@ -1406,11 +1406,11 @@ msgstr "Group color"
 msgid "Farbe der Kachel"
 msgstr "Tile color"
 
-#: dmx_monitor_panel.cpp:219 dmx_output_monitor_panel.cpp:219
+#: dmx_monitor_panel.cpp:223 dmx_output_monitor_panel.cpp:230
 msgid "Farbe für Kanal %1"
 msgstr "Color for channel %1"
 
-#: dmx_monitor_panel.cpp:128 dmx_output_monitor_panel.cpp:130
+#: dmx_monitor_panel.cpp:130 dmx_output_monitor_panel.cpp:139
 msgid "Farbe ändern…"
 msgstr "Change color…"
 
@@ -1474,7 +1474,7 @@ msgstr "Add fixture"
 msgid "Fixture „%1“ entfernen"
 msgstr "Remove fixture “%1”"
 
-#: dmx_output_monitor_panel.cpp:133
+#: dmx_output_monitor_panel.cpp:142
 msgid "Fixture-Patch bearbeiten: %1…"
 msgstr "Edit fixture patch: %1…"
 
@@ -1826,7 +1826,7 @@ msgstr "No project"
 msgid "Kein Projekt geladen."
 msgstr "No project loaded."
 
-#: dmx_monitor_panel.cpp:196
+#: dmx_monitor_panel.cpp:198
 msgid "Kein Signal auf diesem Universe."
 msgstr "No signal on this universe."
 
@@ -1838,11 +1838,11 @@ msgstr "No target (free rectangle)"
 msgid "Keine Aufnahmegeräte gefunden. Ein Audio-Interface anschließen und das Fenster neu öffnen."
 msgstr "No capture devices found. Connect an audio interface and reopen the window."
 
-#: dmx_output_monitor_panel.cpp:153
+#: dmx_output_monitor_panel.cpp:162
 msgid "Keine DMX-Ausgabe-Nodes im Projekt"
 msgstr "No DMX output nodes in the project"
 
-#: dmx_monitor_panel.cpp:154
+#: dmx_monitor_panel.cpp:156
 msgid "Keine DMX-Wert-Nodes im Projekt"
 msgstr "No DMX value nodes in the project"
 
@@ -1934,11 +1934,11 @@ msgstr "Port legend"
 msgid "Legt Bild B über Bild A. Der Modus bestimmt die Verrechnung (Addieren, Multiplizieren, Screen, Subtrahieren, Differenz …), „Amount“ blendet zwischen A und dem Ergebnis."
 msgstr "Lays image B over image A. The mode sets how they combine (add, multiply, screen, subtract, difference ...); \"Amount\" fades between A and the result."
 
-#: dmx_output_monitor_panel.cpp:200
+#: dmx_output_monitor_panel.cpp:209
 msgid "Letzter gesendeter Frame vor %1 s (veraltet)."
 msgstr "Last frame sent %1 s ago (stale)."
 
-#: dmx_monitor_panel.cpp:200
+#: dmx_monitor_panel.cpp:202
 msgid "Letztes Paket vor %1 s (veraltet)."
 msgstr "Last packet %1 s ago (stale)."
 
@@ -1982,7 +1982,7 @@ msgstr "Clear list"
 msgid "Live"
 msgstr "Live"
 
-#: dmx_monitor_panel.cpp:143
+#: dmx_monitor_panel.cpp:145
 msgid "Live Kanal"
 msgstr "Live channel"
 
@@ -2082,7 +2082,7 @@ msgstr "Magenta"
 msgid "Manuell"
 msgstr "Manual"
 
-#: dmx_monitor_panel.cpp:138
+#: dmx_monitor_panel.cpp:140
 msgid "Master"
 msgstr "Master"
 
@@ -2226,7 +2226,7 @@ msgstr "New version %1 available – Help > Check for Updates …"
 msgid "Neuer Name:"
 msgstr "New name:"
 
-#: dmx_output_monitor_panel.cpp:142
+#: dmx_output_monitor_panel.cpp:151
 msgid "Neues Fixture hier patchen…"
 msgstr "Patch new fixture here…"
 
@@ -2266,7 +2266,7 @@ msgstr "No templates yet"
 msgid "Noch nicht im Layout verwendet."
 msgstr "Not used in the layout yet."
 
-#: dmx_monitor_panel.cpp:151 dmx_output_monitor_panel.cpp:150
+#: dmx_monitor_panel.cpp:153 dmx_output_monitor_panel.cpp:159
 msgid "Node"
 msgstr "Node"
 
@@ -2421,6 +2421,10 @@ msgstr "Pixels on the cable before the first LED that do not light up (for examp
 #: node_info_texts.cpp:112
 msgid "Plasma: Weich ineinanderfließende, wabernde Farbflächen. Skalierung, Tempo und Tiefe einstellbar. „Palette“ wählt die Farbgebung: „Classic“ ist der klassische Fixverlauf, dazu drei fertige Verläufe („Fire“, „Ocean“, „Neon“) sowie „Custom“ für die vier eigenen Farben color1..color4."
 msgstr "Plasma: softly flowing, undulating color fields. Scale, speed and depth adjustable. \"Palette\" picks the coloring: \"Classic\" is the original fixed gradient, plus three ready-made gradients (\"Fire\", \"Ocean\", \"Neon\") and \"Custom\" for your own four colors, color1..color4."
+
+#: dmx_output_monitor_panel.cpp:122
+msgid "Pool-Kanal %1"
+msgstr "Pool channel %1"
 
 #: dmx_patch_table.cpp:44
 msgid "Pool-Kanal (von)"

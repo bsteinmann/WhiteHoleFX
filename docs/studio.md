@@ -625,6 +625,12 @@ belegte Zelle bietet zusätzlich „Farbe ändern…” an: ein Farbwahl-Dialog 
 Zelle; die Überschreibung ist rein optisch (kein Projekt- oder Einstellungswert) und geht beim nächsten
 Protokoll-/Universe-Wechsel wieder verloren.
 
+**Name in der Zelle (nachträglich freigegebene Erweiterung, vom Nutzer gewünscht: „den Namen des
+gepatchten Objekts anzeigen, nicht nur die Farbe”):** eine belegte Zelle zeigt unter dem Wert zusätzlich den
+Namen aus demselben Tooltip-Text (Node-Name, „Master-Helligkeit”, „Live-Look-Auswahl” oder
+„Live-Überblendzeit”) — eine freie Zelle zeigt weiterhin nur den Wert bzw. „–”. Wird wie Tooltip und
+Zellenfarbe nur bei einem Protokoll-/Universe-Wechsel neu berechnet.
+
 **Reiter „Ausgang" (Schritt 2 des DMX-Patch/Monitor-Gitters):** dasselbe Gitter wie der Reiter Eingang, aber
 für die zuletzt **gesendeten** Art-Net/sACN-Universen statt der empfangenen — dieselbe Protokoll-/Universe-
 Auswahl, dieselbe „aktiv/veraltet"-Anzeige nach 5 Sekunden, dieselbe Sichtbarkeits-Aktualisierung. DDP
@@ -651,6 +657,10 @@ der Seite Ausgabe und springt dort zur passenden Zeile der Fixture-Patch- bzw. d
 
 **Zellenfarben (Ausgang):** wie beim Eingang, nur mit zwei Kategorien — Fixture (Blau) und DMX-Kanal-Pool
 (Grün) — und derselben „Farbe ändern…”-Aktion auf einer belegten Zelle.
+
+**Name in der Zelle (Ausgang):** wie beim Eingang zeigt eine belegte Zelle unter dem Wert zusätzlich den
+Namen — bei einem Fixture dessen Namen, beim DMX-Kanal-Pool („Pool-Kanal N”, da ein Pool-Eintrag selbst
+keinen eigenen Namen hat) — eine freie Zelle zeigt weiterhin nur den Wert bzw. „–”.
 
 ## Audio-Eingang
 
