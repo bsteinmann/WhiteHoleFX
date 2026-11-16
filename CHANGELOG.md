@@ -2,6 +2,11 @@
 
 ## 0.92.0
 
+- **Layout-Tab: Fixture-Bibliothek nicht mehr von hier aus erreichbar, nur noch im Reiter Fixtures** (vom
+  Nutzer gewünscht: Bauformen dürfen ausschließlich im Reiter Fixtures entstehen bzw. aus der Bibliothek
+  geholt werden). Die zweite, abkürzende „Fixture-Bibliothek“-Liste im Reiter Layout (`layout_panel_catalog.cpp`,
+  `takeOverFromCatalog`) ist entfernt; „Fixtures in Show“ bleibt dort als einzige Liste zum Platzieren von
+  Exemplaren einer schon vorhandenen Bauform.
 - **Eigener Node-Name steht jetzt zusätzlich zum Automatiknamen, nicht statt ihm** - z. B.
   "DMX Channel 2 (Eingangstür)" statt nur "Eingangstür" (vom Nutzer gewünscht: der Automatikname sollte auf
   einen Blick sichtbar bleiben, auch wenn der Node umbenannt wurde). Format "Automatikname (Beschriftung)",

@@ -281,13 +281,12 @@ Die erste Seite im Fenster Stage Config (Menü Stage Config → Fixtures …) is
 
 ### Layout: Exemplare verteilen und drehen
 
-Im Reiter Layout stehen oben zwei Listen übereinander. Ganz oben die **Fixture-Bibliothek** (alle gespeicherten
-Bauformen, dieselbe Benutzerbibliothek wie im Reiter Fixtures unter „Gespeicherte Fixtures“); ein Doppelklick oder
-**In Show übernehmen** holt eine Bauform von dort in diese Show (angelegt oder bearbeitet wird eine Bauform nach wie
-vor im Reiter Fixtures). Darunter **Fixtures in Show**, die Bauformen, die die Show schon hat; ein Doppelklick oder
-**Auf die Bühne** legt davon ein Exemplar mit dem nächsten freien Patch an. Beide Listen zeigen hinter dem frei
-vergebenen Namen in Gedankenstrichen die Original-Bezeichnung der Form (z. B. „Kachel 5x3 — 2D-Matrix“), damit auch
-ein frei gewählter Name nicht verschleiert, was es eigentlich ist.
+Im Reiter Layout steht oben **Fixtures in Show**: die Bauformen, die die Show schon hat (angelegt und bearbeitet
+werden sie ausschließlich im Reiter Fixtures, siehe dort - die Fixture-Bibliothek auf der Festplatte ist von hier
+aus nicht erreichbar). Ein Doppelklick oder **Auf die Bühne** legt von der gewählten Bauform ein Exemplar mit dem
+nächsten freien Patch an, beliebig oft. Die Liste zeigt hinter dem frei vergebenen Namen in Gedankenstrichen die
+Original-Bezeichnung der Form (z. B. „Kachel 5x3 — 2D-Matrix“), damit auch ein frei gewählter Name nicht
+verschleiert, was es eigentlich ist.
 
 Lage (Ursprung x y z) und **Drehung x y z** (Grad, um die Mitte des Fixtures) eines Exemplars auf der Bühne stellst
 du im Formular darunter ein. Das Feld **Bauform** wechselt die Bauform eines Fixtures; der letzte Eintrag „Neue

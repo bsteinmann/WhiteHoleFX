@@ -66,12 +66,6 @@ public:
     bool addFromType(const QString& typeName);
     [[nodiscard]] QString selectedTypeName() const;
 
-    /// Fixture-Bibliothek (alle gespeicherten Bauformen, Benutzerbibliothek auf der Festplatte, siehe
-    /// user_library.hpp): Liste füllen und eine gewählte Bauform in diese Show übernehmen.
-    void fillCatalogList();
-    bool takeOverFromCatalog(const QString& name);
-    [[nodiscard]] QString selectedCatalogName() const;
-
     /// Alle in der Liste gewählten Fixtures (in Listenreihenfolge).
     [[nodiscard]] std::vector<mapping::FixtureId> selectedIds() const;
     /// Wählt genau diese Fixtures (ohne `selectionChanged` auszulösen); das erste zeigt das Formular.
@@ -107,7 +101,6 @@ private:
     QString exerciseImport();
     QString exerciseAddDialog();
     QString exerciseTypes();
-    QString exerciseCatalog();
     void fillList(mapping::FixtureId select);
     void refreshTexts();
     void addFixture(const QString& baseName, mapping::FixtureShape shape);
@@ -121,7 +114,6 @@ private:
 
     runtime::Player& player_;
     QListWidget* list_{nullptr};
-    QListWidget* catalog_{nullptr};  // Fixture-Bibliothek (alle gespeicherten Bauformen); Doppelklick übernimmt in die Show
     QListWidget* types_{nullptr};  // Bauformen der Show; Doppelklick stellt ein Exemplar auf die Bühne
     FixtureForm* fixture_{nullptr};
     QCheckBox* showGrid_{nullptr};

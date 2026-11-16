@@ -32,23 +32,9 @@ LayoutPanel::LayoutPanel(runtime::Player& player, QWidget* parent) : QTabWidget{
     auto* page = new QWidget;
     auto* pageLayout = new QVBoxLayout{page};
 
-    // Ganz oben die Fixture-Bibliothek (alle gespeicherten Bauformen, siehe user_library.hpp): Doppelklick oder
-    // „In Show übernehmen“ holt eine davon in diese Show. Anlegen und Bearbeiten bleibt Aufgabe des Reiters
-    // Fixtures (siehe layout_panel_catalog.cpp) - dieselbe Liste wie dort unter „Gespeicherte Fixtures“.
-    auto* catalogRow = new QHBoxLayout;
-    catalog_ = new QListWidget;
-    catalog_->setMaximumHeight(72);
-    catalog_->setToolTip(tr("Alle gespeicherten Bauformen (Stage Config → Fixtures). Doppelklick übernimmt eine in diese Show."));
-    auto* catalogButton = new QPushButton{tr("In Show übernehmen")};
-    catalogButton->setToolTip(tr("Gewählte Bauform aus der Bibliothek in diese Show übernehmen"));
-    catalogRow->addWidget(catalog_, 1);
-    catalogRow->addWidget(catalogButton, 0, Qt::AlignTop);
-    pageLayout->addWidget(new QLabel{tr("Fixture-Bibliothek (alle gespeicherten Bauformen)")});
-    pageLayout->addLayout(catalogRow);
-    connect(catalog_, &QListWidget::itemDoubleClicked, this, [this](QListWidgetItem*) { takeOverFromCatalog(selectedCatalogName()); });
-    connect(catalogButton, &QPushButton::clicked, this, [this]() { takeOverFromCatalog(selectedCatalogName()); });
-
-    // Darunter die Bauformen dieser Show: Doppelklick oder „Auf die Bühne“ legt ein Exemplar an.
+    // Ganz oben die Bauformen dieser Show: Doppelklick oder „Auf die Bühne“ legt ein Exemplar an. Anlegen und
+    // Bearbeiten der Bauformen selbst (inklusive der Fixture-Bibliothek auf der Festplatte) bleibt Aufgabe des
+    // Reiters Fixtures (siehe fixture_library_page.hpp) - diese Liste hier dient nur dem Platzieren.
     auto* typeRow = new QHBoxLayout;
     types_ = new QListWidget;
     types_->setMaximumHeight(72);
@@ -101,7 +87,6 @@ LayoutPanel::LayoutPanel(runtime::Player& player, QWidget* parent) : QTabWidget{
         Q_EMIT edited();
     });
     connect(fixture_, &FixtureForm::failed, this, &LayoutPanel::failed);
-    fillCatalogList();
 }
 
 mapping::FixtureId LayoutPanel::selectedId() const {
@@ -110,7 +95,6 @@ mapping::FixtureId LayoutPanel::selectedId() const {
 }
 
 void LayoutPanel::rebuild() {
-    fillCatalogList();
     fillTypeList();
     fillList(selectedId());
 }
@@ -382,9 +366,6 @@ QString LayoutPanel::exercise() {
         return note;
     }
     if (const QString note = exerciseTypes(); !note.isEmpty()) {
-        return note;
-    }
-    if (const QString note = exerciseCatalog(); !note.isEmpty()) {
         return note;
     }
     return exerciseArrange();
