@@ -191,7 +191,8 @@ Effekt, und aktualisiert sich bei jeder Änderung.
 
 Die Seite „Layout“ hat drei Teile.
 
-**Fixture hinzufügen:** Der Dialog (Menü Stage Config oder Knopf „Hinzufügen …“ in der Liste) fragt alles in einem Schritt:
+**Fixture hinzufügen:** Der Dialog (Menü Stage Config → „Fixture hinzufügen …“, oder per Rechtsklick „Neues Fixture
+hier patchen…“ im DMX-Ausgangs-Monitor) fragt alles in einem Schritt:
 
 - **Form:** Matrix (Fläche), Strip (Linie) oder 3D-Gitter (Cube, Vorhang, Säule).
 - **Größe:** beim Gitter die Anzahl LEDs in x, y und z, dazu der Abstand je Achse. Eine Zeile darunter nennt LED-Zahl, Größe
@@ -203,10 +204,12 @@ Die Seite „Layout“ hat drei Teile.
 - **Patch:** automatisch (nächstes freies Universe), manuell (Protokoll, Ziel, Universe, erster Kanal, Farbreihenfolge) oder
   nicht senden.
 
-**Fixtures:** Liste mit „Hinzufügen …“ und „Entfernen“ (auch per Rechtsklick auf einen Eintrag: entfernt genau das
-Fixture unter dem Mauszeiger, unabhängig von der aktuellen Auswahl). Ein Fixture aus dem Dialog landet dort, wo der
-Dialog es hinsetzt; ohne eigene Angabe bekommt es das erste freie Universe (Art-Net, Ziel 0, 170 LEDs je Universe).
-Für das gewählte Fixture gibt es ein Formular:
+**Fixtures:** Liste „Fixtures auf der Bühne“ mit „Entfernen“ (auch per Rechtsklick auf einen Eintrag: entfernt genau
+das Fixture unter dem Mauszeiger, unabhängig von der aktuellen Auswahl). Ein Fixture entsteht hier nicht mehr direkt
+(der Knopf „Hinzufügen …“ ist weg); neue Exemplare kommen aus einer Bauform (siehe die beiden Listen weiter unten)
+oder über das Menü Stage Config → „Fixture hinzufügen …“ (Dialog wie oben). Ein Fixture aus dem Dialog landet dort,
+wo der Dialog es hinsetzt; ohne eigene Angabe bekommt es das erste freie Universe (Art-Net, Ziel 0, 170 LEDs je
+Universe). Für das gewählte Fixture gibt es ein Formular:
 
 - Name, Ursprung (x y z), Drehung (x y z in Grad) und Bauform
 - Die Form selbst (Spalten/Zeilen, LED-Zahl, Verkabelung …) ändert man nur noch im Reiter Fixtures, an der
@@ -279,7 +282,22 @@ Die erste Seite im Fenster Stage Config (Menü Stage Config → Fixtures …) is
 
 ### Layout: Exemplare verteilen und drehen
 
-Im Reiter Layout stehen die Bauformen der Show oben in einer eigenen Liste („Bauformen in dieser Show“); ein Doppelklick oder **Auf die Bühne** legt ein Exemplar mit dem nächsten freien Patch an. Lage (Ursprung x y z) und **Drehung x y z** (Grad, um die Mitte des Fixtures) stellst du im Formular ein. Das Feld **Bauform** wechselt die Bauform eines Fixtures; der letzte Eintrag „Neue Bauform aus dieser Form …“ legt aus der aktuellen Form eine neue Bauform in der Bibliothek an und weist sie zu. Jedes Fixture braucht eine Bauform - auch „Matrix“, „Strip“ und der Dialog „Fixture hinzufügen“ legen beim Anlegen automatisch eine an (Reiter Fixtures zeigt sie danach); nur ein Fixture aus einer älteren Projektdatei kann noch ohne Bauform sein, bis man ihm über denselben Weg eine gibt. Die eigentliche Form (Größe, Verkabelung …) ändert man nur noch im Reiter Fixtures. Die Drehung wirkt in der Abtastung (Effekt), in der Vorschau und in der Stage-Ansicht.
+Im Reiter Layout stehen oben zwei Listen übereinander. Ganz oben die **Fixture-Bibliothek** (alle gespeicherten
+Bauformen, dieselbe Benutzerbibliothek wie im Reiter Fixtures unter „Gespeicherte Fixtures“); ein Doppelklick oder
+**In Show übernehmen** holt eine Bauform von dort in diese Show (angelegt oder bearbeitet wird eine Bauform nach wie
+vor im Reiter Fixtures). Darunter **Fixtures in Show**, die Bauformen, die die Show schon hat; ein Doppelklick oder
+**Auf die Bühne** legt davon ein Exemplar mit dem nächsten freien Patch an. Beide Listen zeigen hinter dem frei
+vergebenen Namen in Gedankenstrichen die Original-Bezeichnung der Form (z. B. „Kachel 5x3 — 2D-Matrix“), damit auch
+ein frei gewählter Name nicht verschleiert, was es eigentlich ist.
+
+Lage (Ursprung x y z) und **Drehung x y z** (Grad, um die Mitte des Fixtures) eines Exemplars auf der Bühne stellst
+du im Formular darunter ein. Das Feld **Bauform** wechselt die Bauform eines Fixtures; der letzte Eintrag „Neue
+Bauform aus dieser Form …“ legt aus der aktuellen Form eine neue Bauform in der Bibliothek an und weist sie zu.
+Jedes Fixture braucht eine Bauform - auch „Matrix“, „Strip“ und der Dialog „Fixture hinzufügen“ (Menü Stage Config)
+legen beim Anlegen automatisch eine an (Reiter Fixtures zeigt sie danach); nur ein Fixture aus einer älteren
+Projektdatei kann noch ohne Bauform sein, bis man ihm über denselben Weg eine gibt. Die eigentliche Form (Größe,
+Verkabelung …) ändert man nur noch im Reiter Fixtures. Die Drehung wirkt in der Abtastung (Effekt), in der Vorschau
+und in der Stage-Ansicht.
 
 ### Reiter Test: Testbilder über die ganze Bühne
 
@@ -344,13 +362,11 @@ leuchtenden dahinter. Darum gilt in 3D:
 Die Wahl wird gespeichert und gilt für alle 3D-Ansichten. Die 2D-Ansicht bleibt wie sie war. Der Kern (Kamera, Projektion, Zeichnen) liegt ohne Qt in
 `libs/wh_preview/include/whitehole/preview/view3d.hpp` und ist unit-getestet; `Player::image3d` liefert das Bild.
 
-### Verkabelung, LED-Adresse und Vorlagen
+### Verkabelung und LED-Adresse
 
 In Stage Config → Layout zeigt die kleine Vorschau neben dem Formular den Kabelweg: weiße Linie mit Pfeilen in Laufrichtung, die Start-LED grün umrandet, bei weit genug auseinanderliegenden LEDs auch ihre Nummern. Der Schalter **Verkabelung** darunter blendet das alles aus.
 
 Ein Klick (ohne Ziehen) auf eine LED markiert sie gelb und zeigt in der Zeile darunter, wo sie ankommt: Fixture, LED-Nummer, Protokoll, Ziel, Universe und Kanäle (bei DDP das Byte). Eine LED belegt drei Kanäle und wird nicht über eine Universe-Grenze geteilt, daher beginnt das nächste Universe nach 170 LEDs (bei Startkanal 1).
-
-Der Knopf **Vorlagen** speichert das gewählte Fixture als Vorlage (Form, Maße, Abstand, Verkabelung, Protokoll, Farbreihenfolge, Gamma, Helligkeit; ohne Universe und Kanal) und legt sie später mit einem Klick neu an, mit dem nächsten freien Universe. Die Vorlagen sind `.whfx`-Dateien im Ordner `fixtures` des Programmordners (unter Windows `%APPDATA%\WhiteHoleFX\WhiteHoleFX\fixtures`), also kopierbar und weitergebbar.
 
 ### Mehrere Outputs
 

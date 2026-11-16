@@ -2,6 +2,23 @@
 
 ## 0.92.0
 
+- **Layout-Tab umgebaut: Fixture-Bibliothek oben, „Hinzufügen“- und „Vorlagen“-Knopf entfernt** (vom
+  Nutzer vorgegeben, vier Punkte). Oben im Reiter Layout steht jetzt zuerst die **Fixture-Bibliothek**
+  (alle gespeicherten Bauformen, dieselbe Benutzerbibliothek wie im Reiter Fixtures unter „Gespeicherte
+  Fixtures"; neue Datei `layout_panel_catalog.cpp`, `LayoutPanel::fillCatalogList`/`takeOverFromCatalog`);
+  Doppelklick oder „In Show übernehmen" holt eine Bauform von dort in die Show. Darunter, umbenannt von
+  „Bauformen in dieser Show" zu **Fixtures in Show**, die bisherige Liste der Bauformen der Show
+  unverändert in ihrer Funktion (Doppelklick/„Auf die Bühne" legt ein Exemplar an). Beide Listen zeigen
+  hinter dem frei vergebenen Namen zusätzlich die Original-Bezeichnung der Form (z. B. „Kachel 5x3 —
+  2D-Matrix"; neue Datei `fixture_shape_label.hpp/.cpp`), damit ein frei gewählter Name nicht verschleiert,
+  was dahintersteckt. Der Knopf „Hinzufügen …" ist aus dem Layout-Tab entfernt (Anlegen geht jetzt nur noch
+  über eine Bauform oder über den Dialog im Menü Stage Config bzw. den Rechtsklick im DMX-Ausgangs-Monitor -
+  beide bleiben unverändert bestehen, `AddFixtureDialog`/`addFromDialog`/`addFromDialogAt` sind unangetastet).
+  Der Knopf „Vorlagen" ist komplett entfernt (`layout_panel_library.cpp` gelöscht): Die alte, separate
+  Vorlagen-Bibliothek (`project::FixtureTemplate`/`FixtureLibrary`, je eine `.whfx`-Datei pro Vorlage im
+  Ordner `fixtures`) war seit der Benutzerbibliothek (`user_library.hpp`, eine gemeinsame Datei
+  `fixture-library.whfx`) nur noch für dieses eine, jetzt gestrichene Menü in Gebrauch - Backend
+  (`fixture_template.hpp/.cpp`) und sein eigener Test (`fixture_template_test.cpp`) sind mit entfernt.
 - **Layout: Bauform wird Pflicht, Form nur noch im Reiter Fixtures bearbeitbar** (vom Nutzer entschieden:
   Fixtures sollen "nur im Fixtures-Tab bearbeitet werden können"). Bisher legten „Matrix“, „Strip“ und der
   Dialog „Fixture hinzufügen“ ein typloses Fixture mit „eigener Form“ an - bearbeitbar direkt im Reiter

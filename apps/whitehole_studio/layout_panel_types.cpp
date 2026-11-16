@@ -9,6 +9,8 @@
 
 #include <algorithm>
 
+#include "fixture_shape_label.hpp"
+
 namespace whitehole::studio {
 
 using form::fromStd;
@@ -19,7 +21,10 @@ void LayoutPanel::fillTypeList() {
     types_->clear();
     for (const project::FixtureType& type : player_.fixtureTypes()) {
         const QString name = fromStd(type.name);
-        auto* item = new QListWidgetItem{tr("%1 (%2 LEDs)").arg(name).arg(mapping::ledCount(type.shape))};
+        // Name zuerst (frei vergeben), dahinter die Original-Bezeichnung der Form: sonst sieht man einem Namen wie
+        // "Kachel 5x3" nicht mehr an, ob dahinter wirklich eine Matrix steckt (siehe fixture_shape_label.hpp).
+        auto* item = new QListWidgetItem{
+            tr("%1 — %2 (%3 LEDs)").arg(name, shapeKindLabel(type.shape)).arg(mapping::ledCount(type.shape))};
         item->setData(Qt::UserRole, name);
         types_->addItem(item);
         if (name == keep) {

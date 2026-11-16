@@ -17,7 +17,6 @@
 #include "fixture_form.hpp"
 #include "stage_view.hpp"
 #include "whitehole/mapping/point_import.hpp"
-#include "whitehole/project/fixture_template.hpp"
 #include "whitehole/runtime/player.hpp"
 
 class QCheckBox;
@@ -61,21 +60,21 @@ public:
     bool importPointsFile(const QString& path, const mapping::ImportOptions& options);
     void removeSelected();
 
-    /// Fixture-Bibliothek: füllt das Menü (Speichern, Vorlagen zum Anlegen, Löschen), speichert das gewählte
-    /// Fixture als Vorlage und legt ein Fixture aus einer Vorlage an.
-    void fillLibraryMenu(QMenu* menu);
-    void saveAsTemplate();
-
     /// Gruppen und Regionen als Ziele für Output-Nodes: Menü füllen, Gruppe aus der Auswahl speichern, Region anlegen.
     void fillGroupMenu(QMenu* menu);
     void saveGroup();
     void addRegion();
-    void addFromTemplate(const project::FixtureTemplate& tpl);
 
     /// Bauformen dieser Show (Stage Config → Fixtures): Liste füllen und ein Exemplar mit Patch auf der Bühne anlegen.
     void fillTypeList();
     bool addFromType(const QString& typeName);
     [[nodiscard]] QString selectedTypeName() const;
+
+    /// Fixture-Bibliothek (alle gespeicherten Bauformen, Benutzerbibliothek auf der Festplatte, siehe
+    /// user_library.hpp): Liste füllen und eine gewählte Bauform in diese Show übernehmen.
+    void fillCatalogList();
+    bool takeOverFromCatalog(const QString& name);
+    [[nodiscard]] QString selectedCatalogName() const;
 
     /// Alle in der Liste gewählten Fixtures (in Listenreihenfolge).
     [[nodiscard]] std::vector<mapping::FixtureId> selectedIds() const;
@@ -112,6 +111,7 @@ private:
     QString exerciseImport();
     QString exerciseAddDialog();
     QString exerciseTypes();
+    QString exerciseCatalog();
     void fillList(mapping::FixtureId select);
     void refreshTexts();
     void addFixture(const QString& baseName, mapping::FixtureShape shape);
@@ -125,6 +125,7 @@ private:
 
     runtime::Player& player_;
     QListWidget* list_{nullptr};
+    QListWidget* catalog_{nullptr};  // Fixture-Bibliothek (alle gespeicherten Bauformen); Doppelklick übernimmt in die Show
     QListWidget* types_{nullptr};  // Bauformen der Show; Doppelklick stellt ein Exemplar auf die Bühne
     FixtureForm* fixture_{nullptr};
     QCheckBox* showGrid_{nullptr};

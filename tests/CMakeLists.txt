@@ -95,7 +95,6 @@ add_executable(wh_tests
     project/project_destinations_test.cpp
     project/cue_test.cpp
     project/node_group_file_test.cpp
-    project/fixture_template_test.cpp
     project/output_target_test.cpp
     fuzz/parser_fuzz_test.cpp
     fuzz/player_ops_fuzz_test.cpp
