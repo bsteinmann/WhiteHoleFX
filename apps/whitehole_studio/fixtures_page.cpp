@@ -54,7 +54,7 @@ void FixturesPage::fillList() {
             fixture.type.empty() ? tr("eigene Form") : tr("Bauform „%1“").arg(fromStd(fixture.type));
         auto* item = new QListWidgetItem{
             tr("%1 — %2 (%3 LEDs)").arg(fromStd(fixture.name), shapeInfo).arg(mapping::ledCount(fixture.shape))};
-        item->setData(Qt::UserRole, fixture.id.value());
+        item->setData(Qt::UserRole, static_cast<qulonglong>(fixture.id.value()));
         list_->addItem(item);
     }
     if (list_->count() == 0) {

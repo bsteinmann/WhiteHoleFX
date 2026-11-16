@@ -105,6 +105,8 @@ MainWindow::MainWindow(gpu::IGpuDevice* device, const QString& deviceNote, QWidg
     connect(layoutPanel_, &LayoutPanel::projectNeeded, this, [this]() { newProject(false); });
     connect(layoutPanel_, &LayoutPanel::failed, this,
             [this](const QString& message) { statusBar()->showMessage(message, 8000); });
+    connect(layoutPanel_, &LayoutPanel::notice, this,
+            [this](const QString& message) { statusBar()->showMessage(message, 8000); });
     previewController_ = new PreviewController{*player_, preview_, layoutPanel_, this};
     connect(previewController_, &PreviewController::edited, this, &MainWindow::onLayoutEdited);
     connect(previewController_, &PreviewController::regionEdited, this, &MainWindow::refreshParameters);

@@ -10,7 +10,7 @@ msgstr ""
 msgid "\nRechtsklick: Favorit umschalten"
 msgstr "\nRight-click: toggle favorite"
 
-#: main_window.cpp:292
+#: main_window.cpp:294
 msgid "   |   AUSGABE AN"
 msgstr "   |   OUTPUT ON"
 
@@ -22,11 +22,11 @@ msgstr "   |   Audio nodes in project, input off (Settings)"
 msgid "   |   Audio: %1"
 msgstr "   |   Audio: %1"
 
-#: main_window.cpp:292
+#: main_window.cpp:294
 msgid "   |   Ausgabe aus (%1 Pakete nicht gesendet)"
 msgstr "   |   Output off (%1 packets not sent)"
 
-#: main_window.cpp:282
+#: main_window.cpp:284
 msgid "   |   BLACKOUT"
 msgstr "   |   BLACKOUT"
 
@@ -38,15 +38,15 @@ msgstr "   |   DMX input %1: %2 packets"
 msgid "   |   DMX-Nodes im Projekt, Eingang aus (Einstellungen)"
 msgstr "   |   DMX nodes in project, input off (Settings)"
 
-#: main_window.cpp:287
+#: main_window.cpp:289
 msgid "   |   EINGANG FEHLT – LEDs aus"
 msgstr "   |   INPUT MISSING – LEDs off"
 
-#: main_window.cpp:284
+#: main_window.cpp:286
 msgid "   |   Master %1 %"
 msgstr "   |   Master %1 %"
 
-#: main_window.cpp:279
+#: main_window.cpp:281
 msgid "   |   TESTMODUS"
 msgstr "   |   TEST MODE"
 
@@ -126,11 +126,11 @@ msgstr "%1 (not found)"
 msgid "%1 LEDs · Größe %2 × %3 × %4 · %5 Kanäle (RGB), rund %6 Universe(s)"
 msgstr "%1 LEDs · size %2 × %3 × %4 · %5 channels (RGB), about %6 universe(s)"
 
-#: main_window.cpp:268
+#: main_window.cpp:270
 msgid "%1 LEDs, Frame %2 (verworfen %3), Pakete %4, Sendefehler %5"
 msgstr "%1 LEDs, frame %2 (dropped %3), packets %4, send errors %5"
 
-#: main_window.cpp:266
+#: main_window.cpp:268
 msgid "%1 LEDs, angehalten"
 msgstr "%1 LEDs, stopped"
 
@@ -138,7 +138,7 @@ msgstr "%1 LEDs, stopped"
 msgid "%1 · LED %2 von %3"
 msgstr "%1 · LED %2 of %3"
 
-#: fixtures_page.cpp:56 layout_panel_catalog.cpp:45
+#: fixtures_page.cpp:56 layout_panel_catalog.cpp:48
 msgid "%1 — %2 (%3 LEDs)"
 msgstr "%1 — %2 (%3 LEDs)"
 
@@ -250,11 +250,11 @@ msgstr "&Save"
 msgid "&Stage Config"
 msgstr "&Stage Config"
 
-#: main_window.cpp:154 main_window_actions.cpp:55
+#: main_window.cpp:156 main_window_actions.cpp:55
 msgid "&Start"
 msgstr "&Start"
 
-#: main_window.cpp:154
+#: main_window.cpp:156
 msgid "&Stopp"
 msgstr "&Stop"
 
@@ -750,6 +750,10 @@ msgstr "Remove fixture type. Fixtures in the layout keep their shape as their ow
 msgid "Bauform „%1“"
 msgstr "Fixture type “%1”"
 
+#: layout_panel_catalog.cpp:123
+msgid "Bauform „%1“ in der Bibliothek gespeichert."
+msgstr "Fixture type “%1” saved to the library."
+
 #: cue_panel.cpp:64
 msgid "Bearbeiten …"
 msgstr "Edit …"
@@ -946,7 +950,7 @@ msgstr "The cable runs from ring to ring without jumping back: the bottom ring f
 msgid "Das Pong-Spiel als Rechen-Node: Ball, Schläger, Punkte und Treffer als Werte. Computer oder Eingang spielen, auch im Takt der Musik. Gezeichnet wird es von „Pong Display“."
 msgstr "The Pong game as a compute node: ball, paddles, score and hits as values. The computer or an input plays, also in time with the music. It is drawn by “Pong Display”."
 
-#: main_window.cpp:215
+#: main_window.cpp:217
 msgid "Das Projekt wurde geändert. Änderungen verwerfen?"
 msgstr "The project has been modified. Discard changes?"
 
@@ -1094,7 +1098,7 @@ msgstr "The change takes effect immediately after “OK”."
 msgid "Diese Form ist ungültig."
 msgstr "This shape is invalid."
 
-#: main_window.cpp:192 parameter_panel.cpp:260
+#: main_window.cpp:194 parameter_panel.cpp:260
 msgid "Dieser Node hat keine einstellbaren Parameter."
 msgstr "This node has no adjustable parameters."
 
@@ -1334,7 +1338,7 @@ msgstr "First channel in the internal channel pool of the DMX output nodes (1..5
 msgid "Erster echter DMX-Kanal am Ziel (1..512)."
 msgstr "First real DMX channel at the destination (1..512)."
 
-#: layout_panel_catalog.cpp:111
+#: layout_panel_catalog.cpp:207
 msgid "Es gibt keine gespeicherte Bauform \"%1\""
 msgstr "There is no stored fixture type \\\"%1\\\""
 
@@ -1486,7 +1490,7 @@ msgstr "Shape"
 msgid "Fragt bei GitHub nach der neuesten Version (nur die Versionsnummer, nichts wird installiert)"
 msgstr "Asks GitHub for the latest version (only the version number; nothing is installed)"
 
-#: main_window.cpp:340
+#: main_window.cpp:342
 msgid "Frame"
 msgstr "Frame"
 
@@ -1558,7 +1562,7 @@ msgstr "Overall brightness (affects preview and output, not saved in the project
 msgid "Gesamtlautstärke des Audio-Eingangs als Pegel und Spitze, linear oder in dB, auf Wunsch mit automatischer Verstärkung. Einzelne Schläge (Kick, Snare, Hi-Hat) erkennt „Audio Trigger“."
 msgstr "Overall loudness of the audio input as level and peak, linear or in dB, with automatic gain if you like. Individual hits (kick, snare, hi-hat) are detected by “Audio Trigger”."
 
-#: layout_panel_catalog.cpp:86
+#: layout_panel_catalog.cpp:101
 msgid "Gespeichert in der Bibliothek. „In Show übernehmen“ (oder Doppelklick) holt ein Exemplar in diese Show."
 msgstr "Saved in the library. “Add to show” (or double-click) places an instance in this show."
 
@@ -1782,7 +1786,7 @@ msgstr "No fixture selected."
 msgid "Kein GPU-Adapter: %1"
 msgstr "No GPU adapter: %1"
 
-#: main_window.cpp:264
+#: main_window.cpp:266
 msgid "Kein Projekt"
 msgstr "No project"
 
@@ -1854,7 +1858,7 @@ msgstr "LEDs per ring"
 msgid "LEDs x y z"
 msgstr "LEDs x y z"
 
-#: main_window.cpp:276
+#: main_window.cpp:278
 msgid "LIVE   |   "
 msgstr "LIVE   |   "
 
@@ -2206,7 +2210,7 @@ msgstr "New project"
 msgid "Neues Projekt (Strg+N)"
 msgstr "New project (Ctrl+N)"
 
-#: main_window.cpp:136
+#: main_window.cpp:138
 msgid "Neues Projekt (Strg+N), Projekt öffnen (Strg+O) oder eine .whfx-Datei hierher ziehen.\n\n%1"
 msgstr "New project (Ctrl+N), open a project (Ctrl+O) or drag a .whfx file here.\n\n%1"
 
@@ -2226,7 +2230,7 @@ msgstr "Removes the selected fixture type from the library; the show stays uncha
 msgid "Noch kein Fixture auf der Bühne (Reiter Layout → Fixture-Bibliothek oder „Fixture hinzufügen …“)"
 msgstr "No fixture on stage yet (Layout tab → Fixture library, or “Add fixture…”)"
 
-#: layout_panel_catalog.cpp:53
+#: layout_panel_catalog.cpp:58
 msgid "Noch keine gespeicherten Bauformen (oben: Bauformen dieser Show → In Bibliothek speichern)"
 msgstr "No saved fixture types yet (above: Fixture types in this show → Save to library)"
 
@@ -2722,7 +2726,7 @@ msgstr "Stage Config"
 msgid "Standardgerät des Systems"
 msgstr "System default device"
 
-#: cue_panel.cpp:67 cue_panel.cpp:145 main_window.cpp:310
+#: cue_panel.cpp:67 cue_panel.cpp:145 main_window.cpp:312
 msgid "Start"
 msgstr "Start"
 
@@ -2870,7 +2874,7 @@ msgstr "Rename …"
 msgid "Unerwartetes Ende beim letzten Mal"
 msgstr "Unexpected end last time"
 
-#: main_window.cpp:214
+#: main_window.cpp:216
 msgid "Ungespeicherte Änderungen"
 msgstr "Unsaved changes"
 
@@ -3002,11 +3006,11 @@ msgstr "Waveform of the audio input (a short time window, optionally aligned to 
 msgid "Wellenringe wie Wassertropfen: Ringe breiten sich von zufälligen Punkten aus (Tropfen pro Sekunde, Tempo, Ringbreite)."
 msgstr "Ripples like water drops: rings spread from random points (drops per second, speed, ring width)."
 
-#: main_window.cpp:128 main_window.cpp:167
+#: main_window.cpp:130 main_window.cpp:169
 msgid "WhiteHoleFX"
 msgstr "WhiteHoleFX"
 
-#: main_window.cpp:171
+#: main_window.cpp:173
 msgid "WhiteHoleFX – %1%2"
 msgstr "WhiteHoleFX – %1%2"
 
@@ -3069,6 +3073,10 @@ msgstr "Select a node in the node editor to see its parameters. \"Pin\" keeps a 
 #: layout_panel_groups.cpp:78
 msgid "Wähle zuerst Fixtures in der Liste."
 msgstr "Select fixtures in the list first."
+
+#: layout_panel_catalog.cpp:111
+msgid "Wähle zuerst eine Bauform in „Bauformen dieser Show“."
+msgstr "First select a fixture type in “Fixture types in this show”."
 
 #: output_form_library.cpp:62 output_form_library.cpp:104
 msgid "Wähle zuerst einen Controller in der Tabelle."
@@ -3270,7 +3278,7 @@ msgstr "sACN priority"
 msgid "strecken (Stretch)"
 msgstr "stretch (Stretch)"
 
-#: main_window.cpp:170
+#: main_window.cpp:172
 msgid "unbenannt"
 msgstr "untitled"
 

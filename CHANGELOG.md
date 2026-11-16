@@ -15,6 +15,11 @@
   Bauform selbst. Die beiden Listen „Bauformen dieser Show“ und „Fixture-Bibliothek“ schließen sich in der
   Auswahl weiterhin gegenseitig aus und zeigen beim Anklicken wie gewohnt Formular bzw. Vorschau der
   gewählten Bauform (`LayoutPanel::showSelectedCatalog`, portiert aus dem alten `FixtureLibraryPage::showStored`).
+  „In Bibliothek speichern“, „Alle übernehmen“ und „Aus Bibliothek löschen“ sind ebenfalls originalgetreu
+  aus dem alten `FixtureLibraryPage` übernommen (`saveSelectedShapeToLibrary`, `importFromUserLibrary`,
+  `removeSelectedFromCatalog`, alle in `layout_panel_catalog.cpp`); neues Signal `LayoutPanel::notice` für die
+  Erfolgsmeldung beim Speichern (wie zuvor `FixtureLibraryPage::notice`, in `main_window.cpp` an die
+  Statuszeile verdrahtet).
 - **Layout-Tab: Liste „Fixtures in Show" entfernt, Fixture-Bibliothek übernimmt ihre Aufgabe** (vom Nutzer
   gewünscht: eine Liste weniger). Bisher zwei Schritte - „In Show übernehmen" holte eine Bauform aus der
   Bibliothek nur in die Projektdatei, erst „Auf die Bühne" in der (jetzt entfernten) Liste „Fixtures in

@@ -29,8 +29,8 @@ namespace whitehole::studio {
 
 using form::fromStd;
 
-void LayoutPanel::fillCatalogList() {
-    const QString keep = selectedCatalogName();
+void LayoutPanel::fillCatalogList(const QString& select) {
+    const QString keep = select.isEmpty() ? selectedCatalogName() : select;
     bool hasStoredTypes = false;
     {
         const QSignalBlocker blocker{catalog_};
@@ -102,6 +102,87 @@ void LayoutPanel::showSelectedCatalog() {
             shapePreview_->setShape(type.shape);
             return;
         }
+    }
+}
+
+bool LayoutPanel::saveSelectedShapeToLibrary() {
+    const QString name = selectedShapeName();
+    if (player_.project() == nullptr || name.isEmpty()) {
+        Q_EMIT failed(tr("Wähle zuerst eine Bauform in „Bauformen dieser Show“."));
+        return false;
+    }
+    const std::string key = name.toUtf8().toStdString();
+    for (const project::FixtureType& type : player_.fixtureTypes()) {
+        if (type.name == key) {
+            const Result<void> saved = userlib::upsert(player_.registry(), type);
+            if (!saved.ok()) {
+                Q_EMIT failed(fromStd(saved.error().message));
+                return false;
+            }
+            fillCatalogList(name);
+            Q_EMIT notice(tr("Bauform „%1“ in der Bibliothek gespeichert.").arg(name));
+            return true;
+        }
+    }
+    return false;
+}
+
+int LayoutPanel::importFromUserLibrary() {
+    if (player_.project() == nullptr) {
+        Q_EMIT projectNeeded();
+        if (player_.project() == nullptr) {
+            return 0;
+        }
+    }
+    const auto stored = userlib::load(player_.registry());
+    if (!stored.ok()) {
+        Q_EMIT failed(fromStd(stored.error().message));
+        return 0;
+    }
+    // Holt nur Bauformen, die dieser Show noch fehlen (legt keine Exemplare an); vgl. takeOverFromCatalog für eine
+    // einzelne, gezielt gewählte Bauform.
+    int added = 0;
+    QString last;
+    for (const project::FixtureType& type : stored.value()) {
+        if (std::ranges::any_of(player_.fixtureTypes(), [&](const project::FixtureType& t) { return t.name == type.name; })) {
+            continue;
+        }
+        const Result<void> result = player_.addFixtureType(type.name, type.shape);
+        if (!result.ok()) {
+            Q_EMIT failed(fromStd(result.error().message));
+            break;
+        }
+        ++added;
+        last = fromStd(type.name);
+    }
+    if (added > 0) {
+        shapeEditing_ = true;
+        fillShapeList(last);
+        shapeEditing_ = false;
+        Q_EMIT edited();
+    }
+    return added;
+}
+
+void LayoutPanel::removeSelectedFromCatalog() {
+    const QString name = selectedCatalogName();
+    if (name.isEmpty()) {
+        return;
+    }
+    const int row = catalog_->currentRow();
+    const Result<void> removed = userlib::remove(player_.registry(), name.toUtf8().toStdString());
+    if (!removed.ok()) {
+        Q_EMIT failed(fromStd(removed.error().message));
+        return;
+    }
+    fillCatalogList();
+    // Bleibt mindestens eine echte (nicht nur der Platzhalter „Noch keine gespeicherten Bauformen …“) Bauform
+    // übrig, wählt die nächste; sonst zurück zur Anzeige von „Bauformen dieser Show“ (showSelectedCatalog würde auf
+    // dem nicht wählbaren Platzhalter nichts anzeigen).
+    if (catalog_->count() > 0 && catalog_->item(0)->flags().testFlag(Qt::ItemIsSelectable)) {
+        catalog_->setCurrentRow(std::min(row, catalog_->count() - 1));
+    } else {
+        showSelectedShape();
     }
 }
 

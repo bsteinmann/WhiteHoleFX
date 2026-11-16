@@ -88,7 +88,7 @@ public:
     /// user_library.hpp): Liste füllen und aus einer gewählten Bauform ein Exemplar mit Patch auf der Bühne
     /// anlegen (fehlt die Bauform in dieser Show noch, wird sie zuerst angelegt) - übernimmt damit auch die
     /// frühere Aufgabe der entfernten Liste "Fixtures in Show".
-    void fillCatalogList();
+    void fillCatalogList(const QString& select = {});
     bool takeOverFromCatalog(const QString& name);
     [[nodiscard]] QString selectedCatalogName() const;
     /// Speichert die gewählte Bauform dieser Show in der Benutzerbibliothek (ersetzt eine gleichnamige).
@@ -119,6 +119,8 @@ public:
 Q_SIGNALS:
     void edited();
     void failed(const QString& message);
+    /// Erfolgsmeldung ohne Fehler (z. B. „In Bibliothek speichern“); die Statusleiste zeigt sie kurz an.
+    void notice(const QString& message);
     /// Es ist noch kein Projekt geladen, der Nutzer will aber ein Fixture anlegen: das Hauptfenster
     /// soll ein neues Projekt anlegen (direkt verbundenes Signal, danach ist `player_.project()` gesetzt).
     void projectNeeded();

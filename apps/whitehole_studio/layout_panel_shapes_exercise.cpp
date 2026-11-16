@@ -150,7 +150,9 @@ QString LayoutPanel::exerciseShapes() {
             return QStringLiteral("Bauformen: Entfernen aus der Show hat die Bibliothek verändert");
         }
         const std::size_t inShow = player_.fixtureTypes().size();
-        while (catalog_->count() > 0) {
+        // Ein leerer Katalog zeigt einen nicht wählbaren Platzhalter (siehe layout_panel_catalog.cpp) - der bliebe
+        // sonst stehen und catalog_->count() würde nie 0 erreichen.
+        while (catalog_->count() > 0 && catalog_->item(0)->flags().testFlag(Qt::ItemIsSelectable)) {
             catalog_->setCurrentRow(0);
             removeSelectedFromCatalog();
         }

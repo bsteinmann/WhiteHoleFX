@@ -10,7 +10,7 @@ msgstr ""
 msgid "\nRechtsklick: Favorit umschalten"
 msgstr ""
 
-#: main_window.cpp:292
+#: main_window.cpp:294
 msgid "   |   AUSGABE AN"
 msgstr ""
 
@@ -22,11 +22,11 @@ msgstr ""
 msgid "   |   Audio: %1"
 msgstr ""
 
-#: main_window.cpp:292
+#: main_window.cpp:294
 msgid "   |   Ausgabe aus (%1 Pakete nicht gesendet)"
 msgstr ""
 
-#: main_window.cpp:282
+#: main_window.cpp:284
 msgid "   |   BLACKOUT"
 msgstr ""
 
@@ -38,15 +38,15 @@ msgstr ""
 msgid "   |   DMX-Nodes im Projekt, Eingang aus (Einstellungen)"
 msgstr ""
 
-#: main_window.cpp:287
+#: main_window.cpp:289
 msgid "   |   EINGANG FEHLT – LEDs aus"
 msgstr ""
 
-#: main_window.cpp:284
+#: main_window.cpp:286
 msgid "   |   Master %1 %"
 msgstr ""
 
-#: main_window.cpp:279
+#: main_window.cpp:281
 msgid "   |   TESTMODUS"
 msgstr ""
 
@@ -126,11 +126,11 @@ msgstr ""
 msgid "%1 LEDs · Größe %2 × %3 × %4 · %5 Kanäle (RGB), rund %6 Universe(s)"
 msgstr ""
 
-#: main_window.cpp:268
+#: main_window.cpp:270
 msgid "%1 LEDs, Frame %2 (verworfen %3), Pakete %4, Sendefehler %5"
 msgstr ""
 
-#: main_window.cpp:266
+#: main_window.cpp:268
 msgid "%1 LEDs, angehalten"
 msgstr ""
 
@@ -138,7 +138,7 @@ msgstr ""
 msgid "%1 · LED %2 von %3"
 msgstr ""
 
-#: fixtures_page.cpp:56 layout_panel_catalog.cpp:45
+#: fixtures_page.cpp:56 layout_panel_catalog.cpp:48
 msgid "%1 — %2 (%3 LEDs)"
 msgstr ""
 
@@ -250,11 +250,11 @@ msgstr ""
 msgid "&Stage Config"
 msgstr ""
 
-#: main_window.cpp:154 main_window_actions.cpp:55
+#: main_window.cpp:156 main_window_actions.cpp:55
 msgid "&Start"
 msgstr ""
 
-#: main_window.cpp:154
+#: main_window.cpp:156
 msgid "&Stopp"
 msgstr ""
 
@@ -750,6 +750,10 @@ msgstr ""
 msgid "Bauform „%1“"
 msgstr ""
 
+#: layout_panel_catalog.cpp:123
+msgid "Bauform „%1“ in der Bibliothek gespeichert."
+msgstr ""
+
 #: cue_panel.cpp:64
 msgid "Bearbeiten …"
 msgstr ""
@@ -946,7 +950,7 @@ msgstr ""
 msgid "Das Pong-Spiel als Rechen-Node: Ball, Schläger, Punkte und Treffer als Werte. Computer oder Eingang spielen, auch im Takt der Musik. Gezeichnet wird es von „Pong Display“."
 msgstr ""
 
-#: main_window.cpp:215
+#: main_window.cpp:217
 msgid "Das Projekt wurde geändert. Änderungen verwerfen?"
 msgstr ""
 
@@ -1094,7 +1098,7 @@ msgstr ""
 msgid "Diese Form ist ungültig."
 msgstr ""
 
-#: main_window.cpp:192 parameter_panel.cpp:260
+#: main_window.cpp:194 parameter_panel.cpp:260
 msgid "Dieser Node hat keine einstellbaren Parameter."
 msgstr ""
 
@@ -1334,7 +1338,7 @@ msgstr ""
 msgid "Erster echter DMX-Kanal am Ziel (1..512)."
 msgstr ""
 
-#: layout_panel_catalog.cpp:111
+#: layout_panel_catalog.cpp:207
 msgid "Es gibt keine gespeicherte Bauform \"%1\""
 msgstr ""
 
@@ -1486,7 +1490,7 @@ msgstr ""
 msgid "Fragt bei GitHub nach der neuesten Version (nur die Versionsnummer, nichts wird installiert)"
 msgstr ""
 
-#: main_window.cpp:340
+#: main_window.cpp:342
 msgid "Frame"
 msgstr ""
 
@@ -1558,7 +1562,7 @@ msgstr ""
 msgid "Gesamtlautstärke des Audio-Eingangs als Pegel und Spitze, linear oder in dB, auf Wunsch mit automatischer Verstärkung. Einzelne Schläge (Kick, Snare, Hi-Hat) erkennt „Audio Trigger“."
 msgstr ""
 
-#: layout_panel_catalog.cpp:86
+#: layout_panel_catalog.cpp:101
 msgid "Gespeichert in der Bibliothek. „In Show übernehmen“ (oder Doppelklick) holt ein Exemplar in diese Show."
 msgstr ""
 
@@ -1782,7 +1786,7 @@ msgstr ""
 msgid "Kein GPU-Adapter: %1"
 msgstr ""
 
-#: main_window.cpp:264
+#: main_window.cpp:266
 msgid "Kein Projekt"
 msgstr ""
 
@@ -1854,7 +1858,7 @@ msgstr ""
 msgid "LEDs x y z"
 msgstr ""
 
-#: main_window.cpp:276
+#: main_window.cpp:278
 msgid "LIVE   |   "
 msgstr ""
 
@@ -2206,7 +2210,7 @@ msgstr ""
 msgid "Neues Projekt (Strg+N)"
 msgstr ""
 
-#: main_window.cpp:136
+#: main_window.cpp:138
 msgid "Neues Projekt (Strg+N), Projekt öffnen (Strg+O) oder eine .whfx-Datei hierher ziehen.\n\n%1"
 msgstr ""
 
@@ -2226,7 +2230,7 @@ msgstr ""
 msgid "Noch kein Fixture auf der Bühne (Reiter Layout → Fixture-Bibliothek oder „Fixture hinzufügen …“)"
 msgstr ""
 
-#: layout_panel_catalog.cpp:53
+#: layout_panel_catalog.cpp:58
 msgid "Noch keine gespeicherten Bauformen (oben: Bauformen dieser Show → In Bibliothek speichern)"
 msgstr ""
 
@@ -2722,7 +2726,7 @@ msgstr ""
 msgid "Standardgerät des Systems"
 msgstr ""
 
-#: cue_panel.cpp:67 cue_panel.cpp:145 main_window.cpp:310
+#: cue_panel.cpp:67 cue_panel.cpp:145 main_window.cpp:312
 msgid "Start"
 msgstr ""
 
@@ -2870,7 +2874,7 @@ msgstr ""
 msgid "Unerwartetes Ende beim letzten Mal"
 msgstr ""
 
-#: main_window.cpp:214
+#: main_window.cpp:216
 msgid "Ungespeicherte Änderungen"
 msgstr ""
 
@@ -3002,11 +3006,11 @@ msgstr ""
 msgid "Wellenringe wie Wassertropfen: Ringe breiten sich von zufälligen Punkten aus (Tropfen pro Sekunde, Tempo, Ringbreite)."
 msgstr ""
 
-#: main_window.cpp:128 main_window.cpp:167
+#: main_window.cpp:130 main_window.cpp:169
 msgid "WhiteHoleFX"
 msgstr ""
 
-#: main_window.cpp:171
+#: main_window.cpp:173
 msgid "WhiteHoleFX – %1%2"
 msgstr ""
 
@@ -3068,6 +3072,10 @@ msgstr ""
 
 #: layout_panel_groups.cpp:78
 msgid "Wähle zuerst Fixtures in der Liste."
+msgstr ""
+
+#: layout_panel_catalog.cpp:111
+msgid "Wähle zuerst eine Bauform in „Bauformen dieser Show“."
 msgstr ""
 
 #: output_form_library.cpp:62 output_form_library.cpp:104
@@ -3270,7 +3278,7 @@ msgstr ""
 msgid "strecken (Stretch)"
 msgstr ""
 
-#: main_window.cpp:170
+#: main_window.cpp:172
 msgid "unbenannt"
 msgstr ""
 

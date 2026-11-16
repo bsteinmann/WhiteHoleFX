@@ -10,7 +10,7 @@ msgstr ""
 msgid "\nRechtsklick: Favorit umschalten"
 msgstr "\nПравий клік: додати/прибрати з обраного"
 
-#: main_window.cpp:292
+#: main_window.cpp:294
 msgid "   |   AUSGABE AN"
 msgstr "   |   ВИВІД УВІМКНЕНО"
 
@@ -22,11 +22,11 @@ msgstr "   |   У проєкті є аудіо-ноди, вхід вимкнен
 msgid "   |   Audio: %1"
 msgstr "   |   Аудіо: %1"
 
-#: main_window.cpp:292
+#: main_window.cpp:294
 msgid "   |   Ausgabe aus (%1 Pakete nicht gesendet)"
 msgstr "   |   Вивід вимкнено (%1 пакетів не надіслано)"
 
-#: main_window.cpp:282
+#: main_window.cpp:284
 msgid "   |   BLACKOUT"
 msgstr "   |   BLACKOUT"
 
@@ -38,15 +38,15 @@ msgstr "   |   Вхід DMX %1: %2 пакетів"
 msgid "   |   DMX-Nodes im Projekt, Eingang aus (Einstellungen)"
 msgstr "   |   У проєкті є DMX-ноди, вхід вимкнено (Налаштування)"
 
-#: main_window.cpp:287
+#: main_window.cpp:289
 msgid "   |   EINGANG FEHLT – LEDs aus"
 msgstr "   |   ВХОДУ НЕМАЄ – СВІТЛОДІОДИ ВИМКНЕНО"
 
-#: main_window.cpp:284
+#: main_window.cpp:286
 msgid "   |   Master %1 %"
 msgstr "   |   Master %1 %"
 
-#: main_window.cpp:279
+#: main_window.cpp:281
 msgid "   |   TESTMODUS"
 msgstr "   |   ТЕСТОВИЙ РЕЖИМ"
 
@@ -126,11 +126,11 @@ msgstr "%1 (не знайдено)"
 msgid "%1 LEDs · Größe %2 × %3 × %4 · %5 Kanäle (RGB), rund %6 Universe(s)"
 msgstr "%1 LED · Розмір %2 × %3 × %4 · %5 каналів (RGB), приблизно %6 universe"
 
-#: main_window.cpp:268
+#: main_window.cpp:270
 msgid "%1 LEDs, Frame %2 (verworfen %3), Pakete %4, Sendefehler %5"
 msgstr "%1 LED, кадр %2 (відкинуто %3), пакети %4, помилки надсилання %5"
 
-#: main_window.cpp:266
+#: main_window.cpp:268
 msgid "%1 LEDs, angehalten"
 msgstr "%1 LED, зупинено"
 
@@ -138,7 +138,7 @@ msgstr "%1 LED, зупинено"
 msgid "%1 · LED %2 von %3"
 msgstr "%1 · LED %2 із %3"
 
-#: fixtures_page.cpp:56 layout_panel_catalog.cpp:45
+#: fixtures_page.cpp:56 layout_panel_catalog.cpp:48
 msgid "%1 — %2 (%3 LEDs)"
 msgstr "%1 — %2 (%3 світлодіодів)"
 
@@ -250,11 +250,11 @@ msgstr "&Зберегти"
 msgid "&Stage Config"
 msgstr "&Stage Config"
 
-#: main_window.cpp:154 main_window_actions.cpp:55
+#: main_window.cpp:156 main_window_actions.cpp:55
 msgid "&Start"
 msgstr "&Старт"
 
-#: main_window.cpp:154
+#: main_window.cpp:156
 msgid "&Stopp"
 msgstr "&Стоп"
 
@@ -750,6 +750,10 @@ msgstr "Видалити тип. Фікстури в розкладці збер
 msgid "Bauform „%1“"
 msgstr "Тип фікстури «%1»"
 
+#: layout_panel_catalog.cpp:123
+msgid "Bauform „%1“ in der Bibliothek gespeichert."
+msgstr "Тип фікстури «%1» збережено в бібліотеці."
+
 #: cue_panel.cpp:64
 msgid "Bearbeiten …"
 msgstr "Редагувати …"
@@ -946,7 +950,7 @@ msgstr "Кабель переходить від кільця до кільця 
 msgid "Das Pong-Spiel als Rechen-Node: Ball, Schläger, Punkte und Treffer als Werte. Computer oder Eingang spielen, auch im Takt der Musik. Gezeichnet wird es von „Pong Display“."
 msgstr "Гра Pong як обчислювальний вузол: м'яч, ракетки, рахунок і удари як значення. Грає комп'ютер або вхід, також у такт музики. Малює її «Pong Display»."
 
-#: main_window.cpp:215
+#: main_window.cpp:217
 msgid "Das Projekt wurde geändert. Änderungen verwerfen?"
 msgstr "Проєкт змінено. Відкинути зміни?"
 
@@ -1094,7 +1098,7 @@ msgstr "Зміна набуде чинності одразу після «OK».
 msgid "Diese Form ist ungültig."
 msgstr "Ця форма недійсна."
 
-#: main_window.cpp:192 parameter_panel.cpp:260
+#: main_window.cpp:194 parameter_panel.cpp:260
 msgid "Dieser Node hat keine einstellbaren Parameter."
 msgstr "Ця нода не має параметрів для налаштування."
 
@@ -1334,7 +1338,7 @@ msgstr "Перший канал у внутрішньому пулі канал�
 msgid "Erster echter DMX-Kanal am Ziel (1..512)."
 msgstr "Перший справжній канал DMX на пристрої (1..512)."
 
-#: layout_panel_catalog.cpp:111
+#: layout_panel_catalog.cpp:207
 msgid "Es gibt keine gespeicherte Bauform \"%1\""
 msgstr "Немає збереженого типу прожектора «%1»"
 
@@ -1486,7 +1490,7 @@ msgstr "Форма"
 msgid "Fragt bei GitHub nach der neuesten Version (nur die Versionsnummer, nichts wird installiert)"
 msgstr "Запитує на GitHub останню версію (лише номер версії; нічого не встановлюється)"
 
-#: main_window.cpp:340
+#: main_window.cpp:342
 msgid "Frame"
 msgstr "Frame"
 
@@ -1558,7 +1562,7 @@ msgstr "Загальна яскравість (діє на попередній 
 msgid "Gesamtlautstärke des Audio-Eingangs als Pegel und Spitze, linear oder in dB, auf Wunsch mit automatischer Verstärkung. Einzelne Schläge (Kick, Snare, Hi-Hat) erkennt „Audio Trigger“."
 msgstr "Загальна гучність аудіовходу як рівень і пік, лінійно або в дБ, за бажанням з автоматичним підсиленням. Окремі удари (бочка, малий барабан, хай-хет) розпізнає «Audio Trigger»."
 
-#: layout_panel_catalog.cpp:86
+#: layout_panel_catalog.cpp:101
 msgid "Gespeichert in der Bibliothek. „In Show übernehmen“ (oder Doppelklick) holt ein Exemplar in diese Show."
 msgstr "Збережено в бібліотеці. «Додати до шоу» (або подвійний клац) додає екземпляр у це шоу."
 
@@ -1782,7 +1786,7 @@ msgstr "Фікстуру не вибрано."
 msgid "Kein GPU-Adapter: %1"
 msgstr "Немає GPU-адаптера: %1"
 
-#: main_window.cpp:264
+#: main_window.cpp:266
 msgid "Kein Projekt"
 msgstr "Немає проєкту"
 
@@ -1854,7 +1858,7 @@ msgstr "Світлодіодів у кільці"
 msgid "LEDs x y z"
 msgstr "LED x y z"
 
-#: main_window.cpp:276
+#: main_window.cpp:278
 msgid "LIVE   |   "
 msgstr "LIVE   |   "
 
@@ -2206,7 +2210,7 @@ msgstr "Новий проєкт"
 msgid "Neues Projekt (Strg+N)"
 msgstr "Новий проєкт (Ctrl+N)"
 
-#: main_window.cpp:136
+#: main_window.cpp:138
 msgid "Neues Projekt (Strg+N), Projekt öffnen (Strg+O) oder eine .whfx-Datei hierher ziehen.\n\n%1"
 msgstr "Новий проєкт (Ctrl+N), відкрити проєкт (Ctrl+O) або перетягніть сюди файл .whfx.\n\n%1"
 
@@ -2226,7 +2230,7 @@ msgstr "Видаляє вибрану форму з бібліотеки; шоу
 msgid "Noch kein Fixture auf der Bühne (Reiter Layout → Fixture-Bibliothek oder „Fixture hinzufügen …“)"
 msgstr "На сцені ще немає жодної фікстури (вкладка Макет → Бібліотека фікстур або «Додати фікстуру…»)"
 
-#: layout_panel_catalog.cpp:53
+#: layout_panel_catalog.cpp:58
 msgid "Noch keine gespeicherten Bauformen (oben: Bauformen dieser Show → In Bibliothek speichern)"
 msgstr "Ще немає збережених типів фікстур (вище: Типи фікстур у цьому шоу → Зберегти в бібліотеку)"
 
@@ -2722,7 +2726,7 @@ msgstr "Stage Config"
 msgid "Standardgerät des Systems"
 msgstr "Пристрій системи за замовчуванням"
 
-#: cue_panel.cpp:67 cue_panel.cpp:145 main_window.cpp:310
+#: cue_panel.cpp:67 cue_panel.cpp:145 main_window.cpp:312
 msgid "Start"
 msgstr "Старт"
 
@@ -2870,7 +2874,7 @@ msgstr "Перейменувати …"
 msgid "Unerwartetes Ende beim letzten Mal"
 msgstr "Несподіване завершення минулого разу"
 
-#: main_window.cpp:214
+#: main_window.cpp:216
 msgid "Ungespeicherte Änderungen"
 msgstr "Незбережені зміни"
 
@@ -3002,11 +3006,11 @@ msgstr "Форма хвилі аудіовходу (короткий часов�
 msgid "Wellenringe wie Wassertropfen: Ringe breiten sich von zufälligen Punkten aus (Tropfen pro Sekunde, Tempo, Ringbreite)."
 msgstr "Хвильові кільця, як краплі води: кільця розходяться від випадкових точок (крапель за секунду, темп, ширина кільця)."
 
-#: main_window.cpp:128 main_window.cpp:167
+#: main_window.cpp:130 main_window.cpp:169
 msgid "WhiteHoleFX"
 msgstr "WhiteHoleFX"
 
-#: main_window.cpp:171
+#: main_window.cpp:173
 msgid "WhiteHoleFX – %1%2"
 msgstr "WhiteHoleFX – %1%2"
 
@@ -3069,6 +3073,10 @@ msgstr "Виберіть нод у редакторі нод, щоб побач�
 #: layout_panel_groups.cpp:78
 msgid "Wähle zuerst Fixtures in der Liste."
 msgstr "Спершу оберіть фікстури у списку."
+
+#: layout_panel_catalog.cpp:111
+msgid "Wähle zuerst eine Bauform in „Bauformen dieser Show“."
+msgstr "Спочатку виберіть тип фікстури в «Типи фікстур у цьому шоу»."
 
 #: output_form_library.cpp:62 output_form_library.cpp:104
 msgid "Wähle zuerst einen Controller in der Tabelle."
@@ -3270,7 +3278,7 @@ msgstr "Пріоритет sACN"
 msgid "strecken (Stretch)"
 msgstr "розтягнути (Stretch)"
 
-#: main_window.cpp:170
+#: main_window.cpp:172
 msgid "unbenannt"
 msgstr "без назви"
 

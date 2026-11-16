@@ -10,7 +10,7 @@ msgstr ""
 msgid "\nRechtsklick: Favorit umschalten"
 msgstr "\nClic derecho: añadir/quitar de favoritos"
 
-#: main_window.cpp:292
+#: main_window.cpp:294
 msgid "   |   AUSGABE AN"
 msgstr "   |   SALIDA ACTIVA"
 
@@ -22,11 +22,11 @@ msgstr "   |   Nodos de audio en el proyecto, entrada apagada (Ajustes)"
 msgid "   |   Audio: %1"
 msgstr "   |   Audio: %1"
 
-#: main_window.cpp:292
+#: main_window.cpp:294
 msgid "   |   Ausgabe aus (%1 Pakete nicht gesendet)"
 msgstr "   |   Salida apagada (%1 paquetes sin enviar)"
 
-#: main_window.cpp:282
+#: main_window.cpp:284
 msgid "   |   BLACKOUT"
 msgstr "   |   BLACKOUT"
 
@@ -38,15 +38,15 @@ msgstr "   |   Entrada DMX %1: %2 paquetes"
 msgid "   |   DMX-Nodes im Projekt, Eingang aus (Einstellungen)"
 msgstr "   |   Nodos DMX en el proyecto, entrada apagada (Ajustes)"
 
-#: main_window.cpp:287
+#: main_window.cpp:289
 msgid "   |   EINGANG FEHLT – LEDs aus"
 msgstr "   |   FALTA UNA ENTRADA – LED apagados"
 
-#: main_window.cpp:284
+#: main_window.cpp:286
 msgid "   |   Master %1 %"
 msgstr "   |   Master %1 %"
 
-#: main_window.cpp:279
+#: main_window.cpp:281
 msgid "   |   TESTMODUS"
 msgstr "   |   MODO DE PRUEBA"
 
@@ -126,11 +126,11 @@ msgstr "%1 (no encontrado)"
 msgid "%1 LEDs · Größe %2 × %3 × %4 · %5 Kanäle (RGB), rund %6 Universe(s)"
 msgstr "%1 LED · tamaño %2 × %3 × %4 · %5 canales (RGB), unos %6 universo(s)"
 
-#: main_window.cpp:268
+#: main_window.cpp:270
 msgid "%1 LEDs, Frame %2 (verworfen %3), Pakete %4, Sendefehler %5"
 msgstr "%1 LED, fotograma %2 (descartados %3), paquetes %4, errores de envío %5"
 
-#: main_window.cpp:266
+#: main_window.cpp:268
 msgid "%1 LEDs, angehalten"
 msgstr "%1 LED, detenido"
 
@@ -138,7 +138,7 @@ msgstr "%1 LED, detenido"
 msgid "%1 · LED %2 von %3"
 msgstr "%1 · LED %2 de %3"
 
-#: fixtures_page.cpp:56 layout_panel_catalog.cpp:45
+#: fixtures_page.cpp:56 layout_panel_catalog.cpp:48
 msgid "%1 — %2 (%3 LEDs)"
 msgstr "%1 — %2 (%3 LED)"
 
@@ -250,11 +250,11 @@ msgstr "&Guardar"
 msgid "&Stage Config"
 msgstr "&Stage Config"
 
-#: main_window.cpp:154 main_window_actions.cpp:55
+#: main_window.cpp:156 main_window_actions.cpp:55
 msgid "&Start"
 msgstr "&Iniciar"
 
-#: main_window.cpp:154
+#: main_window.cpp:156
 msgid "&Stopp"
 msgstr "&Detener"
 
@@ -750,6 +750,10 @@ msgstr "Quitar el tipo. Los fixtures del layout conservan su forma como propia."
 msgid "Bauform „%1“"
 msgstr "Modelo «%1»"
 
+#: layout_panel_catalog.cpp:123
+msgid "Bauform „%1“ in der Bibliothek gespeichert."
+msgstr "Modelo «%1» guardado en la biblioteca."
+
 #: cue_panel.cpp:64
 msgid "Bearbeiten …"
 msgstr "Editar …"
@@ -946,7 +950,7 @@ msgstr "El cable pasa de anillo a anillo sin saltos: el inferior hacia delante, 
 msgid "Das Pong-Spiel als Rechen-Node: Ball, Schläger, Punkte und Treffer als Werte. Computer oder Eingang spielen, auch im Takt der Musik. Gezeichnet wird es von „Pong Display“."
 msgstr "El juego Pong como nodo de cálculo: bola, palas, puntos y golpes como valores. Juega el ordenador o una entrada, también al ritmo de la música. Lo dibuja «Pong Display»."
 
-#: main_window.cpp:215
+#: main_window.cpp:217
 msgid "Das Projekt wurde geändert. Änderungen verwerfen?"
 msgstr "El proyecto se ha modificado. ¿Descartar los cambios?"
 
@@ -1094,7 +1098,7 @@ msgstr "El cambio surte efecto inmediatamente tras «Aceptar»."
 msgid "Diese Form ist ungültig."
 msgstr "Esta forma no es válida."
 
-#: main_window.cpp:192 parameter_panel.cpp:260
+#: main_window.cpp:194 parameter_panel.cpp:260
 msgid "Dieser Node hat keine einstellbaren Parameter."
 msgstr "Este nodo no tiene parámetros ajustables."
 
@@ -1334,7 +1338,7 @@ msgstr "Primer canal del grupo de canales interno de los nodos de salida DMX (1.
 msgid "Erster echter DMX-Kanal am Ziel (1..512)."
 msgstr "Primer canal DMX real en el destino (1..512)."
 
-#: layout_panel_catalog.cpp:111
+#: layout_panel_catalog.cpp:207
 msgid "Es gibt keine gespeicherte Bauform \"%1\""
 msgstr "No existe ningún tipo de fixture guardado «%1»"
 
@@ -1486,7 +1490,7 @@ msgstr "Forma"
 msgid "Fragt bei GitHub nach der neuesten Version (nur die Versionsnummer, nichts wird installiert)"
 msgstr "Pregunta a GitHub por la última versión (solo el número de versión; no se instala nada)"
 
-#: main_window.cpp:340
+#: main_window.cpp:342
 msgid "Frame"
 msgstr "Fotograma"
 
@@ -1558,7 +1562,7 @@ msgstr "Brillo global (afecta a la vista previa y a la salida, no se guarda en e
 msgid "Gesamtlautstärke des Audio-Eingangs als Pegel und Spitze, linear oder in dB, auf Wunsch mit automatischer Verstärkung. Einzelne Schläge (Kick, Snare, Hi-Hat) erkennt „Audio Trigger“."
 msgstr "Volumen global de la entrada de audio como nivel y pico, lineal o en dB, con ganancia automática si se desea. Los golpes individuales (bombo, caja, hi-hat) los detecta «Audio Trigger»."
 
-#: layout_panel_catalog.cpp:86
+#: layout_panel_catalog.cpp:101
 msgid "Gespeichert in der Bibliothek. „In Show übernehmen“ (oder Doppelklick) holt ein Exemplar in diese Show."
 msgstr "Guardado en la biblioteca. «Añadir a la función» (o doble clic) coloca un ejemplar en esta función."
 
@@ -1782,7 +1786,7 @@ msgstr "Ningún fixture seleccionado."
 msgid "Kein GPU-Adapter: %1"
 msgstr "Ningún adaptador de GPU: %1"
 
-#: main_window.cpp:264
+#: main_window.cpp:266
 msgid "Kein Projekt"
 msgstr "Sin proyecto"
 
@@ -1854,7 +1858,7 @@ msgstr "LED por anillo"
 msgid "LEDs x y z"
 msgstr "LED x y z"
 
-#: main_window.cpp:276
+#: main_window.cpp:278
 msgid "LIVE   |   "
 msgstr "LIVE   |   "
 
@@ -2206,7 +2210,7 @@ msgstr "Nuevo proyecto"
 msgid "Neues Projekt (Strg+N)"
 msgstr "Nuevo proyecto (Ctrl+N)"
 
-#: main_window.cpp:136
+#: main_window.cpp:138
 msgid "Neues Projekt (Strg+N), Projekt öffnen (Strg+O) oder eine .whfx-Datei hierher ziehen.\n\n%1"
 msgstr "Nuevo proyecto (Ctrl+N), abrir un proyecto (Ctrl+O) o arrastrar aquí un archivo .whfx.\n\n%1"
 
@@ -2226,7 +2230,7 @@ msgstr "Quita la forma elegida de la biblioteca; el show no cambia"
 msgid "Noch kein Fixture auf der Bühne (Reiter Layout → Fixture-Bibliothek oder „Fixture hinzufügen …“)"
 msgstr "Aún no hay ningún fixture en el escenario (pestaña Diseño → Biblioteca de fixtures, o «Añadir fixture…»)"
 
-#: layout_panel_catalog.cpp:53
+#: layout_panel_catalog.cpp:58
 msgid "Noch keine gespeicherten Bauformen (oben: Bauformen dieser Show → In Bibliothek speichern)"
 msgstr "Aún no hay modelos guardados (arriba: Modelos de esta función → Guardar en la biblioteca)"
 
@@ -2722,7 +2726,7 @@ msgstr "Stage Config"
 msgid "Standardgerät des Systems"
 msgstr "Dispositivo predeterminado del sistema"
 
-#: cue_panel.cpp:67 cue_panel.cpp:145 main_window.cpp:310
+#: cue_panel.cpp:67 cue_panel.cpp:145 main_window.cpp:312
 msgid "Start"
 msgstr "Inicio"
 
@@ -2870,7 +2874,7 @@ msgstr "Renombrar …"
 msgid "Unerwartetes Ende beim letzten Mal"
 msgstr "Final inesperado la última vez"
 
-#: main_window.cpp:214
+#: main_window.cpp:216
 msgid "Ungespeicherte Änderungen"
 msgstr "Cambios sin guardar"
 
@@ -3002,11 +3006,11 @@ msgstr "Waveform of the audio input (a short time window, optionally aligned to 
 msgid "Wellenringe wie Wassertropfen: Ringe breiten sich von zufälligen Punkten aus (Tropfen pro Sekunde, Tempo, Ringbreite)."
 msgstr "Ripples like water drops: rings spread from random points (drops per second, speed, ring width)."
 
-#: main_window.cpp:128 main_window.cpp:167
+#: main_window.cpp:130 main_window.cpp:169
 msgid "WhiteHoleFX"
 msgstr "WhiteHoleFX"
 
-#: main_window.cpp:171
+#: main_window.cpp:173
 msgid "WhiteHoleFX – %1%2"
 msgstr "WhiteHoleFX – %1%2"
 
@@ -3069,6 +3073,10 @@ msgstr "Elige un nodo en el editor de nodos para ver sus parámetros. «Fijar» 
 #: layout_panel_groups.cpp:78
 msgid "Wähle zuerst Fixtures in der Liste."
 msgstr "Elige primero fixtures de la lista."
+
+#: layout_panel_catalog.cpp:111
+msgid "Wähle zuerst eine Bauform in „Bauformen dieser Show“."
+msgstr "Selecciona primero un modelo en «Modelos de esta función»."
 
 #: output_form_library.cpp:62 output_form_library.cpp:104
 msgid "Wähle zuerst einen Controller in der Tabelle."
@@ -3270,7 +3278,7 @@ msgstr "Prioridad sACN"
 msgid "strecken (Stretch)"
 msgstr "estirar (Stretch)"
 
-#: main_window.cpp:170
+#: main_window.cpp:172
 msgid "unbenannt"
 msgstr "sin título"
 
