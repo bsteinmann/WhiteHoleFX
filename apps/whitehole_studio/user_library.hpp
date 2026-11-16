@@ -1,10 +1,11 @@
 // user_library.hpp: die Benutzerbibliothek der Bauformen auf der Festplatte.
 //
-// Warum es diese Datei gibt: Bauformen, die man im Reiter Fixtures anlegt, sollen nicht verschwinden, wenn man ein neues
-// Projekt beginnt oder eine neue Programmversion installiert. Neben den Bauformen im Projekt (dort stehen sie, damit die
-// Projektdatei für sich allein vollständig bleibt) gibt es deshalb eine Datei im Benutzerverzeichnis
-// (Linux ~/.local/share/WhiteHoleFX, Windows %APPDATA%/WhiteHoleFX, Datei fixture-library.whfx). Im Reiter Fixtures
-// steht sie als Liste „Gespeicherte Fixtures“ neben den Fixtures der Show; von dort holt man Bauformen in die Show,
+// Warum es diese Datei gibt: Bauformen, die man im Reiter Layout anlegt (Bereich "Bauformen dieser Show", siehe
+// layout_panel_shapes.cpp), sollen nicht verschwinden, wenn man ein neues Projekt beginnt oder eine neue
+// Programmversion installiert. Neben den Bauformen im Projekt (dort stehen sie, damit die Projektdatei für sich
+// allein vollständig bleibt) gibt es deshalb eine Datei im Benutzerverzeichnis (Linux ~/.local/share/WhiteHoleFX,
+// Windows %APPDATA%/WhiteHoleFX, Datei fixture-library.whfx). Im Reiter Layout steht sie als Liste
+// „Fixture-Bibliothek“ (layout_panel_catalog.cpp); von dort holt man Bauformen in die Show (inklusive Exemplar),
 // und „In Bibliothek speichern“ legt eine Bauform der Show dort ab.
 //
 // Die Datei wird atomar geschrieben (QSaveFile). Lässt sie sich nicht lesen (defekt oder von einer neueren Version mit

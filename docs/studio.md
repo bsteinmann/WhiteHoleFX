@@ -177,8 +177,8 @@ ziehen (Treffer auf Ports), verschieben, Kabel und Nodes wieder löschen.
 
 Die Bühne wird einmal am Anfang eingerichtet und danach selten angefasst. Deshalb hat sie ein eigenes Menü **Stage Config**
 (zwischen Bearbeiten und Ansicht) mit: Fixtures …, Fixture hinzufügen …, Layout … (F4), Ausgabe … und Testmodus ….
-Alles liegt im eigenen Fenster **Stage Config** mit vier Reitern: **Fixtures** (Bibliothek der Bauformen), **Layout** (Verteilen und
-Drehen, daneben die Bühne), **Ausgabe** (Ziele und Patch) und **Test**. Es ist kein Dock: es öffnet sich bei Bedarf, lässt sich auf
+Alles liegt im eigenen Fenster **Stage Config** mit vier Reitern: **Fixtures** (Liste der Fixture-Exemplare), **Layout** (Bauformen
+anlegen, Fixture-Bibliothek, Verteilen und Drehen, daneben die Bühne), **Ausgabe** (Ziele und Patch) und **Test**. Es ist kein Dock: es öffnet sich bei Bedarf, lässt sich auf
 einen zweiten Bildschirm ziehen und merkt sich Größe und Platz. Es ist nicht modal, die Vorschau im Hauptfenster bleibt
 bedienbar. Im Live-Modus ist das Menü gesperrt.
 
@@ -205,16 +205,16 @@ Die Seite „Layout“ hat drei Teile.
 
 **Fixtures:** Liste „Fixtures auf der Bühne“ mit „Entfernen“ (auch per Rechtsklick auf einen Eintrag: entfernt genau
 das Fixture unter dem Mauszeiger, unabhängig von der aktuellen Auswahl). Ein Fixture entsteht hier nicht mehr direkt
-(der Knopf „Hinzufügen …“ ist weg); neue Exemplare kommen aus einer Bauform (siehe die beiden Listen weiter unten)
-oder über das Menü Stage Config → „Fixture hinzufügen …“ (Dialog wie oben). Ein Fixture aus dem Dialog landet dort,
-wo der Dialog es hinsetzt; ohne eigene Angabe bekommt es das erste freie Universe (Art-Net, Ziel 0, 170 LEDs je
-Universe). Für das gewählte Fixture gibt es ein Formular:
+(der Knopf „Hinzufügen …“ ist weg); neue Exemplare kommen aus einer Bauform (siehe „Bauformen dieser Show“ und
+„Fixture-Bibliothek“ weiter oben) oder über das Menü Stage Config → „Fixture hinzufügen …“ (Dialog wie oben). Ein
+Fixture aus dem Dialog landet dort, wo der Dialog es hinsetzt; ohne eigene Angabe bekommt es das erste freie
+Universe (Art-Net, Ziel 0, 170 LEDs je Universe). Für das gewählte Fixture gibt es ein Formular:
 
 - Name, Ursprung (x y z), Drehung (x y z in Grad) und Bauform
-- Die Form selbst (Spalten/Zeilen, LED-Zahl, Verkabelung …) ändert man nur noch im Reiter Fixtures, an der
-  Bauform, nicht hier - jedes Fixture bekommt beim Anlegen (auch aus diesem Dialog) automatisch eine eigene
-  Bauform. Ein Fixture aus einer älteren Projektdatei ohne Bauform zeigt stattdessen einen Hinweis; über
-  „Bauform“ → „Neue Bauform aus dieser Form …“ lässt sich auch dafür eine anlegen.
+- Die Form selbst (Spalten/Zeilen, LED-Zahl, Verkabelung …) ändert man nur noch weiter oben, bei „Bauformen dieser
+  Show“, nicht hier - jedes Fixture bekommt beim Anlegen (auch aus diesem Dialog) automatisch eine eigene Bauform.
+  Ein Fixture aus einer älteren Projektdatei ohne Bauform zeigt stattdessen einen Hinweis; über „Bauform“ → „Neue
+  Bauform aus dieser Form …“ lässt sich auch dafür eine anlegen.
 - Der Patch steht nicht mehr hier, sondern im Reiter Ausgabe.
 
 **Import von Positionen:** In der Oberfläche vorerst entfernt (kommt mit dem neuen Stage-Config-Fenster zurück). Punktwolken
@@ -273,32 +273,51 @@ zurück. Das letzte gepatchte Fixture lässt sich nicht entfernen, und ein Ziel,
 zeigt, nicht löschen. Laufende Ausgabe wird nach einer Änderung einmal neu aufgebaut (kurze
 Unterbrechung). Alle Schritte lassen sich zurücknehmen.
 
-### Seite „Fixtures“: Bibliothek der Bauformen
+### Seite „Fixtures“: Liste der Fixture-Exemplare
 
-Die erste Seite im Fenster Stage Config (Menü Stage Config → Fixtures …) ist die **Bibliothek**: Hier beschreibst du eine Bauform einmal, im Reiter Layout verteilst du sie dann beliebig oft. Links stehen die Bauformen des Projekts, mit **Neu** legst du eine an: 2D-Matrix, 3D-Matrix, Kreis, Strip, Säule (Ringe übereinander, das Kabel läuft Ring für Ring nach oben) oder Spirale (ein Strip um eine senkrechte Achse gewickelt). In der Mitte stellst du Name, Größe, Abstände und Verkabelung ein; die Vorschau rechts zeigt die Form sofort, die erste LED am Kabel ist weiß. Der Knopf **Test** lässt ein Muster nur über diese Form laufen (Lauflicht in Kabelreihenfolge, Balken entlang x, y oder z, Farbfolge); gesendet wird dabei nichts. Ändert man eine Bauform, folgen alle Exemplare im Layout. Entfernt man sie, behalten die Exemplare ihre Form als eigene. Alles ist rückgängig zu machen und steht in der Projektdatei (`fixturetype`, siehe [Projektformat](project-format.md)).
+Die erste Seite im Fenster Stage Config (Menü Stage Config → Fixtures …) ist eine einfache Liste: Sie zeigt alle
+Fixture-Exemplare dieser Show (Name, Bauform bzw. „eigene Form“, LED-Zahl). Anlegen (Dialog „Fixture hinzufügen …“,
+aus einer Bauform, Matrix/Strip), Lage, Drehung, Ausrichten und Entfernen bleibt Aufgabe des Reiters Layout; dort
+steht seit Kurzem auch die Bauform-Bearbeitung selbst (vorher eine eigene Seite hier, siehe unten) - diese Seite
+hier dient nur dem Überblick.
 
-**Zwei Listen: Fixtures und Gespeicherte Fixtures.** Links oben stehen die **Fixtures dieser Show** (sie liegen in der Projektdatei, die dadurch vollständig bleibt). Darunter stehen die **gespeicherten Fixtures**: alle Bauformen in einer Datei im Benutzerverzeichnis (`fixture-library.whfx`; Linux `~/.local/share/WhiteHoleFX`, Windows `%APPDATA%\WhiteHoleFX`; der Tooltip von „In Bibliothek speichern“ nennt den genauen Pfad). Diese Liste ist immer da, auch ohne geladenes Projekt, und bleibt über neue Programmversionen erhalten. Die beiden Listen sind getrennt: **In Bibliothek speichern** legt die gewählte Bauform der Show dort ab (eine gleichnamige wird ersetzt), **In Show übernehmen** (oder Doppelklick) holt die gewählte gespeicherte Bauform in die Show, **Alle übernehmen** alle, die in der Show fehlen, und **Aus Bibliothek löschen** nimmt sie aus der Bibliothek, ohne die Show zu ändern. Entfernen in der Show lässt die Bibliothek stehen. Eine gespeicherte Bauform lässt sich ansehen (Vorschau); bearbeitet wird sie in der Show und dann wieder gespeichert. Neue Projekte beginnen ohne Bauformen. Lässt sich die Bibliotheksdatei nicht lesen (defekt), bleibt sie unangetastet und das Studio meldet es; über die Umgebungsvariable `WHITEHOLEFX_FIXTURE_LIBRARY` lässt sich der Pfad ersetzen.
+### Layout: Bauformen, Fixture-Bibliothek, Exemplare verteilen und drehen
 
-### Layout: Exemplare verteilen und drehen
+Der Reiter Layout gliedert sich in drei Bereiche übereinander:
 
-Im Reiter Layout steht oben die **Fixture-Bibliothek** (alle gespeicherten Bauformen, dieselbe Benutzerbibliothek
-wie im Reiter Fixtures unter „Gespeicherte Fixtures“); ein Doppelklick oder **In Show übernehmen** legt aus einer
-gewählten Bauform ein Exemplar mit dem nächsten freien Patch auf der Bühne an - fehlt die Bauform in dieser Show
-noch, wird sie zuerst angelegt (angelegt oder bearbeitet wird eine Bauform selbst nach wie vor im Reiter Fixtures).
-Mehrfaches Übernehmen derselben Bauform legt mehrfach Exemplare an, statt das zweite Mal abgelehnt zu werden. Die Liste
-zeigt hinter dem frei vergebenen Namen in Gedankenstrichen die Original-Bezeichnung der Form (z. B. „Kachel 5x3 —
-2D-Matrix“), damit auch ein frei gewählter Name nicht verschleiert, was es eigentlich ist. (Eine frühere, eigene
-Liste „Fixtures in Show“ für denselben zweiten Schritt - Exemplar einer schon vorhandenen Bauform anlegen - ist
-entfallen; die Fixture-Bibliothek übernimmt das jetzt in einem Schritt.)
+**Bauformen dieser Show** (vorher eine eigene Seite „Fixtures“ im Stage-Config-Fenster - auf Wunsch des Nutzers
+hierher gezogen, zur Fixture-Bibliothek, mit der sie sich die Benutzerbibliothek teilt). Hier beschreibst du eine
+Bauform einmal; weiter unten (Fixture-Bibliothek) verteilst du sie dann beliebig oft. Mit **Neu** legst du eine an:
+2D-Matrix, 3D-Matrix, Kreis, Strip, Säule (Ringe übereinander, das Kabel läuft Ring für Ring nach oben) oder Spirale
+(ein Strip um eine senkrechte Achse gewickelt). Daneben stellst du Name, Größe, Abstände und Verkabelung ein; die
+Vorschau rechts zeigt die Form sofort, die erste LED am Kabel ist weiß. Ändert man eine Bauform, folgen alle
+Exemplare im Layout. Entfernt man sie, behalten die Exemplare ihre Form als eigene. **In Bibliothek speichern**
+legt die gewählte Bauform in der Benutzerbibliothek ab (Datei `fixture-library.whfx`; Linux
+`~/.local/share/WhiteHoleFX`, Windows `%APPDATA%\WhiteHoleFX`; der Tooltip des Knopfs nennt den genauen Pfad; eine
+gleichnamige wird ersetzt). Alles ist rückgängig zu machen und steht in der Projektdatei (`fixturetype`, siehe
+[Projektformat](project-format.md)).
 
-Lage (Ursprung x y z) und **Drehung x y z** (Grad, um die Mitte des Fixtures) eines Exemplars auf der Bühne stellst
-du im Formular darunter ein. Das Feld **Bauform** wechselt die Bauform eines Fixtures; der letzte Eintrag „Neue
-Bauform aus dieser Form …“ legt aus der aktuellen Form eine neue Bauform in der Bibliothek an und weist sie zu.
-Jedes Fixture braucht eine Bauform - auch „Matrix“, „Strip“ und der Dialog „Fixture hinzufügen“ (Menü Stage Config)
-legen beim Anlegen automatisch eine an (Reiter Fixtures zeigt sie danach); nur ein Fixture aus einer älteren
-Projektdatei kann noch ohne Bauform sein, bis man ihm über denselben Weg eine gibt. Die eigentliche Form (Größe,
-Verkabelung …) ändert man nur noch im Reiter Fixtures. Die Drehung wirkt in der Abtastung (Effekt), in der Vorschau
-und in der Stage-Ansicht.
+**Fixture-Bibliothek** (alle gespeicherten Bauformen; diese eine Liste wie oben in der Benutzerbibliothek, immer da,
+auch ohne geladenes Projekt, und über neue Programmversionen erhalten). Ein Doppelklick oder **In Show übernehmen**
+legt aus einer gewählten Bauform ein Exemplar mit dem nächsten freien Patch auf der Bühne an - fehlt die Bauform in
+dieser Show noch, wird sie zuerst angelegt. Mehrfaches Übernehmen derselben Bauform legt mehrfach Exemplare an,
+statt das zweite Mal abgelehnt zu werden (so übernimmt diese eine Liste auch die frühere Aufgabe einer eigenen Liste
+„Fixtures in Show“, die entfallen ist). **Alle übernehmen** holt alle Bauformen, die der Show fehlen (legt dabei
+keine Exemplare an), **Aus Bibliothek löschen** nimmt eine aus der Bibliothek, ohne die Show zu ändern. Entfernen
+einer Bauform aus der Show (oben) lässt die Bibliothek stehen, umgekehrt genauso. Die Liste zeigt hinter dem frei
+vergebenen Namen in Gedankenstrichen die Original-Bezeichnung der Form (z. B. „Kachel 5x3 — 2D-Matrix“), damit auch
+ein frei gewählter Name nicht verschleiert, was es eigentlich ist. Lässt sich die Bibliotheksdatei nicht lesen
+(defekt), bleibt sie unangetastet und das Studio meldet es; über die Umgebungsvariable `WHITEHOLEFX_FIXTURE_LIBRARY`
+lässt sich der Pfad ersetzen.
+
+**Fixtures auf der Bühne**: die eigentlichen Exemplare. Lage (Ursprung x y z) und **Drehung x y z** (Grad, um die
+Mitte des Fixtures) eines gewählten Exemplars stellst du im Formular darunter ein. Das Feld **Bauform** wechselt
+die Bauform eines Fixtures; der letzte Eintrag „Neue Bauform aus dieser Form …“ legt aus der aktuellen Form eine
+neue Bauform in der Bibliothek an und weist sie zu. Jedes Fixture braucht eine Bauform - auch „Matrix“, „Strip“ und
+der Dialog „Fixture hinzufügen“ (Menü Stage Config) legen beim Anlegen automatisch eine an; nur ein Fixture aus
+einer älteren Projektdatei kann noch ohne Bauform sein, bis man ihm über denselben Weg eine gibt. Die eigentliche
+Form (Größe, Verkabelung …) ändert man weiter oben, bei „Bauformen dieser Show“. Die Drehung wirkt in der Abtastung
+(Effekt), in der Vorschau und in der Stage-Ansicht.
 
 ### Reiter Test: Testbilder über die ganze Bühne
 

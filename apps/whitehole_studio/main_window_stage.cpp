@@ -8,7 +8,7 @@
 #include <QMenu>
 #include <QStatusBar>
 
-#include "fixture_library_page.hpp"
+#include "fixtures_page.hpp"
 #include "layout_panel.hpp"
 #include "look_panel.hpp"
 #include "output_page.hpp"
@@ -33,12 +33,10 @@ void MainWindow::buildStageConfig(QMenu* menu) {
         testView_->setSelection(testPanel_->selectedIds());
         testView_->refresh();
     });
-    fixturePage_ = new FixtureLibraryPage{*player_};
-    connect(fixturePage_, &FixtureLibraryPage::edited, this, &MainWindow::onLayoutEdited);
-    connect(fixturePage_, &FixtureLibraryPage::notice, this, [this](const QString& message) { statusBar()->showMessage(message, 8000); });
-    connect(fixturePage_, &FixtureLibraryPage::projectNeeded, this, [this]() { newProject(false); });
-    connect(fixturePage_, &FixtureLibraryPage::failed, this,
-            [this](const QString& message) { statusBar()->showMessage(message, 8000); });
+    // FixturesPage ist eine reine Anzeige (keine eigenen Signale): sie zeigt echte Fixture-Exemplare, angelegt
+    // und bearbeitet wird nach wie vor im Reiter Layout (siehe layout_panel.hpp) - refreshStageViews() unten
+    // hält sie mit dem Player synchron.
+    fixturePage_ = new FixturesPage{*player_};
     outputPage_ = new OutputPage{*player_};
     connect(outputPage_, &OutputPage::edited, this, &MainWindow::onLayoutEdited);
     connect(outputPage_, &OutputPage::failed, this,
@@ -66,7 +64,7 @@ void MainWindow::buildStageConfig(QMenu* menu) {
     connect(testModeAction, &QAction::triggered, this, [this]() { stageSetup_->open(StageSetupWindow::Page::Test); });
 
     auto* fixturesAction = new QAction{tr("&Fixtures …"), this};
-    fixturesAction->setToolTip(tr("Bibliothek der Bauformen: Matrix, Kreis, Strip, Säule mit Vorschau und Test"));
+    fixturesAction->setToolTip(tr("Liste aller Fixture-Exemplare dieser Show"));
     connect(fixturesAction, &QAction::triggered, this, [this]() { stageSetup_->open(StageSetupWindow::Page::Fixtures); });
 
     menu->addAction(fixturesAction);

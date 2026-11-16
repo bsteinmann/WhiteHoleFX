@@ -6,8 +6,9 @@
 // zweiten Bildschirm gezogen werden und lässt dem Hauptfenster seinen Platz. Es bleibt bedienbar,
 // während die Vorschau im Hauptfenster sichtbar ist (kein modaler Dialog).
 //
-// Seiten: Fixtures (Bibliothek der Bauformen), Layout (Verteilen und Drehen, daneben die Bühnenansicht, siehe stage_view.hpp),
-// Ausgabe (Ziele und Patch) und Test (Testbilder für die ganze Bühne, daneben die Bühne mit den Farben des Testbilds).
+// Seiten: Fixtures (Liste aller Fixture-Exemplare dieser Show, siehe fixtures_page.hpp), Layout (Bauform-
+// Bearbeitung, Verteilen und Drehen, daneben die Bühnenansicht, siehe stage_view.hpp), Ausgabe (Ziele und
+// Patch) und Test (Testbilder für die ganze Bühne, daneben die Bühne mit den Farben des Testbilds).
 // Das Fenster besitzt die Panels nur als Tabs; Verbindungen, Rückgängig und Speichern laufen
 // unverändert über das Hauptfenster.
 //
@@ -26,7 +27,7 @@ class QTabWidget;
 
 namespace whitehole::studio {
 
-class FixtureLibraryPage;
+class FixturesPage;
 class LayoutPanel;
 class OutputPage;
 class TestPanel;
@@ -38,7 +39,7 @@ class StageSetupWindow : public QWidget {
 public:
     enum class Page { Fixtures, Layout, Output, Test };
 
-    StageSetupWindow(FixtureLibraryPage* fixtures, LayoutPanel* layout, OutputPage* output, TestPanel* test, StageView* view,
+    StageSetupWindow(FixturesPage* fixtures, LayoutPanel* layout, OutputPage* output, TestPanel* test, StageView* view,
                      StageView* testView, QWidget* parent);
 
     /// Öffnet das Fenster (beim ersten Mal an der gemerkten Stelle) und holt es nach vorn.

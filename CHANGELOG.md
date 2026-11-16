@@ -2,6 +2,19 @@
 
 ## 0.92.0
 
+- **Stage Config: Seite „Fixtures" zeigt jetzt echte Fixture-Exemplare, Bauform-Bearbeitung zieht in den
+  Reiter Layout** (vom Nutzer vorgegeben, zusammen mit der „Fixtures in Show"-Änderung direkt darunter).
+  Die Seite „Fixtures" im Stage-Config-Fenster zeigte bisher die Bauformen (`FixtureLibraryPage`) - jetzt
+  zeigt sie nur noch eine einfache Liste aller Fixture-Exemplare dieser Show (Name, Bauform bzw. „eigene
+  Form“, LED-Zahl; neue Dateien `fixtures_page.hpp/cpp`, ersetzen `fixture_library_page.*`). Die
+  Bauform-Bearbeitung selbst (Anlegen, Maße, Verkabelung, Vorschau, Benutzerbibliothek) ist in den Reiter
+  Layout gezogen, zur dort schon bestehenden Fixture-Bibliothek (neue Dateien `layout_panel_shapes.cpp`,
+  `layout_panel_shapes_exercise.cpp`; `layout_panel_catalog.cpp` um Speichern/Alle-übernehmen/Löschen
+  erweitert; ersetzt `fixture_library_user.cpp`, `fixture_library_exercise.cpp`). „In Show übernehmen“
+  der Fixture-Bibliothek legt dabei immer auch ein Exemplar an (siehe nächster Punkt), nicht mehr nur die
+  Bauform selbst. Die beiden Listen „Bauformen dieser Show“ und „Fixture-Bibliothek“ schließen sich in der
+  Auswahl weiterhin gegenseitig aus und zeigen beim Anklicken wie gewohnt Formular bzw. Vorschau der
+  gewählten Bauform (`LayoutPanel::showSelectedCatalog`, portiert aus dem alten `FixtureLibraryPage::showStored`).
 - **Layout-Tab: Liste „Fixtures in Show" entfernt, Fixture-Bibliothek übernimmt ihre Aufgabe** (vom Nutzer
   gewünscht: eine Liste weniger). Bisher zwei Schritte - „In Show übernehmen" holte eine Bauform aus der
   Bibliothek nur in die Projektdatei, erst „Auf die Bühne" in der (jetzt entfernten) Liste „Fixtures in

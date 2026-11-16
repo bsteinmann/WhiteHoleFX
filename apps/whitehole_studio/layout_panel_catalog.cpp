@@ -1,10 +1,10 @@
 // layout_panel_catalog.cpp: Fixture-Bibliothek im Reiter Layout: aus einer gespeicherten Bauform ein Exemplar
 // auf der Bühne anlegen.
 //
-// Warum eine eigene Datei: layout_panel.cpp und layout_panel_add.cpp sind an der 400-Zeilen-Grenze. Anlegen,
-// Bearbeiten und Speichern einer Bauform bleibt Aufgabe des Reiters Fixtures (siehe fixture_library_user.cpp); hier
-// steht nur das Lesen der Benutzerbibliothek (user_library.hpp) und das Anlegen eines Exemplars aus einer gewählten
-// Bauform - dieselbe Bibliotheksdatei wie dort, nur von einer zweiten Stelle aus erreichbar.
+// Warum eine eigene Datei: layout_panel.cpp und layout_panel_add.cpp sind an der 400-Zeilen-Grenze. Anlegen und
+// Bearbeiten einer Bauform bleibt Aufgabe des Bereichs "Bauformen dieser Show" (siehe layout_panel_shapes.cpp);
+// hier steht nur das Lesen/Schreiben der Benutzerbibliothek (user_library.hpp) und das Anlegen eines Exemplars
+// aus einer gewählten Bauform.
 //
 // "In Show übernehmen" übernahm früher nur die Bauform-Definition in das Projekt; ein zweiter Schritt über die
 // inzwischen entfernte Liste "Fixtures in Show" legte dann erst ein Exemplar an. Auf Wunsch des Nutzers übernimmt
@@ -30,35 +30,78 @@ using form::fromStd;
 
 void LayoutPanel::fillCatalogList() {
     const QString keep = selectedCatalogName();
-    const QSignalBlocker blocker{catalog_};
-    catalog_->clear();
-    const auto stored = userlib::load(player_.registry());
-    if (!stored.ok()) {
-        Q_EMIT failed(fromStd(stored.error().message));
-        return;
-    }
-    for (const project::FixtureType& type : stored.value()) {
-        const QString name = fromStd(type.name);
-        // Name zuerst (frei vergeben), dahinter die Original-Bezeichnung der Form: sonst sieht man einem Namen wie
-        // "Kachel 5x3" nicht mehr an, ob dahinter wirklich eine Matrix steckt (siehe fixture_shape_label.hpp).
-        auto* item = new QListWidgetItem{
-            tr("%1 — %2 (%3 LEDs)").arg(name, shapeKindLabel(type.shape)).arg(mapping::ledCount(type.shape))};
-        item->setData(Qt::UserRole, name);
-        catalog_->addItem(item);
-        if (name == keep) {
-            catalog_->setCurrentItem(item);
+    bool hasStoredTypes = false;
+    {
+        const QSignalBlocker blocker{catalog_};
+        catalog_->clear();
+        const auto stored = userlib::load(player_.registry());
+        if (!stored.ok()) {
+            Q_EMIT failed(fromStd(stored.error().message));
+            return;
+        }
+        for (const project::FixtureType& type : stored.value()) {
+            const QString name = fromStd(type.name);
+            // Name zuerst (frei vergeben), dahinter die Original-Bezeichnung der Form: sonst sieht man einem Namen
+            // wie "Kachel 5x3" nicht mehr an, ob dahinter wirklich eine Matrix steckt (siehe fixture_shape_label.hpp).
+            auto* item = new QListWidgetItem{
+                tr("%1 — %2 (%3 LEDs)").arg(name, shapeKindLabel(type.shape)).arg(mapping::ledCount(type.shape))};
+            item->setData(Qt::UserRole, name);
+            catalog_->addItem(item);
+            if (name == keep) {
+                catalog_->setCurrentItem(item);
+            }
+        }
+        hasStoredTypes = catalog_->count() > 0;
+        if (!hasStoredTypes) {
+            auto* none = new QListWidgetItem{
+                tr("Noch keine gespeicherten Bauformen (oben: Bauformen dieser Show → In Bibliothek speichern)")};
+            none->setFlags(Qt::NoItemFlags);
+            catalog_->addItem(none);
         }
     }
-    if (catalog_->count() == 0) {
-        auto* none = new QListWidgetItem{tr("Noch keine gespeicherten Fixtures (Stage Config → Fixtures)")};
-        none->setFlags(Qt::NoItemFlags);
-        catalog_->addItem(none);
+    // Außerhalb des QSignalBlocker: setCurrentItem() oben hat currentRowChanged nicht ausgelöst (siehe
+    // layout_panel.cpp), Knopf-Status und Vorschau also von Hand nachziehen, wie FixtureLibraryPage::fillStored es
+    // tat.
+    catalogTakeOver_->setEnabled(catalog_->currentRow() >= 0);
+    catalogDelete_->setEnabled(catalog_->currentRow() >= 0);
+    catalogImport_->setEnabled(hasStoredTypes);
+    if (catalog_->currentRow() >= 0) {
+        showSelectedCatalog();
     }
 }
 
 QString LayoutPanel::selectedCatalogName() const {
     const QListWidgetItem* item = catalog_->currentItem();
     return item != nullptr ? item->data(Qt::UserRole).toString() : QString{};
+}
+
+void LayoutPanel::showSelectedCatalog() {
+    const QString name = selectedCatalogName();
+    catalogTakeOver_->setEnabled(!name.isEmpty());
+    catalogDelete_->setEnabled(!name.isEmpty());
+    if (name.isEmpty()) {
+        return;
+    }
+    const auto stored = userlib::load(player_.registry());
+    if (!stored.ok()) {
+        return;
+    }
+    for (const project::FixtureType& type : stored.value()) {
+        if (fromStd(type.name) == name) {
+            // Nur ansehen: bearbeitet wird eine Bauform in "Bauformen dieser Show"; "In Bibliothek speichern" legt
+            // sie wieder ab (siehe layout_panel_shapes.cpp).
+            shapeName_->setText(name);
+            shapeName_->setEnabled(false);
+            shapeDuplicate_->setEnabled(false);
+            shapeRemove_->setEnabled(false);
+            catalogSave_->setEnabled(false);
+            shapeForm_->setVisible(false);
+            shapeUsage_->setText(
+                tr("Gespeichert in der Bibliothek. „In Show übernehmen“ (oder Doppelklick) holt ein Exemplar in diese Show."));
+            shapePreview_->setShape(type.shape);
+            return;
+        }
+    }
 }
 
 bool LayoutPanel::takeOverFromCatalog(const QString& name) {
@@ -108,7 +151,7 @@ bool LayoutPanel::takeOverFromCatalog(const QString& name) {
 namespace {
 
 /// Lenkt die Benutzerbibliothek für die Dauer des Rauchtests in ein Wegwerfverzeichnis (die echte bleibt
-/// unberührt) - dasselbe Muster wie FixtureLibraryPage::exercise (fixture_library_exercise.cpp).
+/// unberührt) - dasselbe Muster wie LayoutPanel::exerciseShapes (layout_panel_shapes_exercise.cpp).
 class ScopedLibraryPath {
 public:
     ScopedLibraryPath()

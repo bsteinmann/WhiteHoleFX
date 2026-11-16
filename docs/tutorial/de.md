@@ -30,13 +30,16 @@ leuchtet dann rot. So kann nichts versehentlich auf einer fremden Anlage leuchte
 
 ## 3. Die Bühne einrichten (Stage Config)
 
-Wer neu anfängt, beginnt mit der Hardware. Öffne **Stage Config → Fixtures …**. Das eigene Fenster hat vier Reiter:
+Wer neu anfängt, beginnt mit der Hardware. Öffne **Stage Config → Layout …** (oder **F4**). Das eigene Fenster hat vier Reiter:
 
-- **Fixtures:** die Bibliothek der Bauformen. Mit **Neu** legst du eine Bauform an (2D-Matrix, 3D-Matrix, Kreis, Strip oder Säule),
-  stellst Größe, Abstand und Verkabelung ein und siehst rechts sofort, wie sie aussieht. Die erste LED am Kabel ist **weiß**, so
-  erkennst du die Startecke. Der Knopf **Test** lässt ein Muster über die Form laufen.
-- **Layout (F4):** Hier verteilst du Exemplare der Bauformen auf der Bühne (**Aus Bauform**), stellst Lage und **Drehung um alle
-  drei Achsen** ein und richtest sie aus. Die Bühne im Raum siehst du daneben, drehbar, mit Achsenkreuz (x rot, y grün, z blau).
+- **Fixtures:** eine einfache Liste aller Fixture-Exemplare dieser Show (Name, Bauform, LED-Zahl) - nur zum Überblick,
+  angelegt und bearbeitet wird alles im Reiter Layout.
+- **Layout (F4):** Ganz oben legst du mit **Neu** eine Bauform an (2D-Matrix, 3D-Matrix, Kreis, Strip oder Säule), stellst
+  Größe, Abstand und Verkabelung ein und siehst rechts sofort, wie sie aussieht - die erste LED am Kabel ist **weiß**, so
+  erkennst du die Startecke. Darunter holst du über die **Fixture-Bibliothek** ein Exemplar einer Bauform auf die Bühne
+  (**In Show übernehmen**, mehrfach für mehrere Exemplare); ganz unten stellst du bei den **Fixtures auf der Bühne** Lage
+  und **Drehung um alle drei Achsen** ein und richtest sie aus. Die Bühne im Raum siehst du daneben, drehbar, mit
+  Achsenkreuz (x rot, y grün, z blau).
 - **Ausgabe:** die Controller mit Protokoll (Art-Net, sACN, DDP) und Adresse (eine leere Adresse bedeutet Multicast, nur sACN) und die Patch-Tabelle: welches
   Fixture auf welches Universe sendet. Jeder Controller lässt sich entfernen, die Spalten lassen sich verschieben.
 - **Test:** schickt Testbilder (Farbe, Laufbalken, Farbreihenfolge, Lauflicht) über die ganze Bühne, um Verkabelung und Patch zu

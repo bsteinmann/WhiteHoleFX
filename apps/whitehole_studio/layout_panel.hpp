@@ -5,6 +5,11 @@
 // Bühnenansicht daneben im Fenster. Die Liste erlaubt mehrere Fixtures; dieselbe
 // Auswahl zeigt die Vorschau (PreviewController). Das Panel hält keinen eigenen Zustand; alles geht
 // über den Player, der jede Änderung samt Ausgabeplan prüft.
+//
+// Die Bauform-Bearbeitung (Anlegen, Maße, Verkabelung, Vorschau, Benutzerbibliothek) stand früher auf einer
+// eigenen Seite "Fixtures" im Stage-Config-Fenster (FixtureLibraryPage); auf Wunsch des Nutzers zeigt diese Seite
+// jetzt echte Fixture-Exemplare statt Bauformen (siehe fixtures_page.hpp), die Bauform-Bearbeitung ist hierher in
+// den Reiter Layout gezogen, zur Fixture-Bibliothek (layout_panel_shapes.cpp, layout_panel_catalog.cpp).
 #pragma once
 
 #include <QListWidget>
@@ -15,6 +20,8 @@
 
 #include "add_fixture_dialog.hpp"
 #include "fixture_form.hpp"
+#include "shape_form.hpp"
+#include "shape_preview.hpp"
 #include "stage_view.hpp"
 #include "whitehole/mapping/point_import.hpp"
 #include "whitehole/runtime/player.hpp"
@@ -22,7 +29,10 @@
 class QCheckBox;
 class QComboBox;
 class QDoubleSpinBox;
+class QLabel;
+class QLineEdit;
 class QMenu;
+class QPushButton;
 
 namespace whitehole::studio {
 
@@ -61,6 +71,19 @@ public:
     void saveGroup();
     void addRegion();
 
+    /// Die Arten, aus denen "Neu" eine Bauform macht (Reihenfolge wie im Menü) - wie früher FixtureLibraryPage::Kind.
+    enum class ShapeKind { Matrix2d, Matrix3d, Circle, Strip, Column, Cylinder };  // Column = Spirale, Cylinder = Säule
+
+    /// Bauformen dieser Show (project::FixtureType, nicht Fixture-Exemplare): anlegen, Maße ändern, umbenennen,
+    /// vervielfältigen, entfernen. Dieselben Bauformen wie auf der Stage-Config-Seite Fixtures - nur dass sie
+    /// jetzt hier bearbeitet werden (siehe Kommentar am Dateianfang).
+    bool addShapeType(ShapeKind kind);
+    [[nodiscard]] QString selectedShapeName() const;
+    void selectShapeType(const QString& name);
+    void removeSelectedShape();
+    void duplicateSelectedShape();
+    void renameSelectedShape(const QString& newName);
+
     /// Fixture-Bibliothek (alle gespeicherten Bauformen, Benutzerbibliothek auf der Festplatte, siehe
     /// user_library.hpp): Liste füllen und aus einer gewählten Bauform ein Exemplar mit Patch auf der Bühne
     /// anlegen (fehlt die Bauform in dieser Show noch, wird sie zuerst angelegt) - übernimmt damit auch die
@@ -68,6 +91,13 @@ public:
     void fillCatalogList();
     bool takeOverFromCatalog(const QString& name);
     [[nodiscard]] QString selectedCatalogName() const;
+    /// Speichert die gewählte Bauform dieser Show in der Benutzerbibliothek (ersetzt eine gleichnamige).
+    bool saveSelectedShapeToLibrary();
+    /// Holt Bauformen der Benutzerbibliothek, die dem Projekt fehlen (gleichnamige bleiben unberührt; legt keine
+    /// Exemplare an). Gibt die Zahl der neuen zurück.
+    int importFromUserLibrary();
+    /// Nimmt die gewählte gespeicherte Bauform aus der Benutzerbibliothek (die Show bleibt unberührt).
+    void removeSelectedFromCatalog();
 
     /// Alle in der Liste gewählten Fixtures (in Listenreihenfolge).
     [[nodiscard]] std::vector<mapping::FixtureId> selectedIds() const;
@@ -100,10 +130,15 @@ Q_SIGNALS:
 private:
     QWidget* buildArrangeBar();
     QWidget* buildGridBar();
+    /// Baut den Bereich "Bauformen dieser Show" (layout_panel_shapes.cpp): Liste, Name, Formular, Vorschau,
+    /// Knöpfe Neu/Duplizieren/Entfernen/In Bibliothek speichern.
+    QWidget* buildShapesArea();
     QString exerciseArrange();
     QString exerciseImport();
     QString exerciseAddDialog();
     QString exerciseCatalog();
+    /// Rauchtest der Bauform-Bearbeitung (früher FixtureLibraryPage::exercise, siehe layout_panel_shapes.cpp).
+    QString exerciseShapes();
     void fillList(mapping::FixtureId select);
     void refreshTexts();
     void addFixture(const QString& baseName, mapping::FixtureShape shape);
@@ -115,15 +150,42 @@ private:
     void showListContextMenu(const QPoint& pos);
     void removeFixture(mapping::FixtureId id);
 
+    /// Bauform-Bearbeitung (layout_panel_shapes.cpp): Liste füllen, Formular/Vorschau nach Auswahl zeigen,
+    /// eindeutigen Namen vorschlagen, einen Result<void> melden (edited oder failed+zurücksetzen).
+    void fillShapeList(const QString& select);
+    void showSelectedShape();
+    [[nodiscard]] QString uniqueShapeName(const QString& base) const;
+    void reportShape(const Result<void>& result);
+    void applyShapeEdit(const mapping::FixtureShape& shape);
+
+    /// Fixture-Bibliothek (layout_panel_catalog.cpp): wie fillShapeList, nur für die gespeicherte Liste;
+    /// beide Listen schließen sich gegenseitig in der Auswahl aus (siehe layout_panel_catalog.cpp).
+    void showSelectedCatalog();
+
     runtime::Player& player_;
     QListWidget* list_{nullptr};
     QListWidget* catalog_{nullptr};  // Fixture-Bibliothek (alle gespeicherten Bauformen); Doppelklick legt ein Exemplar an
+    QPushButton* catalogTakeOver_{nullptr};
+    QPushButton* catalogImport_{nullptr};
+    QPushButton* catalogSave_{nullptr};
+    QPushButton* catalogDelete_{nullptr};
     FixtureForm* fixture_{nullptr};
     QCheckBox* showGrid_{nullptr};
     QCheckBox* snap_{nullptr};
     QCheckBox* snapFixtures_{nullptr};
     QComboBox* gridStep_{nullptr};
     QDoubleSpinBox* packGap_{nullptr};  // Abstand für "Nebeneinander"/"Übereinander"
+
+    // Bauformen dieser Show (project::FixtureType) - früher FixtureLibraryPage, siehe Kommentar am Dateianfang.
+    QListWidget* shapeList_{nullptr};
+    QLineEdit* shapeName_{nullptr};
+    QLabel* shapeUsage_{nullptr};
+    ShapeForm* shapeForm_{nullptr};
+    ShapePreview* shapePreview_{nullptr};
+    QPushButton* shapeAddButton_{nullptr};
+    QPushButton* shapeDuplicate_{nullptr};
+    QPushButton* shapeRemove_{nullptr};
+    bool shapeEditing_{false};  // wir ändern gerade selbst: showSelectedShape() fasst die Felder nicht an
 };
 
 }  // namespace whitehole::studio
