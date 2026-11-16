@@ -13,6 +13,8 @@
 
 #include <string_view>
 
+#include "form_helpers.hpp"
+
 namespace whitehole::studio {
 
 using form::fromStd;
