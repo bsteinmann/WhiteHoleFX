@@ -11,9 +11,12 @@
 
 namespace whitehole::studio {
 
-QString NodeEditor::exerciseRename(NodeId sink) {
+QString NodeEditor::exerciseRename(NodeId sink, const QString& defaultTitle) {
+    // defaultTitle kommt vom Aufrufer (direkt nach dem Anlegen abgelesen): im geladenen Projekt kann schon
+    // ein weiterer Node desselben Typs stecken, dann zeigt auch dieser unbenannte Node "Mirror 1"/"Mirror 2"
+    // statt schlicht "Mirror" (siehe node_display_name.hpp) - ein fester Vergleichswert wäre hier falsch.
     NodeItem* item = itemOf(sink);
-    if (item == nullptr || item->title() != QStringLiteral("Mirror")) {
+    if (item == nullptr || item->title() != defaultTitle) {
         return QStringLiteral("Node-Titel ohne eigenen Namen zeigt nicht den Typnamen");
     }
     if (!player_.renameNode(sink, "Mein Mirror").ok()) {
@@ -29,7 +32,7 @@ QString NodeEditor::exerciseRename(NodeId sink) {
     }
     rebuild();
     item = itemOf(sink);
-    if (item == nullptr || item->title() != QStringLiteral("Mirror")) {
+    if (item == nullptr || item->title() != defaultTitle) {
         return QStringLiteral("Leerer Name löscht den eigenen Namen nicht wieder (Titel fällt nicht auf den Typ zurück)");
     }
     return {};

@@ -116,7 +116,11 @@ QString NodeEditor::exercise() {
     if (from == nullptr || from->info().isEmpty() || !from->infoButtonAt(from->mapToScene(QPointF{152.0, 13.0}))) {
         return QStringLiteral("Info-Zeichen fehlt am neuen Node");
     }
-    if (const QString error = exerciseRename(*sink); !error.isEmpty()) {
+    // Der Starttitel ohne eigenen Namen ist nicht zwingend "Mirror": steckt im geladenen Beispielprojekt
+    // schon ein anderer wh.transform.mirror-Node, zählt die Anzeige durch ("Mirror 1"/"Mirror 2", siehe
+    // node_display_name.hpp) - darum hier den Titel direkt nach dem Anlegen festhalten statt ihn zu raten.
+    const QString defaultTitle = to->title();
+    if (const QString error = exerciseRename(*sink, defaultTitle); !error.isEmpty()) {
         return error;
     }
     to = itemOf(*sink);

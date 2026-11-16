@@ -138,7 +138,7 @@ public:
     QString exercise();
     /// Teil von exercise() (node_editor_exercise_rename.cpp, ausgelagert wegen der 400-Zeilen-Grenze):
     /// eigener Name über renameNode, Titel fällt ohne eigenen Namen auf den Typ zurück.
-    QString exerciseRename(NodeId sink);
+    QString exerciseRename(NodeId sink, const QString& defaultTitle);
 
     /// Schaltet die Überbrückung des Nodes (Schalter im Kopf, Taste B, Kontextmenü). Rückgängig-fähig.
     bool toggleBypass(NodeId id);

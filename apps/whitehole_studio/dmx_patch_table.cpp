@@ -13,6 +13,7 @@
 #include <algorithm>
 
 #include "form_helpers.hpp"
+#include "whitehole/output/artnet.hpp"
 #include "whitehole/output/patch_protocol.hpp"
 
 namespace whitehole::studio {
@@ -162,7 +163,20 @@ void DmxPatchTable::addPatch() {
         return;
     }
     std::vector<output::DmxChannelPatch> patches = player_.project()->dmxPatches;
-    patches.push_back(output::DmxChannelPatch{});
+    output::DmxChannelPatch next;
+    // Nächster freier Pool-Kanal: der Standard (poolChannel 1, siehe DmxChannelPatch) ist nur beim
+    // allerersten Patch frei. Ohne diese Suche überschneidet sich jeder weitere Klick auf "Patch +" mit
+    // dem schon bestehenden ersten Patch, setDmxPatches scheitert leise an der Überschneidung (siehe
+    // OutputPipeline::create) und der Button scheint ab dem zweiten Klick nichts mehr zu tun.
+    std::uint32_t freeFrom = 1;
+    for (const output::DmxChannelPatch& p : patches) {
+        freeFrom = std::max<std::uint32_t>(freeFrom, static_cast<std::uint32_t>(p.poolChannel) + p.count);
+    }
+    if (freeFrom <= output::kDmxMaxChannels) {
+        next.poolChannel = static_cast<std::uint16_t>(freeFrom);
+    }
+    // sonst: Pool ist voll - next behält den Standard, setDmxPatches meldet dann regulär "Pool voll".
+    patches.push_back(next);
     const Result<void> r = player_.setDmxPatches(std::move(patches));
     if (r.ok()) {
         rebuild();
@@ -192,6 +206,17 @@ QString DmxPatchTable::exercise() {
     addPatch();
     if (player_.project()->dmxPatches.size() != before + 1 || table_->rowCount() != static_cast<int>(before + 1)) {
         return QStringLiteral("DMX-Kanal-Pool: Patch wurde nicht angelegt");
+    }
+    // Zweimal hintereinander "Patch +" ohne etwas zu bearbeiten (vom Nutzer gemeldet: der Knopf tat ab dem
+    // zweiten Klick nichts mehr, weil beide Einträge sonst denselben Standard-Pool-Kanal 1 bekamen und sich
+    // überschnitten - siehe CHANGELOG).
+    addPatch();
+    if (player_.project()->dmxPatches.size() != before + 2 || table_->rowCount() != static_cast<int>(before + 2)) {
+        return QStringLiteral("DMX-Kanal-Pool: zweiter unbearbeiteter Patch wurde nicht angelegt (Standardwerte überschneiden sich?)");
+    }
+    removeSelectedPatch();  // letzte Zeile (keine Auswahl) wieder weg, ab hier wie zuvor mit genau einem Patch weitermachen
+    if (player_.project()->dmxPatches.size() != before + 1) {
+        return QStringLiteral("DMX-Kanal-Pool: der zweite Patch ließ sich nicht wieder entfernen");
     }
     const int row = static_cast<int>(before);
     qobject_cast<QSpinBox*>(table_->cellWidget(row, PoolFrom))->setValue(10);

@@ -2,6 +2,14 @@
 
 ## 0.92.0
 
+- **Fix: "Patch +" im DMX-Kanal-Pool (Ausgabe → DMX-Kanal-Pool) funktionierte nur beim ersten Klick**
+  (vom Nutzer gemeldet: „ich kann nur einmal einen Patch hinzufügen... danach funktioniert der Button
+  nicht mehr"). `DmxPatchTable::addPatch()` fügte jeden neuen Eintrag mit dem Standard-Pool-Kanal 1 ein
+  (`output::DmxChannelPatch{}`); ab dem zweiten Klick überschnitt sich der neue Eintrag damit immer mit
+  dem schon bestehenden ersten, `setDmxPatches` scheiterte an der Überschneidungsprüfung
+  (`OutputPipeline::create`) und `addPatch()` rief dann `rebuild()` gar nicht erst auf - der Button
+  schien ab da nichts mehr zu tun. Jetzt sucht `addPatch()` den nächsten freien Pool-Kanal nach den
+  schon bestehenden Einträgen.
 - **Nodes benennbar** (vom Nutzer gewünscht: "dmx nodes mussen benamt werden können, (anderer nodes am
   besten auch) sonst gerät man schnell durcheinander wenn man 32 dmx nodes hat"). Rechtsklick auf einen
   Node im Node-Editor → "Node umbenennen …" gibt ihm einen eigenen Namen statt des Node-Typs; erscheint
