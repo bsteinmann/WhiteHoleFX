@@ -1,5 +1,13 @@
 # Änderungen
 
+## 1.0.0
+
+- **Aus der Testphase heraus: Versionssprung auf 1.0.0.** Keine inhaltliche Änderung gegenüber 0.92.0 (siehe
+  unten) - nur die Aussage, dass WhiteHoleFX jetzt als nutzbar statt als Testversion gilt. Offene
+  Backlog-Punkte (MIDI, Sequencer-Port-Ausblenden, Zonen-Node, Projektions-Ausgabe, Remote-Web-UI,
+  Headless/Pi-Support) bleiben davon unberührt und werden weiterhin erst nach ausdrücklicher Freigabe
+  angegangen (siehe CLAUDE.md).
+
 ## 0.92.0
 
 - **Lizenzwechsel: PolyForm Shield 1.0.0 → GNU General Public License Version 3 (GPL-3.0).** Grund: eine
