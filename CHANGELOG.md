@@ -2,6 +2,18 @@
 
 ## 0.92.0
 
+- **Lizenzwechsel: PolyForm Shield 1.0.0 → GNU General Public License Version 3 (GPL-3.0).** Grund: eine
+  kostenlose Code-Signierung für Windows (zum Beispiel über SignPath) setzt eine von der OSI anerkannte
+  Open-Source-Lizenz voraus - PolyForm Shield zählt nicht dazu. GPL-3.0 ist davon die mit copyleft am
+  strengsten wirkende OSI-Lizenz: kommerzielle Nutzung bleibt ausdrücklich erlaubt, wer die Software aber
+  (verändert oder unverändert) weitergibt, muss den Quellcode mitgeben und das Ergebnis ebenfalls unter der
+  GPL-3.0 stellen - ein Closed-Source-Fork ist damit nicht mehr möglich. Geprüft: alle gebundenen
+  Drittbibliotheken (Qt 6 LGPL-3.0, wgpu-native MIT/Apache-2.0, miniaudio Public Domain/MIT-0, Catch2 nur in
+  Tests) sind mit GPL-3.0 verträglich; einzige Autorin bisher ist diese Session, also keine offenen
+  Zustimmungen Dritter nötig. `LICENSE` (Volltext), `NOTICE`, README, `packaging/linux/copyright`,
+  `packaging/windows/LIESMICH.txt`/`RELEASE_NOTES.md` sowie der Info-Text im Programm ("Über WhiteHoleFX",
+  inkl. Übersetzungen) angepasst. Versionen bis 0.21.0 bleiben unter Apache License 2.0, Versionen 0.22.0 bis
+  0.92.0 bleiben unter PolyForm Shield 1.0.0 - nur künftige Versionen stehen unter der GPL-3.0.
 - **Vier Rückmeldungen zur eben erschienenen Fixture/Layout-Umstellung (siehe unten), alle in einem Schritt
   umgesetzt** (vom Nutzer so gewünscht: "mach alles auf einmal, ich will aus der testversion endlich raus").
   1. **Reiter Fixtures: keine Bibliothek mehr, nur noch Export/Import.** Die automatisch geladene, im

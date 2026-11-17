@@ -110,7 +110,7 @@ void MainWindow::showShortcuts() {
 void MainWindow::showAbout() {
     QString text =
         tr("<b>WhiteHoleFX Studio</b> %1<br><br>Steuerung für LED-Matrizen, Cubes und Pixel mit einem Node-Editor.<br>"
-           "Lizenz: PolyForm Shield 1.0.0<br><br><a href=\"%2\">%2</a>")
+           "Lizenz: GPL-3.0<br><br><a href=\"%2\">%2</a>")
             .arg(QStringLiteral(WH_VERSION), QString::fromLatin1(kRepoUrl));
     const QString adapter = QApplication::instance()->property("whfxGpuAdapter").toString();
     if (!adapter.isEmpty()) {

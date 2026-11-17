@@ -113,17 +113,19 @@ Bildschirm. Rückmeldungen dazu sind willkommen.
 
 ## Lizenz
 
-WhiteHoleFX steht ab Version 0.22.0 unter der [PolyForm Shield License 1.0.0](LICENSE). Die Quellen sind
-offen einsehbar, es ist aber keine Open-Source-Lizenz im Sinne der OSI.
+WhiteHoleFX steht unter der [GNU General Public License Version 3 (GPL-3.0)](LICENSE) - einer von der OSI
+anerkannten Open-Source-Lizenz.
 
 **Kurz gesagt (keine Rechtsberatung, maßgeblich ist der Lizenztext):**
 
 - Kostenlos nutzbar für **jeden Zweck**: privat, im Verein, als DJ oder Lichttechniker auf bezahlten Veranstaltungen,
-  in der Firma für die eigene Anlage.
-- Ändern und weitergeben ist erlaubt, wenn der Lizenztext und die Zeile `Required Notice:` aus [NOTICE](NOTICE) mitgehen.
-- **Nicht erlaubt:** ein Produkt oder einen Dienst anzubieten, der mit WhiteHoleFX konkurriert, zum Beispiel die Software
-  (auch verändert oder umbenannt) selbst zu verkaufen oder als Bezahlprodukt zu vermarkten.
+  in der Firma für die eigene Anlage - auch kommerziell.
+- Ändern und weitergeben ist erlaubt, auch kommerziell - bei Weitergabe (verändert oder unverändert) muss der
+  Quellcode mitgegeben werden und das Ergebnis ebenfalls unter der GPL-3.0 stehen.
+- **Nicht erlaubt:** die Software (auch verändert) als Closed-Source-Produkt weiterzugeben, ohne den Quellcode
+  mitzuliefern.
 
-Versionen bis einschließlich 0.21.0 wurden unter der Apache License 2.0 veröffentlicht und bleiben es. Hinweise zu
-Bibliotheken von Dritten (wgpu-native, Qt, Catch2) stehen in [NOTICE](NOTICE). Beiträge werden, sofern nicht anders
-vereinbart, unter derselben Lizenz angenommen.
+Versionen bis einschließlich 0.21.0 wurden unter der Apache License 2.0 veröffentlicht, Versionen 0.22.0 bis
+0.92.0 unter der PolyForm Shield License 1.0.0 - für diese Versionen bleibt es jeweils bei der damals geltenden
+Lizenz (siehe [CHANGELOG](CHANGELOG.md)). Hinweise zu Bibliotheken von Dritten (wgpu-native, Qt, Catch2) stehen in
+[NOTICE](NOTICE). Beiträge werden, sofern nicht anders vereinbart, unter derselben Lizenz angenommen.

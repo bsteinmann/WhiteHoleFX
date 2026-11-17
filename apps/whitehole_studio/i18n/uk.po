@@ -122,7 +122,7 @@ msgstr "%1 (стандартно)"
 msgid "%1 (nicht gefunden)"
 msgstr "%1 (не знайдено)"
 
-#: fixture_library_export.cpp:80
+#: fixture_library_export.cpp:82
 msgid "%1 Fixtures importiert."
 msgstr "Введено %1 фікстур."
 
@@ -334,7 +334,7 @@ msgstr ", %1 BPM"
 msgid ", Pegel %1 %"
 msgstr ", рівень %1 %"
 
-#: fixture_library_export.cpp:80
+#: fixture_library_export.cpp:82
 msgid "1 Fixture importiert."
 msgstr "Введено 1 фікстуру."
 
@@ -431,8 +431,8 @@ msgid "<b>Säule</b> (Ringe übereinander)"
 msgstr "<b>Колона</b> (кільця одне над одним)"
 
 #: main_window_help.cpp:112
-msgid "<b>WhiteHoleFX Studio</b> %1<br><br>Steuerung für LED-Matrizen, Cubes und Pixel mit einem Node-Editor.<br>Lizenz: PolyForm Shield 1.0.0<br><br><a href=\"%2\">%2</a>"
-msgstr "<b>WhiteHoleFX Studio</b> %1<br><br>Керування LED-матрицями, кубами та пікселями з вузловим редактором.<br>Ліцензія: PolyForm Shield 1.0.0<br><br><a href=\"%2\">%2</a>"
+msgid "<b>WhiteHoleFX Studio</b> %1<br><br>Steuerung für LED-Matrizen, Cubes und Pixel mit einem Node-Editor.<br>Lizenz: GPL-3.0<br><br><a href=\"%2\">%2</a>"
+msgstr "<b>WhiteHoleFX Studio</b> %1<br><br>Керування LED-матрицями, кубами та пікселями з вузловим редактором.<br>Ліцензія: GPL-3.0<br><br><a href=\"%2\">%2</a>"
 
 #: port_legend.cpp:92
 msgid "Abgeblendeter Node mit gestrichelter Durchleitung: überbrückt (Taste B)."
@@ -954,15 +954,15 @@ msgstr "Минулого разу студію закрито неправиль
 msgid "Das Testbild ersetzt den Effekt in der Vorschau und, wenn „Ausgabe senden“ an ist, auch auf den LEDs. Es wird nicht im Projekt gespeichert.\n\nAchtung: Weiß und Farbe leuchten mit voller Helligkeit. Prüfe vorher, ob die Netzteile die ganze Wand auf 100 % tragen."
 msgstr "Тестове зображення замінює ефект у попередньому перегляді, а коли «Надсилати вивід» увімкнено, то й на LED. У проєкті воно не зберігається.\n\nУвага: білий і кольори світять на повну яскравість. Спершу переконайтеся, що блоки живлення витримують усю стіну на 100 %."
 
-#: fixture_library_export.cpp:54
+#: fixture_library_export.cpp:56
 msgid "Datei lässt sich nicht lesen: %1"
 msgstr "Файл не вдається прочитати: %1"
 
-#: fixture_library_export.cpp:31
+#: fixture_library_export.cpp:33
 msgid "Datei lässt sich nicht schreiben: %1"
 msgstr "Файл не вдається записати: %1"
 
-#: fixture_library_export.cpp:36
+#: fixture_library_export.cpp:38
 msgid "Datei lässt sich nicht speichern: %1"
 msgstr "Файл не вдається зберегти: %1"
 
@@ -1462,7 +1462,7 @@ msgstr "Імпортувати фікстуру"
 msgid "Fixture „%1“ entfernen"
 msgstr "Видалити прилад «%1»"
 
-#: fixture_library_export.cpp:39
+#: fixture_library_export.cpp:41
 msgid "Fixture „%1“ exportiert nach: %2"
 msgstr "Фікстуру «%1» експортовано до: %2"
 

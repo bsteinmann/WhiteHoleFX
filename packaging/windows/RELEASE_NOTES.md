@@ -55,6 +55,6 @@ Umgebungsvariable `WHITEHOLEFX_GPU_BACKEND` (`vulkan`, `gl` oder `dx12`) und ein
 **Zum Ausprobieren:** Datei → Beispiele → `looks` öffnen, „Start“ drücken, mit **F9** in den Live-Modus wechseln
 und per Klick oder Tasten 1 bis 3 zwischen den Looks überblenden.
 
-**Lizenz:** PolyForm Shield 1.0.0 — kostenlos für jeden Zweck, auch für DJs und Lichttechniker auf bezahlten
-Veranstaltungen; nicht erlaubt ist, ein konkurrierendes Produkt oder einen Dienst daraus zu machen. Details in
+**Lizenz:** GNU General Public License Version 3 (GPL-3.0) — kostenlos für jeden Zweck, auch kommerziell; wer
+weitergibt, muss den Quellcode mitgeben und das Ergebnis ebenfalls unter der GPL-3.0 stellen. Details in
 `LICENSE` und `NOTICE`.

@@ -20,8 +20,9 @@ Rückmeldungen willkommen
   Bitte nenne dabei Windows-Version, Grafikkarte und was du getan hast.
 
 Lizenz
-  PolyForm Shield License 1.0.0 (siehe LICENSE): kostenlos für jeden Zweck, auch auf bezahlten Veranstaltungen.
-  Nicht erlaubt ist, daraus ein konkurrierendes Produkt oder einen Dienst zu machen. Drittbibliotheken: NOTICE.
+  GNU General Public License Version 3 (GPL-3.0, siehe LICENSE): kostenlos für jeden Zweck, auch kommerziell.
+  Wer die Software (verändert oder unverändert) weitergibt, muss den Quellcode mitgeben und das Ergebnis
+  ebenfalls unter der GPL-3.0 stellen. Drittbibliotheken: NOTICE.
 
 Haftungsausschluss
   Die Software wird ohne jede Gewährleistung bereitgestellt ("as is"), soweit gesetzlich zulässig. Für

@@ -122,7 +122,7 @@ msgstr "%1 (default)"
 msgid "%1 (nicht gefunden)"
 msgstr "%1 (not found)"
 
-#: fixture_library_export.cpp:80
+#: fixture_library_export.cpp:82
 msgid "%1 Fixtures importiert."
 msgstr "%1 fixtures imported."
 
@@ -334,7 +334,7 @@ msgstr ", %1 BPM"
 msgid ", Pegel %1 %"
 msgstr ", level %1 %"
 
-#: fixture_library_export.cpp:80
+#: fixture_library_export.cpp:82
 msgid "1 Fixture importiert."
 msgstr "1 fixture imported."
 
@@ -431,8 +431,8 @@ msgid "<b>Säule</b> (Ringe übereinander)"
 msgstr "<b>Pillar</b> (rings stacked on top of each other)"
 
 #: main_window_help.cpp:112
-msgid "<b>WhiteHoleFX Studio</b> %1<br><br>Steuerung für LED-Matrizen, Cubes und Pixel mit einem Node-Editor.<br>Lizenz: PolyForm Shield 1.0.0<br><br><a href=\"%2\">%2</a>"
-msgstr "<b>WhiteHoleFX Studio</b> %1<br><br>Control for LED matrices, cubes and pixels with a node editor.<br>License: PolyForm Shield 1.0.0<br><br><a href=\"%2\">%2</a>"
+msgid "<b>WhiteHoleFX Studio</b> %1<br><br>Steuerung für LED-Matrizen, Cubes und Pixel mit einem Node-Editor.<br>Lizenz: GPL-3.0<br><br><a href=\"%2\">%2</a>"
+msgstr "<b>WhiteHoleFX Studio</b> %1<br><br>Control for LED matrices, cubes and pixels with a node editor.<br>License: GPL-3.0<br><br><a href=\"%2\">%2</a>"
 
 #: port_legend.cpp:92
 msgid "Abgeblendeter Node mit gestrichelter Durchleitung: überbrückt (Taste B)."
@@ -954,15 +954,15 @@ msgstr "The studio was not closed properly last time."
 msgid "Das Testbild ersetzt den Effekt in der Vorschau und, wenn „Ausgabe senden“ an ist, auch auf den LEDs. Es wird nicht im Projekt gespeichert.\n\nAchtung: Weiß und Farbe leuchten mit voller Helligkeit. Prüfe vorher, ob die Netzteile die ganze Wand auf 100 % tragen."
 msgstr "The test pattern replaces the effect in the preview and, if “Send output” is on, on the LEDs too. It is not saved in the project.\n\nCaution: white and color light up at full brightness. Check beforehand that the power supplies can carry the whole wall at 100 %."
 
-#: fixture_library_export.cpp:54
+#: fixture_library_export.cpp:56
 msgid "Datei lässt sich nicht lesen: %1"
 msgstr "Can't read file: %1"
 
-#: fixture_library_export.cpp:31
+#: fixture_library_export.cpp:33
 msgid "Datei lässt sich nicht schreiben: %1"
 msgstr "Can't write file: %1"
 
-#: fixture_library_export.cpp:36
+#: fixture_library_export.cpp:38
 msgid "Datei lässt sich nicht speichern: %1"
 msgstr "Can't save file: %1"
 
@@ -1462,7 +1462,7 @@ msgstr "Import fixture"
 msgid "Fixture „%1“ entfernen"
 msgstr "Remove fixture “%1”"
 
-#: fixture_library_export.cpp:39
+#: fixture_library_export.cpp:41
 msgid "Fixture „%1“ exportiert nach: %2"
 msgstr "Fixture \"%1\" exported to: %2"
 
