@@ -1082,7 +1082,7 @@ msgstr "La nouvelle langue s'applique après le redémarrage de WhiteHoleFX. Red
 msgid "Die unten gewählten Fixtures; alle anderen bleiben dunkel."
 msgstr "Les fixtures sélectionnées ci-dessous ; toutes les autres restent éteintes."
 
-#: node_info_texts.cpp:185
+#: node_info_texts.cpp:188
 msgid "Die vergangene Zeit in Sekunden, mit Tempo-Faktor und Versatz. Zum Antreiben von Bewegungen."
 msgstr "The elapsed time in seconds, with speed factor and offset. For driving motion."
 
@@ -2581,6 +2581,10 @@ msgstr "Anneaux"
 #: test_panel.cpp:30
 msgid "Rot"
 msgstr "Rouge"
+
+#: node_info_texts.cpp:185
+msgid "Sample & Hold: übernimmt den Wert bei jeder steigenden Flanke von Trigger und hält ihn bis zur nächsten Flanke - z. B. um pro Trigger einen neuen, für den Durchlauf festen Zufallswert zu halten."
+msgstr "Sample & Hold : reprend la valeur à chaque front montant de trigger et la maintient jusqu'au front suivant - par ex. pour garder une nouvelle valeur aléatoire fixe pour chaque passage déclenché."
 
 #: port_legend.cpp:67
 msgid "Schalter"

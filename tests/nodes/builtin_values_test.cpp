@@ -1,4 +1,4 @@
-// Die Werte-Nodes (Time, Number, Color, LFO, Random, Map, Smooth) einzeln.
+// Die Werte-Nodes (Time, Number, Color, LFO, Random, Map, Smooth, Hold) einzeln.
 #include <catch2/catch_approx.hpp>
 #include <catch2/catch_test_macros.hpp>
 
@@ -241,4 +241,35 @@ TEST_CASE("Smooth: Tiefpass mit Zustand") {
         lab.run(1000.0, 1000.0);
         CHECK(lab.number(smooth, "out") == Approx(10.0));
     }
+}
+
+TEST_CASE("Hold: Sample & Hold auf steigende Flanke") {
+    Lab lab;
+    const NodeId hold = lab.add("wh.value.hold");
+    lab.feed(hold, "out");
+
+    // Vor der ersten Flanke: der Startwert 0, auch wenn `value` schon etwas anderes ist.
+    lab.set(hold, "value", 7.0);
+    lab.run(0.0);
+    CHECK(lab.number(hold, "out") == Approx(0.0));
+
+    // Steigende Flanke: übernimmt den aktuellen Wert.
+    lab.set(hold, "trigger", true);
+    lab.run(0.1);
+    CHECK(lab.number(hold, "out") == Approx(7.0));
+
+    // Während `trigger` oben bleibt, ändert sich `value`, aber `out` folgt nicht (keine erneute Flanke).
+    lab.set(hold, "value", 42.0);
+    lab.run(0.2);
+    CHECK(lab.number(hold, "out") == Approx(7.0));
+
+    // `trigger` geht auf low: `out` hält weiterhin den alten Wert.
+    lab.set(hold, "trigger", false);
+    lab.run(0.3);
+    CHECK(lab.number(hold, "out") == Approx(7.0));
+
+    // Nächste steigende Flanke: übernimmt den inzwischen geänderten Wert.
+    lab.set(hold, "trigger", true);
+    lab.run(0.4);
+    CHECK(lab.number(hold, "out") == Approx(42.0));
 }

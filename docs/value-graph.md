@@ -158,6 +158,7 @@ laufen immer. Ein vergessener, unverbundener Node kostet nichts.
 | `wh.value.random` | `out` | `rate`, `seed`, `smooth` | Hash-basiert, reproduzierbar; weich oder gehalten |
 | `wh.value.map` | `out` | `value`, `inMin`, `inMax`, `outMin`, `outMax`, `clamp` | Bereich umrechnen |
 | `wh.value.smooth` | `out` | `value`, `time` | Tiefpass erster Ordnung; hat Zustand |
+| `wh.value.hold` | `out` | `value`, `trigger` | Sample & Hold: übernimmt `value` bei jeder steigenden Flanke von `trigger`, hält den Wert bis zur nächsten; hat Zustand. Zusammen mit Random (hohe `rate`) ergibt das pro Trigger einen neuen, für den Durchlauf festen Zufallswert - z. B. ein zufälliges, pro One-shot-Durchlauf festes Zentrum (siehe `wh.generator.shapes`) |
 | `wh.value.dmx` | `value`, `on` (Boolean), `present` (Boolean) | `source` (0 Art-Net, 1 sACN), `universe`, `channel`, `bits16`, `min`, `max`, `threshold`, `timeout`, `hold` | DMX-Eingang, siehe unten |
 | `wh.value.dmxcolor` | `out` (Color) | `source`, `universe`, `channel`, `mode` (0 RGB, 1 RGB + Dimmer), `timeout`, `hold` | Drei oder vier Kanäle als Farbe |
 

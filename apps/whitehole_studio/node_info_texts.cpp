@@ -181,6 +181,9 @@ std::span<const NodeInfoEntry> nodeInfoEntries() {
      QT_TR_NOOP("Schrittfolge mit bis zu acht Werten. Jedes Einschalten von „Advance“ geht einen Schritt weiter (vorwärts, rückwärts, hin und her oder zufällig).")},
     {"wh.value.smooth",
      QT_TR_NOOP("Glättet einen Wert: Er folgt dem Eingang mit einer Zeitkonstante, statt zu springen.")},
+    {"wh.value.hold",
+     QT_TR_NOOP("Sample & Hold: übernimmt den Wert bei jeder steigenden Flanke von Trigger und hält ihn bis zur "
+                "nächsten Flanke - z. B. um pro Trigger einen neuen, für den Durchlauf festen Zufallswert zu halten.")},
     {"wh.value.time",
      QT_TR_NOOP("Die vergangene Zeit in Sekunden, mit Tempo-Faktor und Versatz. Zum Antreiben von Bewegungen.")},
     };

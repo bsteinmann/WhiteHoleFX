@@ -1082,7 +1082,7 @@ msgstr ""
 msgid "Die unten gewählten Fixtures; alle anderen bleiben dunkel."
 msgstr ""
 
-#: node_info_texts.cpp:185
+#: node_info_texts.cpp:188
 msgid "Die vergangene Zeit in Sekunden, mit Tempo-Faktor und Versatz. Zum Antreiben von Bewegungen."
 msgstr ""
 
@@ -2580,6 +2580,10 @@ msgstr ""
 
 #: test_panel.cpp:30
 msgid "Rot"
+msgstr ""
+
+#: node_info_texts.cpp:185
+msgid "Sample & Hold: übernimmt den Wert bei jeder steigenden Flanke von Trigger und hält ihn bis zur nächsten Flanke - z. B. um pro Trigger einen neuen, für den Durchlauf festen Zufallswert zu halten."
 msgstr ""
 
 #: port_legend.cpp:67

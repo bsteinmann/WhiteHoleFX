@@ -1,9 +1,11 @@
 // Werte-Nodes: erzeugen und formen Zahlen und Farben, die Parameter anderer
 // Nodes steuern (Modulation). Sie laufen auf der CPU, einmal pro Frame.
 //
-// Alle Kernel dieser Datei sind frei von Systemuhr und globalem Zustand: Zeit kommt aus dem
+// Die meisten Kernel dieser Datei sind frei von Systemuhr und globalem Zustand: Zeit kommt aus dem
 // FrameTime, Zufall aus einer Hashfunktion. Derselbe Graph liefert damit bei
-// derselben Zeit immer dieselben Werte, auch beim Offline-Rendern und in Tests.
+// derselben Zeit immer dieselben Werte, auch beim Offline-Rendern und in Tests. Smooth und Hold sind die
+// Ausnahme - sie brauchen zwingend ein Gedächtnis über Frames hinweg (ein Tiefpass bzw. eine Flanken-
+// Erkennung lassen sich nicht aus der aktuellen Zeit allein berechnen).
 #include <algorithm>
 #include <cmath>
 #include <cstdint>
@@ -136,6 +138,26 @@ private:
     double state_{0.0};
 };
 
+// Sample & Hold: merkt sich `value` bei jeder steigenden Flanke von `trigger` und hält diesen Wert, bis die
+// nächste Flanke kommt (dazwischen ändert sich `value` am Eingang beliebig, ohne dass `out` folgt). Zusammen
+// mit Random (hohe `rate`, kontinuierlich wechselnd) ergibt das "bei jedem Trigger eine neue, für die Dauer
+// des Durchlaufs feste Zufallszahl" - zum Beispiel für ein zufälliges, pro Durchlauf festes Zentrum einer
+// One-shot-Form (Expanding Shapes: cx/cy).
+class HoldKernel final : public values::ICpuKernel {
+public:
+    void evaluate(const KernelContext& context, KernelOutputs& outputs) override {
+        triggerEdge_.update(context.inputs.boolean("trigger", false));
+        if (triggerEdge_.rose()) {
+            state_ = context.inputs.number("value", 0.0);
+        }
+        outputs.set("out", state_);
+    }
+
+private:
+    EdgeDetector triggerEdge_;
+    double state_{0.0};
+};
+
 }  // namespace
 
 std::vector<values::CpuNodeDefinition> valueNodes() {
@@ -187,6 +209,11 @@ std::vector<values::CpuNodeDefinition> valueNodes() {
                             {valueOutput("out", "Out", PortType::Scalar)},
                             {number("value", "Value", 0.0), number("time", "Time constant (s)", 0.2, 0.0, 60.0)},
                             kernelFactory<SmoothKernel>()));
+
+    nodes.push_back(cpuNode(
+        "wh.value.hold", "Hold (Sample & Hold)", "Value", {valueOutput("out", "Out", PortType::Scalar)},
+        {number("value", "Value", 0.0), toggle("trigger", "Trigger (each switch on samples)", false)},
+        kernelFactory<HoldKernel>()));
 
     return nodes;
 }

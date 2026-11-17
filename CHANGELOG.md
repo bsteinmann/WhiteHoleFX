@@ -1,5 +1,20 @@
 # Änderungen
 
+## Unreleased
+
+- **Neuer Value-Node `wh.value.hold` ("Hold (Sample & Hold)").** Übernimmt `value` bei jeder steigenden
+  Flanke von `trigger` und hält diesen Wert, bis die nächste Flanke kommt - dazwischen folgt `out` dem
+  Eingang `value` nicht. Hintergrund: Random (`wh.value.random`) ist zeitbasiert und liefert damit keinen
+  Wert, der exakt für einen Trigger-zu-Trigger-Durchlauf fest bleibt. Zusammen mit Random (hohe `rate`)
+  ergibt Hold "bei jedem Trigger ein neuer, für die Dauer des Durchlaufs fester Zufallswert" - zum
+  Beispiel ein zufälliges, pro One-shot-Durchlauf festes Zentrum für Expanding Shapes (`cx`/`cy`): Random
+  → Hold.value, derselbe Trigger → Hold.trigger, Hold.out → Map (0..1 auf den gewünschten Bereich) →
+  Expanding Shapes `cx`/`cy`. Zwei unabhängige Random/Hold-Paare mit unterschiedlichem `seed` für `cx` und
+  `cy`. Neue Dateien/Stellen: `HoldKernel` in `libs/wh_nodes/src/builtin_values.cpp`, Test in
+  `tests/nodes/builtin_values_test.cpp`, Katalogeintrag in `tests/nodes/builtin_nodes_test.cpp`,
+  Hilfetext in `apps/whitehole_studio/node_info_texts.cpp` (übersetzt en/fr/es/uk), Beschreibung in
+  `docs/value-graph.md`.
+
 ## 1.0.0
 
 - **Aus der Testphase heraus: Versionssprung auf 1.0.0.** Keine inhaltliche Änderung gegenüber 0.92.0 (siehe

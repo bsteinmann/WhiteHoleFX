@@ -1082,7 +1082,7 @@ msgstr "Нова мова діятиме після перезапуску White
 msgid "Die unten gewählten Fixtures; alle anderen bleiben dunkel."
 msgstr "Прилади, вибрані нижче; решта залишаються темними."
 
-#: node_info_texts.cpp:185
+#: node_info_texts.cpp:188
 msgid "Die vergangene Zeit in Sekunden, mit Tempo-Faktor und Versatz. Zum Antreiben von Bewegungen."
 msgstr "Минулий час у секундах, з коефіцієнтом темпу та зсувом. Для керування рухом."
 
@@ -2581,6 +2581,10 @@ msgstr "Кільця"
 #: test_panel.cpp:30
 msgid "Rot"
 msgstr "Червоний"
+
+#: node_info_texts.cpp:185
+msgid "Sample & Hold: übernimmt den Wert bei jeder steigenden Flanke von Trigger und hält ihn bis zur nächsten Flanke - z. B. um pro Trigger einen neuen, für den Durchlauf festen Zufallswert zu halten."
+msgstr "Sample & Hold: зчитує значення при кожному фронті наростання trigger і утримує його до наступного фронту - наприклад, щоб тримати нове фіксоване випадкове значення протягом одного запуску."
 
 #: port_legend.cpp:67
 msgid "Schalter"
