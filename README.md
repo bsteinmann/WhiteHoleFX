@@ -4,6 +4,10 @@ Quelloffene Echtzeitsteuerung für LED-Matrizen, LED-Cubes, Strips und Pixelinst
 Effekte entstehen in einem Node-Graphen und laufen als Shader auf der GPU. Dieselben
 Effekte gelten für flache Matrizen und für LEDs im 3D-Raum.
 
+![WhiteHoleFX Studio: der Color-Ramp-Node im Node-Editor, daneben die LED-Vorschau mit einem Texteffekt](docs/images/studio-color-ramp.png)
+
+> 🇬🇧 **English version: [README.en.md](README.en.md)**
+
 > **Status: früh, aber benutzbar.** Projekte lassen sich in einer Qt-Oberfläche bearbeiten
 > (Parameterregler, Node-Editor mit Node-Presets, Layout-Editor, Testmodus, Master/Blackout,
 > Rückgängig/Wiederholen), live ansehen und als Art-Net, sACN oder DDP senden; DMX aus dem Netz
