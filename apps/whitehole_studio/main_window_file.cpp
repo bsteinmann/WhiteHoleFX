@@ -115,9 +115,12 @@ void MainWindow::onOpen() {
     const QString start = player_->status().path.empty() ? QString{} : toQString(player_->status().path);
     QString path;
     {
-        const StallPause pause;  // der Windows-Dialog hat eine eigene Nachrichtenschleife (siehe stall_watchdog.hpp)
+        // Qt-eigener Dialog wie bei "Speichern unter": Der Windows-Dialog lud Erweiterungen von Fremdprogrammen und
+        // beendete das Studio sofort beim Klick auf "Öffnen", ohne Absturzbericht (nur die Sitzungsmarke blieb übrig).
+        const StallPause pause;  // siehe stall_watchdog.hpp
         path = QFileDialog::getOpenFileName(this, tr("Projekt öffnen"), start,
-                                            tr("WhiteHoleFX-Projekte (*.whfx);;Alle Dateien (*)"));
+                                            tr("WhiteHoleFX-Projekte (*.whfx);;Alle Dateien (*)"), nullptr,
+                                            QFileDialog::DontUseNativeDialog);
     }
     if (!path.isEmpty()) {
         openPath(path);

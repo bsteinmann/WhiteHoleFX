@@ -1,4 +1,5 @@
-// Quelltext-Prüfung: Jeder Datei-Dialog des Studios (QFileDialog::get...) steht unter einer StallPause. Warum es das gibt:
+// Quelltext-Prüfung: Jeder Datei-Dialog des Studios (QFileDialog::get...) steht unter einer StallPause und ist der Qt-Dialog
+// (DontUseNativeDialog). Warum es das gibt:
 // Der Windows-Dialog hat eine eigene Nachrichtenschleife; ohne Pause meldete der Wächter einen falschen "Stillstand"
 // (ABSTUERZE_TODO.md Punkt 2, zuletzt beim Fixture-Export/-Import). Das Studio lässt sich lokal nicht bauen, also prüft
 // dieser Test den Quelltext. Er liest die Dateien über __FILE__, wie example_projects_test.cpp die Beispiele.
@@ -23,7 +24,7 @@ std::vector<std::string> linesOf(const std::filesystem::path& file) {
 
 }  // namespace
 
-TEST_CASE("Studio: jeder QFileDialog::get... steht unter einer StallPause", "[studio][source]") {
+TEST_CASE("Studio: jeder QFileDialog::get... steht unter einer StallPause und nutzt den Qt-Dialog", "[studio][source]") {
     const std::filesystem::path dir =
         std::filesystem::path{__FILE__}.parent_path().parent_path().parent_path() / "apps" / "whitehole_studio";
     if (!std::filesystem::exists(dir)) {
@@ -46,6 +47,13 @@ TEST_CASE("Studio: jeder QFileDialog::get... steht unter einer StallPause", "[st
             }
             INFO(entry.path().filename().string() << ":" << (i + 1));
             CHECK(paused);
+            // Nie der Windows-Dialog: Seine Erweiterungen von Fremdprogrammen beendeten das Studio ohne Bericht
+            // (Datei -> Öffnen, 20.11.). Der Aufruf steht über mehrere Zeilen, also die nächsten 6 mitlesen.
+            bool qtDialog = false;
+            for (std::size_t ahead = 0; ahead <= 6 && i + ahead < lines.size(); ++ahead) {
+                qtDialog = qtDialog || lines[i + ahead].find("DontUseNativeDialog") != std::string::npos;
+            }
+            CHECK(qtDialog);
         }
     }
     CHECK(found >= 5);  // Projekt öffnen/speichern, WAV, Fixture-Export/-Import: sonst sucht der Test nichts mehr
