@@ -280,6 +280,7 @@ bool FixtureLibraryPage::addType(Kind kind) {
         if (player_.project() == nullptr) {
             return false;
         }
+        (void)player_.dropSoleFixtureType();  // die Bauform der Vorlage soll nicht neben der neuen stehen
     }
     const Preset preset = presetOf(kind);
     const QString name = uniqueName(preset.name);

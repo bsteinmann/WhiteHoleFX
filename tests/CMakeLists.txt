@@ -122,6 +122,7 @@ add_executable(wh_tests
     runtime/strict_inputs_test.cpp
     runtime/node_clipboard_test.cpp
     runtime/output_duplicate_test.cpp
+    runtime/start_template_test.cpp
     runtime/node_display_name_test.cpp
     runtime/node_defaults_test.cpp
     runtime/point_file_test.cpp
