@@ -32,9 +32,6 @@ Result<void> validate(const FixturePatch& patch) {
         return Error{ErrorCode::InvalidArgument,
                      "Der Startkanal muss zwischen 1 und 510 liegen, damit mindestens eine LED passt"};
     }
-    if (patch.skipEvery > 0 && patch.skipCount == 0) {
-        return Error{ErrorCode::InvalidArgument, "Überspringen: nach je N LEDs muss mindestens ein Pixel ausgelassen werden"};
-    }
     return {};
 }
 

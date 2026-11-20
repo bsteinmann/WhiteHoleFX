@@ -149,7 +149,7 @@ void PatchTable::rebuild() {
             auto* offset = form::intBox(static_cast<int>(shown.ddpOffset), 0, 2000000000);
             auto* skipFirst = form::intBox(static_cast<int>(shown.skipFirst), 0, 65535);
             auto* skipEvery = form::intBox(static_cast<int>(shown.skipEvery), 0, 1000000);
-            auto* skipCount = form::intBox(static_cast<int>(shown.skipCount), 1, 65535);
+            auto* skipCount = form::intBox(static_cast<int>(shown.skipCount), 0, 65535);
             auto* order = form::combo({QStringLiteral("RGB"), QStringLiteral("RBG"), QStringLiteral("GRB"),
                                        QStringLiteral("GBR"), QStringLiteral("BRG"), QStringLiteral("BGR")},
                                       static_cast<int>(shown.color.order));
