@@ -93,10 +93,13 @@ for (var i = 0; i < 8; i = i + 1) {
 let col = @param(color);
 return vec4<f32>(col.rgb, col.a * v);)wgsl";
 
-// Funkeln: `cells` Zellen entlang der Achse (zum Beispiel die LED-Zahl); in einem Teil davon (`density`) blitzt es auf
+// Funkeln: `cells` Zellen entlang der Achse (zum Beispiel die LED-Zahl; 0 = automatisch: Spalten bei Achse x, Zeilen bei
+// Achse y aus der echten Auflösung (@columns/@rows), sonst 60); in einem Teil davon (`density`) blitzt es auf
 // und klingt ab, jede Zelle mit eigenem Takt.
 constexpr const char* kSparkleBody = R"wgsl(let u = clamp(wh_axis_u(p, @param(axis)), 0.0, 0.9999);
-let n = max(floor(@param(cells)), 1.0);
+let axisI = i32(floor(@param(axis) + 0.5));
+let autoN = select(select(60.0, @rows, axisI == 1 && @rows > 0.0), @columns, axisI == 0 && @columns > 0.0);
+let n = max(select(floor(@param(cells)), autoN, @param(cells) < 0.5), 1.0);
 let cell = floor(u * n);
 let h1 = wh_hash_1d(cell);
 let h2 = wh_hash_1d(cell + 17.0);
@@ -154,7 +157,7 @@ std::vector<compiler::NodeDefinition> generators1dNodes() {
 
     nodes.push_back(fieldNode(
         "wh.generator1d.sparkle", "Sparkle", group, {fieldOutput()},
-        {axisChoice(), number("cells", "Cells (e.g. LED count)", 60.0, 1.0, 1024.0),
+        {axisChoice(), number("cells", "Cells (e.g. LED count, 0 = automatic)", 0.0, 0.0, 1024.0),
          number("density", "Density", 0.3, 0.0, 1.0), number("speed", "Speed", 1.0, 0.0, 10.0),
          color("color", "Color", ColorRgba{1.0F, 0.95F, 0.8F, 1.0F})},
         kSparkleBody, k1dPrelude));

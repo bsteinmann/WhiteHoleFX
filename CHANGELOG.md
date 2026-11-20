@@ -4,6 +4,16 @@
 
 - **Fix: Studio ließ sich nach dem Testmodus-Knopf nicht mehr bauen.** `main_window_view3d.cpp` benutzt `TestPanel`, ohne
   `test_panel.hpp` einzubinden (fehlender Include, auf `main` seit dem Merge von #41). Betraf die Qt-Jobs der CI.
+- **Zellenzahl automatisch an die Leinwand anpassen.** Die Nodes **Labyrinth** (`cells`, „Cells across“), **Starfield**
+  und **Fading Pixels** (`cells`, „Cells per axis“) sowie **Funkeln (1D)** (`cells`) haben jetzt `cells` = 0 als neuen
+  Standard: Das Raster entsteht automatisch aus der echten Auflösung (`@columns`/`@rows`), ein Wert > 0 bleibt als
+  manueller Override erhalten (wie bei Random Pixels und Digital Rain). Auf einer 32x16-Matrix hat das Labyrinth damit
+  ohne Handarbeit 32 x 16 Zellen (eine Zelle je LED); Starfield und Fading Pixels bekommen Spalten × Zeilen Felder statt
+  einer festen Zahl je Achse; Funkeln nimmt bei Achse x die Spalten, bei Achse y die Zeilen (Achse z und unbekannte
+  Auflösung: 60). Ohne bekannte Auflösung gelten die bisherigen Richtwerte (8 beim Labyrinth, 16 bei Starfield/Fading
+  Pixels). **Bestehende Projekte ändern sich**, wo `cells` nie verstellt wurde (der alte Standard war 8, 16 bzw. 60);
+  gespeicherte Werte bleiben unverändert. Das Labyrinth rechnet höchstens 64 Zellen über die Breite (wie bisher).
+  Tests: `tests/nodes/builtin_nodes_test.cpp`, `tests/gpu_device/cells_auto_on_device_test.cpp`.
 - **Knopf „Testmodus“ in der Ansichtsleiste.** Rechts neben 2D/3D/3D Front/Seite/Oben schaltet ein Knopf das Testbild ein
   und aus (bisher ging das Abschalten nur im Fenster Stage Config; in der Vorschau stand nur das Banner „TESTMODUS“).
   Ein: das zuletzt benutzte Testbild, beim ersten Mal der Laufbalken; aus: wie „Testmodus beenden“. Der Knopf folgt auch
