@@ -46,7 +46,7 @@ constexpr ULONGLONG kPollMs = 250;
 constexpr int kMaxFrames = 48;
 
 wchar_t g_dir[MAX_PATH + 16];  // Berichtsordner
-char g_version[32];
+char g_version[128];  // Version und Build-Kennung (Commit, CI-Lauf)
 char g_adapter[256];
 char g_note[512];  // Hinweis zur Ursache (zum Beispiel was() einer nicht abgefangenen Ausnahme)
 std::atomic<ULONGLONG> g_beatMs{0};
