@@ -38,7 +38,7 @@ Outputs zusammen); Variante (a) ist umgesetzt.
 | 7 | Fehler (Bedienung) | 20.11. gemeldet | 1.0.0 | Stage Config → Fixtures: erstes Hinzufügen legt zusätzlich eine 16×8-Matrix an | mittel (Ursache sehr wahrscheinlich, noch nicht nachgestellt) | mittel, klein |
 | 8 | Wunsch (Bedienung) | 20.11. gemeldet | 1.0.0 | Testmodus per Knopf neben den Ansichts-Umschaltern (2D/3D/Front/…) ein-/ausschalten | hoch (klein, Qt-Teil nur in der CI prüfbar) | mittel, klein |
 | 9 | Fehler (Bedienung) | 20.11. gemeldet | 1.0.0 | Output-Node duplizieren (Strg+D/Einfügen) → Bild wird schwarz | hoch (Ursache im Code gefunden, noch nicht nachgestellt); Lösung (a) vom Nutzer gewählt | hoch, klein |
-| 10 | Fehler (Bedienung) | 20.11. gemeldet | 1.0.0 | Stage Config → Ausgabe: „übersprungene Pixel“ lassen sich nicht auf 0 setzen | hoch (Ursache im Code gefunden, Qt-Teil nur in der CI prüfbar) | niedrig, klein |
+| 10 | Fehler (Bedienung) | 20.11. gemeldet | 1.0.0 | Stage Config → Ausgabe: „übersprungene Pixel“ lassen sich nicht auf 0 setzen | hoch (Ursache im Code gefunden, Qt-Teil nur in der CI prüfbar); Lösung vom Nutzer gewählt | niedrig, klein |
 
 **Stand 2026-11-20 (Nutzer):** Einer der Berichte geht auf ein Experiment mit 1920×1080 LEDs (rund 2 Millionen) zurück und soll
 ignoriert werden. Gelesen als: die Stillstände aus Punkt 3 und 4 (alle vier stammen aus einem Prozess, und nur sie hängen
@@ -285,7 +285,7 @@ ohne Ausgang → bekommt weiterhin den Ausgang. Undo-Test: Rückgängig stellt d
   („mindestens ein Pixel ausgelassen“); der Projektleser (`project_fixture_parser.cpp`) akzeptiert 0.
   Bei `skipEvery == 0` ist `skipCount` ohne Wirkung.
 - **Fix-Vorschlag:** Minimum im Feld auf 0; 0 bedeutet „nichts überspringen“, die Fehlerprüfung in `output_plan.cpp` entfällt.
-  Alternative: Prüfung behalten, nur bei `skipEvery == 0` ist 0 im Feld erlaubt. **Entscheidung des Nutzers steht aus.**
+  Alternative: Prüfung behalten, nur bei `skipEvery == 0` ist 0 im Feld erlaubt. **Entschieden (20.11.): 0 = nichts überspringen, Prüfung entfällt; umgesetzt auf `fix/skip-count-null`.**
 - **Tests:** Catch2 in `tests/output/` (0 Pixel verschieben keine Adressen), Projektdatei-Rundlauf mit `skip-count 0`;
   Tooltip, `docs/output.md`, CHANGELOG, ggf. Übersetzungen (en/fr/es/uk).
 - **Verifizierung:** Qt-Teil nicht lokal prüfbar, nur über die CI (Rauchtest).
