@@ -230,7 +230,8 @@ void SettingsDialog::chooseWav() {
     QString path;
     {
         const StallPause pause;  // siehe stall_watchdog.hpp
-        path = QFileDialog::getOpenFileName(this, tr("WAV-Datei wählen"), QString{}, tr("WAV-Dateien (*.wav)"));
+        path = QFileDialog::getOpenFileName(this, tr("WAV-Datei wählen"), QString{}, tr("WAV-Dateien (*.wav)"), nullptr,
+                                            QFileDialog::DontUseNativeDialog);  // Windows-Dialog: Erweiterungen stürzten ab
     }
     if (!path.isEmpty()) {
         audioPath_->setText(path);
