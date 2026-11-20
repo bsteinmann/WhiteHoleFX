@@ -19,6 +19,7 @@
 
 #include "main_window.hpp"
 #include "preview_widget.hpp"
+#include "test_panel.hpp"
 
 namespace whitehole::studio {
 

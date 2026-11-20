@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- **Fix: Studio ließ sich nach dem Testmodus-Knopf nicht mehr bauen.** `main_window_view3d.cpp` benutzt `TestPanel`, ohne
+  `test_panel.hpp` einzubinden (fehlender Include, auf `main` seit dem Merge von #41). Betraf die Qt-Jobs der CI.
 - **Zellenzahl automatisch an die Leinwand anpassen.** Die Nodes **Labyrinth** (`cells`, „Cells across“), **Starfield**
   und **Fading Pixels** (`cells`, „Cells per axis“) sowie **Funkeln (1D)** (`cells`) haben jetzt `cells` = 0 als neuen
   Standard: Das Raster entsteht automatisch aus der echten Auflösung (`@columns`/`@rows`), ein Wert > 0 bleibt als
