@@ -1,0 +1,53 @@
+whitehole-project 1
+# 3D-Beispiel: hohler Würfel aus 6 Matrizen zu je 32 x 32 LEDs (6144 LEDs), nur die Außenhaut, innen leer.
+# Jede Fläche ist eine eigene Matrix (Fixture), die per `at`/`rotate` an ihren Platz gedreht ist;
+# die Flächen stehen im Abstand 32 einander gegenüber (Kante 32). Die LEDs einer Fläche liegen bei 0,5 bis 31,5,
+# die LEDs der Kanten fallen also nicht aufeinander.
+#   Vorne = z 0, Hinten = z 32, Links = x 0, Rechts = x 32, Oben = y 32, Unten = y 0
+# Jede Fläche hat 7 Art-Net-Universes (1024 LEDs, 170 LEDs je Universe): Vorne ab 0, Hinten ab 8, Links ab 16 ...
+#
+# Zum Prüfen:
+#   whitehole_cli examples/3d/wuerfel-hohl.whfx --check --snapshot layout.png
+# Effekte, die den Raum nutzen (Plasma mit depth, Position), laufen auf der Außenhaut. Flächenbasierte Effekte
+# wie das Labyrinth sehen dagegen nur Teile des Würfels (siehe CLAUDE.md-Backlog / ABSTUERZE_TODO).
+
+settings fps 40
+
+destination 0 10.0.0.5
+
+fixture "Vorne" at 0 0 0
+  matrix 32 32
+  patch artnet destination 0 universe 0
+end
+
+fixture "Hinten" at 0 0 32 rotate 0 180 0
+  matrix 32 32
+  patch artnet destination 0 universe 8
+end
+
+fixture "Links" at -16 0 16 rotate 0 90 0
+  matrix 32 32
+  patch artnet destination 0 universe 16
+end
+
+fixture "Rechts" at 16 0 16 rotate 0 -90 0
+  matrix 32 32
+  patch artnet destination 0 universe 24
+end
+
+fixture "Oben" at 0 16 16 rotate 90 0 0
+  matrix 32 32
+  patch artnet destination 0 universe 32
+end
+
+fixture "Unten" at 0 -16 16 rotate -90 0 0
+  matrix 32 32
+  patch artnet destination 0 universe 40
+end
+
+node plasma wh.generator.plasma
+  set scale 3
+  set speed 0.6
+  set depth 1
+end
+output plasma.out
