@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- **Knopf „Testmodus“ in der Ansichtsleiste.** Rechts neben 2D/3D/3D Front/Seite/Oben schaltet ein Knopf das Testbild ein
+  und aus (bisher ging das Abschalten nur im Fenster Stage Config; in der Vorschau stand nur das Banner „TESTMODUS“).
+  Ein: das zuletzt benutzte Testbild, beim ersten Mal der Laufbalken; aus: wie „Testmodus beenden“. Der Knopf folgt auch
+  dem Testfenster und dem Laden eines Projekts. Neue Texte in en/fr/es/uk. Prüfung: Rauchtest `exerciseTestButton`
+  (CI, Teil von `exerciseView3d`); `TestPanel::active`/`setActive` neu.
 - **Fix: Absturz beim Fokuswechsel (Windows-Berichte 17. und 19.11.).** Der Stapel lag nur in Qt
   (`QWidget::setFocus` → `QObject::inherits` liest ein schon freigegebenes Widget). Wahrscheinliche Ursache: Ein Klick
   nimmt einem Eingabefeld den Fokus, ein Signal baut daraufhin das Formular neu auf und löschte den Widget-Baum mit

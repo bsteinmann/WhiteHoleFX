@@ -61,6 +61,17 @@ void MainWindow::buildView3d(QMenu* menu) {
         connect(action, &QAction::triggered, this, [this, mode]() { setViewMode(mode); });
     }
     viewActions_[slotOf(static_cast<int>(ViewMode::Edit2d))]->setChecked(true);
+    // Testmodus ein/aus, rechts neben den Ansichten: Ohne den Knopf ließ sich ein Testbild nur im Fenster Stage Config
+    // wieder abschalten, und die Vorschau zeigte nur das Banner "TESTMODUS". Gehört nicht zur Ansichtsgruppe.
+    bar->addSeparator();
+    testAction_ = new QAction{tr("Testmodus"), this};
+    testAction_->setCheckable(true);
+    testAction_->setToolTip(tr("Testbild ein- oder ausschalten (Art und Einstellungen: Stage Config → Testmodus)"));
+    bar->addAction(testAction_);
+    connect(testAction_, &QAction::triggered, this, [this](bool on) {
+        testPanel_->setActive(on);
+        testAction_->setChecked(testPanel_->active());  // schlug das Einschalten fehl (kein Projekt), springt der Knopf zurück
+    });
     buildView3dStyle(menu);
     freeCamera_ = styled(preview::cameraFor(preview::ViewPreset::Perspective));
     connect(preview_, &PreviewWidget::cameraChanged, this, &MainWindow::onCameraChanged);
@@ -149,6 +160,33 @@ void MainWindow::onCameraChanged(const preview::Camera3d& camera) {
         }
     }
     refreshImage();
+}
+
+QString MainWindow::exerciseTestButton() {
+    if (testAction_ == nullptr || !testAction_->isCheckable()) {
+        return QStringLiteral("Testmodus-Knopf: nicht in der Ansichtsleiste");
+    }
+    if (testAction_->isChecked() || player_->testPattern() != nullptr) {
+        return QStringLiteral("Testmodus-Knopf: schon vor dem Test an");
+    }
+    testAction_->trigger();  // einschalten
+    if (player_->testPattern() == nullptr || !testAction_->isChecked()) {
+        return QStringLiteral("Testmodus-Knopf: schaltet das Testbild nicht ein");
+    }
+    testAction_->trigger();  // ausschalten
+    if (player_->testPattern() != nullptr || testAction_->isChecked()) {
+        return QStringLiteral("Testmodus-Knopf: schaltet das Testbild nicht aus");
+    }
+    // Das Testfenster schaltet auch den Knopf: Testbild dort ein- und mit "Testmodus beenden" wieder ausschalten.
+    testPanel_->setActive(true);
+    if (!testAction_->isChecked()) {
+        return QStringLiteral("Testmodus-Knopf: folgt dem Einschalten im Testfenster nicht");
+    }
+    testPanel_->setActive(false);
+    if (testAction_->isChecked() || player_->testPattern() != nullptr) {
+        return QStringLiteral("Testmodus-Knopf: folgt dem Ausschalten im Testfenster nicht");
+    }
+    return {};
 }
 
 QString MainWindow::exerciseView3d() {
@@ -244,7 +282,7 @@ QString MainWindow::exerciseView3d() {
     if (preview_->view3d() || viewMode_ != ViewMode::Edit2d) {
         return QStringLiteral("\"2D\" schaltet nicht zurück");
     }
-    return {};
+    return exerciseTestButton();
 }
 
 }  // namespace whitehole::studio
