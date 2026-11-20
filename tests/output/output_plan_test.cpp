@@ -265,6 +265,17 @@ TEST_CASE("Ein Plan ohne Patches ist leer und gültig", "[output][plan]") {
     CHECK(out.empty());
 }
 
+TEST_CASE("Übersprungene Pixel: 0 heißt nichts überspringen, auch bei gesetztem skipEvery", "[output][plan][skip]") {
+    FixturePatch p = artnet(1, 0);
+    p.skipEvery = 4;
+    p.skipCount = 0;
+    CHECK(dataSlot(p, 4) == 4);  // keine Lücke
+    CHECK(dataSlots(p, 10) == 10);
+    const OutputPlan plan = planOf(mapOf({10}), {p});
+    REQUIRE(plan.slots().size() == 1);
+    CHECK(plan.slots()[0].length == 30);
+}
+
 TEST_CASE("Übersprungene Pixel lassen Lücken im Datenstrom und rücken die Adressen weiter", "[output][plan][skip]") {
     // Ein Verstärkerpixel vor der ersten LED und eines nach je 4 LEDs: 10 LEDs belegen 1 + 10 + 2 = 13 Plätze.
     FixturePatch p = artnet(1, 0);

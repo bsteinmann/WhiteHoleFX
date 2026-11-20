@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- **Fix: „Übersprungene Pixel“ lassen sich auf 0 setzen** (Stage Config → Ausgabe). Das Feld hatte das Minimum 1, und der
+  Ausgabeplan lehnte 0 bei gesetztem „Überspringen nach je N“ als Fehler ab. Jetzt bedeutet 0 „nichts überspringen“, ohne
+  Fehlermeldung. Test: `tests/output/output_plan_test.cpp`.
 - **Fix: Datei → Öffnen beendete das Studio unter Windows sofort, ohne Absturzbericht.** Wie schon bei „Speichern unter“ und
   beim Fixture-Export/-Import nutzt auch „Projekt öffnen“ (und die WAV-Auswahl in den Einstellungen) jetzt den Qt-eigenen
   Dialog statt des Windows-Dialogs, dessen Erweiterungen von Fremdprogrammen den Prozess ohne Bericht beenden konnten (nur

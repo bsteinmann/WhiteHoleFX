@@ -53,7 +53,8 @@ struct FixturePatch {
     std::uint32_t ddpOffset{0};    // nur DDP: Byte-Offset des Stroms
     ColorSettings color;
     /// Pixel am Datenkabel, die nicht leuchten (zum Beispiel ein Pixel als Signalverstärker): `skipFirst` Pixel vor der
-    /// ersten LED, dazu nach je `skipEvery` LEDs (0 = nie) `skipCount` Pixel. Sie bekommen Schwarz, belegen aber ihre
+    /// ersten LED, dazu nach je `skipEvery` LEDs (0 = nie) `skipCount` Pixel (0 = keines, die Einstellung ist dann
+    /// wirkungslos). Sie bekommen Schwarz, belegen aber ihre
     /// Kanäle; die Adressen der LEDs dahinter rücken entsprechend weiter.
     std::uint16_t skipFirst{0};
     std::uint32_t skipEvery{0};
