@@ -114,6 +114,18 @@ Result<void> Player::removeFixtureType(const std::string& name) {
     });
 }
 
+Result<void> Player::dropSoleFixtureType() {
+    if (!project_) {
+        return {};
+    }
+    const auto& fixtures = project_->layout.fixtures();
+    if (fixtures.size() != 1 || fixtures.front().type.empty()) {
+        return {};
+    }
+    const std::string name = fixtures.front().type;  // Kopie: removeFixtureType leert Fixture::type, bevor es den Namen sucht
+    return removeFixtureType(name);
+}
+
 Result<void> Player::assignFixtureType(mapping::FixtureId id, const std::string& typeName) {
     return editProject({}, [&](project::Project& p) -> Result<void> {
         if (p.layout.find(id) == nullptr) {
