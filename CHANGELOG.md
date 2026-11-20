@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- **Fix: Datei → Öffnen beendete das Studio unter Windows sofort, ohne Absturzbericht.** Wie schon bei „Speichern unter“ und
+  beim Fixture-Export/-Import nutzt auch „Projekt öffnen“ (und die WAV-Auswahl in den Einstellungen) jetzt den Qt-eigenen
+  Dialog statt des Windows-Dialogs, dessen Erweiterungen von Fremdprogrammen den Prozess ohne Bericht beenden konnten (nur
+  die Sitzungsmarke `crash/session.txt` blieb liegen). Der Quelltext-Test `tests/core/file_dialog_pause_test.cpp` verlangt
+  das jetzt für jeden Datei-Dialog des Studios.
 - **Zellenzahl automatisch an die Leinwand anpassen.** Die Nodes **Labyrinth** (`cells`, „Cells across“), **Starfield**
   und **Fading Pixels** (`cells`, „Cells per axis“) sowie **Funkeln (1D)** (`cells`) haben jetzt `cells` = 0 als neuen
   Standard: Das Raster entsteht automatisch aus der echten Auflösung (`@columns`/`@rows`), ein Wert > 0 bleibt als
