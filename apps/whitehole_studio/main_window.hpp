@@ -137,6 +137,7 @@ public:
     void startupUpdateCheck();
     /// Rauchtest: Umschalter 2D/3D, Orbit mit der Maus, Zoom, feste Ansichten.
     QString exerciseView3d();
+    QString exerciseTestButton();  // Teil von exerciseView3d
     /// Live-Modus ein- und ausschalten (F9). Eintritt scheitert ohne Looks.
     bool enterLive(int first = 0);
     void leaveLive();
@@ -329,6 +330,7 @@ private:
     ViewMode viewMode_{ViewMode::Edit2d};
     QActionGroup* viewGroup_{nullptr};
     std::array<QAction*, 5> viewActions_{};
+    QAction* testAction_{nullptr};  // Knopf "Testmodus" in der Ansichtsleiste, spiegelt TestPanel::active()
     preview::Camera3d freeCamera_;  // zuletzt frei gedrehte Kamera: "3D" kehrt dorthin zurück
     preview::OffLeds offLeds3d_{preview::OffLeds::Hidden};  // Darstellung ausgeschalteter LEDs in 3D
     bool glow3d_{true};  // leuchtende LEDs in 3D additiv mit Schein

@@ -194,6 +194,9 @@ void MainWindow::onNodeSelected() {
 }
 
 void MainWindow::onTestPatternChanged() {
+    if (testAction_ != nullptr) {
+        testAction_->setChecked(testPanel_->active());  // egal, ob im Testfenster, per Knopf oder beim Laden geschaltet
+    }
     updateBanner();
     updateStatus();
     refreshImage();

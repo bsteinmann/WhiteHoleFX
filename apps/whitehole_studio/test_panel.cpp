@@ -142,11 +142,25 @@ void TestPanel::updateEnabled() {
     rate_->setSuffix(rateSuffix(kind));
 }
 
+bool TestPanel::active() const {
+    return currentKind() != TestPatternKind::Off;
+}
+
+void TestPanel::setActive(bool on) {
+    if (on == active()) {
+        return;
+    }
+    kind_->setCurrentIndex(on ? std::clamp(lastKindIndex_, 1, kind_->count() - 1) : 0);  // löst kindChanged/apply aus
+}
+
 void TestPanel::kindChanged() {
     if (updating_) {
         return;
     }
     const TestPatternKind kind = currentKind();
+    if (kind != TestPatternKind::Off) {
+        lastKindIndex_ = kind_->currentIndex();
+    }
     updating_ = true;
     rate_->setValue(static_cast<double>(runtime::defaultTestRate(kind)));
     updating_ = false;

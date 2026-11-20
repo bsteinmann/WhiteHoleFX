@@ -10,7 +10,7 @@ msgstr ""
 msgid "\nRechtsklick: Favorit umschalten"
 msgstr "\nПравий клік: додати/прибрати з обраного"
 
-#: main_window.cpp:292
+#: main_window.cpp:295
 msgid "   |   AUSGABE AN"
 msgstr "   |   ВИВІД УВІМКНЕНО"
 
@@ -22,11 +22,11 @@ msgstr "   |   У проєкті є аудіо-ноди, вхід вимкнен
 msgid "   |   Audio: %1"
 msgstr "   |   Аудіо: %1"
 
-#: main_window.cpp:292
+#: main_window.cpp:295
 msgid "   |   Ausgabe aus (%1 Pakete nicht gesendet)"
 msgstr "   |   Вивід вимкнено (%1 пакетів не надіслано)"
 
-#: main_window.cpp:282
+#: main_window.cpp:285
 msgid "   |   BLACKOUT"
 msgstr "   |   BLACKOUT"
 
@@ -38,15 +38,15 @@ msgstr "   |   Вхід DMX %1: %2 пакетів"
 msgid "   |   DMX-Nodes im Projekt, Eingang aus (Einstellungen)"
 msgstr "   |   У проєкті є DMX-ноди, вхід вимкнено (Налаштування)"
 
-#: main_window.cpp:287
+#: main_window.cpp:290
 msgid "   |   EINGANG FEHLT – LEDs aus"
 msgstr "   |   ВХОДУ НЕМАЄ – СВІТЛОДІОДИ ВИМКНЕНО"
 
-#: main_window.cpp:284
+#: main_window.cpp:287
 msgid "   |   Master %1 %"
 msgstr "   |   Master %1 %"
 
-#: main_window.cpp:279
+#: main_window.cpp:282
 msgid "   |   TESTMODUS"
 msgstr "   |   ТЕСТОВИЙ РЕЖИМ"
 
@@ -94,7 +94,7 @@ msgstr " · не пропатчено"
 msgid "\"%1\" aus der Bibliothek löschen?"
 msgstr "Видалити \"%1\" з бібліотеки?"
 
-#: layout_panel.cpp:276 test_panel.cpp:199
+#: layout_panel.cpp:276 test_panel.cpp:213
 msgid "%1  (%2 LEDs)"
 msgstr "%1  (%2 LED)"
 
@@ -130,11 +130,11 @@ msgstr "Введено %1 фікстур."
 msgid "%1 LEDs · Größe %2 × %3 × %4 · %5 Kanäle (RGB), rund %6 Universe(s)"
 msgstr "%1 LED · Розмір %2 × %3 × %4 · %5 каналів (RGB), приблизно %6 universe"
 
-#: main_window.cpp:268
+#: main_window.cpp:271
 msgid "%1 LEDs, Frame %2 (verworfen %3), Pakete %4, Sendefehler %5"
 msgstr "%1 LED, кадр %2 (відкинуто %3), пакети %4, помилки надсилання %5"
 
-#: main_window.cpp:266
+#: main_window.cpp:269
 msgid "%1 LEDs, angehalten"
 msgstr "%1 LED, зупинено"
 
@@ -218,7 +218,7 @@ msgstr "&Розкладка …"
 msgid "&Legende der Ports …"
 msgstr "&Легенда портів …"
 
-#: main_window_view3d.cpp:116
+#: main_window_view3d.cpp:127
 msgid "&Leuchten (additiv)"
 msgstr "&Світіння (адитивно)"
 
@@ -378,7 +378,7 @@ msgstr "3D справа (у масштабі)"
 msgid "3D von vorn (maßhaltig, zum Drehen einfach ziehen)"
 msgstr "3D спереду (у масштабі, для обертання просто тягніть)"
 
-#: main_window_view3d.cpp:88
+#: main_window_view3d.cpp:99
 msgid "3D-&Darstellung"
 msgstr "3D-&відображення"
 
@@ -666,15 +666,15 @@ msgstr "Видалити з бібліотеки"
 msgid "Aus Favoriten entfernen"
 msgstr "Прибрати з обраного"
 
-#: main_window_view3d.cpp:97
+#: main_window_view3d.cpp:108
 msgid "Aus-LEDs &grau"
 msgstr "Вимкнені LED &сірі"
 
-#: main_window_view3d.cpp:96
+#: main_window_view3d.cpp:107
 msgid "Aus-LEDs &schwach"
 msgstr "Вимкнені LED &слабкі"
 
-#: main_window_view3d.cpp:95
+#: main_window_view3d.cpp:106
 msgid "Aus-LEDs &unsichtbar"
 msgstr "Вимкнені LED &невидимі"
 
@@ -698,7 +698,7 @@ msgstr "З’єднати вихід із новим нодом"
 msgid "Ausgang: %1"
 msgstr "Вихід: %1"
 
-#: main_window_view3d.cpp:96
+#: main_window_view3d.cpp:107
 msgid "Ausgeschaltete LEDs als sehr dunkle Punkte, nur als Orientierung"
 msgstr "Вимкнені LED як дуже темні точки, лише для орієнтації"
 
@@ -934,7 +934,7 @@ msgstr "Кабель переходить від кільця до кільця 
 msgid "Das Pong-Spiel als Rechen-Node: Ball, Schläger, Punkte und Treffer als Werte. Computer oder Eingang spielen, auch im Takt der Musik. Gezeichnet wird es von „Pong Display“."
 msgstr "Гра Pong як обчислювальний вузол: м'яч, ракетки, рахунок і удари як значення. Грає комп'ютер або вхід, також у такт музики. Малює її «Pong Display»."
 
-#: main_window.cpp:215
+#: main_window.cpp:218
 msgid "Das Projekt wurde geändert. Änderungen verwerfen?"
 msgstr "Проєкт змінено. Відкинути зміни?"
 
@@ -1510,7 +1510,7 @@ msgstr "Форма"
 msgid "Fragt bei GitHub nach der neuesten Version (nur die Versionsnummer, nichts wird installiert)"
 msgstr "Запитує на GitHub останню версію (лише номер версії; нічого не встановлюється)"
 
-#: main_window.cpp:340
+#: main_window.cpp:343
 msgid "Frame"
 msgstr "Frame"
 
@@ -1798,7 +1798,7 @@ msgstr "Фікстуру не вибрано."
 msgid "Kein GPU-Adapter: %1"
 msgstr "Немає GPU-адаптера: %1"
 
-#: main_window.cpp:264
+#: main_window.cpp:267
 msgid "Kein Projekt"
 msgstr "Немає проєкту"
 
@@ -1870,7 +1870,7 @@ msgstr "Світлодіодів у кільці"
 msgid "LEDs x y z"
 msgstr "LED x y z"
 
-#: main_window.cpp:276
+#: main_window.cpp:279
 msgid "LIVE   |   "
 msgstr "LIVE   |   "
 
@@ -1922,7 +1922,7 @@ msgstr "Останній кадр надіслано %1 с тому (заста�
 msgid "Letztes Paket vor %1 s (veraltet)."
 msgstr "Останній пакет %1 с тому (застарілий)."
 
-#: main_window_view3d.cpp:119
+#: main_window_view3d.cpp:130
 msgid "Leuchtende LEDs mit weichem Schein, Farben addieren sich; nichts verdeckt etwas"
 msgstr "Світні LED з м'яким сяйвом, кольори додаються; ніщо нічого не затуляє"
 
@@ -2302,7 +2302,7 @@ msgstr "№"
 msgid "Nur auf gewählten Fixtures"
 msgstr "Лише на вибраних фікстурах"
 
-#: main_window_view3d.cpp:95
+#: main_window_view3d.cpp:106
 msgid "Nur leuchtende LEDs zeichnen: man sieht durch den Cube hindurch"
 msgstr "Малювати лише світні LED: крізь куб видно наскрізь"
 
@@ -2738,7 +2738,7 @@ msgstr "Stage Config"
 msgid "Standardgerät des Systems"
 msgstr "Пристрій системи за замовчуванням"
 
-#: cue_panel.cpp:67 cue_panel.cpp:145 main_window.cpp:310
+#: cue_panel.cpp:67 cue_panel.cpp:145 main_window.cpp:313
 msgid "Start"
 msgstr "Старт"
 
@@ -2842,6 +2842,10 @@ msgstr "Тест"
 msgid "Testbild"
 msgstr "Тестове зображення"
 
+#: main_window_view3d.cpp:69
+msgid "Testbild ein- oder ausschalten (Art und Einstellungen: Stage Config → Testmodus)"
+msgstr "Увімкнути або вимкнути тестове зображення (тип і налаштування: Stage Config → Режим тесту)"
+
 #: node_info_texts.cpp:114
 msgid "Testbild für den Aufbau: x wird rot, y grün, z blau. So sieht man, welche Seite wo liegt und ob Verkabelung und Startecke stimmen."
 msgstr "Тестове зображення для монтажу: x стає червоним, y зеленим, z синім. Так видно, де яка сторона і чи правильні підключення та стартовий кут."
@@ -2849,6 +2853,10 @@ msgstr "Тестове зображення для монтажу: x стає ч
 #: main_window_stage.cpp:65
 msgid "Testbilder auf die LEDs schicken, um Verkabelung und Patch zu prüfen"
 msgstr "Надсилати тестові зображення на LED, щоб перевірити підключення й Patch"
+
+#: main_window_view3d.cpp:67
+msgid "Testmodus"
+msgstr "Режим тесту"
 
 #: test_panel.cpp:99
 msgid "Testmodus beenden"
@@ -2886,7 +2894,7 @@ msgstr "Перейменувати …"
 msgid "Unerwartetes Ende beim letzten Mal"
 msgstr "Несподіване завершення минулого разу"
 
-#: main_window.cpp:214
+#: main_window.cpp:217
 msgid "Ungespeicherte Änderungen"
 msgstr "Незбережені зміни"
 
@@ -3042,7 +3050,7 @@ msgstr "Проєкти WhiteHoleFX (*.whfx);;Усі файли (*)"
 msgid "Wie Strobe, blitzt aber nur, solange „Gate“ den Schwellwert erreicht, zum Beispiel der Puls einer Kick- oder Hi-Hat-Erkennung. Darunter geht das Bild unverändert durch."
 msgstr "Як Strobe, але спалахує лише доки «Gate» досягає порогу, наприклад імпульс детектора бочки чи хай-хета. Нижче порогу зображення проходить без змін."
 
-#: main_window_view3d.cpp:97
+#: main_window_view3d.cpp:108
 msgid "Wie in der 2D-Ansicht; graue Punkte der vorderen Schicht verdecken LEDs dahinter"
 msgstr "Як у 2D-вигляді; сірі точки переднього шару затуляють LED позаду"
 

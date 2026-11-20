@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- **Knopf „Testmodus“ in der Ansichtsleiste.** Rechts neben 2D/3D/3D Front/Seite/Oben schaltet ein Knopf das Testbild ein
+  und aus (bisher ging das Abschalten nur im Fenster Stage Config; in der Vorschau stand nur das Banner „TESTMODUS“).
+  Ein: das zuletzt benutzte Testbild, beim ersten Mal der Laufbalken; aus: wie „Testmodus beenden“. Der Knopf folgt auch
+  dem Testfenster und dem Laden eines Projekts. Neue Texte in en/fr/es/uk. Prüfung: Rauchtest `exerciseTestButton`
+  (CI, Teil von `exerciseView3d`); `TestPanel::active`/`setActive` neu.
 - **Englische README und Screenshot.** Neue Datei `README.en.md` (vollständige Übersetzung der README, mit
   Link zurück zur deutschen Fassung); die deutsche `README.md` verlinkt sie oben. Der Screenshot der Oberfläche
   liegt unter `docs/images/studio-color-ramp.png` und ist in beiden README eingebunden.
