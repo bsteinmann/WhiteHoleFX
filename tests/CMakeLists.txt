@@ -13,6 +13,7 @@ add_executable(wh_tests
     core/hash_test.cpp
     core/utf8_test.cpp
     core/update_check_test.cpp
+    core/file_dialog_pause_test.cpp
     graph/graph_test.cpp
     graph/graph_topology_test.cpp
     graph/node_group_test.cpp
