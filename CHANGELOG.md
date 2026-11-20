@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- **Fix: neue Projekte zeigten die Vorlagen-Bauform „Matrix 16x8“ in der Fixture-Bibliothek.** Wer im leeren Studio
+  ein Fixture hinzufügte, eine Bauform neu anlegte oder eine Fixture-Datei importierte, legte damit still ein Projekt
+  aus der Vorlage an. Deren Fixture wurde zwar ersetzt, die Bauform „Matrix 16x8“ blieb aber in der Liste und stand
+  neben dem Neuen. Jetzt entfernt `Player::dropSoleFixtureType` die Bauform der Vorlage (das Vorlagen-Fixture behält
+  seine Form), bevor etwas Eigenes entsteht. Test: `tests/runtime/start_template_test.cpp`.
 - **Englische README und Screenshot.** Neue Datei `README.en.md` (vollständige Übersetzung der README, mit
   Link zurück zur deutschen Fassung); die deutsche `README.md` verlinkt sie oben. Der Screenshot der Oberfläche
   liegt unter `docs/images/studio-color-ramp.png` und ist in beiden README eingebunden.
