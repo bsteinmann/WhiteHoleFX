@@ -20,6 +20,7 @@
 #include "form_helpers.hpp"
 #include "shape_form.hpp"
 #include "shape_preview.hpp"
+#include "stall_watchdog.hpp"
 
 namespace whitehole::studio {
 
@@ -146,17 +147,22 @@ FixtureLibraryPage::FixtureLibraryPage(runtime::Player& player, QWidget* parent)
         if (name.isEmpty()) {
             return;
         }
+        // Qt-eigener Dialog und Wächter-Pause wie bei "Projekt speichern unter" (main_window_file.cpp): Der Windows-
+        // Dialog hat eine eigene Nachrichtenschleife, der Wächter meldete währenddessen einen falschen Stillstand
+        // (ABSTUERZE_TODO.md Punkt 2), und Shell-Erweiterungen können ihn abstürzen lassen.
+        const StallPause pause;
         const QString path = QFileDialog::getSaveFileName(
             this, tr("Fixture exportieren"), name + QStringLiteral(".whfx-fixture"),
-            tr("WhiteHoleFX-Fixture (*.whfx-fixture);;Alle Dateien (*)"));
+            tr("WhiteHoleFX-Fixture (*.whfx-fixture);;Alle Dateien (*)"), nullptr, QFileDialog::DontUseNativeDialog);
         if (!path.isEmpty()) {
             exportSelectedTo(path);
         }
     });
     connect(import_, &QPushButton::clicked, this, [this]() {
+        const StallPause pause;  // siehe Export oben
         const QString path = QFileDialog::getOpenFileName(
             this, tr("Fixture importieren"), QString{},
-            tr("WhiteHoleFX-Fixture (*.whfx-fixture);;Alle Dateien (*)"));
+            tr("WhiteHoleFX-Fixture (*.whfx-fixture);;Alle Dateien (*)"), nullptr, QFileDialog::DontUseNativeDialog);
         if (!path.isEmpty()) {
             importFrom(path);
         }
@@ -280,6 +286,7 @@ bool FixtureLibraryPage::addType(Kind kind) {
         if (player_.project() == nullptr) {
             return false;
         }
+        (void)player_.dropSoleFixtureType();  // die Bauform der Vorlage soll nicht neben der neuen stehen
     }
     const Preset preset = presetOf(kind);
     const QString name = uniqueName(preset.name);

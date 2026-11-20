@@ -391,7 +391,14 @@ void ParameterPanel::rebuild(const std::vector<runtime::NodeInfo>& nodes) {
         entries_[node.id.value()] = Entry{group, body, arrow, pin, searchText.toLower()};
     }
     column->addStretch(1);
-    scroll_->setWidget(content);  // übernimmt den Besitz und löscht den alten Inhalt
+    // setWidget würde den alten Inhalt sofort löschen. Wir können aber aus einem Signal einer seiner Zeilen hierher
+    // kommen (Eingabefeld verliert beim Klick den Fokus): Qt hielte dann ein freigegebenes Fokus-Widget
+    // (ABSTUERZE_TODO.md Punkt 1). Darum herausnehmen und erst nach der Ereignisbehandlung löschen.
+    if (QWidget* old = scroll_->takeWidget()) {
+        old->hide();
+        old->deleteLater();
+    }
+    scroll_->setWidget(content);  // übernimmt den Besitz des neuen Inhalts
     applyVisibility();
 }
 

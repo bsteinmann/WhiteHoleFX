@@ -3,10 +3,19 @@ name: CI
 # Das Windows-Paket (Artefakt) entsteht nur bei Start von Hand: Actions -> CI -> Run workflow, oder
 # `gh workflow run CI`. Bei normalen Pushes wird Windows nur gebaut und getestet. Releases bauen
 # ihr Paket selbst (release.yml).
+#
+# Reine Dokumentation (Markdown, docs/, Bilder, Lizenztexte) löst keinen Lauf aus: Eine README-Änderung
+# soll nicht die ganze Pipeline starten. Ein Start von Hand (workflow_dispatch) läuft immer.
 on:
   push:
     branches: [main]
+    paths-ignore: &docs_only
+      - "**.md"
+      - "docs/**"
+      - "LICENSE"
+      - "NOTICE"
   pull_request:
+    paths-ignore: *docs_only
   workflow_dispatch:
 
 # Ein neuer Push bricht den noch laufenden Lauf desselben Zweigs ab.

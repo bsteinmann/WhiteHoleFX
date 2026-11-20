@@ -161,7 +161,7 @@ TEST_CASE("Zwischenablage: Fehler ändern nichts", "[clipboard]") {
     CHECK(rig.nodeCount() == nodesBefore);
 }
 
-TEST_CASE("Zwischenablage: ein eingefügter Ausgangs-Node wird zum Ausgang und legt sich über den bisherigen", "[clipboard][output]") {
+TEST_CASE("Zwischenablage: ein eingefügter Ausgangs-Node läuft parallel, der bisherige Ausgang bleibt", "[clipboard][output]") {
     Rig rig;
     const NodeId first = rig.player.addNode("wh.output.canvas", Vec2{0.0F, 0.0F}).value();
     const runtime::NodeClipboard clip = runtime::copyNodes(rig.player.project()->graph, std::vector<NodeId>{first});
@@ -173,7 +173,9 @@ TEST_CASE("Zwischenablage: ein eingefügter Ausgangs-Node wird zum Ausgang und l
     REQUIRE(pasted.ok());
     const NodeId copy = pasted.value().front();
     REQUIRE(rig.player.project()->target.has_value());
-    CHECK(*rig.player.project()->target == graph::PortRef{copy, "out"});  // "kein Ausgang" darf nicht vorkommen
+    // Entscheidung des Nutzers (ABSTUERZE_TODO.md Punkt 9, Variante a): Duplizieren ändert den Ausgang nicht, die Kopie ist
+    // ein zusätzlicher Node. "Kein Ausgang" kommt trotzdem nicht vor (der bisherige bleibt).
+    CHECK(*rig.player.project()->target == before);
     CHECK(rig.player.project()->graph.findInputConnection(copy, "behind") == nullptr);  // keine Kette zwischen Outputs
 
     REQUIRE(rig.player.undo().ok());  // der Ausgang kehrt mit dem Einfügen zurück

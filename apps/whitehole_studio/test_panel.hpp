@@ -34,6 +34,11 @@ public:
     void reset();
     /// Das aktive Testbild als Text für Banner und Statuszeile, leer ohne Testbild.
     [[nodiscard]] QString description() const;
+    /// Läuft gerade ein Testbild? (Für den Knopf "Testmodus" in der Ansichtsleiste.)
+    [[nodiscard]] bool active() const;
+    /// Schaltet das Testbild ein oder aus. Ein: das zuletzt benutzte Testbild, sonst der Laufbalken (leuchtet nur
+    /// einen Streifen, nicht die ganze Wand wie "Farbe" in Weiß). Aus: wie "Testmodus beenden".
+    void setActive(bool on);
 
     /// Liest die Fixtures des Projekts neu in die Liste (nach Laden, Anlegen, Entfernen). Die Auswahl bleibt, wo es sie noch gibt.
     void rebuild();
@@ -73,6 +78,7 @@ private:
     QPushButton* stop_{nullptr};
     QLabel* hint_{nullptr};
     bool updating_{false};  // Bedienelemente werden gerade vom Programm gesetzt
+    int lastKindIndex_{3};  // zuletzt benutzte Art (Index in kind_); 3 = Laufbalken, siehe setActive
 };
 
 }  // namespace whitehole::studio

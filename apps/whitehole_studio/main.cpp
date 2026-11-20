@@ -57,7 +57,7 @@ int main(int argc, char** argv) {
     const QByteArray stackFile = QDir{cacheDir}.filePath(QStringLiteral("stack.txt")).toLocal8Bit();
     QTimer heartbeat;
     whitehole::studio::StallEventFilter eventTally;
-    whitehole::studio::stallSetInfo(WH_VERSION, nullptr);
+    whitehole::studio::stallSetInfo(WH_VERSION " (" WH_BUILD_ID ")", nullptr);  // Commit und CI-Lauf: ordnen den Bericht dem Build zu
     if (whitehole::studio::startStallWatchdog(stackFile.constData())) {
         app.installEventFilter(&eventTally);
         heartbeat.setInterval(100);

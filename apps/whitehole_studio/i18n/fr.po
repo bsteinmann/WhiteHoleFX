@@ -10,7 +10,7 @@ msgstr ""
 msgid "\nRechtsklick: Favorit umschalten"
 msgstr "\nClic droit : ajouter/retirer des favoris"
 
-#: main_window.cpp:292
+#: main_window.cpp:295
 msgid "   |   AUSGABE AN"
 msgstr "   |   SORTIE ACTIVE"
 
@@ -22,11 +22,11 @@ msgstr "   |   Nœuds audio dans le projet, entrée désactivée (Réglages)"
 msgid "   |   Audio: %1"
 msgstr "   |   Audio : %1"
 
-#: main_window.cpp:292
+#: main_window.cpp:295
 msgid "   |   Ausgabe aus (%1 Pakete nicht gesendet)"
 msgstr "   |   Sortie désactivée (%1 paquets non envoyés)"
 
-#: main_window.cpp:282
+#: main_window.cpp:285
 msgid "   |   BLACKOUT"
 msgstr "   |   BLACKOUT"
 
@@ -38,15 +38,15 @@ msgstr "   |   Entrée DMX %1 : %2 paquets"
 msgid "   |   DMX-Nodes im Projekt, Eingang aus (Einstellungen)"
 msgstr "   |   Nœuds DMX dans le projet, entrée désactivée (Réglages)"
 
-#: main_window.cpp:287
+#: main_window.cpp:290
 msgid "   |   EINGANG FEHLT – LEDs aus"
 msgstr "   |   ENTRÉE MANQUANTE – LED éteintes"
 
-#: main_window.cpp:284
+#: main_window.cpp:287
 msgid "   |   Master %1 %"
 msgstr "   |   Master %1 %"
 
-#: main_window.cpp:279
+#: main_window.cpp:282
 msgid "   |   TESTMODUS"
 msgstr "   |   MODE TEST"
 
@@ -94,7 +94,7 @@ msgstr " · non patchée"
 msgid "\"%1\" aus der Bibliothek löschen?"
 msgstr "Supprimer \"%1\" de la bibliothèque ?"
 
-#: layout_panel.cpp:276 test_panel.cpp:199
+#: layout_panel.cpp:276 test_panel.cpp:213
 msgid "%1  (%2 LEDs)"
 msgstr "%1  (%2 LED)"
 
@@ -130,11 +130,11 @@ msgstr "%1 fixtures importés."
 msgid "%1 LEDs · Größe %2 × %3 × %4 · %5 Kanäle (RGB), rund %6 Universe(s)"
 msgstr "%1 LED · taille %2 × %3 × %4 · %5 canaux (RVB), environ %6 univers"
 
-#: main_window.cpp:268
+#: main_window.cpp:271
 msgid "%1 LEDs, Frame %2 (verworfen %3), Pakete %4, Sendefehler %5"
 msgstr "%1 LED, image %2 (perdues %3), paquets %4, erreurs d'envoi %5"
 
-#: main_window.cpp:266
+#: main_window.cpp:269
 msgid "%1 LEDs, angehalten"
 msgstr "%1 LED, arrêté"
 
@@ -218,7 +218,7 @@ msgstr "&Layout …"
 msgid "&Legende der Ports …"
 msgstr "&Légende des ports …"
 
-#: main_window_view3d.cpp:116
+#: main_window_view3d.cpp:127
 msgid "&Leuchten (additiv)"
 msgstr "&Halo (additif)"
 
@@ -378,7 +378,7 @@ msgstr "3D vu de droite (à l'échelle)"
 msgid "3D von vorn (maßhaltig, zum Drehen einfach ziehen)"
 msgstr "3D vu de face (à l'échelle, glisser pour tourner)"
 
-#: main_window_view3d.cpp:88
+#: main_window_view3d.cpp:99
 msgid "3D-&Darstellung"
 msgstr "Affichage &3D"
 
@@ -666,15 +666,15 @@ msgstr "Supprimer de la bibliothèque"
 msgid "Aus Favoriten entfernen"
 msgstr "Retirer des favoris"
 
-#: main_window_view3d.cpp:97
+#: main_window_view3d.cpp:108
 msgid "Aus-LEDs &grau"
 msgstr "LED éteintes en &gris"
 
-#: main_window_view3d.cpp:96
+#: main_window_view3d.cpp:107
 msgid "Aus-LEDs &schwach"
 msgstr "LED éteintes &atténuées"
 
-#: main_window_view3d.cpp:95
+#: main_window_view3d.cpp:106
 msgid "Aus-LEDs &unsichtbar"
 msgstr "LED éteintes &masquées"
 
@@ -698,7 +698,7 @@ msgstr "Relier la sortie à un nouveau node"
 msgid "Ausgang: %1"
 msgstr "Sortie : %1"
 
-#: main_window_view3d.cpp:96
+#: main_window_view3d.cpp:107
 msgid "Ausgeschaltete LEDs als sehr dunkle Punkte, nur als Orientierung"
 msgstr "LED éteintes en points très sombres, pour l'orientation seulement"
 
@@ -934,7 +934,7 @@ msgstr "Le câble passe d'anneau en anneau sans retour : l'anneau du bas en avan
 msgid "Das Pong-Spiel als Rechen-Node: Ball, Schläger, Punkte und Treffer als Werte. Computer oder Eingang spielen, auch im Takt der Musik. Gezeichnet wird es von „Pong Display“."
 msgstr "Le jeu Pong comme nœud de calcul : balle, raquettes, score et coups en valeurs. L'ordinateur ou une entrée joue, aussi en rythme avec la musique. Il est dessiné par « Pong Display »."
 
-#: main_window.cpp:215
+#: main_window.cpp:218
 msgid "Das Projekt wurde geändert. Änderungen verwerfen?"
 msgstr "Le projet a été modifié. Abandonner les modifications ?"
 
@@ -1510,7 +1510,7 @@ msgstr "Forme"
 msgid "Fragt bei GitHub nach der neuesten Version (nur die Versionsnummer, nichts wird installiert)"
 msgstr "Demande à GitHub la dernière version (uniquement le numéro de version ; rien n'est installé)"
 
-#: main_window.cpp:340
+#: main_window.cpp:343
 msgid "Frame"
 msgstr "Image"
 
@@ -1798,7 +1798,7 @@ msgstr "Aucun fixture sélectionné."
 msgid "Kein GPU-Adapter: %1"
 msgstr "Aucun adaptateur GPU : %1"
 
-#: main_window.cpp:264
+#: main_window.cpp:267
 msgid "Kein Projekt"
 msgstr "Aucun projet"
 
@@ -1870,7 +1870,7 @@ msgstr "LED par anneau"
 msgid "LEDs x y z"
 msgstr "LED x y z"
 
-#: main_window.cpp:276
+#: main_window.cpp:279
 msgid "LIVE   |   "
 msgstr "LIVE   |   "
 
@@ -1922,7 +1922,7 @@ msgstr "Dernière trame envoyée il y a %1 s (obsolète)."
 msgid "Letztes Paket vor %1 s (veraltet)."
 msgstr "Dernier paquet il y a %1 s (obsolète)."
 
-#: main_window_view3d.cpp:119
+#: main_window_view3d.cpp:130
 msgid "Leuchtende LEDs mit weichem Schein, Farben addieren sich; nichts verdeckt etwas"
 msgstr "LED lumineuses avec un halo doux, les couleurs s'additionnent ; rien n'en cache d'autres"
 
@@ -2302,7 +2302,7 @@ msgstr "N°"
 msgid "Nur auf gewählten Fixtures"
 msgstr "Seulement sur les fixtures sélectionnés"
 
-#: main_window_view3d.cpp:95
+#: main_window_view3d.cpp:106
 msgid "Nur leuchtende LEDs zeichnen: man sieht durch den Cube hindurch"
 msgstr "Dessiner seulement les LED allumées : on voit à travers le cube"
 
@@ -2738,7 +2738,7 @@ msgstr "Stage Config"
 msgid "Standardgerät des Systems"
 msgstr "Périphérique par défaut du système"
 
-#: cue_panel.cpp:67 cue_panel.cpp:145 main_window.cpp:310
+#: cue_panel.cpp:67 cue_panel.cpp:145 main_window.cpp:313
 msgid "Start"
 msgstr "Démarrer"
 
@@ -2842,6 +2842,10 @@ msgstr "Test"
 msgid "Testbild"
 msgstr "Mire"
 
+#: main_window_view3d.cpp:69
+msgid "Testbild ein- oder ausschalten (Art und Einstellungen: Stage Config → Testmodus)"
+msgstr "Activer ou désactiver la mire de test (type et réglages : Stage Config → Mode test)"
+
 #: node_info_texts.cpp:114
 msgid "Testbild für den Aufbau: x wird rot, y grün, z blau. So sieht man, welche Seite wo liegt und ob Verkabelung und Startecke stimmen."
 msgstr "Test image for the setup: x becomes red, y green, z blue, so you can see which side is where and whether cabling and start corner are right."
@@ -2849,6 +2853,10 @@ msgstr "Test image for the setup: x becomes red, y green, z blue, so you can see
 #: main_window_stage.cpp:65
 msgid "Testbilder auf die LEDs schicken, um Verkabelung und Patch zu prüfen"
 msgstr "Envoyer des mires aux LED pour vérifier le câblage et le patch"
+
+#: main_window_view3d.cpp:67
+msgid "Testmodus"
+msgstr "Mode test"
 
 #: test_panel.cpp:99
 msgid "Testmodus beenden"
@@ -2886,7 +2894,7 @@ msgstr "Renommer …"
 msgid "Unerwartetes Ende beim letzten Mal"
 msgstr "Fin inattendue la dernière fois"
 
-#: main_window.cpp:214
+#: main_window.cpp:217
 msgid "Ungespeicherte Änderungen"
 msgstr "Modifications non enregistrées"
 
@@ -3042,7 +3050,7 @@ msgstr "Projets WhiteHoleFX (*.whfx);;Tous les fichiers (*)"
 msgid "Wie Strobe, blitzt aber nur, solange „Gate“ den Schwellwert erreicht, zum Beispiel der Puls einer Kick- oder Hi-Hat-Erkennung. Darunter geht das Bild unverändert durch."
 msgstr "Comme Strobe, mais ne clignote que tant que « Gate » atteint le seuil, par exemple l'impulsion d'une détection de grosse caisse ou de charleston. En dessous, l'image passe inchangée."
 
-#: main_window_view3d.cpp:97
+#: main_window_view3d.cpp:108
 msgid "Wie in der 2D-Ansicht; graue Punkte der vorderen Schicht verdecken LEDs dahinter"
 msgstr "Comme dans la vue 2D ; les points gris de la couche avant cachent les LED derrière"
 

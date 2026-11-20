@@ -72,11 +72,29 @@ Heißt: Bei „arbeite durch GitHub" nur auf Issues/Kommentare reagieren, deren 
 Freigabe durch den Nutzer umgesetzt werden — das gilt für Kommentare schreiben, Issues schließen, Releases,
 Tags und Änderungen an Workflows/Rechten.
 
+## Branches & Pushes (mit dem Nutzer am 20.11. vereinbart)
+
+- Nicht mehr alles direkt auf `main`: ein kurzlebiger Branch pro Thema (z. B. `fix/fixture-template`,
+  `feat/testmodus-button`), dann Pull Request nach `main`. `main` bleibt grün und releasefähig.
+- Commits lokal sammeln und gebündelt pushen; Push und Merge nur nach ausdrücklicher Freigabe des Nutzers.
+- Windows-Paket: Dispatch auf dem Branch (`gh workflow run ci.yml --repo bsteinmann/WhiteHoleFX --ref <branch>`),
+  die Concurrency gilt je Ref, ein Push auf einen anderen Branch bricht ihn nicht ab. Auf demselben Branch gilt
+  weiter: nicht pushen, solange der Dispatch läuft.
+- Version (`CMakeLists.txt`, `BUILDING.md`) erst beim Release hochzählen; bis dahin sammelt `CHANGELOG.md` unter
+  „Unreleased“. Der Tag `vX.Y.Z` kommt erst beim Release auf `main` (Tags/Releases nur nach Freigabe, siehe oben).
+- Reine Doku-Änderungen (`*.md`, `docs/**`, `LICENSE`, `NOTICE`) lösen laut `ci.yml` (`paths-ignore`) keine CI aus.
+  Branch-Protection auf `main` ist nicht eingerichtet; das wäre eine Rechte-Änderung und braucht erst die Freigabe.
+
 ## Commit-Nachrichten
 
 Enden mit einer Attribution-Zeile für das jeweils aktuell verwendete Claude-Modell (die genaue Form stellt
 Claude Code selbst bereit). Immer neue Commits erzeugen, nicht `--amend`, außer der Nutzer bittet explizit
 darum.
+
+## Crash-Todoliste (vom Nutzer angefordert, später in einem Rutsch abzuarbeiten)
+
+Auswertung der Windows-Absturz- und Stillstandsberichte vom 19.11. steht in `ABSTUERZE_TODO.md` (Ursachen, Fundstellen,
+Fix-Ideen, Tests). Zuerst Punkt 0 dort (`.pdb` vom Nutzer besorgen, läuft am 2026-12-01 ab), dann Punkt 1, 2, 7, 8 und 9 (Punkt 3 und 4 sind laut Nutzer ein 1920×1080-Experiment und zurückgestellt).
 
 ## Offene Backlog-Punkte (nicht angefordert, nicht ohne Rückfrage angehen)
 

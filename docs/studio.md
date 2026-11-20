@@ -350,6 +350,12 @@ Die Leiste „Ansicht“ (und das Menü Ansicht) schaltet die Vorschau um:
 | 3D | Strg+2 | frei drehbare Perspektive um die Mitte der Installation |
 | 3D Front, Seite, Oben | Strg+3, 4, 5 | feste, maßhaltige Ansichten (Parallelprojektion) von vorn, von rechts und von oben |
 
+Rechts neben den Ansichten, durch einen Strich getrennt, sitzt der Knopf **Testmodus**: Er schaltet das Testbild ein
+und aus, ohne das Fenster Stage Config zu öffnen. Beim Einschalten läuft das zuletzt benutzte Testbild, beim ersten Mal
+der Laufbalken (leuchtet nur einen Streifen, nicht die ganze Wand). Art und Einstellungen wählst du weiter unter
+Stage Config → Testmodus; der Knopf zeigt den Zustand auch dann richtig an, wenn dort oder beim Laden eines Projekts
+geschaltet wurde.
+
 In den 3D-Ansichten gehört die Maus der Kamera; bearbeitet wird nur in „2D“.
 
 | Aktion | Wirkung |
