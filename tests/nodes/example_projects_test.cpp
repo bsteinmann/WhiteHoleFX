@@ -5,6 +5,7 @@
 // Quelltext gesucht, brauchen also keine Installation.
 #include <catch2/catch_test_macros.hpp>
 
+#include <cmath>
 #include <filesystem>
 #include <string>
 
@@ -137,7 +138,7 @@ TEST_CASE("Beispiele: jede Datei in examples/ (auch in Untergruppen) kompiliert"
         }
     }
     CHECK(found >= 15);
-    CHECK(threeD == 5);  // die fünf 3D-Beispiele in examples/3d/
+    CHECK(threeD == 6);  // die sechs 3D-Beispiele in examples/3d/
 }
 
 TEST_CASE("Beispiel: examples/spiele/pong.whfx lädt und kompiliert", "[examples][nodes][pong]") {
@@ -146,4 +147,30 @@ TEST_CASE("Beispiel: examples/spiele/pong.whfx lädt und kompiliert", "[examples
 
 TEST_CASE("Beispiel: examples/spiele/pong-takt.whfx lädt und kompiliert", "[examples][nodes][pong]") {
     checkExample("spiele/pong-takt.whfx", "wh_pong_cov");
+}
+
+TEST_CASE("Beispiel: examples/3d/wuerfel-hohl.whfx lädt, kompiliert und ist ein hohler Würfel", "[examples][nodes][cube]") {
+    checkExample("3d/wuerfel-hohl.whfx", "length(q.xy");  // Plasma-Körper im Shader
+
+    // Geometrie: 6 Flächen zu je 32 x 32 LEDs, alle auf der Außenhaut, keine im Inneren.
+    const auto path = std::filesystem::path{__FILE__}.parent_path().parent_path().parent_path() / "examples" / "3d" / "wuerfel-hohl.whfx";
+    const auto text = project::readTextFile(path.string());
+    REQUIRE(text.ok());
+    Lab lab;
+    auto parsed = project::parseProject(text.value(), lab.registry);
+    REQUIRE(parsed.ok());
+    REQUIRE(parsed.value().layout.fixtures().size() == 6);
+    const auto map = parsed.value().layout.bake(parsed.value().normalize);
+    REQUIRE(map.ok());
+    REQUIRE(map.value().world.size() == 6U * 32U * 32U);
+    constexpr float kLow = 0.0F;   // Flächen bei 0 und 32, LEDs der Fläche bei 0,5 bis 31,5
+    constexpr float kHigh = 32.0F;
+    constexpr float kEps = 1e-3F;
+    for (const Vec3& p : map.value().world) {
+        const auto onPlane = [&](float v) { return std::abs(v - kLow) < kEps || std::abs(v - kHigh) < kEps; };
+        const bool onSkin = onPlane(p.x) || onPlane(p.y) || onPlane(p.z);
+        REQUIRE(onSkin);
+        const auto inside = [&](float v) { return v > kLow - kEps && v < kHigh + kEps; };
+        REQUIRE((inside(p.x) && inside(p.y) && inside(p.z)));
+    }
 }

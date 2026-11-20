@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- **Neues Beispiel `examples/3d/wuerfel-hohl.whfx`:** hohler Würfel aus sechs Matrizen zu je 32×32 LEDs (Außenhaut, innen leer),
+  per `at`/`rotate` zusammengesetzt, Plasma mit Tiefe. Test: `tests/nodes/example_projects_test.cpp` (alle 6144 LEDs liegen auf der Haut).
 - **Knopf „Testmodus“ in der Ansichtsleiste.** Rechts neben 2D/3D/3D Front/Seite/Oben schaltet ein Knopf das Testbild ein
   und aus (bisher ging das Abschalten nur im Fenster Stage Config; in der Vorschau stand nur das Banner „TESTMODUS“).
   Ein: das zuletzt benutzte Testbild, beim ersten Mal der Laufbalken; aus: wie „Testmodus beenden“. Der Knopf folgt auch
