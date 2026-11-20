@@ -57,7 +57,11 @@ return wh_mix_color(@param(colorA), @param(colorB), v);)wgsl";
 // der Mitte neu beginnt); `warpSpeed` ist das Tempo, `trail` die Streifenlänge relativ zum aktuellen
 // Abstand von der Mitte (also kurz nahe der Mitte, lang am Rand, wie bei echtem Warp). Ignoriert dabei
 // `space`/`drift`/`twinkle`/`size` (reiner 2D-Effekt in x/y, unabhängig von Flat/Volume).
-constexpr const char* kStarfieldBody = R"wgsl(let cells = max(floor(@param(cells)), 1.0);
+constexpr const char* kStarfieldBody = R"wgsl(let autoCells = @param(cells) < 0.5;
+let colsAuto = max(select(16.0, @columns, @columns > 0.0), 1.0);
+let rowsAuto = max(select(16.0, @rows, @rows > 0.0), 1.0);
+let cells = select(max(floor(@param(cells)), 1.0), colsAuto, autoCells);
+let cellScale = select(vec3<f32>(cells, cells, cells), vec3<f32>(colsAuto, rowsAuto, colsAuto), autoCells);
 if (@param(motion) > 0.5) {
     let centered = p.xy - vec2<f32>(0.5, 0.5);
     let r = length(centered);
@@ -76,7 +80,7 @@ if (@param(motion) > 0.5) {
     return vec4<f32>(col.rgb, col.a * fade * on);
 }
 let vol = ((@param(space) > 0.5 && @param(space) < 1.5) || (@param(space) >= 1.5 && @volume));
-let q = vec3<f32>(p.x, p.y + @time * @param(drift), select(0.0, p.z, vol)) * cells;
+let q = vec3<f32>(p.x, p.y + @time * @param(drift), select(0.0, p.z, vol)) * cellScale;
 let cell3 = floor(q);
 let id = cell3.xy + vec2<f32>(cell3.z * 19.0, cell3.z * 11.0);
 let h1 = wh_cell_hash(id);
@@ -95,8 +99,12 @@ return vec4<f32>(col.rgb, col.a * star * tw * on);)wgsl";
 // Beginn jedes Takts wird neu gewürfelt, ob sie leuchtet (`density`). `sharpness` ist der Exponent
 // der Abklingkurve (größer = kurzer Blitz mit langem Dunkel). Mit space = Volume ist jede Zelle ein Würfel
 // des Raums (eigener Takt je Würfel), Flat gruppiert nur nach x/y wie bisher.
-constexpr const char* kFadingBody = R"wgsl(let cells = max(floor(@param(cells)), 1.0);
-let cell3 = floor(vec3<f32>(p.x, p.y, select(0.0, p.z, ((@param(space) > 0.5 && @param(space) < 1.5) || (@param(space) >= 1.5 && @volume)))) * cells);
+constexpr const char* kFadingBody = R"wgsl(let autoCells = @param(cells) < 0.5;
+let colsAuto = max(select(16.0, @columns, @columns > 0.0), 1.0);
+let rowsAuto = max(select(16.0, @rows, @rows > 0.0), 1.0);
+let cells = max(floor(@param(cells)), 1.0);
+let cellScale = select(vec3<f32>(cells, cells, cells), vec3<f32>(colsAuto, rowsAuto, colsAuto), autoCells);
+let cell3 = floor(vec3<f32>(p.x, p.y, select(0.0, p.z, ((@param(space) > 0.5 && @param(space) < 1.5) || (@param(space) >= 1.5 && @volume)))) * cellScale);
 let id = cell3.xy + vec2<f32>(cell3.z * 19.0, cell3.z * 11.0);
 let h1 = wh_cell_hash(id);
 let h2 = wh_cell_hash(id + vec2<f32>(13.0, 7.0));
@@ -171,7 +179,7 @@ std::vector<compiler::NodeDefinition> shapeNodes() {
 
     nodes.push_back(fieldNode(
         "wh.generator.starfield", "Starfield", "Generators", {fieldOutput()},
-        {number("cells", "Cells per axis", 16.0, 1.0, 256.0), number("density", "Star density", 0.15, 0.0, 1.0),
+        {number("cells", "Cells per axis (0 = automatic)", 0.0, 0.0, 256.0), number("density", "Star density", 0.15, 0.0, 1.0),
          number("size", "Star size", 0.6, 0.05, 1.0), number("twinkle", "Twinkle speed", 1.5, 0.0, 20.0),
          number("drift", "Drift (down)", 0.0, -5.0, 5.0),
          color("colorA", "Color A", ColorRgba{1.0F, 1.0F, 1.0F, 1.0F}),
@@ -183,7 +191,7 @@ std::vector<compiler::NodeDefinition> shapeNodes() {
 
     nodes.push_back(fieldNode(
         "wh.generator.fading", "Fading Pixels", "Generators", {fieldOutput()},
-        {number("cells", "Cells per axis", 16.0, 1.0, 256.0), number("rate", "Rate", 0.6, 0.01, 20.0),
+        {number("cells", "Cells per axis (0 = automatic)", 0.0, 0.0, 256.0), number("rate", "Rate", 0.6, 0.01, 20.0),
          number("density", "Density", 0.4, 0.0, 1.0), number("sharpness", "Sharpness", 2.0, 0.1, 10.0),
          color("colorA", "Color A", ColorRgba{1.0F, 0.4F, 0.1F, 1.0F}),
          color("colorB", "Color B", ColorRgba{0.2F, 0.5F, 1.0F, 1.0F}),
