@@ -13,6 +13,7 @@ add_executable(wh_tests
     core/hash_test.cpp
     core/utf8_test.cpp
     core/update_check_test.cpp
+    core/file_dialog_pause_test.cpp
     graph/graph_test.cpp
     graph/graph_topology_test.cpp
     graph/node_group_test.cpp
@@ -121,6 +122,8 @@ add_executable(wh_tests
     runtime/node_docking_player_test.cpp
     runtime/strict_inputs_test.cpp
     runtime/node_clipboard_test.cpp
+    runtime/output_duplicate_test.cpp
+    runtime/start_template_test.cpp
     runtime/node_display_name_test.cpp
     runtime/node_defaults_test.cpp
     runtime/point_file_test.cpp

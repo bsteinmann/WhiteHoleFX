@@ -86,6 +86,9 @@ void LayoutPanel::addFixture(const NewFixture& fixture) {
             return;
         }
         template_ = player_.project()->layout.fixtures().front().id;
+        // Die Bauform der Vorlage ("Matrix 16x8") verschwindet sofort aus der Bibliothek; die Vorlage behält ihre Form
+        // bis sie unten ersetzt wird. Sonst bliebe sie neben dem neuen Fixture stehen (ABSTUERZE_TODO.md Punkt 7).
+        (void)player_.dropSoleFixtureType();
     }
     const std::uint64_t leds = mapping::ledCount(fixture.shape);
     const QString name = fixture.name.isEmpty() ? uniqueName(baseNameOf(fixture.shape)) : fixture.name;

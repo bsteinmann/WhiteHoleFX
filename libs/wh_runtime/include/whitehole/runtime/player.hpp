@@ -247,6 +247,11 @@ public:
     Result<void> renameFixtureType(const std::string& from, std::string to);
     /// Entfernt die Bauform; die Exemplare behalten ihre Form als eigene. Fehler: NotFound.
     Result<void> removeFixtureType(const std::string& name);
+    /// Für ein frisch angelegtes Projekt (Vorlage "Matrix 16x8"): Hat es genau ein Fixture und gehört dessen Bauform sonst
+    /// niemandem, verschwindet die Bauform aus der Bibliothek; das Fixture behält seine Form. So steht in der
+    /// Bibliothek nur, was der Nutzer selbst anlegt. Ohne passenden Fall (kein Projekt, mehrere Fixtures, kein Typ)
+    /// geschieht nichts und es ist kein Fehler.
+    Result<void> dropSoleFixtureType();
     /// Setzt die Bauform eines Fixtures (übernimmt deren Form); mit leerem Namen wird es von der Bibliothek gelöst.
     Result<void> assignFixtureType(mapping::FixtureId id, const std::string& typeName);
     /// Legt ein Exemplar einer Bauform an (Lage, Drehung, optional Patch).

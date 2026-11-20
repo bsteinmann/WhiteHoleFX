@@ -50,6 +50,7 @@ int FixtureLibraryPage::importFrom(const QString& path) {
         if (player_.project() == nullptr) {
             return -1;
         }
+        (void)player_.dropSoleFixtureType();  // die Bauform der Vorlage soll nicht neben den importierten stehen
     }
     QFile file{path};
     if (!file.open(QIODevice::ReadOnly)) {

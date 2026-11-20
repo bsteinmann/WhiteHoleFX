@@ -2,6 +2,8 @@
 #include "shape_form.hpp"
 
 #include <QCheckBox>
+#include <QCoreApplication>
+#include <QEventLoop>
 #include <QFormLayout>
 #include <QLabel>
 #include <QVBoxLayout>
@@ -38,7 +40,15 @@ void ShapeForm::setShape(const mapping::FixtureShape& shape) {
 }
 
 void ShapeForm::build() {
-    delete content_;
+    if (content_ != nullptr) {
+        // Nicht sofort löschen: Wir können aus einem Signal dieses Inhalts hierher kommen (Eingabefeld verliert beim Klick
+        // den Fokus). Ein synchrones delete ließ Qt mit einem freigegebenen Fokus-Widget zurück (Absturz in
+        // QWidget::setFocus, ABSTUERZE_TODO.md Punkt 1). Gleiches Muster wie FixtureForm::build.
+        outer_->removeWidget(content_);
+        content_->hide();
+        content_->deleteLater();
+        content_ = nullptr;
+    }
     c_ = Controls{};
     content_ = new QWidget{this};
     auto* layout = new QFormLayout{content_};
@@ -289,6 +299,16 @@ QString ShapeForm::exercise() {
     disconnect(link);
     if (reported < 1 || leds == 0) {
         return QStringLiteral("Formularfeld für die Form: Änderung wurde nicht gemeldet");
+    }
+    // Neuaufbau, während ein Feld den Fokus hat (Absturz 1.0.0, ABSTUERZE_TODO.md Punkt 1): Der alte Inhalt wird erst
+    // nach der Ereignisbehandlung gelöscht, im Layout steht aber sofort nur noch der neue.
+    box->setFocus();
+    setShape(shape_);
+    if (outer_->count() != 1 || content_ == nullptr) {
+        return QStringLiteral("Formularfeld für die Form: nach dem Neuaufbau steht nicht genau ein Inhalt im Layout");
+    }
+    for (int i = 0; i < 3; ++i) {
+        QCoreApplication::processEvents(QEventLoop::AllEvents);
     }
     return {};
 }

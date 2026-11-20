@@ -7,6 +7,32 @@
   Ein: das zuletzt benutzte Testbild, beim ersten Mal der Laufbalken; aus: wie „Testmodus beenden“. Der Knopf folgt auch
   dem Testfenster und dem Laden eines Projekts. Neue Texte in en/fr/es/uk. Prüfung: Rauchtest `exerciseTestButton`
   (CI, Teil von `exerciseView3d`); `TestPanel::active`/`setActive` neu.
+- **Fix: Absturz beim Fokuswechsel (Windows-Berichte 17. und 19.11.).** Der Stapel lag nur in Qt
+  (`QWidget::setFocus` → `QObject::inherits` liest ein schon freigegebenes Widget). Wahrscheinliche Ursache: Ein Klick
+  nimmt einem Eingabefeld den Fokus, ein Signal baut daraufhin das Formular neu auf und löschte den Widget-Baum mit
+  dem fokussierten Feld sofort. `ShapeForm::build` (Fixture-Bibliothek) und `ParameterPanel::rebuild` löschen den
+  alten Inhalt jetzt erst nach der Ereignisbehandlung (`deleteLater`), wie es `FixtureForm` schon tat. Nicht mit einer
+  `.pdb` bestätigt (der Build der Berichte hatte keine); der Rauchtest von `ShapeForm` baut jetzt bei fokussiertem Feld
+  neu auf.
+- **Fix: falscher „Stillstand“-Bericht beim Fixture-Export/-Import.** Beide Datei-Dialoge liefen ohne `StallPause`; der
+  Wächter meldete währenddessen einen Stillstand. Sie laufen jetzt mit Pause und (wie „Projekt speichern unter“) mit
+  dem Qt-eigenen Dialog. Neuer Test `tests/core/file_dialog_pause_test.cpp` verlangt eine `StallPause` bei jedem
+  `QFileDialog::get…` im Studio.
+- **Berichte nennen den Build.** Die erste Zeile der Absturz- und Stillstandsberichte lautet jetzt zum Beispiel
+  `WhiteHoleFX 1.0.0 (commit-5a6da9d507_lauf-44056022233)`: Commit und (in der CI) Lauf-Nummer. Damit lässt sich ein
+  Bericht dem richtigen Build und der richtigen `.pdb` zuordnen; die Versionsnummer allein unterschied CI- und
+  Release-Lauf desselben Stands nicht.
+- **Fix: Output-Node duplizieren machte das Bild dunkel.** Ein eingefügter oder duplizierter Output-Node wurde
+  immer zum Ausgang des Projekts, auch wenn er (als bloße Kopie) keine eigene Quelle hatte. Jetzt bleibt der bisherige
+  Ausgang, wenn er schon ein Output-Node ist: Die Kopie läuft als zusätzlicher Node parallel (alle Outputs mit
+  Effekt werden ohnehin zusammengefasst, siehe „Mehrere Outputs“). Nur ohne bisherigen Ausgang, oder wenn dieser
+  kein Output-Node ist (altes Projekt), übernimmt der eingefügte Output wie bisher. Tests:
+  `tests/runtime/output_duplicate_test.cpp`, angepasst `tests/runtime/node_clipboard_test.cpp`.
+- **Fix: neue Projekte zeigten die Vorlagen-Bauform „Matrix 16x8“ in der Fixture-Bibliothek.** Wer im leeren Studio
+  ein Fixture hinzufügte, eine Bauform neu anlegte oder eine Fixture-Datei importierte, legte damit still ein Projekt
+  aus der Vorlage an. Deren Fixture wurde zwar ersetzt, die Bauform „Matrix 16x8“ blieb aber in der Liste und stand
+  neben dem Neuen. Jetzt entfernt `Player::dropSoleFixtureType` die Bauform der Vorlage (das Vorlagen-Fixture behält
+  seine Form), bevor etwas Eigenes entsteht. Test: `tests/runtime/start_template_test.cpp`.
 - **Englische README und Screenshot.** Neue Datei `README.en.md` (vollständige Übersetzung der README, mit
   Link zurück zur deutschen Fassung); die deutsche `README.md` verlinkt sie oben. Der Screenshot der Oberfläche
   liegt unter `docs/images/studio-color-ramp.png` und ist in beiden README eingebunden.
