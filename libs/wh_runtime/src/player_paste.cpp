@@ -41,15 +41,23 @@ Result<std::vector<NodeId>> Player::pasteNodes(const NodeClipboard& clipboard, V
         *project_ = backup;  // alles oder nichts
         return ids.error();
     }
-    // Ein eingefügter Ausgangs-Node (Preset, Kopie) soll wie ein neu angelegter wirken: Er wird zum Ausgang des
-    // Projekts und legt sich über den bisherigen. Ohne das meldet das Projekt "kein Ausgang", obwohl ein Output da ist.
+    // Ein eingefügter Ausgangs-Node (Preset, Kopie) soll das Projekt nicht ohne Ausgang lassen: Gibt es noch keinen
+    // Ausgang, wird er zum Ausgang. Hing der bisherige Ausgang an keinem Output (altes Projekt), speist er den
+    // neuen, und der neue löst ihn ab. Ist der bisherige Ausgang schon ein Output, bleibt er es: Alle Outputs mit
+    // Effekt laufen ohnehin parallel (graph::mergeOutputs), und eine Kopie ohne eigene Quelle würde sonst zum Ausgang
+    // und das Bild dunkel werden (Duplizieren eines Outputs, ABSTUERZE_TODO.md Punkt 9).
     if (const std::optional<NodeId> output = pastedOutput(project_->graph, ids.value())) {
-        if (project_->target && project_->graph.findNode(project_->target->node)->typeId != "wh.output.canvas" &&
-            project_->graph.findInputConnection(*output, "source") == nullptr) {
-            (void)project_->graph.connect(*project_->target, graph::PortRef{*output, "source"});
+        const graph::NodeInstance* current = project_->target ? project_->graph.findNode(project_->target->node) : nullptr;
+        if (current == nullptr) {
+            project_->target = graph::PortRef{*output, "out"};
+            rebuildDirty_ = true;
+        } else if (current->typeId != "wh.output.canvas") {
+            if (project_->graph.findInputConnection(*output, "source") == nullptr) {
+                (void)project_->graph.connect(*project_->target, graph::PortRef{*output, "source"});
+            }
+            project_->target = graph::PortRef{*output, "out"};
+            rebuildDirty_ = true;
         }
-        project_->target = graph::PortRef{*output, "out"};
-        rebuildDirty_ = true;
     }
     finishEdit(std::move(before), {}, true);
     modified_ = true;

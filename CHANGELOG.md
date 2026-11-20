@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- **Fix: Output-Node duplizieren machte das Bild dunkel.** Ein eingefügter oder duplizierter Output-Node wurde
+  immer zum Ausgang des Projekts, auch wenn er (als bloße Kopie) keine eigene Quelle hatte. Jetzt bleibt der bisherige
+  Ausgang, wenn er schon ein Output-Node ist: Die Kopie läuft als zusätzlicher Node parallel (alle Outputs mit
+  Effekt werden ohnehin zusammengefasst, siehe „Mehrere Outputs“). Nur ohne bisherigen Ausgang, oder wenn dieser
+  kein Output-Node ist (altes Projekt), übernimmt der eingefügte Output wie bisher. Tests:
+  `tests/runtime/output_duplicate_test.cpp`, angepasst `tests/runtime/node_clipboard_test.cpp`.
 - **Fix: neue Projekte zeigten die Vorlagen-Bauform „Matrix 16x8“ in der Fixture-Bibliothek.** Wer im leeren Studio
   ein Fixture hinzufügte, eine Bauform neu anlegte oder eine Fixture-Datei importierte, legte damit still ein Projekt
   aus der Vorlage an. Deren Fixture wurde zwar ersetzt, die Bauform „Matrix 16x8“ blieb aber in der Liste und stand
