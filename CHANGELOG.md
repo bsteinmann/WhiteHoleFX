@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- **Fix: Output-Node duplizieren machte das Bild dunkel.** Ein eingefügter oder duplizierter Output-Node wurde
+  immer zum Ausgang des Projekts, auch wenn er (als bloße Kopie) keine eigene Quelle hatte. Jetzt bleibt der bisherige
+  Ausgang, wenn er schon ein Output-Node ist: Die Kopie läuft als zusätzlicher Node parallel (alle Outputs mit
+  Effekt werden ohnehin zusammengefasst, siehe „Mehrere Outputs“). Nur ohne bisherigen Ausgang, oder wenn dieser
+  kein Output-Node ist (altes Projekt), übernimmt der eingefügte Output wie bisher. Tests:
+  `tests/runtime/output_duplicate_test.cpp`, angepasst `tests/runtime/node_clipboard_test.cpp`.
 - **Englische README und Screenshot.** Neue Datei `README.en.md` (vollständige Übersetzung der README, mit
   Link zurück zur deutschen Fassung); die deutsche `README.md` verlinkt sie oben. Der Screenshot der Oberfläche
   liegt unter `docs/images/studio-color-ramp.png` und ist in beiden README eingebunden.
