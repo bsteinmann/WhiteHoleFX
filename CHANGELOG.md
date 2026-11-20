@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- **Fix: Studio ließ sich nach dem Testmodus-Knopf nicht mehr bauen.** `main_window_view3d.cpp` benutzt `TestPanel`, ohne
+  `test_panel.hpp` einzubinden (fehlender Include, auf `main` seit dem Merge von #41). Betraf die Qt-Jobs der CI.
 - **Knopf „Testmodus“ in der Ansichtsleiste.** Rechts neben 2D/3D/3D Front/Seite/Oben schaltet ein Knopf das Testbild ein
   und aus (bisher ging das Abschalten nur im Fenster Stage Config; in der Vorschau stand nur das Banner „TESTMODUS“).
   Ein: das zuletzt benutzte Testbild, beim ersten Mal der Laufbalken; aus: wie „Testmodus beenden“. Der Knopf folgt auch
