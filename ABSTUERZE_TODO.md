@@ -9,6 +9,21 @@ umgesetzt. Stand der Sicherheit steht je Punkt dabei: Die Stapel zeigen nur Adre
 Bei der Abarbeitung gelten die Regeln aus `CLAUDE.md` (kleine Schritte, Tests, Doku, i18n, vier lokale Testläufe,
 Release-Workflow). Studio-Code (Qt) lässt sich lokal nicht bauen; die Prüfung läuft über die CI und beim Nutzer unter Windows.
 
+## Umsetzungsstand (20.11., auf Branches, Pull Requests offen; Merge nach `main` erst nach grüner CI und Freigabe)
+
+| Punkt | Branch |
+|---|---|
+| 1, 2, 6 (Fokus-Absturz, StallPause, Build-Kennung im Bericht) | `fix/crashes` |
+| 7 (Vorlagen-Bauform „Matrix 16x8“) | `fix/fixture-template` |
+| 8 (Testmodus-Knopf) | `feat/testmodus-button` |
+| 9 (Output duplizieren, Variante a) | `fix/output-duplizieren` |
+| Zellenzahl automatisch (Wunsch vom 20.11., kein Punkt dieser Liste) | `feat/cells-auto` |
+| CI `paths-ignore`, Branch-Regeln, diese Liste | `chore/ci-docs-paths` |
+
+Punkt 1 ist ohne passende `.pdb` nicht bestätigt (siehe Punkt 0); das Muster ist behoben, die Stelle nicht belegt. Punkt 9: der
+Fehler ließ sich im Test nur als „Ausgang wechselt auf die Kopie“ nachstellen, nicht als schwarzes Bild (die Engine fasst
+Outputs zusammen); Variante (a) ist umgesetzt.
+
 ## Überblick
 
 | # | Art | Wann (lokal) | Version | Kern | Sicherheit der Ursache | Priorität |
