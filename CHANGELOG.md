@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+- **Zellenzahl automatisch an die Leinwand anpassen.** Die Nodes **Labyrinth** (`cells`, „Cells across“), **Starfield**
+  und **Fading Pixels** (`cells`, „Cells per axis“) sowie **Funkeln (1D)** (`cells`) haben jetzt `cells` = 0 als neuen
+  Standard: Das Raster entsteht automatisch aus der echten Auflösung (`@columns`/`@rows`), ein Wert > 0 bleibt als
+  manueller Override erhalten (wie bei Random Pixels und Digital Rain). Auf einer 32x16-Matrix hat das Labyrinth damit
+  ohne Handarbeit 32 x 16 Zellen (eine Zelle je LED); Starfield und Fading Pixels bekommen Spalten × Zeilen Felder statt
+  einer festen Zahl je Achse; Funkeln nimmt bei Achse x die Spalten, bei Achse y die Zeilen (Achse z und unbekannte
+  Auflösung: 60). Ohne bekannte Auflösung gelten die bisherigen Richtwerte (8 beim Labyrinth, 16 bei Starfield/Fading
+  Pixels). **Bestehende Projekte ändern sich**, wo `cells` nie verstellt wurde (der alte Standard war 8, 16 bzw. 60);
+  gespeicherte Werte bleiben unverändert. Das Labyrinth rechnet höchstens 64 Zellen über die Breite (wie bisher).
+  Tests: `tests/nodes/builtin_nodes_test.cpp`, `tests/gpu_device/cells_auto_on_device_test.cpp`.
 - **Englische README und Screenshot.** Neue Datei `README.en.md` (vollständige Übersetzung der README, mit
   Link zurück zur deutschen Fassung); die deutsche `README.md` verlinkt sie oben. Der Screenshot der Oberfläche
   liegt unter `docs/images/studio-color-ramp.png` und ist in beiden README eingebunden.

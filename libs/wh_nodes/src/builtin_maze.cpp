@@ -98,8 +98,11 @@ fn wh_maze_wall_pos(s: f32, w: f32, h: f32) -> vec2<f32> {
 // Je Läufer zwei Epochen (vorige und aktuelle) zu je kEpoch Schritten; der Schweif ist höchstens kEpoch Schritte lang,
 // darum reichen die beiden aus. Die Schleifen haben feste Grenzen (WGSL), `runners` und `trail` schalten innen.
 constexpr const char* kMazeBody = R"wgsl(let volume = ((@param(space) > 0.5 && @param(space) < 1.5) || (@param(space) >= 1.5 && @volume));
-let ncells = clamp(floor(@param(cells) + 0.5), 2.0, 64.0);
-let aspect = select(@aspect, max(@param(aspect), 0.1), @param(aspect) > 0.0);
+let autoCells = @param(cells) < 0.5;
+let colsAuto = select(8.0, @columns, @columns > 0.0);
+let ncells = clamp(select(floor(@param(cells) + 0.5), colsAuto, autoCells), 2.0, 64.0);
+let aspectAuto = select(@aspect, @columns / max(@rows, 1.0), autoCells && @columns > 0.0 && @rows > 0.0);
+let aspect = select(aspectAuto, max(@param(aspect), 0.1), @param(aspect) > 0.0);
 let n = vec3<f32>(ncells, max(floor(ncells / aspect + 0.5), 1.0), select(1.0, ncells, volume));
 let cs = 1.0 / ncells;
 let q = vec3<f32>(p.x, p.y / aspect, select(0.0, p.z, volume));
@@ -264,7 +267,7 @@ std::vector<compiler::NodeDefinition> mazeNodes() {
     std::vector<compiler::NodeDefinition> nodes;
     nodes.push_back(fieldNode(
         "wh.generator.maze", "Labyrinth", "Generators", {fieldOutput()},
-        {integer("cells", "Cells across", 8, 2, 64),
+        {integer("cells", "Cells across (0 = automatic)", 0, 0, 64),
          number("aspect", "Aspect (width / height, 0 = automatic)", 0.0, 0.0, 8.0),
          integer("runners", "Runners", 4, 1, 8),
          choice("mode", "Mode", {"Random walk", "Along walls"}),
