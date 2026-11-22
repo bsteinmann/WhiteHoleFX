@@ -50,6 +50,7 @@ private:
         form::Vec3Boxes origin;
         form::Vec3Boxes rotation;  // Drehung in Grad um x, y, z
         QComboBox* type{nullptr};  // Fixture aus der Bibliothek; letzter Eintrag legt ein neues an
+        QComboBox* projection{nullptr};  // Projektion: Volumen, Flächen, Box (mapping::Projection)
     };
 
     void build();
@@ -59,6 +60,7 @@ private:
     void applyOrigin();
     void applyRotation();
     void applyType();
+    void applyProjection();
 
     runtime::Player& player_;
     mapping::FixtureId id_;

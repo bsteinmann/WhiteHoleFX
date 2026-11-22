@@ -83,6 +83,14 @@ void FixtureForm::build() {
     connect(c_.type, qOverload<int>(&QComboBox::currentIndexChanged), this, [this](int) { applyType(); });
     layout->addRow(tr("Fixture"), form::labeledRow({{QString{}, c_.type}}));
 
+    c_.projection = combo({tr("Volumen (3D, Standard)"), tr("Flächen (jedes Fixture ein eigenes 2D-Bild)"),
+                           tr("Box (von außen auf die Box aller Box-Fixtures)")},
+                          static_cast<int>(fixture->projection));
+    c_.projection->setToolTip(tr("Wie Effekte dieses Fixture sehen. Volumen: als Teil des 3D-Raums. Flächen/Box: als 2D-Bild, "
+                                 "z. B. ein hohler Würfel aus sechs Matrizen, auf dem ein 2D-Effekt auf jeder Seite läuft."));
+    connect(c_.projection, qOverload<int>(&QComboBox::currentIndexChanged), this, [this](int) { applyProjection(); });
+    layout->addRow(tr("Projektion"), c_.projection);
+
     if (!fixture->type.empty()) {
         layout->addRow(new QLabel{tr("Die Form kommt vom Fixture und wird im Reiter Fixtures geändert.")});
     } else {
@@ -122,6 +130,14 @@ void FixtureForm::applyName() {
 void FixtureForm::applyOrigin() { report(player_.moveFixture(id_, c_.origin.value())); }
 
 void FixtureForm::applyRotation() { report(player_.setFixtureRotation(id_, c_.rotation.value())); }
+
+void FixtureForm::applyProjection() {
+    const int index = c_.projection->currentIndex();
+    if (index < 0 || index > static_cast<int>(mapping::Projection::Box)) {
+        return;
+    }
+    report(player_.setFixturesProjection({id_}, static_cast<mapping::Projection>(index)));
+}
 
 void FixtureForm::applyType() {
     const int index = c_.type->currentIndex();

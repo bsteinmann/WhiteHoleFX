@@ -106,7 +106,7 @@ msgstr "%1  →  %2"
 msgid "%1 %"
 msgstr "%1 %"
 
-#: fixture_library_page.cpp:212 fixture_library_page.cpp:358
+#: fixture_library_page.cpp:218 fixture_library_page.cpp:365
 msgid "%1 (%2 LEDs)"
 msgstr "%1 (%2 світлодіодів)"
 
@@ -122,7 +122,7 @@ msgstr "%1 (стандартно)"
 msgid "%1 (nicht gefunden)"
 msgstr "%1 (не знайдено)"
 
-#: fixture_library_export.cpp:82
+#: fixture_library_export.cpp:83
 msgid "%1 Fixtures importiert."
 msgstr "Введено %1 фікстур."
 
@@ -146,11 +146,11 @@ msgstr "%1 · LED %2 із %3"
 msgid "%1 — %2 (%3 LEDs)"
 msgstr "%1 — %2 (%3 світлодіодів)"
 
-#: main_window_view3d.cpp:39
+#: main_window_view3d.cpp:40
 msgid "&2D (bearbeiten)"
 msgstr "&2D (редагування)"
 
-#: main_window_view3d.cpp:40
+#: main_window_view3d.cpp:41
 msgid "&3D"
 msgstr "&3D"
 
@@ -218,7 +218,7 @@ msgstr "&Розкладка …"
 msgid "&Legende der Ports …"
 msgstr "&Легенда портів …"
 
-#: main_window_view3d.cpp:127
+#: main_window_view3d.cpp:128
 msgid "&Leuchten (additiv)"
 msgstr "&Світіння (адитивно)"
 
@@ -334,7 +334,7 @@ msgstr ", %1 BPM"
 msgid ", Pegel %1 %"
 msgstr ", рівень %1 %"
 
-#: fixture_library_export.cpp:82
+#: fixture_library_export.cpp:83
 msgid "1 Fixture importiert."
 msgstr "Введено 1 фікстуру."
 
@@ -342,11 +342,11 @@ msgstr "Введено 1 фікстуру."
 msgid "100 %"
 msgstr "100 %"
 
-#: fixture_library_page.cpp:99 fixture_shape_label.cpp:10
+#: fixture_library_page.cpp:100 fixture_shape_label.cpp:10
 msgid "2D-Matrix"
 msgstr "2D-матриця"
 
-#: fixture_library_page.cpp:72
+#: fixture_library_page.cpp:73
 msgid "2D-Matrix 8x8"
 msgstr "2D-матриця 8x8"
 
@@ -354,31 +354,31 @@ msgstr "2D-матриця 8x8"
 msgid "3D"
 msgstr "3D"
 
-#: main_window_view3d.cpp:41
+#: main_window_view3d.cpp:42
 msgid "3D &Front"
 msgstr "3D &спереду"
 
-#: main_window_view3d.cpp:43
+#: main_window_view3d.cpp:44
 msgid "3D &Oben"
 msgstr "3D &зверху"
 
-#: main_window_view3d.cpp:42
+#: main_window_view3d.cpp:43
 msgid "3D &Seite"
 msgstr "3D &збоку"
 
-#: main_window_view3d.cpp:43
+#: main_window_view3d.cpp:44
 msgid "3D von oben (maßhaltig)"
 msgstr "3D зверху (у масштабі)"
 
-#: main_window_view3d.cpp:42
+#: main_window_view3d.cpp:43
 msgid "3D von rechts (maßhaltig)"
 msgstr "3D справа (у масштабі)"
 
-#: main_window_view3d.cpp:41
+#: main_window_view3d.cpp:42
 msgid "3D von vorn (maßhaltig, zum Drehen einfach ziehen)"
 msgstr "3D спереду (у масштабі, для обертання просто тягніть)"
 
-#: main_window_view3d.cpp:99
+#: main_window_view3d.cpp:100
 msgid "3D-&Darstellung"
 msgstr "3D-&відображення"
 
@@ -386,11 +386,11 @@ msgstr "3D-&відображення"
 msgid "3D-Gitter (Cube, Vorhang, Säule)"
 msgstr "3D-сітка (куб, завіса, колона)"
 
-#: fixture_library_page.cpp:99 fixture_shape_label.cpp:13
+#: fixture_library_page.cpp:100 fixture_shape_label.cpp:13
 msgid "3D-Matrix"
 msgstr "3D-матриця"
 
-#: fixture_library_page.cpp:41
+#: fixture_library_page.cpp:42
 msgid "3D-Matrix 4x4x4"
 msgstr "3D-матриця 4x4x4"
 
@@ -398,35 +398,35 @@ msgstr "3D-матриця 4x4x4"
 msgid "3D: ziehen = drehen · Rechtsklick oder Umschalt+Ziehen = verschieben · Rad = Zoom · Doppelklick = Zoom zurücksetzen"
 msgstr "3D: тягнути = обертати · правий клік або Shift+тягнути = переміщувати · колесо = масштаб · подвійний клік = скинути масштаб"
 
-#: shape_form.cpp:66
+#: shape_form.cpp:76
 msgid "<b>2D-Matrix</b>"
 msgstr "<b>2D-матриця</b>"
 
-#: shape_form.cpp:106
+#: shape_form.cpp:116
 msgid "<b>3D-Matrix</b>"
 msgstr "<b>3D-матриця</b>"
 
-#: fixture_library_page.cpp:93
+#: fixture_library_page.cpp:94
 msgid "<b>Fixtures</b>"
 msgstr "<b>Фікстури</b>"
 
-#: shape_form.cpp:142
+#: shape_form.cpp:152
 msgid "<b>Kreis</b>"
 msgstr "<b>Коло</b>"
 
-#: shape_form.cpp:53
+#: shape_form.cpp:63
 msgid "<b>Punktwolke</b>: %1 Punkte, nur in der Datei änderbar"
 msgstr "<b>Хмара точок</b>: %1 точок, змінюється лише у файлі"
 
-#: shape_form.cpp:161
+#: shape_form.cpp:171
 msgid "<b>Spirale</b> (Säule mit einem um das Rohr gewickelten Strip)"
 msgstr "<b>Спіраль</b> (колона зі стрічкою, намотаною навколо труби)"
 
-#: shape_form.cpp:92
+#: shape_form.cpp:102
 msgid "<b>Strip</b>"
 msgstr "<b>Стрічка</b>"
 
-#: shape_form.cpp:183
+#: shape_form.cpp:193
 msgid "<b>Säule</b> (Ringe übereinander)"
 msgstr "<b>Колона</b> (кільця одне над одним)"
 
@@ -442,11 +442,11 @@ msgstr "Приглушена нода з пунктирним наскрізни
 msgid "Abstand"
 msgstr "Відстань"
 
-#: add_fixture_dialog.cpp:109 shape_form.cpp:85
+#: add_fixture_dialog.cpp:109 shape_form.cpp:95
 msgid "Abstand x y"
 msgstr "Відстань x y"
 
-#: add_fixture_dialog.cpp:149 shape_form.cpp:135
+#: add_fixture_dialog.cpp:149 shape_form.cpp:145
 msgid "Abstand x y z"
 msgstr "Відстань x y z"
 
@@ -542,7 +542,7 @@ msgstr "Увімкнено: непідключений вхід у Blend, Mix, C
 msgid "Anfang und Ende relativ zur Position; die erste LED sitzt am Anfang."
 msgstr "Початок і кінець відносно позиції; перший LED стоїть на початку."
 
-#: add_fixture_dialog.cpp:123 shape_form.cpp:101
+#: add_fixture_dialog.cpp:123 shape_form.cpp:111
 msgid "Anfang x y z"
 msgstr "Початок x y z"
 
@@ -554,11 +554,11 @@ msgstr "Закріпити"
 msgid "Anschluss / Parameter"
 msgstr "Порт / параметр"
 
-#: main_window_view3d.cpp:47
+#: main_window_view3d.cpp:48
 msgid "Ansicht"
 msgstr "Вигляд"
 
-#: main_window_view3d.cpp:39
+#: main_window_view3d.cpp:40
 msgid "Ansicht von vorn: Fixtures verschieben, Bereich aufziehen"
 msgstr "Вигляд спереду: переміщуйте фікстури, виділяйте область"
 
@@ -570,7 +570,7 @@ msgstr "Кількість"
 msgid "Anzahl der Exemplare, die „Patchen“ auf einmal anlegt"
 msgstr "Кількість екземплярів, які «Патчити» створює одразу"
 
-#: shape_form.cpp:134
+#: shape_form.cpp:144
 msgid "Anzahl x y z"
 msgstr "Кількість x y z"
 
@@ -666,15 +666,15 @@ msgstr "Видалити з бібліотеки"
 msgid "Aus Favoriten entfernen"
 msgstr "Прибрати з обраного"
 
-#: main_window_view3d.cpp:108
+#: main_window_view3d.cpp:109
 msgid "Aus-LEDs &grau"
 msgstr "Вимкнені LED &сірі"
 
-#: main_window_view3d.cpp:107
+#: main_window_view3d.cpp:108
 msgid "Aus-LEDs &schwach"
 msgstr "Вимкнені LED &слабкі"
 
-#: main_window_view3d.cpp:106
+#: main_window_view3d.cpp:107
 msgid "Aus-LEDs &unsichtbar"
 msgstr "Вимкнені LED &невидимі"
 
@@ -698,7 +698,7 @@ msgstr "З’єднати вихід із новим нодом"
 msgid "Ausgang: %1"
 msgstr "Вихід: %1"
 
-#: main_window_view3d.cpp:107
+#: main_window_view3d.cpp:108
 msgid "Ausgeschaltete LEDs als sehr dunkle Punkte, nur als Orientierung"
 msgstr "Вимкнені LED як дуже темні точки, лише для орієнтації"
 
@@ -814,7 +814,11 @@ msgstr "Спалах на удар: заповнює зображення, ди�
 msgid "Blitze: Zufällige verzweigte Einschläge mit Nachglühen und Aufhellen. Häufigkeit, Breite und Verästelung einstellbar."
 msgstr "Блискавки: випадкові розгалужені удари з післясвіченням і підсвічуванням. Частоту, ширину й розгалуженість можна налаштувати."
 
-#: layout_panel_groups.cpp:194
+#: fixture_form.cpp:87 layout_panel_groups.cpp:46
+msgid "Box (von außen auf die Box aller Box-Fixtures)"
+msgstr "Коробка (проєкція ззовні на коробку усіх фікстур Коробка)"
+
+#: layout_panel_groups.cpp:210
 msgid "Breite"
 msgstr "Ширина"
 
@@ -922,11 +926,11 @@ msgstr "Монітор DMX"
 msgid "Dabei wird nur die öffentliche Seite des neuesten Releases abgefragt. Gesendet werden Programmname und Versionsnummer (und, wie bei jedem Netzwerkzugriff, deine IP-Adresse), nichts über dich oder deine Projekte. Es wird nichts installiert. Du kannst das jederzeit im Menü Hilfe ändern."
 msgstr "Запитується лише публічна сторінка останнього релізу. Надсилаються назва програми та номер версії (і, як при будь-якому мережевому доступі, ваша IP-адреса), нічого про вас чи ваші проєкти. Нічого не встановлюється. Ви можете змінити це в будь-який час у меню «Довідка»."
 
-#: add_fixture_dialog.cpp:146 shape_form.cpp:123
+#: add_fixture_dialog.cpp:146 shape_form.cpp:133
 msgid "Das Kabel beginnt an dieser Seite statt an der gegenüberliegenden"
 msgstr "Кабель починається з цього боку, а не з протилежного"
 
-#: shape_form.cpp:193
+#: shape_form.cpp:203
 msgid "Das Kabel läuft ohne Rücksprung von Ring zu Ring: unten vorwärts, den nächsten Ring rückwärts ..."
 msgstr "Кабель переходить від кільця до кільця без повернення: нижнє вперед, наступне назад ..."
 
@@ -954,7 +958,7 @@ msgstr "Минулого разу студію закрито неправиль
 msgid "Das Testbild ersetzt den Effekt in der Vorschau und, wenn „Ausgabe senden“ an ist, auch auf den LEDs. Es wird nicht im Projekt gespeichert.\n\nAchtung: Weiß und Farbe leuchten mit voller Helligkeit. Prüfe vorher, ob die Netzteile die ganze Wand auf 100 % tragen."
 msgstr "Тестове зображення замінює ефект у попередньому перегляді, а коли «Надсилати вивід» увімкнено, то й на LED. У проєкті воно не зберігається.\n\nУвага: білий і кольори світять на повну яскравість. Спершу переконайтеся, що блоки живлення витримують усю стіну на 100 %."
 
-#: fixture_library_export.cpp:56
+#: fixture_library_export.cpp:57
 msgid "Datei lässt sich nicht lesen: %1"
 msgstr "Файл не вдається прочитати: %1"
 
@@ -1042,7 +1046,7 @@ msgstr "Cuelist працює й сам перемикає Look. Спершу н�
 msgid "Die DMX-Nodes im Projekt lesen ihre Werte aus dem Empfang. Standard-Ports sind 6454 (Art-Net) und 5568 (sACN); nur ändern, wenn ein anderes Programm sie belegt. Nach der Installation ist der Empfang aus; unter Windows fragt die Firewall beim ersten Einschalten nach."
 msgstr "DMX-ноди в проєкті читають свої значення з приймання. Стандартні порти: 6454 (Art-Net) і 5568 (sACN); змінюйте лише якщо їх займає інша програма. Після встановлення приймання вимкнене; у Windows брандмауер запитає при першому вмиканні."
 
-#: fixture_form.cpp:87
+#: fixture_form.cpp:95
 msgid "Die Form kommt vom Fixture und wird im Reiter Fixtures geändert."
 msgstr "Форма походить від фікстури і змінюється на вкладці «Фікстури»."
 
@@ -1098,7 +1102,7 @@ msgstr "Ця форма недійсна."
 msgid "Dieser Node hat keine einstellbaren Parameter."
 msgstr "Ця нода не має параметрів для налаштування."
 
-#: fixture_form.cpp:91
+#: fixture_form.cpp:99
 msgid "Dieses Fixture ist mit keinem Fixture aus dem Reiter Fixtures verknüpft (ältere Projektdatei oder es wurde entfernt). Über \"Fixture\" → \"Neues Fixture aus dieser Form …\" lässt sich wieder eines anlegen."
 msgstr "Ця фікстура не пов’язана з жодною фікстурою на вкладці Fixtures (старіший файл проєкту або її видалили). Через \"Fixture\" → \"Нова фікстура з цієї форми …\" можна знову прив’язати."
 
@@ -1150,7 +1154,7 @@ msgstr "Обертання x y z (градуси)"
 msgid "Du hast die neueste Version (%1)."
 msgstr "У вас остання версія (%1)."
 
-#: fixture_library_page.cpp:82
+#: fixture_library_page.cpp:83
 msgid "Duplizieren"
 msgstr "Дублювати"
 
@@ -1222,7 +1226,7 @@ msgstr "Група з назвою \"%1\" уже існує."
 msgid "Eine Kugel (Kreis) mit weichem Rand, Innen- und Außenfarbe. „Space“ wählt flach, Volumen oder automatisch nach Aufbau."
 msgstr "Куля (коло) з м'яким краєм, внутрішнім і зовнішнім кольором. «Space» обирає плоский, об'ємний або автоматичний режим залежно від конструкції."
 
-#: layout_panel_groups.cpp:150
+#: layout_panel_groups.cpp:166
 msgid "Eine Region ist ein Rechteck der Bühne. Ein Output mit dieser Region als Ziel bespielt alle LEDs darin. Die Angaben sind Prozent der ganzen Bühne."
 msgstr "Регіон — це прямокутник сцени. Output із цим регіоном як ціллю керує всіма LED у ньому. Значення вказано у відсотках від усієї сцени."
 
@@ -1286,11 +1290,11 @@ msgstr "Початок"
 msgid "Empfangene und gesendete DMX-Kanäle einsehen und direkt patchen (eigenes Fenster)"
 msgstr "Переглядати отримані та надіслані канали DMX і одразу їх патчити (окреме вікно)"
 
-#: add_fixture_dialog.cpp:124 shape_form.cpp:102
+#: add_fixture_dialog.cpp:124 shape_form.cpp:112
 msgid "Ende x y z"
 msgstr "Кінець x y z"
 
-#: fixture_library_page.cpp:83 layout_panel.cpp:89
+#: fixture_library_page.cpp:84 layout_panel.cpp:89
 msgid "Entfernen"
 msgstr "Прибрати"
 
@@ -1318,7 +1322,7 @@ msgstr "Спершу оберіть фікстури (з Ctrl або Shift — �
 msgid "Erste Achse = läuft am schnellsten entlang des Kabels"
 msgstr "Перша вісь = біжить найшвидше вздовж кабелю"
 
-#: shape_form.cpp:156 shape_form.cpp:178 shape_form.cpp:207
+#: shape_form.cpp:166 shape_form.cpp:188 shape_form.cpp:217
 msgid "Erste LED bei (Grad)"
 msgstr "Перший світлодіод на (градусів)"
 
@@ -1358,7 +1362,7 @@ msgstr "Проєкт не завантажено. Ctrl+N створює нови
 msgid "Es wurde noch nichts auf dieses Universe gesendet."
 msgstr "На цей юніверс ще нічого не надсилалося."
 
-#: fixture_library_page.cpp:83
+#: fixture_library_page.cpp:84
 msgid "Export …"
 msgstr "Експортувати …"
 
@@ -1442,11 +1446,11 @@ msgstr "Надсилати фікстуру на вивід"
 msgid "Fixture aus dem Reiter Fixtures (Stage Config). Änderungen daran gelten für alle Exemplare."
 msgstr "Фікстура з вкладки Fixtures (Stage Config). Зміни в ній стосуються всіх екземплярів."
 
-#: fixture_library_page.cpp:110
+#: fixture_library_page.cpp:111
 msgid "Fixture aus dieser Show entfernen. Schon platzierte Exemplare im Layout behalten ihre Form als eigene."
 msgstr "Видалити фікстуру з цього шоу. Екземпляри, уже розміщені в розкладці, зберігають свою форму як власну."
 
-#: fixture_library_page.cpp:150
+#: fixture_library_page.cpp:155
 msgid "Fixture exportieren"
 msgstr "Експортувати фікстуру"
 
@@ -1454,7 +1458,7 @@ msgstr "Експортувати фікстуру"
 msgid "Fixture hinzufügen"
 msgstr "Додати фікстуру"
 
-#: fixture_library_page.cpp:158
+#: fixture_library_page.cpp:164
 msgid "Fixture importieren"
 msgstr "Імпортувати фікстуру"
 
@@ -1502,6 +1506,10 @@ msgstr "Розміщувати й обертати фікстури на сце�
 msgid "Flammen: Aufsteigendes, flackerndes Feuer mit einstellbarer Skalierung, Tempo und Flammenhöhe."
 msgstr "Полум'я: вогонь, що здіймається й мерехтить, з налаштовуваним масштабом, темпом і висотою полум'я."
 
+#: fixture_form.cpp:86 layout_panel_groups.cpp:45
+msgid "Flächen (jedes Fixture ein eigenes 2D-Bild)"
+msgstr "Грані (кожна фікстура має власне 2D-зображення)"
+
 #: add_fixture_dialog.cpp:56
 msgid "Form"
 msgstr "Форма"
@@ -1514,7 +1522,7 @@ msgstr "Запитує на GitHub останню версію (лише ном�
 msgid "Frame"
 msgstr "Frame"
 
-#: main_window_view3d.cpp:40
+#: main_window_view3d.cpp:41
 msgid "Frei drehbare Ansicht: ziehen = drehen, Rechtsklick = verschieben, Rad = Zoom"
 msgstr "Вільно обертовий вигляд: тягнути = обертати, правий клік = переміщувати, колесо = масштаб"
 
@@ -1582,7 +1590,7 @@ msgstr "Загальна яскравість (діє на попередній 
 msgid "Gesamtlautstärke des Audio-Eingangs als Pegel und Spitze, linear oder in dB, auf Wunsch mit automatischer Verstärkung. Einzelne Schläge (Kick, Snare, Hi-Hat) erkennt „Audio Trigger“."
 msgstr "Загальна гучність аудіовходу як рівень і пік, лінійно або в дБ, за бажанням з автоматичним підсиленням. Окремі удари (бочка, малий барабан, хай-хет) розпізнає «Audio Trigger»."
 
-#: main_window_file.cpp:150 main_window_file.cpp:178
+#: main_window_file.cpp:153 main_window_file.cpp:181
 msgid "Gespeichert: %1"
 msgstr "Збережено: %1"
 
@@ -1654,7 +1662,7 @@ msgstr "Замінити групу"
 msgid "Gruppe in Bibliothek speichern"
 msgstr "Зберегти групу в бібліотеці"
 
-#: layout_panel_groups.cpp:41
+#: layout_panel_groups.cpp:57
 msgid "Gruppe löschen"
 msgstr "Видалити групу"
 
@@ -1662,7 +1670,7 @@ msgstr "Видалити групу"
 msgid "Gruppe samt Nodes löschen"
 msgstr "Видалити групу разом із нодами"
 
-#: layout_panel_groups.cpp:82
+#: layout_panel_groups.cpp:98
 msgid "Gruppe speichern"
 msgstr "Зберегти групу"
 
@@ -1686,7 +1694,7 @@ msgstr "Групувати"
 msgid "Gruppieren …\tStrg+G"
 msgstr "Групувати …\tCtrl+G"
 
-#: shape_form.cpp:84
+#: shape_form.cpp:94
 msgid "Größe"
 msgstr "Розмір"
 
@@ -1710,7 +1718,7 @@ msgstr "Додати"
 msgid "Hält diesen Node im Fenster, auch wenn du im Editor einen anderen wählst"
 msgstr "Залишає цей нод у вікні, навіть якщо в редакторі вибрати інший"
 
-#: layout_panel_groups.cpp:195
+#: layout_panel_groups.cpp:211
 msgid "Höhe"
 msgstr "Висота"
 
@@ -1718,7 +1726,7 @@ msgstr "Висота"
 msgid "Hüllkurve (ADSR): Aus einem Schalter wird ein weicher Verlauf mit Attack, Decay, Sustain und Release. Auch als Einzelimpuls."
 msgstr "Огинаюча (ADSR): із перемикача робить м'який перебіг з Attack, Decay, Sustain і Release. Також як одиночний імпульс."
 
-#: fixture_library_page.cpp:251
+#: fixture_library_page.cpp:257
 msgid "Im Layout %1 Mal gepatcht; Änderungen gelten für alle."
 msgstr "Запатчено %1 разів у розкладці; зміни стосуються всіх."
 
@@ -1726,7 +1734,7 @@ msgstr "Запатчено %1 разів у розкладці; зміни ст�
 msgid "Image"
 msgstr "Image"
 
-#: fixture_library_page.cpp:84
+#: fixture_library_page.cpp:85
 msgid "Import …"
 msgstr "Імпортувати …"
 
@@ -1750,7 +1758,7 @@ msgstr "Зберегти в бібліотеці"
 msgid "Ja, beim Start suchen"
 msgstr "Так, перевіряти під час запуску"
 
-#: add_fixture_dialog.cpp:110 add_fixture_dialog.cpp:152 shape_form.cpp:86
+#: add_fixture_dialog.cpp:110 add_fixture_dialog.cpp:152 shape_form.cpp:96
 msgid "Kabel beginnt"
 msgstr "Кабель починається"
 
@@ -1834,7 +1842,7 @@ msgstr "Нічого не знайдено."
 msgid "Klicke eine LED, um ihre Adresse zu sehen."
 msgstr "Клацніть LED, щоб побачити його адресу."
 
-#: fixture_library_page.cpp:109
+#: fixture_library_page.cpp:110
 msgid "Kopie des gewählten Fixtures anlegen"
 msgstr "Створити копію вибраної фікстури"
 
@@ -1842,11 +1850,11 @@ msgstr "Створити копію вибраної фікстури"
 msgid "Kopieren\tStrg+C"
 msgstr "Копіювати\tCtrl+C"
 
-#: fixture_library_page.cpp:100 fixture_shape_label.cpp:19
+#: fixture_library_page.cpp:101 fixture_shape_label.cpp:19
 msgid "Kreis"
 msgstr "Коло"
 
-#: fixture_library_page.cpp:47
+#: fixture_library_page.cpp:48
 msgid "Kreis 24"
 msgstr "Коло 24"
 
@@ -1854,7 +1862,7 @@ msgstr "Коло 24"
 msgid "LED-Steuerung für Matrizen, Cubes und Pixelinstallationen"
 msgstr "Керування LED-матрицями, кубами та піксельними інсталяціями"
 
-#: add_fixture_dialog.cpp:122 patch_table.cpp:48 shape_form.cpp:100
+#: add_fixture_dialog.cpp:122 patch_table.cpp:48 shape_form.cpp:110
 msgid "LEDs"
 msgstr "LED"
 
@@ -1862,7 +1870,7 @@ msgstr "LED"
 msgid "LEDs breit × hoch"
 msgstr "LED завширшки × заввишки"
 
-#: shape_form.cpp:204
+#: shape_form.cpp:214
 msgid "LEDs je Ring"
 msgstr "Світлодіодів у кільці"
 
@@ -1902,7 +1910,7 @@ msgstr "Layout"
 msgid "Layout auf Würfel abbilden"
 msgstr "Відобразити Layout на куб"
 
-#: fixture_library_page.cpp:239
+#: fixture_library_page.cpp:245
 msgid "Lege mit „Neu“ ein Fixture an. Im Reiter Layout patchst du es dann auf die Bühne."
 msgstr "Створіть фікстуру за допомогою «Новий». На вкладці «Layout» потім запатчіть її на сцену."
 
@@ -1922,7 +1930,7 @@ msgstr "Останній кадр надіслано %1 с тому (заста�
 msgid "Letztes Paket vor %1 s (veraltet)."
 msgstr "Останній пакет %1 с тому (застарілий)."
 
-#: main_window_view3d.cpp:130
+#: main_window_view3d.cpp:131
 msgid "Leuchtende LEDs mit weichem Schein, Farben addieren sich; nichts verdeckt etwas"
 msgstr "Світні LED з м'яким сяйвом, кольори додаються; ніщо нічого не затуляє"
 
@@ -1946,11 +1954,11 @@ msgstr "Лінії у вигляді синусоїд, що рухаються (
 msgid "Linke Kanten ausrichten"
 msgstr "Вирівняти ліві краї"
 
-#: layout_panel_groups.cpp:186
+#: layout_panel_groups.cpp:202
 msgid "Links"
 msgstr "Ліворуч"
 
-#: layout_panel_groups.cpp:192
+#: layout_panel_groups.cpp:208
 msgid "Links ab"
 msgstr "Ліворуч від"
 
@@ -2030,7 +2038,7 @@ msgstr "Looks"
 msgid "Loslassen: Node wird entfernt"
 msgstr "Відпустіть: нода буде видалена"
 
-#: fixture_library_page.cpp:119
+#: fixture_library_page.cpp:120
 msgid "Lädt ein oder mehrere mit „Export …“ gespeicherte Fixtures in diese Show."
 msgstr "Завантажує в це шоу одну або кілька фікстур, збережених за допомогою «Експортувати …»."
 
@@ -2086,7 +2094,7 @@ msgstr "Master: протокол:"
 msgid "Master: Universe:"
 msgstr "Master: universe:"
 
-#: layout_panel_add.cpp:35 layout_panel_add.cpp:139
+#: layout_panel_add.cpp:35 layout_panel_add.cpp:142
 msgid "Matrix"
 msgstr "Матриця"
 
@@ -2114,7 +2122,7 @@ msgstr "За GO (попереднє завантаження)"
 msgid "Mit aktuellem Effekt überschreiben"
 msgstr "Перезаписати поточним ефектом"
 
-#: layout_panel_groups.cpp:190
+#: layout_panel_groups.cpp:206
 msgid "Mitte"
 msgstr "Центр"
 
@@ -2142,11 +2150,11 @@ msgstr "Після кожної такої кількості світлодіо
 msgid "Name"
 msgstr "Назва"
 
-#: layout_panel_groups.cpp:82
+#: layout_panel_groups.cpp:98
 msgid "Name der Gruppe"
 msgstr "Назва групи"
 
-#: layout_panel_groups.cpp:156
+#: layout_panel_groups.cpp:172
 msgid "Name der Region"
 msgstr "Назва регіону"
 
@@ -2162,7 +2170,7 @@ msgstr "Назва Look:"
 msgid "Name des Presets:"
 msgstr "Назва пресету:"
 
-#: fixture_form.cpp:137
+#: fixture_form.cpp:153
 msgid "Name:"
 msgstr "Назва:"
 
@@ -2186,7 +2194,7 @@ msgstr "Мережева карта для надсилання: %1"
 msgid "Netzwerkkarte, DMX-Eingang, Audio-Interface und Standardwerte für Nodes"
 msgstr "Мережева карта, вхід DMX, аудіоінтерфейс і стандартні значення для нод"
 
-#: fixture_library_page.cpp:82
+#: fixture_library_page.cpp:83
 msgid "Neu"
 msgstr "Новий"
 
@@ -2202,11 +2210,11 @@ msgstr "Доступна нова версія %1 – Довідка > Пере�
 msgid "Neuer Name:"
 msgstr "Нова назва:"
 
-#: fixture_form.cpp:137
+#: fixture_form.cpp:153
 msgid "Neues Fixture"
 msgstr "Нова фікстура"
 
-#: fixture_library_page.cpp:108
+#: fixture_library_page.cpp:109
 msgid "Neues Fixture anlegen"
 msgstr "Створити нову фікстуру"
 
@@ -2238,7 +2246,7 @@ msgstr "Не надсилати"
 msgid "Noch kein Fixture (Stage Config → Fixtures → Neu)"
 msgstr "Ще немає фікстури (Stage Config → Fixtures → Новий)"
 
-#: fixture_library_page.cpp:250
+#: fixture_library_page.cpp:256
 msgid "Noch nicht im Layout gepatcht."
 msgstr "Ще не запатчено в розкладці."
 
@@ -2302,7 +2310,7 @@ msgstr "№"
 msgid "Nur auf gewählten Fixtures"
 msgstr "Лише на вибраних фікстурах"
 
-#: main_window_view3d.cpp:106
+#: main_window_view3d.cpp:107
 msgid "Nur leuchtende LEDs zeichnen: man sieht durch den Cube hindurch"
 msgstr "Малювати лише світні LED: крізь куб видно наскрізь"
 
@@ -2310,11 +2318,11 @@ msgstr "Малювати лише світні LED: крізь куб видно
 msgid "Nächsten Cue auslösen (Leertaste)"
 msgstr "Запустити наступний Cue (пробіл)"
 
-#: layout_panel_groups.cpp:188 stage_view.cpp:95
+#: layout_panel_groups.cpp:204 stage_view.cpp:95
 msgid "Oben"
 msgstr "Угорі"
 
-#: layout_panel_groups.cpp:193
+#: layout_panel_groups.cpp:209
 msgid "Oben ab"
 msgstr "Вгору від"
 
@@ -2474,13 +2482,21 @@ msgstr "Пресети"
 msgid "Projekt laden"
 msgstr "Завантажити проєкт"
 
-#: main_window_file.cpp:162
+#: main_window_file.cpp:165
 msgid "Projekt speichern unter"
 msgstr "Зберегти проєкт як"
 
-#: main_window_file.cpp:119
+#: main_window_file.cpp:121
 msgid "Projekt öffnen"
 msgstr "Відкрити проєкт"
+
+#: fixture_form.cpp:92
+msgid "Projektion"
+msgstr "Проєкція"
+
+#: layout_panel_groups.cpp:41
+msgid "Projektion einer Gruppe"
+msgstr "Проєкція групи"
 
 #: add_fixture_dialog.cpp:174 dmx_patch_table.cpp:45 output_form.cpp:30
 msgid "Protokoll"
@@ -2502,11 +2518,11 @@ msgstr "Хмара точок"
 msgid "Quellname (sACN)"
 msgstr "Назва джерела (sACN)"
 
-#: shape_form.cpp:155
+#: shape_form.cpp:165
 msgid "Radius"
 msgstr "Радіус"
 
-#: shape_form.cpp:176 shape_form.cpp:206
+#: shape_form.cpp:186 shape_form.cpp:216
 msgid "Radius und Höhe"
 msgstr "Радіус і висота"
 
@@ -2534,7 +2550,7 @@ msgstr "Рахує з двома числами: додавання, відні�
 msgid "Rechte Kanten ausrichten"
 msgstr "Вирівняти праві краї"
 
-#: layout_panel_groups.cpp:187
+#: layout_panel_groups.cpp:203
 msgid "Rechts"
 msgstr "Праворуч"
 
@@ -2542,11 +2558,11 @@ msgstr "Праворуч"
 msgid "Rechts ⇥"
 msgstr "Праворуч ⇥"
 
-#: layout_panel_groups.cpp:155
+#: layout_panel_groups.cpp:171
 msgid "Region %1"
 msgstr "Регіон %1"
 
-#: layout_panel_groups.cpp:148
+#: layout_panel_groups.cpp:164
 msgid "Region anlegen"
 msgstr "Створити регіон"
 
@@ -2554,7 +2570,7 @@ msgstr "Створити регіон"
 msgid "Region anlegen …"
 msgstr "Створити регіон …"
 
-#: layout_panel_groups.cpp:52
+#: layout_panel_groups.cpp:68
 msgid "Region löschen"
 msgstr "Видалити регіон"
 
@@ -2562,7 +2578,7 @@ msgstr "Видалити регіон"
 msgid "Regionen"
 msgstr "Регіони"
 
-#: shape_form.cpp:136
+#: shape_form.cpp:146
 msgid "Reihenfolge (schnellste zuerst)"
 msgstr "Порядок (найшвидша перша)"
 
@@ -2574,7 +2590,7 @@ msgstr "Напрямок"
 msgid "Ring, der bei einem Treffer von der Mitte nach außen läuft und verblasst. „Age“ kommt vom Ausgang „Age“ eines Kick-Erkenners."
 msgstr "Кільце, що при ударі біжить від центру назовні й згасає. «Age» надходить від виходу «Age» детектора кіка."
 
-#: shape_form.cpp:205
+#: shape_form.cpp:215
 msgid "Ringe"
 msgstr "Кільця"
 
@@ -2586,7 +2602,7 @@ msgstr "Червоний"
 msgid "Schalter"
 msgstr "Перемикач"
 
-#: layout_panel_groups.cpp:191
+#: layout_panel_groups.cpp:207
 msgid "Schnellwahl"
 msgstr "Швидкий вибір"
 
@@ -2626,7 +2642,7 @@ msgstr "Надсилати"
 msgid "Senkrecht mittig ausrichten"
 msgstr "Вирівняти по центру вертикально"
 
-#: shape_form.cpp:73 shape_form.cpp:114
+#: shape_form.cpp:83 shape_form.cpp:124
 msgid "Serpentine"
 msgstr "Змійка"
 
@@ -2638,7 +2654,7 @@ msgstr "Змійка (нитка розвертається на кожному 
 msgid "Serpentine (jede zweite Zeile rückwärts)"
 msgstr "Змійка (кожен другий рядок у зворотному напрямку)"
 
-#: shape_form.cpp:191
+#: shape_form.cpp:201
 msgid "Serpentine (jeder zweite Ring rückwärts)"
 msgstr "Змійкою (кожне друге кільце у зворотному напрямку)"
 
@@ -2670,7 +2686,7 @@ msgstr "Чи має WhiteHoleFX під час запуску заглядати 
 msgid "Sonstige"
 msgstr "Інше"
 
-#: shape_form.cpp:72 shape_form.cpp:84
+#: shape_form.cpp:82 shape_form.cpp:94
 msgid "Spalten"
 msgstr "Стовпці"
 
@@ -2686,7 +2702,7 @@ msgstr "Стовпці можна переміщувати перетягува�
 msgid "Spannt einen Wert von 0 bis 1 über den ganzen Bereich des Parameters"
 msgstr "Розтягує значення від 0 до 1 на весь діапазон параметра"
 
-#: main_window_file.cpp:146 main_window_file.cpp:173
+#: main_window_file.cpp:149 main_window_file.cpp:176
 msgid "Speichern"
 msgstr "Зберегти"
 
@@ -2694,7 +2710,7 @@ msgstr "Зберегти"
 msgid "Speichern &unter …"
 msgstr "Зберегти &як …"
 
-#: fixture_library_page.cpp:117
+#: fixture_library_page.cpp:118
 msgid "Speichert das gewählte Fixture als eigene Datei, um es in einem anderen Projekt wieder zu importieren."
 msgstr "Справжає обрану фікстуру як окремий файл, щоб знову імпортувати його в іншому проєкті."
 
@@ -2718,11 +2734,11 @@ msgstr "Ігри"
 msgid "Spirale"
 msgstr "Спіраль"
 
-#: fixture_library_page.cpp:101
+#: fixture_library_page.cpp:102
 msgid "Spirale (Säule)"
 msgstr "Спіраль (колона)"
 
-#: fixture_library_page.cpp:61
+#: fixture_library_page.cpp:62
 msgid "Spirale 60"
 msgstr "Спіраль 60"
 
@@ -2766,7 +2782,7 @@ msgstr "Суворі &входи"
 msgid "Strenge Eingänge"
 msgstr "Суворі входи"
 
-#: fixture_library_page.cpp:100 fixture_shape_label.cpp:16 layout_panel_add.cpp:38
+#: fixture_library_page.cpp:101 fixture_shape_label.cpp:16 layout_panel_add.cpp:38
 msgid "Strip"
 msgstr "Стрічка"
 
@@ -2774,7 +2790,7 @@ msgstr "Стрічка"
 msgid "Strip (Linie)"
 msgstr "Стрічка (лінія)"
 
-#: fixture_library_page.cpp:53
+#: fixture_library_page.cpp:54
 msgid "Strip 30"
 msgstr "Стрип 30"
 
@@ -2790,11 +2806,11 @@ msgstr "Пошук …"
 msgid "Säule"
 msgstr "Колона"
 
-#: fixture_library_page.cpp:101
+#: fixture_library_page.cpp:102
 msgid "Säule (Ringe)"
 msgstr "Колона (кільця)"
 
-#: fixture_library_page.cpp:65
+#: fixture_library_page.cpp:66
 msgid "Säule 12x20"
 msgstr "Колона 12x20"
 
@@ -2842,7 +2858,7 @@ msgstr "Тест"
 msgid "Testbild"
 msgstr "Тестове зображення"
 
-#: main_window_view3d.cpp:69
+#: main_window_view3d.cpp:70
 msgid "Testbild ein- oder ausschalten (Art und Einstellungen: Stage Config → Testmodus)"
 msgstr "Увімкнути або вимкнути тестове зображення (тип і налаштування: Stage Config → Режим тесту)"
 
@@ -2854,7 +2870,7 @@ msgstr "Тестове зображення для монтажу: x стає ч
 msgid "Testbilder auf die LEDs schicken, um Verkabelung und Patch zu prüfen"
 msgstr "Надсилати тестові зображення на LED, щоб перевірити підключення й Patch"
 
-#: main_window_view3d.cpp:67
+#: main_window_view3d.cpp:68
 msgid "Testmodus"
 msgstr "Режим тесту"
 
@@ -2914,7 +2930,7 @@ msgstr "Універс (Art-Net з 0, sACN з 1)"
 msgid "Universe:"
 msgstr "Universe:"
 
-#: layout_panel_groups.cpp:189
+#: layout_panel_groups.cpp:205
 msgid "Unten"
 msgstr "Унизу"
 
@@ -2970,7 +2986,11 @@ msgstr "Версія %1"
 msgid "Version %1 ist verfügbar (installiert: %2)."
 msgstr "Доступна версія %1 (встановлена: %2)."
 
-#: layout_panel_groups.cpp:196
+#: fixture_form.cpp:86 layout_panel_groups.cpp:44
+msgid "Volumen (3D, Standard)"
+msgstr "Об’єм (3D, типово)"
+
+#: layout_panel_groups.cpp:212
 msgid "Vorschau"
 msgstr "Попередній перегляд"
 
@@ -3034,27 +3054,31 @@ msgstr "WhiteHoleFX"
 msgid "WhiteHoleFX – %1%2"
 msgstr "WhiteHoleFX – %1%2"
 
-#: fixture_library_page.cpp:151 fixture_library_page.cpp:159
+#: fixture_library_page.cpp:156 fixture_library_page.cpp:165
 msgid "WhiteHoleFX-Fixture (*.whfx-fixture);;Alle Dateien (*)"
 msgstr "Фікстура WhiteHoleFX (*.whfx-fixture);;Усі файли (*)"
 
-#: main_window_file.cpp:163
+#: main_window_file.cpp:166
 msgid "WhiteHoleFX-Projekte (*.whfx)"
 msgstr "Проєкти WhiteHoleFX (*.whfx)"
 
-#: main_window_file.cpp:120
+#: main_window_file.cpp:122
 msgid "WhiteHoleFX-Projekte (*.whfx);;Alle Dateien (*)"
 msgstr "Проєкти WhiteHoleFX (*.whfx);;Усі файли (*)"
+
+#: fixture_form.cpp:89
+msgid "Wie Effekte dieses Fixture sehen. Volumen: als Teil des 3D-Raums. Flächen/Box: als 2D-Bild, z. B. ein hohler Würfel aus sechs Matrizen, auf dem ein 2D-Effekt auf jeder Seite läuft."
+msgstr "Як ефекти бачать цю фікстуру. Об’єм: як частину 3D-простору. Грані/Коробка: як 2D-зображення, напр. порожнистий куб із шести матриць, на кожній стороні якого йде 2D-ефект."
 
 #: node_info_texts.cpp:73
 msgid "Wie Strobe, blitzt aber nur, solange „Gate“ den Schwellwert erreicht, zum Beispiel der Puls einer Kick- oder Hi-Hat-Erkennung. Darunter geht das Bild unverändert durch."
 msgstr "Як Strobe, але спалахує лише доки «Gate» досягає порогу, наприклад імпульс детектора бочки чи хай-хета. Нижче порогу зображення проходить без змін."
 
-#: main_window_view3d.cpp:108
+#: main_window_view3d.cpp:109
 msgid "Wie in der 2D-Ansicht; graue Punkte der vorderen Schicht verdecken LEDs dahinter"
 msgstr "Як у 2D-вигляді; сірі точки переднього шару затуляють LED позаду"
 
-#: shape_form.cpp:169
+#: shape_form.cpp:179
 msgid "Wie oft die Spirale um die Säule läuft (0 = gerade nach oben)"
 msgstr "Скільки разів спіраль обвиває колону (0 = прямо вгору)"
 
@@ -3070,15 +3094,15 @@ msgstr "Скільки каналів пулу, починаючи з цього
 msgid "Wiederholt das Bild als Kacheln (Tiles X/Y/Z), auf Wunsch jede zweite gespiegelt."
 msgstr "Повторює зображення плитками (Tiles X/Y/Z), за бажанням кожну другу віддзеркалено."
 
-#: shape_form.cpp:177
+#: shape_form.cpp:187
 msgid "Windungen"
 msgstr "Витки"
 
-#: shape_form.cpp:194
+#: shape_form.cpp:204
 msgid "Winkel der ersten LED im untersten Ring: 0 = +x"
 msgstr "Кут першого світлодіода в нижньому кільці: 0 = +x"
 
-#: shape_form.cpp:148
+#: shape_form.cpp:158
 msgid "Winkel der ersten LED: 0 = rechts, 90 = oben"
 msgstr "Кут першого світлодіода: 0 = праворуч, 90 = вгору"
 
@@ -3094,7 +3118,7 @@ msgstr "Керується зв'язком у графі."
 msgid "Wähle einen Node im Node-Editor, um seine Parameter zu sehen. Mit „Anheften“ bleibt ein Node hier stehen."
 msgstr "Виберіть нод у редакторі нод, щоб побачити його параметри. «Закріпити» залишає нод тут."
 
-#: layout_panel_groups.cpp:78
+#: layout_panel_groups.cpp:94
 msgid "Wähle zuerst Fixtures in der Liste."
 msgstr "Спершу оберіть фікстури у списку."
 
@@ -3134,7 +3158,7 @@ msgstr "Обводить лише краї зображення (контур) �
 msgid "Zeigt das Bild nur in einem Ausschnitt (links, oben, Breite, Höhe, Tiefe) und füllt den Rest mit Transparent."
 msgstr "Показує зображення лише у фрагменті (ліворуч, угорі, ширина, висота, глибина), решту заповнює прозорим."
 
-#: shape_form.cpp:72 shape_form.cpp:84
+#: shape_form.cpp:82 shape_form.cpp:94
 msgid "Zeilen"
 msgstr "Рядки"
 
@@ -3186,7 +3210,7 @@ msgstr "Додати до обраного"
 msgid "Zuerst ein Projekt anlegen (Strg+N) oder öffnen (Strg+O)."
 msgstr "Спершу створіть проєкт (Ctrl+N) або відкрийте наявний (Ctrl+O)."
 
-#: add_fixture_dialog.cpp:111 shape_form.cpp:87
+#: add_fixture_dialog.cpp:111 shape_form.cpp:97
 msgid "Zuerst entlang"
 msgstr "Спочатку вздовж"
 
@@ -3254,23 +3278,23 @@ msgstr "короткий тригер, напр. біт чи удар"
 msgid "eine einzelne Farbe"
 msgstr "один колір"
 
-#: shape_form.cpp:146 shape_form.cpp:167 shape_form.cpp:189
+#: shape_form.cpp:156 shape_form.cpp:177 shape_form.cpp:199
 msgid "im Uhrzeigersinn"
 msgstr "за годинниковою стрілкою"
 
-#: add_fixture_dialog.cpp:143 shape_form.cpp:117
+#: add_fixture_dialog.cpp:143 shape_form.cpp:127
 msgid "oben (y max)"
 msgstr "угорі (y макс)"
 
-#: add_fixture_dialog.cpp:104 shape_form.cpp:70
+#: add_fixture_dialog.cpp:104 shape_form.cpp:80
 msgid "oben links"
 msgstr "вгорі ліворуч"
 
-#: add_fixture_dialog.cpp:104 shape_form.cpp:70
+#: add_fixture_dialog.cpp:104 shape_form.cpp:80
 msgid "oben rechts"
 msgstr "вгорі праворуч"
 
-#: add_fixture_dialog.cpp:142 shape_form.cpp:116
+#: add_fixture_dialog.cpp:142 shape_form.cpp:126
 msgid "rechts (x max)"
 msgstr "праворуч (x макс)"
 
@@ -3298,15 +3322,15 @@ msgstr "розтягнути (Stretch)"
 msgid "unbenannt"
 msgstr "без назви"
 
-#: add_fixture_dialog.cpp:104 shape_form.cpp:70
+#: add_fixture_dialog.cpp:104 shape_form.cpp:80
 msgid "unten links"
 msgstr "внизу ліворуч"
 
-#: add_fixture_dialog.cpp:104 shape_form.cpp:70
+#: add_fixture_dialog.cpp:104 shape_form.cpp:80
 msgid "unten rechts"
 msgstr "внизу праворуч"
 
-#: add_fixture_dialog.cpp:144 shape_form.cpp:118
+#: add_fixture_dialog.cpp:144 shape_form.cpp:128
 msgid "vorn (z max)"
 msgstr "спереду (z макс)"
 

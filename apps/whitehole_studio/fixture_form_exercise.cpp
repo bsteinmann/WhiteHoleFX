@@ -44,6 +44,22 @@ QString FixtureForm::exerciseTyped() {
         std::abs(static_cast<double>(fixture->rotation.z) - 30.0) > 1.0e-3) {
         return QStringLiteral("Formular: Drehung wurde nicht übernommen");
     }
+    // Projektion über das Auswahlfeld umstellen und zurück
+    if (c_.projection == nullptr || c_.projection->count() != 3) {
+        return QStringLiteral("Formular: Projektion fehlt");
+    }
+    c_.projection->setCurrentIndex(static_cast<int>(mapping::Projection::Box));
+    fixture = player_.project()->layout.find(id_);
+    if (fixture == nullptr || fixture->projection != mapping::Projection::Box) {
+        return QStringLiteral("Formular: Projektion wurde nicht übernommen");
+    }
+    if (c_.projection != nullptr) {  // report() baut bei Erfolg nicht neu: das Feld lebt noch
+        c_.projection->setCurrentIndex(static_cast<int>(mapping::Projection::Volume));
+    }
+    fixture = player_.project()->layout.find(id_);
+    if (fixture == nullptr || fixture->projection != mapping::Projection::Volume) {
+        return QStringLiteral("Formular: Projektion ließ sich nicht zurückstellen");
+    }
     // "Typ wird Pflicht": kein Eintrag zum Loslösen mehr - nur noch Fixtures plus "Neues Fixture …" als
     // letzten Eintrag (den tatsächlich auszulösen bräuchte einen echten QInputDialog, der den Rauchtest
     // ohne Publikum blockieren würde, siehe exerciseRename in node_editor_exercise_rename.cpp - darum hier
