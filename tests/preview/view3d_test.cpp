@@ -317,3 +317,10 @@ TEST_CASE("3D: das Achsenkreuz zeichnet Rot, Grün und Blau an der Ecke und läs
     CHECK(green);
     CHECK(blue);
 }
+
+TEST_CASE("3D: Glow ist standardmäßig aus", "[preview][view3d]") {
+    // Warum: Der Schein um leuchtende LEDs ist nur Zierde und verdeckt bei dichten Matrizen die Farben.
+    // Der Nutzer will ihn nur auf Wunsch sehen, deshalb gilt der Standard für Kamera und Form-Vorschau.
+    const preview::Camera3d camera;
+    CHECK_FALSE(camera.glow);
+}
