@@ -222,10 +222,12 @@ FixtureDraft beginFixture(Reader& r, bool isType) {
             d.origin = r.vec3("Ursprung");
         } else if (key == "rotate") {
             d.rotation = r.vec3("Drehung");
+        } else if (key == "projection") {
+            d.projection = detail::readName(r, detail::kProjections, "Projektion");
         } else if (key == "type") {
             d.type = r.word("Typname");
         } else if (r.ok()) {
-            r.fail("Erwartet \"at\", \"rotate\" oder \"type\", nicht \"" + key + "\"");
+            r.fail("Erwartet \"at\", \"rotate\", \"projection\" oder \"type\", nicht \"" + key + "\"");
         }
     }
     r.expectEnd();
@@ -308,6 +310,7 @@ std::optional<Error> finishFixture(FixtureDraft& draft, Project& project) {
     if (const auto rotated = project.layout.rotate(id.value(), draft.rotation); !rotated.ok()) {
         return at(rotated.error());
     }
+    (void)project.layout.setProjection(id.value(), draft.projection);
     (void)project.layout.setType(id.value(), draft.type);
     for (output::FixturePatch p : draft.patches) {
         p.fixture = id.value();

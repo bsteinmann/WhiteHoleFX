@@ -93,6 +93,7 @@ add_executable(wh_tests
     preview/view_test.cpp
     preview/view3d_test.cpp
     preview/wiring_test.cpp
+    project/project_projection_test.cpp
     project/project_test.cpp
     project/project_library_test.cpp
     project/project_destinations_test.cpp

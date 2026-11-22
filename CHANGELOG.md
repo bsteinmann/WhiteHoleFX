@@ -6,8 +6,8 @@
   abgebildet werden (`Fixture::projection`: `Volume` = wie bisher, `Faces` = eigenes Bild je Fixture, `Box` = von außen auf die
   Box aller Box-Fixtures projiziert, z. B. ein hohler Würfel aus sechs Matrizen). `Layout::bake` rechnet pro Fixture,
   `Layout::setProjection` stellt um. Projekte ohne projizierte Fixtures bleiben unverändert. Entwurf:
-  `docs/entwurf-flaechenabbildung.md`. Tests: `tests/mapping/projection_test.cpp`. Es folgen Projektdatei, Shader-Werte,
-  Player-Befehle und die Auswahl im Studio.
+  `docs/entwurf-flaechenabbildung.md`. Tests: `tests/mapping/projection_test.cpp`. Projektdatei: `fixture … projection
+  volume|faces|box` (nur geschrieben, wenn nicht `volume`). Es folgen Shader-Werte, Player-Befehle und die Auswahl im Studio.
 - **Neues Beispiel `examples/3d/wuerfel-hohl.whfx`:** hohler Würfel aus sechs Matrizen zu je 32×32 LEDs (Außenhaut, innen leer),
   per `at`/`rotate` zusammengesetzt, Plasma mit Tiefe. Test: `tests/nodes/example_projects_test.cpp` (alle 6144 LEDs liegen auf der Haut).
 - **Fix: „Übersprungene Pixel“ lassen sich auf 0 setzen** (Stage Config → Ausgabe). Das Feld hatte das Minimum 1, und der

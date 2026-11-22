@@ -217,6 +217,9 @@ Result<std::string> writeProject(const Project& project) {
         if (turn.x != 0.0F || turn.y != 0.0F || turn.z != 0.0F) {
             out << " rotate " << vec3(turn);
         }
+        if (fixture.projection != mapping::Projection::Volume) {
+            out << " projection " << nameOf(detail::kProjections, fixture.projection);
+        }
         if (!fixture.type.empty()) {
             out << " type " << quoteWord(fixture.type) << "\n";  // die Form steht im fixturetype
         } else {

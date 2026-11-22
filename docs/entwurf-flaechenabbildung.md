@@ -27,13 +27,12 @@ noch nichts davon ist gebaut (Stand 21.11.2026).
 
 ## 2. Die Einstellung „Projektion“ (pro Fixture, per Gruppe setzbar)
 
-Jedes Fixture bekommt ein Feld `projection`, in der Projektdatei eine Zeile im `fixture`-Block (Standard `volume`, wird dann
+Jedes Fixture bekommt ein Feld `projection`, in der Projektdatei eine Option der `fixture`-Kopfzeile, wie `rotate` und `type` (Standard `volume`, wird dann
 nicht geschrieben, alte Projekte bleiben bitgleich):
 
 ```
-fixture "Vorne" at 0 0 0
+fixture "Vorne" at 0 0 0 projection box
   matrix 32 32
-  projection box
 end
 ```
 
@@ -102,7 +101,7 @@ Heute aus der Karte geschätzt. Bei `faces`/`box`:
 1. `mapping::Projection` (`volume|faces|box`) als Feld in `Fixture`; `Layout::bake` rechnet `unit` pro Fixture. Tests in
    `tests/mapping/`: sechs Matrizen als hohler Würfel mit `box` bzw. `faces` → alle `unit.z == 0`, jede Fläche deckt 0..1 ab;
    `volume` bleibt bitgleich zu heute; Mischfall (Würfel `box` + Matrix `faces`).
-2. Projektdatei: `projection` im `fixture`-Block lesen/schreiben (`project_parser`, `project_writer`), Rundlauf-Test,
+2. Projektdatei: `projection` in der `fixture`-Kopfzeile lesen/schreiben (`project_parser`, `project_writer`), Rundlauf-Test,
    Fehlerfall (unbekannter Wert), `docs/project-format.md`.
 3. Durchreichen an `sampling_render_stage` (`@columns/@rows/@aspect`), GPU-Test nach dem Muster von `cells_auto` auf dem Würfel.
 4. Befehle im `Player` (`setFixtureProjection`, Gruppe → alle Fixtures, ein Undo-Schritt), Tests.
