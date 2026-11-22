@@ -8,39 +8,40 @@ whitehole-project 1
 #
 # Zum Prüfen:
 #   whitehole_cli examples/3d/wuerfel-hohl.whfx --check --snapshot layout.png
-# Effekte, die den Raum nutzen (Plasma mit depth, Position), laufen auf der Außenhaut. Flächenbasierte Effekte
-# wie das Labyrinth sehen dagegen nur Teile des Würfels (siehe CLAUDE.md-Backlog / ABSTUERZE_TODO).
+# Alle Flächen haben `projection box`: Effekte sehen die Außenhaut als 2D-Bild, das auf jede der sechs Seiten
+# projiziert wird. Flächenbasierte Effekte (Labyrinth, Text, Pong) laufen so auf jeder Seite voll sichtbar;
+# Plasma läuft als 2D-Bild auf jeder Seite. Mit `projection volume` (Standard) sähen 2D-Effekte nur Teile des Würfels.
 
 settings fps 40
 
 destination 0 10.0.0.5
 
-fixture "Vorne" at 0 0 0
+fixture "Vorne" at 0 0 0 projection box
   matrix 32 32
   patch artnet destination 0 universe 0
 end
 
-fixture "Hinten" at 0 0 32 rotate 0 180 0
+fixture "Hinten" at 0 0 32 rotate 0 180 0 projection box
   matrix 32 32
   patch artnet destination 0 universe 8
 end
 
-fixture "Links" at -16 0 16 rotate 0 90 0
+fixture "Links" at -16 0 16 rotate 0 90 0 projection box
   matrix 32 32
   patch artnet destination 0 universe 16
 end
 
-fixture "Rechts" at 16 0 16 rotate 0 -90 0
+fixture "Rechts" at 16 0 16 rotate 0 -90 0 projection box
   matrix 32 32
   patch artnet destination 0 universe 24
 end
 
-fixture "Oben" at 0 16 16 rotate 90 0 0
+fixture "Oben" at 0 16 16 rotate 90 0 0 projection box
   matrix 32 32
   patch artnet destination 0 universe 32
 end
 
-fixture "Unten" at 0 -16 16 rotate -90 0 0
+fixture "Unten" at 0 -16 16 rotate -90 0 0 projection box
   matrix 32 32
   patch artnet destination 0 universe 40
 end

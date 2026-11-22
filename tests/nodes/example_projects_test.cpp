@@ -160,6 +160,9 @@ TEST_CASE("Beispiel: examples/3d/wuerfel-hohl.whfx lädt, kompiliert und ist ein
     auto parsed = project::parseProject(text.value(), lab.registry);
     REQUIRE(parsed.ok());
     REQUIRE(parsed.value().layout.fixtures().size() == 6);
+    for (const mapping::Fixture& fixture : parsed.value().layout.fixtures()) {
+        CHECK(fixture.projection == mapping::Projection::Box);
+    }
     const auto map = parsed.value().layout.bake(parsed.value().normalize);
     REQUIRE(map.ok());
     REQUIRE(map.value().world.size() == 6U * 32U * 32U);

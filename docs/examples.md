@@ -27,7 +27,7 @@ Die Beispiele liegen in `examples/`, nach Themen in Untergruppen. Im Studio ersc
 | DMX | `dmx/fader.whfx` | DMX Out und DMX Color Out: Nebel-Dimmer und RGB-Wash als reine DMX-Kanäle, ohne eigenes LED-Fixture |
 | 3D | `3d/ausrichtung.whfx` | Position Test: Achsen, Startecke und Verkabelung eines 6×4×8-Quaders prüfen |
 | 3D | `3d/plasma-wuerfel.whfx` | Plasma durch die Tiefe eines 8×8×8-Cubes, Color Map, Rotate 3D |
-| 3D | `3d/wuerfel-hohl.whfx` | hohler Würfel aus 6 Matrizen zu je 32×32 LEDs (nur die Außenhaut), Plasma mit Tiefe |
+| 3D | `3d/wuerfel-hohl.whfx` | hohler Würfel aus 6 Matrizen zu je 32×32 LEDs (nur die Außenhaut), Projektion „Box“: 2D-Effekte (Plasma, Labyrinth, Text) laufen auf jeder Seite |
 | 3D | `3d/scheibe.whfx` | Scan Line als Scheibe, die ein LFO durch den Cube fährt |
 | 3D | `3d/regentropfen.whfx` | Ripples als Kugelschalen (Volume) und blinkende Würfel (Fading Pixels, Volume) |
 | 3D | `3d/saeule.whfx` | ein Strip als Schraube um eine Säule (Punktwolke) mit Helix und Wellenfront |

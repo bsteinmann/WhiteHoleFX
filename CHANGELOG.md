@@ -21,6 +21,7 @@
 - **„Projektion“: Auswahl im Studio.** Das Fixture-Formular (Stage Config → Layout) hat ein Feld **Projektion** (Volumen,
   Flächen, Box); im Gruppen-Menü gibt es **Projektion einer Gruppe**, das alle Fixtures der Gruppe auf einmal umstellt
   (je ein Undo-Schritt). Übersetzungen en/fr/es/uk. Rauchtest: `FixtureForm::exerciseTyped` stellt die Projektion um und zurück.
+- **„Projektion“: Beispiel und Doku.** `examples/3d/wuerfel-hohl.whfx` nutzt jetzt `projection box` an allen sechs Flächen (Test prüft das); `docs/studio.md` erklärt die Auswahl.
 - **Neues Beispiel `examples/3d/wuerfel-hohl.whfx`:** hohler Würfel aus sechs Matrizen zu je 32×32 LEDs (Außenhaut, innen leer),
   per `at`/`rotate` zusammengesetzt, Plasma mit Tiefe. Test: `tests/nodes/example_projects_test.cpp` (alle 6144 LEDs liegen auf der Haut).
 - **Fix: „Übersprungene Pixel“ lassen sich auf 0 setzen** (Stage Config → Ausgabe). Das Feld hatte das Minimum 1, und der
