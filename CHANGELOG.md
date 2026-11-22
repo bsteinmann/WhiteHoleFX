@@ -14,6 +14,10 @@
   Labyrinth & Co. zeichnen auf jeder Fläche quadratische Zellen. Ohne projizierte Fixtures unverändert. Tests:
   `tests/mapping/projection_test.cpp`, `tests/executor/sampling_render_stage_test.cpp`, auf der GPU
   `tests/gpu_device/projection_on_device_test.cpp` (Würfel rendert je Fläche wie eine flache 8x8-Matrix).
+- **„Projektion“: Player-Befehle.** `Player::setFixturesProjection` stellt mehrere Fixtures auf einmal um,
+  `Player::setGroupProjection` tut dasselbe für alle Fixtures einer Gruppe (Namen werden im Layout aufgelöst). Jeder
+  Aufruf ist ein Undo-Schritt. Fehler: leere Auswahl, unbekannte Id, Gruppe oder Fixture-Name. Tests:
+  `tests/runtime/player_projection_test.cpp`.
 - **Neues Beispiel `examples/3d/wuerfel-hohl.whfx`:** hohler Würfel aus sechs Matrizen zu je 32×32 LEDs (Außenhaut, innen leer),
   per `at`/`rotate` zusammengesetzt, Plasma mit Tiefe. Test: `tests/nodes/example_projects_test.cpp` (alle 6144 LEDs liegen auf der Haut).
 - **Fix: „Übersprungene Pixel“ lassen sich auf 0 setzen** (Stage Config → Ausgabe). Das Feld hatte das Minimum 1, und der

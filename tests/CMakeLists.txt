@@ -111,6 +111,7 @@ add_executable(wh_tests
     runtime/live_dmx_test.cpp
     runtime/player_targets_test.cpp
     runtime/player_arrange_test.cpp
+    runtime/player_projection_test.cpp
     runtime/player_types_test.cpp
     runtime/dmx_usage_test.cpp
     runtime/dmx_output_usage_test.cpp

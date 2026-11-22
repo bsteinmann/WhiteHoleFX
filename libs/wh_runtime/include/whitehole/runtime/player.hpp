@@ -280,6 +280,12 @@ public:
     /// zwischen den Boxen; das erste bleibt stehen, die anderen rücken an (ein Undo-Schritt). Fehler:
     /// InvalidArgument bei weniger als zwei Fixtures oder einem Abstand unter 0, NotFound bei unbekannter Id.
     Result<void> packFixtures(const std::vector<mapping::FixtureId>& ids, Axis axis, float gap = 0.0F);
+    /// Stellt die Projektion mehrerer Fixtures um (Volume/Faces/Box, siehe mapping::Projection). Ein Undo-Schritt.
+    /// Fehler: InvalidArgument bei leerer Auswahl, NotFound bei unbekannter Id.
+    Result<void> setFixturesProjection(const std::vector<mapping::FixtureId>& ids, mapping::Projection projection);
+    /// Stellt die Projektion aller Fixtures einer Gruppe um (ein Undo-Schritt). Die Gruppe nennt ihre Fixtures über
+    /// den Namen. Fehler: NotFound bei unbekannter Gruppe oder einem Namen, der im Layout fehlt.
+    Result<void> setGroupProjection(const std::string& group, mapping::Projection projection);
 
     /// Die Box der ganzen Wand (alle Fixtures) in Weltkoordinaten. Ohne Projekt eine leere Box.
     [[nodiscard]] mapping::Box wallBox() const noexcept { return map_.volume; }
