@@ -177,6 +177,34 @@ Result<LedMap> Layout::bake(NormalizeMode mode) const {
         any = true;
     }
 
+    // Bezugsgröße für @aspect/@columns/@rows: Volume vor Box vor Faces (siehe LedMap::frameBox).
+    const auto finest = [&](Projection projection) {
+        float spacing = 0.0F;
+        for (std::size_t i = 0; i < fixtures_.size(); ++i) {
+            const float s = map.spacing[i];
+            if (fixtures_[i].projection == projection && s > 0.0F && (spacing == 0.0F || s < spacing)) {
+                spacing = s;
+            }
+        }
+        return spacing;
+    };
+    if (anyVolume) {
+        map.frameBox = volumeBox;
+        map.frameSpacing = finest(Projection::Volume);
+    } else if (anyBox) {
+        map.frameBox = boxBox;
+        map.frameSpacing = finest(Projection::Box);
+    } else {
+        for (const Fixture& fixture : fixtures_) {  // nur Faces-Fixtures: die ungedrehte Box des ersten
+            Fixture bare = fixture;
+            bare.origin = Vec3{};
+            bare.rotation = Vec3{};
+            map.frameBox = worldBox(bare);
+            break;
+        }
+        map.frameSpacing = finest(Projection::Faces);
+    }
+
     const Vec3 extent{volumeBox.max.x - volumeBox.min.x, volumeBox.max.y - volumeBox.min.y,
                       volumeBox.max.z - volumeBox.min.z};
     const float longest = std::max({extent.x, extent.y, extent.z});

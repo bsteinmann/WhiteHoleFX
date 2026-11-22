@@ -7,7 +7,13 @@
   Box aller Box-Fixtures projiziert, z. B. ein hohler Würfel aus sechs Matrizen). `Layout::bake` rechnet pro Fixture,
   `Layout::setProjection` stellt um. Projekte ohne projizierte Fixtures bleiben unverändert. Entwurf:
   `docs/entwurf-flaechenabbildung.md`. Tests: `tests/mapping/projection_test.cpp`. Projektdatei: `fixture … projection
-  volume|faces|box` (nur geschrieben, wenn nicht `volume`). Es folgen Shader-Werte, Player-Befehle und die Auswahl im Studio.
+  volume|faces|box` (nur geschrieben, wenn nicht `volume`). Es folgen Player-Befehle und die Auswahl im Studio.
+- **„Projektion“: Shader-Werte folgen der Projektion.** `@aspect`/`@aspectZ`/`@columns`/`@rows` kommen jetzt aus
+  `LedMap::frameBox`/`frameSpacing` (Bezugsgruppe: Volume-Fixtures, sonst Box-Fixtures, sonst erstes Faces-Fixture;
+  `docs/field-nodes.md`). Ein Würfel aus sechs 32x32-Matrizen mit Projektion *Box* meldet damit Verhältnis 1 und 32 x 32,
+  Labyrinth & Co. zeichnen auf jeder Fläche quadratische Zellen. Ohne projizierte Fixtures unverändert. Tests:
+  `tests/mapping/projection_test.cpp`, `tests/executor/sampling_render_stage_test.cpp`, auf der GPU
+  `tests/gpu_device/projection_on_device_test.cpp` (Würfel rendert je Fläche wie eine flache 8x8-Matrix).
 - **Neues Beispiel `examples/3d/wuerfel-hohl.whfx`:** hohler Würfel aus sechs Matrizen zu je 32×32 LEDs (Außenhaut, innen leer),
   per `at`/`rotate` zusammengesetzt, Plasma mit Tiefe. Test: `tests/nodes/example_projects_test.cpp` (alle 6144 LEDs liegen auf der Haut).
 - **Fix: „Übersprungene Pixel“ lassen sich auf 0 setzen** (Stage Config → Ausgabe). Das Feld hatte das Minimum 1, und der

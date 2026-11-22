@@ -200,3 +200,51 @@ TEST_CASE("Projektion: unbekanntes Fixture beim Umstellen ist ein Fehler", "[map
     REQUIRE_FALSE(r.ok());
     CHECK(r.error().code == ErrorCode::NotFound);
 }
+
+TEST_CASE("Projektion: ohne projizierte Fixtures ist die Bezugsgröße genau wie bisher", "[mapping][projection][frame]") {
+    Layout layout;
+    put(layout, "A", Vec3{0, 0, 0}, matrix(8, 4), Vec3{}, Projection::Volume);
+    put(layout, "B", Vec3{20, 0, 0}, matrix(4, 4), Vec3{}, Projection::Volume);
+    const auto map = layout.bake();
+    REQUIRE(map.ok());
+    CHECK(map.value().frameBox == map.value().volume);
+    CHECK(map.value().frameSpacing == Approx(1.0F));
+}
+
+TEST_CASE("Projektion: ein Würfel mit Box hat die Bezugsgröße einer quadratischen Fläche", "[mapping][projection][frame]") {
+    const Layout layout = cube(8, Projection::Box);
+    const auto map = layout.bake();
+    REQUIRE(map.ok());
+    const Box& b = map.value().frameBox;
+    CHECK(b.max.x - b.min.x == Approx(8.0F));
+    CHECK(b.max.y - b.min.y == Approx(8.0F));
+    CHECK(map.value().frameSpacing == Approx(1.0F));
+}
+
+TEST_CASE("Projektion: in einer Mischanlage gelten die Volume-Fixtures als Bezug", "[mapping][projection][frame]") {
+    Layout layout;
+    const Layout source = cube(4, Projection::Box);
+    for (const Fixture& f : source.fixtures()) {
+        const auto id = layout.add(f.name, Vec3{f.origin.x + 1000.0F, f.origin.y, f.origin.z}, f.shape);
+        REQUIRE(id.ok());
+        REQUIRE(layout.rotate(id.value(), f.rotation).ok());
+        REQUIRE(layout.setProjection(id.value(), Projection::Box).ok());
+    }
+    put(layout, "Solo", Vec3{0, 0, 0}, matrix(16, 2), Vec3{}, Projection::Volume);
+    const auto map = layout.bake();
+    REQUIRE(map.ok());
+    const Box& b = map.value().frameBox;
+    CHECK(b.max.x - b.min.x == Approx(16.0F));
+    CHECK(b.max.y - b.min.y == Approx(2.0F));
+}
+
+TEST_CASE("Projektion: bei Faces gilt die ungedrehte Box des ersten Fixtures", "[mapping][projection][frame]") {
+    Layout layout;
+    put(layout, "Wand", Vec3{5, 5, 5}, matrix(32, 16), Vec3{0, 90, 0}, Projection::Faces);
+    const auto map = layout.bake();
+    REQUIRE(map.ok());
+    const Box& b = map.value().frameBox;
+    CHECK(b.max.x - b.min.x == Approx(32.0F));
+    CHECK(b.max.y - b.min.y == Approx(16.0F));
+    CHECK(b.max.z - b.min.z == Approx(0.0F));
+}

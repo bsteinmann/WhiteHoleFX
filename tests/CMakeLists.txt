@@ -196,6 +196,7 @@ if(TARGET wh_gpu_webgpu)
         gpu_device/warps_on_device_test.cpp
         gpu_device/volume_on_device_test.cpp
         gpu_device/session_on_device_test.cpp
+        gpu_device/projection_on_device_test.cpp
         gpu_device/sampling_on_device_test.cpp
         gpu_device/stage_on_device_test.cpp
         gpu_device/webgpu_device_test.cpp)
