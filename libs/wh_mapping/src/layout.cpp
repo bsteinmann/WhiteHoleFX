@@ -5,6 +5,8 @@
 #include <cmath>
 #include <utility>
 
+#include "whitehole/mapping/projection.hpp"
+
 namespace whitehole::mapping {
 
 namespace {
@@ -14,17 +16,9 @@ bool finiteVec(const Vec3& v) noexcept {
 }
 
 
-float clamp01(float v) noexcept { return std::clamp(v, 0.0F, 1.0F); }
-
-/// Eine Achse: Wert -> [0,1]. `scale` ist die Länge, die auf 1 abgebildet wird.
-float normalizeAxis(float value, float low, float extent, float scale) noexcept {
-    if (!(extent > 0.0F)) {
-        return 0.0F;  // keine Ausdehnung
-    }
-    // Zentriert: Die Mitte der Achse landet bei 0,5. Bei Stretch ist scale == extent,
-    // dann ist das gleichbedeutend mit (value - low) / extent.
-    const float center = low + extent * 0.5F;
-    return clamp01(0.5F + (value - center) / scale);
+Box unite(const Box& a, const Box& b) noexcept {
+    return Box{Vec3{std::min(a.min.x, b.min.x), std::min(a.min.y, b.min.y), std::min(a.min.z, b.min.z)},
+               Vec3{std::max(a.max.x, b.max.x), std::max(a.max.y, b.max.y), std::max(a.max.z, b.max.z)}};
 }
 
 }  // namespace
@@ -37,7 +31,7 @@ Result<FixtureId> Layout::add(std::string name, const Vec3& origin, FixtureShape
         return valid.error();
     }
     const FixtureId id = ids_.next();
-    fixtures_.push_back(Fixture{id, std::move(name), origin, std::move(shape), Vec3{}, std::string{}});
+    fixtures_.push_back(Fixture{id, std::move(name), origin, std::move(shape), Vec3{}, std::string{}, Projection::Volume});
     return id;
 }
 
@@ -81,6 +75,16 @@ Result<void> Layout::setType(FixtureId id, std::string type) {
     for (Fixture& fixture : fixtures_) {
         if (fixture.id == id) {
             fixture.type = std::move(type);
+            return {};
+        }
+    }
+    return Error{ErrorCode::NotFound, "Fixture unbekannt"};
+}
+
+Result<void> Layout::setProjection(FixtureId id, Projection projection) {
+    for (Fixture& fixture : fixtures_) {
+        if (fixture.id == id) {
+            fixture.projection = projection;
             return {};
         }
     }
@@ -156,18 +160,79 @@ Result<LedMap> Layout::bake(NormalizeMode mode) const {
         map.spacing.push_back(ledSpacing(fixture.shape));
     }
 
-    const Vec3 extent{map.volume.max.x - map.volume.min.x, map.volume.max.y - map.volume.min.y,
-                      map.volume.max.z - map.volume.min.z};
+    // Bezugsboxen: Volume-Fixtures normalisieren sich auf ihre eigene Box, Box-Fixtures werden auf die Box aller Box-Fixtures
+    // projiziert. Ohne projizierte Fixtures ist die Volume-Box genau map.volume (wie vor der Projektion).
+    Box volumeBox{};
+    Box boxBox{};
+    bool anyVolume = false;
+    bool anyBox = false;
+    for (const Fixture& fixture : fixtures_) {
+        if (fixture.projection == Projection::Faces) {
+            continue;
+        }
+        const Box box = worldBox(fixture);
+        Box& target = fixture.projection == Projection::Volume ? volumeBox : boxBox;
+        bool& any = fixture.projection == Projection::Volume ? anyVolume : anyBox;
+        target = any ? unite(target, box) : box;
+        any = true;
+    }
+
+    // Bezugsgröße für @aspect/@columns/@rows: Volume vor Box vor Faces (siehe LedMap::frameBox).
+    const auto finest = [&](Projection projection) {
+        float spacing = 0.0F;
+        for (std::size_t i = 0; i < fixtures_.size(); ++i) {
+            const float s = map.spacing[i];
+            if (fixtures_[i].projection == projection && s > 0.0F && (spacing == 0.0F || s < spacing)) {
+                spacing = s;
+            }
+        }
+        return spacing;
+    };
+    if (anyVolume) {
+        map.frameBox = volumeBox;
+        map.frameSpacing = finest(Projection::Volume);
+    } else if (anyBox) {
+        map.frameBox = boxBox;
+        map.frameSpacing = finest(Projection::Box);
+    } else {
+        for (const Fixture& fixture : fixtures_) {  // nur Faces-Fixtures: die ungedrehte Box des ersten
+            Fixture bare = fixture;
+            bare.origin = Vec3{};
+            bare.rotation = Vec3{};
+            map.frameBox = worldBox(bare);
+            break;
+        }
+        map.frameSpacing = finest(Projection::Faces);
+    }
+
+    const Vec3 extent{volumeBox.max.x - volumeBox.min.x, volumeBox.max.y - volumeBox.min.y,
+                      volumeBox.max.z - volumeBox.min.z};
     const float longest = std::max({extent.x, extent.y, extent.z});
 
     map.unit.reserve(map.world.size());
-    for (const Vec3& p : map.world) {
-        const float sx = mode == NormalizeMode::Stretch ? extent.x : longest;
-        const float sy = mode == NormalizeMode::Stretch ? extent.y : longest;
-        const float sz = mode == NormalizeMode::Stretch ? extent.z : longest;
-        map.unit.push_back(Vec3{normalizeAxis(p.x, map.volume.min.x, extent.x, sx),
-                                normalizeAxis(p.y, map.volume.min.y, extent.y, sy),
-                                normalizeAxis(p.z, map.volume.min.z, extent.z, sz)});
+    for (std::size_t i = 0; i < fixtures_.size(); ++i) {
+        const Fixture& fixture = fixtures_[i];
+        const FixtureRange& range = map.ranges[i];
+        if (fixture.projection == Projection::Volume) {
+            for (std::uint32_t k = 0; k < range.count; ++k) {
+                const Vec3& p = map.world[range.first + k];
+                const float sx = mode == NormalizeMode::Stretch ? extent.x : longest;
+                const float sy = mode == NormalizeMode::Stretch ? extent.y : longest;
+                const float sz = mode == NormalizeMode::Stretch ? extent.z : longest;
+                map.unit.push_back(Vec3{normalizeAxis(p.x, volumeBox.min.x, extent.x, sx),
+                                        normalizeAxis(p.y, volumeBox.min.y, extent.y, sy),
+                                        normalizeAxis(p.z, volumeBox.min.z, extent.z, sz)});
+            }
+        } else {
+            const std::vector<Vec3> projected =
+                fixture.projection == Projection::Faces
+                    ? projectFaces(fixture, mode)
+                    : projectBox(fixture,
+                                 std::vector<Vec3>(map.world.begin() + range.first,
+                                                   map.world.begin() + range.first + range.count),
+                                 boxBox, mode);
+            map.unit.insert(map.unit.end(), projected.begin(), projected.end());
+        }
     }
     return map;
 }

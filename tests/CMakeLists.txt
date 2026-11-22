@@ -71,6 +71,7 @@ add_executable(wh_tests
     mapping/fixture_pose_test.cpp
     mapping/layout_test.cpp
     mapping/point_import_test.cpp
+    mapping/projection_test.cpp
     mapping/region_edit_test.cpp
     mapping/wiring_test.cpp
     output/artnet_test.cpp
@@ -92,6 +93,7 @@ add_executable(wh_tests
     preview/view_test.cpp
     preview/view3d_test.cpp
     preview/wiring_test.cpp
+    project/project_projection_test.cpp
     project/project_test.cpp
     project/project_library_test.cpp
     project/project_destinations_test.cpp
@@ -109,6 +111,7 @@ add_executable(wh_tests
     runtime/live_dmx_test.cpp
     runtime/player_targets_test.cpp
     runtime/player_arrange_test.cpp
+    runtime/player_projection_test.cpp
     runtime/player_types_test.cpp
     runtime/dmx_usage_test.cpp
     runtime/dmx_output_usage_test.cpp
@@ -194,6 +197,7 @@ if(TARGET wh_gpu_webgpu)
         gpu_device/warps_on_device_test.cpp
         gpu_device/volume_on_device_test.cpp
         gpu_device/session_on_device_test.cpp
+        gpu_device/projection_on_device_test.cpp
         gpu_device/sampling_on_device_test.cpp
         gpu_device/stage_on_device_test.cpp
         gpu_device/webgpu_device_test.cpp)

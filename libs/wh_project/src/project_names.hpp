@@ -13,6 +13,7 @@ namespace whitehole::project::detail {
 using mapping::AxisOrder;
 using mapping::FirstAxis;
 using mapping::NormalizeMode;
+using mapping::Projection;
 using mapping::StartCorner;
 using output::ColorOrder;
 using output::Protocol;
@@ -44,6 +45,9 @@ inline constexpr NameTable<ColorOrder, 6> kColorOrders{{{"RGB", ColorOrder::RGB}
 
 inline constexpr NameTable<NormalizeMode, 2> kNormalizeModes{
     {{"stretch", NormalizeMode::Stretch}, {"keep-aspect", NormalizeMode::KeepAspect}}};
+
+inline constexpr NameTable<Projection, 3> kProjections{
+    {{"volume", Projection::Volume}, {"faces", Projection::Faces}, {"box", Projection::Box}}};
 
 /// Liest ein Wort aus einer Tabelle; bei Fehler setzt der Reader eine Meldung mit den Namen.
 template <typename E, std::size_t N>

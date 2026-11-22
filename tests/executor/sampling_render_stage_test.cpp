@@ -89,6 +89,41 @@ TEST_CASE("setMap meldet die echte Spalten-/Zeilenzahl der Fixture an den Shader
     CHECK(frame.rows == 4.0F);
 }
 
+TEST_CASE("setMap: ein projizierter Würfel (Box) meldet die Fläche, nicht die Gesamtbox der Anlage") {
+    // Sechs 8x8-Matrizen als hohler Würfel (Kante 8): aspect 1, columns/rows 8, p.z = 0, also kein @volume.
+    mapping::Layout layout;
+    const auto add = [&](const char* name, const Vec3& origin, const Vec3& rotation) {
+        mapping::MatrixShape m;
+        m.columns = 8;
+        m.rows = 8;
+        const auto id = layout.add(name, origin, m);
+        REQUIRE(id.ok());
+        REQUIRE(layout.rotate(id.value(), rotation).ok());
+        REQUIRE(layout.setProjection(id.value(), mapping::Projection::Box).ok());
+    };
+    add("Vorne", Vec3{0, 0, 0}, Vec3{0, 0, 0});
+    add("Hinten", Vec3{0, 0, 8}, Vec3{0, 180, 0});
+    add("Links", Vec3{-4, 0, 4}, Vec3{0, 90, 0});
+    add("Rechts", Vec3{4, 0, 4}, Vec3{0, -90, 0});
+    add("Oben", Vec3{0, 4, 4}, Vec3{90, 0, 0});
+    add("Unten", Vec3{0, -4, 4}, Vec3{-90, 0, 0});
+    const mapping::LedMap map = layout.bake().value();
+
+    SamplingFixture fx{512};
+    REQUIRE(fx.stage->setGraph(fx.lab.graph).ok());
+    REQUIRE(fx.stage->setMap(map).ok());
+    fx.render(0.0);
+    compiler::FrameUniforms frame{};
+    const std::vector<std::byte> bytes =
+        fx.device.bufferBytes(bufferAt(fx.last(), compiler::kFieldBindGroup, compiler::kFrameBinding));
+    REQUIRE(bytes.size() == sizeof frame);
+    std::memcpy(&frame, bytes.data(), sizeof frame);
+    CHECK(frame.aspect == 1.0F);
+    CHECK(frame.columns == 8.0F);
+    CHECK(frame.rows == 8.0F);
+    CHECK(frame.volume == 0U);
+}
+
 TEST_CASE("create legt Positions-, Farb-, Info- und Frame-Puffer an") {
     SamplingFixture fx{100};
     CHECK(fx.device.liveBufferCount() == 4U);

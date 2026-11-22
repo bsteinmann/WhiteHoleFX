@@ -21,6 +21,7 @@ struct FixtureDraft {
     std::string name;
     Vec3 origin;
     Vec3 rotation;                 // Grad um x, y, z
+    mapping::Projection projection{mapping::Projection::Volume};  // Abbildung auf p (`projection volume|faces|box`)
     std::string type;              // Name aus der Bibliothek (Fixture mit `type`), sonst leer
     bool isType{false};            // Block `fixturetype` statt `fixture`
     std::optional<mapping::FixtureShape> shape;
@@ -28,7 +29,7 @@ struct FixtureDraft {
     std::vector<output::FixturePatch> patches;
 };
 
-/// `fixture "Name" [at x y z] [rotate x y z] [type "Typ"]` oder, mit `isType`, `fixturetype "Name"` (Reader steht
+/// `fixture "Name" [at x y z] [rotate x y z] [projection volume|faces|box] [type "Typ"]` oder, mit `isType`, `fixturetype "Name"` (Reader steht
 /// hinter dem Schlüsselwort).
 FixtureDraft beginFixture(Reader& r, bool isType = false);
 

@@ -397,6 +397,7 @@ Ein Klick (ohne Ziehen) auf eine LED markiert sie gelb und zeigt in der Zeile da
 Für getrennte Effektketten je Fixture, Gruppe oder Bühnenbereich legst du mehrere **Output**-Nodes an und weist jedem ein Ziel zu:
 
 1. Im Layout den Knopf **Gruppen**: „Gewählte Fixtures als Gruppe speichern …“ fasst Fixtures unter einem Namen zusammen; „Region anlegen …“ öffnet einen Dialog: Name, Schnellwahl (Links, Rechts, Oben, Unten, Mitte) oder Angaben in Prozent der ganzen Bühne (links ab, oben ab, Breite, Höhe), dazu eine kleine Vorschau der Bühne mit dem Rechteck.
+   **Projektion:** Im Fixture-Formular (Feld „Projektion“) oder im Gruppen-Menü („Projektion einer Gruppe“) legst du fest, wie Effekte ein Fixture sehen. *Volumen* (Standard) ist der 3D-Raum wie bisher. *Flächen*: jedes Fixture bekommt sein eigenes 2D-Bild. *Box*: alle Box-Fixtures bilden zusammen eine Box, auf deren sechs Seiten das 2D-Bild von außen projiziert wird, etwa bei einem hohlen Würfel aus sechs Matrizen (`examples/3d/wuerfel-hohl.whfx`). Labyrinth, Text und Pong laufen dann auf jeder Seite sichtbar. Je Änderung ein Undo-Schritt.
 2. Im Node-Editor Rechtsklick auf den Output-Node → **Ziel zuweisen** und Fixtures, Gruppen oder Regionen anhaken (mehrere möglich). „Kein Ziel“ stellt das freie Rechteck aus den Parametern wieder her.
 3. Die eigene Kette an den Eingang `source` des Output-Nodes anschließen. Mit „Scale into area“ füllt der Effekt das Ziel, mit „Window“ bleibt er an seinem Platz auf der Bühne.
 

@@ -38,6 +38,22 @@ void LayoutPanel::fillGroupMenu(QMenu* menu) {
     QAction* region = menu->addAction(tr("Region anlegen …"));
     connect(region, &QAction::triggered, this, [this]() { addRegion(); });
     menu->addSeparator();
+    QMenu* projectGroup = menu->addMenu(tr("Projektion einer Gruppe"));
+    projectGroup->setEnabled(!project->groups.empty());
+    const std::pair<mapping::Projection, QString> kinds[] = {
+        {mapping::Projection::Volume, tr("Volumen (3D, Standard)")},
+        {mapping::Projection::Faces, tr("Flächen (jedes Fixture ein eigenes 2D-Bild)")},
+        {mapping::Projection::Box, tr("Box (von außen auf die Box aller Box-Fixtures)")}};
+    for (const project::FixtureGroup& group : project->groups) {
+        QMenu* groupMenu = projectGroup->addMenu(fromStd(group.name));
+        for (const auto& [kind, text] : kinds) {
+            connect(groupMenu->addAction(text), &QAction::triggered, this, [this, name = group.name, projection = kind]() {
+                if (const Result<void> r = player_.setGroupProjection(name, projection); !r.ok()) {
+                    Q_EMIT failed(fromStd(r.error().message));
+                }
+            });
+        }
+    }
     QMenu* removeGroup = menu->addMenu(tr("Gruppe löschen"));
     removeGroup->setEnabled(!project->groups.empty());
     for (const project::FixtureGroup& group : project->groups) {

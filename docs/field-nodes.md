@@ -26,6 +26,12 @@ fn wh_field(p: vec3<f32>) -> vec4<f32>
   Punktwolke) oder Ausdehnung bleibt der Wert 0 (unbekannt) - anders als bei `@aspect`, wo 1 die unbekannt-
   Konvention ist, da 0 dort kein gültiges Seitenverhältnis wäre. Löst nach und nach die Nodes ab, die
   bisher `columns`/`rows` von Hand nachpflegen mussten (Random Pixels, Digital Rain).
+- **Mit „Projektion“** (`Fixture::projection`, siehe `docs/entwurf-flaechenabbildung.md`) beziehen sich `@aspect`,
+  `@aspectZ`, `@columns` und `@rows` auf die Bezugsgruppe der LED-Karte: die Fixtures mit Projektion *Volume*, wenn es
+  welche gibt, sonst die Box aller *Box*-Fixtures (z. B. ein hohler Würfel aus sechs 32x32-Matrizen: Verhältnis 1,
+  32 x 32 LEDs je Fläche, `@volume` falsch), sonst das erste *Faces*-Fixture. Der Abstand ist der feinste positive
+  LED-Abstand dieser Gruppe. Ohne projizierte Fixtures ändert sich nichts. In gemischten Aufbauten beschreiben die Werte nur
+  die Volume-Fixtures, und `@volume` bleibt global (wahr, sobald irgendeine LED `z > 0` hat).
 - Die Farbe ist linear RGBA mit „geradem“ Alpha (RGB und Alpha getrennt). Gamma und Farbreihenfolge
   setzt erst der Ausgabe-Pass, der die Farbe zuletzt mit Alpha multipliziert (transparent = LED aus).
   Wer Farben überblendet oder addiert, nimmt `wh_mix_color` und `wh_add_color` (Prelude

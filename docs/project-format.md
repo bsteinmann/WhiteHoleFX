@@ -108,7 +108,7 @@ um). Ein Controller ohne Patch ist Art-Net, bei Adresse `multicast` sACN. Steht 
 anderes, ist das ein Fehler mit dem Namen des Fixtures. Art-Net zählt Universen ab 0 (bis 32767), sACN ab 1 (bis 63999); die Zahl in
 `universe` ist immer die des Protokolls. Das Studio verschiebt sie beim Protokollwechsel eines Controllers um 1.
 
-### `fixture "<name>" [at x y z] [rotate x y z] [type "<name>"]` … `end`
+### `fixture "<name>" [at x y z] [rotate x y z] [projection volume|faces|box] [type "<name>"]` … `end`
 
 Genau eine Form pro Fixture, beliebig viele Patches:
 
@@ -124,7 +124,12 @@ Genau eine Form pro Fixture, beliebig viele Patches:
 | `patch <artnet\|sacn\|ddp> destination <n> [universe u] [channel c] [offset o] [order RGB…] [gamma g] [brightness b]` | wohin das Fixture geht |
 | `… [skip-first s] [skip-every n skip-count k]` | Pixel am Kabel, die nicht leuchten (zum Beispiel ein Pixel als Signalverstärker): `s` Pixel vor der ersten LED, nach je `n` LEDs `k` Pixel. Sie bekommen Schwarz, belegen aber ihre Kanäle; die Adressen danach rücken weiter |
 
-`rotate x y z` dreht das ganze Fixture (Grad, um die Mitte seiner Box, Reihenfolge x, y, z). `type "Name"` verweist auf ein
+`rotate x y z` dreht das ganze Fixture (Grad, um die Mitte seiner Box, Reihenfolge x, y, z). `projection` legt fest, wie die LEDs zu den
+Koordinaten kommen, die ein Effekt sieht: `volume` (Standard, aus der Position im Raum), `faces` (jedes Fixture bekommt sein eigenes
+2D-Bild aus der Lage in der eigenen Matrix) oder `box` (von außen auf die Box aller `box`-Fixtures projiziert, zum Beispiel ein hohler
+Würfel aus sechs Matrizen als gefaltete 2D-Fläche; Fläche vorne/hinten (x, y), links/rechts (z, y), oben/unten (x, z)). Bei `faces` und
+`box` ist die dritte Koordinate immer 0; die 3D-Vorschau und die Ausgabe-Adressen ändern sich nicht. Ohne die Angabe gilt `volume`, sie
+wird nur geschrieben, wenn sie abweicht. `type "Name"` verweist auf ein
 Fixture dieser Show (`fixturetype`, siehe unten); die Form steht dann dort und im Fixture selbst nicht.
 
 Koordinaten und Reihenfolge der LEDs: siehe [Mapping](mapping.md). Verteilung auf Universen

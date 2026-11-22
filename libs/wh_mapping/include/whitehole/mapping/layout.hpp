@@ -11,6 +11,10 @@
 //    im Würfel zentriert. Ein Kreis bleibt ein Kreis, auch bei einer breiten Wand.
 //  In beiden Fällen bleibt eine Achse ohne Ausdehnung bei 0 (flache Anlage: p.z = 0).
 //
+// Projektion je Fixture (Fixture::projection, projection.hpp): Fixtures mit Faces oder Box bekommen p.z = 0 und eine
+// 2D-Koordinate. Die Normalisierung der übrigen (Volume-)Fixtures bezieht sich nur auf deren eigene Box, damit zum Beispiel
+// ein projizierter Würfel sie nicht staucht. Ohne projizierte Fixtures ändert sich nichts.
+//
 // Threading: ein Layout gehört einem Thread. Die LedMap ist ein Wert und wandert als
 // Kopie zum Engine-Thread.
 #pragma once
@@ -43,6 +47,8 @@ public:
     Result<void> rotate(FixtureId id, const Vec3& degrees);
     /// Merkt den Namen des Bibliothekstyps (Fixture::type); die Form ändert das nicht. Fehler: NotFound.
     Result<void> setType(FixtureId id, std::string type);
+    /// Stellt die Abbildung auf p um (Fixture::projection); die Position im Raum bleibt. Fehler: NotFound.
+    Result<void> setProjection(FixtureId id, Projection projection);
     /// Der Name wird nicht auf Eindeutigkeit geprüft (das tut die Projektebene). Fehler: NotFound.
     Result<void> rename(FixtureId id, std::string name);
     /// Tauscht die Form; bei einem Fehler bleibt die alte erhalten.

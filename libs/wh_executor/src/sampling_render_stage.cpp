@@ -125,26 +125,22 @@ Result<void> SamplingRenderStage::setMap(const mapping::LedMap& map) {
     ledCount_ = count;
     // Räumlich, sobald irgendeine LED z > 0 hat (flache Anlagen bleiben bei z = 0, siehe LedMap::unit).
     pass_->setVolume(std::any_of(map.unit.begin(), map.unit.end(), [](const Vec3& p) { return p.z > 0.0F; }));
-    // Echte Seitenverhältnisse aus der umschließenden Box aller Fixtures (Weltkoordinaten) - siehe @aspect/
+    // Echte Seitenverhältnisse aus der Bezugsbox der LED-Karte (LedMap::frameBox: ohne Projektion die Box aller Fixtures,
+    // mit Projektion die der Fixtures, deren Bild die Effekte sehen, Weltkoordinaten) - siehe @aspect/
     // @aspectZ in docs/field-nodes.md. Ohne Ausdehnung auf einer Achse (0, z. B. eine flache Matrix in z oder
     // ein einzelner Strip in y) bleibt das jeweilige Verhältnis bei 1, wie vor Einführung dieser Werte.
-    const float sizeX = map.volume.max.x - map.volume.min.x;
-    const float sizeY = map.volume.max.y - map.volume.min.y;
-    const float sizeZ = map.volume.max.z - map.volume.min.z;
+    const float sizeX = map.frameBox.max.x - map.frameBox.min.x;
+    const float sizeY = map.frameBox.max.y - map.frameBox.min.y;
+    const float sizeZ = map.frameBox.max.z - map.frameBox.min.z;
     const float aspectXY = (sizeX > 0.0F && sizeY > 0.0F) ? sizeX / sizeY : 1.0F;
     const float aspectXZ = (sizeX > 0.0F && sizeZ > 0.0F) ? sizeX / sizeZ : 1.0F;
     pass_->setAspect(aspectXY, aspectXZ);
-    // Echte Spalten-/Zeilenzahl (@columns/@rows), geschätzt aus Box-Größe und LED-Abstand (das feinste
-    // Raster über alle Fixtures, damit eine grobe Nebenfixture die Schätzung nicht verfälscht). Ohne
-    // bekannten Abstand (Punktwolke) oder Ausdehnung bleibt der Wert 0 (unbekannt) - siehe @columns/@rows
-    // in docs/field-nodes.md. Die Box einer Matrix/eines Gitters spannt genau N*Abstand (volle Zellspanne,
-    // siehe BoxOf in fixture.cpp), daher columns = Boxgröße / Abstand ohne +1.
-    float spacing = 0.0F;
-    for (const float s : map.spacing) {
-        if (s > 0.0F && (spacing == 0.0F || s < spacing)) {
-            spacing = s;
-        }
-    }
+    // Echte Spalten-/Zeilenzahl (@columns/@rows), geschätzt aus Box-Größe und LED-Abstand (der feinste über die Fixtures
+    // der Bezugsbox, damit eine grobe Nebenfixture die Schätzung nicht verfälscht). Ohne bekannten Abstand (Punktwolke)
+    // oder Ausdehnung bleibt der Wert 0 (unbekannt) - siehe @columns/@rows in docs/field-nodes.md. Die Box einer
+    // Matrix/eines Gitters spannt genau N*Abstand (volle Zellspanne, siehe BoxOf in fixture.cpp), daher
+    // columns = Boxgröße / Abstand ohne +1.
+    const float spacing = map.frameSpacing;
     const float columns = (spacing > 0.0F && sizeX > 0.0F) ? std::round(sizeX / spacing) : 0.0F;
     const float rows = (spacing > 0.0F && sizeY > 0.0F) ? std::round(sizeY / spacing) : 0.0F;
     pass_->setResolution(columns, rows);

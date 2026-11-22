@@ -333,7 +333,7 @@ private:
     QAction* testAction_{nullptr};  // Knopf "Testmodus" in der Ansichtsleiste, spiegelt TestPanel::active()
     preview::Camera3d freeCamera_;  // zuletzt frei gedrehte Kamera: "3D" kehrt dorthin zurück
     preview::OffLeds offLeds3d_{preview::OffLeds::Hidden};  // Darstellung ausgeschalteter LEDs in 3D
-    bool glow3d_{true};  // leuchtende LEDs in 3D additiv mit Schein
+    bool glow3d_{false};  // leuchtende LEDs in 3D additiv mit Schein
     QLabel* statusLabel_{nullptr};
     QTimer timer_;
     QTimer statusTimer_;

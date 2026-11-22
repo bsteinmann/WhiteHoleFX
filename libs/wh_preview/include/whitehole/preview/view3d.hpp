@@ -41,7 +41,7 @@ struct Camera3d {
     bool showBox{true};         // Rahmen um die Installation zeichnen (Orientierung)
     float depthCue{0.35F};      // wie stark entfernte LEDs abdunkeln (0 = gar nicht, 1 = bis Hintergrund)
     OffLeds offLeds{OffLeds::Hidden};  // Darstellung ausgeschalteter LEDs
-    bool glow{true};            // leuchtende LEDs addieren sich und haben einen weichen Schein (nichts verdeckt etwas)
+    bool glow{false};           // leuchtende LEDs addieren sich und haben einen weichen Schein (nichts verdeckt etwas)
     bool showAxes{false};       // Achsenkreuz an der Ecke (min x, y, z): x rot, y grün, z blau (Stage Config)
 
     bool operator==(const Camera3d&) const = default;

@@ -2,6 +2,27 @@
 
 ## Unreleased
 
+- **Vorbereitung „Projektion“ (Kern, noch ohne Oberfläche und ohne Projektdatei):** Jedes Fixture kann in `wh_mapping` als 2D-Fläche
+  abgebildet werden (`Fixture::projection`: `Volume` = wie bisher, `Faces` = eigenes Bild je Fixture, `Box` = von außen auf die
+  Box aller Box-Fixtures projiziert, z. B. ein hohler Würfel aus sechs Matrizen). `Layout::bake` rechnet pro Fixture,
+  `Layout::setProjection` stellt um. Projekte ohne projizierte Fixtures bleiben unverändert. Entwurf:
+  `docs/entwurf-flaechenabbildung.md`. Tests: `tests/mapping/projection_test.cpp`. Projektdatei: `fixture … projection
+  volume|faces|box` (nur geschrieben, wenn nicht `volume`). Es folgen Player-Befehle und die Auswahl im Studio.
+- **„Projektion“: Shader-Werte folgen der Projektion.** `@aspect`/`@aspectZ`/`@columns`/`@rows` kommen jetzt aus
+  `LedMap::frameBox`/`frameSpacing` (Bezugsgruppe: Volume-Fixtures, sonst Box-Fixtures, sonst erstes Faces-Fixture;
+  `docs/field-nodes.md`). Ein Würfel aus sechs 32x32-Matrizen mit Projektion *Box* meldet damit Verhältnis 1 und 32 x 32,
+  Labyrinth & Co. zeichnen auf jeder Fläche quadratische Zellen. Ohne projizierte Fixtures unverändert. Tests:
+  `tests/mapping/projection_test.cpp`, `tests/executor/sampling_render_stage_test.cpp`, auf der GPU
+  `tests/gpu_device/projection_on_device_test.cpp` (Würfel rendert je Fläche wie eine flache 8x8-Matrix).
+- **„Projektion“: Player-Befehle.** `Player::setFixturesProjection` stellt mehrere Fixtures auf einmal um,
+  `Player::setGroupProjection` tut dasselbe für alle Fixtures einer Gruppe (Namen werden im Layout aufgelöst). Jeder
+  Aufruf ist ein Undo-Schritt. Fehler: leere Auswahl, unbekannte Id, Gruppe oder Fixture-Name. Tests:
+  `tests/runtime/player_projection_test.cpp`.
+- **„Projektion“: Auswahl im Studio.** Das Fixture-Formular (Stage Config → Layout) hat ein Feld **Projektion** (Volumen,
+  Flächen, Box); im Gruppen-Menü gibt es **Projektion einer Gruppe**, das alle Fixtures der Gruppe auf einmal umstellt
+  (je ein Undo-Schritt). Übersetzungen en/fr/es/uk. Rauchtest: `FixtureForm::exerciseTyped` stellt die Projektion um und zurück.
+- **3D-Vorschau: Glow standardmäßig aus.** Kamera, Form-Vorschau und 3D-Vorschau im Hauptfenster starten ohne Schein um leuchtende LEDs; er bleibt in der Kamera-Einstellung zuschaltbar. Test: `tests/preview/view3d_test.cpp`.
+- **„Projektion“: Beispiel und Doku.** `examples/3d/wuerfel-hohl.whfx` nutzt jetzt `projection box` an allen sechs Flächen (Test prüft das); `docs/studio.md` erklärt die Auswahl.
 - **Neues Beispiel `examples/3d/wuerfel-hohl.whfx`:** hohler Würfel aus sechs Matrizen zu je 32×32 LEDs (Außenhaut, innen leer),
   per `at`/`rotate` zusammengesetzt, Plasma mit Tiefe. Test: `tests/nodes/example_projects_test.cpp` (alle 6144 LEDs liegen auf der Haut).
 - **Fix: „Übersprungene Pixel“ lassen sich auf 0 setzen** (Stage Config → Ausgabe). Das Feld hatte das Minimum 1, und der

@@ -21,7 +21,7 @@ namespace {
 preview::Camera3d shapeCamera() {
     preview::Camera3d camera = preview::cameraFor(preview::ViewPreset::Perspective);
     camera.offLeds = preview::OffLeds::Gray;
-    camera.glow = true;
+    camera.glow = false;  // Standard: aus (Wunsch des Nutzers, 22.11.)
     camera.showBox = true;
     camera.showAxes = true;
     camera.depthCue = 0.2F;
