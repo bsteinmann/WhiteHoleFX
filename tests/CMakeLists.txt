@@ -71,6 +71,7 @@ add_executable(wh_tests
     mapping/fixture_pose_test.cpp
     mapping/layout_test.cpp
     mapping/point_import_test.cpp
+    mapping/projection_test.cpp
     mapping/region_edit_test.cpp
     mapping/wiring_test.cpp
     output/artnet_test.cpp

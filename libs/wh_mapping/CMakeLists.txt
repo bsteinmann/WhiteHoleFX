@@ -9,6 +9,7 @@ wh_add_library(wh_mapping
         src/layout.cpp
         src/mini_json.cpp
         src/point_import.cpp
+        src/projection.cpp
         src/region_edit.cpp
         src/wiring.cpp
     PUBLIC_DEPS

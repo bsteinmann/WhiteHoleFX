@@ -103,6 +103,12 @@ struct CylinderShape {
 
 using FixtureShape = std::variant<MatrixShape, StripShape, GridShape, PointsShape, RingShape, HelixShape, CylinderShape>;
 
+/// Wie die LEDs eines Fixtures zu den Koordinaten p kommen, die der Effekt sieht (siehe projection.hpp):
+///  - Volume: aus der Position im Raum (Standard, wie immer),
+///  - Faces:  jedes Fixture bekommt sein eigenes 2D-Bild (Lage in der eigenen Matrix, z = 0),
+///  - Box:    von außen auf die Box aller Box-Fixtures projiziert (z = 0, je nach Fläche x/y, z/y oder x/z).
+enum class Projection : std::uint8_t { Volume, Faces, Box };
+
 struct Fixture {
     FixtureId id;
     std::string name;
@@ -113,6 +119,8 @@ struct Fixture {
     Vec3 rotation{};
     /// Name der Fixture-Bibliothek (Project::types), aus der die Form stammt; leer = eigene Form.
     std::string type;
+    /// Abbildung auf p; Volume = aus der Raumposition (siehe Projection).
+    Projection projection{Projection::Volume};
 };
 
 /// Achsenparallele Box.
