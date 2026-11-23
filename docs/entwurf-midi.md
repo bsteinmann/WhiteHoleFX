@@ -153,3 +153,5 @@ Offene Punkte für die Umsetzung:
 - **Das Pad-Raster bleibt fest** (Entscheidung vom 23.11.): Pads werden nicht einzeln einem Look zugewiesen. Look i liegt
   immer am Raster-Feld i. Gelernt werden nur die Funktionen (GO, Ende, Fader, Flash-/Umschalt-Tasten).
   Das Lernen von Pads entfällt damit.
+- **Profil bleibt Startbelegung** (bestätigt am 23.11.): Ein Profil legt die Anfangsbelegung der Funktionen fest. Lernen
+  überschreibt sie. Pro Funktion gibt es „Auf Profil zurücksetzen"; „Alle auf Profil zurücksetzen" im Reiter „Steuerung".
