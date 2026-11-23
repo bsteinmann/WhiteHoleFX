@@ -7,11 +7,12 @@
 //
 // Schlüssel in QSettings (Organisation und Anwendung "WhiteHoleFX"): dmx/artnet, dmx/sacn, audio/source
 // wie bisher, neu dmx/artnetPort, dmx/sacnPort, dmx/masterEnabled, dmx/masterProtocol, dmx/masterUniverse, dmx/masterChannel,
-// dmx/liveEnabled, dmx/liveProtocol, dmx/liveUniverse, dmx/liveSelectChannel, dmx/liveFadeChannel, network/outInterface, network/inInterface, midi/input, midi/output,
+// dmx/liveEnabled, dmx/liveProtocol, dmx/liveUniverse, dmx/liveSelectChannel, dmx/liveFadeChannel, network/outInterface, network/inInterface, midi/input, midi/output, midi/profile, midi/profiles,
 // nodeDefaults/<Typ-ID>/<Parameter> (Wert als Text, siehe encodeParameterValue).
 #pragma once
 
 #include <QString>
+#include <QStringList>
 
 #include "whitehole/runtime/node_defaults.hpp"
 
@@ -41,6 +42,10 @@ struct AppSettings {
     /// MIDI-Ports (Name wie vom System gemeldet, leer = aus). Gehört zum Auftritt, nicht zum Projekt.
     QString midiInput;
     QString midiOutput;
+    /// Live-Profil für den Controller (Name; leer = das erste vorgefertigte) und die eigenen Profile als Textzeilen
+    /// (midi::serializeProfile).
+    QString midiProfile;
+    QStringList midiProfiles;
     /// "off", "default", "device:<Name>" oder "file:<Pfad>".
     QString audioSource{QStringLiteral("off")};
     /// Eigene Standardwerte für neue Nodes (Seite "Node-Standardwerte").

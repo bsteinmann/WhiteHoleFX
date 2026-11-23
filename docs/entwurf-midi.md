@@ -63,7 +63,9 @@ Fader 9 setzt den Master, Fader 1 die Überblendzeit (0..10 s, wie beim DMX-Kana
 Der Live-Graph mischt über einen Crossfade-Node mit Parameter `amount`. Neu: `LiveDecks::setManualProgress(0..1)` setzt den
 Fortschritt direkt. Ablauf: Look vorladen, dann den Fader von 0 nach 1 ziehen; bei 1 ist der Look sichtbar und der Fade
 beendet. Solange der Fader mitten steht, läuft kein Zeit-Fade. Randfälle (Fader beim Vorladen nicht auf 0, Rückwärtsfahren)
-werden in Stufe 3 mit Tests festgelegt.
+werden in Stufe 3 mit Tests festgelegt. **Festgelegt (umgesetzt):** Mitnahme - ein neu vorgeladener Look folgt dem Fader erst,
+wenn dieser unten war (≤ 3); rückwärts senkt den Fortschritt, auf 0 ist der Look wieder nur vorgeladen; GO mittendrin blendet mit
+der Uhr von der erreichten Stelle zu Ende (`tests/runtime/live_manual_fade_test.cpp`, `tests/runtime/midi_live_test.cpp`).
 
 ### 3.5 Profile
 

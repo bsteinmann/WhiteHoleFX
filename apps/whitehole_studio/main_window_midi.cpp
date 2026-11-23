@@ -2,7 +2,7 @@
 //
 // Warum es das gibt: Welcher Controller benutzt wird, gehört zu den Programmeinstellungen (siehe AppSettings). Das Öffnen
 // der Ports und der Umgang mit Fehlern steht hier, damit main_window_settings.cpp übersichtlich bleibt. Der Empfänger
-// (wh_midi) schreibt in den MidiStore; die MIDI-Nodes und der Live-Modus lesen später daraus.
+// (wh_midi) schreibt in den MidiStore; die MIDI-Nodes und der Live-Modus (main_window_midi_live.cpp) lesen daraus.
 #include <QStringList>
 
 #include <string>
@@ -34,6 +34,8 @@ QString MainWindow::applyMidi() {
             problems << tr("MIDI-Ausgang: %1").arg(QString::fromStdString(out.error().message));
         }
     }
+    applyMidiProfile();
+    midiLive_->setOutput(midiOutput_->isOpen() ? midiOutput_.get() : nullptr);
     return problems.join(QLatin1Char('\n'));
 }
 

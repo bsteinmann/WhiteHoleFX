@@ -9,6 +9,7 @@ find_package(Threads REQUIRED)
 option(WHITEHOLEFX_MIDI_DEVICES "MIDI-Geräte ansprechen (RtMidi, wird geladen)" ON)
 
 set(WH_MIDI_SOURCES
+    src/live_profile.cpp
     src/midi_learn.cpp
     src/midi_message.cpp
     src/midi_port_search.cpp

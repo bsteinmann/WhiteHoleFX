@@ -23,6 +23,7 @@
 #include "whitehole/audio/audio_input.hpp"
 #include "whitehole/input/dmx_receiver.hpp"
 #include "whitehole/midi/midi_receiver.hpp"
+#include "whitehole/runtime/midi_live.hpp"
 #include "whitehole/nodes/builtin_library.hpp"
 #include "whitehole/output/udp_sender.hpp"
 #include "whitehole/runtime/gated_sink.hpp"
@@ -220,6 +221,9 @@ private:
     QString applyDmxInput();
     QString applyMidi();  // öffnet die gewählten MIDI-Ports; Fehlertext oder leer
     [[nodiscard]] bool midiNeedsApply(const AppSettings& before) const;
+    void applyMidiProfile();  // Live-Profil aus appSettings_ an den Controller geben
+    void midiTick();          // Controller-Ereignisse im Live-Modus, LED-Rückmeldung (jeden Frame)
+    QString exerciseMidiLive();  // Rauchtest: Profilverwaltung und Pad -> Look ohne Gerät (main_window_midi_live.cpp)
     void syncDmxUniverses();
     /// Master über DMX (main_window_dmx.cpp): gibt die Wahl aus appSettings_ an den Player; der Regler folgt dem Pult.
     void applyMasterDmx();
@@ -292,7 +296,8 @@ private:
     std::unique_ptr<input::DmxReceiver> dmxReceiver_;  // nach library_: liest/schreibt dessen Speicher
     std::shared_ptr<midi::MidiStore> midiStore_;         // letzter MIDI-Zustand (Controller)
     std::unique_ptr<midi::MidiReceiver> midiReceiver_;   // schreibt in midiStore_
-    std::unique_ptr<midi::IMidiOutput> midiOutput_;      // LED-Rückmeldung (ab Stufe 3 genutzt)
+    std::unique_ptr<midi::IMidiOutput> midiOutput_;      // LED-Rückmeldung des Controllers
+    std::unique_ptr<runtime::MidiLiveController> midiLive_;  // nach midiOutput_ und player_: benutzt beide
     AppSettings appSettings_;                           // was gerade angewendet ist (Netzwerkkarten, DMX, Audio)
     QAction* settingsAction_{nullptr};
     std::unique_ptr<audio::AudioInput> audioInput_;    // nach library_: schreibt in dessen Audio-Speicher

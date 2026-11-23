@@ -84,6 +84,8 @@ QString MainWindow::applySettings(const AppSettings& wanted, bool persist) {
         if (const QString error = applyMidi(); !error.isEmpty()) {
             problems << error;
         }
+    } else {
+        applyMidiProfile();
     }
     if (next.audioSource != audioBefore) {
         if (const QString error = applyAudioChoice(next.audioSource); !error.isEmpty()) {
@@ -116,6 +118,8 @@ QString MainWindow::exerciseSettings() {
     probe.inputInterface = QStringLiteral("203.0.113.10");
     probe.midiInput = QStringLiteral("Test-MIDI-Eingang 1:0");
     probe.midiOutput = QStringLiteral("Test-MIDI-Ausgang 1:1");
+    probe.midiProfile = QStringLiteral("Test-Profil");
+    probe.midiProfiles = QStringList{QStringLiteral("Test-Profil|apcmini1|8|-1|-1|56|48|49")};
     probe.audioSource = QStringLiteral("device:Nicht vorhanden");
     if (!(SettingsDialog{probe, *library_->registry, this}.settings() == probe)) {
         return QStringLiteral("Einstellungen: der Dialog gibt nicht zurück, was man ihm gibt (Gerät)");
@@ -130,6 +134,9 @@ QString MainWindow::exerciseSettings() {
     }
 
     if (const QString error = exerciseNodeDefaults(); !error.isEmpty()) {
+        return error;
+    }
+    if (const QString error = exerciseMidiLive(); !error.isEmpty()) {
         return error;
     }
 

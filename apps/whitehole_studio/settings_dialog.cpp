@@ -20,6 +20,7 @@
 #include <string>
 #include <utility>
 
+#include "midi_profile_box.hpp"
 #include "midi_settings_page.hpp"
 #include "network_interfaces.hpp"
 #include "node_defaults_page.hpp"
@@ -63,7 +64,8 @@ SettingsDialog::SettingsDialog(const AppSettings& current, const graph::INodeReg
     tabs->addTab(buildNetworkPage(current), tr("Netzwerk"));
     tabs->addTab(buildDmxPage(current), tr("DMX-Eingang"));
     tabs->addTab(buildAudioPage(current), tr("Audio"));
-    midiPage_ = new MidiSettingsPage{current.midiInput, current.midiOutput, std::move(midiStore), this};
+    midiPage_ = new MidiSettingsPage{current.midiInput, current.midiOutput, std::move(midiStore), this,
+                                     current.midiProfile, current.midiProfiles};
     tabs->addTab(midiPage_, tr("MIDI"));
     defaultsPage_ = new NodeDefaultsPage{registry, current.nodeDefaults, this};
     tabs->addTab(defaultsPage_, tr("Node-Standardwerte"));
@@ -272,6 +274,8 @@ AppSettings SettingsDialog::settings() const {
     }
     result.midiInput = midiPage_->input();
     result.midiOutput = midiPage_->output();
+    result.midiProfile = midiPage_->profiles()->active();
+    result.midiProfiles = midiPage_->profiles()->userProfiles();
     result.nodeDefaults = defaultsPage_->defaults();
     return result;
 }

@@ -10,7 +10,7 @@ msgstr ""
 msgid "\nRechtsklick: Favorit umschalten"
 msgstr ""
 
-#: main_window.cpp:296
+#: main_window.cpp:299
 msgid "   |   AUSGABE AN"
 msgstr ""
 
@@ -22,11 +22,11 @@ msgstr ""
 msgid "   |   Audio: %1"
 msgstr ""
 
-#: main_window.cpp:296
+#: main_window.cpp:299
 msgid "   |   Ausgabe aus (%1 Pakete nicht gesendet)"
 msgstr ""
 
-#: main_window.cpp:286
+#: main_window.cpp:289
 msgid "   |   BLACKOUT"
 msgstr ""
 
@@ -38,16 +38,20 @@ msgstr ""
 msgid "   |   DMX-Nodes im Projekt, Eingang aus (Einstellungen)"
 msgstr ""
 
-#: main_window.cpp:291
+#: main_window.cpp:294
 msgid "   |   EINGANG FEHLT – LEDs aus"
 msgstr ""
 
-#: main_window.cpp:288
+#: main_window.cpp:291
 msgid "   |   Master %1 %"
 msgstr ""
 
-#: main_window.cpp:283
+#: main_window.cpp:286
 msgid "   |   TESTMODUS"
+msgstr ""
+
+#: midi_profile_box.cpp:100
+msgid " (Kopie)"
 msgstr ""
 
 #: main_window_dmx.cpp:197
@@ -102,7 +106,7 @@ msgstr ""
 msgid "%1  →  %2"
 msgstr ""
 
-#: main_window_controls.cpp:62 main_window_dmx.cpp:175
+#: main_window_controls.cpp:62 main_window_dmx.cpp:175 main_window_midi_live.cpp:46
 msgid "%1 %"
 msgstr ""
 
@@ -114,11 +118,11 @@ msgstr ""
 msgid "%1 (%2)"
 msgstr ""
 
-#: settings_dialog.cpp:190
+#: settings_dialog.cpp:192
 msgid "%1 (Standard)"
 msgstr ""
 
-#: midi_settings_page.cpp:33 settings_dialog.cpp:48 settings_dialog.cpp:194
+#: midi_settings_page.cpp:34 settings_dialog.cpp:49 settings_dialog.cpp:196
 msgid "%1 (nicht gefunden)"
 msgstr ""
 
@@ -130,11 +134,11 @@ msgstr ""
 msgid "%1 LEDs · Größe %2 × %3 × %4 · %5 Kanäle (RGB), rund %6 Universe(s)"
 msgstr ""
 
-#: main_window.cpp:272
+#: main_window.cpp:275
 msgid "%1 LEDs, Frame %2 (verworfen %3), Pakete %4, Sendefehler %5"
 msgstr ""
 
-#: main_window.cpp:270
+#: main_window.cpp:273
 msgid "%1 LEDs, angehalten"
 msgstr ""
 
@@ -254,11 +258,11 @@ msgstr ""
 msgid "&Stage Config"
 msgstr ""
 
-#: main_window.cpp:155 main_window_actions.cpp:55
+#: main_window.cpp:158 main_window_actions.cpp:55
 msgid "&Start"
 msgstr ""
 
-#: main_window.cpp:155
+#: main_window.cpp:158
 msgid "&Stopp"
 msgstr ""
 
@@ -578,7 +582,7 @@ msgstr ""
 msgid "Art-Net"
 msgstr ""
 
-#: settings_dialog.cpp:102
+#: settings_dialog.cpp:104
 msgid "Art-Net empfangen"
 msgstr ""
 
@@ -590,15 +594,15 @@ msgstr ""
 msgid "Art-Net zählt Universen ab 0 (bis 32767), sACN ab 1 (bis 63999). Bei DDP gibt es keine Universen."
 msgstr ""
 
-#: settings_dialog.cpp:87
+#: settings_dialog.cpp:89
 msgid "Art-Net, sACN und DDP gehen über diese Karte hinaus. Bei „Automatisch“ entscheidet die Routingtabelle des Systems, bei mehreren Karten oft die falsche. Eine Karte auswählen, wenn die Lichtanlage an einem zweiten Netzwerkanschluss hängt."
 msgstr ""
 
-#: settings_dialog.cpp:114
+#: settings_dialog.cpp:116
 msgid "Art-Net-Port (UDP):"
 msgstr ""
 
-#: main_window_actions.cpp:166 settings_dialog.cpp:65
+#: main_window_actions.cpp:166 settings_dialog.cpp:66
 msgid "Audio"
 msgstr ""
 
@@ -646,11 +650,11 @@ msgstr ""
 msgid "Auf gewählten anwenden"
 msgstr ""
 
-#: settings_dialog.cpp:225
+#: settings_dialog.cpp:227
 msgid "Aufnahmegeräte lassen sich nicht auflisten: %1"
 msgstr ""
 
-#: midi_settings_page.cpp:26 settings_dialog.cpp:176 test_panel.cpp:39
+#: midi_settings_page.cpp:27 settings_dialog.cpp:178 test_panel.cpp:39
 msgid "Aus"
 msgstr ""
 
@@ -710,7 +714,7 @@ msgstr ""
 msgid "Auswahl hervorheben"
 msgstr ""
 
-#: settings_dialog.cpp:42
+#: settings_dialog.cpp:43
 msgid "Automatisch (das System wählt)"
 msgstr ""
 
@@ -906,7 +910,7 @@ msgstr ""
 msgid "DMX-Auslöser: Universe"
 msgstr ""
 
-#: settings_dialog.cpp:64
+#: settings_dialog.cpp:65
 msgid "DMX-Eingang"
 msgstr ""
 
@@ -938,7 +942,7 @@ msgstr ""
 msgid "Das Pong-Spiel als Rechen-Node: Ball, Schläger, Punkte und Treffer als Werte. Computer oder Eingang spielen, auch im Takt der Musik. Gezeichnet wird es von „Pong Display“."
 msgstr ""
 
-#: main_window.cpp:219
+#: main_window.cpp:222
 msgid "Das Projekt wurde geändert. Änderungen verwerfen?"
 msgstr ""
 
@@ -994,7 +998,7 @@ msgstr ""
 msgid "Der Ausgang: Was hier ankommt, wird auf die LEDs gesendet. Mit „Mode“ in einen Bereich skalieren oder als Fenster ausschneiden, plus Helligkeit."
 msgstr ""
 
-#: settings_dialog.cpp:165
+#: settings_dialog.cpp:167
 msgid "Der Auswahl-Kanal teilt sich in so viele gleich große Stufen, wie das Projekt Looks hat; 0 heißt kein Wechsel. Ohne Überblendzeit-Kanal (aus) gilt die im Look gespeicherte Zeit, sonst setzt der Kanalwert 0 bis 255 die Zeit auf 0 bis 10 Sekunden. Wirkt nur im laufenden Live-Betrieb; bleibt das Signal weg, bleibt der zuletzt gezeigte Look stehen."
 msgstr ""
 
@@ -1014,7 +1018,7 @@ msgstr ""
 msgid "Der Cue löst aus, wenn der Kanalwert auf diese Zahl oder darüber steigt"
 msgstr ""
 
-#: settings_dialog.cpp:134
+#: settings_dialog.cpp:136
 msgid "Der Kanalwert 0 bis 255 setzt den Master auf 0 bis 100 %. Solange Pakete kommen, folgt der Master-Regler dem Pult; bleibt das Signal weg, hält der Master seinen Wert. Der Empfang oben muss für das gewählte Protokoll eingeschaltet sein."
 msgstr ""
 
@@ -1042,7 +1046,7 @@ msgstr ""
 msgid "Die Cuelist läuft und schaltet die Looks selbst. Erst in der Cuelist auf Stopp drücken."
 msgstr ""
 
-#: settings_dialog.cpp:138
+#: settings_dialog.cpp:140
 msgid "Die DMX-Nodes im Projekt lesen ihre Werte aus dem Empfang. Standard-Ports sind 6454 (Art-Net) und 5568 (sACN); nur ändern, wenn ein anderes Programm sie belegt. Nach der Installation ist der Empfang aus; unter Windows fragt die Firewall beim ersten Einschalten nach."
 msgstr ""
 
@@ -1066,7 +1070,7 @@ msgstr ""
 msgid "Die Prüfung ist fehlgeschlagen:\n%1"
 msgstr ""
 
-#: settings_dialog.cpp:229
+#: settings_dialog.cpp:231
 msgid "Die Quelle speist die Audio-Nodes (Pegel, Frequenzband, Beat, Spektrum)."
 msgstr ""
 
@@ -1090,7 +1094,7 @@ msgstr ""
 msgid "Die vergangene Zeit in Sekunden, mit Tempo-Faktor und Versatz. Zum Antreiben von Bewegungen."
 msgstr ""
 
-#: settings_dialog.cpp:95
+#: settings_dialog.cpp:97
 msgid "Die Änderung wirkt sofort nach „OK“."
 msgstr ""
 
@@ -1098,11 +1102,11 @@ msgstr ""
 msgid "Diese Form ist ungültig."
 msgstr ""
 
-#: midi_settings_page.cpp:51
+#: midi_settings_page.cpp:52
 msgid "Dieser Build hat keine MIDI-Geräteunterstützung (unter Linux fehlt die ALSA-Bibliothek beim Bauen). Es gibt keine Ports."
 msgstr ""
 
-#: main_window.cpp:193 parameter_panel.cpp:261
+#: main_window.cpp:196 parameter_panel.cpp:261
 msgid "Dieser Node hat keine einstellbaren Parameter."
 msgstr ""
 
@@ -1210,7 +1214,7 @@ msgstr ""
 msgid "Ein- und Ausgang"
 msgstr ""
 
-#: midi_settings_page.cpp:45
+#: midi_settings_page.cpp:46
 msgid "Ein- und Ausgang eines MIDI-Controllers, zum Beispiel eines Akai APC mini. Die Wahl gilt für diesen Rechner und Auftritt, nicht für das Projekt."
 msgstr ""
 
@@ -1286,7 +1290,7 @@ msgstr ""
 msgid "Einrasten"
 msgstr ""
 
-#: main_window_settings.cpp:49 output_form.cpp:89 settings_dialog.cpp:61
+#: main_window_settings.cpp:49 output_form.cpp:89 settings_dialog.cpp:62
 msgid "Einstellungen"
 msgstr ""
 
@@ -1376,6 +1380,18 @@ msgstr ""
 
 #: cue_dialog.cpp:88 cue_panel.cpp:53
 msgid "Fade"
+msgstr ""
+
+#: midi_profile_box.cpp:91
+msgid "Fader Master (CC)"
+msgstr ""
+
+#: midi_profile_box.cpp:93
+msgid "Fader manuelle Überblendung (CC)"
+msgstr ""
+
+#: midi_profile_box.cpp:92
+msgid "Fader Überblendzeit 0–10 s (CC)"
 msgstr ""
 
 #: group_dialog.cpp:43 parameter_editors.cpp:92 port_legend.cpp:68
@@ -1526,7 +1542,7 @@ msgstr ""
 msgid "Fragt bei GitHub nach der neuesten Version (nur die Versionsnummer, nichts wird installiert)"
 msgstr ""
 
-#: main_window.cpp:344
+#: main_window.cpp:348
 msgid "Frame"
 msgstr ""
 
@@ -1586,7 +1602,7 @@ msgstr ""
 msgid "Gelb"
 msgstr ""
 
-#: settings_dialog.cpp:178
+#: settings_dialog.cpp:180
 msgid "Gerät:"
 msgstr ""
 
@@ -1738,6 +1754,10 @@ msgstr ""
 msgid "Im Layout %1 Mal gepatcht; Änderungen gelten für alle."
 msgstr ""
 
+#: midi_profile_box.cpp:58
+msgid "Im Live-Modus rufen die Pads die Looks ab (Raster wie im Live-Fenster, erste Zeile oben) und leuchten: grün = läuft, gelb blinkend = vorgeladen, gelb = blendet ein. Außerhalb des Live-Modus bleiben Pads und Fader frei. Nummern: Noten bzw. Regler (CC), −1 = nicht belegt."
+msgstr ""
+
 #: port_legend.cpp:64
 msgid "Image"
 msgstr ""
@@ -1798,11 +1818,11 @@ msgstr ""
 msgid "Kanal %1 — gehört zu: %2"
 msgstr ""
 
-#: settings_dialog.cpp:91
+#: settings_dialog.cpp:93
 msgid "Karte zum Empfangen:"
 msgstr ""
 
-#: settings_dialog.cpp:86
+#: settings_dialog.cpp:88
 msgid "Karte zum Senden:"
 msgstr ""
 
@@ -1814,7 +1834,7 @@ msgstr ""
 msgid "Kein GPU-Adapter: %1"
 msgstr ""
 
-#: main_window.cpp:268
+#: main_window.cpp:271
 msgid "Kein Projekt"
 msgstr ""
 
@@ -1830,7 +1850,7 @@ msgstr ""
 msgid "Kein Ziel (freies Rechteck)"
 msgstr ""
 
-#: settings_dialog.cpp:227
+#: settings_dialog.cpp:229
 msgid "Keine Aufnahmegeräte gefunden. Ein Audio-Interface anschließen und das Fenster neu öffnen."
 msgstr ""
 
@@ -1856,6 +1876,10 @@ msgstr ""
 
 #: node_editor_menu.cpp:67
 msgid "Kopieren\tStrg+C"
+msgstr ""
+
+#: midi_profile_box.cpp:66
+msgid "Kopieren …"
 msgstr ""
 
 #: fixture_library_page.cpp:101 fixture_shape_label.cpp:19
@@ -1886,7 +1910,7 @@ msgstr ""
 msgid "LEDs x y z"
 msgstr ""
 
-#: main_window.cpp:280
+#: main_window.cpp:283
 msgid "LIVE   |   "
 msgstr ""
 
@@ -1934,11 +1958,11 @@ msgstr ""
 msgid "Lernen"
 msgstr ""
 
-#: midi_settings_page.cpp:102
+#: midi_settings_page.cpp:105
 msgid "Letzte Nachricht: Kanal %1, %2 (vor %3 s)"
 msgstr ""
 
-#: midi_settings_page.cpp:90
+#: midi_settings_page.cpp:93
 msgid "Letzte Nachricht: noch keine empfangen"
 msgstr ""
 
@@ -2002,20 +2026,24 @@ msgstr ""
 msgid "Live Kanal"
 msgstr ""
 
-#: settings_dialog.cpp:163
+#: settings_dialog.cpp:165
 msgid "Live-Look: Auswahl-Kanal (1 bis 512):"
 msgstr ""
 
-#: settings_dialog.cpp:161
+#: settings_dialog.cpp:163
 msgid "Live-Look: Protokoll:"
 msgstr ""
 
-#: settings_dialog.cpp:162
+#: settings_dialog.cpp:164
 msgid "Live-Look: Universe:"
 msgstr ""
 
-#: settings_dialog.cpp:164
+#: settings_dialog.cpp:166
 msgid "Live-Look: Überblendzeit-Kanal (0 = aus):"
+msgstr ""
+
+#: midi_profile_box.cpp:55
+msgid "Live-Modus auf dem Controller (Akai APC mini mk1)"
 msgstr ""
 
 #: look_panel.cpp:73
@@ -2054,12 +2082,16 @@ msgstr ""
 msgid "Look überschreiben"
 msgstr ""
 
-#: settings_dialog.cpp:144
+#: settings_dialog.cpp:146
 msgid "Look-Auswahl im Live-Betrieb über einen DMX-Kanal steuern"
 msgstr ""
 
 #: main_window_live.cpp:66
 msgid "Looks"
+msgstr ""
+
+#: midi_profile_box.cpp:88
+msgid "Looks je Zeile"
 msgstr ""
 
 #: node_palette.cpp:374
@@ -2078,7 +2110,7 @@ msgstr ""
 msgid "Lässt ein Testmuster über diese Form laufen (nur hier, nichts wird gesendet)"
 msgstr ""
 
-#: look_panel.cpp:62 node_palette_library.cpp:106
+#: look_panel.cpp:62 midi_profile_box.cpp:68 node_palette_library.cpp:106
 msgid "Löschen"
 msgstr ""
 
@@ -2086,11 +2118,11 @@ msgstr ""
 msgid "Löst bei jedem Einsatz in einem Frequenzbereich aus: Kick, Snare, Hi-Hat oder ein eigener Bereich in Hz. Liefert Treffer, Pulse (klingt ab), Stärke und „Age“. Für einzelne Schläge; die Gesamtlautstärke liefert „Audio Level“, den Takt „Beat“. Die Schwelle folgt der Lautstärke, auch leise Schläge werden erkannt."
 msgstr ""
 
-#: settings_dialog.cpp:67
+#: settings_dialog.cpp:69
 msgid "MIDI"
 msgstr ""
 
-#: midi_settings_page.cpp:61
+#: midi_settings_page.cpp:62
 msgid "MIDI-Ausgang"
 msgstr ""
 
@@ -2098,12 +2130,16 @@ msgstr ""
 msgid "MIDI-Ausgang: %1"
 msgstr ""
 
-#: midi_settings_page.cpp:60
+#: midi_settings_page.cpp:61
 msgid "MIDI-Eingang"
 msgstr ""
 
 #: main_window_midi.cpp:28
 msgid "MIDI-Eingang: %1"
+msgstr ""
+
+#: main_window_midi_live.cpp:40
+msgid "MIDI: %1"
 msgstr ""
 
 #: node_info_texts.cpp:43
@@ -2126,19 +2162,19 @@ msgstr ""
 msgid "Master"
 msgstr ""
 
-#: settings_dialog.cpp:118
+#: settings_dialog.cpp:120
 msgid "Master-Helligkeit über einen DMX-Kanal steuern"
 msgstr ""
 
-#: settings_dialog.cpp:133
+#: settings_dialog.cpp:135
 msgid "Master: Kanal (1 bis 512):"
 msgstr ""
 
-#: settings_dialog.cpp:131
+#: settings_dialog.cpp:133
 msgid "Master: Protokoll:"
 msgstr ""
 
-#: settings_dialog.cpp:132
+#: settings_dialog.cpp:134
 msgid "Master: Universe:"
 msgstr ""
 
@@ -2218,6 +2254,10 @@ msgstr ""
 msgid "Name des Presets:"
 msgstr ""
 
+#: midi_profile_box.cpp:99
+msgid "Name des neuen Profils:"
+msgstr ""
+
 #: fixture_form.cpp:153
 msgid "Name:"
 msgstr ""
@@ -2230,7 +2270,7 @@ msgstr ""
 msgid "Nein"
 msgstr ""
 
-#: settings_dialog.cpp:63
+#: settings_dialog.cpp:64
 msgid "Netzwerk"
 msgstr ""
 
@@ -2254,7 +2294,7 @@ msgstr ""
 msgid "Neue Version %1 verfügbar – Hilfe > Auf Updates prüfen …"
 msgstr ""
 
-#: look_panel.cpp:271
+#: look_panel.cpp:271 midi_profile_box.cpp:107
 msgid "Neuer Name:"
 msgstr ""
 
@@ -2326,7 +2366,7 @@ msgstr ""
 msgid "Node umbenennen …"
 msgstr ""
 
-#: settings_dialog.cpp:69
+#: settings_dialog.cpp:71
 msgid "Node-Standardwerte"
 msgstr ""
 
@@ -2342,11 +2382,11 @@ msgstr ""
 msgid "Nodes suchen …"
 msgstr ""
 
-#: midi_settings_page.cpp:98
+#: midi_settings_page.cpp:101
 msgid "Note %1 an (Velocity %2)"
 msgstr ""
 
-#: midi_settings_page.cpp:100
+#: midi_settings_page.cpp:103
 msgid "Note %1 aus"
 msgstr ""
 
@@ -2490,7 +2530,7 @@ msgstr ""
 msgid "Port (leer = Standard)"
 msgstr ""
 
-#: midi_settings_page.cpp:63
+#: midi_settings_page.cpp:64
 msgid "Ports neu einlesen"
 msgstr ""
 
@@ -2536,6 +2576,14 @@ msgstr ""
 
 #: node_palette.cpp:163 node_palette_library.cpp:53
 msgid "Presets"
+msgstr ""
+
+#: midi_profile_box.cpp:99
+msgid "Profil kopieren"
+msgstr ""
+
+#: midi_profile_box.cpp:107
+msgid "Profil umbenennen"
 msgstr ""
 
 #: main_window_file.cpp:79
@@ -2638,7 +2686,7 @@ msgstr ""
 msgid "Regionen"
 msgstr ""
 
-#: midi_settings_page.cpp:96
+#: midi_settings_page.cpp:99
 msgid "Regler %1 = %2"
 msgstr ""
 
@@ -2814,11 +2862,11 @@ msgstr ""
 msgid "Stage Config"
 msgstr ""
 
-#: settings_dialog.cpp:177
+#: settings_dialog.cpp:179
 msgid "Standardgerät des Systems"
 msgstr ""
 
-#: cue_panel.cpp:67 cue_panel.cpp:145 main_window.cpp:314
+#: cue_panel.cpp:67 cue_panel.cpp:145 main_window.cpp:317
 msgid "Start"
 msgstr ""
 
@@ -2894,6 +2942,14 @@ msgstr ""
 msgid "Taste %1"
 msgstr ""
 
+#: midi_profile_box.cpp:89
+msgid "Taste GO (Note)"
+msgstr ""
+
+#: midi_profile_box.cpp:90
+msgid "Taste Live beenden (Note)"
+msgstr ""
+
 #: cue_dialog.cpp:67
 msgid "Taste drücken, die den Cue auslösen soll"
 msgstr ""
@@ -2966,7 +3022,7 @@ msgstr ""
 msgid "U%1: %2–%3"
 msgstr ""
 
-#: look_panel.cpp:61
+#: look_panel.cpp:61 midi_profile_box.cpp:67
 msgid "Umbenennen …"
 msgstr ""
 
@@ -2974,7 +3030,7 @@ msgstr ""
 msgid "Unerwartetes Ende beim letzten Mal"
 msgstr ""
 
-#: main_window.cpp:218
+#: main_window.cpp:221
 msgid "Ungespeicherte Änderungen"
 msgstr ""
 
@@ -3054,6 +3110,10 @@ msgstr ""
 msgid "Volumen (3D, Standard)"
 msgstr ""
 
+#: midi_profile_box.cpp:212
+msgid "Vorgefertigtes Profil: zum Ändern erst kopieren"
+msgstr ""
+
 #: layout_panel_groups.cpp:212
 msgid "Vorschau"
 msgstr ""
@@ -3062,15 +3122,15 @@ msgstr ""
 msgid "Vorweg überspringen"
 msgstr ""
 
-#: settings_dialog.cpp:179
+#: settings_dialog.cpp:181
 msgid "WAV-Datei in Schleife:"
 msgstr ""
 
-#: settings_dialog.cpp:238
+#: settings_dialog.cpp:240
 msgid "WAV-Datei wählen"
 msgstr ""
 
-#: settings_dialog.cpp:238
+#: settings_dialog.cpp:240
 msgid "WAV-Dateien (*.wav)"
 msgstr ""
 
@@ -3122,11 +3182,11 @@ msgstr ""
 msgid "Wellenringe wie Wassertropfen: Ringe breiten sich von zufälligen Punkten aus (Tropfen pro Sekunde, Tempo, Ringbreite)."
 msgstr ""
 
-#: main_window.cpp:129 main_window.cpp:168
+#: main_window.cpp:129 main_window.cpp:171
 msgid "WhiteHoleFX"
 msgstr ""
 
-#: main_window.cpp:172
+#: main_window.cpp:175
 msgid "WhiteHoleFX – %1%2"
 msgstr ""
 
@@ -3202,7 +3262,7 @@ msgstr ""
 msgid "Wähle zuerst einen Controller in der Tabelle."
 msgstr ""
 
-#: settings_dialog.cpp:182
+#: settings_dialog.cpp:184
 msgid "Wählen …"
 msgstr ""
 
@@ -3326,7 +3386,7 @@ msgstr ""
 msgid "an oder aus"
 msgstr ""
 
-#: settings_dialog.cpp:158
+#: midi_profile_box.cpp:78 settings_dialog.cpp:160
 msgid "aus"
 msgstr ""
 
@@ -3378,11 +3438,11 @@ msgstr ""
 msgid "sACN"
 msgstr ""
 
-#: settings_dialog.cpp:103
+#: settings_dialog.cpp:105
 msgid "sACN (E1.31) empfangen"
 msgstr ""
 
-#: settings_dialog.cpp:116
+#: settings_dialog.cpp:118
 msgid "sACN-Port (UDP):"
 msgstr ""
 
@@ -3394,7 +3454,7 @@ msgstr ""
 msgid "strecken (Stretch)"
 msgstr ""
 
-#: main_window.cpp:171
+#: main_window.cpp:174
 msgid "unbenannt"
 msgstr ""
 
@@ -3434,7 +3494,7 @@ msgstr ""
 msgid "Über WhiteHoleFX"
 msgstr ""
 
-#: settings_dialog.cpp:92
+#: settings_dialog.cpp:94
 msgid "Über diese Karte tritt der sACN-Empfang den Multicast-Gruppen bei. Art-Net-Broadcast und Unicast-Pakete kommen weiterhin von jeder Karte an."
 msgstr ""
 

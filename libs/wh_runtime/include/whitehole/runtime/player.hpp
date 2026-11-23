@@ -411,6 +411,9 @@ public:
     /// liveArm + liveGo in einem Schritt (ein Tastendruck für einen Look).
     Result<void> liveTrigger(int index, std::optional<double> fadeSeconds = std::nullopt);
     [[nodiscard]] LiveStatus liveStatus() const noexcept;
+    /// Manuelle Überblendung zum vorgeladenen Look (Fader 0..1, siehe LiveDecks::setManualProgress).
+    /// Fehler: InvalidArgument (nicht live). Ohne vorgeladenen Look wirkungslos.
+    Result<void> liveManualFade(double progress);
     /// Uhr für die Überblendung in Sekunden (Standard: Systemuhr). Nur für Tests austauschbar.
     void setLiveClock(std::function<double()> clock) { liveClock_ = std::move(clock); }
 
