@@ -140,3 +140,13 @@ Offene Punkte für die Umsetzung:
 1. Reiter „Steuerung" und Live-Fenster schreiben dieselbe Belegung, damit es keine zwei Wahrheiten gibt.
 2. Profil bleibt als Startbelegung, Lernen überschreibt sie; „Auf Profil zurücksetzen" pro Funktion.
 3. Welche Nachrichtenart beim Lernen gilt: Note für Tasten, Regler für Fader; beim Lernen eines Pads wird die Art automatisch gewählt.
+
+### 6.1 Entscheidungen vom 23.11. (Nachtrag)
+
+- **Reiter und Live-Fenster schreiben dieselbe Belegung.** Bestätigt.
+- **DMX genauso:** Jede Funktion kann auch auf einen DMX-Kanal (Quelle, Universe, Kanal) gelernt werden. „Lernen" heißt hier:
+  Knopf drücken, dann den Kanal am Pult bewegen; der erste Kanal, der sich ändert, wird übernommen. Dafür braucht der
+  DMX-Empfang eine Lernfunktion analog zu `midi::MidiLearn` (Änderung seit dem Scharfstellen, nicht der Wert selbst).
+- Eine Funktion hat **eine Quelle pro Eingang**: Ein Pad und ein DMX-Kanal können dieselbe Funktion steuern, beide Eingänge
+  wirken gleichzeitig. Die Belegungstabelle hält je Funktion eine Liste von Quellen (MIDI oder DMX).
+- Offen (unverändert): Pad-Direktlernen, Profil als Startbelegung mit „Auf Profil zurücksetzen".
