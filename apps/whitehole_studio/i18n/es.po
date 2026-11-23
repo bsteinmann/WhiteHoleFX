@@ -50,7 +50,7 @@ msgstr "   |   Master %1 %"
 msgid "   |   TESTMODUS"
 msgstr "   |   MODO DE PRUEBA"
 
-#: live_panel_looks.cpp:34
+#: live_panel_looks.cpp:38
 msgid "  · Flash"
 msgstr "  · Flash"
 
@@ -106,7 +106,7 @@ msgstr "¿Eliminar \"%1\" de la biblioteca?"
 msgid "%1  (%2 LEDs)"
 msgstr "%1  (%2 LED)"
 
-#: live_panel.cpp:165
+#: live_panel.cpp:232
 msgid "%1  →  %2"
 msgstr "%1  →  %2"
 
@@ -246,11 +246,11 @@ msgstr "&Brillo (aditivo)"
 msgid "&Live"
 msgstr "&Live"
 
-#: main_window_live.cpp:86
+#: main_window_live.cpp:92
 msgid "&Live-Modus"
 msgstr "Modo &live"
 
-#: main_window_live.cpp:81
+#: main_window_live.cpp:87
 msgid "&Look speichern …"
 msgstr "&Guardar look …"
 
@@ -326,7 +326,7 @@ msgstr "(Negro)"
 msgid "(eigene Form)"
 msgstr "(forma propia)"
 
-#: live_panel.cpp:165
+#: live_panel.cpp:232
 msgid "(kein Look)"
 msgstr "(sin look)"
 
@@ -806,7 +806,7 @@ msgstr "No se puede escribir la biblioteca de usuario: %1"
 msgid "Benutzerbibliothek lässt sich nicht speichern: %1"
 msgstr "No se puede guardar la biblioteca de usuario: %1"
 
-#: live_panel.cpp:166
+#: live_panel.cpp:233
 msgid "Bereit: %1 - GO drücken"
 msgstr "Listo: %1 - pulsa GO"
 
@@ -837,6 +837,10 @@ msgstr "Hasta ocho cometas a la vez, cada una con su velocidad y punto de partid
 #: test_panel.cpp:31
 msgid "Blau"
 msgstr "Azul"
+
+#: live_panel.cpp:55
+msgid "Blendet Flash je Look, die Belegung von MIDI und DMX und die Menüleiste ein oder aus"
+msgstr "Muestra u oculta el flash por look, la asignación de MIDI y DMX y la barra de menús"
 
 #: look_panel.cpp:75
 msgid "Blendet die Bearbeitung aus und zeigt große Knöpfe für alle Looks (F9)"
@@ -898,7 +902,7 @@ msgstr "Editar cue"
 msgid "Cue −"
 msgstr "Cue −"
 
-#: main_window_live.cpp:64
+#: main_window_live.cpp:70
 msgid "Cuelist"
 msgstr "Lista de cues"
 
@@ -1022,7 +1026,7 @@ msgstr "¿Sustituir el look «%1» por el efecto actual?"
 msgid "Den Look „%1“ löschen?"
 msgstr "¿Eliminar el look «%1»?"
 
-#: main_window_live.cpp:83
+#: main_window_live.cpp:89
 msgid "Den aktuellen Effekt als Look in die Liste legen (Strg+L)"
 msgstr "Añadir el efecto actual a la lista como look (Ctrl+L)"
 
@@ -1054,6 +1058,10 @@ msgstr "El cue se dispara cuando el valor del canal sube a este número o más"
 msgid "Der Kanalwert 0 bis 255 setzt den Master auf 0 bis 100 %. Solange Pakete kommen, folgt der Master-Regler dem Pult; bleibt das Signal weg, hält der Master seinen Wert. Der Empfang oben muss für das gewählte Protokoll eingeschaltet sein."
 msgstr "El valor del canal de 0 a 255 ajusta el master de 0 a 100 %. Mientras lleguen paquetes, el control master sigue a la mesa; si la señal se corta, el master mantiene su valor. La recepción de arriba debe estar activada para el protocolo elegido."
 
+#: live_panel.cpp:170
+msgid "Der Look läuft nur, solange der Knopf (oder das Pad) gehalten wird"
+msgstr "El look solo se reproduce mientras se mantiene pulsado el botón (o el pad)"
+
 #: main_window_dmx.cpp:180
 msgid "Der Master kommt gerade vom DMX-Kanal (Einstellungen → DMX-Eingang)"
 msgstr "El master viene ahora del canal DMX (Ajustes → Entrada DMX)"
@@ -1074,7 +1082,7 @@ msgstr "La biblioteca ya contiene un grupo \"%1\". ¿Reemplazarlo?"
 msgid "Die Cuelist ist leer. Erst Cues anlegen (Dock „Cuelist“)."
 msgstr "La lista de cues está vacía. Cree primero cues (panel Lista de cues)."
 
-#: live_panel.cpp:191 live_panel_looks.cpp:41
+#: live_panel.cpp:258 live_panel_looks.cpp:92
 msgid "Die Cuelist läuft und schaltet die Looks selbst. Erst in der Cuelist auf Stopp drücken."
 msgstr "La lista de cues está en marcha y cambia los looks sola. Pulse primero Parar en la lista."
 
@@ -1210,7 +1218,7 @@ msgstr "Plane wave: stripes moving in one direction (frequency, speed, two color
 msgid "Effekte (2D)"
 msgstr "Efectos (2D)"
 
-#: live_panel.cpp:64
+#: live_panel.cpp:88
 msgid "Eigene Überblendzeit:"
 msgstr "Tiempo de fundido propio:"
 
@@ -1226,7 +1234,7 @@ msgstr "Un informe (.txt) y un volcado de memoria (.dmp) están en la carpeta:\n
 msgid "Ein Kabel lässt sich nur zwischen passenden Typen ziehen."
 msgstr "Un cable solo se puede tender entre tipos compatibles."
 
-#: live_panel.cpp:63
+#: live_panel.cpp:87
 msgid "Ein Klick lädt den Look nur vor. GO (Leertaste) startet dann die Überblendung."
 msgstr "Un clic solo precarga el look. GO (barra espaciadora) inicia entonces el fundido."
 
@@ -1249,6 +1257,22 @@ msgstr "Entrada y salida"
 #: midi_settings_page.cpp:46
 msgid "Ein- und Ausgang eines MIDI-Controllers, zum Beispiel eines Akai APC mini. Die Wahl gilt für diesen Rechner und Auftritt, nicht für das Projekt."
 msgstr "Entrada y salida de un controlador MIDI, por ejemplo un Akai APC mini. La elección vale para este ordenador y esta actuación, no para el proyecto."
+
+#: live_panel_looks.cpp:136
+msgid "Einblenden"
+msgstr "Entrada"
+
+#: live_panel_looks.cpp:189
+msgid "Einblenden mit der Zeit des Looks (%1 s)"
+msgstr "Entrada con el tiempo del look (%1 s)"
+
+#: live_panel_looks.cpp:190
+msgid "Einblenden mit eigener Zeit (%1 s) …"
+msgstr "Entrada con tiempo propio (%1 s) …"
+
+#: live_panel_looks.cpp:191
+msgid "Einblenden mit eigener Zeit …"
+msgstr "Entrada con tiempo propio …"
 
 #: node_info_texts.cpp:86
 msgid "Eine Box (Rechteck oder Quader) mit weichem Rand. Innen- und Außenfarbe, Größe und Lage einstellbar. „Space“ wählt flach, Volumen oder automatisch nach Aufbau."
@@ -1322,7 +1346,7 @@ msgstr "Entrada: %1"
 msgid "Einrasten"
 msgstr "Ajustar"
 
-#: main_window_settings.cpp:49 output_form.cpp:89 settings_dialog.cpp:65
+#: live_panel.cpp:53 main_window_settings.cpp:49 output_form.cpp:89
 msgid "Einstellungen"
 msgstr "Ajustes"
 
@@ -1562,7 +1586,11 @@ msgstr "Distribuir y girar fixtures en el escenario (ventana propia)"
 msgid "Flammen: Aufsteigendes, flackerndes Feuer mit einstellbarer Skalierung, Tempo und Flammenhöhe."
 msgstr "Flames: rising, flickering fire with adjustable scale, speed and flame height."
 
-#: live_panel_looks.cpp:91
+#: live_panel.cpp:169
+msgid "Flash"
+msgstr "Flash"
+
+#: live_panel_looks.cpp:158
 msgid "Flashen (nur solange gedrückt)"
 msgstr "Flash (solo mientras se mantiene)"
 
@@ -1602,7 +1630,7 @@ msgstr "Destellos: celdas sueltas se encienden y se apagan, cada una a su ritmo.
 msgid "Färbt ein Bild nach seiner Helligkeit mit bis zu vier Farben um (von dunkel nach hell). „Shift“ lässt die Farben wandern."
 msgstr "Recolors an image by its brightness with up to four colors (dark to bright). \"Shift\" makes the colors travel."
 
-#: main_window_live.cpp:108
+#: main_window_live.cpp:115
 msgid "Für den Live-Modus erst Looks speichern (Dock „Looks“)."
 msgstr "Para el modo live, guarda primero looks (panel «Looks»)."
 
@@ -1610,7 +1638,7 @@ msgstr "Para el modo live, guarda primero looks (panel «Looks»)."
 msgid "GO"
 msgstr "GO"
 
-#: live_panel.cpp:75
+#: live_panel.cpp:99
 msgid "GO  (Leertaste)"
 msgstr "GO  (barra espaciadora)"
 
@@ -2058,7 +2086,7 @@ msgstr "Borde izquierdo en"
 msgid "Liste leeren"
 msgstr "Vaciar lista"
 
-#: main_window_live.cpp:74
+#: main_window_live.cpp:80
 msgid "Live"
 msgstr "Live"
 
@@ -2130,7 +2158,7 @@ msgstr "Sobrescribir look"
 msgid "Look-Auswahl im Live-Betrieb über einen DMX-Kanal steuern"
 msgstr "Controlar la selección del look en modo en vivo mediante un canal DMX"
 
-#: main_window_live.cpp:69
+#: main_window_live.cpp:75
 msgid "Looks"
 msgstr "Looks"
 
@@ -2254,7 +2282,7 @@ msgstr "Selecciona varios con Ctrl o Mayús. Un clic en un LED de la vista selec
 msgid "Mischt zwei Bilder: 0 zeigt nur A, 1 nur B, dazwischen eine Überblendung."
 msgstr "Mixes two images: 0 shows only A, 1 only B, in between a crossfade."
 
-#: live_panel.cpp:62
+#: live_panel.cpp:86
 msgid "Mit GO (vorladen)"
 msgstr "Con GO (precarga)"
 
@@ -2762,6 +2790,14 @@ msgstr "Controlador %1, canal %2"
 msgid "Reihenfolge (schnellste zuerst)"
 msgstr "Orden (el más rápido primero)"
 
+#: live_panel_looks.cpp:45
+msgid "Rein: %1 s"
+msgstr "Entrada: %1 s"
+
+#: live_panel_looks.cpp:45
+msgid "Rein: Look-Zeit"
+msgstr "Entrada: tiempo del look"
+
 #: test_panel.cpp:76
 msgid "Richtung"
 msgstr "Dirección"
@@ -2942,7 +2978,7 @@ msgstr "Inicio"
 msgid "Starte …"
 msgstr "Iniciando …"
 
-#: live_panel.cpp:65
+#: live_panel.cpp:89
 msgid "Statt der Zeit, die beim Look gespeichert ist"
 msgstr "En lugar del tiempo guardado con el look"
 
@@ -2954,9 +2990,9 @@ msgstr "Cielo estrellado: estrellas titilantes con densidad, tamaño y velocidad
 msgid "Steuerung"
 msgstr "Controles"
 
-#: live_panel_looks.cpp:124
-msgid "Steuerung lernen:"
-msgstr "Aprender controles:"
+#: live_panel_looks.cpp:207
+msgid "Steuerung belegen:"
+msgstr "Asignar controles:"
 
 #: cue_panel.cpp:145
 msgid "Stopp"
@@ -3102,7 +3138,7 @@ msgstr "U%1: %2–%3"
 msgid "Umbenennen …"
 msgstr "Renombrar …"
 
-#: live_panel_looks.cpp:90
+#: live_panel_looks.cpp:157
 msgid "Umschalten (bleibt an)"
 msgstr "Alternar (permanece)"
 
@@ -3137,6 +3173,10 @@ msgstr "Abajo"
 #: layout_panel.cpp:183
 msgid "Unten ⤓"
 msgstr "Abajo ⤓"
+
+#: live_panel.cpp:71
+msgid "Unter jedem Look: Flash (läuft nur, solange der Knopf gehalten wird) und die Zeit zum Zurückblenden."
+msgstr "Bajo cada look: flash (solo mientras se mantiene el botón) y el tiempo para volver con fundido."
 
 #: layout_panel.cpp:183
 msgid "Untere Kanten ausrichten"
@@ -3402,7 +3442,19 @@ msgstr "Filas (horizontales)"
 msgid "Zeit"
 msgstr "Tiempo"
 
-#: live_panel_looks.cpp:75
+#: live_panel.cpp:172
+msgid "Zeit zum Einblenden beim Drücken"
+msgstr "Tiempo de entrada con fundido al pulsar"
+
+#: live_panel_looks.cpp:137
+msgid "Zeit zum Einblenden beim Drücken (s):"
+msgstr "Tiempo de entrada con fundido al pulsar (s):"
+
+#: live_panel.cpp:174
+msgid "Zeit zum Zurückblenden beim Loslassen"
+msgstr "Tiempo de vuelta con fundido al soltar"
+
+#: live_panel_looks.cpp:137
 msgid "Zeit zum Zurückblenden beim Loslassen (s):"
 msgstr "Tiempo de retorno al soltar (s):"
 
@@ -3466,27 +3518,35 @@ msgstr "Random cells that fade in and out, between two colors."
 msgid "Zum Aneinanderreihen mindestens zwei Fixtures wählen"
 msgstr "Selecciona al menos dos fixtures para alinear"
 
-#: live_panel.cpp:79
+#: live_panel.cpp:56
 msgid "Zurück zum Editor (Esc)"
 msgstr "Volver al editor (Esc)"
 
-#: live_panel_looks.cpp:75
+#: live_panel_looks.cpp:50
+msgid "Zurück: %1 s"
+msgstr "Volver: %1 s"
+
+#: live_panel_looks.cpp:50
+msgid "Zurück: Look-Zeit"
+msgstr "Volver: tiempo del look"
+
+#: live_panel_looks.cpp:136
 msgid "Zurückblenden"
 msgstr "Retorno"
 
-#: live_panel_looks.cpp:103
+#: live_panel_looks.cpp:193
 msgid "Zurückblenden mit der Zeit des Looks (%1 s)"
 msgstr "Retorno con el tiempo del look (%1 s)"
 
-#: live_panel_looks.cpp:104
+#: live_panel_looks.cpp:194
 msgid "Zurückblenden mit eigener Zeit (%1 s) …"
 msgstr "Retorno con tiempo propio (%1 s) …"
 
-#: live_panel_looks.cpp:105
+#: live_panel_looks.cpp:195
 msgid "Zurückblenden mit eigener Zeit …"
 msgstr "Retorno con tiempo propio …"
 
-#: main_window_live.cpp:89
+#: main_window_live.cpp:96
 msgid "Zwischen Bearbeiten und Live-Betrieb wechseln (F9)"
 msgstr "Cambiar entre edición y funcionamiento live (F9)"
 
@@ -3618,7 +3678,7 @@ msgstr "La recepción de sACN se une a los grupos multicast a través de esta ta
 msgid "Überblendet von Bild A zu Bild B (Position 0 bis 1). „Progressive“ lässt beide in der Mitte voll leuchten."
 msgstr "Fades from image A to image B (position 0 to 1). \"Progressive\" lets both shine fully in the middle."
 
-#: live_panel.cpp:124
+#: live_panel.cpp:154
 msgid "Überblendzeit %1 s. Rechtsklick: umschalten oder flashen"
 msgstr "Tiempo de fundido %1 s. Clic derecho: alternar o flash"
 

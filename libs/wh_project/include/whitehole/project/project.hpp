@@ -46,6 +46,8 @@ struct Look {
     std::string name;
     double fadeSeconds{2.0};  // Überblendzeit beim Abrufen, 0 = hartes Umschalten
     LookTrigger trigger{LookTrigger::Toggle};
+    /// Nur Flash: Zeit für das Einblenden beim Drücken. Leer = die Überblendzeit dieses Looks (bzw. die eigene Zeit des Live-Fensters).
+    std::optional<double> flashInSeconds;
     /// Nur Flash: Zeit für das Zurückblenden beim Loslassen. Leer = die Überblendzeit dieses Looks.
     std::optional<double> returnSeconds;
     graph::Graph graph;

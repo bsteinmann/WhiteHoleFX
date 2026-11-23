@@ -7,6 +7,8 @@
 // Regeln: Flash hat Vorrang vor "Mit GO". Beim ersten gedrückten Flash-Look wird der sichtbare Look gemerkt; mehrere
 // gehaltene Flash-Looks stapeln sich (der zuletzt gedrückte ist zu sehen), erst das Loslassen des letzten kehrt zurück.
 // Schaltet inzwischen jemand um (liveTrigger/liveArm/liveGo), endet das Flash und der neue Look bleibt stehen.
+// Zeiten: Einblenden beim Drücken = `in` des Looks, sonst die eigene Zeit des Live-Fensters, sonst die Überblendzeit des
+// Looks; Zurückblenden beim Loslassen = `return` des Looks, sonst dessen Überblendzeit.
 #include <algorithm>
 #include <cmath>
 
@@ -31,7 +33,8 @@ Result<void> Player::setLookTrigger(int index, project::LookTrigger trigger, std
         return Error{ErrorCode::InvalidArgument, "Die Zeit zum Zurückblenden muss zwischen 0 und 600 Sekunden liegen"};
     }
     project::Look& look = project_->looks[static_cast<std::size_t>(index)];
-    if (look.trigger == trigger && look.returnSeconds == returnSeconds) {
+    const bool dropsIn = trigger == project::LookTrigger::Toggle && look.flashInSeconds.has_value();
+    if (look.trigger == trigger && look.returnSeconds == returnSeconds && !dropsIn) {
         return {};
     }
     if (trigger != project::LookTrigger::Flash) {
@@ -39,7 +42,28 @@ Result<void> Player::setLookTrigger(int index, project::LookTrigger trigger, std
     }
     look.trigger = trigger;
     look.returnSeconds = returnSeconds;
+    if (trigger == project::LookTrigger::Toggle) {
+        look.flashInSeconds.reset();  // ohne Flash gibt es kein Einblenden beim Drücken
+    }
     modified_ = true;
+    return {};
+}
+
+Result<void> Player::setLookFlashIn(int index, std::optional<double> seconds) {
+    if (!project_) {
+        return Error{ErrorCode::InvalidArgument, "Es ist kein Projekt geladen"};
+    }
+    if (!inRange(index, project_->looks.size())) {
+        return Error{ErrorCode::NotFound, "Es gibt keinen Look Nummer " + std::to_string(index + 1)};
+    }
+    if (seconds && !(std::isfinite(*seconds) && *seconds >= 0.0 && *seconds <= project::kMaxFadeSeconds)) {
+        return Error{ErrorCode::InvalidArgument, "Die Zeit zum Einblenden muss zwischen 0 und 600 Sekunden liegen"};
+    }
+    project::Look& look = project_->looks[static_cast<std::size_t>(index)];
+    if (look.flashInSeconds != seconds) {
+        look.flashInSeconds = seconds;
+        modified_ = true;
+    }
     return {};
 }
 
@@ -63,7 +87,8 @@ Result<void> Player::liveDown(int index, std::optional<double> fadeSeconds, bool
     if (const Result<void> armed = armLook(index); !armed.ok()) {
         return armed;
     }
-    return goLook(fadeSeconds);
+    // Die eigene Einblendzeit des Looks gilt vor der Zeit des Live-Fensters und der des Looks
+    return goLook(look.flashInSeconds ? std::optional<double>{*look.flashInSeconds} : fadeSeconds);
 }
 
 Result<void> Player::liveUp(int index) {

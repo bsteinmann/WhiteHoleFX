@@ -91,7 +91,7 @@ Ziel: Jeder Look legt selbst fest, wie er ausgelöst wird. Das gilt für alle Ei
 - **Zurückblenden** (nur Flash): wahlweise
   - `Zeit des Looks` (Standard: die Überblendzeit des Looks, der gerade geflasht wird), oder
   - `frei` (eigene Zeit in Sekunden, 0 = hart).
-- Speicherort: am Look selbst, in der Projektdatei (`look "Name" fade 3 trigger flash return 0.5`; `trigger` und `return` werden nur geschrieben, wenn nicht Standard). Bearbeitbar im Live-Fenster (Rechtsklick auf den Knopf).
+- Speicherort: am Look selbst, in der Projektdatei (`look "Name" fade 3 trigger flash in 0.2 return 0.5`; `trigger`, `in` und `return` werden nur geschrieben, wenn nicht Standard; `in` = Zeit zum Einblenden beim Drücken, Nachtrag 23.11.). Bearbeitbar im Live-Fenster (Rechtsklick auf den Knopf).
 
 ### 5.2 Vorrang
 
@@ -130,7 +130,9 @@ drückt bzw. bewegt. Das ersetzt die festen Nummern aus den Profilen als Standar
   Pads für Looks werden über ihren Ort im Raster gelernt (ein Druck auf das gewünschte Pad belegt das Raster-Feld) oder
   bleiben am Profil-Raster.
 - **Live-Fenster:** neben den Knöpfen für GO, Live beenden und Überblendzeit ebenfalls „Lernen"; dasselbe Ergebnis wie im
-  Reiter, weil beides dieselbe Belegung schreibt.
+  Reiter, weil beides dieselbe Belegung schreibt. Nachtrag 23.11.: Die Zeile steht nicht mehr dauerhaft unten (verwirrend),
+  sondern hinter der Schaltfläche „Einstellungen“ oben rechts, zusammen mit dem Haken „Flash“ je Look und der Menüleiste;
+  im Live-Modus ist alles zunächst ausgeblendet.
 - **Flash und Umschalten** bekommen je Look eine Taste (oder das Pad selbst), gelernt im Look-Dialog (siehe Abschnitt 5).
 - Gespeichert: Belegungen gehören zum Auftritt (Programmeinstellungen), nicht zum Projekt. Ausnahme: der Look-Auslöse-Modus
   aus Abschnitt 5 liegt im Projekt.

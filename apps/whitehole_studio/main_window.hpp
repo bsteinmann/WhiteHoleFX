@@ -145,6 +145,8 @@ public:
     /// Live-Modus ein- und ausschalten (F9). Eintritt scheitert ohne Looks.
     bool enterLive(int first = 0);
     void leaveLive();
+    /// Auftrittsansicht an/aus: im Live-Modus ohne Menüleiste (Schaltfläche "Einstellungen" im Live-Fenster blendet sie ein).
+    void setLiveChrome(bool live);
     [[nodiscard]] bool liveMode() const noexcept { return liveMode_; }
 
 protected:

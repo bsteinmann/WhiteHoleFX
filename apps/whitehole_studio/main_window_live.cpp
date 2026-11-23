@@ -10,6 +10,7 @@
 // versehentlich verstellt wird.
 #include <QAction>
 #include <QApplication>
+#include <QCheckBox>
 #include <QDockWidget>
 #include <QKeySequence>
 #include <QMenu>
@@ -50,6 +51,12 @@ void MainWindow::buildLive() {
     connect(lookPanel_, &LookPanel::loadedIntoEditor, this, &MainWindow::afterRestore);
     connect(lookPanel_, &LookPanel::liveRequested, this, [this](int first) { enterLive(first); });
     connect(livePanel_, &LivePanel::leaveRequested, this, [this]() { leaveLive(); });
+    // Die Schaltfläche "Einstellungen" im Live-Fenster blendet mit den Einstellungen auch die Menüleiste ein und aus
+    connect(livePanel_, &LivePanel::settingsToggled, this, [this](bool shown) {
+        if (liveMode_) {
+            menuBar()->setVisible(shown);
+        }
+    });
     livePanel_->setLearning(library_->midi, library_->dmx,
                             [this](runtime::LiveFunction function, const LearnedSource& found) { learnLiveControl(function, found); });
 
@@ -86,6 +93,7 @@ void MainWindow::buildLive() {
     liveAction_ = new QAction{tr("&Live-Modus"), this};
     liveAction_->setCheckable(true);
     liveAction_->setShortcut(QKeySequence{Qt::Key_F9});
+    addAction(liveAction_);  // F9 gilt auch bei ausgeblendeter Menüleiste
     liveAction_->setToolTip(tr("Zwischen Bearbeiten und Live-Betrieb wechseln (F9)"));
     connect(liveAction_, &QAction::toggled, this, [this](bool on) {
         if (on) {
@@ -119,6 +127,7 @@ bool MainWindow::enterLive(int first) {
     liveDock_->show();
     resizeDocks({liveDock_}, {320}, Qt::Vertical);
     liveMode_ = true;
+    setLiveChrome(true);
     setChecked(true);
     livePanel_->rebuild();
     if (!player_->status().running) {
@@ -134,6 +143,7 @@ void MainWindow::leaveLive() {
     }
     player_->stopLive();
     liveMode_ = false;
+    setLiveChrome(false);
     showEditDocks();
     {
         const QSignalBlocker blocker{liveAction_};
@@ -141,6 +151,12 @@ void MainWindow::leaveLive() {
     }
     afterRestore();
     refreshImage();
+}
+
+void MainWindow::setLiveChrome(bool live) {
+    // Erst die Einstellungen zu (liveMode_ entscheidet, ob das die Menüleiste anfasst), dann die Menüleiste selbst.
+    livePanel_->setSettingsShown(false);
+    menuBar()->setVisible(!live);
 }
 
 void MainWindow::hideEditDocks() {
@@ -184,6 +200,7 @@ void MainWindow::resetLive() {
     // Ein Projekt wurde geladen (der Player hat den Live-Betrieb schon beendet): Oberfläche nachziehen.
     if (liveMode_) {
         liveMode_ = false;
+        setLiveChrome(false);
         showEditDocks();
         const QSignalBlocker blocker{liveAction_};
         liveAction_->setChecked(false);
@@ -217,6 +234,28 @@ QString MainWindow::exerciseLive() {
     }
     if (newAction_->isEnabled() || openAction_->isEnabled() || !runAction_->shortcut().isEmpty() || undoAction_->isEnabled()) {
         return tr("Live: Neu/Öffnen, Leertaste oder Rückgängig sind im Live-Modus nicht gesperrt");
+    }
+    // Auftrittsansicht: ohne Menüleiste und ohne Einstellungen; die Schaltfläche blendet beides gemeinsam ein
+    QApplication::processEvents();  // Qt zeigt Widgets, die nach dem Anzeigen des Fensters entstehen, erst über die Ereignisschleife
+    if (menuBar()->isVisibleTo(this) || livePanel_->settingsShown() || livePanel_->flashCheck(0) == nullptr ||
+        livePanel_->flashCheck(0)->isVisibleTo(livePanel_)) {
+        return QStringLiteral("Live: Menüleiste oder Einstellungen sind zu Beginn nicht ausgeblendet");
+    }
+    livePanel_->setSettingsShown(true);
+    if (!menuBar()->isVisibleTo(this) || !livePanel_->flashCheck(0)->isVisibleTo(livePanel_)) {
+        return QStringLiteral("Live: Die Einstellungen blenden Menüleiste und Flash-Haken nicht ein");
+    }
+    livePanel_->flashCheck(0)->click();
+    if (player_->looks()[0].trigger != project::LookTrigger::Flash) {
+        return QStringLiteral("Live: Der Flash-Haken stellt den Look nicht auf Flash");
+    }
+    livePanel_->flashCheck(0)->click();
+    if (player_->looks()[0].trigger != project::LookTrigger::Toggle || livePanel_->flashCheck(0)->isChecked()) {
+        return QStringLiteral("Live: Der Flash-Haken stellt den Look nicht auf Umschalten zurück");
+    }
+    livePanel_->setSettingsShown(false);
+    if (menuBar()->isVisibleTo(this) || livePanel_->flashCheck(0)->isVisibleTo(livePanel_)) {
+        return QStringLiteral("Live: Ausblenden der Einstellungen lässt Menüleiste oder Flash-Haken stehen");
     }
     for (int i = 0; i < 3; ++i) {
         tick();
@@ -254,7 +293,10 @@ QString MainWindow::exerciseLive() {
     if (!livePanel_->setLookTrigger(0, project::LookTrigger::Flash, 0.0) || player_->looks()[0].trigger != project::LookTrigger::Flash) {
         return QStringLiteral("Live: Flash lässt sich nicht einstellen");
     }
-    if (const std::unique_ptr<QMenu> menu{livePanel_->lookMenu(0)}; menu->actions().size() < 4) {
+    if (!livePanel_->setLookFlashIn(0, 0.0) || player_->looks()[0].flashInSeconds != 0.0) {
+        return QStringLiteral("Live: Die Einblendzeit eines Flash-Looks lässt sich nicht einstellen");
+    }
+    if (const std::unique_ptr<QMenu> menu{livePanel_->lookMenu(0)}; menu->actions().size() < 6) {
         return QStringLiteral("Live: das Rechtsklick-Menü eines Looks ist unvollständig");
     }
     livePanel_->setUseGo(true);
@@ -267,9 +309,16 @@ QString MainWindow::exerciseLive() {
     }
     livePanel_->setUseGo(false);
     (void)livePanel_->setLookTrigger(0, project::LookTrigger::Toggle, std::nullopt);
+    if (player_->looks()[0].flashInSeconds.has_value()) {
+        return QStringLiteral("Live: Umschalten behält die Einblendzeit eines Flash-Looks");
+    }
+    livePanel_->setSettingsShown(true);  // auch mit offenen Einstellungen muss der Editor die Menüleiste zurückbekommen
     leaveLive();
     if (player_->liveActive() || liveDock_->isVisible()) {
         return tr("Live: Zurück zum Editor scheitert");
+    }
+    if (!menuBar()->isVisibleTo(this) || livePanel_->settingsShown()) {
+        return QStringLiteral("Live: Nach dem Live-Modus fehlt die Menüleiste oder die Einstellungen sind noch offen");
     }
     if (!newAction_->isEnabled() || !openAction_->isEnabled() || runAction_->shortcut().isEmpty() || !editorDock_->isVisible()) {
         return tr("Live: Neu/Öffnen, Leertaste oder Editor kommen nach dem Live-Modus nicht zurück");

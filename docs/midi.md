@@ -54,9 +54,11 @@ Code: `midi::LiveProfile` (`live_profile.hpp`), `runtime::MidiLiveController` (`
 
 ## Looks umschalten oder flashen
 
-Jeder Look legt fest, wie er ausgelöst wird (Rechtsklick auf den Look im Live-Fenster, in der Datei `look "Name" fade 3 trigger flash
-return 0.5`): **Umschalten** (Standard) bleibt an; **Flashen** läuft nur, solange Pad oder Knopf gehalten werden, und blendet beim
-Loslassen zum vorherigen Look zurück - mit der Überblendzeit des Looks oder einer eigenen Zeit (0 = hart). Flash hat Vorrang vor
+Jeder Look legt fest, wie er ausgelöst wird (im Live-Fenster unter „Einstellungen“ der Haken **Flash** unter dem Look, oder per
+Rechtsklick auf den Look; in der Datei `look "Name" fade 3 trigger flash in 0.2 return 0.5`): **Umschalten** (Standard) bleibt an; **Flashen** läuft nur, solange Pad oder Knopf gehalten werden, und blendet beim
+Loslassen zum vorherigen Look zurück. Beide Zeiten sind je Look einstellbar: **Rein** (`in`, beim Drücken) und **Zurück**
+(`return`, beim Loslassen), jeweils die Überblendzeit des Looks oder eine eigene Zeit (0 = hart). Ohne eigene Einblendzeit gilt beim
+Drücken die Zeit des Looks (im Live-Fenster ggf. die eigene Überblendzeit); eine Einblendzeit am Look geht vor. Flash hat Vorrang vor
 „Mit GO“. Mehrere gehaltene Flash-Looks stapeln sich, erst das letzte Loslassen kehrt zurück; wer inzwischen umschaltet (Pad, GO,
 Cue), beendet das Flash und der neue Look bleibt stehen. Die Logik steckt im Player (`liveDown`/`liveUp`), damit sie für alle
 Eingänge gleich gilt.
@@ -64,8 +66,8 @@ Eingänge gleich gilt.
 ## Steuerung frei belegen (MIDI und DMX)
 
 GO, Live beenden, Master, Überblendzeit und manuelle Überblendung lassen sich per **Lernen** auf beliebige Tasten, Regler oder
-DMX-Kanäle legen - im Reiter Einstellungen → **Steuerung** und in der Zeile „Steuerung lernen“ des Live-Fensters; beide schreiben
-dieselbe Belegung (`runtime::LiveBindings`, Programmeinstellung `midi/liveBindings`). Ohne eigene MIDI-Belegung gilt das Profil;
+DMX-Kanäle legen - im Reiter Einstellungen → **Steuerung** und in der Zeile „Steuerung belegen“ des Live-Fensters (erscheint mit der
+Schaltfläche **Einstellungen** oben rechts); beide schreiben dieselbe Belegung (`runtime::LiveBindings`, Programmeinstellung `midi/liveBindings`). Ohne eigene MIDI-Belegung gilt das Profil;
 „Profil“ setzt zurück. DMX: Tasten lösen bei steigender Flanke über 127 aus, Fader wirken bei jeder Änderung; der erste gelesene
 Wert löst nichts aus. Master über DMX ist die vorhandene Einstellung der Seite DMX-Eingang. Solange ein Lernen-Knopf wartet, wirkt
 der Controller im Live-Modus nicht (die zu lernende Taste löst nicht ihre alte Funktion aus).

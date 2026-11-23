@@ -255,6 +255,9 @@ Result<std::string> writeProject(const Project& project) {
         if (look.trigger == LookTrigger::Flash) {
             out << " trigger flash";
         }
+        if (look.flashInSeconds) {
+            out << " in " << formatDouble(*look.flashInSeconds);
+        }
         if (look.returnSeconds) {
             out << " return " << formatDouble(*look.returnSeconds);
         }

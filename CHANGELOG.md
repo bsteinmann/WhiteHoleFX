@@ -23,13 +23,22 @@
   `tests/runtime/midi_live_test.cpp`, `tests/runtime/live_manual_fade_test.cpp`. Beschreibung: `docs/midi.md`.
 - **Looks flashen.** Jeder Look kann umschalten (wie bisher) oder flashen: nur solange gehalten, beim Loslassen zurück zum
   vorherigen Look, mit der Zeit des Looks oder eigener Zeit. Einstellbar per Rechtsklick im Live-Fenster, gespeichert im Projekt
-  (`look … trigger flash return 0.5`). Flash hat Vorrang vor „Mit GO“; gilt für Knöpfe und MIDI-Pads gleich
+  (`look … trigger flash in 0.2 return 0.5`). Auch die Zeit zum **Einblenden** beim Drücken (`in`, `Player::setLookFlashIn`) ist je
+  Look einstellbar; ohne Angabe gilt wie bisher die Überblendzeit des Looks bzw. die eigene Zeit des Live-Fensters, eine
+  Einblendzeit am Look geht vor. Umstellen auf „umschalten“ löscht sie. Flash hat Vorrang vor „Mit GO“; gilt für Knöpfe und MIDI-Pads gleich
   (`Player::liveDown`/`liveUp`/`setLookTrigger`). Look-Knöpfe reagieren jetzt beim Drücken statt beim Loslassen. Tests:
   `tests/runtime/live_flash_test.cpp`.
-- **Live-Steuerung frei belegbar, MIDI und DMX.** Neuer Reiter Einstellungen → **Steuerung** und Zeile „Steuerung lernen“ im
-  Live-Fenster: GO, Live beenden, Master, Überblendzeit und manuelle Überblendung per **Lernen** auf MIDI-Tasten/-Regler oder
-  DMX-Kanäle (`runtime::LiveBindings`, `input::DmxLearn`); das MIDI-Profil bleibt Startbelegung. Tests:
-  `tests/runtime/live_bindings_test.cpp`.
+- **Live-Steuerung frei belegbar, MIDI und DMX.** Neuer Reiter Einstellungen → **Steuerung** und Zeile „Steuerung belegen“ in den
+  Einstellungen des Live-Fensters (siehe nächster Eintrag): GO, Live beenden, Master, Überblendzeit und manuelle Überblendung per
+  **Lernen** auf MIDI-Tasten/-Regler oder DMX-Kanäle (`runtime::LiveBindings`, `input::DmxLearn`); das MIDI-Profil bleibt
+  Startbelegung. Tests: `tests/runtime/live_bindings_test.cpp`.
+- **Live-Fenster: Schaltfläche „Einstellungen“.** Die Zeile „Steuerung lernen“ unten ist weg (verwirrend). Stattdessen blendet die
+  Schaltfläche **Einstellungen** oben rechts neben „Zurück zum Editor“ ein und aus: unter jedem Look den Haken **Flash** samt
+  Zeiten zum Ein- und Zurückblenden (bisher nur per Rechtsklick auffindbar), die Zeile „Steuerung belegen“ mit den Lernen-Knöpfen und die
+  **Menüleiste** des Hauptfensters. Im Live-Modus startet alles ausgeblendet (aufgeräumte Auftrittsansicht, ohne Menüs Ansicht,
+  Wiedergabe, Speichern, Testmodus usw.); beim Verlassen des Live-Modus ist die Menüleiste immer wieder da. F9 gilt auch bei
+  ausgeblendeter Menüleiste. Der Zustand wird nicht gespeichert. „Zurück zum Editor“ sitzt jetzt oben statt unten. Rauchtest:
+  `MainWindow::exerciseLive`.
 
 ## 1.1.0
 
