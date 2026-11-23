@@ -127,6 +127,9 @@ add_executable(whitehole_studio
     add_fixture_dialog.cpp
     add_fixture_dialog.hpp
     app_settings.cpp
+    main_window_midi.cpp
+    midi_settings_page.cpp
+    midi_settings_page.hpp
     app_settings.hpp
     network_interfaces.cpp
     node_defaults_page.cpp
@@ -162,6 +165,7 @@ target_link_libraries(whitehole_studio PRIVATE
     whitehole::audio
     whitehole::i18n
     whitehole::input
+    whitehole::midi
     whitehole::nodes
     whitehole::output
     whitehole::preview

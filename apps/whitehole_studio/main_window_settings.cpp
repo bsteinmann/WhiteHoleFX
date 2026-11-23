@@ -37,7 +37,10 @@ void MainWindow::buildSettings(QMenu* editMenu) {
 }
 
 void MainWindow::openSettings() {
-    SettingsDialog dialog{appSettings_, *library_->registry, this};
+    if (!midiStore_) {
+        midiStore_ = std::make_shared<midi::MidiStore>();  // damit die Seite MIDI sofort Nachrichten zeigt
+    }
+    SettingsDialog dialog{appSettings_, *library_->registry, this, midiStore_};
     if (dialog.exec() != QDialog::Accepted) {
         return;
     }
@@ -64,6 +67,7 @@ QString MainWindow::applySettings(const AppSettings& wanted, bool persist) {
                             next.artnetPort != appSettings_.artnetPort || next.sacnPort != appSettings_.sacnPort ||
                             next.inputInterface != appSettings_.inputInterface;
     const QString audioBefore = appSettings_.audioSource;
+    const AppSettings settingsBefore = appSettings_;
     appSettings_ = next;
     applyMasterDmx();
     applyLiveDmx();
@@ -73,6 +77,11 @@ QString MainWindow::applySettings(const AppSettings& wanted, bool persist) {
     }
     if (dmxChanged) {
         if (const QString error = applyDmxInput(); !error.isEmpty()) {
+            problems << error;
+        }
+    }
+    if (midiNeedsApply(settingsBefore)) {
+        if (const QString error = applyMidi(); !error.isEmpty()) {
             problems << error;
         }
     }
@@ -105,6 +114,8 @@ QString MainWindow::exerciseSettings() {
     probe.masterDmxChannel = 77;
     probe.outputInterface = QStringLiteral("203.0.113.9");
     probe.inputInterface = QStringLiteral("203.0.113.10");
+    probe.midiInput = QStringLiteral("Test-MIDI-Eingang 1:0");
+    probe.midiOutput = QStringLiteral("Test-MIDI-Ausgang 1:1");
     probe.audioSource = QStringLiteral("device:Nicht vorhanden");
     if (!(SettingsDialog{probe, *library_->registry, this}.settings() == probe)) {
         return QStringLiteral("Einstellungen: der Dialog gibt nicht zurück, was man ihm gibt (Gerät)");
@@ -135,6 +146,12 @@ QString MainWindow::exerciseSettings() {
         return QStringLiteral("Einstellungen: die Karte 127.0.0.1 lässt sich nicht wählen: ") + error;
     }
     tick();  // das Senden läuft über die gewählte Karte weiter
+    // Ein MIDI-Port, den es nicht gibt, wird gemeldet (die Wahl bleibt stehen; der Rest läuft weiter).
+    AppSettings midiBad = loopback;
+    midiBad.midiInput = QStringLiteral("Gibt es garantiert nicht 99:9");
+    if (applySettings(midiBad, false).isEmpty()) {
+        return QStringLiteral("Einstellungen: ein nicht vorhandener MIDI-Eingang wurde nicht gemeldet");
+    }
     if (const QString error = applySettings(before, false); !error.isEmpty() || !(appSettings_ == before)) {
         return QStringLiteral("Einstellungen: der alte Stand lässt sich nicht wiederherstellen: ") + error;
     }

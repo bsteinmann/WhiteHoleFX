@@ -69,6 +69,7 @@ Mit GPU und Oberfläche, Windows und alle Fallstricke: **[BUILDING.md](BUILDING.
 - [Projektdatei und Konsolen-Runner](docs/project-format.md)
 - [Bauen und Starten](BUILDING.md)
 - [Oberfläche (Qt)](docs/studio.md)
+- [MIDI (Controller, Stand Stufe 1)](docs/midi.md)
 - [Tutorial](docs/tutorial/de.md) ([English](docs/tutorial/en.md), [Français](docs/tutorial/fr.md), [Español](docs/tutorial/es.md), [Українська](docs/tutorial/uk.md))
 - [Beispielprojekte](docs/examples.md)
 - [Sprachen und Übersetzen](docs/translating.md)

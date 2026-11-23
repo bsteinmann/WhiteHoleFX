@@ -85,7 +85,7 @@ jobs:
       - name: Bauwerkzeuge und Qt installieren
         run: |
           sudo apt-get update
-          sudo apt-get install -y g++-12 qt6-base-dev libgl1-mesa-dev libxkbcommon-dev dpkg-dev \
+          sudo apt-get install -y g++-12 qt6-base-dev libgl1-mesa-dev libxkbcommon-dev libasound2-dev dpkg-dev \
             desktop-file-utils shared-mime-info libxml2-utils unzip curl
       - name: wgpu-native laden
         run: scripts/fetch-wgpu-native.sh

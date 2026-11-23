@@ -7,7 +7,7 @@
 //
 // Schlüssel in QSettings (Organisation und Anwendung "WhiteHoleFX"): dmx/artnet, dmx/sacn, audio/source
 // wie bisher, neu dmx/artnetPort, dmx/sacnPort, dmx/masterEnabled, dmx/masterProtocol, dmx/masterUniverse, dmx/masterChannel,
-// dmx/liveEnabled, dmx/liveProtocol, dmx/liveUniverse, dmx/liveSelectChannel, dmx/liveFadeChannel, network/outInterface, network/inInterface,
+// dmx/liveEnabled, dmx/liveProtocol, dmx/liveUniverse, dmx/liveSelectChannel, dmx/liveFadeChannel, network/outInterface, network/inInterface, midi/input, midi/output,
 // nodeDefaults/<Typ-ID>/<Parameter> (Wert als Text, siehe encodeParameterValue).
 #pragma once
 
@@ -38,6 +38,9 @@ struct AppSettings {
     /// IPv4-Adresse der Netzwerkkarte zum Senden bzw. Empfangen; leer = das System wählt.
     QString outputInterface;
     QString inputInterface;
+    /// MIDI-Ports (Name wie vom System gemeldet, leer = aus). Gehört zum Auftritt, nicht zum Projekt.
+    QString midiInput;
+    QString midiOutput;
     /// "off", "default", "device:<Name>" oder "file:<Pfad>".
     QString audioSource{QStringLiteral("off")};
     /// Eigene Standardwerte für neue Nodes (Seite "Node-Standardwerte").

@@ -33,6 +33,8 @@ AppSettings loadAppSettings() {
     result.liveDmxFadeChannel = std::clamp(s.value(QStringLiteral("dmx/liveFadeChannel"), 0).toInt(), 0, 512);
     result.outputInterface = s.value(QStringLiteral("network/outInterface")).toString();
     result.inputInterface = s.value(QStringLiteral("network/inInterface")).toString();
+    result.midiInput = s.value(QStringLiteral("midi/input")).toString();
+    result.midiOutput = s.value(QStringLiteral("midi/output")).toString();
     result.audioSource = s.value(QStringLiteral("audio/source"), result.audioSource).toString();
     // Eigene Standardwerte: eine Gruppe je Node-Typ. Unlesbare Einträge werden übersprungen.
     QSettings defaults = store();
@@ -67,6 +69,8 @@ void saveAppSettings(const AppSettings& settings) {
     s.setValue(QStringLiteral("dmx/liveFadeChannel"), settings.liveDmxFadeChannel);
     s.setValue(QStringLiteral("network/outInterface"), settings.outputInterface);
     s.setValue(QStringLiteral("network/inInterface"), settings.inputInterface);
+    s.setValue(QStringLiteral("midi/input"), settings.midiInput);
+    s.setValue(QStringLiteral("midi/output"), settings.midiOutput);
     s.setValue(QStringLiteral("audio/source"), settings.audioSource);
     s.remove(QStringLiteral("nodeDefaults"));
     for (const auto& [type, values] : settings.nodeDefaults.all()) {

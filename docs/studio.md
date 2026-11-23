@@ -595,6 +595,7 @@ zum Projekt. Die Wahl wird beim Nutzer gespeichert und beim nächsten Start wied
   Statuszeile meldet es.
 - **DMX-Eingang:** Art-Net und sACN einzeln einschalten, dazu die Ports (Standard 6454 und 5568).
 - **Audio:** die Quelle für die Audio-Nodes (siehe unten).
+- **MIDI:** Eingangs- und Ausgangsport eines MIDI-Controllers (zum Beispiel Akai APC mini), jeweils „Aus“ oder ein vom System gemeldeter Port; „Ports neu einlesen“ liest die Liste nach dem Anstecken neu. Darunter steht die zuletzt empfangene Nachricht, damit man sieht, ob das Gerät ankommt. Siehe [MIDI](midi.md).
 
 ## DMX-Eingang
 

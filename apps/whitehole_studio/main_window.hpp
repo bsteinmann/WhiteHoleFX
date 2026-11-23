@@ -22,6 +22,7 @@
 #include "update_checker.hpp"
 #include "whitehole/audio/audio_input.hpp"
 #include "whitehole/input/dmx_receiver.hpp"
+#include "whitehole/midi/midi_receiver.hpp"
 #include "whitehole/nodes/builtin_library.hpp"
 #include "whitehole/output/udp_sender.hpp"
 #include "whitehole/runtime/gated_sink.hpp"
@@ -217,6 +218,8 @@ private:
     /// DMX-Eingang (main_window_dmx.cpp): Empfänger nach appSettings_ starten/stoppen. Liefert den Fehlertext
     /// (leer = in Ordnung); bei einem Fehler sind beide Protokolle in appSettings_ aus.
     QString applyDmxInput();
+    QString applyMidi();  // öffnet die gewählten MIDI-Ports; Fehlertext oder leer
+    [[nodiscard]] bool midiNeedsApply(const AppSettings& before) const;
     void syncDmxUniverses();
     /// Master über DMX (main_window_dmx.cpp): gibt die Wahl aus appSettings_ an den Player; der Regler folgt dem Pult.
     void applyMasterDmx();
@@ -287,6 +290,9 @@ private:
     std::unique_ptr<runtime::PresetStore> groupLibrary_;  // Ordner mit gespeicherten Gruppen (Bibliothek in der Palette)
     std::unique_ptr<runtime::PresetStore> presets_;  // Ordner mit Node-Presets im Datenordner des Nutzers
     std::unique_ptr<input::DmxReceiver> dmxReceiver_;  // nach library_: liest/schreibt dessen Speicher
+    std::shared_ptr<midi::MidiStore> midiStore_;         // letzter MIDI-Zustand (Controller)
+    std::unique_ptr<midi::MidiReceiver> midiReceiver_;   // schreibt in midiStore_
+    std::unique_ptr<midi::IMidiOutput> midiOutput_;      // LED-Rückmeldung (ab Stufe 3 genutzt)
     AppSettings appSettings_;                           // was gerade angewendet ist (Netzwerkkarten, DMX, Audio)
     QAction* settingsAction_{nullptr};
     std::unique_ptr<audio::AudioInput> audioInput_;    // nach library_: schreibt in dessen Audio-Speicher
