@@ -32,6 +32,7 @@
 #include <variant>
 
 #include "parameter_editors.hpp"
+#include "parameter_panel_midi.hpp"
 #include "whitehole/runtime/connection_scale.hpp"
 
 namespace whitehole::studio {
@@ -328,6 +329,7 @@ void ParameterPanel::rebuild(const std::vector<runtime::NodeInfo>& nodes) {
                 dependentsByController[info.visibleWhenAtLeastKey].emplace_back(key, *info.visibleWhenAtLeast);
             }
         }
+        addMidiLearnRow(node, grid, row, holders);  // nur MIDI-Nodes
         // "<name>Min" und "<name>Max" stellen den Bereich des Schiebereglers von "<name>" ein.
         for (const runtime::ParameterInfo& info : node.parameters) {
             const auto low = numberOf(info.key + "Min");

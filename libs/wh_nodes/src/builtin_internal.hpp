@@ -13,6 +13,7 @@
 #include "whitehole/graph/parameter_resolve.hpp"
 #include "whitehole/audio/audio_store.hpp"
 #include "whitehole/input/dmx_store.hpp"
+#include "whitehole/midi/midi_store.hpp"
 #include "whitehole/values/cpu_kernel.hpp"
 
 namespace whitehole::nodes::detail {
@@ -213,6 +214,8 @@ std::vector<values::CpuNodeDefinition> pongNodes();       // Pong (Spiel)
 std::vector<compiler::NodeDefinition> audioFieldNodes();  // Spectrum Bars
 /// DMX-Eingang (Art-Net/sACN): die Kernel lesen aus `store`; null = ein leerer Speicher (nie ein Signal).
 std::vector<values::CpuNodeDefinition> dmxNodes(std::shared_ptr<input::DmxStore> store);
+/// MIDI-Eingang (wh.value.midicc, wh.value.midinote): die Kernel lesen aus `store`; null = ein leerer Speicher (nie ein Signal).
+std::vector<values::CpuNodeDefinition> midiNodes(std::shared_ptr<midi::MidiStore> store);
 
 /// Farbton (in Umläufen, 0..1 wiederholt sich), Sättigung und Helligkeit einer Farbe ändern; bei
 /// 0 / 1 / 1 kommt die Farbe unverändert zurück. Alpha bleibt.

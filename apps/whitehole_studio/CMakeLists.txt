@@ -120,6 +120,8 @@ add_executable(whitehole_studio
     parameter_editors.cpp
     parameter_editors.hpp
     parameter_panel.cpp
+    parameter_panel_midi.cpp
+    parameter_panel_midi.hpp
     parameter_panel.hpp
     preview_controller.cpp
     preview_controller_exercise.cpp

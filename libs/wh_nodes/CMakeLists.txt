@@ -28,9 +28,11 @@ wh_add_library(wh_nodes
         src/builtin_color_values.cpp
         src/builtin_dmx.cpp
         src/builtin_dmx_out.cpp
+        src/builtin_midi.cpp
         src/builtin_values.cpp
     PUBLIC_DEPS
         wh_audio
         wh_compiler
         wh_input
+        wh_midi
         wh_values)

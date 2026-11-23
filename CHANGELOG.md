@@ -9,6 +9,11 @@
   den Einstellungen (Eingang, Ausgang, letzte Nachricht); `midi/input` und `midi/output` gehören zum Programm, nicht zum Projekt.
   CI: `libasound2-dev` in den Linux-Jobs mit Studio und Paket. Plan: `docs/entwurf-midi.md`, Beschreibung: `docs/midi.md`.
   Tests: `tests/midi/midi_test.cpp`.
+- **MIDI, Stufe 2: Nodes und „Lernen“.** Neue Nodes **MIDI CC** (`wh.value.midicc`: Regler als Zahl mit Out min/max, Schwelle, Zeitlimit,
+  Halten) und **MIDI Note** (`wh.value.midinote`: `On`, `Velocity`, `Signal`). Im Parameterfenster trägt der Knopf **Lernen** Kanal und
+  Reglernummer bzw. Note der nächsten Controller-Nachricht ein (`midi::MidiLearn`, berührt die Ereignisliste des Speichers nicht).
+  `MidiStore` merkt sich dafür die letzte Reglernachricht und den letzten Note-On samt laufender Nummer. `BuiltinLibrary::midi` ist der
+  gemeinsame Speicher von Nodes und Einstellungsseite. Tests: `tests/midi/midi_nodes_test.cpp`, `tests/midi/midi_learn_test.cpp`.
 
 ## 1.1.0
 

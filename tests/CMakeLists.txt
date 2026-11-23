@@ -44,6 +44,8 @@ add_executable(wh_tests
     input/dmx_packets_test.cpp
     input/dmx_receiver_test.cpp
     input/dmx_store_test.cpp
+    midi/midi_learn_test.cpp
+    midi/midi_nodes_test.cpp
     midi/midi_test.cpp
     nodes/builtin_nodes_test.cpp
     nodes/cells_auto_test.cpp

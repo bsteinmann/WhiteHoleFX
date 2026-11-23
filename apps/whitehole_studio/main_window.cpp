@@ -78,6 +78,7 @@ MainWindow::MainWindow(gpu::IGpuDevice* device, const QString& deviceNote, QWidg
     connect(preview_, &PreviewWidget::resized, this, [this](QSize) { refreshImage(); });
 
     parameters_ = new ParameterPanel{this};
+    parameters_->setMidiLearn(std::make_shared<midi::MidiLearn>(library_->midi));
     parameters_->setChangeHandler(
         [this](NodeId node, const std::string& key,
                graph::ParameterValue value) -> std::optional<graph::ParameterValue> {

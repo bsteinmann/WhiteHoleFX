@@ -10,7 +10,7 @@ msgstr ""
 msgid "\nRechtsklick: Favorit umschalten"
 msgstr "\nПравий клік: додати/прибрати з обраного"
 
-#: main_window.cpp:295
+#: main_window.cpp:296
 msgid "   |   AUSGABE AN"
 msgstr "   |   ВИВІД УВІМКНЕНО"
 
@@ -22,11 +22,11 @@ msgstr "   |   У проєкті є аудіо-ноди, вхід вимкнен
 msgid "   |   Audio: %1"
 msgstr "   |   Аудіо: %1"
 
-#: main_window.cpp:295
+#: main_window.cpp:296
 msgid "   |   Ausgabe aus (%1 Pakete nicht gesendet)"
 msgstr "   |   Вивід вимкнено (%1 пакетів не надіслано)"
 
-#: main_window.cpp:285
+#: main_window.cpp:286
 msgid "   |   BLACKOUT"
 msgstr "   |   BLACKOUT"
 
@@ -38,15 +38,15 @@ msgstr "   |   Вхід DMX %1: %2 пакетів"
 msgid "   |   DMX-Nodes im Projekt, Eingang aus (Einstellungen)"
 msgstr "   |   У проєкті є DMX-ноди, вхід вимкнено (Налаштування)"
 
-#: main_window.cpp:290
+#: main_window.cpp:291
 msgid "   |   EINGANG FEHLT – LEDs aus"
 msgstr "   |   ВХОДУ НЕМАЄ – СВІТЛОДІОДИ ВИМКНЕНО"
 
-#: main_window.cpp:287
+#: main_window.cpp:288
 msgid "   |   Master %1 %"
 msgstr "   |   Master %1 %"
 
-#: main_window.cpp:282
+#: main_window.cpp:283
 msgid "   |   TESTMODUS"
 msgstr "   |   ТЕСТОВИЙ РЕЖИМ"
 
@@ -114,11 +114,11 @@ msgstr "%1 (%2 світлодіодів)"
 msgid "%1 (%2)"
 msgstr "%1 (%2)"
 
-#: settings_dialog.cpp:189
+#: settings_dialog.cpp:190
 msgid "%1 (Standard)"
 msgstr "%1 (стандартно)"
 
-#: midi_settings_page.cpp:31 settings_dialog.cpp:47 settings_dialog.cpp:193
+#: midi_settings_page.cpp:33 settings_dialog.cpp:48 settings_dialog.cpp:194
 msgid "%1 (nicht gefunden)"
 msgstr "%1 (не знайдено)"
 
@@ -130,11 +130,11 @@ msgstr "Введено %1 фікстур."
 msgid "%1 LEDs · Größe %2 × %3 × %4 · %5 Kanäle (RGB), rund %6 Universe(s)"
 msgstr "%1 LED · Розмір %2 × %3 × %4 · %5 каналів (RGB), приблизно %6 universe"
 
-#: main_window.cpp:271
+#: main_window.cpp:272
 msgid "%1 LEDs, Frame %2 (verworfen %3), Pakete %4, Sendefehler %5"
 msgstr "%1 LED, кадр %2 (відкинуто %3), пакети %4, помилки надсилання %5"
 
-#: main_window.cpp:269
+#: main_window.cpp:270
 msgid "%1 LEDs, angehalten"
 msgstr "%1 LED, зупинено"
 
@@ -254,11 +254,11 @@ msgstr "&Зберегти"
 msgid "&Stage Config"
 msgstr "&Stage Config"
 
-#: main_window.cpp:154 main_window_actions.cpp:55
+#: main_window.cpp:155 main_window_actions.cpp:55
 msgid "&Start"
 msgstr "&Старт"
 
-#: main_window.cpp:154
+#: main_window.cpp:155
 msgid "&Stopp"
 msgstr "&Стоп"
 
@@ -486,7 +486,7 @@ msgstr "Зберегти поточний ефект як Look …"
 msgid "Alle LEDs aus; die Pakete laufen weiter (Strg+B)"
 msgstr "Усі LED вимкнено; пакети надсилаються далі (Ctrl+B)"
 
-#: parameter_panel.cpp:126
+#: parameter_panel.cpp:127
 msgid "Alle Nodes"
 msgstr "Усі ноди"
 
@@ -526,7 +526,7 @@ msgstr "Зберегти як пресет"
 msgid "Als Preset speichern …"
 msgstr "Зберегти як пресет …"
 
-#: parameter_panel.cpp:95
+#: parameter_panel.cpp:96
 msgid "An Bereich anpassen"
 msgstr "Підігнати під діапазон"
 
@@ -546,7 +546,7 @@ msgstr "Початок і кінець відносно позиції; перш
 msgid "Anfang x y z"
 msgstr "Початок x y z"
 
-#: parameter_panel.cpp:238
+#: parameter_panel.cpp:239
 msgid "Anheften"
 msgstr "Закріпити"
 
@@ -578,7 +578,7 @@ msgstr "Кількість x y z"
 msgid "Art-Net"
 msgstr "Art-Net"
 
-#: settings_dialog.cpp:101
+#: settings_dialog.cpp:102
 msgid "Art-Net empfangen"
 msgstr "Приймати Art-Net"
 
@@ -590,15 +590,15 @@ msgstr "Art-Net рахує універси з 0 (до 32767), sACN з 1 (до 6
 msgid "Art-Net zählt Universen ab 0 (bis 32767), sACN ab 1 (bis 63999). Bei DDP gibt es keine Universen."
 msgstr "Art-Net рахує універси з 0 (до 32767), sACN з 1 (до 63999). У DDP універсів немає."
 
-#: settings_dialog.cpp:86
+#: settings_dialog.cpp:87
 msgid "Art-Net, sACN und DDP gehen über diese Karte hinaus. Bei „Automatisch“ entscheidet die Routingtabelle des Systems, bei mehreren Karten oft die falsche. Eine Karte auswählen, wenn die Lichtanlage an einem zweiten Netzwerkanschluss hängt."
 msgstr "Art-Net, sACN і DDP виходять через цю карту. За «Автоматично» вирішує таблиця маршрутизації системи, а за кількох карт вона часто обирає хибну. Оберіть карту, якщо світлове обладнання підключене до другого мережевого порту."
 
-#: settings_dialog.cpp:113
+#: settings_dialog.cpp:114
 msgid "Art-Net-Port (UDP):"
 msgstr "Порт Art-Net (UDP):"
 
-#: main_window_actions.cpp:166 settings_dialog.cpp:64
+#: main_window_actions.cpp:166 settings_dialog.cpp:65
 msgid "Audio"
 msgstr "Аудіо"
 
@@ -622,7 +622,7 @@ msgstr "Аудіохвиля"
 msgid "Auf &Updates prüfen …"
 msgstr "Перевірити &оновлення …"
 
-#: parameter_panel.cpp:305
+#: parameter_panel.cpp:306
 msgid "Auf Standardwert zurücksetzen"
 msgstr "Скинути до стандартного значення"
 
@@ -646,11 +646,11 @@ msgstr "Перетягніть на поле: додати ноду.\nПерет
 msgid "Auf gewählten anwenden"
 msgstr "Застосувати до вибраного"
 
-#: settings_dialog.cpp:224
+#: settings_dialog.cpp:225
 msgid "Aufnahmegeräte lassen sich nicht auflisten: %1"
 msgstr "Не вдалося отримати список пристроїв запису: %1"
 
-#: midi_settings_page.cpp:24 settings_dialog.cpp:175 test_panel.cpp:39
+#: midi_settings_page.cpp:26 settings_dialog.cpp:176 test_panel.cpp:39
 msgid "Aus"
 msgstr "Вимк."
 
@@ -710,7 +710,7 @@ msgstr "Тригер"
 msgid "Auswahl hervorheben"
 msgstr "Підсвічувати вибране"
 
-#: settings_dialog.cpp:41
+#: settings_dialog.cpp:42
 msgid "Automatisch (das System wählt)"
 msgstr "Автоматично (обирає система)"
 
@@ -906,7 +906,7 @@ msgstr "Тригер DMX: поріг (від 1 до 255)"
 msgid "DMX-Auslöser: Universe"
 msgstr "Тригер DMX: universe"
 
-#: settings_dialog.cpp:63
+#: settings_dialog.cpp:64
 msgid "DMX-Eingang"
 msgstr "Вхід DMX"
 
@@ -934,11 +934,11 @@ msgstr "Кабель починається з цього боку, а не з �
 msgid "Das Kabel läuft ohne Rücksprung von Ring zu Ring: unten vorwärts, den nächsten Ring rückwärts ..."
 msgstr "Кабель переходить від кільця до кільця без повернення: нижнє вперед, наступне назад ..."
 
-#: node_info_texts.cpp:177
+#: node_info_texts.cpp:181
 msgid "Das Pong-Spiel als Rechen-Node: Ball, Schläger, Punkte und Treffer als Werte. Computer oder Eingang spielen, auch im Takt der Musik. Gezeichnet wird es von „Pong Display“."
 msgstr "Гра Pong як обчислювальний вузол: м'яч, ракетки, рахунок і удари як значення. Грає комп'ютер або вхід, також у такт музики. Малює її «Pong Display»."
 
-#: main_window.cpp:218
+#: main_window.cpp:219
 msgid "Das Projekt wurde geändert. Änderungen verwerfen?"
 msgstr "Проєкт змінено. Відкинути зміни?"
 
@@ -990,11 +990,11 @@ msgstr "Видалити Look «%1»?"
 msgid "Den aktuellen Effekt als Look in die Liste legen (Strg+L)"
 msgstr "Додати поточний ефект до списку як Look (Ctrl+L)"
 
-#: node_info_texts.cpp:151
+#: node_info_texts.cpp:155
 msgid "Der Ausgang: Was hier ankommt, wird auf die LEDs gesendet. Mit „Mode“ in einen Bereich skalieren oder als Fenster ausschneiden, plus Helligkeit."
 msgstr "Вихід: усе, що сюди надходить, надсилається на LED. Через «Mode» масштабується в область або вирізається як вікно, плюс яскравість."
 
-#: settings_dialog.cpp:164
+#: settings_dialog.cpp:165
 msgid "Der Auswahl-Kanal teilt sich in so viele gleich große Stufen, wie das Projekt Looks hat; 0 heißt kein Wechsel. Ohne Überblendzeit-Kanal (aus) gilt die im Look gespeicherte Zeit, sonst setzt der Kanalwert 0 bis 255 die Zeit auf 0 bis 10 Sekunden. Wirkt nur im laufenden Live-Betrieb; bleibt das Signal weg, bleibt der zuletzt gezeigte Look stehen."
 msgstr "Канал вибору ділиться на стільки рівних ступенів, скільки луків у проєкті; 0 означає без зміни. Без каналу часу переходу (вимкнено) діє власний час луку, інакше значення каналу (0..255) задає час від 0 до 10 секунд. Діє лише під час роботи live-режиму; якщо сигнал зникає, залишається останній показаний лук."
 
@@ -1014,7 +1014,7 @@ msgstr "Контролеру потрібна назва, щоб його збе
 msgid "Der Cue löst aus, wenn der Kanalwert auf diese Zahl oder darüber steigt"
 msgstr "Cue спрацьовує, коли значення каналу зростає до цього числа або вище"
 
-#: settings_dialog.cpp:133
+#: settings_dialog.cpp:134
 msgid "Der Kanalwert 0 bis 255 setzt den Master auf 0 bis 100 %. Solange Pakete kommen, folgt der Master-Regler dem Pult; bleibt das Signal weg, hält der Master seinen Wert. Der Empfang oben muss für das gewählte Protokoll eingeschaltet sein."
 msgstr "Значення каналу від 0 до 255 задає Master від 0 до 100 %. Поки надходять пакети, регулятор Master слідує за пультом; якщо сигнал зникає, Master тримає своє значення. Приймання вгорі має бути ввімкнене для обраного протоколу."
 
@@ -1042,7 +1042,7 @@ msgstr "Cuelist порожній. Спершу створіть Cue (док «Cu
 msgid "Die Cuelist läuft und schaltet die Looks selbst. Erst in der Cuelist auf Stopp drücken."
 msgstr "Cuelist працює й сам перемикає Look. Спершу натисніть Стоп у Cuelist."
 
-#: settings_dialog.cpp:137
+#: settings_dialog.cpp:138
 msgid "Die DMX-Nodes im Projekt lesen ihre Werte aus dem Empfang. Standard-Ports sind 6454 (Art-Net) und 5568 (sACN); nur ändern, wenn ein anderes Programm sie belegt. Nach der Installation ist der Empfang aus; unter Windows fragt die Firewall beim ersten Einschalten nach."
 msgstr "DMX-ноди в проєкті читають свої значення з приймання. Стандартні порти: 6454 (Art-Net) і 5568 (sACN); змінюйте лише якщо їх займає інша програма. Після встановлення приймання вимкнене; у Windows брандмауер запитає при першому вмиканні."
 
@@ -1066,7 +1066,7 @@ msgstr "Яскравість маски визначає, наскільки в�
 msgid "Die Prüfung ist fehlgeschlagen:\n%1"
 msgstr "Перевірка не вдалася:\n%1"
 
-#: settings_dialog.cpp:228
+#: settings_dialog.cpp:229
 msgid "Die Quelle speist die Audio-Nodes (Pegel, Frequenzband, Beat, Spektrum)."
 msgstr "Джерело живить аудіо-ноди (рівень, смуга частот, біт, спектр)."
 
@@ -1086,11 +1086,11 @@ msgstr "Нова мова діятиме після перезапуску White
 msgid "Die unten gewählten Fixtures; alle anderen bleiben dunkel."
 msgstr "Прилади, вибрані нижче; решта залишаються темними."
 
-#: node_info_texts.cpp:185
+#: node_info_texts.cpp:189
 msgid "Die vergangene Zeit in Sekunden, mit Tempo-Faktor und Versatz. Zum Antreiben von Bewegungen."
 msgstr "Минулий час у секундах, з коефіцієнтом темпу та зсувом. Для керування рухом."
 
-#: settings_dialog.cpp:94
+#: settings_dialog.cpp:95
 msgid "Die Änderung wirkt sofort nach „OK“."
 msgstr "Зміна набуде чинності одразу після «OK»."
 
@@ -1098,11 +1098,11 @@ msgstr "Зміна набуде чинності одразу після «OK».
 msgid "Diese Form ist ungültig."
 msgstr "Ця форма недійсна."
 
-#: midi_settings_page.cpp:49
+#: midi_settings_page.cpp:51
 msgid "Dieser Build hat keine MIDI-Geräteunterstützung (unter Linux fehlt die ALSA-Bibliothek beim Bauen). Es gibt keine Ports."
 msgstr "Ця збірка не підтримує MIDI-пристрої (у Linux під час збирання бракувало бібліотеки ALSA). Портів немає."
 
-#: main_window.cpp:192 parameter_panel.cpp:260
+#: main_window.cpp:193 parameter_panel.cpp:261
 msgid "Dieser Node hat keine einstellbaren Parameter."
 msgstr "Ця нода не має параметрів для налаштування."
 
@@ -1114,7 +1114,7 @@ msgstr "Ця фікстура не пов’язана з жодною фікс�
 msgid "Dieses Programm wurde ohne GPU-Backend gebaut (-DWHITEHOLEFX_WEBGPU=ON); es zeigt nur das Layout."
 msgstr "Цю програму зібрано без GPU-бекенду (-DWHITEHOLEFX_WEBGPU=ON); вона показує лише Layout."
 
-#: parameter_panel.cpp:224
+#: parameter_panel.cpp:225
 msgid "Dieses Projekt hat keine einstellbaren Parameter."
 msgstr "Цей проєкт не має параметрів для налаштування."
 
@@ -1202,7 +1202,7 @@ msgstr "Голова біжить уздовж вибраної осі, за н�
 msgid "Ein Look ist ein fertiger Effekt (vom Generator bis zum Ausgang). Speichere deine Effekte hier und rufe sie im Live-Modus mit einem Klick ab."
 msgstr "Look — це готовий ефект (від генератора до виходу). Зберігайте тут свої ефекти й викликайте їх у режимі Live одним кліком."
 
-#: node_info_texts.cpp:179
+#: node_info_texts.cpp:183
 msgid "Ein Trigger startet einen Durchlauf von 0 nach 1, im Tempo der Musik (Schläge oder gemessener Abstand der Trigger). Mehrfach wiederholbar. Mit Map auf Radius, Position oder Helligkeit legen."
 msgstr "Тригер запускає прохід від 0 до 1 у темпі музики (долі або виміряний інтервал між тригерами). Можна повторювати кілька разів. Через Map подайте його на радіус, позицію або яскравість."
 
@@ -1210,7 +1210,7 @@ msgstr "Тригер запускає прохід від 0 до 1 у темпі
 msgid "Ein- und Ausgang"
 msgstr "Входи та виходи"
 
-#: midi_settings_page.cpp:43
+#: midi_settings_page.cpp:45
 msgid "Ein- und Ausgang eines MIDI-Controllers, zum Beispiel eines Akai APC mini. Die Wahl gilt für diesen Rechner und Auftritt, nicht für das Projekt."
 msgstr "Вхід і вихід MIDI-контролера, наприклад Akai APC mini. Вибір стосується цього комп’ютера й виступу, а не проєкту."
 
@@ -1222,7 +1222,7 @@ msgstr "Бокс (прямокутник або паралелепіпед) з �
 msgid "Eine Einführung in die Bedienung, in der gewählten Sprache"
 msgstr "Вступ до роботи з програмою обраною мовою"
 
-#: node_info_texts.cpp:159
+#: node_info_texts.cpp:163
 msgid "Eine Farbe als Wert, mit Farbton-Verschiebung, Sättigung und Helligkeit. Speist Farb-Eingänge anderer Nodes."
 msgstr "Колір як значення, зі зсувом відтінку, насиченістю та яскравістю. Живить колірні входи інших нод."
 
@@ -1250,7 +1250,7 @@ msgstr "Спіраль (геліс) з однієї чи кількох нито
 msgid "Eine einfarbige Fläche. Der einfachste Generator, gut als Hintergrund oder Test."
 msgstr "Однокольорова поверхня. Найпростіший генератор, добре підходить як тло або для тесту."
 
-#: node_info_texts.cpp:173
+#: node_info_texts.cpp:177
 msgid "Eine feste Zahl. Praktisch, um mehrere Parameter mit demselben Wert zu speisen."
 msgstr "Фіксоване число. Зручно, щоб живити кілька параметрів одним значенням."
 
@@ -1286,7 +1286,7 @@ msgstr "Вхід: %1"
 msgid "Einrasten"
 msgstr "Прилипання"
 
-#: main_window_settings.cpp:49 output_form.cpp:89 settings_dialog.cpp:60
+#: main_window_settings.cpp:49 output_form.cpp:89 settings_dialog.cpp:61
 msgid "Einstellungen"
 msgstr "Налаштування"
 
@@ -1414,7 +1414,7 @@ msgstr "Кольорові точки перед нодами в палітрі:
 msgid "Farbreihenfolge"
 msgstr "Порядок кольорів"
 
-#: node_info_texts.cpp:161
+#: node_info_texts.cpp:165
 msgid "Farbverlauf aus bis zu vier Farben. „Position“ wählt die Stelle, oder er läuft von selbst im eingestellten Tempo. „Mode“ legt fest, was am Ende passiert: Pendulum kehrt um, Loop springt zurück zum Anfang. Mit „Hard steps“ springt er wie ein Sequencer statt zu überblenden. „Advance“ schaltet per Taster einen Schritt weiter, unabhängig von Position/Tempo, immer hart."
 msgstr "Градієнт з до чотирьох кольорів. «Position» вибирає точку, або він рухається сам у заданому темпі. «Mode» визначає, що відбувається в кінці: Pendulum розвертається, Loop повертається до початку. З «Hard steps» він перескакує, як секвенсор, замість переходу. «Advance» перемикає на крок кнопкою, незалежно від позиції/темпу, завжди різко."
 
@@ -1434,7 +1434,7 @@ msgstr "Розташування вікон скинуто: набуде чин�
 msgid "Field"
 msgstr "Field"
 
-#: parameter_panel.cpp:132
+#: parameter_panel.cpp:133
 msgid "Filtert die Gruppen nach Node- oder Parametername (über alle Nodes)"
 msgstr "Фільтрує групи за назвою нода або параметра (серед усіх нод)"
 
@@ -1526,7 +1526,7 @@ msgstr "Форма"
 msgid "Fragt bei GitHub nach der neuesten Version (nur die Versionsnummer, nichts wird installiert)"
 msgstr "Запитує на GitHub останню версію (лише номер версії; нічого не встановлюється)"
 
-#: main_window.cpp:343
+#: main_window.cpp:344
 msgid "Frame"
 msgstr "Frame"
 
@@ -1586,7 +1586,7 @@ msgstr "Завантажено: %1"
 msgid "Gelb"
 msgstr "Жовтий"
 
-#: settings_dialog.cpp:177
+#: settings_dialog.cpp:178
 msgid "Gerät:"
 msgstr "Пристрій:"
 
@@ -1622,15 +1622,15 @@ msgstr "Видалити вибраний контролер −"
 msgid "Gewählten Patch −"
 msgstr "Вибраний патч −"
 
-#: parameter_panel.cpp:125
+#: parameter_panel.cpp:126
 msgid "Gewählter Node"
 msgstr "Вибраний нод"
 
-#: parameter_panel.cpp:127
+#: parameter_panel.cpp:128
 msgid "Gewählter Node: nur der Node, den du im Editor gewählt hast, und angeheftete Nodes. Alle Nodes: jede Gruppe, aufgeklappt nur die des gewählten und der angehefteten Nodes."
 msgstr "Вибраний нод: лише нод, вибраний у редакторі, та закріплені ноди. Усі ноди: кожна група, розгорнута лише для вибраного та закріплених нод."
 
-#: node_info_texts.cpp:183
+#: node_info_texts.cpp:187
 msgid "Glättet einen Wert: Er folgt dem Eingang mit einer Zeitkonstante, statt zu springen."
 msgstr "Згладжує значення: воно слідує за входом із постійною часу, замість того щоб стрибати."
 
@@ -1722,7 +1722,7 @@ msgstr "Яскравість"
 msgid "Hinzufügen"
 msgstr "Додати"
 
-#: parameter_panel.cpp:241
+#: parameter_panel.cpp:242
 msgid "Hält diesen Node im Fenster, auch wenn du im Editor einen anderen wählst"
 msgstr "Залишає цей нод у вікні, навіть якщо в редакторі вибрати інший"
 
@@ -1730,7 +1730,7 @@ msgstr "Залишає цей нод у вікні, навіть якщо в р�
 msgid "Höhe"
 msgstr "Висота"
 
-#: node_info_texts.cpp:165
+#: node_info_texts.cpp:169
 msgid "Hüllkurve (ADSR): Aus einem Schalter wird ein weicher Verlauf mit Attack, Decay, Sustain und Release. Auch als Einzelimpuls."
 msgstr "Огинаюча (ADSR): із перемикача робить м'який перебіг з Attack, Decay, Sustain і Release. Також як одиночний імпульс."
 
@@ -1770,7 +1770,7 @@ msgstr "Так, перевіряти під час запуску"
 msgid "Kabel beginnt"
 msgstr "Кабель починається"
 
-#: parameter_panel.cpp:66
+#: parameter_panel.cpp:67
 msgid "Kabel:"
 msgstr "Кабель:"
 
@@ -1798,11 +1798,11 @@ msgstr "Канал %1 — зайнятий фікстурою: %2"
 msgid "Kanal %1 — gehört zu: %2"
 msgstr "Канал %1 — належить: %2"
 
-#: settings_dialog.cpp:90
+#: settings_dialog.cpp:91
 msgid "Karte zum Empfangen:"
 msgstr "Карта для приймання:"
 
-#: settings_dialog.cpp:85
+#: settings_dialog.cpp:86
 msgid "Karte zum Senden:"
 msgstr "Карта для надсилання:"
 
@@ -1814,11 +1814,11 @@ msgstr "Фікстуру не вибрано."
 msgid "Kein GPU-Adapter: %1"
 msgstr "Немає GPU-адаптера: %1"
 
-#: main_window.cpp:267
+#: main_window.cpp:268
 msgid "Kein Projekt"
 msgstr "Немає проєкту"
 
-#: parameter_panel.cpp:139 stage_view.cpp:166
+#: parameter_panel.cpp:140 stage_view.cpp:166
 msgid "Kein Projekt geladen."
 msgstr "Проєкт не завантажено."
 
@@ -1830,7 +1830,7 @@ msgstr "Немає сигналу в цьому universe."
 msgid "Kein Ziel (freies Rechteck)"
 msgstr "Без цілі (вільний прямокутник)"
 
-#: settings_dialog.cpp:226
+#: settings_dialog.cpp:227
 msgid "Keine Aufnahmegeräte gefunden. Ein Audio-Interface anschließen und das Fenster neu öffnen."
 msgstr "Пристроїв запису не знайдено. Підключіть аудіоінтерфейс і знову відкрийте вікно."
 
@@ -1842,7 +1842,7 @@ msgstr "Немає DMX-вузлів виходу у проєкті"
 msgid "Keine DMX-Wert-Nodes im Projekt"
 msgstr "Немає DMX-вузлів значень у проєкті"
 
-#: parameter_panel.cpp:208
+#: parameter_panel.cpp:209
 msgid "Keine Treffer."
 msgstr "Нічого не знайдено."
 
@@ -1886,7 +1886,7 @@ msgstr "Світлодіодів у кільці"
 msgid "LEDs x y z"
 msgstr "LED x y z"
 
-#: main_window.cpp:279
+#: main_window.cpp:280
 msgid "LIVE   |   "
 msgstr "LIVE   |   "
 
@@ -1930,11 +1930,15 @@ msgstr "Легенда портів"
 msgid "Legt Bild B über Bild A. Der Modus bestimmt die Verrechnung (Addieren, Multiplizieren, Screen, Subtrahieren, Differenz …), „Amount“ blendet zwischen A und dem Ergebnis."
 msgstr "Накладає зображення B на A. Режим визначає змішування (додавання, множення, Screen, віднімання, різниця …), «Amount» перетікає між A та результатом."
 
-#: midi_settings_page.cpp:100
+#: parameter_panel_midi.cpp:53
+msgid "Lernen"
+msgstr "Навчити"
+
+#: midi_settings_page.cpp:102
 msgid "Letzte Nachricht: Kanal %1, %2 (vor %3 s)"
 msgstr "Останнє повідомлення: канал %1, %2 (%3 с тому)"
 
-#: midi_settings_page.cpp:88
+#: midi_settings_page.cpp:90
 msgid "Letzte Nachricht: noch keine empfangen"
 msgstr "Останнє повідомлення: ще жодного"
 
@@ -1954,9 +1958,17 @@ msgstr "Світні LED з м'яким сяйвом, кольори додаю�
 msgid "Liest drei oder vier DMX-Kanäle (Art-Net oder sACN) als Farbe, wahlweise RGB oder RGB mit Dimmer."
 msgstr "Читає три або чотири канали DMX (Art-Net чи sACN) як колір, на вибір RGB або RGB із діммером."
 
+#: node_info_texts.cpp:153
+msgid "Liest eine Taste oder ein Pad eines MIDI-Controllers: „On“ ist an, solange sie gedrückt ist, „Velocity“ ist die Anschlagstärke des letzten Drucks. „Lernen“ trägt Kanal und Note ein: Knopf drücken, dann die Taste drücken."
+msgstr "Читає клавішу чи пад MIDI-контролера: «On» активний, поки її утримують, «Velocity» — сила останнього натискання. «Навчити» вписує канал і ноту: натисніть кнопку, потім клавішу."
+
 #: node_info_texts.cpp:147
 msgid "Liest einen DMX-Kanal (Art-Net oder sACN) als Zahl. Mit Umrechnung auf einen Bereich, 16-Bit-Betrieb und Verhalten bei Signalverlust."
 msgstr "Читає один канал DMX (Art-Net чи sACN) як число. З перерахунком у діапазон, 16-бітним режимом і поведінкою при втраті сигналу."
+
+#: node_info_texts.cpp:151
+msgid "Liest einen Regler (Control Change) eines MIDI-Controllers als Zahl, mit Umrechnung auf einen Bereich. „Lernen“ trägt Kanal und Reglernummer ein: Knopf drücken, dann den Regler bewegen. Ohne Zeitlimit bleibt der letzte Wert stehen."
+msgstr "Читає регулятор (Control Change) MIDI-контролера як число з перерахунком у діапазон. «Навчити» вписує канал і номер: натисніть кнопку, потім поверніть регулятор. Без обмеження часу останнє значення зберігається."
 
 #: node_info_texts.cpp:100
 msgid "Linearer Farbverlauf von Farbe A nach Farbe B in einem einstellbaren Winkel."
@@ -1990,19 +2002,19 @@ msgstr "Live"
 msgid "Live Kanal"
 msgstr "Канал прямого ефіру"
 
-#: settings_dialog.cpp:162
+#: settings_dialog.cpp:163
 msgid "Live-Look: Auswahl-Kanal (1 bis 512):"
 msgstr "Live-лук: канал вибору (1..512):"
 
-#: settings_dialog.cpp:160
+#: settings_dialog.cpp:161
 msgid "Live-Look: Protokoll:"
 msgstr "Live-лук: протокол:"
 
-#: settings_dialog.cpp:161
+#: settings_dialog.cpp:162
 msgid "Live-Look: Universe:"
 msgstr "Live-лук: універс:"
 
-#: settings_dialog.cpp:163
+#: settings_dialog.cpp:164
 msgid "Live-Look: Überblendzeit-Kanal (0 = aus):"
 msgstr "Live-лук: канал часу переходу (0 = вимкнено):"
 
@@ -2042,7 +2054,7 @@ msgstr "Перейменувати Look"
 msgid "Look überschreiben"
 msgstr "Перезаписати Look"
 
-#: settings_dialog.cpp:143
+#: settings_dialog.cpp:144
 msgid "Look-Auswahl im Live-Betrieb über einen DMX-Kanal steuern"
 msgstr "Керувати вибором луку в live-режимі через канал DMX"
 
@@ -2074,11 +2086,11 @@ msgstr "Видалити"
 msgid "Löst bei jedem Einsatz in einem Frequenzbereich aus: Kick, Snare, Hi-Hat oder ein eigener Bereich in Hz. Liefert Treffer, Pulse (klingt ab), Stärke und „Age“. Für einzelne Schläge; die Gesamtlautstärke liefert „Audio Level“, den Takt „Beat“. Die Schwelle folgt der Lautstärke, auch leise Schläge werden erkannt."
 msgstr "Спрацьовує на кожен удар у діапазоні частот: бочка, малий барабан, хай-хет або власний діапазон у Гц. Дає удар, pulse (згасає), силу та «Age». Для окремих ударів; загальну гучність дає «Audio Level», темп — «Beat». Поріг слідує за гучністю, тому тихі удари теж розпізнаються."
 
-#: settings_dialog.cpp:66
+#: settings_dialog.cpp:67
 msgid "MIDI"
 msgstr "MIDI"
 
-#: midi_settings_page.cpp:59
+#: midi_settings_page.cpp:61
 msgid "MIDI-Ausgang"
 msgstr "Вихід MIDI"
 
@@ -2086,7 +2098,7 @@ msgstr "Вихід MIDI"
 msgid "MIDI-Ausgang: %1"
 msgstr "Вихід MIDI: %1"
 
-#: midi_settings_page.cpp:58
+#: midi_settings_page.cpp:60
 msgid "MIDI-Eingang"
 msgstr "Вхід MIDI"
 
@@ -2114,19 +2126,19 @@ msgstr "Вручну"
 msgid "Master"
 msgstr "Майстер"
 
-#: settings_dialog.cpp:117
+#: settings_dialog.cpp:118
 msgid "Master-Helligkeit über einen DMX-Kanal steuern"
 msgstr "Керувати майстер-яскравістю через канал DMX"
 
-#: settings_dialog.cpp:132
+#: settings_dialog.cpp:133
 msgid "Master: Kanal (1 bis 512):"
 msgstr "Master: канал (від 1 до 512):"
 
-#: settings_dialog.cpp:130
+#: settings_dialog.cpp:131
 msgid "Master: Protokoll:"
 msgstr "Master: протокол:"
 
-#: settings_dialog.cpp:131
+#: settings_dialog.cpp:132
 msgid "Master: Universe:"
 msgstr "Master: universe:"
 
@@ -2218,7 +2230,7 @@ msgstr "Поруч ↔"
 msgid "Nein"
 msgstr "Ні"
 
-#: settings_dialog.cpp:62
+#: settings_dialog.cpp:63
 msgid "Netzwerk"
 msgstr "Мережа"
 
@@ -2266,7 +2278,7 @@ msgstr "Новий проєкт"
 msgid "Neues Projekt (Strg+N)"
 msgstr "Новий проєкт (Ctrl+N)"
 
-#: main_window.cpp:136
+#: main_window.cpp:137
 msgid "Neues Projekt (Strg+N), Projekt öffnen (Strg+O) oder eine .whfx-Datei hierher ziehen.\n\n%1"
 msgstr "Новий проєкт (Ctrl+N), відкрити проєкт (Ctrl+O) або перетягніть сюди файл .whfx.\n\n%1"
 
@@ -2314,7 +2326,7 @@ msgstr "Перейменувати вузол"
 msgid "Node umbenennen …"
 msgstr "Перейменувати вузол …"
 
-#: settings_dialog.cpp:68
+#: settings_dialog.cpp:69
 msgid "Node-Standardwerte"
 msgstr "Стандартні значення нод"
 
@@ -2330,11 +2342,11 @@ msgstr "Ноди"
 msgid "Nodes suchen …"
 msgstr "Знайти ноди …"
 
-#: midi_settings_page.cpp:96
+#: midi_settings_page.cpp:98
 msgid "Note %1 an (Velocity %2)"
 msgstr "нота %1 увімкнена (швидкість %2)"
 
-#: midi_settings_page.cpp:98
+#: midi_settings_page.cpp:100
 msgid "Note %1 aus"
 msgstr "нота %1 вимкнена"
 
@@ -2406,11 +2418,11 @@ msgstr "Палітра"
 msgid "Palette &farbig"
 msgstr "Палітра &кольорова"
 
-#: main_window.cpp:99
+#: main_window.cpp:100
 msgid "Parameter"
 msgstr "Параметри"
 
-#: parameter_panel.cpp:236
+#: parameter_panel.cpp:237
 msgid "Parameter dieses Nodes auf- oder zuklappen"
 msgstr "Розгорнути або згорнути параметри цього нода"
 
@@ -2478,7 +2490,7 @@ msgstr "Канал пулу (від)"
 msgid "Port (leer = Standard)"
 msgstr "Порт (порожній = типовий)"
 
-#: midi_settings_page.cpp:61
+#: midi_settings_page.cpp:63
 msgid "Ports neu einlesen"
 msgstr "Оновити список портів"
 
@@ -2586,11 +2598,11 @@ msgstr "Показувати сітку в попередньому перегл
 msgid "Rasterweite in Layout-Einheiten"
 msgstr "Крок сітки в одиницях Layout"
 
-#: node_info_texts.cpp:169
+#: node_info_texts.cpp:173
 msgid "Rechnet einen Wert von einem Bereich in einen anderen um (In min/max auf Out min/max), auf Wunsch begrenzt."
 msgstr "Перераховує значення з одного діапазону в інший (з In min/max в Out min/max), за бажанням з обмеженням."
 
-#: node_info_texts.cpp:171
+#: node_info_texts.cpp:175
 msgid "Rechnet mit zwei Zahlen: Addieren, Subtrahieren, Multiplizieren, Dividieren, Minimum, Maximum und weitere."
 msgstr "Рахує з двома числами: додавання, віднімання, множення, ділення, мінімум, максимум та інше."
 
@@ -2626,7 +2638,7 @@ msgstr "Видалити регіон"
 msgid "Regionen"
 msgstr "Регіони"
 
-#: midi_settings_page.cpp:94
+#: midi_settings_page.cpp:96
 msgid "Regler %1 = %2"
 msgstr "регулятор %1 = %2"
 
@@ -2658,19 +2670,19 @@ msgstr "Перемикач"
 msgid "Schnellwahl"
 msgstr "Швидкий вибір"
 
-#: node_info_texts.cpp:153
+#: node_info_texts.cpp:157
 msgid "Schreibt bis zu acht Werte auf aufeinanderfolgende Kanäle eines internen Kanal-Pools (nicht mehr direkt auf Controller/Universe). „Low“/„High“ legen die DMX-Werte für 0 und 1 fest, „16 Bit“ belegt je Kanal zwei Pool-Kanäle. Wohin der Pool wirklich geht, legt „dmxpatch“ in der Projektdatei fest. Hat keinen Ausgang und wird darum immer ausgewertet; der Streifen im Node zeigt die gerade gesendeten Bytes je Kanal."
 msgstr "Записує до восьми значень у послідовні канали внутрішнього пулу каналів (більше не напряму на контролер/універсум). «Low»/«High» задають значення DMX для 0 і 1, «16 bit» займає по два канали пулу на канал. Куди саме йде пул, визначає «dmxpatch» у файлі проєкту. Не має виходу, тому обчислюється завжди; смуга на вузлі показує байти, які надсилаються зараз, по каналах."
 
-#: node_info_texts.cpp:155
+#: node_info_texts.cpp:159
 msgid "Schreibt eine Farbe in den internen Kanal-Pool: RGB oder RGBW, davor auf Wunsch ein Dimmer-Kanal. Wohin der Pool wirklich geht, legt „dmxpatch“ in der Projektdatei fest. Hat keinen Ausgang und wird darum immer ausgewertet; der Streifen im Node zeigt die gerade gesendeten Bytes je Kanal."
 msgstr "Записує колір у внутрішній пул каналів: RGB або RGBW, за бажанням попередньо канал димера. Куди саме йде пул, визначає «dmxpatch» у файлі проєкту. Не має виходу, тому обчислюється завжди; смуга на вузлі показує байти, які надсилаються зараз, по каналах."
 
-#: node_info_texts.cpp:181
+#: node_info_texts.cpp:185
 msgid "Schrittfolge mit bis zu acht Werten. Jedes Einschalten von „Advance“ geht einen Schritt weiter (vorwärts, rückwärts, hin und her oder zufällig)."
 msgstr "Послідовність до восьми значень. Кожне вмикання «Advance» робить крок далі (вперед, назад, туди й назад або випадково)."
 
-#: node_info_texts.cpp:167
+#: node_info_texts.cpp:171
 msgid "Schwingung (LFO): Sinus, Dreieck, Sägezahn oder Rechteck mit Frequenz, Phase und Wertebereich. Der Klassiker zum Bewegen von Parametern."
 msgstr "Коливання (LFO): синус, трикутник, пилка або прямокутник із частотою, фазою та діапазоном значень. Класика для руху параметрів."
 
@@ -2714,11 +2726,11 @@ msgstr "Змійкою (кожне друге кільце у зворотном
 msgid "Sich ausbreitende Formen von einem Mittelpunkt aus: Kreis, Quadrat, Raute, Dreieck, Sechseck, Vieleck, Stern, Kreuz, Balken, Spirale, Squircle (Kreis/Quadrat-Morph über „squareness“). Füllung als Ring, voll, Verlauf oder Hollow core (voll mit hohlem Kern, zweite Farbe „colorB“, Kerngröße „core“); fortlaufend mit Abstand und Tempo oder als One shot über den Eingang „progress“ (vom Shot-Node)."
 msgstr "Форми, що поширюються від центральної точки: коло, квадрат, ромб, трикутник, шестикутник, многокутник, зірка, хрест, смуги, спіраль, сквіркл (перехід коло/квадрат через «squareness»). Заповнення як кільце, суцільне, градієнт або порожнє ядро (суцільне з порожнім центром, другий колір «colorB», розмір ядра «core»); безперервно з кроком і швидкістю або як одноразовий запуск через вхід «progress» (від вузла Shot)."
 
-#: parameter_panel.cpp:64
+#: parameter_panel.cpp:65
 msgid "Skalierung am Kabel: Wert × Faktor + Offset, danach begrenzt auf den Bereich des Parameters. So steuert ein Wert von 0 bis 1 zum Beispiel einen Winkel von 0 bis 360."
 msgstr "Масштабування на кабелі: значення × коефіцієнт + зсув, далі обмежене діапазоном параметра. Так значення від 0 до 1 може, наприклад, керувати кутом від 0 до 360."
 
-#: parameter_panel.cpp:107
+#: parameter_panel.cpp:108
 msgid "Skalierung zurücksetzen (× 1, + 0)"
 msgstr "Скинути масштабування (× 1, + 0)"
 
@@ -2750,7 +2762,7 @@ msgstr "Стовпці (вертикально)"
 msgid "Spalten lassen sich an der Kopfzeile verschieben"
 msgstr "Стовпці можна переміщувати перетягуванням заголовка"
 
-#: parameter_panel.cpp:96
+#: parameter_panel.cpp:97
 msgid "Spannt einen Wert von 0 bis 1 über den ganzen Bereich des Parameters"
 msgstr "Розтягує значення від 0 до 1 на весь діапазон параметра"
 
@@ -2802,11 +2814,11 @@ msgstr "Мова"
 msgid "Stage Config"
 msgstr "Stage Config"
 
-#: settings_dialog.cpp:176
+#: settings_dialog.cpp:177
 msgid "Standardgerät des Systems"
 msgstr "Пристрій системи за замовчуванням"
 
-#: cue_panel.cpp:67 cue_panel.cpp:145 main_window.cpp:313
+#: cue_panel.cpp:67 cue_panel.cpp:145 main_window.cpp:314
 msgid "Start"
 msgstr "Старт"
 
@@ -2850,7 +2862,7 @@ msgstr "Стрип 30"
 msgid "Suche nach Updates …"
 msgstr "Пошук оновлень …"
 
-#: parameter_panel.cpp:130
+#: parameter_panel.cpp:131
 msgid "Suchen …"
 msgstr "Пошук …"
 
@@ -2870,7 +2882,7 @@ msgstr "Колона 12x20"
 msgid "TESTMODUS: %1"
 msgstr "ТЕСТОВИЙ РЕЖИМ: %1"
 
-#: node_info_texts.cpp:157
+#: node_info_texts.cpp:161
 msgid "Taktgeber: Liefert im eingestellten Tempo (BPM) Impulse, Phase und Zähler. Läuft ohne Audio."
 msgstr "Тактовий генератор: видає імпульси, фазу та лічильник із заданим темпом (BPM). Працює без аудіо."
 
@@ -2962,7 +2974,7 @@ msgstr "Перейменувати …"
 msgid "Unerwartetes Ende beim letzten Mal"
 msgstr "Несподіване завершення минулого разу"
 
-#: main_window.cpp:217
+#: main_window.cpp:218
 msgid "Ungespeicherte Änderungen"
 msgstr "Незбережені зміни"
 
@@ -3010,7 +3022,7 @@ msgstr "Розірвати зв'язок"
 msgid "Verdreht das Bild entlang einer Achse, je weiter weg, desto stärker (Winkel pro Einheit)."
 msgstr "Закручує зображення вздовж осі, тим сильніше, чим далі (кут на одиницю)."
 
-#: node_info_texts.cpp:163
+#: node_info_texts.cpp:167
 msgid "Vergleicht einen Wert mit einer Schwelle (mit Hysterese): darüber, darunter, zwischen zwei Grenzen oder gleich (mit Toleranz). Liefert Ja/Nein sowie Impulse beim Einschalten und Ausschalten."
 msgstr "Порівнює значення з порогом (з гістерезисом): вище, нижче, між двома межами або дорівнює (з допуском). Видає так/ні та імпульси під час вмикання й вимикання."
 
@@ -3050,21 +3062,33 @@ msgstr "Попередній перегляд"
 msgid "Vorweg überspringen"
 msgstr "Пропустити спочатку"
 
-#: settings_dialog.cpp:178
+#: settings_dialog.cpp:179
 msgid "WAV-Datei in Schleife:"
 msgstr "Файл WAV у циклі:"
 
-#: settings_dialog.cpp:237
+#: settings_dialog.cpp:238
 msgid "WAV-Datei wählen"
 msgstr "Оберіть файл WAV"
 
-#: settings_dialog.cpp:237
+#: settings_dialog.cpp:238
 msgid "WAV-Dateien (*.wav)"
 msgstr "Файли WAV (*.wav)"
 
 #: layout_panel.cpp:179
 msgid "Waagrecht mittig ausrichten"
 msgstr "Вирівняти по центру горизонтально"
+
+#: parameter_panel_midi.cpp:53
+msgid "Warte auf MIDI …"
+msgstr "Очікування MIDI …"
+
+#: parameter_panel_midi.cpp:54
+msgid "Wartet auf die nächste Reglerbewegung am MIDI-Controller und trägt Kanal und Reglernummer ein."
+msgstr "Чекає на наступний рух регулятора на MIDI-контролері та вписує канал і номер регулятора."
+
+#: parameter_panel_midi.cpp:55
+msgid "Wartet auf die nächste Taste am MIDI-Controller und trägt Kanal und Note ein."
+msgstr "Чекає на наступне натискання клавіші чи пада на MIDI-контролері та вписує канал і ноту."
 
 #: cue_dialog.cpp:62
 msgid "Wartezeit nach dem Ende der vorigen Überblendung"
@@ -3098,11 +3122,11 @@ msgstr "Форма хвилі аудіовходу (короткий часов�
 msgid "Wellenringe wie Wassertropfen: Ringe breiten sich von zufälligen Punkten aus (Tropfen pro Sekunde, Tempo, Ringbreite)."
 msgstr "Хвильові кільця, як краплі води: кільця розходяться від випадкових точок (крапель за секунду, темп, ширина кільця)."
 
-#: main_window.cpp:128 main_window.cpp:167
+#: main_window.cpp:129 main_window.cpp:168
 msgid "WhiteHoleFX"
 msgstr "WhiteHoleFX"
 
-#: main_window.cpp:171
+#: main_window.cpp:172
 msgid "WhiteHoleFX – %1%2"
 msgstr "WhiteHoleFX – %1%2"
 
@@ -3162,11 +3186,11 @@ msgstr "Кут першого світлодіода: 0 = праворуч, 90 =
 msgid "Wirbel: Dreht das Bild um einen Mittelpunkt, in der Mitte am stärksten, nach außen abklingend (Radius)."
 msgstr "Вихор: обертає зображення навколо центру, найсильніше в середині, назовні згасаючи (Radius)."
 
-#: parameter_panel.cpp:312
+#: parameter_panel.cpp:313
 msgid "Wird durch eine Verbindung im Graphen gesteuert."
 msgstr "Керується зв'язком у графі."
 
-#: parameter_panel.cpp:206
+#: parameter_panel.cpp:207
 msgid "Wähle einen Node im Node-Editor, um seine Parameter zu sehen. Mit „Anheften“ bleibt ein Node hier stehen."
 msgstr "Виберіть нод у редакторі нод, щоб побачити його параметри. «Закріпити» залишає нод тут."
 
@@ -3178,7 +3202,7 @@ msgstr "Спершу оберіть фікстури у списку."
 msgid "Wähle zuerst einen Controller in der Tabelle."
 msgstr "Спершу виберіть контролер у таблиці."
 
-#: settings_dialog.cpp:181
+#: settings_dialog.cpp:182
 msgid "Wählen …"
 msgstr "Обрати …"
 
@@ -3266,7 +3290,7 @@ msgstr "Спершу створіть проєкт (Ctrl+N) або відкри�
 msgid "Zuerst entlang"
 msgstr "Спочатку вздовж"
 
-#: node_info_texts.cpp:175
+#: node_info_texts.cpp:179
 msgid "Zufallswert, der sich im eingestellten Takt ändert, auf Wunsch weich überblendet. Mit Seed wiederholbar."
 msgstr "Випадкове значення, що змінюється в заданому такті, за бажанням плавно. Відтворюється через Seed."
 
@@ -3302,7 +3326,7 @@ msgstr "Напрямок лічби"
 msgid "an oder aus"
 msgstr "увімк. чи вимк."
 
-#: settings_dialog.cpp:157
+#: settings_dialog.cpp:158
 msgid "aus"
 msgstr "вимкнено"
 
@@ -3354,11 +3378,11 @@ msgstr "праворуч (x макс)"
 msgid "sACN"
 msgstr "sACN"
 
-#: settings_dialog.cpp:102
+#: settings_dialog.cpp:103
 msgid "sACN (E1.31) empfangen"
 msgstr "Приймати sACN (E1.31)"
 
-#: settings_dialog.cpp:115
+#: settings_dialog.cpp:116
 msgid "sACN-Port (UDP):"
 msgstr "Порт sACN (UDP):"
 
@@ -3370,7 +3394,7 @@ msgstr "Пріоритет sACN"
 msgid "strecken (Stretch)"
 msgstr "розтягнути (Stretch)"
 
-#: main_window.cpp:170
+#: main_window.cpp:171
 msgid "unbenannt"
 msgstr "без назви"
 
@@ -3410,7 +3434,7 @@ msgstr "Відкриває GitHub: створити нове Issue"
 msgid "Über WhiteHoleFX"
 msgstr "Про WhiteHoleFX"
 
-#: settings_dialog.cpp:91
+#: settings_dialog.cpp:92
 msgid "Über diese Karte tritt der sACN-Empfang den Multicast-Gruppen bei. Art-Net-Broadcast und Unicast-Pakete kommen weiterhin von jeder Karte an."
 msgstr "Через цю карту приймання sACN входить у multicast-групи. Широкомовні пакети Art-Net та unicast-пакети й надалі приходять з будь-якої карти."
 

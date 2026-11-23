@@ -12,7 +12,19 @@ den Entscheidungen steht in `entwurf-midi.md`.
   jedem Übernehmen der Einstellungen erneut.
 - Die Seite zeigt die zuletzt empfangene Nachricht (Kanal, Note oder Regler, Wert). Verarbeitet werden Note an/aus und
   Control Change; Systemnachrichten (Takt, SysEx) werden ignoriert.
-- Noch **keine** MIDI-Nodes und noch keine Belegung für den Akai APC mini - das sind Stufe 2 und 3.
+- Noch keine Belegung für den Akai APC mini im Live-Modus (Stufe 3).
+
+## Stufe 2: Nodes und „Lernen“
+
+- **MIDI CC** (`wh.value.midicc`, Kategorie Input): Kanal 1..16, Reglernummer (CC) 0..127; Ausgänge `Value` (auf Out min/Out max umgerechnet),
+  `On` (Wert ≥ Schwelle) und `Signal`.
+- **MIDI Note** (`wh.value.midinote`): Kanal, Note 0..127; Ausgänge `On` (solange die Taste gedrückt ist), `Velocity` (0..1, die
+  Anschlagstärke des letzten Drucks, bleibt nach dem Loslassen stehen) und `Signal`.
+- **Signal** heißt: Für diesen Regler bzw. diese Taste kam schon eine Nachricht (und nicht länger her als das Zeitlimit). Ein Regler
+  meldet sich nur bei Bewegung; darum ist das Zeitlimit hier standardmäßig **0 = nie**. „Hold“ hält den letzten Wert bei Signalverlust.
+- **Lernen:** Im Parameterfenster des Nodes „Lernen“ drücken, dann am Controller den Regler bewegen bzw. die Taste drücken; Kanal und
+  Nummer werden eingetragen. Ein zweiter Klick bricht ab. Voraussetzung: der Eingangsport ist unter Einstellungen → MIDI gewählt.
+- Die Nodes lesen aus demselben Speicher wie die Anzeige „Letzte Nachricht“ der Einstellungen (`BuiltinLibrary::midi`).
 
 ## Bauen
 

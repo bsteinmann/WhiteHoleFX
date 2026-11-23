@@ -14,7 +14,7 @@ namespace whitehole::studio {
 
 QString MainWindow::applyMidi() {
     if (!midiStore_) {
-        midiStore_ = std::make_shared<midi::MidiStore>();
+        midiStore_ = library_->midi;  // derselbe Speicher, aus dem die MIDI-Nodes lesen
     }
     if (!midiReceiver_) {
         midiReceiver_ = std::make_unique<midi::MidiReceiver>(midi::makeMidiInput(), midiStore_);

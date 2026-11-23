@@ -36,6 +36,7 @@ struct NoteSample {
 struct LastMessage {
     MidiMessage message;
     double ageSeconds{0.0};
+    std::uint64_t sequence{0};  // laufende Nummer der Nachricht (1 = die erste); erlaubt "kam etwas Neues?" ohne Ereignisliste
 };
 
 struct MidiStats {
@@ -61,6 +62,9 @@ public:
     [[nodiscard]] std::optional<NoteSample> readNote(std::uint8_t channel, std::uint8_t note) const;
     /// Die zuletzt angenommene Nachricht (für die Anzeige in den Einstellungen).
     [[nodiscard]] std::optional<LastMessage> last() const;
+    /// Die zuletzt angenommene Reglernachricht bzw. Note-On-Nachricht (für "Lernen": ein Note-Off danach darf sie nicht verdecken).
+    [[nodiscard]] std::optional<LastMessage> lastControlChange() const;
+    [[nodiscard]] std::optional<LastMessage> lastNoteOn() const;
 
     /// Holt alle seit dem letzten Aufruf eingegangenen Ereignisse in der Reihenfolge ihres Eintreffens ab.
     [[nodiscard]] std::vector<MidiMessage> takeEvents();
@@ -84,8 +88,16 @@ private:
     std::array<Slot, 16 * 128> controllers_{};
     std::array<Slot, 16 * 128> notes_{};
     std::deque<MidiMessage> events_;
-    std::optional<MidiMessage> last_;
-    std::chrono::steady_clock::time_point lastTime_;
+    struct Stamped {
+        MidiMessage message;
+        std::chrono::steady_clock::time_point time;
+        std::uint64_t sequence{0};
+    };
+    [[nodiscard]] std::optional<LastMessage> snapshot(const std::optional<Stamped>& stamped) const;
+
+    std::optional<Stamped> last_;
+    std::optional<Stamped> lastCc_;
+    std::optional<Stamped> lastNoteOn_;
     MidiStats stats_;
 };
 

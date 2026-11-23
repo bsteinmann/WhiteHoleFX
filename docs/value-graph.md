@@ -160,6 +160,8 @@ laufen immer. Ein vergessener, unverbundener Node kostet nichts.
 | `wh.value.smooth` | `out` | `value`, `time` | Tiefpass erster Ordnung; hat Zustand |
 | `wh.value.dmx` | `value`, `on` (Boolean), `present` (Boolean) | `source` (0 Art-Net, 1 sACN), `universe`, `channel`, `bits16`, `min`, `max`, `threshold`, `timeout`, `hold` | DMX-Eingang, siehe unten |
 | `wh.value.dmxcolor` | `out` (Color) | `source`, `universe`, `channel`, `mode` (0 RGB, 1 RGB + Dimmer), `timeout`, `hold` | Drei oder vier Kanäle als Farbe |
+| `wh.value.midicc` | `value` (Scalar), `on`, `present` (Boolean) | `channel` (1..16), `cc` (0..127), `min`, `max`, `threshold`, `timeout` (0 = nie), `hold` | Ein MIDI-Regler (Control Change) als Zahl; „Lernen“ im Parameterfenster trägt Kanal und Nummer ein |
+| `wh.value.midinote` | `on`, `present` (Boolean), `velocity` (Scalar) | `channel` (1..16), `note` (0..127), `timeout` (0 = nie), `hold` | Eine MIDI-Taste: „On“ solange gedrückt, „Velocity“ = Anschlagstärke des letzten Drucks |
 
 | `wh.value.audiolevel`, `audioband`, `audiospectrum`, `audiowave`, `beat`, `tap` | siehe [Audio](audio.md) | | Audio-Eingang (Kategorie „Audio“): Pegel, Frequenzband, Spektrum, Wellenform, Beat und Tap Tempo |
 
