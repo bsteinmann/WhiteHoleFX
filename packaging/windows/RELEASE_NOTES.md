@@ -1,4 +1,4 @@
-**Vorabversion (0.x) für Windows (64 Bit) und Linux.** Alle Einzelheiten stehen in `CHANGELOG.md`.
+**Version 1.1.0 für Windows (64 Bit) und Linux.** Alle Einzelheiten stehen in `CHANGELOG.md`.
 
 **Windows:** ZIP herunterladen, in einen eigenen Ordner entpacken, `whitehole_studio.exe` starten.
 
