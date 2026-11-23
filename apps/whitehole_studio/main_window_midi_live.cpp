@@ -3,6 +3,7 @@
 // Warum es das gibt: Die Logik (Pads -> Looks, LEDs, Fader) steckt testbar in runtime::MidiLiveController. Hier wird
 // sie mit dem Studio verbunden: Profil aus den Einstellungen, "Mit GO" und eigene Überblendzeit aus dem Live-Fenster,
 // Master-Regler nachziehen, "Live beenden" wie der Knopf im Live-Fenster. Aktiv nur, solange das Live-Fenster offen ist.
+#include <QLabel>
 #include <QSignalBlocker>
 #include <QSlider>
 #include <QStatusBar>
