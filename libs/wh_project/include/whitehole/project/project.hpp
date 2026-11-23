@@ -35,11 +35,19 @@ inline constexpr int kFormatVersion = 1;
 /// Ein gespeicherter Effekt ("Look"): die Nodes vom Generator bis zum Ausgang als eigener kleiner Graph,
 /// dazu der Field-Ausgang und die Zeit, in der er beim Live-Betrieb eingeblendet wird. Looks gehören zur
 /// Projektdatei (Abschnitt `look ... endlook`), damit eine Show in einer Datei bleibt.
+/// Wie ein Look im Live-Betrieb ausgelöst wird (docs/entwurf-midi.md, Abschnitt 5).
+///   Toggle: ein Druck blendet dauerhaft um (wie bisher).
+///   Flash:  der Look läuft nur, solange gehalten; beim Loslassen zurück zum vorherigen. Hat Vorrang vor "Mit GO".
+enum class LookTrigger : std::uint8_t { Toggle, Flash };
+
 struct Look {
     explicit Look(std::shared_ptr<const graph::INodeRegistry> registry) : graph{std::move(registry)} {}
 
     std::string name;
     double fadeSeconds{2.0};  // Überblendzeit beim Abrufen, 0 = hartes Umschalten
+    LookTrigger trigger{LookTrigger::Toggle};
+    /// Nur Flash: Zeit für das Zurückblenden beim Loslassen. Leer = die Überblendzeit dieses Looks.
+    std::optional<double> returnSeconds;
     graph::Graph graph;
     graph::PortRef target;    // Field-Ausgang des Looks
 };

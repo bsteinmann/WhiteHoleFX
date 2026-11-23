@@ -17,9 +17,12 @@
 #include <QVBoxLayout>
 
 #include <algorithm>
+#include <cstdint>
+#include <optional>
 #include <string>
 #include <utility>
 
+#include "live_controls_page.hpp"
 #include "midi_profile_box.hpp"
 #include "midi_settings_page.hpp"
 #include "network_interfaces.hpp"
@@ -57,16 +60,39 @@ QString toQ(const std::string& text) { return QString::fromUtf8(text.data(), sta
 }  // namespace
 
 SettingsDialog::SettingsDialog(const AppSettings& current, const graph::INodeRegistry& registry, QWidget* parent,
-                               std::shared_ptr<midi::MidiStore> midiStore)
+                               std::shared_ptr<midi::MidiStore> midiStore, std::shared_ptr<const input::DmxStore> dmxStore)
     : QDialog{parent} {
     setWindowTitle(tr("Einstellungen"));
     auto* tabs = new QTabWidget{this};
     tabs->addTab(buildNetworkPage(current), tr("Netzwerk"));
     tabs->addTab(buildDmxPage(current), tr("DMX-Eingang"));
     tabs->addTab(buildAudioPage(current), tr("Audio"));
-    midiPage_ = new MidiSettingsPage{current.midiInput, current.midiOutput, std::move(midiStore), this,
+    midiPage_ = new MidiSettingsPage{current.midiInput, current.midiOutput, midiStore, this,
                                      current.midiProfile, current.midiProfiles};
     tabs->addTab(midiPage_, tr("MIDI"));
+    controlsPage_ = new LiveControlsPage{current, std::move(midiStore), std::move(dmxStore), this};
+    tabs->addTab(controlsPage_, tr("Steuerung"));
+    // Master über DMX: eine Einstellung, zwei Seiten (DMX-Eingang und Steuerung) - beide Richtungen abgleichen.
+    connect(controlsPage_, &LiveControlsPage::masterDmxChanged, this, [this](std::optional<input::DmxAddress> address) {
+        masterDmx_->setChecked(address.has_value());
+        if (address) {
+            masterProtocol_->setCurrentIndex(address->protocol == input::DmxProtocol::Sacn ? 1 : 0);
+            masterUniverse_->setValue(static_cast<int>(address->universe));
+            masterChannel_->setValue(static_cast<int>(address->channel));
+        }
+    });
+    const auto masterToControls = [this]() {
+        controlsPage_->setMasterDmx(masterDmx_->isChecked()
+                                        ? std::optional<input::DmxAddress>{input::DmxAddress{
+                                              masterProtocol_->currentIndex() == 1 ? input::DmxProtocol::Sacn : input::DmxProtocol::ArtNet,
+                                              static_cast<std::uint32_t>(masterUniverse_->value()),
+                                              static_cast<std::uint32_t>(masterChannel_->value())}}
+                                        : std::nullopt);
+    };
+    connect(masterDmx_, &QCheckBox::toggled, this, masterToControls);
+    connect(masterProtocol_, &QComboBox::currentIndexChanged, this, masterToControls);
+    connect(masterUniverse_, &QSpinBox::valueChanged, this, masterToControls);
+    connect(masterChannel_, &QSpinBox::valueChanged, this, masterToControls);
     defaultsPage_ = new NodeDefaultsPage{registry, current.nodeDefaults, this};
     tabs->addTab(defaultsPage_, tr("Node-Standardwerte"));
     auto* buttons = new QDialogButtonBox{QDialogButtonBox::Ok | QDialogButtonBox::Cancel, this};
@@ -276,6 +302,10 @@ AppSettings SettingsDialog::settings() const {
     result.midiOutput = midiPage_->output();
     result.midiProfile = midiPage_->profiles()->active();
     result.midiProfiles = midiPage_->profiles()->userProfiles();
+    result.liveBindings.clear();
+    for (const std::string& line : runtime::serializeBindings(controlsPage_->bindings())) {
+        result.liveBindings << QString::fromStdString(line);
+    }
     result.nodeDefaults = defaultsPage_->defaults();
     return result;
 }

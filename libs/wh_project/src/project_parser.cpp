@@ -491,13 +491,30 @@ std::optional<Error> Parser::beginLook(Reader& r, std::size_t lineNumber) {
     }
     const std::string name = r.word("Lookname");
     double fade = 2.0;
+    LookTrigger trigger = LookTrigger::Toggle;
+    std::optional<double> back;
+    const auto inRange = [&r](double seconds, const char* what) {
+        if (r.ok() && !(seconds >= 0.0 && seconds <= kMaxFadeSeconds)) {
+            r.fail(std::string{what} + " muss zwischen 0 und " + std::to_string(static_cast<int>(kMaxFadeSeconds)) + " Sekunden liegen");
+        }
+    };
     while (r.ok() && !r.atEnd()) {
         const std::string key = r.word("Einstellung");
         if (key == "fade") {
             fade = r.numberD("Überblendzeit");
-            if (r.ok() && !(fade >= 0.0 && fade <= kMaxFadeSeconds)) {
-                r.fail("fade muss zwischen 0 und " + std::to_string(static_cast<int>(kMaxFadeSeconds)) + " Sekunden liegen");
+            inRange(fade, "fade");
+        } else if (key == "trigger") {
+            const std::string mode = r.word("Auslösen");
+            if (mode == "flash") {
+                trigger = LookTrigger::Flash;
+            } else if (mode == "toggle") {
+                trigger = LookTrigger::Toggle;
+            } else if (r.ok()) {
+                r.fail("trigger muss toggle oder flash sein");
             }
+        } else if (key == "return") {
+            back = r.numberD("Zeit zum Zurückblenden");
+            inRange(*back, "return");
         } else if (r.ok()) {
             r.fail("Unbekannte Einstellung \"" + key + "\"");
         }
@@ -516,6 +533,8 @@ std::optional<Error> Parser::beginLook(Reader& r, std::size_t lineNumber) {
     look_.emplace(registry_);
     look_->name = name;
     look_->fadeSeconds = fade;
+    look_->trigger = trigger;
+    look_->returnSeconds = back;
     lookTarget_.reset();
     mainNodes_ = std::move(nodes_);
     nodes_.clear();

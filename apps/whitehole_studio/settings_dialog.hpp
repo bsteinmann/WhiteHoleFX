@@ -11,6 +11,8 @@
 #include "app_settings.hpp"
 #include <memory>
 
+#include "whitehole/input/dmx_store.hpp"
+
 #include "whitehole/graph/node_registry.hpp"
 #include "whitehole/midi/midi_store.hpp"
 
@@ -22,6 +24,7 @@ class QSpinBox;
 
 namespace whitehole::studio {
 
+class LiveControlsPage;
 class MidiSettingsPage;
 class NodeDefaultsPage;
 
@@ -29,14 +32,18 @@ class SettingsDialog : public QDialog {
     Q_OBJECT
 
 public:
-    /// `midiStore` (optional) liefert der Seite MIDI die zuletzt empfangene Nachricht.
+    /// `midiStore` (optional) liefert der Seite MIDI die zuletzt empfangene Nachricht, `midiStore`/`dmxStore` dem Reiter
+    /// "Steuerung" das Lernen (ohne sie sind die Lernen-Knöpfe gesperrt).
     SettingsDialog(const AppSettings& current, const graph::INodeRegistry& registry, QWidget* parent,
-                   std::shared_ptr<midi::MidiStore> midiStore = nullptr);
+                   std::shared_ptr<midi::MidiStore> midiStore = nullptr,
+                   std::shared_ptr<const input::DmxStore> dmxStore = nullptr);
 
     /// Die Einstellungen, wie sie die Felder gerade zeigen.
     [[nodiscard]] AppSettings settings() const;
     /// Die Seite "Node-Standardwerte" (für den Rauchtest).
     [[nodiscard]] NodeDefaultsPage* nodeDefaultsPage() const noexcept { return defaultsPage_; }
+    /// Der Reiter "Steuerung" (für den Rauchtest).
+    [[nodiscard]] LiveControlsPage* liveControlsPage() const noexcept { return controlsPage_; }
 
 private:
     QWidget* buildNetworkPage(const AppSettings& current);
@@ -46,6 +53,7 @@ private:
 
     NodeDefaultsPage* defaultsPage_{nullptr};
     MidiSettingsPage* midiPage_{nullptr};
+    LiveControlsPage* controlsPage_{nullptr};
     QComboBox* outputCard_{nullptr};
     QComboBox* inputCard_{nullptr};
     QCheckBox* artnet_{nullptr};

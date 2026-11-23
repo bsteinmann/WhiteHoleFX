@@ -411,6 +411,17 @@ public:
     /// liveArm + liveGo in einem Schritt (ein Tastendruck für einen Look).
     Result<void> liveTrigger(int index, std::optional<double> fadeSeconds = std::nullopt);
     [[nodiscard]] LiveStatus liveStatus() const noexcept;
+    /// Taste gedrückt bzw. losgelassen (Pad, Knopf, DMX-Schwelle; player_live_flash.cpp, docs/entwurf-midi.md Abschnitt 5).
+    /// Ein Look mit `trigger flash` blendet beim Drücken ein und beim Loslassen zum vorherigen zurück (Vorrang vor
+    /// "Mit GO"); ein umschaltender Look folgt `useGo` (vorladen statt überblenden), liveUp lässt ihn unberührt.
+    /// Ein Umschalten (auch über liveTrigger/liveArm/liveGo) beendet ein laufendes Flash: dann bleibt der neue Look stehen.
+    /// Stellt ein, wie ein Look ausgelöst wird (umschalten/flashen) und wie lange das Zurückblenden dauert (leer = die
+    /// Überblendzeit des Looks). Geht auch im Live-Betrieb. Fehler: NotFound, InvalidArgument (keine Projekt, Zeit ungültig).
+    Result<void> setLookTrigger(int index, project::LookTrigger trigger, std::optional<double> returnSeconds);
+    Result<void> liveDown(int index, std::optional<double> fadeSeconds = std::nullopt, bool useGo = false);
+    Result<void> liveUp(int index);
+    /// Gehaltene Flash-Looks, zuletzt gedrückter hinten (für Anzeige und Tests).
+    [[nodiscard]] const std::vector<int>& liveFlashHeld() const noexcept { return flashHeld_; }
     /// Manuelle Überblendung zum vorgeladenen Look (Fader 0..1, siehe LiveDecks::setManualProgress).
     /// Fehler: InvalidArgument (nicht live). Ohne vorgeladenen Look wirkungslos.
     Result<void> liveManualFade(double progress);
@@ -581,6 +592,11 @@ private:
     std::optional<LiveDmxSource> liveDmx_;
     bool liveDmxLive_{false};
     std::optional<int> liveDmxLastIndex_;
+    std::vector<int> flashHeld_;  // gedrückte Flash-Looks (liveDown), zuletzt gedrückter hinten
+    int flashReturn_{-1};         // Look, zu dem das Loslassen des letzten Flash-Looks zurückkehrt
+    void clearFlash() noexcept { flashHeld_.clear(); flashReturn_ = -1; }
+    Result<void> armLook(int index);                                  // liveArm ohne clearFlash
+    Result<void> goLook(std::optional<double> fadeSeconds);           // liveGo ohne clearFlash
     CueRunner cueRunner_;
     bool cueGo_{false};
     std::vector<std::string> cueKeys_;

@@ -52,6 +52,24 @@ MIDI-Nodes lesen sie weiter). Dafür muss unter Einstellungen → MIDI der Einga
 Code: `midi::LiveProfile` (`live_profile.hpp`), `runtime::MidiLiveController` (`midi_live.hpp`), `LiveDecks::setManualProgress`,
 `Player::liveManualFade`; im Studio `main_window_midi_live.cpp` und `midi_profile_box.cpp`.
 
+## Looks umschalten oder flashen
+
+Jeder Look legt fest, wie er ausgelöst wird (Rechtsklick auf den Look im Live-Fenster, in der Datei `look "Name" fade 3 trigger flash
+return 0.5`): **Umschalten** (Standard) bleibt an; **Flashen** läuft nur, solange Pad oder Knopf gehalten werden, und blendet beim
+Loslassen zum vorherigen Look zurück - mit der Überblendzeit des Looks oder einer eigenen Zeit (0 = hart). Flash hat Vorrang vor
+„Mit GO“. Mehrere gehaltene Flash-Looks stapeln sich, erst das letzte Loslassen kehrt zurück; wer inzwischen umschaltet (Pad, GO,
+Cue), beendet das Flash und der neue Look bleibt stehen. Die Logik steckt im Player (`liveDown`/`liveUp`), damit sie für alle
+Eingänge gleich gilt.
+
+## Steuerung frei belegen (MIDI und DMX)
+
+GO, Live beenden, Master, Überblendzeit und manuelle Überblendung lassen sich per **Lernen** auf beliebige Tasten, Regler oder
+DMX-Kanäle legen - im Reiter Einstellungen → **Steuerung** und in der Zeile „Steuerung lernen“ des Live-Fensters; beide schreiben
+dieselbe Belegung (`runtime::LiveBindings`, Programmeinstellung `midi/liveBindings`). Ohne eigene MIDI-Belegung gilt das Profil;
+„Profil“ setzt zurück. DMX: Tasten lösen bei steigender Flanke über 127 aus, Fader wirken bei jeder Änderung; der erste gelesene
+Wert löst nichts aus. Master über DMX ist die vorhandene Einstellung der Seite DMX-Eingang. Solange ein Lernen-Knopf wartet, wirkt
+der Controller im Live-Modus nicht (die zu lernende Taste löst nicht ihre alte Funktion aus).
+
 ## Bauen
 
 Die Geräteanbindung nutzt RtMidi (wird beim Konfigurieren geladen). Linux braucht dafür die ALSA-Entwicklungsdateien

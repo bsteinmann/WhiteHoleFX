@@ -11,6 +11,7 @@
 #include "recording_sink.hpp"
 #include "whitehole/midi/live_profile.hpp"
 #include "whitehole/nodes/builtin_library.hpp"
+#include "whitehole/project/project.hpp"
 #include "whitehole/runtime/gated_sink.hpp"
 #include "whitehole/runtime/midi_live.hpp"
 #include "whitehole/runtime/player.hpp"
@@ -307,4 +308,27 @@ TEST_CASE("APC live: abgeschaltet verhält er sich wie außerhalb des Live-Betri
     CHECK(rig.leds()[56] == 1);
     rig.frame(off);  // aus: gelöscht
     CHECK(rig.leds()[56] == 0);
+}
+
+TEST_CASE("APC live: Pad an einem Flash-Look - Loslassen kehrt zurück", "[midi][midi_live]") {
+    Rig rig;
+    rig.player.stopLive();
+    // Look 2 ("Zwei", Index 1) auf Flash stellen, über die Projektdatei
+    const auto text = project::writeProject(*rig.player.project());
+    REQUIRE(text.ok());
+    std::string changed = text.value();
+    const std::string head = "look Zwei fade 0.5\n";
+    REQUIRE(changed.find(head) != std::string::npos);
+    changed.replace(changed.find(head), head.size(), "look Zwei fade 0 trigger flash\n");
+    REQUIRE(rig.player.loadText(changed).ok());
+    REQUIRE(rig.player.start().ok());
+    rig.live();
+    runtime::MidiLiveOptions options;
+    options.useGo = true;  // Flash hat Vorrang
+    rig.pad(1);
+    rig.frame(options);
+    CHECK(rig.player.liveStatus().current == 1);
+    rig.library->midi->apply(midi::noteOff(0, *rig.controller.profile().noteForLook(1)));
+    rig.frame(options);
+    CHECK(rig.player.liveStatus().current == 0);
 }

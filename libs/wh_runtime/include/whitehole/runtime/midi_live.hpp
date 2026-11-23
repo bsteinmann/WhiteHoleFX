@@ -4,11 +4,15 @@
 // Warum es das gibt: Auf der Bühne will man Looks mit echten Tasten abrufen und sehen, was läuft, ohne auf den
 // Bildschirm zu schauen. Die Belegung kommt aus einem Profil (midi/live_profile.hpp); die Logik hier ist vom Studio
 // getrennt und damit ohne Gerät und ohne Qt testbar: Sie liest die Ereignisse aus dem MidiStore, ruft den Player auf
-// (liveTrigger/liveArm/liveGo/liveManualFade/setMasterBrightness) und schickt nur geänderte LED-Werte an den Ausgang.
+// (liveDown/liveUp/liveGo/liveManualFade/setMasterBrightness; ein Flash-Look kehrt beim Loslassen des Pads zurück) und schickt nur geänderte LED-Werte an den Ausgang.
 //
 // Außerhalb des Live-Betriebs bleiben die Pads frei (Ereignisse werden verworfen, die MIDI-Nodes lesen den Zustand,
 // nicht die Ereignisse). Nur die Stellung der Fader wird gemerkt, damit Überblendzeit und Mitnahme stimmen.
 // "Live beenden" führt der Controller nicht selbst aus, sondern meldet es (das Studio räumt dabei seine Ansicht um).
+//
+// Die Steuerfunktionen (GO, Ende, Fader) folgen der Belegung (live_bindings.hpp): eigene MIDI-Belegung oder Profil, dazu
+// wahlweise ein DMX-Kanal. DMX-Tasten lösen bei einer steigenden Flanke über 127 aus, DMX-Fader wirken bei jeder Änderung;
+// der erste gelesene Wert eines Kanals löst nichts aus (ein Pult, das schon oben steht, startet nicht sofort GO).
 #pragma once
 
 #include <array>
@@ -16,7 +20,9 @@
 #include <optional>
 #include <string>
 
+#include "whitehole/input/dmx_store.hpp"
 #include "whitehole/midi/live_profile.hpp"
+#include "whitehole/runtime/live_bindings.hpp"
 #include "whitehole/midi/midi_backend.hpp"
 #include "whitehole/midi/midi_store.hpp"
 
@@ -48,6 +54,12 @@ public:
     void setOutput(midi::IMidiOutput* output);
     void setProfile(midi::LiveProfile profile);
     [[nodiscard]] const midi::LiveProfile& profile() const noexcept { return profile_; }
+    void setBindings(LiveBindings bindings);
+    [[nodiscard]] const LiveBindings& bindings() const noexcept { return bindings_; }
+    /// Quelle für die DMX-Belegungen; nullptr = keine.
+    void setDmxStore(std::shared_ptr<const input::DmxStore> store) { dmx_ = std::move(store); }
+    /// Höchstes Alter eines DMX-Werts, damit er noch zählt.
+    static constexpr double kDmxTimeoutSeconds = 2.0;
 
     /// Einmal pro Frame (nach Player::step oder davor - beides geht).
     MidiLiveResult step(const MidiLiveOptions& options);
@@ -60,6 +72,8 @@ public:
 private:
     void handle(const midi::MidiMessage& message, const MidiLiveOptions& options, bool live, MidiLiveResult& result);
     void handleCrossfade(int value, MidiLiveResult& result);
+    void pollDmx(const MidiLiveOptions& options, bool live, MidiLiveResult& result);
+    void act(LiveFunction function, int value, const MidiLiveOptions& options, bool live, MidiLiveResult& result);  // value 0..127
     void syncArmed();
     void updateLeds(bool live);
     void report(const Result<void>& result, MidiLiveResult& out);
@@ -68,6 +82,9 @@ private:
     std::shared_ptr<midi::MidiStore> store_;
     midi::IMidiOutput* output_{nullptr};
     midi::LiveProfile profile_;
+    LiveBindings bindings_;
+    std::shared_ptr<const input::DmxStore> dmx_;
+    std::array<int, kLiveFunctionCount> dmxLast_{};  // zuletzt gelesener DMX-Wert je Funktion; -1 = noch keiner
     std::array<int, 128> sent_{};  // zuletzt gesendete Velocity je Note; -1 = unbekannt
     bool wasLive_{false};
     std::optional<double> fadeFader_;

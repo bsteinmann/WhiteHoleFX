@@ -6,6 +6,7 @@
 //
 // Zwei Arten zu schalten:
 //   - Direkt (Standard): ein Klick blendet sofort zum Look über - ein Handgriff, kaum Fehlbedienung.
+//   - Flash (je Look, Rechtsklick): der Look läuft nur, solange der Knopf gedrückt ist; Vorrang vor "Mit GO".
 //   - Mit GO: ein Klick lädt den Look nur vor ("Next", orange); GO (Leertaste) startet dann die Überblendung.
 //     So kann der Shader vorher bereitgestellt werden, und der Fade selbst läuft ohne Ruckler.
 // Farben: grün = läuft, orange = vorgeladen, gelb = blendet gerade ein.
@@ -15,9 +16,12 @@
 
 #include <QWidget>
 
+#include <functional>
+#include <memory>
 #include <optional>
 #include <vector>
 
+#include "live_learn.hpp"
 #include "whitehole/runtime/player.hpp"
 
 class QCheckBox;
@@ -26,6 +30,7 @@ class QGridLayout;
 class QLabel;
 class QProgressBar;
 class QShortcut;
+class QMenu;
 class QPushButton;
 
 namespace whitehole::studio {
@@ -53,6 +58,19 @@ public:
     /// Die eingestellte eigene Überblendzeit; leer = Zeit des Looks.
     [[nodiscard]] std::optional<double> fadeOverride() const;
 
+    // --- Drücken/Loslassen, Flash, Lernen (live_panel_looks.cpp) ------------------------------------------------
+    /// Knopf eines Looks gedrückt bzw. losgelassen (Player::liveDown/liveUp: ein Flash-Look kehrt beim Loslassen zurück).
+    bool press(int index);
+    void release(int index);
+    /// Wie der Look ausgelöst wird (umschalten/flashen, Zeit zum Zurückblenden; leer = Zeit des Looks).
+    bool setLookTrigger(int index, project::LookTrigger trigger, std::optional<double> returnSeconds);
+    /// Das Rechtsklick-Menü eines Looks (aufgebaut, nicht gezeigt; der Aufrufer besitzt es).
+    [[nodiscard]] QMenu* lookMenu(int index);
+    /// Gelernte Quelle für eine Live-Funktion (dieselbe Belegung wie im Reiter "Steuerung").
+    using LearnHandler = std::function<void(runtime::LiveFunction, const LearnedSource&)>;
+    /// Zeigt die Zeile "Steuerung lernen" mit einem Lernen-Knopf je Funktion (MIDI und DMX).
+    void setLearning(std::shared_ptr<midi::MidiStore> midi, std::shared_ptr<const input::DmxStore> dmx, LearnHandler handler);
+
 Q_SIGNALS:
     void failed(const QString& message);
     /// Der Knopf "Zurück zum Editor" (oder Esc).
@@ -60,6 +78,8 @@ Q_SIGNALS:
 
 private:
     [[nodiscard]] static QString styleFor(const QString& color);
+    [[nodiscard]] QString buttonText(int index) const;
+    void askReturnSeconds(int index);
 
     runtime::Player& player_;
     QGridLayout* grid_{nullptr};
@@ -73,6 +93,7 @@ private:
     QCheckBox* useGo_{nullptr};
     QCheckBox* customFade_{nullptr};
     QDoubleSpinBox* fade_{nullptr};
+    QWidget* learnRow_{nullptr};
 };
 
 }  // namespace whitehole::studio

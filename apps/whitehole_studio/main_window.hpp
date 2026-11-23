@@ -42,6 +42,8 @@ class QToolBar;
 
 namespace whitehole::studio {
 
+struct LearnedSource;
+
 class PortLegend;
 
 class LayoutPanel;
@@ -223,7 +225,9 @@ private:
     [[nodiscard]] bool midiNeedsApply(const AppSettings& before) const;
     void applyMidiProfile();  // Live-Profil aus appSettings_ an den Controller geben
     void midiTick();          // Controller-Ereignisse im Live-Modus, LED-Rückmeldung (jeden Frame)
-    QString exerciseMidiLive();  // Rauchtest: Profilverwaltung und Pad -> Look ohne Gerät (main_window_midi_live.cpp)
+    QString exerciseMidiLive();
+    /// Gelernte Quelle für eine Live-Funktion übernehmen (Live-Fenster; schreibt AppSettings::liveBindings bzw. Master über DMX).
+    void learnLiveControl(runtime::LiveFunction function, const LearnedSource& found);  // Rauchtest: Profilverwaltung und Pad -> Look ohne Gerät (main_window_midi_live.cpp)
     void syncDmxUniverses();
     /// Master über DMX (main_window_dmx.cpp): gibt die Wahl aus appSettings_ an den Player; der Regler folgt dem Pult.
     void applyMasterDmx();

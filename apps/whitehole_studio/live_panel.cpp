@@ -6,6 +6,7 @@
 #include <QGridLayout>
 #include <QHBoxLayout>
 #include <QLabel>
+#include <QMenu>
 #include <QProgressBar>
 #include <QPushButton>
 #include <QShortcut>
@@ -83,6 +84,9 @@ LivePanel::LivePanel(runtime::Player& player, QWidget* parent) : QWidget{parent}
     layout->addLayout(options);
     layout->addWidget(goButton_);
     layout->addWidget(leave);
+    learnRow_ = new QWidget{this};  // "Steuerung lernen", gefüllt von setLearning
+    learnRow_->setVisible(false);
+    layout->addWidget(learnRow_);
 
     connect(goButton_, &QPushButton::clicked, this, [this]() { go(); });
     connect(leave, &QPushButton::clicked, this, [this]() { Q_EMIT leaveRequested(); });
@@ -113,13 +117,20 @@ void LivePanel::rebuild() {
     buttons_.clear();
     const auto& looks = player_.looks();
     for (std::size_t i = 0; i < looks.size(); ++i) {
-        const QString prefix = i < 9 ? QStringLiteral("%1   ").arg(i + 1) : QString{};
-        auto* button = new QPushButton{prefix + fromStd(looks[i].name), gridHost_};
+        const int index = static_cast<int>(i);
+        auto* button = new QPushButton{buttonText(index), gridHost_};
         button->setMinimumHeight(72);
         button->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-        button->setToolTip(tr("Überblendzeit %1 s").arg(looks[i].fadeSeconds, 0, 'f', 1));
-        const int index = static_cast<int>(i);
-        connect(button, &QPushButton::clicked, this, [this, index]() { trigger(index); });
+        button->setToolTip(tr("Überblendzeit %1 s. Rechtsklick: umschalten oder flashen").arg(looks[i].fadeSeconds, 0, 'f', 1));
+        // Drücken und Loslassen statt Klick: ein Flash-Look läuft, solange gehalten (live_panel_looks.cpp)
+        connect(button, &QPushButton::pressed, this, [this, index]() { press(index); });
+        connect(button, &QPushButton::released, this, [this, index]() { release(index); });
+        button->setContextMenuPolicy(Qt::CustomContextMenu);
+        connect(button, &QWidget::customContextMenuRequested, this, [this, index, button](const QPoint& at) {
+            QMenu* menu = lookMenu(index);
+            menu->exec(button->mapToGlobal(at));
+            menu->deleteLater();
+        });
         grid_->addWidget(button, index / kColumns, index % kColumns);
         buttons_.push_back(button);
     }

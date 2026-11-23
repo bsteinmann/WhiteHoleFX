@@ -37,6 +37,7 @@ AppSettings loadAppSettings() {
     result.midiOutput = s.value(QStringLiteral("midi/output")).toString();
     result.midiProfile = s.value(QStringLiteral("midi/profile")).toString();
     result.midiProfiles = s.value(QStringLiteral("midi/profiles")).toStringList();
+    result.liveBindings = s.value(QStringLiteral("midi/liveBindings")).toStringList();
     result.audioSource = s.value(QStringLiteral("audio/source"), result.audioSource).toString();
     // Eigene Standardwerte: eine Gruppe je Node-Typ. Unlesbare Einträge werden übersprungen.
     QSettings defaults = store();
@@ -75,6 +76,7 @@ void saveAppSettings(const AppSettings& settings) {
     s.setValue(QStringLiteral("midi/output"), settings.midiOutput);
     s.setValue(QStringLiteral("midi/profile"), settings.midiProfile);
     s.setValue(QStringLiteral("midi/profiles"), settings.midiProfiles);
+    s.setValue(QStringLiteral("midi/liveBindings"), settings.liveBindings);
     s.setValue(QStringLiteral("audio/source"), settings.audioSource);
     s.remove(QStringLiteral("nodeDefaults"));
     for (const auto& [type, values] : settings.nodeDefaults.all()) {

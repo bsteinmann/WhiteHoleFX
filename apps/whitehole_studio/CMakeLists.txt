@@ -74,7 +74,12 @@ add_executable(whitehole_studio
     group_dialog.hpp
     cue_panel.cpp
     cue_panel.hpp
+    live_controls_page.cpp
+    live_controls_page.hpp
+    live_learn.cpp
+    live_learn.hpp
     live_panel.cpp
+    live_panel_looks.cpp
     live_panel.hpp
     look_panel.cpp
     look_panel.hpp

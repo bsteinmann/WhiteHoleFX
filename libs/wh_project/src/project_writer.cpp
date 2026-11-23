@@ -251,7 +251,14 @@ Result<std::string> writeProject(const Project& project) {
         return graph.error();
     }
     for (const Look& look : project.looks) {
-        out << "\nlook " << quoteWord(look.name) << " fade " << formatDouble(look.fadeSeconds) << "\n";
+        out << "\nlook " << quoteWord(look.name) << " fade " << formatDouble(look.fadeSeconds);
+        if (look.trigger == LookTrigger::Flash) {
+            out << " trigger flash";
+        }
+        if (look.returnSeconds) {
+            out << " return " << formatDouble(*look.returnSeconds);
+        }
+        out << "\n";
         if (const Result<void> graph = writeGraph(out, look.graph, look.target, "Das Ziel des Looks"); !graph.ok()) {
             return graph.error();
         }
