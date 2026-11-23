@@ -494,6 +494,8 @@ nichts versehentlich angehalten oder geändert wird.
 | Klick auf einen Look oder Taste 1 bis 9 | blendet in der Zeit des Looks zu ihm über |
 | Kästchen „Eigene Überblendzeit“ | gilt für alle Klicks statt der Zeit des Looks (0 = hart) |
 | Kästchen „Mit GO“ | ein Klick lädt den Look nur vor (orange); GO oder Leertaste startet die Überblendung |
+| Rechtsklick auf einen Look | „Umschalten (bleibt an)“ oder „Flashen (nur solange gedrückt)“; für Flash: zurückblenden mit der Zeit des Looks oder mit eigener Zeit. Steht im Projekt (`trigger flash`, `return`) und gilt für Knöpfe, MIDI-Pads und alle anderen Eingänge. Ein Flash-Look hat Vorrang vor „Mit GO“; die Tasten 1–9 schalten auch einen Flash-Look nur um (sie kennen kein Loslassen) |
+| Zeile „Steuerung lernen“ | Lernen-Knopf je Funktion (GO, Live beenden, Master, Überblendzeit, manuelle Überblendung) für MIDI oder DMX - dieselbe Belegung wie im Reiter „Steuerung“ der Einstellungen |
 | Esc oder „Zurück zum Editor“ | beendet den Live-Modus |
 
 Farben: grün läuft, orange vorgeladen, gelb blendet gerade ein. Ein Balken zeigt den Fortschritt.
@@ -596,6 +598,10 @@ zum Projekt. Die Wahl wird beim Nutzer gespeichert und beim nächsten Start wied
 - **DMX-Eingang:** Art-Net und sACN einzeln einschalten, dazu die Ports (Standard 6454 und 5568).
 - **Audio:** die Quelle für die Audio-Nodes (siehe unten).
 - **MIDI:** Eingangs- und Ausgangsport eines MIDI-Controllers (zum Beispiel Akai APC mini), jeweils „Aus“ oder ein vom System gemeldeter Port; „Ports neu einlesen“ liest die Liste nach dem Anstecken neu. Darunter steht die zuletzt empfangene Nachricht, damit man sieht, ob das Gerät ankommt. Siehe [MIDI](midi.md).
+- **Steuerung:** je Live-Funktion (GO, Live beenden, Master-Helligkeit, Überblendzeit 0–10 s, manuelle Überblendung) eine Zeile mit
+  MIDI-Belegung („Lernen“, „Profil“ = zurück zur Belegung des MIDI-Profils) und DMX-Kanal („Lernen“, „Aus“). DMX-Lernen nimmt den
+  Kanal, der sich nach dem Drücken am stärksten bewegt; DMX-Tasten lösen aus, wenn der Kanal über 50 % steigt. Master über DMX ist
+  dieselbe Einstellung wie auf der Seite DMX-Eingang. Gehört zum Programm, nicht zum Projekt (`midi/liveBindings`).
 
 ## DMX-Eingang
 

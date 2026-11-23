@@ -40,7 +40,7 @@ void MainWindow::openSettings() {
     if (!midiStore_) {
         midiStore_ = library_->midi;  // damit die Seite MIDI sofort Nachrichten zeigt
     }
-    SettingsDialog dialog{appSettings_, *library_->registry, this, midiStore_};
+    SettingsDialog dialog{appSettings_, *library_->registry, this, midiStore_, library_->dmx};
     if (dialog.exec() != QDialog::Accepted) {
         return;
     }
@@ -120,6 +120,7 @@ QString MainWindow::exerciseSettings() {
     probe.midiOutput = QStringLiteral("Test-MIDI-Ausgang 1:1");
     probe.midiProfile = QStringLiteral("Test-Profil");
     probe.midiProfiles = QStringList{QStringLiteral("Test-Profil|apcmini1|8|-1|-1|56|48|49")};
+    probe.liveBindings = QStringList{QStringLiteral("go midi 3 12"), QStringLiteral("crossfade dmx sacn 7 512")};
     probe.audioSource = QStringLiteral("device:Nicht vorhanden");
     if (!(SettingsDialog{probe, *library_->registry, this}.settings() == probe)) {
         return QStringLiteral("Einstellungen: der Dialog gibt nicht zurück, was man ihm gibt (Gerät)");

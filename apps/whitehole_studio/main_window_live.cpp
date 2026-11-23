@@ -24,6 +24,7 @@
 #include "cue_panel.hpp"
 #include "live_panel.hpp"
 #include "look_panel.hpp"
+#include <memory>
 #include "main_window.hpp"
 #include "stage_setup_window.hpp"
 
@@ -49,6 +50,8 @@ void MainWindow::buildLive() {
     connect(lookPanel_, &LookPanel::loadedIntoEditor, this, &MainWindow::afterRestore);
     connect(lookPanel_, &LookPanel::liveRequested, this, [this](int first) { enterLive(first); });
     connect(livePanel_, &LivePanel::leaveRequested, this, [this]() { leaveLive(); });
+    livePanel_->setLearning(library_->midi, library_->dmx,
+                            [this](runtime::LiveFunction function, const LearnedSource& found) { learnLiveControl(function, found); });
 
     cuePanel_ = new CuePanel{*player_, this};
     connect(cuePanel_, &CuePanel::failed, this, toStatus);
@@ -247,6 +250,23 @@ QString MainWindow::exerciseLive() {
     if (!problem().isEmpty()) {
         return tr("Live: %1").arg(problem());
     }
+    // Flash: Look 1 blitzt, solange gedrückt (Vorrang vor "Mit GO"), Loslassen kehrt zu Look 2 zurück (0 s: sofort)
+    if (!livePanel_->setLookTrigger(0, project::LookTrigger::Flash, 0.0) || player_->looks()[0].trigger != project::LookTrigger::Flash) {
+        return QStringLiteral("Live: Flash lässt sich nicht einstellen");
+    }
+    if (const std::unique_ptr<QMenu> menu{livePanel_->lookMenu(0)}; menu->actions().size() < 4) {
+        return QStringLiteral("Live: das Rechtsklick-Menü eines Looks ist unvollständig");
+    }
+    livePanel_->setUseGo(true);
+    if (!livePanel_->press(0) || player_->liveStatus().current != 0) {
+        return QStringLiteral("Live: Flash zeigt den Look beim Drücken nicht");
+    }
+    livePanel_->release(0);
+    if (player_->liveStatus().current != 1) {
+        return QStringLiteral("Live: Loslassen eines Flash-Looks kehrt nicht zurück");
+    }
+    livePanel_->setUseGo(false);
+    (void)livePanel_->setLookTrigger(0, project::LookTrigger::Toggle, std::nullopt);
     leaveLive();
     if (player_->liveActive() || liveDock_->isVisible()) {
         return tr("Live: Zurück zum Editor scheitert");

@@ -50,6 +50,10 @@ msgstr "   |   Master %1 %"
 msgid "   |   TESTMODUS"
 msgstr "   |   MODO DE PRUEBA"
 
+#: live_panel_looks.cpp:34
+msgid "  · Flash"
+msgstr "  · Flash"
+
 #: midi_profile_box.cpp:100
 msgid " (Kopie)"
 msgstr " (copia)"
@@ -102,11 +106,11 @@ msgstr "¿Eliminar \"%1\" de la biblioteca?"
 msgid "%1  (%2 LEDs)"
 msgstr "%1  (%2 LED)"
 
-#: live_panel.cpp:154
+#: live_panel.cpp:165
 msgid "%1  →  %2"
 msgstr "%1  →  %2"
 
-#: main_window_controls.cpp:62 main_window_dmx.cpp:175 main_window_midi_live.cpp:46
+#: main_window_controls.cpp:62 main_window_dmx.cpp:175 main_window_midi_live.cpp:91
 msgid "%1 %"
 msgstr "%1 %"
 
@@ -118,11 +122,15 @@ msgstr "%1 (%2 LED)"
 msgid "%1 (%2)"
 msgstr "%1 (%2)"
 
-#: settings_dialog.cpp:192
+#: live_controls_page.cpp:132
+msgid "%1 (Profil)"
+msgstr "%1 (perfil)"
+
+#: settings_dialog.cpp:218
 msgid "%1 (Standard)"
 msgstr "%1 (predeterminado)"
 
-#: midi_settings_page.cpp:34 settings_dialog.cpp:49 settings_dialog.cpp:196
+#: midi_settings_page.cpp:34 settings_dialog.cpp:52 settings_dialog.cpp:222
 msgid "%1 (nicht gefunden)"
 msgstr "%1 (no encontrado)"
 
@@ -142,6 +150,10 @@ msgstr "%1 LED, fotograma %2 (descartados %3), paquetes %4, errores de envío %5
 msgid "%1 LEDs, angehalten"
 msgstr "%1 LED, detenido"
 
+#: live_learn.cpp:39
+msgid "%1 Universe %2, Kanal %3"
+msgstr "%1 universo %2, canal %3"
+
 #: stage_view.cpp:230
 msgid "%1 · LED %2 von %3"
 msgstr "%1 · LED %2 de %3"
@@ -149,6 +161,10 @@ msgstr "%1 · LED %2 de %3"
 #: layout_panel_types.cpp:45
 msgid "%1 — %2 (%3 LEDs)"
 msgstr "%1 — %2 (%3 LED)"
+
+#: main_window_midi_live.cpp:70
+msgid "%1: %2 gelernt"
+msgstr "%1: %2 aprendido"
 
 #: main_window_view3d.cpp:40
 msgid "&2D (bearbeiten)"
@@ -230,11 +246,11 @@ msgstr "&Brillo (aditivo)"
 msgid "&Live"
 msgstr "&Live"
 
-#: main_window_live.cpp:83
+#: main_window_live.cpp:86
 msgid "&Live-Modus"
 msgstr "Modo &live"
 
-#: main_window_live.cpp:78
+#: main_window_live.cpp:81
 msgid "&Look speichern …"
 msgstr "&Guardar look …"
 
@@ -310,7 +326,7 @@ msgstr "(Negro)"
 msgid "(eigene Form)"
 msgstr "(forma propia)"
 
-#: live_panel.cpp:154
+#: live_panel.cpp:165
 msgid "(kein Look)"
 msgstr "(sin look)"
 
@@ -410,13 +426,25 @@ msgstr "<b>Matriz 2D</b>"
 msgid "<b>3D-Matrix</b>"
 msgstr "<b>Matriz 3D</b>"
 
+#: live_controls_page.cpp:49
+msgid "<b>DMX</b>"
+msgstr "<b>DMX</b>"
+
 #: fixture_library_page.cpp:94
 msgid "<b>Fixtures</b>"
 msgstr "<b>Fixtures</b>"
 
+#: live_controls_page.cpp:47
+msgid "<b>Funktion</b>"
+msgstr "<b>Función</b>"
+
 #: shape_form.cpp:152
 msgid "<b>Kreis</b>"
 msgstr "<b>Círculo</b>"
+
+#: live_controls_page.cpp:48
+msgid "<b>MIDI</b>"
+msgstr "<b>MIDI</b>"
 
 #: shape_form.cpp:63
 msgid "<b>Punktwolke</b>: %1 Punkte, nur in der Datei änderbar"
@@ -582,7 +610,7 @@ msgstr "Cantidad x y z"
 msgid "Art-Net"
 msgstr "Art-Net"
 
-#: settings_dialog.cpp:104
+#: settings_dialog.cpp:130
 msgid "Art-Net empfangen"
 msgstr "Recibir Art-Net"
 
@@ -594,15 +622,15 @@ msgstr "Art-Net cuenta los universos desde 0 (hasta 32767), sACN desde 1 (hasta 
 msgid "Art-Net zählt Universen ab 0 (bis 32767), sACN ab 1 (bis 63999). Bei DDP gibt es keine Universen."
 msgstr "Art-Net cuenta los universos desde 0 (hasta 32767), sACN desde 1 (hasta 63999). DDP no tiene universos."
 
-#: settings_dialog.cpp:89
+#: settings_dialog.cpp:115
 msgid "Art-Net, sACN und DDP gehen über diese Karte hinaus. Bei „Automatisch“ entscheidet die Routingtabelle des Systems, bei mehreren Karten oft die falsche. Eine Karte auswählen, wenn die Lichtanlage an einem zweiten Netzwerkanschluss hängt."
 msgstr "Art-Net, sACN y DDP salen por esta tarjeta. Con «Automático» decide la tabla de enrutamiento del sistema, que con varias tarjetas suele equivocarse. Elige una tarjeta si la instalación de luces está en una segunda conexión de red."
 
-#: settings_dialog.cpp:116
+#: settings_dialog.cpp:142
 msgid "Art-Net-Port (UDP):"
 msgstr "Puerto Art-Net (UDP):"
 
-#: main_window_actions.cpp:166 settings_dialog.cpp:66
+#: main_window_actions.cpp:166 settings_dialog.cpp:69
 msgid "Audio"
 msgstr "Audio"
 
@@ -642,6 +670,10 @@ msgstr "Ocultar en la ficha"
 msgid "Auf der Kachel ausblenden (Kabel nach außen vorhanden)"
 msgstr "Ocultar en la ficha (hay un cable hacia fuera)"
 
+#: live_controls_page.cpp:65
+msgid "Auf die Belegung des MIDI-Profils zurücksetzen"
+msgstr "Volver a la asignación del perfil MIDI"
+
 #: node_palette.cpp:157 node_palette.cpp:378
 msgid "Auf die Fläche ziehen: Node hinzufügen.\nNode hierher ziehen: entfernen."
 msgstr "Arrastra al lienzo: añadir un nodo.\nArrastra un nodo aquí: eliminarlo."
@@ -650,11 +682,11 @@ msgstr "Arrastra al lienzo: añadir un nodo.\nArrastra un nodo aquí: eliminarlo
 msgid "Auf gewählten anwenden"
 msgstr "Aplicar al seleccionado"
 
-#: settings_dialog.cpp:227
+#: settings_dialog.cpp:253
 msgid "Aufnahmegeräte lassen sich nicht auflisten: %1"
 msgstr "No se pueden listar los dispositivos de captura: %1"
 
-#: midi_settings_page.cpp:27 settings_dialog.cpp:178 test_panel.cpp:39
+#: live_controls_page.cpp:77 midi_settings_page.cpp:27 settings_dialog.cpp:204
 msgid "Aus"
 msgstr "Apagado"
 
@@ -714,7 +746,7 @@ msgstr "Disparador"
 msgid "Auswahl hervorheben"
 msgstr "Resaltar selección"
 
-#: settings_dialog.cpp:43
+#: settings_dialog.cpp:46
 msgid "Automatisch (das System wählt)"
 msgstr "Automático (lo elige el sistema)"
 
@@ -774,7 +806,7 @@ msgstr "No se puede escribir la biblioteca de usuario: %1"
 msgid "Benutzerbibliothek lässt sich nicht speichern: %1"
 msgstr "No se puede guardar la biblioteca de usuario: %1"
 
-#: live_panel.cpp:155
+#: live_panel.cpp:166
 msgid "Bereit: %1 - GO drücken"
 msgstr "Listo: %1 - pulsa GO"
 
@@ -866,7 +898,7 @@ msgstr "Editar cue"
 msgid "Cue −"
 msgstr "Cue −"
 
-#: main_window_live.cpp:61
+#: main_window_live.cpp:64
 msgid "Cuelist"
 msgstr "Lista de cues"
 
@@ -910,7 +942,7 @@ msgstr "Disparador DMX: umbral (1 a 255)"
 msgid "DMX-Auslöser: Universe"
 msgstr "Disparador DMX: universo"
 
-#: settings_dialog.cpp:65
+#: settings_dialog.cpp:68
 msgid "DMX-Eingang"
 msgstr "Entrada DMX"
 
@@ -990,7 +1022,7 @@ msgstr "¿Sustituir el look «%1» por el efecto actual?"
 msgid "Den Look „%1“ löschen?"
 msgstr "¿Eliminar el look «%1»?"
 
-#: main_window_live.cpp:80
+#: main_window_live.cpp:83
 msgid "Den aktuellen Effekt als Look in die Liste legen (Strg+L)"
 msgstr "Añadir el efecto actual a la lista como look (Ctrl+L)"
 
@@ -998,7 +1030,7 @@ msgstr "Añadir el efecto actual a la lista como look (Ctrl+L)"
 msgid "Der Ausgang: Was hier ankommt, wird auf die LEDs gesendet. Mit „Mode“ in einen Bereich skalieren oder als Fenster ausschneiden, plus Helligkeit."
 msgstr "The output: whatever arrives here is sent to the LEDs. \"Mode\" scales into an area or cuts a window; plus brightness."
 
-#: settings_dialog.cpp:167
+#: settings_dialog.cpp:193
 msgid "Der Auswahl-Kanal teilt sich in so viele gleich große Stufen, wie das Projekt Looks hat; 0 heißt kein Wechsel. Ohne Überblendzeit-Kanal (aus) gilt die im Look gespeicherte Zeit, sonst setzt der Kanalwert 0 bis 255 die Zeit auf 0 bis 10 Sekunden. Wirkt nur im laufenden Live-Betrieb; bleibt das Signal weg, bleibt der zuletzt gezeigte Look stehen."
 msgstr "El canal de selección se divide en tantos pasos iguales como looks tenga el proyecto; 0 significa sin cambio. Sin canal de tiempo de fundido (desactivado) se aplica el tiempo propio del look; si no, el valor del canal (0 a 255) ajusta el tiempo de 0 a 10 segundos. Solo actúa mientras el modo en vivo está activo; si la señal desaparece, se mantiene el último look mostrado."
 
@@ -1018,7 +1050,7 @@ msgstr "El controlador necesita un nombre para guardarse"
 msgid "Der Cue löst aus, wenn der Kanalwert auf diese Zahl oder darüber steigt"
 msgstr "El cue se dispara cuando el valor del canal sube a este número o más"
 
-#: settings_dialog.cpp:136
+#: settings_dialog.cpp:162
 msgid "Der Kanalwert 0 bis 255 setzt den Master auf 0 bis 100 %. Solange Pakete kommen, folgt der Master-Regler dem Pult; bleibt das Signal weg, hält der Master seinen Wert. Der Empfang oben muss für das gewählte Protokoll eingeschaltet sein."
 msgstr "El valor del canal de 0 a 255 ajusta el master de 0 a 100 %. Mientras lleguen paquetes, el control master sigue a la mesa; si la señal se corta, el master mantiene su valor. La recepción de arriba debe estar activada para el protocolo elegido."
 
@@ -1042,11 +1074,11 @@ msgstr "La biblioteca ya contiene un grupo \"%1\". ¿Reemplazarlo?"
 msgid "Die Cuelist ist leer. Erst Cues anlegen (Dock „Cuelist“)."
 msgstr "La lista de cues está vacía. Cree primero cues (panel Lista de cues)."
 
-#: live_panel.cpp:180
+#: live_panel.cpp:191 live_panel_looks.cpp:41
 msgid "Die Cuelist läuft und schaltet die Looks selbst. Erst in der Cuelist auf Stopp drücken."
 msgstr "La lista de cues está en marcha y cambia los looks sola. Pulse primero Parar en la lista."
 
-#: settings_dialog.cpp:140
+#: settings_dialog.cpp:166
 msgid "Die DMX-Nodes im Projekt lesen ihre Werte aus dem Empfang. Standard-Ports sind 6454 (Art-Net) und 5568 (sACN); nur ändern, wenn ein anderes Programm sie belegt. Nach der Installation ist der Empfang aus; unter Windows fragt die Firewall beim ersten Einschalten nach."
 msgstr "Los nodos DMX del proyecto leen sus valores de los datos recibidos. Los puertos predeterminados son 6454 (Art-Net) y 5568 (sACN); cámbialos solo si otro programa los usa. La recepción está apagada tras la instalación; en Windows el cortafuegos pregunta al activarla por primera vez."
 
@@ -1070,7 +1102,7 @@ msgstr "The brightness of the mask decides how much of the content is visible. \
 msgid "Die Prüfung ist fehlgeschlagen:\n%1"
 msgstr "La comprobación ha fallado:\n%1"
 
-#: settings_dialog.cpp:231
+#: settings_dialog.cpp:257
 msgid "Die Quelle speist die Audio-Nodes (Pegel, Frequenzband, Beat, Spektrum)."
 msgstr "La fuente alimenta los nodos de audio (nivel, banda de frecuencia, beat, espectro)."
 
@@ -1094,7 +1126,7 @@ msgstr "Los fixtures seleccionados abajo; los demás quedan apagados."
 msgid "Die vergangene Zeit in Sekunden, mit Tempo-Faktor und Versatz. Zum Antreiben von Bewegungen."
 msgstr "The elapsed time in seconds, with speed factor and offset. For driving motion."
 
-#: settings_dialog.cpp:97
+#: settings_dialog.cpp:123
 msgid "Die Änderung wirkt sofort nach „OK“."
 msgstr "El cambio surte efecto inmediatamente tras «Aceptar»."
 
@@ -1178,7 +1210,7 @@ msgstr "Plane wave: stripes moving in one direction (frequency, speed, two color
 msgid "Effekte (2D)"
 msgstr "Efectos (2D)"
 
-#: live_panel.cpp:63
+#: live_panel.cpp:64
 msgid "Eigene Überblendzeit:"
 msgstr "Tiempo de fundido propio:"
 
@@ -1194,7 +1226,7 @@ msgstr "Un informe (.txt) y un volcado de memoria (.dmp) están en la carpeta:\n
 msgid "Ein Kabel lässt sich nur zwischen passenden Typen ziehen."
 msgstr "Un cable solo se puede tender entre tipos compatibles."
 
-#: live_panel.cpp:62
+#: live_panel.cpp:63
 msgid "Ein Klick lädt den Look nur vor. GO (Leertaste) startet dann die Überblendung."
 msgstr "Un clic solo precarga el look. GO (barra espaciadora) inicia entonces el fundido."
 
@@ -1290,7 +1322,7 @@ msgstr "Entrada: %1"
 msgid "Einrasten"
 msgstr "Ajustar"
 
-#: main_window_settings.cpp:49 output_form.cpp:89 settings_dialog.cpp:62
+#: main_window_settings.cpp:49 output_form.cpp:89 settings_dialog.cpp:65
 msgid "Einstellungen"
 msgstr "Ajustes"
 
@@ -1530,6 +1562,10 @@ msgstr "Distribuir y girar fixtures en el escenario (ventana propia)"
 msgid "Flammen: Aufsteigendes, flackerndes Feuer mit einstellbarer Skalierung, Tempo und Flammenhöhe."
 msgstr "Flames: rising, flickering fire with adjustable scale, speed and flame height."
 
+#: live_panel_looks.cpp:91
+msgid "Flashen (nur solange gedrückt)"
+msgstr "Flash (solo mientras se mantiene)"
+
 #: fixture_form.cpp:86 layout_panel_groups.cpp:45
 msgid "Flächen (jedes Fixture ein eigenes 2D-Bild)"
 msgstr "Caras (cada fixture, su propia imagen 2D)"
@@ -1566,15 +1602,15 @@ msgstr "Destellos: celdas sueltas se encienden y se apagan, cada una a su ritmo.
 msgid "Färbt ein Bild nach seiner Helligkeit mit bis zu vier Farben um (von dunkel nach hell). „Shift“ lässt die Farben wandern."
 msgstr "Recolors an image by its brightness with up to four colors (dark to bright). \"Shift\" makes the colors travel."
 
-#: main_window_live.cpp:105
+#: main_window_live.cpp:108
 msgid "Für den Live-Modus erst Looks speichern (Dock „Looks“)."
 msgstr "Para el modo live, guarda primero looks (panel «Looks»)."
 
-#: cue_panel.cpp:34 cue_panel.cpp:70
+#: cue_panel.cpp:34 cue_panel.cpp:70 live_learn.cpp:16
 msgid "GO"
 msgstr "GO"
 
-#: live_panel.cpp:74
+#: live_panel.cpp:75
 msgid "GO  (Leertaste)"
 msgstr "GO  (barra espaciadora)"
 
@@ -1602,7 +1638,7 @@ msgstr "Cargado: %1"
 msgid "Gelb"
 msgstr "Amarillo"
 
-#: settings_dialog.cpp:180
+#: settings_dialog.cpp:206
 msgid "Gerät:"
 msgstr "Dispositivo:"
 
@@ -1818,11 +1854,11 @@ msgstr "Canal %1 — ocupado por el fixture: %2"
 msgid "Kanal %1 — gehört zu: %2"
 msgstr "Canal %1 — pertenece a: %2"
 
-#: settings_dialog.cpp:93
+#: settings_dialog.cpp:119
 msgid "Karte zum Empfangen:"
 msgstr "Tarjeta para recibir:"
 
-#: settings_dialog.cpp:88
+#: settings_dialog.cpp:114
 msgid "Karte zum Senden:"
 msgstr "Tarjeta para enviar:"
 
@@ -1850,7 +1886,7 @@ msgstr "Sin señal en este universo."
 msgid "Kein Ziel (freies Rechteck)"
 msgstr "Sin destino (rectángulo libre)"
 
-#: settings_dialog.cpp:229
+#: settings_dialog.cpp:255
 msgid "Keine Aufnahmegeräte gefunden. Ein Audio-Interface anschließen und das Fenster neu öffnen."
 msgstr "No se encontraron dispositivos de captura. Conecta una interfaz de audio y vuelve a abrir la ventana."
 
@@ -1865,6 +1901,10 @@ msgstr "No hay nodos de valor DMX en el proyecto"
 #: parameter_panel.cpp:209
 msgid "Keine Treffer."
 msgstr "Sin resultados."
+
+#: live_controls_page.cpp:78
+msgid "Keinen DMX-Kanal für diese Funktion"
+msgstr "Ningún canal DMX para esta función"
 
 #: stage_view.cpp:56 stage_view.cpp:212
 msgid "Klicke eine LED, um ihre Adresse zu sehen."
@@ -1954,7 +1994,7 @@ msgstr "Leyenda de los puertos"
 msgid "Legt Bild B über Bild A. Der Modus bestimmt die Verrechnung (Addieren, Multiplizieren, Screen, Subtrahieren, Differenz …), „Amount“ blendet zwischen A und dem Ergebnis."
 msgstr "Lays image B over image A. The mode sets how they combine (add, multiply, screen, subtract, difference ...); \"Amount\" fades between A and the result."
 
-#: parameter_panel_midi.cpp:53
+#: live_learn.cpp:50 parameter_panel_midi.cpp:53
 msgid "Lernen"
 msgstr "Aprender"
 
@@ -2018,7 +2058,7 @@ msgstr "Borde izquierdo en"
 msgid "Liste leeren"
 msgstr "Vaciar lista"
 
-#: main_window_live.cpp:71
+#: main_window_live.cpp:74
 msgid "Live"
 msgstr "Live"
 
@@ -2026,19 +2066,23 @@ msgstr "Live"
 msgid "Live Kanal"
 msgstr "Canal en vivo"
 
-#: settings_dialog.cpp:165
+#: live_learn.cpp:16
+msgid "Live beenden"
+msgstr "Salir del vivo"
+
+#: settings_dialog.cpp:191
 msgid "Live-Look: Auswahl-Kanal (1 bis 512):"
 msgstr "Look en vivo: canal de selección (1 a 512):"
 
-#: settings_dialog.cpp:163
+#: settings_dialog.cpp:189
 msgid "Live-Look: Protokoll:"
 msgstr "Look en vivo: protocolo:"
 
-#: settings_dialog.cpp:164
+#: settings_dialog.cpp:190
 msgid "Live-Look: Universe:"
 msgstr "Look en vivo: universo:"
 
-#: settings_dialog.cpp:166
+#: settings_dialog.cpp:192
 msgid "Live-Look: Überblendzeit-Kanal (0 = aus):"
 msgstr "Look en vivo: canal de tiempo de fundido (0 = desactivado):"
 
@@ -2082,11 +2126,11 @@ msgstr "Renombrar look"
 msgid "Look überschreiben"
 msgstr "Sobrescribir look"
 
-#: settings_dialog.cpp:146
+#: settings_dialog.cpp:172
 msgid "Look-Auswahl im Live-Betrieb über einen DMX-Kanal steuern"
 msgstr "Controlar la selección del look en modo en vivo mediante un canal DMX"
 
-#: main_window_live.cpp:66
+#: main_window_live.cpp:69
 msgid "Looks"
 msgstr "Looks"
 
@@ -2118,7 +2162,7 @@ msgstr "Eliminar"
 msgid "Löst bei jedem Einsatz in einem Frequenzbereich aus: Kick, Snare, Hi-Hat oder ein eigener Bereich in Hz. Liefert Treffer, Pulse (klingt ab), Stärke und „Age“. Für einzelne Schläge; die Gesamtlautstärke liefert „Audio Level“, den Takt „Beat“. Die Schwelle folgt der Lautstärke, auch leise Schläge werden erkannt."
 msgstr "Se dispara en cada ataque dentro de un rango de frecuencias: bombo, caja, hi-hat o un rango propio en Hz. Entrega golpe, pulse (decae), fuerza y «Age». Para golpes individuales; el volumen global lo da «Audio Level» y el tempo «Beat». El umbral sigue al volumen, así que también se detectan golpes suaves."
 
-#: settings_dialog.cpp:69
+#: settings_dialog.cpp:72
 msgid "MIDI"
 msgstr "MIDI"
 
@@ -2138,7 +2182,7 @@ msgstr "Entrada MIDI"
 msgid "MIDI-Eingang: %1"
 msgstr "Entrada MIDI: %1"
 
-#: main_window_midi_live.cpp:40
+#: main_window_midi_live.cpp:85
 msgid "MIDI: %1"
 msgstr "MIDI: %1"
 
@@ -2158,23 +2202,35 @@ msgstr "Magenta"
 msgid "Manuell"
 msgstr "Manual"
 
+#: live_learn.cpp:17
+msgid "Manuelle Überblendung"
+msgstr "Fundido manual"
+
 #: dmx_monitor_panel.cpp:139
 msgid "Master"
 msgstr "Master"
 
-#: settings_dialog.cpp:120
+#: live_controls_page.cpp:87
+msgid "Master über DMX ist dieselbe Einstellung wie auf der Seite DMX-Eingang. DMX-Tasten lösen aus, wenn der Kanal über 50 % steigt."
+msgstr "El máster por DMX es el mismo ajuste que en la página Entrada DMX. Los botones DMX se activan cuando el canal sube por encima del 50 %."
+
+#: live_learn.cpp:16
+msgid "Master-Helligkeit"
+msgstr "Brillo máster"
+
+#: settings_dialog.cpp:146
 msgid "Master-Helligkeit über einen DMX-Kanal steuern"
 msgstr "Controlar el brillo master con un canal DMX"
 
-#: settings_dialog.cpp:135
+#: settings_dialog.cpp:161
 msgid "Master: Kanal (1 bis 512):"
 msgstr "Master: canal (1 a 512):"
 
-#: settings_dialog.cpp:133
+#: settings_dialog.cpp:159
 msgid "Master: Protokoll:"
 msgstr "Master: protocolo:"
 
-#: settings_dialog.cpp:134
+#: settings_dialog.cpp:160
 msgid "Master: Universe:"
 msgstr "Master: universo:"
 
@@ -2198,7 +2254,7 @@ msgstr "Selecciona varios con Ctrl o Mayús. Un clic en un LED de la vista selec
 msgid "Mischt zwei Bilder: 0 zeigt nur A, 1 nur B, dazwischen eine Überblendung."
 msgstr "Mixes two images: 0 shows only A, 1 only B, in between a crossfade."
 
-#: live_panel.cpp:61
+#: live_panel.cpp:62
 msgid "Mit GO (vorladen)"
 msgstr "Con GO (precarga)"
 
@@ -2270,7 +2326,7 @@ msgstr "Uno junto a otro ↔"
 msgid "Nein"
 msgstr "No"
 
-#: settings_dialog.cpp:64
+#: settings_dialog.cpp:67
 msgid "Netzwerk"
 msgstr "Red"
 
@@ -2366,7 +2422,7 @@ msgstr "Renombrar node"
 msgid "Node umbenennen …"
 msgstr "Renombrar node …"
 
-#: settings_dialog.cpp:71
+#: settings_dialog.cpp:97
 msgid "Node-Standardwerte"
 msgstr "Valores predeterminados de nodos"
 
@@ -2389,6 +2445,10 @@ msgstr "nota %1 activada (velocidad %2)"
 #: midi_settings_page.cpp:103
 msgid "Note %1 aus"
 msgstr "nota %1 desactivada"
+
+#: live_learn.cpp:33
+msgid "Note %1, Kanal %2"
+msgstr "Nota %1, canal %2"
 
 #: cue_dialog.cpp:41 cue_panel.cpp:53
 msgid "Notiz"
@@ -2578,6 +2638,10 @@ msgstr "Eliminar preset …"
 msgid "Presets"
 msgstr "Presets"
 
+#: live_controls_page.cpp:64
+msgid "Profil"
+msgstr "Perfil"
+
 #: midi_profile_box.cpp:99
 msgid "Profil kopieren"
 msgstr "Copiar perfil"
@@ -2689,6 +2753,10 @@ msgstr "Regiones"
 #: midi_settings_page.cpp:99
 msgid "Regler %1 = %2"
 msgstr "controlador %1 = %2"
+
+#: live_learn.cpp:33
+msgid "Regler %1, Kanal %2"
+msgstr "Controlador %1, canal %2"
 
 #: shape_form.cpp:146
 msgid "Reihenfolge (schnellste zuerst)"
@@ -2862,7 +2930,7 @@ msgstr "Idioma"
 msgid "Stage Config"
 msgstr "Stage Config"
 
-#: settings_dialog.cpp:179
+#: settings_dialog.cpp:205
 msgid "Standardgerät des Systems"
 msgstr "Dispositivo predeterminado del sistema"
 
@@ -2874,13 +2942,21 @@ msgstr "Inicio"
 msgid "Starte …"
 msgstr "Iniciando …"
 
-#: live_panel.cpp:64
+#: live_panel.cpp:65
 msgid "Statt der Zeit, die beim Look gespeichert ist"
 msgstr "En lugar del tiempo guardado con el look"
 
 #: node_info_texts.cpp:141
 msgid "Sternenhimmel: Funkelnde Sterne mit einstellbarer Dichte, Größe und Funkeltempo, auf Wunsch langsam abwärts driftend. „Motion“ = Warp lässt die Sterne stattdessen wie beim Sprung auf Warp-Geschwindigkeit radial von der Mitte weg zu Streifen werden („warpSpeed“, „trail“ für die Streifenlänge)."
 msgstr "Cielo estrellado: estrellas titilantes con densidad, tamaño y velocidad de parpadeo ajustables, a la deriva lentamente hacia abajo si se desea. «Motion» = Warp hace que las estrellas se extiendan radialmente desde el centro, como un salto a velocidad de curvatura («warpSpeed», «trail» para la longitud de la estela)."
+
+#: settings_dialog.cpp:74
+msgid "Steuerung"
+msgstr "Controles"
+
+#: live_panel_looks.cpp:124
+msgid "Steuerung lernen:"
+msgstr "Aprender controles:"
 
 #: cue_panel.cpp:145
 msgid "Stopp"
@@ -3026,6 +3102,10 @@ msgstr "U%1: %2–%3"
 msgid "Umbenennen …"
 msgstr "Renombrar …"
 
+#: live_panel_looks.cpp:90
+msgid "Umschalten (bleibt an)"
+msgstr "Alternar (permanece)"
+
 #: crash_notice.cpp:45
 msgid "Unerwartetes Ende beim letzten Mal"
 msgstr "Final inesperado la última vez"
@@ -3122,15 +3202,15 @@ msgstr "Vista previa"
 msgid "Vorweg überspringen"
 msgstr "Saltar antes"
 
-#: settings_dialog.cpp:181
+#: settings_dialog.cpp:207
 msgid "WAV-Datei in Schleife:"
 msgstr "Archivo WAV en bucle:"
 
-#: settings_dialog.cpp:240
+#: settings_dialog.cpp:266
 msgid "WAV-Datei wählen"
 msgstr "Elegir archivo WAV"
 
-#: settings_dialog.cpp:240
+#: settings_dialog.cpp:266
 msgid "WAV-Dateien (*.wav)"
 msgstr "Archivos WAV (*.wav)"
 
@@ -3142,9 +3222,21 @@ msgstr "Centrar horizontalmente"
 msgid "Warte auf MIDI …"
 msgstr "Esperando MIDI …"
 
+#: live_learn.cpp:106
+msgid "Warte …"
+msgstr "Esperando …"
+
+#: live_learn.cpp:56
+msgid "Wartet auf den nächsten Regler am MIDI-Controller oder einen DMX-Kanal, der sich bewegt."
+msgstr "Espera el siguiente controlador MIDI o un canal DMX que se mueva."
+
 #: parameter_panel_midi.cpp:54
 msgid "Wartet auf die nächste Reglerbewegung am MIDI-Controller und trägt Kanal und Reglernummer ein."
 msgstr "Espera el siguiente movimiento de un potenciómetro o fader del controlador MIDI y rellena el canal y el número de controlador."
+
+#: live_learn.cpp:55
+msgid "Wartet auf die nächste Taste am MIDI-Controller oder einen DMX-Kanal, der sich bewegt."
+msgstr "Espera la siguiente tecla MIDI o un canal DMX que se mueva."
 
 #: parameter_panel_midi.cpp:55
 msgid "Wartet auf die nächste Taste am MIDI-Controller und trägt Kanal und Note ein."
@@ -3181,6 +3273,10 @@ msgstr "Waveform of the audio input (a short time window, optionally aligned to 
 #: node_info_texts.cpp:118
 msgid "Wellenringe wie Wassertropfen: Ringe breiten sich von zufälligen Punkten aus (Tropfen pro Sekunde, Tempo, Ringbreite)."
 msgstr "Ripples like water drops: rings spread from random points (drops per second, speed, ring width)."
+
+#: live_controls_page.cpp:40
+msgid "Wer im Live-Modus GO, Ende, Master und Überblendung steuert. „Lernen“ wartet auf die nächste Taste, den nächsten Regler oder einen DMX-Kanal, der sich bewegt. Ohne eigene Belegung gilt das MIDI-Profil (Seite MIDI). Dieselbe Belegung lässt sich auch im Live-Fenster lernen."
+msgstr "Qué controla GO, el final, el máster y el fundido en modo en vivo. «Aprender» espera la siguiente tecla, el siguiente controlador o un canal DMX que se mueva. Sin asignación propia se aplica el perfil MIDI (página MIDI). La misma asignación también se puede aprender en la ventana en vivo."
 
 #: main_window.cpp:129 main_window.cpp:171
 msgid "WhiteHoleFX"
@@ -3262,7 +3358,7 @@ msgstr "Elige primero fixtures de la lista."
 msgid "Wähle zuerst einen Controller in der Tabelle."
 msgstr "Elige primero un controlador en la tabla."
 
-#: settings_dialog.cpp:184
+#: settings_dialog.cpp:210
 msgid "Wählen …"
 msgstr "Elegir …"
 
@@ -3305,6 +3401,10 @@ msgstr "Filas (horizontales)"
 #: cue_dialog.cpp:56
 msgid "Zeit"
 msgstr "Tiempo"
+
+#: live_panel_looks.cpp:75
+msgid "Zeit zum Zurückblenden beim Loslassen (s):"
+msgstr "Tiempo de retorno al soltar (s):"
 
 #: cue_dialog.cpp:63
 msgid "Zeit-Auslöser: Wartezeit"
@@ -3366,11 +3466,27 @@ msgstr "Random cells that fade in and out, between two colors."
 msgid "Zum Aneinanderreihen mindestens zwei Fixtures wählen"
 msgstr "Selecciona al menos dos fixtures para alinear"
 
-#: live_panel.cpp:78
+#: live_panel.cpp:79
 msgid "Zurück zum Editor (Esc)"
 msgstr "Volver al editor (Esc)"
 
-#: main_window_live.cpp:86
+#: live_panel_looks.cpp:75
+msgid "Zurückblenden"
+msgstr "Retorno"
+
+#: live_panel_looks.cpp:103
+msgid "Zurückblenden mit der Zeit des Looks (%1 s)"
+msgstr "Retorno con el tiempo del look (%1 s)"
+
+#: live_panel_looks.cpp:104
+msgid "Zurückblenden mit eigener Zeit (%1 s) …"
+msgstr "Retorno con tiempo propio (%1 s) …"
+
+#: live_panel_looks.cpp:105
+msgid "Zurückblenden mit eigener Zeit …"
+msgstr "Retorno con tiempo propio …"
+
+#: main_window_live.cpp:89
 msgid "Zwischen Bearbeiten und Live-Betrieb wechseln (F9)"
 msgstr "Cambiar entre edición y funcionamiento live (F9)"
 
@@ -3386,7 +3502,7 @@ msgstr "Sentido de recuento"
 msgid "an oder aus"
 msgstr "encendido o apagado"
 
-#: midi_profile_box.cpp:78 settings_dialog.cpp:160
+#: live_controls_page.cpp:137 live_learn.cpp:31 midi_profile_box.cpp:78
 msgid "aus"
 msgstr "desactivado"
 
@@ -3438,11 +3554,11 @@ msgstr "derecha (x máx)"
 msgid "sACN"
 msgstr "sACN"
 
-#: settings_dialog.cpp:105
+#: settings_dialog.cpp:131
 msgid "sACN (E1.31) empfangen"
 msgstr "Recibir sACN (E1.31)"
 
-#: settings_dialog.cpp:118
+#: settings_dialog.cpp:144
 msgid "sACN-Port (UDP):"
 msgstr "Puerto sACN (UDP):"
 
@@ -3494,7 +3610,7 @@ msgstr "Abre GitHub: crear una nueva incidencia"
 msgid "Über WhiteHoleFX"
 msgstr "Acerca de WhiteHoleFX"
 
-#: settings_dialog.cpp:94
+#: settings_dialog.cpp:120
 msgid "Über diese Karte tritt der sACN-Empfang den Multicast-Gruppen bei. Art-Net-Broadcast und Unicast-Pakete kommen weiterhin von jeder Karte an."
 msgstr "La recepción de sACN se une a los grupos multicast a través de esta tarjeta. Los paquetes Art-Net de difusión y unicast siguen llegando por todas las tarjetas."
 
@@ -3502,9 +3618,13 @@ msgstr "La recepción de sACN se une a los grupos multicast a través de esta ta
 msgid "Überblendet von Bild A zu Bild B (Position 0 bis 1). „Progressive“ lässt beide in der Mitte voll leuchten."
 msgstr "Fades from image A to image B (position 0 to 1). \"Progressive\" lets both shine fully in the middle."
 
-#: live_panel.cpp:120
-msgid "Überblendzeit %1 s"
-msgstr "Tiempo de fundido %1 s"
+#: live_panel.cpp:124
+msgid "Überblendzeit %1 s. Rechtsklick: umschalten oder flashen"
+msgstr "Tiempo de fundido %1 s. Clic derecho: alternar o flash"
+
+#: live_learn.cpp:16
+msgid "Überblendzeit (0–10 s)"
+msgstr "Tiempo de fundido (0–10 s)"
 
 #: look_panel.cpp:46
 msgid "Überblendzeit:"

@@ -226,7 +226,7 @@ Fix-Ideen, Tests). Zuerst Punkt 0 dort (`.pdb` vom Nutzer besorgen, läuft am 20
   Einstellungsdaten). Vom Nutzer mit "jetzt umsetzen" freigegeben und umgesetzt; Details siehe CHANGELOG.
   Damit sind beide Teile des 15.11.-Vorschlags zum DMX-Patch/Monitor-Gitter abgeschlossen.
 - **MIDI-Eingang/-Ausgang** (z. B. Akai APC Mini): **vom Nutzer am 23.11. zur Umsetzung freigegeben**, Plan und Entscheidungen
-  in `docs/entwurf-midi.md` (Stufe 1 Grundlage, 2 Nodes, 3 APC mini mk1 im Live-Modus). **Stand 23.11.:** Stufe 1 gemergt (PR #49), Stufe 2 als PR #50, Stufe 3 auf `feat/midi-stufe3`; offen bleiben die Punkte unter „4. Offen / später“ im Entwurf. Ursprüngliche Überlegungen: Überlegungen aus dem
+  in `docs/entwurf-midi.md` (Stufe 1 Grundlage, 2 Nodes, 3 APC mini mk1 im Live-Modus). **Stand 23.11.:** Stufe 1 gemergt (PR #49), Stufe 2 als PR #50, Stufe 3 gemergt (PR #51); Flash je Look und frei belegbare Live-Steuerung (MIDI/DMX, Abschnitte 5/6 im Entwurf) auf `feat/midi-flash`; offen bleiben die Punkte unter „4. Offen / später“ im Entwurf. Ursprüngliche Überlegungen: Überlegungen aus dem
   Gespräch:
   - *Bibliothek:* RtMidi — C++, cross-platform (ALSA/WinMM), passt zum bestehenden Muster, mit dem
     `wh_audio` schon `miniaudio` einbindet. Ein neues `wh_midi` mit einem `MidiStore` (threadsicherer

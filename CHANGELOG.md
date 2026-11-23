@@ -21,6 +21,15 @@
   Programmeinstellungen: zwei vorgefertigte („Looks 4 x 8 mit GO und Fadern“, „Looks 8 x 8 ohne Steuertasten“), eigene per
   Kopieren, Umbenennen, Löschen auf der Seite MIDI. Logik in `runtime::MidiLiveController`. Tests:
   `tests/runtime/midi_live_test.cpp`, `tests/runtime/live_manual_fade_test.cpp`. Beschreibung: `docs/midi.md`.
+- **Looks flashen.** Jeder Look kann umschalten (wie bisher) oder flashen: nur solange gehalten, beim Loslassen zurück zum
+  vorherigen Look, mit der Zeit des Looks oder eigener Zeit. Einstellbar per Rechtsklick im Live-Fenster, gespeichert im Projekt
+  (`look … trigger flash return 0.5`). Flash hat Vorrang vor „Mit GO“; gilt für Knöpfe und MIDI-Pads gleich
+  (`Player::liveDown`/`liveUp`/`setLookTrigger`). Look-Knöpfe reagieren jetzt beim Drücken statt beim Loslassen. Tests:
+  `tests/runtime/live_flash_test.cpp`.
+- **Live-Steuerung frei belegbar, MIDI und DMX.** Neuer Reiter Einstellungen → **Steuerung** und Zeile „Steuerung lernen“ im
+  Live-Fenster: GO, Live beenden, Master, Überblendzeit und manuelle Überblendung per **Lernen** auf MIDI-Tasten/-Regler oder
+  DMX-Kanäle (`runtime::LiveBindings`, `input::DmxLearn`); das MIDI-Profil bleibt Startbelegung. Tests:
+  `tests/runtime/live_bindings_test.cpp`.
 
 ## 1.1.0
 
