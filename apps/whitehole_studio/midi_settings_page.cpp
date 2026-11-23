@@ -13,6 +13,7 @@
 #include <utility>
 #include <vector>
 
+#include "midi_profile_box.hpp"
 #include "whitehole/midi/midi_backend.hpp"
 
 namespace whitehole::studio {
@@ -39,7 +40,7 @@ void fillPorts(QComboBox* combo, const std::vector<std::string>& ports, const QS
 }  // namespace
 
 MidiSettingsPage::MidiSettingsPage(const QString& input, const QString& output, std::shared_ptr<midi::MidiStore> store,
-                                   QWidget* parent)
+                                   QWidget* parent, const QString& profile, const QStringList& profiles)
     : QWidget{parent}, store_{std::move(store)} {
     auto* layout = new QVBoxLayout{this};
     auto* intro = new QLabel{tr("Ein- und Ausgang eines MIDI-Controllers, zum Beispiel eines Akai APC mini. "
@@ -65,6 +66,8 @@ MidiSettingsPage::MidiSettingsPage(const QString& input, const QString& output, 
     last_ = new QLabel{this};
     last_->setTextFormat(Qt::PlainText);
     layout->addWidget(last_);
+    profiles_ = new MidiProfileBox{profile, profiles, this};
+    layout->addWidget(profiles_);
     layout->addStretch(1);
 
     fillPorts(input_, midi::makeMidiInput()->ports(), input);

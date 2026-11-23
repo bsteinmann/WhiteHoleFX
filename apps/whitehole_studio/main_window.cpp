@@ -141,6 +141,9 @@ MainWindow::MainWindow(gpu::IGpuDevice* device, const QString& deviceNote, QWidg
 
 MainWindow::~MainWindow() {
     timer_.stop();
+    if (midiLive_) {
+        midiLive_->clear();  // Pads des Controllers dunkel lassen, nicht im letzten Zustand
+    }
     player_->stop();
 }
 
@@ -337,6 +340,7 @@ void MainWindow::tick() {
     if (lastTick != Clock::time_point{} && ms(begin - lastTick) > 500) {
         std::fprintf(stderr, "Hauptschleife stand %lld ms (zwischen zwei Frames)\n", static_cast<long long>(ms(begin - lastTick)));
     }
+    midiTick();  // vor dem Schritt: ein Pad-Druck wirkt im selben Frame
     const Result<void> r = player_->step();
     const Clock::time_point stepped = Clock::now();
     if (!r.ok()) {

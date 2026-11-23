@@ -36,6 +36,7 @@ struct LiveStatus {
     int incoming{-1};    // während eines Fades: der neue Look
     double progress{1.0};  // 0..1 des laufenden Fades (1 = kein Fade)
     double fadeSeconds{0.0};
+    bool manual{false};  // der laufende Fade folgt einem Fader (setManualProgress), nicht der Uhr
 };
 
 class LiveDecks {
@@ -61,6 +62,13 @@ public:
     /// Liefert true, wenn sich dadurch ein Wert im Graphen geändert hat.
     bool advance(double seconds);
 
+    /// Manuelle Überblendung (Fader): setzt den Fortschritt zum vorgeladenen Look direkt auf `progress` (0..1).
+    /// Über 0 beginnt ein Fade, der nicht mit der Zeit läuft (advance() lässt ihn stehen); bei 1 ist der neue Look
+    /// sichtbar und der Fade beendet; zurück auf 0 ist der Look wieder nur vorgeladen. go() während eines manuellen
+    /// Fades übergibt an die Uhr und blendet von der erreichten Stelle zu Ende. Ohne vorgeladenen Look (oder während
+    /// eines Zeit-Fades) wirkungslos. Liefert true, wenn sich dadurch ein Wert im Graphen geändert hat.
+    bool setManualProgress(double progress);
+
     /// Hat arm() oder start() den Aufbau des Graphen verändert (Nodes kamen oder gingen)? Wird mit dem
     /// Abfragen zurückgesetzt. Danach genügt ein Wertabgleich, bis der nächste Look geladen wird.
     [[nodiscard]] bool takeStructureChanged() noexcept;
@@ -82,6 +90,7 @@ private:
     void fill(Deck deck);  // durchsichtiger Platzhalter in einem leeren Deck
     void finishFade();
     void setAmount(double amount);
+    void showProgress();  // Mischwert aus progress_ und dem sichtbaren Deck
     [[nodiscard]] static Deck other(Deck deck) noexcept { return deck == Deck::A ? Deck::B : Deck::A; }
 
     graph::Graph graph_;
@@ -92,6 +101,7 @@ private:
     Deck visible_{Deck::A};
     bool armed_{false};
     bool fading_{false};
+    bool manual_{false};
     double progress_{1.0};
     double fadeSeconds_{0.0};
     double amount_{0.0};

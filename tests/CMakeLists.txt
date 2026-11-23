@@ -137,6 +137,8 @@ add_executable(wh_tests
     runtime/operator_controls_test.cpp
     runtime/node_preset_test.cpp
     runtime/live_decks_test.cpp
+    runtime/live_manual_fade_test.cpp
+    runtime/midi_live_test.cpp
     runtime/player_live_test.cpp
     runtime/player_edit_test.cpp
     runtime/player_groups_test.cpp

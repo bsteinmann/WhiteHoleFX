@@ -50,6 +50,8 @@ public:
     [[nodiscard]] bool useGo() const;
     /// Eigene Überblendzeit statt der des Looks; leer = Zeit des Looks.
     void setFadeOverride(std::optional<double> seconds);
+    /// Die eingestellte eigene Überblendzeit; leer = Zeit des Looks.
+    [[nodiscard]] std::optional<double> fadeOverride() const;
 
 Q_SIGNALS:
     void failed(const QString& message);
@@ -57,7 +59,6 @@ Q_SIGNALS:
     void leaveRequested();
 
 private:
-    [[nodiscard]] std::optional<double> fadeOverride() const;
     [[nodiscard]] static QString styleFor(const QString& color);
 
     runtime::Player& player_;

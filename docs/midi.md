@@ -12,7 +12,6 @@ den Entscheidungen steht in `entwurf-midi.md`.
   jedem Übernehmen der Einstellungen erneut.
 - Die Seite zeigt die zuletzt empfangene Nachricht (Kanal, Note oder Regler, Wert). Verarbeitet werden Note an/aus und
   Control Change; Systemnachrichten (Takt, SysEx) werden ignoriert.
-- Noch keine Belegung für den Akai APC mini im Live-Modus (Stufe 3).
 
 ## Stufe 2: Nodes und „Lernen“
 
@@ -25,6 +24,33 @@ den Entscheidungen steht in `entwurf-midi.md`.
 - **Lernen:** Im Parameterfenster des Nodes „Lernen“ drücken, dann am Controller den Regler bewegen bzw. die Taste drücken; Kanal und
   Nummer werden eingetragen. Ein zweiter Klick bricht ab. Voraussetzung: der Eingangsport ist unter Einstellungen → MIDI gewählt.
 - Die Nodes lesen aus demselben Speicher wie die Anzeige „Letzte Nachricht“ der Einstellungen (`BuiltinLibrary::midi`).
+
+## Stufe 3: Live-Modus auf dem Akai APC mini (mk1)
+
+Solange das Live-Fenster offen ist, bedient der Controller den Live-Modus; außerhalb bleiben Pads und Fader frei (die
+MIDI-Nodes lesen sie weiter). Dafür muss unter Einstellungen → MIDI der Eingang gewählt sein, für die LEDs auch der Ausgang.
+
+- **Pads → Looks:** Raster wie im Live-Fenster, erste Zeile oben (Look 1 = Pad links oben). Ein Druck blendet zum Look über; mit
+  „Mit GO“ im Live-Fenster lädt er ihn nur vor. Pads ohne Look tun nichts.
+- **LEDs:** grün = läuft, gelb blinkend = vorgeladen, gelb = blendet gerade ein, sonst aus. Gesendet wird nur, was sich ändert; beim
+  Verlassen des Live-Modus und beim Beenden des Programms gehen alle aus.
+- **Tasten** (Profil „Looks 4 x 8 mit GO und Fadern“): Seitentaste 1 (oben) = GO (blinkt, wenn etwas vorgeladen ist), Seitentaste 2 =
+  Live beenden (leuchtet im Live-Modus).
+- **Fader:** Fader 9 = Master-Helligkeit (der Regler im Studio zieht mit), Fader 1 = Überblendzeit 0–10 s (hat Vorrang vor der
+  eigenen Zeit im Live-Fenster, sobald er einmal bewegt wurde), Fader 2 = **manuelle Überblendung**.
+- **Manuelle Überblendung:** Look vorladen (am besten mit „Mit GO“), dann Fader 2 von unten nach oben ziehen: Bei ganz oben ist der
+  Look sichtbar, zurück nach unten ist er wieder nur vorgeladen, die Zeit läuft dabei nicht mit. GO mittendrin blendet mit der Uhr zu
+  Ende. **Mitnahme:** Ein neu vorgeladener Look folgt dem Fader erst, wenn dieser einmal unten war (Wert ≤ 3) - sonst würde das Bild
+  springen. Nach einem vollständigen Übergang also erst wieder nach unten ziehen.
+- **Profile** (Einstellungen → MIDI, Programmeinstellungen, nicht im Projekt): vorgefertigt sind „Looks 4 x 8 mit GO und Fadern“
+  (Standard, 32 Looks, rechte Pad-Hälfte frei) und „Looks 8 x 8 ohne Steuertasten“ (64 Looks, Fader wie oben). Beide sind
+  schreibgeschützt; „Kopieren …“ legt ein eigenes an, dessen Spalten, Tasten (Noten) und Fader (CC) sich ändern lassen
+  (−1 = nicht belegt); eigene lassen sich umbenennen und löschen.
+- Gerätedaten mk1 (Kanal 1): Pads Noten 0..63 (links unten 0), Seitentasten Noten 82..89 (oben 82), untere Tasten 64..71, Fader
+  CC 48..56. Pad-LED über die Velocity: 0 aus, 1 grün, 2 grün blinkend, 3 rot, 4 rot blinkend, 5 gelb, 6 gelb blinkend.
+
+Code: `midi::LiveProfile` (`live_profile.hpp`), `runtime::MidiLiveController` (`midi_live.hpp`), `LiveDecks::setManualProgress`,
+`Player::liveManualFade`; im Studio `main_window_midi_live.cpp` und `midi_profile_box.cpp`.
 
 ## Bauen
 

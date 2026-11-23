@@ -130,6 +130,9 @@ add_executable(whitehole_studio
     add_fixture_dialog.hpp
     app_settings.cpp
     main_window_midi.cpp
+    main_window_midi_live.cpp
+    midi_profile_box.cpp
+    midi_profile_box.hpp
     midi_settings_page.cpp
     midi_settings_page.hpp
     app_settings.hpp

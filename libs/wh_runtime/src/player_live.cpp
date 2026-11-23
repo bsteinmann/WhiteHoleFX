@@ -257,6 +257,17 @@ Result<void> Player::liveTrigger(int index, std::optional<double> fadeSeconds) {
     return liveGo(fadeSeconds);
 }
 
+Result<void> Player::liveManualFade(double progress) {
+    if (!live_) {
+        return Error{ErrorCode::InvalidArgument, "Der Live-Betrieb ist nicht gestartet"};
+    }
+    if (live_->setManualProgress(progress)) {
+        valuesDirty_ = true;
+        liveLast_.reset();  // übergibt go() später an die Uhr, zählt die Zeit ab dem nächsten Frame
+    }
+    return {};
+}
+
 LiveStatus Player::liveStatus() const noexcept { return live_ ? live_->status() : LiveStatus{}; }
 
 }  // namespace whitehole::runtime

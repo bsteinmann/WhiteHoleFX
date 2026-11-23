@@ -14,6 +14,13 @@
   Reglernummer bzw. Note der nächsten Controller-Nachricht ein (`midi::MidiLearn`, berührt die Ereignisliste des Speichers nicht).
   `MidiStore` merkt sich dafür die letzte Reglernachricht und den letzten Note-On samt laufender Nummer. `BuiltinLibrary::midi` ist der
   gemeinsame Speicher von Nodes und Einstellungsseite. Tests: `tests/midi/midi_nodes_test.cpp`, `tests/midi/midi_learn_test.cpp`.
+- **MIDI, Stufe 3: Live-Modus auf dem Akai APC mini (mk1).** Im Live-Fenster rufen die Pads die Looks ab (Raster wie im Fenster,
+  erste Zeile oben) und zeigen den Zustand (grün läuft, gelb blinkend vorgeladen, gelb blendet ein); Seitentaste 1 = GO,
+  Seitentaste 2 = Live beenden, Fader 9 = Master, Fader 1 = Überblendzeit 0–10 s, Fader 2 = **manuelle Überblendung** (neu
+  `LiveDecks::setManualProgress`/`Player::liveManualFade`, mit Mitnahme). Profile (`midi::LiveProfile`) in den
+  Programmeinstellungen: zwei vorgefertigte („Looks 4 x 8 mit GO und Fadern“, „Looks 8 x 8 ohne Steuertasten“), eigene per
+  Kopieren, Umbenennen, Löschen auf der Seite MIDI. Logik in `runtime::MidiLiveController`. Tests:
+  `tests/runtime/midi_live_test.cpp`, `tests/runtime/live_manual_fade_test.cpp`. Beschreibung: `docs/midi.md`.
 
 ## 1.1.0
 

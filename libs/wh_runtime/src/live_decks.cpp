@@ -103,6 +103,7 @@ Result<void> LiveDecks::load(Deck deck, const project::Look& look, int index) {
 
 void LiveDecks::finishFade() {
     fading_ = false;
+    manual_ = false;
     progress_ = 1.0;
     visible_ = other(visible_);
     armed_ = false;
@@ -141,8 +142,12 @@ Result<void> LiveDecks::go(double fadeSeconds) {
         return Error{ErrorCode::InvalidArgument, "Die Überblendzeit ist ungültig"};
     }
     fadeSeconds_ = fadeSeconds;
-    fading_ = true;
-    progress_ = 0.0;
+    if (fading_ && manual_) {
+        manual_ = false;  // von der erreichten Stelle aus mit der Uhr weiter (advance)
+    } else {
+        fading_ = true;
+        progress_ = 0.0;
+    }
     if (fadeSeconds <= 0.0) {
         finishFade();
     }
@@ -150,7 +155,7 @@ Result<void> LiveDecks::go(double fadeSeconds) {
 }
 
 bool LiveDecks::advance(double seconds) {
-    if (!fading_) {
+    if (!fading_ || manual_) {
         return false;
     }
     if (std::isfinite(seconds) && seconds > 0.0) {
@@ -160,9 +165,40 @@ bool LiveDecks::advance(double seconds) {
         finishFade();
         return true;
     }
+    showProgress();
+    return true;
+}
+
+void LiveDecks::showProgress() {
     // Von der Position des sichtbaren Decks zur anderen: A -> B steigt von 0 auf 1, B -> A fällt
     const double from = visible_ == Deck::A ? 0.0 : 1.0;
     setAmount(from + (1.0 - 2.0 * from) * progress_);
+}
+
+bool LiveDecks::setManualProgress(double progress) {
+    if (!armed_ || (fading_ && !manual_) || !std::isfinite(progress)) {
+        return false;
+    }
+    progress = std::clamp(progress, 0.0, 1.0);
+    if (progress >= 1.0) {
+        finishFade();
+        return true;
+    }
+    if (progress <= 0.0) {
+        if (!fading_) {
+            return false;
+        }
+        fading_ = false;  // zurück auf "nur vorgeladen"
+        manual_ = false;
+        progress_ = 1.0;
+        setAmount(visible_ == Deck::A ? 0.0 : 1.0);
+        return true;
+    }
+    fading_ = true;
+    manual_ = true;
+    fadeSeconds_ = 0.0;
+    progress_ = progress;
+    showProgress();
     return true;
 }
 
@@ -187,6 +223,7 @@ LiveStatus LiveDecks::status() const noexcept {
     s.incoming = fading_ ? hidden.look : -1;
     s.progress = progress_;
     s.fadeSeconds = fadeSeconds_;
+    s.manual = fading_ && manual_;
     return s;
 }
 

@@ -29,6 +29,7 @@ wh_add_library(wh_runtime
         src/player_targets.cpp
         src/player_master.cpp
         src/live_dmx.cpp
+        src/midi_live.cpp
         src/player_live_dmx.cpp
         src/player_layout.cpp
         src/player_types.cpp
@@ -49,6 +50,7 @@ wh_add_library(wh_runtime
         wh_executor
         wh_gpu
         wh_mapping
+        wh_midi
         wh_nodes
         wh_output
         wh_preview
