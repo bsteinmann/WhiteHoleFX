@@ -37,15 +37,19 @@
 #include <unordered_map>
 #include <vector>
 
+#include "whitehole/midi/midi_learn.hpp"
 #include "whitehole/runtime/player.hpp"
 
 class QComboBox;
+class QGridLayout;
 class QLabel;
 class QLineEdit;
 class QScrollArea;
 class QToolButton;
 
 namespace whitehole::studio {
+
+struct Editor;
 
 class ParameterPanel : public QWidget {
     Q_OBJECT
@@ -61,6 +65,8 @@ public:
 
     void setChangeHandler(ChangeHandler handler) { handler_ = std::move(handler); }
     void setScaleHandler(ScaleHandler handler) { scaleHandler_ = std::move(handler); }
+    /// Quelle für den "Lernen"-Knopf der MIDI-Nodes; ohne sie gibt es keinen Knopf.
+    void setMidiLearn(std::shared_ptr<midi::MidiLearn> learn) { midiLearn_ = std::move(learn); }
     /// Baut die Regler neu auf (nach dem Laden eines Projekts).
     void rebuild(const std::vector<runtime::NodeInfo>& nodes);
 
@@ -94,9 +100,13 @@ private:
     };
     QWidget* makeScaleRow(const runtime::ParameterInfo& info, QWidget* parent);
     void applyVisibility();
+    /// Hängt bei den MIDI-Nodes den "Lernen"-Knopf als nächste Zeile an `grid` (parameter_panel_midi.cpp).
+    void addMidiLearnRow(const runtime::NodeInfo& node, QGridLayout* grid, int& row,
+                         const std::unordered_map<std::string, std::shared_ptr<Editor>>& holders);
 
     ChangeHandler handler_;
     ScaleHandler scaleHandler_;
+    std::shared_ptr<midi::MidiLearn> midiLearn_;
     std::unordered_map<std::uint64_t, Entry> entries_;
     std::unordered_map<std::uint64_t, bool> open_;  // von Hand auf- oder zugeklappt (sonst gilt die Regel der Ansicht)
     std::unordered_set<std::uint64_t> pinned_;

@@ -13,6 +13,7 @@
 #include "whitehole/graph/node_registry_impl.hpp"
 #include "whitehole/audio/audio_store.hpp"
 #include "whitehole/input/dmx_store.hpp"
+#include "whitehole/midi/midi_store.hpp"
 #include "whitehole/values/cpu_kernel.hpp"
 
 namespace whitehole::nodes {
@@ -23,6 +24,8 @@ struct BuiltinLibrary {
     values::CpuKernelLibrary kernels;
     /// Der Speicher, aus dem die DMX-Nodes lesen; ein DmxReceiver schreibt hinein.
     std::shared_ptr<input::DmxStore> dmx;
+    /// Der Speicher, aus dem die MIDI-Nodes lesen; ein MidiReceiver schreibt hinein.
+    std::shared_ptr<midi::MidiStore> midi;
     /// Der Speicher, aus dem die Audio-Nodes lesen; ein AudioInput schreibt hinein.
     std::shared_ptr<audio::AudioStore> audio;
 

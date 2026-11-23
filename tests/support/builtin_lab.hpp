@@ -37,8 +37,12 @@ struct Lab {
     std::chrono::steady_clock::time_point audioNow = std::chrono::steady_clock::time_point{} + std::chrono::seconds{100};
     std::shared_ptr<audio::AudioStore> audio =
         std::make_shared<audio::AudioStore>([this] { return audioNow; });  // Quelle der Audio-Nodes
+    /// Uhr des MIDI-Speichers (wie audioNow von Hand zu stellen).
+    std::chrono::steady_clock::time_point midiNow = std::chrono::steady_clock::time_point{} + std::chrono::seconds{100};
+    std::shared_ptr<midi::MidiStore> midi =
+        std::make_shared<midi::MidiStore>([this] { return midiNow; });  // Quelle der MIDI-Nodes
 
-    Lab() { REQUIRE(nodes::registerBuiltinNodes(*registry, snippets, kernels, dmx, audio).ok()); }
+    Lab() { REQUIRE(nodes::registerBuiltinNodes(*registry, snippets, kernels, dmx, audio, midi).ok()); }
 
     NodeId add(std::string_view typeId) { return graph.addNode(typeId, Vec2{}).value(); }
 

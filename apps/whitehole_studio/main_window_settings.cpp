@@ -38,7 +38,7 @@ void MainWindow::buildSettings(QMenu* editMenu) {
 
 void MainWindow::openSettings() {
     if (!midiStore_) {
-        midiStore_ = std::make_shared<midi::MidiStore>();  // damit die Seite MIDI sofort Nachrichten zeigt
+        midiStore_ = library_->midi;  // damit die Seite MIDI sofort Nachrichten zeigt
     }
     SettingsDialog dialog{appSettings_, *library_->registry, this, midiStore_};
     if (dialog.exec() != QDialog::Accepted) {

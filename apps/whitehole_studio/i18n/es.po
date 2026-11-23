@@ -10,7 +10,7 @@ msgstr ""
 msgid "\nRechtsklick: Favorit umschalten"
 msgstr "\nClic derecho: añadir/quitar de favoritos"
 
-#: main_window.cpp:295
+#: main_window.cpp:296
 msgid "   |   AUSGABE AN"
 msgstr "   |   SALIDA ACTIVA"
 
@@ -22,11 +22,11 @@ msgstr "   |   Nodos de audio en el proyecto, entrada apagada (Ajustes)"
 msgid "   |   Audio: %1"
 msgstr "   |   Audio: %1"
 
-#: main_window.cpp:295
+#: main_window.cpp:296
 msgid "   |   Ausgabe aus (%1 Pakete nicht gesendet)"
 msgstr "   |   Salida apagada (%1 paquetes sin enviar)"
 
-#: main_window.cpp:285
+#: main_window.cpp:286
 msgid "   |   BLACKOUT"
 msgstr "   |   BLACKOUT"
 
@@ -38,15 +38,15 @@ msgstr "   |   Entrada DMX %1: %2 paquetes"
 msgid "   |   DMX-Nodes im Projekt, Eingang aus (Einstellungen)"
 msgstr "   |   Nodos DMX en el proyecto, entrada apagada (Ajustes)"
 
-#: main_window.cpp:290
+#: main_window.cpp:291
 msgid "   |   EINGANG FEHLT – LEDs aus"
 msgstr "   |   FALTA UNA ENTRADA – LED apagados"
 
-#: main_window.cpp:287
+#: main_window.cpp:288
 msgid "   |   Master %1 %"
 msgstr "   |   Master %1 %"
 
-#: main_window.cpp:282
+#: main_window.cpp:283
 msgid "   |   TESTMODUS"
 msgstr "   |   MODO DE PRUEBA"
 
@@ -114,11 +114,11 @@ msgstr "%1 (%2 LED)"
 msgid "%1 (%2)"
 msgstr "%1 (%2)"
 
-#: settings_dialog.cpp:189
+#: settings_dialog.cpp:190
 msgid "%1 (Standard)"
 msgstr "%1 (predeterminado)"
 
-#: midi_settings_page.cpp:31 settings_dialog.cpp:47 settings_dialog.cpp:193
+#: midi_settings_page.cpp:33 settings_dialog.cpp:48 settings_dialog.cpp:194
 msgid "%1 (nicht gefunden)"
 msgstr "%1 (no encontrado)"
 
@@ -130,11 +130,11 @@ msgstr "%1 fixtures importados."
 msgid "%1 LEDs · Größe %2 × %3 × %4 · %5 Kanäle (RGB), rund %6 Universe(s)"
 msgstr "%1 LED · tamaño %2 × %3 × %4 · %5 canales (RGB), unos %6 universo(s)"
 
-#: main_window.cpp:271
+#: main_window.cpp:272
 msgid "%1 LEDs, Frame %2 (verworfen %3), Pakete %4, Sendefehler %5"
 msgstr "%1 LED, fotograma %2 (descartados %3), paquetes %4, errores de envío %5"
 
-#: main_window.cpp:269
+#: main_window.cpp:270
 msgid "%1 LEDs, angehalten"
 msgstr "%1 LED, detenido"
 
@@ -254,11 +254,11 @@ msgstr "&Guardar"
 msgid "&Stage Config"
 msgstr "&Stage Config"
 
-#: main_window.cpp:154 main_window_actions.cpp:55
+#: main_window.cpp:155 main_window_actions.cpp:55
 msgid "&Start"
 msgstr "&Iniciar"
 
-#: main_window.cpp:154
+#: main_window.cpp:155
 msgid "&Stopp"
 msgstr "&Detener"
 
@@ -486,7 +486,7 @@ msgstr "Guardar el efecto actual como look …"
 msgid "Alle LEDs aus; die Pakete laufen weiter (Strg+B)"
 msgstr "Todos los LED apagados; los paquetes siguen enviándose (Ctrl+B)"
 
-#: parameter_panel.cpp:126
+#: parameter_panel.cpp:127
 msgid "Alle Nodes"
 msgstr "Todos los nodos"
 
@@ -526,7 +526,7 @@ msgstr "Guardar como preajuste"
 msgid "Als Preset speichern …"
 msgstr "Guardar como preajuste …"
 
-#: parameter_panel.cpp:95
+#: parameter_panel.cpp:96
 msgid "An Bereich anpassen"
 msgstr "Ajustar al rango"
 
@@ -546,7 +546,7 @@ msgstr "Inicio y fin relativos a la posición; el primer LED está en el inicio.
 msgid "Anfang x y z"
 msgstr "Inicio x y z"
 
-#: parameter_panel.cpp:238
+#: parameter_panel.cpp:239
 msgid "Anheften"
 msgstr "Fijar"
 
@@ -578,7 +578,7 @@ msgstr "Cantidad x y z"
 msgid "Art-Net"
 msgstr "Art-Net"
 
-#: settings_dialog.cpp:101
+#: settings_dialog.cpp:102
 msgid "Art-Net empfangen"
 msgstr "Recibir Art-Net"
 
@@ -590,15 +590,15 @@ msgstr "Art-Net cuenta los universos desde 0 (hasta 32767), sACN desde 1 (hasta 
 msgid "Art-Net zählt Universen ab 0 (bis 32767), sACN ab 1 (bis 63999). Bei DDP gibt es keine Universen."
 msgstr "Art-Net cuenta los universos desde 0 (hasta 32767), sACN desde 1 (hasta 63999). DDP no tiene universos."
 
-#: settings_dialog.cpp:86
+#: settings_dialog.cpp:87
 msgid "Art-Net, sACN und DDP gehen über diese Karte hinaus. Bei „Automatisch“ entscheidet die Routingtabelle des Systems, bei mehreren Karten oft die falsche. Eine Karte auswählen, wenn die Lichtanlage an einem zweiten Netzwerkanschluss hängt."
 msgstr "Art-Net, sACN y DDP salen por esta tarjeta. Con «Automático» decide la tabla de enrutamiento del sistema, que con varias tarjetas suele equivocarse. Elige una tarjeta si la instalación de luces está en una segunda conexión de red."
 
-#: settings_dialog.cpp:113
+#: settings_dialog.cpp:114
 msgid "Art-Net-Port (UDP):"
 msgstr "Puerto Art-Net (UDP):"
 
-#: main_window_actions.cpp:166 settings_dialog.cpp:64
+#: main_window_actions.cpp:166 settings_dialog.cpp:65
 msgid "Audio"
 msgstr "Audio"
 
@@ -622,7 +622,7 @@ msgstr "Onda de audio"
 msgid "Auf &Updates prüfen …"
 msgstr "Buscar &actualizaciones …"
 
-#: parameter_panel.cpp:305
+#: parameter_panel.cpp:306
 msgid "Auf Standardwert zurücksetzen"
 msgstr "Restablecer al valor predeterminado"
 
@@ -646,11 +646,11 @@ msgstr "Arrastra al lienzo: añadir un nodo.\nArrastra un nodo aquí: eliminarlo
 msgid "Auf gewählten anwenden"
 msgstr "Aplicar al seleccionado"
 
-#: settings_dialog.cpp:224
+#: settings_dialog.cpp:225
 msgid "Aufnahmegeräte lassen sich nicht auflisten: %1"
 msgstr "No se pueden listar los dispositivos de captura: %1"
 
-#: midi_settings_page.cpp:24 settings_dialog.cpp:175 test_panel.cpp:39
+#: midi_settings_page.cpp:26 settings_dialog.cpp:176 test_panel.cpp:39
 msgid "Aus"
 msgstr "Apagado"
 
@@ -710,7 +710,7 @@ msgstr "Disparador"
 msgid "Auswahl hervorheben"
 msgstr "Resaltar selección"
 
-#: settings_dialog.cpp:41
+#: settings_dialog.cpp:42
 msgid "Automatisch (das System wählt)"
 msgstr "Automático (lo elige el sistema)"
 
@@ -906,7 +906,7 @@ msgstr "Disparador DMX: umbral (1 a 255)"
 msgid "DMX-Auslöser: Universe"
 msgstr "Disparador DMX: universo"
 
-#: settings_dialog.cpp:63
+#: settings_dialog.cpp:64
 msgid "DMX-Eingang"
 msgstr "Entrada DMX"
 
@@ -934,11 +934,11 @@ msgstr "El cable empieza en este lado en vez del opuesto"
 msgid "Das Kabel läuft ohne Rücksprung von Ring zu Ring: unten vorwärts, den nächsten Ring rückwärts ..."
 msgstr "El cable pasa de anillo a anillo sin saltos: el inferior hacia delante, el siguiente hacia atrás ..."
 
-#: node_info_texts.cpp:177
+#: node_info_texts.cpp:181
 msgid "Das Pong-Spiel als Rechen-Node: Ball, Schläger, Punkte und Treffer als Werte. Computer oder Eingang spielen, auch im Takt der Musik. Gezeichnet wird es von „Pong Display“."
 msgstr "El juego Pong como nodo de cálculo: bola, palas, puntos y golpes como valores. Juega el ordenador o una entrada, también al ritmo de la música. Lo dibuja «Pong Display»."
 
-#: main_window.cpp:218
+#: main_window.cpp:219
 msgid "Das Projekt wurde geändert. Änderungen verwerfen?"
 msgstr "El proyecto se ha modificado. ¿Descartar los cambios?"
 
@@ -990,11 +990,11 @@ msgstr "¿Eliminar el look «%1»?"
 msgid "Den aktuellen Effekt als Look in die Liste legen (Strg+L)"
 msgstr "Añadir el efecto actual a la lista como look (Ctrl+L)"
 
-#: node_info_texts.cpp:151
+#: node_info_texts.cpp:155
 msgid "Der Ausgang: Was hier ankommt, wird auf die LEDs gesendet. Mit „Mode“ in einen Bereich skalieren oder als Fenster ausschneiden, plus Helligkeit."
 msgstr "The output: whatever arrives here is sent to the LEDs. \"Mode\" scales into an area or cuts a window; plus brightness."
 
-#: settings_dialog.cpp:164
+#: settings_dialog.cpp:165
 msgid "Der Auswahl-Kanal teilt sich in so viele gleich große Stufen, wie das Projekt Looks hat; 0 heißt kein Wechsel. Ohne Überblendzeit-Kanal (aus) gilt die im Look gespeicherte Zeit, sonst setzt der Kanalwert 0 bis 255 die Zeit auf 0 bis 10 Sekunden. Wirkt nur im laufenden Live-Betrieb; bleibt das Signal weg, bleibt der zuletzt gezeigte Look stehen."
 msgstr "El canal de selección se divide en tantos pasos iguales como looks tenga el proyecto; 0 significa sin cambio. Sin canal de tiempo de fundido (desactivado) se aplica el tiempo propio del look; si no, el valor del canal (0 a 255) ajusta el tiempo de 0 a 10 segundos. Solo actúa mientras el modo en vivo está activo; si la señal desaparece, se mantiene el último look mostrado."
 
@@ -1014,7 +1014,7 @@ msgstr "El controlador necesita un nombre para guardarse"
 msgid "Der Cue löst aus, wenn der Kanalwert auf diese Zahl oder darüber steigt"
 msgstr "El cue se dispara cuando el valor del canal sube a este número o más"
 
-#: settings_dialog.cpp:133
+#: settings_dialog.cpp:134
 msgid "Der Kanalwert 0 bis 255 setzt den Master auf 0 bis 100 %. Solange Pakete kommen, folgt der Master-Regler dem Pult; bleibt das Signal weg, hält der Master seinen Wert. Der Empfang oben muss für das gewählte Protokoll eingeschaltet sein."
 msgstr "El valor del canal de 0 a 255 ajusta el master de 0 a 100 %. Mientras lleguen paquetes, el control master sigue a la mesa; si la señal se corta, el master mantiene su valor. La recepción de arriba debe estar activada para el protocolo elegido."
 
@@ -1042,7 +1042,7 @@ msgstr "La lista de cues está vacía. Cree primero cues (panel Lista de cues)."
 msgid "Die Cuelist läuft und schaltet die Looks selbst. Erst in der Cuelist auf Stopp drücken."
 msgstr "La lista de cues está en marcha y cambia los looks sola. Pulse primero Parar en la lista."
 
-#: settings_dialog.cpp:137
+#: settings_dialog.cpp:138
 msgid "Die DMX-Nodes im Projekt lesen ihre Werte aus dem Empfang. Standard-Ports sind 6454 (Art-Net) und 5568 (sACN); nur ändern, wenn ein anderes Programm sie belegt. Nach der Installation ist der Empfang aus; unter Windows fragt die Firewall beim ersten Einschalten nach."
 msgstr "Los nodos DMX del proyecto leen sus valores de los datos recibidos. Los puertos predeterminados son 6454 (Art-Net) y 5568 (sACN); cámbialos solo si otro programa los usa. La recepción está apagada tras la instalación; en Windows el cortafuegos pregunta al activarla por primera vez."
 
@@ -1066,7 +1066,7 @@ msgstr "The brightness of the mask decides how much of the content is visible. \
 msgid "Die Prüfung ist fehlgeschlagen:\n%1"
 msgstr "La comprobación ha fallado:\n%1"
 
-#: settings_dialog.cpp:228
+#: settings_dialog.cpp:229
 msgid "Die Quelle speist die Audio-Nodes (Pegel, Frequenzband, Beat, Spektrum)."
 msgstr "La fuente alimenta los nodos de audio (nivel, banda de frecuencia, beat, espectro)."
 
@@ -1086,11 +1086,11 @@ msgstr "El nuevo idioma se aplica tras reiniciar WhiteHoleFX. ¿Reiniciar ahora?
 msgid "Die unten gewählten Fixtures; alle anderen bleiben dunkel."
 msgstr "Los fixtures seleccionados abajo; los demás quedan apagados."
 
-#: node_info_texts.cpp:185
+#: node_info_texts.cpp:189
 msgid "Die vergangene Zeit in Sekunden, mit Tempo-Faktor und Versatz. Zum Antreiben von Bewegungen."
 msgstr "The elapsed time in seconds, with speed factor and offset. For driving motion."
 
-#: settings_dialog.cpp:94
+#: settings_dialog.cpp:95
 msgid "Die Änderung wirkt sofort nach „OK“."
 msgstr "El cambio surte efecto inmediatamente tras «Aceptar»."
 
@@ -1098,11 +1098,11 @@ msgstr "El cambio surte efecto inmediatamente tras «Aceptar»."
 msgid "Diese Form ist ungültig."
 msgstr "Esta forma no es válida."
 
-#: midi_settings_page.cpp:49
+#: midi_settings_page.cpp:51
 msgid "Dieser Build hat keine MIDI-Geräteunterstützung (unter Linux fehlt die ALSA-Bibliothek beim Bauen). Es gibt keine Ports."
 msgstr "Esta compilación no admite dispositivos MIDI (en Linux faltaba la biblioteca ALSA al compilar). No hay puertos."
 
-#: main_window.cpp:192 parameter_panel.cpp:260
+#: main_window.cpp:193 parameter_panel.cpp:261
 msgid "Dieser Node hat keine einstellbaren Parameter."
 msgstr "Este nodo no tiene parámetros ajustables."
 
@@ -1114,7 +1114,7 @@ msgstr "Este fixture no está vinculado a ningún fixture de la pestaña Fixture
 msgid "Dieses Programm wurde ohne GPU-Backend gebaut (-DWHITEHOLEFX_WEBGPU=ON); es zeigt nur das Layout."
 msgstr "Este programa se compiló sin el backend de GPU (-DWHITEHOLEFX_WEBGPU=ON); solo muestra la disposición."
 
-#: parameter_panel.cpp:224
+#: parameter_panel.cpp:225
 msgid "Dieses Projekt hat keine einstellbaren Parameter."
 msgstr "Este proyecto no tiene parámetros ajustables."
 
@@ -1202,7 +1202,7 @@ msgstr "Una cabeza recorre el eje elegido con una cola que se desvanece detrás.
 msgid "Ein Look ist ein fertiger Effekt (vom Generator bis zum Ausgang). Speichere deine Effekte hier und rufe sie im Live-Modus mit einem Klick ab."
 msgstr "Un look es un efecto terminado (del generador a la salida). Guarda aquí tus efectos y llámalos en modo live con un clic."
 
-#: node_info_texts.cpp:179
+#: node_info_texts.cpp:183
 msgid "Ein Trigger startet einen Durchlauf von 0 nach 1, im Tempo der Musik (Schläge oder gemessener Abstand der Trigger). Mehrfach wiederholbar. Mit Map auf Radius, Position oder Helligkeit legen."
 msgstr "Un disparador inicia un recorrido de 0 a 1 al tempo de la música (tiempos o intervalo medido entre disparadores). Se puede repetir varias veces. Envíalo con Map a un radio, una posición o un brillo."
 
@@ -1210,7 +1210,7 @@ msgstr "Un disparador inicia un recorrido de 0 a 1 al tempo de la música (tiemp
 msgid "Ein- und Ausgang"
 msgstr "Entrada y salida"
 
-#: midi_settings_page.cpp:43
+#: midi_settings_page.cpp:45
 msgid "Ein- und Ausgang eines MIDI-Controllers, zum Beispiel eines Akai APC mini. Die Wahl gilt für diesen Rechner und Auftritt, nicht für das Projekt."
 msgstr "Entrada y salida de un controlador MIDI, por ejemplo un Akai APC mini. La elección vale para este ordenador y esta actuación, no para el proyecto."
 
@@ -1222,7 +1222,7 @@ msgstr "A box (rectangle or cuboid) with a soft edge. Inside and outside color, 
 msgid "Eine Einführung in die Bedienung, in der gewählten Sprache"
 msgstr "Una introducción al manejo, en el idioma elegido"
 
-#: node_info_texts.cpp:159
+#: node_info_texts.cpp:163
 msgid "Eine Farbe als Wert, mit Farbton-Verschiebung, Sättigung und Helligkeit. Speist Farb-Eingänge anderer Nodes."
 msgstr "A color as a value, with hue shift, saturation and brightness. Feeds color inputs of other nodes."
 
@@ -1250,7 +1250,7 @@ msgstr "A helix of one or more strands rotating around a vertical axis. For 3D s
 msgid "Eine einfarbige Fläche. Der einfachste Generator, gut als Hintergrund oder Test."
 msgstr "A single solid color. The simplest generator, good as a background or for testing."
 
-#: node_info_texts.cpp:173
+#: node_info_texts.cpp:177
 msgid "Eine feste Zahl. Praktisch, um mehrere Parameter mit demselben Wert zu speisen."
 msgstr "A fixed number. Handy for feeding the same value to several parameters."
 
@@ -1286,7 +1286,7 @@ msgstr "Entrada: %1"
 msgid "Einrasten"
 msgstr "Ajustar"
 
-#: main_window_settings.cpp:49 output_form.cpp:89 settings_dialog.cpp:60
+#: main_window_settings.cpp:49 output_form.cpp:89 settings_dialog.cpp:61
 msgid "Einstellungen"
 msgstr "Ajustes"
 
@@ -1414,7 +1414,7 @@ msgstr "Puntos de color delante de los nodos de la paleta: lo que entrega el nod
 msgid "Farbreihenfolge"
 msgstr "Orden de colores"
 
-#: node_info_texts.cpp:161
+#: node_info_texts.cpp:165
 msgid "Farbverlauf aus bis zu vier Farben. „Position“ wählt die Stelle, oder er läuft von selbst im eingestellten Tempo. „Mode“ legt fest, was am Ende passiert: Pendulum kehrt um, Loop springt zurück zum Anfang. Mit „Hard steps“ springt er wie ein Sequencer statt zu überblenden. „Advance“ schaltet per Taster einen Schritt weiter, unabhängig von Position/Tempo, immer hart."
 msgstr "Degradado de hasta cuatro colores. «Position» elige el punto, o avanza solo al ritmo configurado. «Mode» decide qué pasa al final: Pendulum invierte el sentido, Loop vuelve al principio. Con «Hard steps» salta como un secuenciador en vez de fundir. «Advance» avanza un paso mediante un botón, independientemente de la posición/velocidad, siempre de forma abrupta."
 
@@ -1434,7 +1434,7 @@ msgstr "Disposición de la ventana restablecida: se aplica en el próximo inicio
 msgid "Field"
 msgstr "Field"
 
-#: parameter_panel.cpp:132
+#: parameter_panel.cpp:133
 msgid "Filtert die Gruppen nach Node- oder Parametername (über alle Nodes)"
 msgstr "Filtra los grupos por nombre de nodo o de parámetro (en todos los nodos)"
 
@@ -1526,7 +1526,7 @@ msgstr "Forma"
 msgid "Fragt bei GitHub nach der neuesten Version (nur die Versionsnummer, nichts wird installiert)"
 msgstr "Pregunta a GitHub por la última versión (solo el número de versión; no se instala nada)"
 
-#: main_window.cpp:343
+#: main_window.cpp:344
 msgid "Frame"
 msgstr "Fotograma"
 
@@ -1586,7 +1586,7 @@ msgstr "Cargado: %1"
 msgid "Gelb"
 msgstr "Amarillo"
 
-#: settings_dialog.cpp:177
+#: settings_dialog.cpp:178
 msgid "Gerät:"
 msgstr "Dispositivo:"
 
@@ -1622,15 +1622,15 @@ msgstr "Quitar controlador elegido −"
 msgid "Gewählten Patch −"
 msgstr "Patch seleccionado −"
 
-#: parameter_panel.cpp:125
+#: parameter_panel.cpp:126
 msgid "Gewählter Node"
 msgstr "Nodo seleccionado"
 
-#: parameter_panel.cpp:127
+#: parameter_panel.cpp:128
 msgid "Gewählter Node: nur der Node, den du im Editor gewählt hast, und angeheftete Nodes. Alle Nodes: jede Gruppe, aufgeklappt nur die des gewählten und der angehefteten Nodes."
 msgstr "Nodo seleccionado: solo el nodo elegido en el editor, más los nodos fijados. Todos los nodos: cada grupo, desplegado solo para el nodo seleccionado y los fijados."
 
-#: node_info_texts.cpp:183
+#: node_info_texts.cpp:187
 msgid "Glättet einen Wert: Er folgt dem Eingang mit einer Zeitkonstante, statt zu springen."
 msgstr "Smooths a value: it follows the input with a time constant instead of jumping."
 
@@ -1722,7 +1722,7 @@ msgstr "Brillo"
 msgid "Hinzufügen"
 msgstr "Añadir"
 
-#: parameter_panel.cpp:241
+#: parameter_panel.cpp:242
 msgid "Hält diesen Node im Fenster, auch wenn du im Editor einen anderen wählst"
 msgstr "Mantiene este nodo en la ventana aunque elijas otro en el editor"
 
@@ -1730,7 +1730,7 @@ msgstr "Mantiene este nodo en la ventana aunque elijas otro en el editor"
 msgid "Höhe"
 msgstr "Alto"
 
-#: node_info_texts.cpp:165
+#: node_info_texts.cpp:169
 msgid "Hüllkurve (ADSR): Aus einem Schalter wird ein weicher Verlauf mit Attack, Decay, Sustain und Release. Auch als Einzelimpuls."
 msgstr "Envelope (ADSR): turns a switch into a smooth curve with attack, decay, sustain and release. Also as a one-shot."
 
@@ -1770,7 +1770,7 @@ msgstr "Sí, buscar al iniciar"
 msgid "Kabel beginnt"
 msgstr "El cable empieza"
 
-#: parameter_panel.cpp:66
+#: parameter_panel.cpp:67
 msgid "Kabel:"
 msgstr "Cable:"
 
@@ -1798,11 +1798,11 @@ msgstr "Canal %1 — ocupado por el fixture: %2"
 msgid "Kanal %1 — gehört zu: %2"
 msgstr "Canal %1 — pertenece a: %2"
 
-#: settings_dialog.cpp:90
+#: settings_dialog.cpp:91
 msgid "Karte zum Empfangen:"
 msgstr "Tarjeta para recibir:"
 
-#: settings_dialog.cpp:85
+#: settings_dialog.cpp:86
 msgid "Karte zum Senden:"
 msgstr "Tarjeta para enviar:"
 
@@ -1814,11 +1814,11 @@ msgstr "Ningún fixture seleccionado."
 msgid "Kein GPU-Adapter: %1"
 msgstr "Ningún adaptador de GPU: %1"
 
-#: main_window.cpp:267
+#: main_window.cpp:268
 msgid "Kein Projekt"
 msgstr "Sin proyecto"
 
-#: parameter_panel.cpp:139 stage_view.cpp:166
+#: parameter_panel.cpp:140 stage_view.cpp:166
 msgid "Kein Projekt geladen."
 msgstr "Ningún proyecto cargado."
 
@@ -1830,7 +1830,7 @@ msgstr "Sin señal en este universo."
 msgid "Kein Ziel (freies Rechteck)"
 msgstr "Sin destino (rectángulo libre)"
 
-#: settings_dialog.cpp:226
+#: settings_dialog.cpp:227
 msgid "Keine Aufnahmegeräte gefunden. Ein Audio-Interface anschließen und das Fenster neu öffnen."
 msgstr "No se encontraron dispositivos de captura. Conecta una interfaz de audio y vuelve a abrir la ventana."
 
@@ -1842,7 +1842,7 @@ msgstr "No hay nodos de salida DMX en el proyecto"
 msgid "Keine DMX-Wert-Nodes im Projekt"
 msgstr "No hay nodos de valor DMX en el proyecto"
 
-#: parameter_panel.cpp:208
+#: parameter_panel.cpp:209
 msgid "Keine Treffer."
 msgstr "Sin resultados."
 
@@ -1886,7 +1886,7 @@ msgstr "LED por anillo"
 msgid "LEDs x y z"
 msgstr "LED x y z"
 
-#: main_window.cpp:279
+#: main_window.cpp:280
 msgid "LIVE   |   "
 msgstr "LIVE   |   "
 
@@ -1930,11 +1930,15 @@ msgstr "Leyenda de los puertos"
 msgid "Legt Bild B über Bild A. Der Modus bestimmt die Verrechnung (Addieren, Multiplizieren, Screen, Subtrahieren, Differenz …), „Amount“ blendet zwischen A und dem Ergebnis."
 msgstr "Lays image B over image A. The mode sets how they combine (add, multiply, screen, subtract, difference ...); \"Amount\" fades between A and the result."
 
-#: midi_settings_page.cpp:100
+#: parameter_panel_midi.cpp:53
+msgid "Lernen"
+msgstr "Aprender"
+
+#: midi_settings_page.cpp:102
 msgid "Letzte Nachricht: Kanal %1, %2 (vor %3 s)"
 msgstr "Último mensaje: canal %1, %2 (hace %3 s)"
 
-#: midi_settings_page.cpp:88
+#: midi_settings_page.cpp:90
 msgid "Letzte Nachricht: noch keine empfangen"
 msgstr "Último mensaje: todavía ninguno"
 
@@ -1954,9 +1958,17 @@ msgstr "LED encendidos con un brillo suave, los colores se suman; nada tapa a na
 msgid "Liest drei oder vier DMX-Kanäle (Art-Net oder sACN) als Farbe, wahlweise RGB oder RGB mit Dimmer."
 msgstr "Reads three or four DMX channels (Art-Net or sACN) as a color, either RGB or RGB with dimmer."
 
+#: node_info_texts.cpp:153
+msgid "Liest eine Taste oder ein Pad eines MIDI-Controllers: „On“ ist an, solange sie gedrückt ist, „Velocity“ ist die Anschlagstärke des letzten Drucks. „Lernen“ trägt Kanal und Note ein: Knopf drücken, dann die Taste drücken."
+msgstr "Lee una tecla o pad de un controlador MIDI: «On» está activo mientras se mantiene pulsada, «Velocity» es la fuerza de la última pulsación. «Aprender» rellena canal y nota: pulsa el botón y luego la tecla."
+
 #: node_info_texts.cpp:147
 msgid "Liest einen DMX-Kanal (Art-Net oder sACN) als Zahl. Mit Umrechnung auf einen Bereich, 16-Bit-Betrieb und Verhalten bei Signalverlust."
 msgstr "Reads a DMX channel (Art-Net or sACN) as a number. With scaling to a range, 16-bit mode and behavior on signal loss."
+
+#: node_info_texts.cpp:151
+msgid "Liest einen Regler (Control Change) eines MIDI-Controllers als Zahl, mit Umrechnung auf einen Bereich. „Lernen“ trägt Kanal und Reglernummer ein: Knopf drücken, dann den Regler bewegen. Ohne Zeitlimit bleibt der letzte Wert stehen."
+msgstr "Lee un potenciómetro o fader (Control Change) de un controlador MIDI como número, convertido a un rango. «Aprender» rellena canal y número: pulsa el botón y mueve el control. Sin tiempo límite se mantiene el último valor."
 
 #: node_info_texts.cpp:100
 msgid "Linearer Farbverlauf von Farbe A nach Farbe B in einem einstellbaren Winkel."
@@ -1990,19 +2002,19 @@ msgstr "Live"
 msgid "Live Kanal"
 msgstr "Canal en vivo"
 
-#: settings_dialog.cpp:162
+#: settings_dialog.cpp:163
 msgid "Live-Look: Auswahl-Kanal (1 bis 512):"
 msgstr "Look en vivo: canal de selección (1 a 512):"
 
-#: settings_dialog.cpp:160
+#: settings_dialog.cpp:161
 msgid "Live-Look: Protokoll:"
 msgstr "Look en vivo: protocolo:"
 
-#: settings_dialog.cpp:161
+#: settings_dialog.cpp:162
 msgid "Live-Look: Universe:"
 msgstr "Look en vivo: universo:"
 
-#: settings_dialog.cpp:163
+#: settings_dialog.cpp:164
 msgid "Live-Look: Überblendzeit-Kanal (0 = aus):"
 msgstr "Look en vivo: canal de tiempo de fundido (0 = desactivado):"
 
@@ -2042,7 +2054,7 @@ msgstr "Renombrar look"
 msgid "Look überschreiben"
 msgstr "Sobrescribir look"
 
-#: settings_dialog.cpp:143
+#: settings_dialog.cpp:144
 msgid "Look-Auswahl im Live-Betrieb über einen DMX-Kanal steuern"
 msgstr "Controlar la selección del look en modo en vivo mediante un canal DMX"
 
@@ -2074,11 +2086,11 @@ msgstr "Eliminar"
 msgid "Löst bei jedem Einsatz in einem Frequenzbereich aus: Kick, Snare, Hi-Hat oder ein eigener Bereich in Hz. Liefert Treffer, Pulse (klingt ab), Stärke und „Age“. Für einzelne Schläge; die Gesamtlautstärke liefert „Audio Level“, den Takt „Beat“. Die Schwelle folgt der Lautstärke, auch leise Schläge werden erkannt."
 msgstr "Se dispara en cada ataque dentro de un rango de frecuencias: bombo, caja, hi-hat o un rango propio en Hz. Entrega golpe, pulse (decae), fuerza y «Age». Para golpes individuales; el volumen global lo da «Audio Level» y el tempo «Beat». El umbral sigue al volumen, así que también se detectan golpes suaves."
 
-#: settings_dialog.cpp:66
+#: settings_dialog.cpp:67
 msgid "MIDI"
 msgstr "MIDI"
 
-#: midi_settings_page.cpp:59
+#: midi_settings_page.cpp:61
 msgid "MIDI-Ausgang"
 msgstr "Salida MIDI"
 
@@ -2086,7 +2098,7 @@ msgstr "Salida MIDI"
 msgid "MIDI-Ausgang: %1"
 msgstr "Salida MIDI: %1"
 
-#: midi_settings_page.cpp:58
+#: midi_settings_page.cpp:60
 msgid "MIDI-Eingang"
 msgstr "Entrada MIDI"
 
@@ -2114,19 +2126,19 @@ msgstr "Manual"
 msgid "Master"
 msgstr "Master"
 
-#: settings_dialog.cpp:117
+#: settings_dialog.cpp:118
 msgid "Master-Helligkeit über einen DMX-Kanal steuern"
 msgstr "Controlar el brillo master con un canal DMX"
 
-#: settings_dialog.cpp:132
+#: settings_dialog.cpp:133
 msgid "Master: Kanal (1 bis 512):"
 msgstr "Master: canal (1 a 512):"
 
-#: settings_dialog.cpp:130
+#: settings_dialog.cpp:131
 msgid "Master: Protokoll:"
 msgstr "Master: protocolo:"
 
-#: settings_dialog.cpp:131
+#: settings_dialog.cpp:132
 msgid "Master: Universe:"
 msgstr "Master: universo:"
 
@@ -2218,7 +2230,7 @@ msgstr "Uno junto a otro ↔"
 msgid "Nein"
 msgstr "No"
 
-#: settings_dialog.cpp:62
+#: settings_dialog.cpp:63
 msgid "Netzwerk"
 msgstr "Red"
 
@@ -2266,7 +2278,7 @@ msgstr "Nuevo proyecto"
 msgid "Neues Projekt (Strg+N)"
 msgstr "Nuevo proyecto (Ctrl+N)"
 
-#: main_window.cpp:136
+#: main_window.cpp:137
 msgid "Neues Projekt (Strg+N), Projekt öffnen (Strg+O) oder eine .whfx-Datei hierher ziehen.\n\n%1"
 msgstr "Nuevo proyecto (Ctrl+N), abrir un proyecto (Ctrl+O) o arrastrar aquí un archivo .whfx.\n\n%1"
 
@@ -2314,7 +2326,7 @@ msgstr "Renombrar node"
 msgid "Node umbenennen …"
 msgstr "Renombrar node …"
 
-#: settings_dialog.cpp:68
+#: settings_dialog.cpp:69
 msgid "Node-Standardwerte"
 msgstr "Valores predeterminados de nodos"
 
@@ -2330,11 +2342,11 @@ msgstr "Nodos"
 msgid "Nodes suchen …"
 msgstr "Buscar nodos …"
 
-#: midi_settings_page.cpp:96
+#: midi_settings_page.cpp:98
 msgid "Note %1 an (Velocity %2)"
 msgstr "nota %1 activada (velocidad %2)"
 
-#: midi_settings_page.cpp:98
+#: midi_settings_page.cpp:100
 msgid "Note %1 aus"
 msgstr "nota %1 desactivada"
 
@@ -2406,11 +2418,11 @@ msgstr "Paleta"
 msgid "Palette &farbig"
 msgstr "&Paleta en color"
 
-#: main_window.cpp:99
+#: main_window.cpp:100
 msgid "Parameter"
 msgstr "Parámetros"
 
-#: parameter_panel.cpp:236
+#: parameter_panel.cpp:237
 msgid "Parameter dieses Nodes auf- oder zuklappen"
 msgstr "Desplegar o plegar los parámetros de este nodo"
 
@@ -2478,7 +2490,7 @@ msgstr "Canal del grupo (desde)"
 msgid "Port (leer = Standard)"
 msgstr "Puerto (vacío = predeterminado)"
 
-#: midi_settings_page.cpp:61
+#: midi_settings_page.cpp:63
 msgid "Ports neu einlesen"
 msgstr "Releer los puertos"
 
@@ -2586,11 +2598,11 @@ msgstr "Mostrar la cuadrícula en la vista previa"
 msgid "Rasterweite in Layout-Einheiten"
 msgstr "Separación de la cuadrícula en unidades de layout"
 
-#: node_info_texts.cpp:169
+#: node_info_texts.cpp:173
 msgid "Rechnet einen Wert von einem Bereich in einen anderen um (In min/max auf Out min/max), auf Wunsch begrenzt."
 msgstr "Converts a value from one range to another (In min/max to Out min/max), optionally clamped."
 
-#: node_info_texts.cpp:171
+#: node_info_texts.cpp:175
 msgid "Rechnet mit zwei Zahlen: Addieren, Subtrahieren, Multiplizieren, Dividieren, Minimum, Maximum und weitere."
 msgstr "Calculates with two numbers: add, subtract, multiply, divide, minimum, maximum and more."
 
@@ -2626,7 +2638,7 @@ msgstr "Eliminar región"
 msgid "Regionen"
 msgstr "Regiones"
 
-#: midi_settings_page.cpp:94
+#: midi_settings_page.cpp:96
 msgid "Regler %1 = %2"
 msgstr "controlador %1 = %2"
 
@@ -2658,19 +2670,19 @@ msgstr "Interruptor"
 msgid "Schnellwahl"
 msgstr "Selección rápida"
 
-#: node_info_texts.cpp:153
+#: node_info_texts.cpp:157
 msgid "Schreibt bis zu acht Werte auf aufeinanderfolgende Kanäle eines internen Kanal-Pools (nicht mehr direkt auf Controller/Universe). „Low“/„High“ legen die DMX-Werte für 0 und 1 fest, „16 Bit“ belegt je Kanal zwei Pool-Kanäle. Wohin der Pool wirklich geht, legt „dmxpatch“ in der Projektdatei fest. Hat keinen Ausgang und wird darum immer ausgewertet; der Streifen im Node zeigt die gerade gesendeten Bytes je Kanal."
 msgstr "Escribe hasta ocho valores en canales consecutivos de un pool de canales interno (ya no directamente en un controlador/universo). «Low»/«High» fijan los valores DMX para 0 y 1, «16 bits» usa dos canales del pool por canal. A dónde va realmente el pool lo define «dmxpatch» en el archivo de proyecto. No tiene salida y por eso se evalúa siempre; la franja del nodo muestra los bytes que se están enviando por canal."
 
-#: node_info_texts.cpp:155
+#: node_info_texts.cpp:159
 msgid "Schreibt eine Farbe in den internen Kanal-Pool: RGB oder RGBW, davor auf Wunsch ein Dimmer-Kanal. Wohin der Pool wirklich geht, legt „dmxpatch“ in der Projektdatei fest. Hat keinen Ausgang und wird darum immer ausgewertet; der Streifen im Node zeigt die gerade gesendeten Bytes je Kanal."
 msgstr "Escribe un color en el pool de canales interno: RGB o RGBW, opcionalmente precedido de un canal de regulador (dimmer). A dónde va realmente el pool lo define «dmxpatch» en el archivo de proyecto. No tiene salida y por eso se evalúa siempre; la franja del nodo muestra los bytes que se están enviando por canal."
 
-#: node_info_texts.cpp:181
+#: node_info_texts.cpp:185
 msgid "Schrittfolge mit bis zu acht Werten. Jedes Einschalten von „Advance“ geht einen Schritt weiter (vorwärts, rückwärts, hin und her oder zufällig)."
 msgstr "A step sequence with up to eight values. Each switch-on of \"Advance\" moves one step (forward, backward, ping-pong or random)."
 
-#: node_info_texts.cpp:167
+#: node_info_texts.cpp:171
 msgid "Schwingung (LFO): Sinus, Dreieck, Sägezahn oder Rechteck mit Frequenz, Phase und Wertebereich. Der Klassiker zum Bewegen von Parametern."
 msgstr "Oscillator (LFO): sine, triangle, saw or square with frequency, phase and value range. The classic for moving parameters."
 
@@ -2714,11 +2726,11 @@ msgstr "Serpentina (un anillo de cada dos hacia atrás)"
 msgid "Sich ausbreitende Formen von einem Mittelpunkt aus: Kreis, Quadrat, Raute, Dreieck, Sechseck, Vieleck, Stern, Kreuz, Balken, Spirale, Squircle (Kreis/Quadrat-Morph über „squareness“). Füllung als Ring, voll, Verlauf oder Hollow core (voll mit hohlem Kern, zweite Farbe „colorB“, Kerngröße „core“); fortlaufend mit Abstand und Tempo oder als One shot über den Eingang „progress“ (vom Shot-Node)."
 msgstr "Formas que se expanden desde un punto central: círculo, cuadrado, rombo, triángulo, hexágono, polígono, estrella, cruz, barras, espiral, squircle (mezcla círculo/cuadrado mediante «squareness»). Relleno como anillo, sólido, degradado o núcleo hueco (sólido con un centro hueco, segundo color «colorB», tamaño del núcleo «core»); continuo con espaciado y velocidad, o como disparo único mediante la entrada «progress» (del nodo Shot)."
 
-#: parameter_panel.cpp:64
+#: parameter_panel.cpp:65
 msgid "Skalierung am Kabel: Wert × Faktor + Offset, danach begrenzt auf den Bereich des Parameters. So steuert ein Wert von 0 bis 1 zum Beispiel einen Winkel von 0 bis 360."
 msgstr "Escala en el cable: valor × factor + desplazamiento, luego limitado al rango del parámetro. Así, un valor de 0 a 1 puede controlar, por ejemplo, un ángulo de 0 a 360."
 
-#: parameter_panel.cpp:107
+#: parameter_panel.cpp:108
 msgid "Skalierung zurücksetzen (× 1, + 0)"
 msgstr "Restablecer la escala (× 1, + 0)"
 
@@ -2750,7 +2762,7 @@ msgstr "Columnas (verticales)"
 msgid "Spalten lassen sich an der Kopfzeile verschieben"
 msgstr "Las columnas se mueven arrastrando la cabecera"
 
-#: parameter_panel.cpp:96
+#: parameter_panel.cpp:97
 msgid "Spannt einen Wert von 0 bis 1 über den ganzen Bereich des Parameters"
 msgstr "Extiende un valor de 0 a 1 sobre todo el rango del parámetro"
 
@@ -2802,11 +2814,11 @@ msgstr "Idioma"
 msgid "Stage Config"
 msgstr "Stage Config"
 
-#: settings_dialog.cpp:176
+#: settings_dialog.cpp:177
 msgid "Standardgerät des Systems"
 msgstr "Dispositivo predeterminado del sistema"
 
-#: cue_panel.cpp:67 cue_panel.cpp:145 main_window.cpp:313
+#: cue_panel.cpp:67 cue_panel.cpp:145 main_window.cpp:314
 msgid "Start"
 msgstr "Inicio"
 
@@ -2850,7 +2862,7 @@ msgstr "Strip 30"
 msgid "Suche nach Updates …"
 msgstr "Buscando actualizaciones …"
 
-#: parameter_panel.cpp:130
+#: parameter_panel.cpp:131
 msgid "Suchen …"
 msgstr "Buscar …"
 
@@ -2870,7 +2882,7 @@ msgstr "Columna 12x20"
 msgid "TESTMODUS: %1"
 msgstr "MODO DE PRUEBA: %1"
 
-#: node_info_texts.cpp:157
+#: node_info_texts.cpp:161
 msgid "Taktgeber: Liefert im eingestellten Tempo (BPM) Impulse, Phase und Zähler. Läuft ohne Audio."
 msgstr "Clock: outputs ticks, phase and a counter at the set tempo (BPM). Runs without audio."
 
@@ -2962,7 +2974,7 @@ msgstr "Renombrar …"
 msgid "Unerwartetes Ende beim letzten Mal"
 msgstr "Final inesperado la última vez"
 
-#: main_window.cpp:217
+#: main_window.cpp:218
 msgid "Ungespeicherte Änderungen"
 msgstr "Cambios sin guardar"
 
@@ -3010,7 +3022,7 @@ msgstr "Desconectar"
 msgid "Verdreht das Bild entlang einer Achse, je weiter weg, desto stärker (Winkel pro Einheit)."
 msgstr "Twists the image along an axis, stronger the further away (angle per unit)."
 
-#: node_info_texts.cpp:163
+#: node_info_texts.cpp:167
 msgid "Vergleicht einen Wert mit einer Schwelle (mit Hysterese): darüber, darunter, zwischen zwei Grenzen oder gleich (mit Toleranz). Liefert Ja/Nein sowie Impulse beim Einschalten und Ausschalten."
 msgstr "Compara un valor con un umbral (con histéresis): por encima, por debajo, entre dos límites o igual (con tolerancia). Entrega sí/no y pulsos al activarse y al desactivarse."
 
@@ -3050,21 +3062,33 @@ msgstr "Vista previa"
 msgid "Vorweg überspringen"
 msgstr "Saltar antes"
 
-#: settings_dialog.cpp:178
+#: settings_dialog.cpp:179
 msgid "WAV-Datei in Schleife:"
 msgstr "Archivo WAV en bucle:"
 
-#: settings_dialog.cpp:237
+#: settings_dialog.cpp:238
 msgid "WAV-Datei wählen"
 msgstr "Elegir archivo WAV"
 
-#: settings_dialog.cpp:237
+#: settings_dialog.cpp:238
 msgid "WAV-Dateien (*.wav)"
 msgstr "Archivos WAV (*.wav)"
 
 #: layout_panel.cpp:179
 msgid "Waagrecht mittig ausrichten"
 msgstr "Centrar horizontalmente"
+
+#: parameter_panel_midi.cpp:53
+msgid "Warte auf MIDI …"
+msgstr "Esperando MIDI …"
+
+#: parameter_panel_midi.cpp:54
+msgid "Wartet auf die nächste Reglerbewegung am MIDI-Controller und trägt Kanal und Reglernummer ein."
+msgstr "Espera el siguiente movimiento de un potenciómetro o fader del controlador MIDI y rellena el canal y el número de controlador."
+
+#: parameter_panel_midi.cpp:55
+msgid "Wartet auf die nächste Taste am MIDI-Controller und trägt Kanal und Note ein."
+msgstr "Espera la siguiente tecla o pad del controlador MIDI y rellena el canal y la nota."
 
 #: cue_dialog.cpp:62
 msgid "Wartezeit nach dem Ende der vorigen Überblendung"
@@ -3098,11 +3122,11 @@ msgstr "Waveform of the audio input (a short time window, optionally aligned to 
 msgid "Wellenringe wie Wassertropfen: Ringe breiten sich von zufälligen Punkten aus (Tropfen pro Sekunde, Tempo, Ringbreite)."
 msgstr "Ripples like water drops: rings spread from random points (drops per second, speed, ring width)."
 
-#: main_window.cpp:128 main_window.cpp:167
+#: main_window.cpp:129 main_window.cpp:168
 msgid "WhiteHoleFX"
 msgstr "WhiteHoleFX"
 
-#: main_window.cpp:171
+#: main_window.cpp:172
 msgid "WhiteHoleFX – %1%2"
 msgstr "WhiteHoleFX – %1%2"
 
@@ -3162,11 +3186,11 @@ msgstr "Ángulo del primer LED: 0 = derecha, 90 = arriba"
 msgid "Wirbel: Dreht das Bild um einen Mittelpunkt, in der Mitte am stärksten, nach außen abklingend (Radius)."
 msgstr "Vortex: swirls the image around a center, strongest in the middle and fading outward (radius)."
 
-#: parameter_panel.cpp:312
+#: parameter_panel.cpp:313
 msgid "Wird durch eine Verbindung im Graphen gesteuert."
 msgstr "Controlado por una conexión en el grafo."
 
-#: parameter_panel.cpp:206
+#: parameter_panel.cpp:207
 msgid "Wähle einen Node im Node-Editor, um seine Parameter zu sehen. Mit „Anheften“ bleibt ein Node hier stehen."
 msgstr "Elige un nodo en el editor de nodos para ver sus parámetros. «Fijar» mantiene un nodo aquí."
 
@@ -3178,7 +3202,7 @@ msgstr "Elige primero fixtures de la lista."
 msgid "Wähle zuerst einen Controller in der Tabelle."
 msgstr "Elige primero un controlador en la tabla."
 
-#: settings_dialog.cpp:181
+#: settings_dialog.cpp:182
 msgid "Wählen …"
 msgstr "Elegir …"
 
@@ -3266,7 +3290,7 @@ msgstr "Primero crea un proyecto (Ctrl+N) o abre uno (Ctrl+O)."
 msgid "Zuerst entlang"
 msgstr "Primero a lo largo de"
 
-#: node_info_texts.cpp:175
+#: node_info_texts.cpp:179
 msgid "Zufallswert, der sich im eingestellten Takt ändert, auf Wunsch weich überblendet. Mit Seed wiederholbar."
 msgstr "A random value that changes at the set rate, optionally smoothed. Repeatable with a seed."
 
@@ -3302,7 +3326,7 @@ msgstr "Sentido de recuento"
 msgid "an oder aus"
 msgstr "encendido o apagado"
 
-#: settings_dialog.cpp:157
+#: settings_dialog.cpp:158
 msgid "aus"
 msgstr "desactivado"
 
@@ -3354,11 +3378,11 @@ msgstr "derecha (x máx)"
 msgid "sACN"
 msgstr "sACN"
 
-#: settings_dialog.cpp:102
+#: settings_dialog.cpp:103
 msgid "sACN (E1.31) empfangen"
 msgstr "Recibir sACN (E1.31)"
 
-#: settings_dialog.cpp:115
+#: settings_dialog.cpp:116
 msgid "sACN-Port (UDP):"
 msgstr "Puerto sACN (UDP):"
 
@@ -3370,7 +3394,7 @@ msgstr "Prioridad sACN"
 msgid "strecken (Stretch)"
 msgstr "estirar (Stretch)"
 
-#: main_window.cpp:170
+#: main_window.cpp:171
 msgid "unbenannt"
 msgstr "sin título"
 
@@ -3410,7 +3434,7 @@ msgstr "Abre GitHub: crear una nueva incidencia"
 msgid "Über WhiteHoleFX"
 msgstr "Acerca de WhiteHoleFX"
 
-#: settings_dialog.cpp:91
+#: settings_dialog.cpp:92
 msgid "Über diese Karte tritt der sACN-Empfang den Multicast-Gruppen bei. Art-Net-Broadcast und Unicast-Pakete kommen weiterhin von jeder Karte an."
 msgstr "La recepción de sACN se une a los grupos multicast a través de esta tarjeta. Los paquetes Art-Net de difusión y unicast siguen llegando por todas las tarjetas."
 

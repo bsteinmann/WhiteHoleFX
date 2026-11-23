@@ -29,9 +29,14 @@ void MidiStore::apply(const MidiMessage& message) {
         events_.pop_front();
         ++stats_.dropped;
     }
-    last_ = message;
-    lastTime_ = now;
     ++stats_.messages;
+    const Stamped stamped{message, now, stats_.messages};
+    last_ = stamped;
+    if (message.kind == MessageKind::ControlChange) {
+        lastCc_ = stamped;
+    } else if (message.kind == MessageKind::NoteOn) {
+        lastNoteOn_ = stamped;
+    }
 }
 
 std::optional<CcSample> MidiStore::readCc(std::uint8_t channel, std::uint8_t controller) const {
@@ -54,13 +59,26 @@ std::optional<NoteSample> MidiStore::readNote(std::uint8_t channel, std::uint8_t
     return NoteSample{slot.on, slot.value, secondsSince(now, slot.updated)};
 }
 
-std::optional<LastMessage> MidiStore::last() const {
-    const auto now = now_();
-    const std::lock_guard lock{mutex_};
-    if (!last_) {
+std::optional<LastMessage> MidiStore::snapshot(const std::optional<Stamped>& stamped) const {
+    if (!stamped) {
         return std::nullopt;
     }
-    return LastMessage{*last_, secondsSince(now, lastTime_)};
+    return LastMessage{stamped->message, secondsSince(now_(), stamped->time), stamped->sequence};
+}
+
+std::optional<LastMessage> MidiStore::last() const {
+    const std::lock_guard lock{mutex_};
+    return snapshot(last_);
+}
+
+std::optional<LastMessage> MidiStore::lastControlChange() const {
+    const std::lock_guard lock{mutex_};
+    return snapshot(lastCc_);
+}
+
+std::optional<LastMessage> MidiStore::lastNoteOn() const {
+    const std::lock_guard lock{mutex_};
+    return snapshot(lastNoteOn_);
 }
 
 std::vector<MidiMessage> MidiStore::takeEvents() {
