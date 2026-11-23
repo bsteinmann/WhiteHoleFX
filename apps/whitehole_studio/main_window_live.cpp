@@ -10,6 +10,7 @@
 // versehentlich verstellt wird.
 #include <QAction>
 #include <QApplication>
+#include <QCheckBox>
 #include <QDockWidget>
 #include <QKeySequence>
 #include <QMenu>
