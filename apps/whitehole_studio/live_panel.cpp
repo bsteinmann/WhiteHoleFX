@@ -44,14 +44,38 @@ LivePanel::LivePanel(runtime::Player& player, QWidget* parent) : QWidget{parent}
     nowLabel_->setStyleSheet(QStringLiteral("font-size: 22px; font-weight: bold;"));
     nextLabel_ = new QLabel{this};
     nextLabel_->setStyleSheet(QStringLiteral("font-size: 14px; color: #d9822b;"));
-    layout->addWidget(nowLabel_);
-    layout->addWidget(nextLabel_);
+    // Kopfzeile: links Name und "Bereit", rechts die Schaltfläche für die Einstellungen neben "Zurück zum Editor"
+    auto* header = new QHBoxLayout;
+    auto* titles = new QVBoxLayout;
+    titles->addWidget(nowLabel_);
+    titles->addWidget(nextLabel_);
+    header->addLayout(titles, 1);
+    settingsToggle_ = new QPushButton{tr("Einstellungen"), this};
+    settingsToggle_->setCheckable(true);
+    settingsToggle_->setToolTip(tr("Blendet Flash je Look, die Belegung von MIDI und DMX und die Menüleiste ein oder aus"));
+    auto* leave = new QPushButton{tr("Zurück zum Editor (Esc)"), this};
+    header->addWidget(settingsToggle_, 0, Qt::AlignTop);
+    header->addWidget(leave, 0, Qt::AlignTop);
+    layout->addLayout(header);
 
     progress_ = new QProgressBar{this};
     progress_->setRange(0, 1000);
     progress_->setTextVisible(false);
     progress_->setFixedHeight(10);
     layout->addWidget(progress_);
+
+    // Einstellungsleiste: Standard ausgeblendet; die Zeile "Steuerung belegen" füllt setLearning
+    settingsBar_ = new QWidget{this};
+    auto* barLayout = new QVBoxLayout{settingsBar_};
+    barLayout->setContentsMargins(0, 0, 0, 0);
+    auto* hint = new QLabel{tr("Unter jedem Look: Flash (läuft nur, solange der Knopf gehalten wird) und die Zeit zum Zurückblenden."),
+                            settingsBar_};
+    hint->setWordWrap(true);
+    barLayout->addWidget(hint);
+    learnRow_ = new QWidget{settingsBar_};
+    barLayout->addWidget(learnRow_);
+    settingsBar_->setVisible(false);
+    layout->addWidget(settingsBar_);
 
     gridHost_ = new QWidget{this};
     grid_ = new QGridLayout{gridHost_};
@@ -76,20 +100,16 @@ LivePanel::LivePanel(runtime::Player& player, QWidget* parent) : QWidget{parent}
     goButton_->setMinimumHeight(48);
     goButton_->setStyleSheet(styleFor(QStringLiteral("#2468c4")));
     goButton_->setEnabled(false);
-    auto* leave = new QPushButton{tr("Zurück zum Editor (Esc)"), this};
     options->addWidget(useGo_);
     options->addWidget(customFade_);
     options->addWidget(fade_);
     options->addStretch(1);
     layout->addLayout(options);
     layout->addWidget(goButton_);
-    layout->addWidget(leave);
-    learnRow_ = new QWidget{this};  // "Steuerung lernen", gefüllt von setLearning
-    learnRow_->setVisible(false);
-    layout->addWidget(learnRow_);
 
     connect(goButton_, &QPushButton::clicked, this, [this]() { go(); });
     connect(leave, &QPushButton::clicked, this, [this]() { Q_EMIT leaveRequested(); });
+    connect(settingsToggle_, &QPushButton::toggled, this, [this](bool shown) { setSettingsShown(shown); });
     connect(useGo_, &QCheckBox::toggled, this, [this](bool) { refresh(); });
 
     // Tasten gelten, solange das Panel sichtbar ist (das Panel liegt im Hauptfenster).
@@ -110,15 +130,25 @@ LivePanel::LivePanel(runtime::Player& player, QWidget* parent) : QWidget{parent}
 }
 
 void LivePanel::rebuild() {
-    for (QPushButton* button : buttons_) {
-        grid_->removeWidget(button);
-        delete button;
+    for (QWidget* cell : cells_) {
+        grid_->removeWidget(cell);
+        delete cell;  // nimmt Knopf, Flash-Haken und Zurückblend-Knopf mit
     }
+    cells_.clear();
     buttons_.clear();
+    optionRows_.clear();
+    flashChecks_.clear();
+    inButtons_.clear();
+    returnButtons_.clear();
     const auto& looks = player_.looks();
     for (std::size_t i = 0; i < looks.size(); ++i) {
         const int index = static_cast<int>(i);
-        auto* button = new QPushButton{buttonText(index), gridHost_};
+        // Eine Zelle je Look: der große Knopf, darunter (nur bei offenen Einstellungen) Flash und Zurückblenden
+        auto* cell = new QWidget{gridHost_};
+        auto* cellLayout = new QVBoxLayout{cell};
+        cellLayout->setContentsMargins(0, 0, 0, 0);
+        cellLayout->setSpacing(4);
+        auto* button = new QPushButton{buttonText(index), cell};
         button->setMinimumHeight(72);
         button->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
         button->setToolTip(tr("Überblendzeit %1 s. Rechtsklick: umschalten oder flashen").arg(looks[i].fadeSeconds, 0, 'f', 1));
@@ -131,8 +161,45 @@ void LivePanel::rebuild() {
             menu->exec(button->mapToGlobal(at));
             menu->deleteLater();
         });
-        grid_->addWidget(button, index / kColumns, index % kColumns);
+        cellLayout->addWidget(button, 1);
+
+        auto* row = new QWidget{cell};
+        auto* rowLayout = new QGridLayout{row};
+        rowLayout->setContentsMargins(0, 0, 0, 0);
+        auto* flash = new QCheckBox{tr("Flash"), row};
+        flash->setToolTip(tr("Der Look läuft nur, solange der Knopf (oder das Pad) gehalten wird"));
+        auto* ins = new QPushButton{row};
+        ins->setToolTip(tr("Zeit zum Einblenden beim Drücken"));
+        auto* returns = new QPushButton{row};
+        returns->setToolTip(tr("Zeit zum Zurückblenden beim Loslassen"));
+        rowLayout->addWidget(flash, 0, 0, 1, 2);
+        rowLayout->addWidget(ins, 1, 0);
+        rowLayout->addWidget(returns, 1, 1);
+        row->setVisible(settingsShown_);
+        cellLayout->addWidget(row);
+        // clicked statt toggled: ein vom Player nachgezogener Haken (syncLookOptions) löst nichts aus
+        connect(flash, &QCheckBox::clicked, this, [this, index](bool on) {
+            const std::optional<double> keep = player_.looks()[static_cast<std::size_t>(index)].returnSeconds;
+            (void)setLookTrigger(index, on ? project::LookTrigger::Flash : project::LookTrigger::Toggle,
+                                 on ? keep : std::optional<double>{});
+            syncLookOptions(index);  // scheitert das Setzen, springt der Haken zurück
+        });
+        for (QPushButton* timeButton : {ins, returns}) {  // beide Zeiten: das Menü des Looks (Zeiten zum Wählen)
+            connect(timeButton, &QPushButton::clicked, this, [this, index, timeButton]() {
+                QMenu* menu = lookMenu(index);
+                menu->exec(timeButton->mapToGlobal(QPoint{0, timeButton->height()}));
+                menu->deleteLater();
+            });
+        }
+
+        grid_->addWidget(cell, index / kColumns, index % kColumns);
+        cells_.push_back(cell);
         buttons_.push_back(button);
+        optionRows_.push_back(row);
+        flashChecks_.push_back(flash);
+        inButtons_.push_back(ins);
+        returnButtons_.push_back(returns);
+        syncLookOptions(index);
     }
     refresh();
 }

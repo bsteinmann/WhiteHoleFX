@@ -50,7 +50,7 @@ msgstr ""
 msgid "   |   TESTMODUS"
 msgstr ""
 
-#: live_panel_looks.cpp:34
+#: live_panel_looks.cpp:38
 msgid "  · Flash"
 msgstr ""
 
@@ -106,7 +106,7 @@ msgstr ""
 msgid "%1  (%2 LEDs)"
 msgstr ""
 
-#: live_panel.cpp:165
+#: live_panel.cpp:232
 msgid "%1  →  %2"
 msgstr ""
 
@@ -246,11 +246,11 @@ msgstr ""
 msgid "&Live"
 msgstr ""
 
-#: main_window_live.cpp:86
+#: main_window_live.cpp:92
 msgid "&Live-Modus"
 msgstr ""
 
-#: main_window_live.cpp:81
+#: main_window_live.cpp:87
 msgid "&Look speichern …"
 msgstr ""
 
@@ -326,7 +326,7 @@ msgstr ""
 msgid "(eigene Form)"
 msgstr ""
 
-#: live_panel.cpp:165
+#: live_panel.cpp:232
 msgid "(kein Look)"
 msgstr ""
 
@@ -806,7 +806,7 @@ msgstr ""
 msgid "Benutzerbibliothek lässt sich nicht speichern: %1"
 msgstr ""
 
-#: live_panel.cpp:166
+#: live_panel.cpp:233
 msgid "Bereit: %1 - GO drücken"
 msgstr ""
 
@@ -836,6 +836,10 @@ msgstr ""
 
 #: test_panel.cpp:31
 msgid "Blau"
+msgstr ""
+
+#: live_panel.cpp:55
+msgid "Blendet Flash je Look, die Belegung von MIDI und DMX und die Menüleiste ein oder aus"
 msgstr ""
 
 #: look_panel.cpp:75
@@ -898,7 +902,7 @@ msgstr ""
 msgid "Cue −"
 msgstr ""
 
-#: main_window_live.cpp:64
+#: main_window_live.cpp:70
 msgid "Cuelist"
 msgstr ""
 
@@ -1022,7 +1026,7 @@ msgstr ""
 msgid "Den Look „%1“ löschen?"
 msgstr ""
 
-#: main_window_live.cpp:83
+#: main_window_live.cpp:89
 msgid "Den aktuellen Effekt als Look in die Liste legen (Strg+L)"
 msgstr ""
 
@@ -1054,6 +1058,10 @@ msgstr ""
 msgid "Der Kanalwert 0 bis 255 setzt den Master auf 0 bis 100 %. Solange Pakete kommen, folgt der Master-Regler dem Pult; bleibt das Signal weg, hält der Master seinen Wert. Der Empfang oben muss für das gewählte Protokoll eingeschaltet sein."
 msgstr ""
 
+#: live_panel.cpp:170
+msgid "Der Look läuft nur, solange der Knopf (oder das Pad) gehalten wird"
+msgstr ""
+
 #: main_window_dmx.cpp:180
 msgid "Der Master kommt gerade vom DMX-Kanal (Einstellungen → DMX-Eingang)"
 msgstr ""
@@ -1074,7 +1082,7 @@ msgstr ""
 msgid "Die Cuelist ist leer. Erst Cues anlegen (Dock „Cuelist“)."
 msgstr ""
 
-#: live_panel.cpp:191 live_panel_looks.cpp:41
+#: live_panel.cpp:258 live_panel_looks.cpp:92
 msgid "Die Cuelist läuft und schaltet die Looks selbst. Erst in der Cuelist auf Stopp drücken."
 msgstr ""
 
@@ -1210,7 +1218,7 @@ msgstr ""
 msgid "Effekte (2D)"
 msgstr ""
 
-#: live_panel.cpp:64
+#: live_panel.cpp:88
 msgid "Eigene Überblendzeit:"
 msgstr ""
 
@@ -1226,7 +1234,7 @@ msgstr ""
 msgid "Ein Kabel lässt sich nur zwischen passenden Typen ziehen."
 msgstr ""
 
-#: live_panel.cpp:63
+#: live_panel.cpp:87
 msgid "Ein Klick lädt den Look nur vor. GO (Leertaste) startet dann die Überblendung."
 msgstr ""
 
@@ -1248,6 +1256,22 @@ msgstr ""
 
 #: midi_settings_page.cpp:46
 msgid "Ein- und Ausgang eines MIDI-Controllers, zum Beispiel eines Akai APC mini. Die Wahl gilt für diesen Rechner und Auftritt, nicht für das Projekt."
+msgstr ""
+
+#: live_panel_looks.cpp:136
+msgid "Einblenden"
+msgstr ""
+
+#: live_panel_looks.cpp:189
+msgid "Einblenden mit der Zeit des Looks (%1 s)"
+msgstr ""
+
+#: live_panel_looks.cpp:190
+msgid "Einblenden mit eigener Zeit (%1 s) …"
+msgstr ""
+
+#: live_panel_looks.cpp:191
+msgid "Einblenden mit eigener Zeit …"
 msgstr ""
 
 #: node_info_texts.cpp:86
@@ -1322,7 +1346,7 @@ msgstr ""
 msgid "Einrasten"
 msgstr ""
 
-#: main_window_settings.cpp:49 output_form.cpp:89 settings_dialog.cpp:65
+#: live_panel.cpp:53 main_window_settings.cpp:49 output_form.cpp:89
 msgid "Einstellungen"
 msgstr ""
 
@@ -1562,7 +1586,11 @@ msgstr ""
 msgid "Flammen: Aufsteigendes, flackerndes Feuer mit einstellbarer Skalierung, Tempo und Flammenhöhe."
 msgstr ""
 
-#: live_panel_looks.cpp:91
+#: live_panel.cpp:169
+msgid "Flash"
+msgstr ""
+
+#: live_panel_looks.cpp:158
 msgid "Flashen (nur solange gedrückt)"
 msgstr ""
 
@@ -1602,7 +1630,7 @@ msgstr ""
 msgid "Färbt ein Bild nach seiner Helligkeit mit bis zu vier Farben um (von dunkel nach hell). „Shift“ lässt die Farben wandern."
 msgstr ""
 
-#: main_window_live.cpp:108
+#: main_window_live.cpp:115
 msgid "Für den Live-Modus erst Looks speichern (Dock „Looks“)."
 msgstr ""
 
@@ -1610,7 +1638,7 @@ msgstr ""
 msgid "GO"
 msgstr ""
 
-#: live_panel.cpp:75
+#: live_panel.cpp:99
 msgid "GO  (Leertaste)"
 msgstr ""
 
@@ -2058,7 +2086,7 @@ msgstr ""
 msgid "Liste leeren"
 msgstr ""
 
-#: main_window_live.cpp:74
+#: main_window_live.cpp:80
 msgid "Live"
 msgstr ""
 
@@ -2130,7 +2158,7 @@ msgstr ""
 msgid "Look-Auswahl im Live-Betrieb über einen DMX-Kanal steuern"
 msgstr ""
 
-#: main_window_live.cpp:69
+#: main_window_live.cpp:75
 msgid "Looks"
 msgstr ""
 
@@ -2254,7 +2282,7 @@ msgstr ""
 msgid "Mischt zwei Bilder: 0 zeigt nur A, 1 nur B, dazwischen eine Überblendung."
 msgstr ""
 
-#: live_panel.cpp:62
+#: live_panel.cpp:86
 msgid "Mit GO (vorladen)"
 msgstr ""
 
@@ -2762,6 +2790,14 @@ msgstr ""
 msgid "Reihenfolge (schnellste zuerst)"
 msgstr ""
 
+#: live_panel_looks.cpp:45
+msgid "Rein: %1 s"
+msgstr ""
+
+#: live_panel_looks.cpp:45
+msgid "Rein: Look-Zeit"
+msgstr ""
+
 #: test_panel.cpp:76
 msgid "Richtung"
 msgstr ""
@@ -2942,7 +2978,7 @@ msgstr ""
 msgid "Starte …"
 msgstr ""
 
-#: live_panel.cpp:65
+#: live_panel.cpp:89
 msgid "Statt der Zeit, die beim Look gespeichert ist"
 msgstr ""
 
@@ -2954,8 +2990,8 @@ msgstr ""
 msgid "Steuerung"
 msgstr ""
 
-#: live_panel_looks.cpp:124
-msgid "Steuerung lernen:"
+#: live_panel_looks.cpp:207
+msgid "Steuerung belegen:"
 msgstr ""
 
 #: cue_panel.cpp:145
@@ -3102,7 +3138,7 @@ msgstr ""
 msgid "Umbenennen …"
 msgstr ""
 
-#: live_panel_looks.cpp:90
+#: live_panel_looks.cpp:157
 msgid "Umschalten (bleibt an)"
 msgstr ""
 
@@ -3136,6 +3172,10 @@ msgstr ""
 
 #: layout_panel.cpp:183
 msgid "Unten ⤓"
+msgstr ""
+
+#: live_panel.cpp:71
+msgid "Unter jedem Look: Flash (läuft nur, solange der Knopf gehalten wird) und die Zeit zum Zurückblenden."
 msgstr ""
 
 #: layout_panel.cpp:183
@@ -3402,7 +3442,19 @@ msgstr ""
 msgid "Zeit"
 msgstr ""
 
-#: live_panel_looks.cpp:75
+#: live_panel.cpp:172
+msgid "Zeit zum Einblenden beim Drücken"
+msgstr ""
+
+#: live_panel_looks.cpp:137
+msgid "Zeit zum Einblenden beim Drücken (s):"
+msgstr ""
+
+#: live_panel.cpp:174
+msgid "Zeit zum Zurückblenden beim Loslassen"
+msgstr ""
+
+#: live_panel_looks.cpp:137
 msgid "Zeit zum Zurückblenden beim Loslassen (s):"
 msgstr ""
 
@@ -3466,27 +3518,35 @@ msgstr ""
 msgid "Zum Aneinanderreihen mindestens zwei Fixtures wählen"
 msgstr ""
 
-#: live_panel.cpp:79
+#: live_panel.cpp:56
 msgid "Zurück zum Editor (Esc)"
 msgstr ""
 
-#: live_panel_looks.cpp:75
+#: live_panel_looks.cpp:50
+msgid "Zurück: %1 s"
+msgstr ""
+
+#: live_panel_looks.cpp:50
+msgid "Zurück: Look-Zeit"
+msgstr ""
+
+#: live_panel_looks.cpp:136
 msgid "Zurückblenden"
 msgstr ""
 
-#: live_panel_looks.cpp:103
+#: live_panel_looks.cpp:193
 msgid "Zurückblenden mit der Zeit des Looks (%1 s)"
 msgstr ""
 
-#: live_panel_looks.cpp:104
+#: live_panel_looks.cpp:194
 msgid "Zurückblenden mit eigener Zeit (%1 s) …"
 msgstr ""
 
-#: live_panel_looks.cpp:105
+#: live_panel_looks.cpp:195
 msgid "Zurückblenden mit eigener Zeit …"
 msgstr ""
 
-#: main_window_live.cpp:89
+#: main_window_live.cpp:96
 msgid "Zwischen Bearbeiten und Live-Betrieb wechseln (F9)"
 msgstr ""
 
@@ -3618,7 +3678,7 @@ msgstr ""
 msgid "Überblendet von Bild A zu Bild B (Position 0 bis 1). „Progressive“ lässt beide in der Mitte voll leuchten."
 msgstr ""
 
-#: live_panel.cpp:124
+#: live_panel.cpp:154
 msgid "Überblendzeit %1 s. Rechtsklick: umschalten oder flashen"
 msgstr ""
 

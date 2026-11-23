@@ -11,6 +11,9 @@
 //     So kann der Shader vorher bereitgestellt werden, und der Fade selbst läuft ohne Ruckler.
 // Farben: grün = läuft, orange = vorgeladen, gelb = blendet gerade ein.
 //
+// Einstellungen: Die Schaltfläche "Einstellungen" oben rechts blendet ein, was auf der Bühne nur stört - unter jedem
+// Look "Flash" samt Zeiten zum Ein- und Zurückblenden, dazu die Zeile zum Belegen der Steuerung (Lernen). Aus = reine Auftrittsansicht.
+//
 // Die Logik steckt im Player (liveTrigger/liveArm/liveGo); das Panel ruft nur auf und zeigt liveStatus().
 #pragma once
 
@@ -64,27 +67,49 @@ public:
     void release(int index);
     /// Wie der Look ausgelöst wird (umschalten/flashen, Zeit zum Zurückblenden; leer = Zeit des Looks).
     bool setLookTrigger(int index, project::LookTrigger trigger, std::optional<double> returnSeconds);
+    /// Zeit, in der ein Flash-Look beim Drücken einblendet (leer = Zeit des Looks bzw. die eigene Zeit des Live-Fensters).
+    bool setLookFlashIn(int index, std::optional<double> seconds);
     /// Das Rechtsklick-Menü eines Looks (aufgebaut, nicht gezeigt; der Aufrufer besitzt es).
     [[nodiscard]] QMenu* lookMenu(int index);
     /// Gelernte Quelle für eine Live-Funktion (dieselbe Belegung wie im Reiter "Steuerung").
     using LearnHandler = std::function<void(runtime::LiveFunction, const LearnedSource&)>;
-    /// Zeigt die Zeile "Steuerung lernen" mit einem Lernen-Knopf je Funktion (MIDI und DMX).
+    /// Füllt die Zeile "Steuerung belegen" der Einstellungsleiste mit einem Lernen-Knopf je Funktion (MIDI und DMX).
     void setLearning(std::shared_ptr<midi::MidiStore> midi, std::shared_ptr<const input::DmxStore> dmx, LearnHandler handler);
+
+    // --- Einstellungen ein-/ausblenden (live_panel_looks.cpp) --------------------------------------------------
+    /// Blendet die Einstellungsleiste (Belegung lernen) und unter jedem Look "Flash" samt Zurückblenden ein oder aus.
+    /// Standard: aus, damit die Auftrittsansicht aufgeräumt bleibt. Das Hauptfenster blendet mit ihr die Menüleiste ein.
+    void setSettingsShown(bool shown);
+    [[nodiscard]] bool settingsShown() const { return settingsShown_; }
+    /// Das Feld "Flash" unter dem Look-Knopf (nur sichtbar, solange die Einstellungen offen sind); nullptr bei ungültigem Index.
+    [[nodiscard]] QCheckBox* flashCheck(int index) const;
 
 Q_SIGNALS:
     void failed(const QString& message);
     /// Der Knopf "Zurück zum Editor" (oder Esc).
     void leaveRequested();
+    /// Die Einstellungen wurden ein- oder ausgeblendet (Schaltfläche oben rechts oder setSettingsShown).
+    void settingsToggled(bool shown);
 
 private:
     [[nodiscard]] static QString styleFor(const QString& color);
     [[nodiscard]] QString buttonText(int index) const;
-    void askReturnSeconds(int index);
+    [[nodiscard]] QString flashInText(int index) const;
+    [[nodiscard]] QString returnText(int index) const;
+    /// Gleicht Knopftext, Flash-Haken und Zurückblend-Knopf eines Looks mit dem Player ab.
+    void syncLookOptions(int index);
+    /// Fragt die Zeit zum Einblenden (beim Drücken) oder Zurückblenden (beim Loslassen) eines Flash-Looks ab.
+    void askFlashSeconds(int index, bool returnTime);
 
     runtime::Player& player_;
     QGridLayout* grid_{nullptr};
     QWidget* gridHost_{nullptr};
-    std::vector<QPushButton*> buttons_;
+    std::vector<QWidget*> cells_;            // je Look: Knopf plus Reihe mit den Einstellungen darunter
+    std::vector<QPushButton*> buttons_;      // die Look-Knöpfe selbst
+    std::vector<QWidget*> optionRows_;       // Reihe "Flash / Zurückblenden" unter dem Knopf (nur bei offenen Einstellungen)
+    std::vector<QCheckBox*> flashChecks_;
+    std::vector<QPushButton*> inButtons_;
+    std::vector<QPushButton*> returnButtons_;
     std::vector<QShortcut*> digitKeys_;  // Tasten 1 bis 9 (aus, solange die Cuelist läuft)
     QLabel* nowLabel_{nullptr};
     QLabel* nextLabel_{nullptr};
@@ -93,7 +118,10 @@ private:
     QCheckBox* useGo_{nullptr};
     QCheckBox* customFade_{nullptr};
     QDoubleSpinBox* fade_{nullptr};
-    QWidget* learnRow_{nullptr};
+    QPushButton* settingsToggle_{nullptr};  // "Einstellungen", oben rechts neben "Zurück zum Editor"
+    QWidget* settingsBar_{nullptr};         // Hinweis und Zeile "Steuerung belegen", Standard: ausgeblendet
+    QWidget* learnRow_{nullptr};            // gefüllt von setLearning
+    bool settingsShown_{false};
 };
 
 }  // namespace whitehole::studio

@@ -1,16 +1,20 @@
-// live_panel_looks.cpp: Drücken/Loslassen der Look-Knöpfe, Flash-Einstellung je Look und "Steuerung lernen" im
-// Live-Fenster (Teil von LivePanel).
+// live_panel_looks.cpp: Drücken/Loslassen der Look-Knöpfe, Flash-Einstellung je Look, Einstellungen ein-/ausblenden
+// und "Steuerung belegen" im Live-Fenster (Teil von LivePanel).
 //
 // Warum es diese Datei gibt: Ob ein Look umschaltet oder flasht, legt der Look fest (Player::setLookTrigger,
 // Projektdatei `trigger flash`), damit es für alle Eingänge gleich gilt - Knöpfe hier, Pads am MIDI-Controller, später DMX.
-// Das Live-Fenster bietet dafür das Rechtsklick-Menü und, wie der Reiter "Steuerung", Lernen-Knöpfe für die
-// Steuerfunktionen. Eigene Datei, damit live_panel.cpp klein bleibt. Entwurf: docs/entwurf-midi.md, Abschnitte 5 und 6.
+// Das Live-Fenster zeigt das unter jedem Look als Haken "Flash" (sichtbar, nicht nur im Rechtsklick-Menü) und bietet, wie
+// der Reiter "Steuerung", Lernen-Knöpfe für die Steuerfunktionen. Beides blendet die Schaltfläche "Einstellungen" ein
+// und aus, damit die Auftrittsansicht aufgeräumt bleibt. Eigene Datei, damit live_panel.cpp klein bleibt.
+// Entwurf: docs/entwurf-midi.md, Abschnitte 5 und 6.
 #include <QActionGroup>
+#include <QCheckBox>
 #include <QHBoxLayout>
 #include <QInputDialog>
 #include <QLabel>
 #include <QMenu>
 #include <QPushButton>
+#include <QSignalBlocker>
 
 #include <string>
 #include <utility>
@@ -34,6 +38,53 @@ QString LivePanel::buttonText(int index) const {
         text += tr("  · Flash");
     }
     return text;
+}
+
+QString LivePanel::flashInText(int index) const {
+    const project::Look& look = player_.looks()[static_cast<std::size_t>(index)];
+    return look.flashInSeconds ? tr("Rein: %1 s").arg(*look.flashInSeconds, 0, 'f', 1) : tr("Rein: Look-Zeit");
+}
+
+QString LivePanel::returnText(int index) const {
+    const project::Look& look = player_.looks()[static_cast<std::size_t>(index)];
+    return look.returnSeconds ? tr("Zurück: %1 s").arg(*look.returnSeconds, 0, 'f', 1) : tr("Zurück: Look-Zeit");
+}
+
+void LivePanel::syncLookOptions(int index) {
+    const auto i = static_cast<std::size_t>(index);
+    if (index < 0 || i >= player_.looks().size() || i >= buttons_.size()) {
+        return;
+    }
+    const bool flash = player_.looks()[i].trigger == project::LookTrigger::Flash;
+    buttons_[i]->setText(buttonText(index));
+    {
+        const QSignalBlocker blocker{flashChecks_[i]};
+        flashChecks_[i]->setChecked(flash);
+    }
+    inButtons_[i]->setText(flashInText(index));
+    inButtons_[i]->setEnabled(flash);  // ohne Flash gibt es weder etwas ein- noch zurückzublenden
+    returnButtons_[i]->setText(returnText(index));
+    returnButtons_[i]->setEnabled(flash);
+}
+
+QCheckBox* LivePanel::flashCheck(int index) const {
+    return index >= 0 && index < static_cast<int>(flashChecks_.size()) ? flashChecks_[static_cast<std::size_t>(index)] : nullptr;
+}
+
+void LivePanel::setSettingsShown(bool shown) {
+    if (shown == settingsShown_) {
+        return;
+    }
+    settingsShown_ = shown;
+    settingsBar_->setVisible(shown);
+    for (QWidget* row : optionRows_) {
+        row->setVisible(shown);
+    }
+    {
+        const QSignalBlocker blocker{settingsToggle_};  // der Knopf löst das hier aus; der Aufruf von außen zieht ihn nach
+        settingsToggle_->setChecked(shown);
+    }
+    Q_EMIT settingsToggled(shown);
 }
 
 bool LivePanel::press(int index) {
@@ -63,19 +114,35 @@ bool LivePanel::setLookTrigger(int index, project::LookTrigger trigger, std::opt
         Q_EMIT failed(fromStd(r.error().message));
         return false;
     }
-    if (index >= 0 && index < buttonCount()) {
-        buttons_[static_cast<std::size_t>(index)]->setText(buttonText(index));
-    }
+    syncLookOptions(index);  // Knopftext "· Flash", Haken und Zurückblend-Knopf
     return true;
 }
 
-void LivePanel::askReturnSeconds(int index) {
+bool LivePanel::setLookFlashIn(int index, std::optional<double> seconds) {
+    const Result<void> r = player_.setLookFlashIn(index, seconds);
+    if (!r.ok()) {
+        Q_EMIT failed(fromStd(r.error().message));
+        return false;
+    }
+    syncLookOptions(index);
+    return true;
+}
+
+void LivePanel::askFlashSeconds(int index, bool returnTime) {
     const project::Look& look = player_.looks()[static_cast<std::size_t>(index)];
+    const std::optional<double> current = returnTime ? look.returnSeconds : look.flashInSeconds;
     bool ok = false;
-    const double seconds = QInputDialog::getDouble(this, tr("Zurückblenden"), tr("Zeit zum Zurückblenden beim Loslassen (s):"),
-                                                   look.returnSeconds.value_or(look.fadeSeconds), 0.0, 600.0, 1, &ok);
-    if (ok) {
+    const double seconds = QInputDialog::getDouble(
+        this, returnTime ? tr("Zurückblenden") : tr("Einblenden"),
+        returnTime ? tr("Zeit zum Zurückblenden beim Loslassen (s):") : tr("Zeit zum Einblenden beim Drücken (s):"),
+        current.value_or(look.fadeSeconds), 0.0, 600.0, 1, &ok);
+    if (!ok) {
+        return;
+    }
+    if (returnTime) {
         (void)setLookTrigger(index, project::LookTrigger::Flash, seconds);
+    } else {
+        (void)setLookFlashIn(index, seconds);
     }
 }
 
@@ -98,19 +165,35 @@ QMenu* LivePanel::lookMenu(int index) {
     connect(flashing, &QAction::triggered, this, [this, index]() {
         (void)setLookTrigger(index, project::LookTrigger::Flash, player_.looks()[static_cast<std::size_t>(index)].returnSeconds);
     });
-    menu->addSeparator();
-    auto* returns = new QActionGroup{menu};
-    QAction* lookTime = menu->addAction(tr("Zurückblenden mit der Zeit des Looks (%1 s)").arg(look.fadeSeconds, 0, 'f', 1));
-    QAction* ownTime = menu->addAction(look.returnSeconds ? tr("Zurückblenden mit eigener Zeit (%1 s) …").arg(*look.returnSeconds, 0, 'f', 1)
-                                                          : tr("Zurückblenden mit eigener Zeit …"));
-    for (QAction* action : {lookTime, ownTime}) {
-        action->setCheckable(true);
-        action->setEnabled(flash);
-        returns->addAction(action);
-    }
-    (look.returnSeconds ? ownTime : lookTime)->setChecked(true);
-    connect(lookTime, &QAction::triggered, this, [this, index]() { (void)setLookTrigger(index, project::LookTrigger::Flash, std::nullopt); });
-    connect(ownTime, &QAction::triggered, this, [this, index]() { askReturnSeconds(index); });
+    // Zwei Zeiten für Flash: beim Drücken einblenden und beim Loslassen zurückblenden; jeweils Zeit des Looks oder eigene
+    const auto addTimes = [this, menu, index, flash](const QString& byLookText, const QString& ownText, bool hasOwn, bool returnTime) {
+        menu->addSeparator();
+        auto* group = new QActionGroup{menu};
+        QAction* byLook = menu->addAction(byLookText);
+        QAction* own = menu->addAction(ownText);
+        for (QAction* action : {byLook, own}) {
+            action->setCheckable(true);
+            action->setEnabled(flash);
+            group->addAction(action);
+        }
+        (hasOwn ? own : byLook)->setChecked(true);
+        connect(byLook, &QAction::triggered, this, [this, index, returnTime]() {
+            if (returnTime) {
+                (void)setLookTrigger(index, project::LookTrigger::Flash, std::nullopt);
+            } else {
+                (void)setLookFlashIn(index, std::nullopt);
+            }
+        });
+        connect(own, &QAction::triggered, this, [this, index, returnTime]() { askFlashSeconds(index, returnTime); });
+    };
+    addTimes(tr("Einblenden mit der Zeit des Looks (%1 s)").arg(look.fadeSeconds, 0, 'f', 1),
+             look.flashInSeconds ? tr("Einblenden mit eigener Zeit (%1 s) …").arg(*look.flashInSeconds, 0, 'f', 1)
+                                 : tr("Einblenden mit eigener Zeit …"),
+             look.flashInSeconds.has_value(), false);
+    addTimes(tr("Zurückblenden mit der Zeit des Looks (%1 s)").arg(look.fadeSeconds, 0, 'f', 1),
+             look.returnSeconds ? tr("Zurückblenden mit eigener Zeit (%1 s) …").arg(*look.returnSeconds, 0, 'f', 1)
+                                : tr("Zurückblenden mit eigener Zeit …"),
+             look.returnSeconds.has_value(), true);
     return menu;
 }
 
@@ -121,7 +204,7 @@ void LivePanel::setLearning(std::shared_ptr<midi::MidiStore> midi, std::shared_p
     }
     auto* row = new QHBoxLayout{learnRow_};
     row->setContentsMargins(0, 0, 0, 0);
-    row->addWidget(new QLabel{tr("Steuerung lernen:"), learnRow_});
+    row->addWidget(new QLabel{tr("Steuerung belegen:"), learnRow_});
     for (const runtime::LiveFunction function : runtime::kLiveFunctions) {
         row->addWidget(new QLabel{liveFunctionName(function), learnRow_});
         row->addWidget(makeLiveLearnButton(function, midi, dmx,

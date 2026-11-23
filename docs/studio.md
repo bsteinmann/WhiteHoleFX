@@ -485,8 +485,8 @@ Ausgangs-Node). Looks stehen in der Projektdatei (`look ... endlook`, siehe [Pro
 - Gespeichert wird mit dem Projekt (Strg+S).
 
 **Live-Modus (F9 oder Menü Live):** versteckt Editor, Parameter, das Fenster Stage Config, Looks-Dock und sperrt
-Neu, Öffnen, Zuletzt geöffnet und Beispiele im Menü Datei. Es zeigt für jeden Look einen großen Knopf. Master und Blackout (Strg+B)
-bleiben in der Leiste. Rückgängig ist gesperrt, und die Leertaste ist GO statt Start/Stopp, damit auf der Bühne
+Neu, Öffnen, Zuletzt geöffnet und Beispiele im Menü Datei. Es zeigt für jeden Look einen großen Knopf. Auch die Menüleiste ist weg; Master und Blackout (Strg+B)
+bleiben in der Werkzeugleiste, F9 beendet den Live-Modus weiterhin. Rückgängig ist gesperrt, und die Leertaste ist GO statt Start/Stopp, damit auf der Bühne
 nichts versehentlich angehalten oder geändert wird.
 
 | Bedienung | Wirkung |
@@ -494,8 +494,9 @@ nichts versehentlich angehalten oder geändert wird.
 | Klick auf einen Look oder Taste 1 bis 9 | blendet in der Zeit des Looks zu ihm über |
 | Kästchen „Eigene Überblendzeit“ | gilt für alle Klicks statt der Zeit des Looks (0 = hart) |
 | Kästchen „Mit GO“ | ein Klick lädt den Look nur vor (orange); GO oder Leertaste startet die Überblendung |
-| Rechtsklick auf einen Look | „Umschalten (bleibt an)“ oder „Flashen (nur solange gedrückt)“; für Flash: zurückblenden mit der Zeit des Looks oder mit eigener Zeit. Steht im Projekt (`trigger flash`, `return`) und gilt für Knöpfe, MIDI-Pads und alle anderen Eingänge. Ein Flash-Look hat Vorrang vor „Mit GO“; die Tasten 1–9 schalten auch einen Flash-Look nur um (sie kennen kein Loslassen) |
-| Zeile „Steuerung lernen“ | Lernen-Knopf je Funktion (GO, Live beenden, Master, Überblendzeit, manuelle Überblendung) für MIDI oder DMX - dieselbe Belegung wie im Reiter „Steuerung“ der Einstellungen |
+| Schaltfläche „Einstellungen“ (oben rechts) | blendet ein und aus: unter jedem Look den Haken **Flash** und die Zeiten zum Ein- und Zurückblenden, die Zeile „Steuerung belegen“ und die Menüleiste. Beim Start des Live-Modus ist alles ausgeblendet; die Wahl wird nicht gespeichert |
+| Haken „Flash“ unter einem Look (oder Rechtsklick auf den Look) | „Umschalten (bleibt an)“ oder „Flashen (nur solange gedrückt)“; für Flash außerdem die Zeit zum Einblenden beim Drücken („Rein“) und zum Zurückblenden beim Loslassen („Zurück“), jeweils mit der Zeit des Looks oder mit eigener Zeit. Steht im Projekt (`trigger flash`, `in`, `return`) und gilt für Knöpfe, MIDI-Pads und alle anderen Eingänge. Ein Flash-Look hat Vorrang vor „Mit GO“; die Tasten 1–9 schalten auch einen Flash-Look nur um (sie kennen kein Loslassen) |
+| Zeile „Steuerung belegen“ (nur bei offenen Einstellungen) | Lernen-Knopf je Funktion (GO, Live beenden, Master, Überblendzeit, manuelle Überblendung) für MIDI oder DMX - dieselbe Belegung wie im Reiter „Steuerung“ der Einstellungen |
 | Esc oder „Zurück zum Editor“ | beendet den Live-Modus |
 
 Farben: grün läuft, orange vorgeladen, gelb blendet gerade ein. Ein Balken zeigt den Fortschritt.
