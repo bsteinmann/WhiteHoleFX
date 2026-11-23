@@ -6,6 +6,7 @@ find_package(Threads REQUIRED)
 
 wh_add_library(wh_input
     SOURCES
+        src/dmx_learn.cpp
         src/dmx_packets.cpp
         src/dmx_receiver.cpp
         src/dmx_store.cpp

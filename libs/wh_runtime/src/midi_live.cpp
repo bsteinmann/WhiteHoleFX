@@ -19,6 +19,12 @@ bool managed(int note) { return note < midi::LiveProfile::kPads || (note >= 64 &
 MidiLiveController::MidiLiveController(Player& player, std::shared_ptr<midi::MidiStore> store)
     : player_{player}, store_{std::move(store)}, profile_{midi::builtinLiveProfiles().front()} {
     sent_.fill(-1);
+    dmxLast_.fill(-1);
+}
+
+void MidiLiveController::setBindings(LiveBindings bindings) {
+    bindings_ = std::move(bindings);
+    dmxLast_.fill(-1);
 }
 
 void MidiLiveController::setOutput(midi::IMidiOutput* output) {
@@ -62,27 +68,22 @@ void MidiLiveController::handleCrossfade(int value, MidiLiveResult& result) {
 
 void MidiLiveController::handle(const midi::MidiMessage& message, const MidiLiveOptions& options, bool live,
                                 MidiLiveResult& result) {
-    if (message.channel != kChannel) {
-        return;
-    }
-    const midi::LiveControls& k = profile_.controls;
-    if (message.kind == midi::MessageKind::ControlChange) {
-        const int cc = message.data1;
-        const int value = message.data2;
-        if (cc == k.fadeCc) {
-            fadeFader_ = value / 127.0 * kMaxFadeSeconds;
-        } else if (cc == k.masterCc && live) {
-            player_.setMasterBrightness(static_cast<float>(value) / 127.0F);
-            result.masterChanged = true;
-        } else if (cc == k.crossfadeCc) {
-            if (live) {
-                handleCrossfade(value, result);
-            }
-            crossfade_ = value;
+    // Steuerfunktionen: Belegung (eigene oder Profil), auch auf anderen Kanälen
+    for (const LiveFunction function : kLiveFunctions) {
+        const MidiBinding binding = effectiveMidi(bindings_, profile_, function);
+        if (binding.number < 0 || binding.channel != message.channel || binding.number != message.data1) {
+            continue;
         }
-        return;
+        if (isButton(function) && message.kind == midi::MessageKind::NoteOn) {
+            act(function, 127, options, live, result);
+            return;
+        }
+        if (!isButton(function) && message.kind == midi::MessageKind::ControlChange) {
+            act(function, message.data2, options, live, result);
+            return;
+        }
     }
-    if (!live) {
+    if (message.channel != kChannel || !live) {
         return;
     }
     if (message.kind == midi::MessageKind::NoteOff) {
@@ -94,16 +95,72 @@ void MidiLiveController::handle(const midi::MidiMessage& message, const MidiLive
     if (message.kind != midi::MessageKind::NoteOn) {
         return;
     }
-    const int note = message.data1;
     const std::optional<double> fade = fadeFader_ ? fadeFader_ : options.fadeOverride;
-    if (note == k.goNote) {
-        report(player_.liveGo(fade), result);
-    } else if (note == k.stopNote) {
-        result.leaveRequested = true;
-    } else if (const auto look = profile_.lookForNote(message.data1);
+    if (const auto look = profile_.lookForNote(message.data1);
                look && *look < static_cast<int>(player_.looks().size())) {
         report(player_.liveDown(*look, fade, options.useGo), result);  // Flash-Looks: Vorrang vor "Mit GO"
 
+    }
+}
+
+void MidiLiveController::act(LiveFunction function, int value, const MidiLiveOptions& options, bool live,
+                             MidiLiveResult& result) {
+    switch (function) {
+        case LiveFunction::FadeTime:
+            fadeFader_ = value / 127.0 * kMaxFadeSeconds;  // auch außerhalb des Live-Betriebs merken
+            return;
+        case LiveFunction::Crossfade:
+            if (live) {
+                handleCrossfade(value, result);
+            }
+            crossfade_ = value;
+            return;
+        case LiveFunction::Master:
+            if (live) {
+                player_.setMasterBrightness(static_cast<float>(value) / 127.0F);
+                result.masterChanged = true;
+            }
+            return;
+        case LiveFunction::Go:
+            if (live) {
+                report(player_.liveGo(fadeFader_ ? fadeFader_ : options.fadeOverride), result);
+            }
+            return;
+        case LiveFunction::Stop:
+            if (live) {
+                result.leaveRequested = true;
+            }
+            return;
+    }
+}
+
+void MidiLiveController::pollDmx(const MidiLiveOptions& options, bool live, MidiLiveResult& result) {
+    if (!dmx_) {
+        return;
+    }
+    for (std::size_t i = 0; i < kLiveFunctionCount; ++i) {
+        const LiveFunction function = kLiveFunctions[i];
+        const auto& address = bindings_.dmx[i];
+        if (!address || !hasDmxBinding(function)) {
+            continue;
+        }
+        const auto sample = dmx_->read(address->protocol, address->universe, address->channel, 1);
+        if (!sample || sample->ageSeconds > kDmxTimeoutSeconds) {
+            continue;
+        }
+        const int value = sample->values[0];
+        const int before = dmxLast_[i];
+        dmxLast_[i] = value;
+        if (before < 0 || before == value) {
+            continue;  // erster Wert oder keine Änderung
+        }
+        if (isButton(function)) {
+            if (before < 128 && value >= 128) {
+                act(function, 127, options, live, result);
+            }
+        } else {
+            act(function, (value * 127 + 127) / 255, options, live, result);
+        }
     }
 }
 
@@ -118,6 +175,7 @@ MidiLiveResult MidiLiveController::step(const MidiLiveOptions& options) {
             handle(message, options, live && player_.liveActive(), result);
         }
     }
+    pollDmx(options, live && player_.liveActive(), result);
     const bool liveNow = options.enabled && player_.liveActive();
     if (liveNow || wasLive_) {
         updateLeds(liveNow);
@@ -149,12 +207,14 @@ void MidiLiveController::updateLeds(bool live) {
             }
             wanted[*note] = static_cast<int>(led);
         }
-        const midi::LiveControls& k = profile_.controls;
-        if (k.goNote >= 0 && k.goNote < 128) {
-            wanted[static_cast<std::size_t>(k.goNote)] = status.armed >= 0 ? kButtonBlink : 0;
+        // Tasten-LEDs nur auf Kanal 1 (dort sitzt der Controller); eine Belegung auf anderem Kanal bleibt dunkel
+        const MidiBinding go = effectiveMidi(bindings_, profile_, LiveFunction::Go);
+        const MidiBinding stop = effectiveMidi(bindings_, profile_, LiveFunction::Stop);
+        if (go.channel == kChannel && go.number >= 0) {
+            wanted[static_cast<std::size_t>(go.number)] = status.armed >= 0 ? kButtonBlink : 0;
         }
-        if (k.stopNote >= 0 && k.stopNote < 128) {
-            wanted[static_cast<std::size_t>(k.stopNote)] = kButtonOn;
+        if (stop.channel == kChannel && stop.number >= 0) {
+            wanted[static_cast<std::size_t>(stop.number)] = kButtonOn;
         }
     }
     if (output_ == nullptr || !output_->isOpen()) {
