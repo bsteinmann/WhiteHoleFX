@@ -1,6 +1,8 @@
 # Änderungen
 
-## Unreleased
+## 1.1.0
+
+Neue Funktionen seit 1.0.0: „Projektion“ (Fixtures als 2D-Fläche, Box-Würfel, Studio-Auswahl), Glow in der 3D-Vorschau standardmäßig aus. Fehlerbehebungen: Datei → Öffnen unter Windows, Absturz beim Fokuswechsel, übersprungene Pixel auf 0 setzbar, Output-Node duplizieren, Testmodus-Knopf. Die Einzelheiten stehen unten.
 
 - **Vorbereitung „Projektion“ (Kern, noch ohne Oberfläche und ohne Projektdatei):** Jedes Fixture kann in `wh_mapping` als 2D-Fläche
   abgebildet werden (`Fixture::projection`: `Volume` = wie bisher, `Faces` = eigenes Bild je Fixture, `Box` = von außen auf die
