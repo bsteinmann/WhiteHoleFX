@@ -79,3 +79,43 @@ der Uhr von der erreichten Stelle zu Ende (`tests/runtime/live_manual_fade_test.
 - Pads einzeln umlegen, Seiten für mehr als 32/64 Looks, mk2-Profil (RGB), Cue-Sprung per MIDI (zusammen mit Teil 2 der
   DMX-Fernsteuerung), `wh.output.midinote`, MIDI-Clock als Tempoquelle, Hot-Plug.
 - Zu prüfen in Stufe 1: ob RtMidi lokal ladbar ist (Netz) oder nur in der CI.
+
+## 5. Looks auslösen: umschalten und flashen (Entscheidung vom 23.11.)
+
+Ziel: Jeder Look legt selbst fest, wie er ausgelöst wird. Das gilt für alle Eingänge (MIDI, DMX, Taste im Fenster), nicht nur für MIDI.
+
+### 5.1 Einstellungen je Look
+
+- **Auslösen:** `umschalten` (Standard, wie bisher: Druck blendet dauerhaft um) oder `flashen` (läuft nur, solange gehalten).
+- **Überblendzeit** (Hinlauf): wie bisher, der Wert des Looks.
+- **Zurückblenden** (nur Flash): wahlweise
+  - `Zeit des Looks` (Standard: die Überblendzeit des Looks, der gerade geflasht wird), oder
+  - `frei` (eigene Zeit in Sekunden, 0 = hart).
+- Speicherort: am Look selbst, in der Projektdatei (`look "Name" fade 3 trigger flash return 0.5`; `trigger` und `return` werden nur geschrieben, wenn nicht Standard). Bearbeitbar im Live-Fenster (Rechtsklick auf den Knopf).
+
+### 5.2 Vorrang
+
+- **Flash hat Vorrang vor „Mit GO".** Ein flashender Look blendet beim Drücken sofort ein und beim Loslassen sofort zurück, GO wird dabei nicht gebraucht.
+- Ein umschaltender Look folgt weiter dem Schalter „Mit GO" im Live-Fenster.
+
+### 5.3 Ablauf Flash
+
+1. Drücken: Der aktuell sichtbare Look wird gemerkt (`returnTo`). Der geflashte Look wird wie beim Umschalten geladen und eingeblendet.
+2. Loslassen: Zurück zum gemerkten Look, mit der gewählten Zeit (siehe 5.1).
+3. Ist ein anderer Look inzwischen durch ein Pad oder GO umgeschaltet worden, bleibt er stehen; das Zurückblenden betrifft nur den Fall, dass nichts anderes passiert ist.
+4. Mehrere Flash-Pads gleichzeitig: Der zuletzt gedrückte gewinnt. Erst beim Loslassen des letzten Flash-Pads geht es zum ursprünglichen Look zurück.
+
+### 5.4 Schnittstelle (protokollunabhängig)
+
+- `Player::liveDown(index)` und `Player::liveUp(index)`. Die Logik (merken, zurückblenden, Vorrang) steckt nur im Player.
+- MIDI: Note-On ruft `liveDown`, Note-Off ruft `liveUp` auf. Heute wird Note-Off ignoriert.
+- DMX: ein Schwellwert (z. B. ab 128 = unten) ruft dieselben Aufrufe. Noch nicht Teil dieses Schritts.
+- Umschalt-Looks ignorieren `liveUp`.
+
+### 5.5 Schritte
+
+1. Datenmodell und Projektdatei: Felder `trigger`, `return` am Look, Lesen/Schreiben, Tests.
+2. Player: `liveDown`/`liveUp`, Vorrang, Rückblenden, Tests (Einzel-Flash, Zwei-Flash, Flash mit GO, Rückblenden während eines anderen Fades).
+3. MIDI: Note-Off durchreichen, Pad-Druck ruft `liveDown`.
+4. Live-Fenster: Einstellungsdialog pro Look.
+5. Doku, CHANGELOG, Übersetzungen.
