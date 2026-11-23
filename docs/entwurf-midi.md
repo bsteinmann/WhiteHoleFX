@@ -150,3 +150,6 @@ Offene Punkte für die Umsetzung:
 - Eine Funktion hat **eine Quelle pro Eingang**: Ein Pad und ein DMX-Kanal können dieselbe Funktion steuern, beide Eingänge
   wirken gleichzeitig. Die Belegungstabelle hält je Funktion eine Liste von Quellen (MIDI oder DMX).
 - Offen (unverändert): Pad-Direktlernen, Profil als Startbelegung mit „Auf Profil zurücksetzen".
+- **Das Pad-Raster bleibt fest** (Entscheidung vom 23.11.): Pads werden nicht einzeln einem Look zugewiesen. Look i liegt
+  immer am Raster-Feld i. Gelernt werden nur die Funktionen (GO, Ende, Fader, Flash-/Umschalt-Tasten).
+  Das Lernen von Pads entfällt damit.
