@@ -236,6 +236,7 @@ QString MainWindow::exerciseLive() {
         return tr("Live: Neu/Öffnen, Leertaste oder Rückgängig sind im Live-Modus nicht gesperrt");
     }
     // Auftrittsansicht: ohne Menüleiste und ohne Einstellungen; die Schaltfläche blendet beides gemeinsam ein
+    QApplication::processEvents();  // Qt zeigt Widgets, die nach dem Anzeigen des Fensters entstehen, erst über die Ereignisschleife
     if (menuBar()->isVisibleTo(this) || livePanel_->settingsShown() || livePanel_->flashCheck(0) == nullptr ||
         livePanel_->flashCheck(0)->isVisibleTo(livePanel_)) {
         return QStringLiteral("Live: Menüleiste oder Einstellungen sind zu Beginn nicht ausgeblendet");
