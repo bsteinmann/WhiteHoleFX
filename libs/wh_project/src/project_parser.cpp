@@ -492,6 +492,7 @@ std::optional<Error> Parser::beginLook(Reader& r, std::size_t lineNumber) {
     const std::string name = r.word("Lookname");
     double fade = 2.0;
     LookTrigger trigger = LookTrigger::Toggle;
+    std::optional<double> flashIn;
     std::optional<double> back;
     const auto inRange = [&r](double seconds, const char* what) {
         if (r.ok() && !(seconds >= 0.0 && seconds <= kMaxFadeSeconds)) {
@@ -512,6 +513,9 @@ std::optional<Error> Parser::beginLook(Reader& r, std::size_t lineNumber) {
             } else if (r.ok()) {
                 r.fail("trigger muss toggle oder flash sein");
             }
+        } else if (key == "in") {
+            flashIn = r.numberD("Zeit zum Einblenden");
+            inRange(*flashIn, "in");
         } else if (key == "return") {
             back = r.numberD("Zeit zum Zurückblenden");
             inRange(*back, "return");
@@ -534,6 +538,7 @@ std::optional<Error> Parser::beginLook(Reader& r, std::size_t lineNumber) {
     look_->name = name;
     look_->fadeSeconds = fade;
     look_->trigger = trigger;
+    look_->flashInSeconds = flashIn;
     look_->returnSeconds = back;
     lookTarget_.reset();
     mainNodes_ = std::move(nodes_);

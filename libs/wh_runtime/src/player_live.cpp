@@ -38,6 +38,7 @@ Result<int> Player::saveLook(const std::string& name, std::optional<double> fade
     if (existing >= 0) {
         project::Look& old = project_->looks[static_cast<std::size_t>(existing)];
         look.value().trigger = old.trigger;  // Auslösen bleibt beim Überschreiben erhalten
+        look.value().flashInSeconds = old.flashInSeconds;
         look.value().returnSeconds = old.returnSeconds;
         old = std::move(look).value();
         return existing;

@@ -417,7 +417,11 @@ public:
     /// Ein Umschalten (auch über liveTrigger/liveArm/liveGo) beendet ein laufendes Flash: dann bleibt der neue Look stehen.
     /// Stellt ein, wie ein Look ausgelöst wird (umschalten/flashen) und wie lange das Zurückblenden dauert (leer = die
     /// Überblendzeit des Looks). Geht auch im Live-Betrieb. Fehler: NotFound, InvalidArgument (keine Projekt, Zeit ungültig).
+    /// Beim Umstellen auf "umschalten" entfällt auch die Einblendzeit (setLookFlashIn).
     Result<void> setLookTrigger(int index, project::LookTrigger trigger, std::optional<double> returnSeconds);
+    /// Zeit, in der ein Flash-Look beim Drücken einblendet (leer = die Überblendzeit des Looks bzw. die eigene Zeit des
+    /// Live-Fensters; eine hier gesetzte Zeit gilt vor beiden). Fehler: NotFound, InvalidArgument (kein Projekt, Zeit ungültig).
+    Result<void> setLookFlashIn(int index, std::optional<double> seconds);
     Result<void> liveDown(int index, std::optional<double> fadeSeconds = std::nullopt, bool useGo = false);
     Result<void> liveUp(int index);
     /// Gehaltene Flash-Looks, zuletzt gedrückter hinten (für Anzeige und Tests).
