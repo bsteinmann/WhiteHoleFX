@@ -107,6 +107,7 @@ Result<void> Player::cueFire(int index) {
 
 Result<void> Player::executeCue(int index) {
     const project::Cue& cue = project_->cues[static_cast<std::size_t>(index)];
+    clearFlash();  // ein Cue schaltet um: ein gehaltenes Flash kehrt danach nicht mehr zurück
     if (cue.look.empty()) {
         if (const Result<void> armed = live_->armBlank(); !armed.ok()) {
             return armed;

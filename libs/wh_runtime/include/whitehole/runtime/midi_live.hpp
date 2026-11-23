@@ -4,7 +4,7 @@
 // Warum es das gibt: Auf der Bühne will man Looks mit echten Tasten abrufen und sehen, was läuft, ohne auf den
 // Bildschirm zu schauen. Die Belegung kommt aus einem Profil (midi/live_profile.hpp); die Logik hier ist vom Studio
 // getrennt und damit ohne Gerät und ohne Qt testbar: Sie liest die Ereignisse aus dem MidiStore, ruft den Player auf
-// (liveTrigger/liveArm/liveGo/liveManualFade/setMasterBrightness) und schickt nur geänderte LED-Werte an den Ausgang.
+// (liveDown/liveUp/liveGo/liveManualFade/setMasterBrightness; ein Flash-Look kehrt beim Loslassen des Pads zurück) und schickt nur geänderte LED-Werte an den Ausgang.
 //
 // Außerhalb des Live-Betriebs bleiben die Pads frei (Ereignisse werden verworfen, die MIDI-Nodes lesen den Zustand,
 // nicht die Ereignisse). Nur die Stellung der Fader wird gemerkt, damit Überblendzeit und Mitnahme stimmen.

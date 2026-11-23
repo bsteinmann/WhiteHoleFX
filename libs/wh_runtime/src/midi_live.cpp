@@ -82,7 +82,16 @@ void MidiLiveController::handle(const midi::MidiMessage& message, const MidiLive
         }
         return;
     }
-    if (message.kind != midi::MessageKind::NoteOn || !live) {
+    if (!live) {
+        return;
+    }
+    if (message.kind == midi::MessageKind::NoteOff) {
+        if (const auto look = profile_.lookForNote(message.data1); look && *look < static_cast<int>(player_.looks().size())) {
+            report(player_.liveUp(*look), result);  // nur Flash-Looks reagieren
+        }
+        return;
+    }
+    if (message.kind != midi::MessageKind::NoteOn) {
         return;
     }
     const int note = message.data1;
@@ -93,7 +102,8 @@ void MidiLiveController::handle(const midi::MidiMessage& message, const MidiLive
         result.leaveRequested = true;
     } else if (const auto look = profile_.lookForNote(message.data1);
                look && *look < static_cast<int>(player_.looks().size())) {
-        report(options.useGo ? player_.liveArm(*look) : player_.liveTrigger(*look, fade), result);
+        report(player_.liveDown(*look, fade, options.useGo), result);  // Flash-Looks: Vorrang vor "Mit GO"
+
     }
 }
 

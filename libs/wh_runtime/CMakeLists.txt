@@ -35,6 +35,7 @@ wh_add_library(wh_runtime
         src/player_types.cpp
         src/player_destinations.cpp
         src/player_live.cpp
+        src/player_live_flash.cpp
         src/player_arrange.cpp
         src/player_projection.cpp
         src/player_paste.cpp

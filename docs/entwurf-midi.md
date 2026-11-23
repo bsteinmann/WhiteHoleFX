@@ -155,3 +155,5 @@ Offene Punkte für die Umsetzung:
   Das Lernen von Pads entfällt damit.
 - **Profil bleibt Startbelegung** (bestätigt am 23.11.): Ein Profil legt die Anfangsbelegung der Funktionen fest. Lernen
   überschreibt sie. Pro Funktion gibt es „Auf Profil zurücksetzen"; „Alle auf Profil zurücksetzen" im Reiter „Steuerung".
+- **Profil bleibt Startbelegung** (Entscheidung vom 23.11.): Gelernte Belegungen überschreiben das Profil je Funktion;
+  „Auf Profil zurücksetzen" je Funktion stellt den Profilwert wieder her.

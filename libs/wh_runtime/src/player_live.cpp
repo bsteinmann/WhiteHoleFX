@@ -36,7 +36,10 @@ Result<int> Player::saveLook(const std::string& name, std::optional<double> fade
     }
     modified_ = true;
     if (existing >= 0) {
-        project_->looks[static_cast<std::size_t>(existing)] = std::move(look).value();
+        project::Look& old = project_->looks[static_cast<std::size_t>(existing)];
+        look.value().trigger = old.trigger;  // Auslösen bleibt beim Überschreiben erhalten
+        look.value().returnSeconds = old.returnSeconds;
+        old = std::move(look).value();
         return existing;
     }
     project_->looks.push_back(std::move(look).value());
@@ -214,6 +217,7 @@ void Player::stopLive() {
     live_.reset();
     liveLast_.reset();
     liveDmxLastIndex_.reset();  // der nächste Live-Betrieb soll sich wieder frisch auf den Kanal einstellen
+    clearFlash();
     cueRunner_.stop();
     if (session_) {
         rebuildDirty_ = true;
@@ -221,6 +225,11 @@ void Player::stopLive() {
 }
 
 Result<void> Player::liveArm(int index) {
+    clearFlash();
+    return armLook(index);
+}
+
+Result<void> Player::armLook(int index) {
     if (!project_) {
         return noProject();
     }
@@ -234,6 +243,11 @@ Result<void> Player::liveArm(int index) {
 }
 
 Result<void> Player::liveGo(std::optional<double> fadeSeconds) {
+    clearFlash();
+    return goLook(fadeSeconds);
+}
+
+Result<void> Player::goLook(std::optional<double> fadeSeconds) {
     if (!live_) {
         return Error{ErrorCode::InvalidArgument, "Der Live-Betrieb ist nicht gestartet"};
     }
@@ -251,10 +265,11 @@ Result<void> Player::liveGo(std::optional<double> fadeSeconds) {
 }
 
 Result<void> Player::liveTrigger(int index, std::optional<double> fadeSeconds) {
-    if (const Result<void> armed = liveArm(index); !armed.ok()) {
+    clearFlash();
+    if (const Result<void> armed = armLook(index); !armed.ok()) {
         return armed;
     }
-    return liveGo(fadeSeconds);
+    return goLook(fadeSeconds);
 }
 
 Result<void> Player::liveManualFade(double progress) {
