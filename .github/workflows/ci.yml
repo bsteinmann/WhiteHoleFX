@@ -185,7 +185,7 @@ jobs:
       - name: Qt, Software-Vulkan und Schriften installieren
         run: |
           sudo apt-get update
-          sudo apt-get install -y qt6-base-dev libgl1-mesa-dev libxkbcommon-dev fonts-dejavu-core \
+          sudo apt-get install -y qt6-base-dev libgl1-mesa-dev libxkbcommon-dev libasound2-dev fonts-dejavu-core \
             mesa-vulkan-drivers libvulkan1 vulkan-tools unzip gdb
       - uses: ./.github/actions/wgpu-native
       - name: Konfigurieren
@@ -408,7 +408,7 @@ jobs:
       - name: Bauwerkzeuge, Qt und desktop-file-utils installieren
         run: |
           sudo apt-get update
-          sudo apt-get install -y g++-12 qt6-base-dev libgl1-mesa-dev libxkbcommon-dev dpkg-dev \
+          sudo apt-get install -y g++-12 qt6-base-dev libgl1-mesa-dev libxkbcommon-dev libasound2-dev dpkg-dev \
             desktop-file-utils shared-mime-info libxml2-utils unzip curl
       - uses: ./.github/actions/wgpu-native
       - name: Konfigurieren (Release, Präfix /usr)

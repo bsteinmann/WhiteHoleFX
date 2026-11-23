@@ -9,7 +9,10 @@
 #include <QDialog>
 
 #include "app_settings.hpp"
+#include <memory>
+
 #include "whitehole/graph/node_registry.hpp"
+#include "whitehole/midi/midi_store.hpp"
 
 class QCheckBox;
 class QComboBox;
@@ -19,13 +22,16 @@ class QSpinBox;
 
 namespace whitehole::studio {
 
+class MidiSettingsPage;
 class NodeDefaultsPage;
 
 class SettingsDialog : public QDialog {
     Q_OBJECT
 
 public:
-    SettingsDialog(const AppSettings& current, const graph::INodeRegistry& registry, QWidget* parent);
+    /// `midiStore` (optional) liefert der Seite MIDI die zuletzt empfangene Nachricht.
+    SettingsDialog(const AppSettings& current, const graph::INodeRegistry& registry, QWidget* parent,
+                   std::shared_ptr<midi::MidiStore> midiStore = nullptr);
 
     /// Die Einstellungen, wie sie die Felder gerade zeigen.
     [[nodiscard]] AppSettings settings() const;
@@ -39,6 +45,7 @@ private:
     void chooseWav();
 
     NodeDefaultsPage* defaultsPage_{nullptr};
+    MidiSettingsPage* midiPage_{nullptr};
     QComboBox* outputCard_{nullptr};
     QComboBox* inputCard_{nullptr};
     QCheckBox* artnet_{nullptr};

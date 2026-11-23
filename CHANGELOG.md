@@ -1,5 +1,15 @@
 # Änderungen
 
+## Unreleased
+
+- **MIDI, Stufe 1: Grundlage (noch ohne Nodes und ohne APC-Belegung).** Neue Bibliothek `wh_midi`: `MidiStore` (letzter Stand von
+  Reglern und Noten, begrenzte Ereignisliste), `MidiReceiver`, Geräteschnittstelle `IMidiInput`/`IMidiOutput` und Portsuche über
+  den Namen (überlebt Ab- und Anstecken). Die Geräte spricht RtMidi 6.0.0 an (ALSA unter Linux, WinMM unter Windows;
+  `-DWHITEHOLEFX_MIDI_DEVICES=OFF` oder fehlendes `libasound2-dev` ergibt einen Stub ohne Ports). Studio: neue Seite **MIDI** in
+  den Einstellungen (Eingang, Ausgang, letzte Nachricht); `midi/input` und `midi/output` gehören zum Programm, nicht zum Projekt.
+  CI: `libasound2-dev` in den Linux-Jobs mit Studio und Paket. Plan: `docs/entwurf-midi.md`, Beschreibung: `docs/midi.md`.
+  Tests: `tests/midi/midi_test.cpp`.
+
 ## 1.1.0
 
 Neue Funktionen seit 1.0.0: „Projektion“ (Fixtures als 2D-Fläche, Box-Würfel, Studio-Auswahl), Glow in der 3D-Vorschau standardmäßig aus. Fehlerbehebungen: Datei → Öffnen unter Windows, Absturz beim Fokuswechsel, übersprungene Pixel auf 0 setzbar, Output-Node duplizieren, Testmodus-Knopf. Die Einzelheiten stehen unten.

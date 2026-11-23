@@ -225,7 +225,8 @@ Fix-Ideen, Tests). Zuerst Punkt 0 dort (`.pdb` vom Nutzer besorgen, läuft am 20
   belegten Zelle per Rechtsklick → "Farbe ändern…" überschreibbar (reine Anzeige, keine Projekt- oder
   Einstellungsdaten). Vom Nutzer mit "jetzt umsetzen" freigegeben und umgesetzt; Details siehe CHANGELOG.
   Damit sind beide Teile des 15.11.-Vorschlags zum DMX-Patch/Monitor-Gitter abgeschlossen.
-- **MIDI-Eingang/-Ausgang** (z. B. Akai APC Mini): nur besprochen, nicht begonnen. Überlegungen aus dem
+- **MIDI-Eingang/-Ausgang** (z. B. Akai APC Mini): **vom Nutzer am 23.11. zur Umsetzung freigegeben**, Plan und Entscheidungen
+  in `docs/entwurf-midi.md` (Stufe 1 Grundlage, 2 Nodes, 3 APC mini mk1 im Live-Modus). Ursprüngliche Überlegungen: Überlegungen aus dem
   Gespräch:
   - *Bibliothek:* RtMidi — C++, cross-platform (ALSA/WinMM), passt zum bestehenden Muster, mit dem
     `wh_audio` schon `miniaudio` einbindet. Ein neues `wh_midi` mit einem `MidiStore` (threadsicherer

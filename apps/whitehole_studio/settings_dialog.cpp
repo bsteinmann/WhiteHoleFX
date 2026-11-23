@@ -18,7 +18,9 @@
 
 #include <algorithm>
 #include <string>
+#include <utility>
 
+#include "midi_settings_page.hpp"
 #include "network_interfaces.hpp"
 #include "node_defaults_page.hpp"
 #include "whitehole/audio/audio_input.hpp"
@@ -53,13 +55,16 @@ QString toQ(const std::string& text) { return QString::fromUtf8(text.data(), sta
 
 }  // namespace
 
-SettingsDialog::SettingsDialog(const AppSettings& current, const graph::INodeRegistry& registry, QWidget* parent)
+SettingsDialog::SettingsDialog(const AppSettings& current, const graph::INodeRegistry& registry, QWidget* parent,
+                               std::shared_ptr<midi::MidiStore> midiStore)
     : QDialog{parent} {
     setWindowTitle(tr("Einstellungen"));
     auto* tabs = new QTabWidget{this};
     tabs->addTab(buildNetworkPage(current), tr("Netzwerk"));
     tabs->addTab(buildDmxPage(current), tr("DMX-Eingang"));
     tabs->addTab(buildAudioPage(current), tr("Audio"));
+    midiPage_ = new MidiSettingsPage{current.midiInput, current.midiOutput, std::move(midiStore), this};
+    tabs->addTab(midiPage_, tr("MIDI"));
     defaultsPage_ = new NodeDefaultsPage{registry, current.nodeDefaults, this};
     tabs->addTab(defaultsPage_, tr("Node-Standardwerte"));
     auto* buttons = new QDialogButtonBox{QDialogButtonBox::Ok | QDialogButtonBox::Cancel, this};
@@ -265,6 +270,8 @@ AppSettings SettingsDialog::settings() const {
     } else {
         result.audioSource = QStringLiteral("off");
     }
+    result.midiInput = midiPage_->input();
+    result.midiOutput = midiPage_->output();
     result.nodeDefaults = defaultsPage_->defaults();
     return result;
 }
