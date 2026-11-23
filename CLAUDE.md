@@ -49,6 +49,7 @@ Alle vier Testläufe (dev, gpu, plus die beiden oben) müssen grün sein, bevor 
 
 1. Version in `CMakeLists.txt` (`VERSION`) und `BUILDING.md` (Paketname) hochzählen.
 2. `CHANGELOG.md` ergänzen.
+2a. `packaging/windows/RELEASE_NOTES.md` prüfen: Die erste Zeile muss zur neuen Version passen (z. B. „Version 1.1.0 für Windows (64 Bit) und Linux.“), kein veralteter Hinweis wie „Vorabversion (0.x)“.
 3. Commit + Push nach `main`.
 4. CI abwarten, **alle 8 Jobs** müssen grün sein:
    `gh run view <id> --json status,conclusion` und je Job über `--json jobs`.
