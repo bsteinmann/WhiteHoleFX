@@ -119,3 +119,24 @@ Ziel: Jeder Look legt selbst fest, wie er ausgelöst wird. Das gilt für alle Ei
 3. MIDI: Note-Off durchreichen, Pad-Druck ruft `liveDown`.
 4. Live-Fenster: Einstellungsdialog pro Look.
 5. Doku, CHANGELOG, Übersetzungen.
+
+## 6. Steuerung frei belegbar, mit „Lernen" (Wunsch vom 23.11.)
+
+Lesart: Jede Steuerfunktion im Live-Modus (GO, Live beenden, Master, Überblendzeit, manuelle Überblendung, und die Look-Pads
+selbst) bekommt eine Belegung, die man nicht mehr von Hand in Zahlen eingibt, sondern per **Lernen** auf dem Controller
+drückt bzw. bewegt. Das ersetzt die festen Nummern aus den Profilen als Standard, Profile bleiben als Vorlagen.
+
+- **Einstellungen → eigener Reiter „Steuerung":** eine Zeile je Funktion mit Name, aktueller Belegung und Knopf „Lernen".
+  Pads für Looks werden über ihren Ort im Raster gelernt (ein Druck auf das gewünschte Pad belegt das Raster-Feld) oder
+  bleiben am Profil-Raster.
+- **Live-Fenster:** neben den Knöpfen für GO, Live beenden und Überblendzeit ebenfalls „Lernen"; dasselbe Ergebnis wie im
+  Reiter, weil beides dieselbe Belegung schreibt.
+- **Flash und Umschalten** bekommen je Look eine Taste (oder das Pad selbst), gelernt im Look-Dialog (siehe Abschnitt 5).
+- Gespeichert: Belegungen gehören zum Auftritt (Programmeinstellungen), nicht zum Projekt. Ausnahme: der Look-Auslöse-Modus
+  aus Abschnitt 5 liegt im Projekt.
+- Lernen wird wie bei den MIDI-Nodes umgesetzt (`midi::MidiLearn`): nur eine neue Nachricht zählt, Abbruch per zweitem Klick.
+
+Offene Punkte für die Umsetzung:
+1. Reiter „Steuerung" und Live-Fenster schreiben dieselbe Belegung, damit es keine zwei Wahrheiten gibt.
+2. Profil bleibt als Startbelegung, Lernen überschreibt sie; „Auf Profil zurücksetzen" pro Funktion.
+3. Welche Nachrichtenart beim Lernen gilt: Note für Tasten, Regler für Fader; beim Lernen eines Pads wird die Art automatisch gewählt.
