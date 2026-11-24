@@ -1,7 +1,8 @@
 # whitehole_cli: Konsolen-Runner. Liest eine Projektdatei, prüft sie (--check) oder rendert
 # sie und sendet Art-Net, sACN oder DDP. Das Rendern braucht das GPU-Backend
 # (-DWHITEHOLEFX_WEBGPU=ON); ohne es läuft nur --check.
-add_executable(whitehole_cli main.cpp cli_options.cpp)
+add_executable(whitehole_cli main.cpp cli_options.cpp cli_benchmark.cpp)
+target_compile_definitions(whitehole_cli PRIVATE WH_VERSION="${PROJECT_VERSION}" WH_BUILD_ID="${WH_BUILD_ID}")
 target_link_libraries(whitehole_cli PRIVATE
     whitehole::audio
     whitehole::input

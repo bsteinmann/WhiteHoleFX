@@ -24,6 +24,7 @@ endif()
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 include(WhiteHoleFXSettings)
+include(WhiteHoleFXBuildId)  # WH_BUILD_ID für Studio und CLI (Absturzberichte, Benchmark)
 
 # Module in Abhängigkeitsreihenfolge:
 #   core <- gpu <- engine
