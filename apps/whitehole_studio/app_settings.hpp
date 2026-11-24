@@ -46,6 +46,8 @@ struct AppSettings {
     /// (midi::serializeProfile).
     QString midiProfile;
     QStringList midiProfiles;
+    /// Spalten des Look-Rasters im Live-Fenster (1 bis 16).
+    int liveColumns{4};
     /// Belegung der Live-Steuerung (runtime::serializeBindings), Reiter "Steuerung" und Live-Fenster.
     QStringList liveBindings;
     /// "off", "default", "device:<Name>" oder "file:<Pfad>".

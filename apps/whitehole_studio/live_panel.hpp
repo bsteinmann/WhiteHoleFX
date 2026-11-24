@@ -46,6 +46,9 @@ public:
 
     /// Baut die Look-Knöpfe aus der Liste im Player neu auf (nach Änderungen der Liste).
     void rebuild();
+    /// Spalten des Look-Rasters (1 bis 16, Standard 4); baut das Raster neu. Löst columnsChanged nicht aus.
+    void setColumns(int columns);
+    [[nodiscard]] int columns() const { return columns_; }
     /// Gleicht Farben, Name und Balken mit dem Zustand des Players ab (jeden Frame; billig).
     void refresh();
 
@@ -90,6 +93,8 @@ Q_SIGNALS:
     void leaveRequested();
     /// Die Einstellungen wurden ein- oder ausgeblendet (Schaltfläche oben rechts oder setSettingsShown).
     void settingsToggled(bool shown);
+    /// Der Nutzer hat die Rasterbreite in den Einstellungen geändert.
+    void columnsChanged(int columns);
 
 private:
     [[nodiscard]] static QString styleFor(const QString& color);
@@ -122,6 +127,8 @@ private:
     QWidget* settingsBar_{nullptr};         // Hinweis und Zeile "Steuerung belegen", Standard: ausgeblendet
     QWidget* learnRow_{nullptr};            // gefüllt von setLearning
     bool settingsShown_{false};
+    int columns_{4};
+    QSpinBox* columnsBox_{nullptr};
 };
 
 }  // namespace whitehole::studio
