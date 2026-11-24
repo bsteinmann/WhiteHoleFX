@@ -114,7 +114,7 @@ Was schon da ist und was fehlt, nach Durchsicht von `wh_engine`, `wh_executor`, 
 ## 10. Offene Fragen an den Nutzer
 
 - **A (entschieden 24.11.):** Zwei wählbare Reihen (Projektion, LEDs, beide), siehe Abschnitt 3.
-- **B:** Reicht für die Temperatur zunächst NVIDIA (NVML), und ist „leer, wenn nicht verfügbar“ in Ordnung?
-- **C:** Darf der Kern zuerst als `whitehole_cli --benchmark` entstehen (lokal prüfbar), der Studio-Knopf danach?
+- **B (entschieden 24.11.):** Temperatur und Takt erstmal nur NVIDIA (NVML, zur Laufzeit geladen); bei anderen Karten bleibt die Spalte leer.
+- **C (entschieden 24.11.):** Ja: Kern zuerst Qt-frei mit `whitehole_cli --benchmark` (lokal prüfbar), der Studio-Knopf danach.
 - **D:** Welche Modelle: Schritt 1 (Zeitstempel, Abbruchlogik, Engine-Eingriff) mit Opus, Schritt 2 und 3 (Modi, Vergleich,
   Export, Ampel) mit Sonnet.
