@@ -2470,7 +2470,7 @@ msgstr "Стандартні значення нод"
 msgid "Node-Typ suchen …"
 msgstr "Знайти тип ноди …"
 
-#: main_window_editor.cpp:65
+#: main_window_editor.cpp:67
 msgid "Nodes"
 msgstr "Ноди"
 
@@ -3022,7 +3022,7 @@ msgstr "Стоп"
 msgid "Strenge &Eingänge"
 msgstr "Суворі &входи"
 
-#: main_window_editor.cpp:180
+#: main_window_editor.cpp:196
 msgid "Strenge Eingänge"
 msgstr "Суворі входи"
 

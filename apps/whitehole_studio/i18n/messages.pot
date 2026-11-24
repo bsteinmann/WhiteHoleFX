@@ -2470,7 +2470,7 @@ msgstr ""
 msgid "Node-Typ suchen …"
 msgstr ""
 
-#: main_window_editor.cpp:65
+#: main_window_editor.cpp:67
 msgid "Nodes"
 msgstr ""
 
@@ -3022,7 +3022,7 @@ msgstr ""
 msgid "Strenge &Eingänge"
 msgstr ""
 
-#: main_window_editor.cpp:180
+#: main_window_editor.cpp:196
 msgid "Strenge Eingänge"
 msgstr ""
 
