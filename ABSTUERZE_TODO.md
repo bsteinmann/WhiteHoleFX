@@ -289,3 +289,20 @@ ohne Ausgang → bekommt weiterhin den Ausgang. Undo-Test: Rückgängig stellt d
 - **Tests:** Catch2 in `tests/output/` (0 Pixel verschieben keine Adressen), Projektdatei-Rundlauf mit `skip-count 0`;
   Tooltip, `docs/output.md`, CHANGELOG, ggf. Übersetzungen (en/fr/es/uk).
 - **Verifizierung:** Qt-Teil nicht lokal prüfbar, nur über die CI (Rauchtest).
+
+## 11. Erledigt (Branch `fix/editor-einpassen-schleife`): Stillstand im Node-Editor, Beispiel techno (1.1.0, dreimal am 24.11.)
+
+Berichte 13:45:23, 13:47:20, 13:47:27 (Build `a8f82c684b`, Lauf 45375818178), laut Nutzer nur mit `examples/audio/techno.whfx`.
+Stapel: verzögerter Slot von `QAbstractScrollArea` (in Qt 6 `_q_showOrHideScrollBars`, per `rangeChanged` der Scrollbalken in die
+Warteschlange gestellt; die Namen `keyPressEvent+0x…` im Bericht sind nur nächstgelegene Exporte) → `layoutChildren` → neue
+Viewport-Größe → `NodeEditor::resizeEvent` (exe `+0x71ecf`) → `showAll` → `fitInView` ändert den Bereich → wieder `rangeChanged`.
+Bei einer Fenstergröße an der Grenze kippt ein Scrollbalken dabei jedes Mal um; die Warteschlange wird nie leer, der Herzschlag-Timer
+kommt nicht mehr dran. Behoben: Einpassen nur bei geänderter `maximumViewportSize()`. Die Dumps (`.dmp`) wurden mangels passender
+`.pdb` nicht ausgewertet; die Textberichte reichen für die Zuordnung.
+
+## 12. Beobachtung (nicht umgesetzt): falscher Stillstand beim Start (1.0.0, 23.11. 10:09:12)
+
+`MainWindow` → `restoreGeometry` → Fenster anlegen → Qt-Windows-Plugin → `Direct3DCreate9` → `NtGdiDdDDIGetDisplayModeList`:
+Der Grafiktreiber (Intel + NVIDIA, dazu der OBS-Haken `graphics-hook64.dll`) brauchte über 5 s für die Liste der Anzeigemodi.
+Kein Fehler im Programm; der Wächter läuft aber schon. Idee: `StallPause` um das erste Anlegen/Anzeigen des Hauptfensters.
+Erst nach Rückfrage beim Nutzer umsetzen.

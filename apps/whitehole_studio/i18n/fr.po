@@ -2470,7 +2470,7 @@ msgstr "Valeurs par défaut des nœuds"
 msgid "Node-Typ suchen …"
 msgstr "Chercher un type de nœud …"
 
-#: main_window_editor.cpp:65
+#: main_window_editor.cpp:67
 msgid "Nodes"
 msgstr "Nœuds"
 
@@ -3022,7 +3022,7 @@ msgstr "Stop"
 msgid "Strenge &Eingänge"
 msgstr "Entrées &strictes"
 
-#: main_window_editor.cpp:180
+#: main_window_editor.cpp:196
 msgid "Strenge Eingänge"
 msgstr "Entrées strictes"
 
