@@ -4,6 +4,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <functional>
+#include <optional>
 #include <span>
 
 #include "whitehole/core/result.hpp"
@@ -53,6 +54,10 @@ public:
     /// Callbacks laufen ausschließlich im Aufruf von poll(), also auf dem
     /// Thread, der poll() aufruft (der Engine-Thread).
     virtual void poll() = 0;
+
+    /// GPU-Laufzeit des zuletzt fertig gemessenen submit in Millisekunden; danach vergessen. nullopt, wenn das Gerät
+    /// keine Zeitstempel misst (Standard, siehe WebGpuOptions::timestamps) oder noch kein Wert da ist. Für den Benchmark.
+    [[nodiscard]] virtual std::optional<double> takeGpuMilliseconds() { return std::nullopt; }
 };
 
 }  // namespace whitehole::gpu

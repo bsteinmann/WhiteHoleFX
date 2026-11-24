@@ -5,6 +5,12 @@ wh_add_library(wh_runtime
     SOURCES
         src/graph_layout.cpp
         src/audio_usage.cpp
+        src/benchmark_gpu_target.cpp
+        src/benchmark_plan.cpp
+        src/benchmark_report.cpp
+        src/benchmark_runner.cpp
+        src/benchmark_sensors.cpp
+        src/benchmark_scenes.cpp
         src/dmx_usage.cpp
         src/dmx_output_usage.cpp
         src/dmx_listener.cpp
@@ -59,3 +65,4 @@ wh_add_library(wh_runtime
         wh_output
         wh_preview
         wh_project)
+target_link_libraries(wh_runtime PRIVATE ${CMAKE_DL_LIBS})  # NVML zur Laufzeit laden (benchmark_sensors.cpp)

@@ -23,6 +23,10 @@ const char* usageText() {
            "  --size <BxH>     Bildgröße der Vorschau, z. B. 1280x720 (Standard 960x540)\n"
            "  --list-nodes     alle Node-Typen auflisten und beenden\n"
            "  --describe-node <typ>  Ports, Parameter, Standardwerte und Auswahlfelder eines Node-Typs ausgeben\n"
+           "  --benchmark <r>  Leistungsmessung ohne Projekt und ohne Netzwerk: projection, leds oder both;\n"
+           "                   Ergebnis als Markdown-Tabelle (Strg+C bricht ab)\n"
+           "  --quick          mit --benchmark: Schnelltest mit drei Stufen statt vollem Lauf\n"
+           "  --out <datei>    mit --benchmark: Ergebnis zusätzlich speichern, .csv oder .md\n"
            "  --help           diese Hilfe\n";
 }
 
@@ -103,6 +107,24 @@ Result<Options> parseOptions(const std::vector<std::string>& args) {
                 return bad("--describe-node braucht eine Typ-ID, z. B. wh.generator.gradient");
             }
             options.describeNode = *value;
+        } else if (a == "--benchmark") {
+            const std::string* value = next();
+            if (value == nullptr || (*value != "projection" && *value != "leds" && *value != "both")) {
+                return bad("--benchmark braucht projection, leds oder both");
+            }
+            options.benchmark = *value;
+        } else if (a == "--quick") {
+            options.benchmarkQuick = true;
+        } else if (a == "--out") {
+            const std::string* value = next();
+            const auto endsWith = [&](const char* ext) {
+                const std::string e{ext};
+                return value->size() > e.size() && value->compare(value->size() - e.size(), e.size(), e) == 0;
+            };
+            if (value == nullptr || !(endsWith(".csv") || endsWith(".md"))) {
+                return bad("--out braucht einen Dateinamen mit .csv oder .md");
+            }
+            options.benchmarkOut = *value;
         } else if (a == "--size") {
             const std::string* value = next();
             if (value == nullptr) {
@@ -131,8 +153,14 @@ Result<Options> parseOptions(const std::vector<std::string>& args) {
             return bad("Zweite Projektdatei \"" + a + "\" angegeben");
         }
     }
+    if (options.benchmark.empty() && (options.benchmarkQuick || !options.benchmarkOut.empty())) {
+        return bad("--quick und --out gehören zu --benchmark");
+    }
+    if (!options.benchmark.empty() && !options.projectPath.empty()) {
+        return bad("--benchmark misst eingebaute Szenen und braucht keine Projektdatei");
+    }
     if (!options.help && !options.audioDevices && !options.listNodes && options.describeNode.empty() &&
-        options.projectPath.empty()) {
+        options.benchmark.empty() && options.projectPath.empty()) {
         return bad("Es fehlt die Projektdatei");
     }
     if (options.snapshotPath.empty() && (options.snapshotWidth != 960 || options.snapshotHeight != 540)) {

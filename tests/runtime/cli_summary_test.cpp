@@ -206,3 +206,21 @@ TEST_CASE("Bericht: Audio-Nodes werden erwähnt", "[cli][audio]") {
     REQUIRE(report.ok());
     CHECK(contains(report.value(), "Audio-Eingang: 2 Node(s)"));  // Tap Tempo braucht kein Audio
 }
+
+TEST_CASE("Kommandozeile: --benchmark, --quick und --out", "[cli][benchmark]") {
+    const cli::Options a = options({"--benchmark", "both"});
+    CHECK(a.benchmark == "both");
+    CHECK(a.projectPath.empty());  // braucht kein Projekt
+    CHECK_FALSE(a.benchmarkQuick);
+    const cli::Options b = options({"--benchmark", "leds", "--quick", "--out", "ergebnis.csv", "--software"});
+    CHECK(b.benchmarkQuick);
+    CHECK(b.benchmarkOut == "ergebnis.csv");
+    CHECK(options({"--benchmark", "projection", "--out", "x.md"}).benchmarkOut == "x.md");
+
+    CHECK(contains(optionError({"--benchmark"}), "projection, leds oder both"));
+    CHECK(contains(optionError({"--benchmark", "alles"}), "projection, leds oder both"));
+    CHECK(contains(optionError({"--benchmark", "both", "--out", "x.txt"}), ".csv oder .md"));
+    CHECK(contains(optionError({"--benchmark", "both", "--out"}), ".csv oder .md"));
+    CHECK(contains(optionError({"p.whfx", "--quick"}), "gehören zu --benchmark"));
+    CHECK(contains(optionError({"--benchmark", "both", "p.whfx"}), "braucht keine Projektdatei"));
+}

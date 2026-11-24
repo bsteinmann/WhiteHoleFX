@@ -272,3 +272,40 @@ TEST_CASE("Fehlerfälle bei Kopie und Readback", "[gpu_device]") {
     CHECK(device->writeBuffer(buf, 0, big).error().code == ErrorCode::InvalidArgument);
     CHECK(device->writeBuffer(BufferHandle{9999}, 0, std::span<const std::byte>{}).error().code == ErrorCode::NotFound);
 }
+
+TEST_CASE("WebGpuDevice: GPU-Zeitstempel nur auf Wunsch, Werte plausibel", "[gpu_device]") {
+    WebGpuOptions options;
+    options.timestamps = true;
+    auto made = WebGpuDevice::create(options);
+    if (!made.ok()) {
+        options.forceFallbackAdapter = true;
+        made = WebGpuDevice::create(options);
+    }
+    if (!made.ok()) {
+        SKIP("Kein WebGPU-Adapter verfügbar");
+    }
+    WebGpuDevice& device = *made.value();
+    INFO(device.adapterName() << " Treiber: " << device.driverInfo());
+    CHECK_FALSE(device.backendName().empty());
+    CHECK(device.deviceName().find(" [") == std::string::npos);
+    if (device.deviceName().find("Basic Render") != std::string::npos) {
+        CHECK_FALSE(device.measuresGpuTime());  // WARP: ohne diese Ausnahme stürzt wgpu-native beim Anlegen ab
+    }
+    if (!device.measuresGpuTime()) {
+        CHECK_FALSE(device.takeGpuMilliseconds().has_value());
+        SKIP("Adapter ohne Zeitstempel");
+    }
+    CHECK_FALSE(device.takeGpuMilliseconds().has_value());  // vor dem ersten Frame gibt es nichts; der Weg mit echten
+                                                            // Frames steckt in benchmark_on_device_test.cpp
+}
+
+TEST_CASE("allowsGpuTimestamps: nur der Software-Adapter von Windows ist ausgenommen", "[gpu_device]") {
+    CHECK_FALSE(allowsGpuTimestamps("DX12", true));  // D3D12/WARP: Absturz in wgpu-native beim Anlegen des Geräts
+    CHECK(allowsGpuTimestamps("DX12", false));       // echte Grafikkarte unter D3D12
+    CHECK(allowsGpuTimestamps("Vulkan", true));      // lavapipe
+    CHECK(allowsGpuTimestamps("OpenGL", true));      // llvmpipe
+    CHECK(allowsGpuTimestamps("Vulkan", false));
+    CHECK(allowsGpuTimestamps("OpenGL", false));
+    CHECK(allowsGpuTimestamps("Metal", false));
+    CHECK(allowsGpuTimestamps("", true));            // unbekannte Schnittstelle: wie bisher versuchen
+}

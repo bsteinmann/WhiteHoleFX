@@ -28,6 +28,7 @@ ausgeliefert, dann erscheint eine Zusammenfassung (Frames, verworfene Frames, Pa
 ```
 whitehole_cli --list-nodes                  # alle Node-Typen, nach Kategorie
 whitehole_cli --describe-node wh.generator.noise     # Ports, Parameter (mit Bereich, Standard, Auswahl) eines Typs
+whitehole_cli --benchmark both --quick              # Leistungsmessung ohne Projekt, siehe benchmark.md
 ```
 
 So findest du beim Schreiben einer `.whfx`-Datei von Hand die Typnamen, Port- und Parameterschlüssel

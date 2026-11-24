@@ -26,6 +26,9 @@ struct Options {
     std::string snapshotPath;             // PNG der LEDs (bei --check: des Layouts)
     std::uint32_t snapshotWidth{960};
     std::uint32_t snapshotHeight{540};
+    std::string benchmark;           // --benchmark projection|leds|both; leer = kein Benchmark (braucht kein Projekt)
+    bool benchmarkQuick{false};      // --quick: Schnelltest statt vollem Lauf
+    std::string benchmarkOut;        // --out <datei.csv|datei.md>: Ergebnis zusätzlich als Datei
 };
 
 /// Fehler: InvalidArgument mit einer Meldung, die auf die Hilfe verweist.

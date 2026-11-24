@@ -12,6 +12,7 @@
 #include <iostream>
 #include <thread>
 
+#include "cli_benchmark.hpp"
 #include "cli_options.hpp"
 #include "whitehole/audio/audio_input.hpp"
 #include "whitehole/engine/frame_clocks.hpp"
@@ -268,6 +269,11 @@ int main(int argc, char** argv) {
         }
         std::cout << text.value();
         return 0;
+    }
+    if (!options.value().benchmark.empty()) {
+        std::signal(SIGINT, onSignal);
+        std::signal(SIGTERM, onSignal);
+        return cli::runBenchmarkCommand(options.value(), *library.value(), gStop);
     }
     const auto text = project::readTextFile(options.value().projectPath);
     if (!text.ok()) {

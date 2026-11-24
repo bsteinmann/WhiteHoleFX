@@ -78,6 +78,7 @@ bool waitFor(WebGpuDevice::Impl& impl, const Request& request) {
 }  // namespace
 
 WebGpuDevice::Impl::~Impl() {
+    releaseTimestamps(*this);  // zuerst: ein später Map-Rückruf zeigt auf `timestamps`, das bis zum Ende lebt
     for (auto& [id, entry] : pipelines) {
         for (WGPUBindGroupLayout layout : entry.layouts) {
             wgpuBindGroupLayoutRelease(layout);
@@ -133,6 +134,37 @@ const std::string& WebGpuDevice::adapterName() const noexcept {
     return impl_->adapterName;
 }
 
+const std::string& WebGpuDevice::deviceName() const noexcept {
+    return impl_->deviceName;
+}
+
+const std::string& WebGpuDevice::driverInfo() const noexcept {
+    return impl_->driver;
+}
+
+std::string_view backendLabel(WGPUBackendType type) noexcept {
+    switch (type) {
+        case WGPUBackendType_Vulkan: return "Vulkan";
+        case WGPUBackendType_OpenGL:
+        case WGPUBackendType_OpenGLES: return "OpenGL";
+        case WGPUBackendType_D3D12: return "DX12";
+        case WGPUBackendType_Metal: return "Metal";
+        default: return {};
+    }
+}
+
+std::string WebGpuDevice::backendName() const {
+    return std::string{backendLabel(impl_->backendType)};
+}
+
+bool WebGpuDevice::measuresGpuTime() const noexcept {
+    return impl_->timestamps.querySet != nullptr;
+}
+
+std::optional<double> WebGpuDevice::takeGpuMilliseconds() {
+    return std::exchange(impl_->timestamps.lastMs, std::nullopt);
+}
+
 std::vector<std::string> WebGpuDevice::takeErrors() {
     return impl_->drainErrors();
 }
@@ -184,6 +216,12 @@ Result<std::unique_ptr<WebGpuDevice::Impl>> openImpl(const WebGpuOptions& option
         }
         impl->deviceName = impl->adapterName;
         impl->backendType = info.backendType;
+        impl->softwareAdapter =
+            info.adapterType == WGPUAdapterType_CPU || impl->deviceName.find("Basic Render") != std::string::npos;
+        impl->driver = toString(info.description);
+        if (impl->driver == impl->deviceName) {
+            impl->driver.clear();  // manche Backends wiederholen hier nur den Namen
+        }
         switch (info.backendType) {
             case WGPUBackendType_Vulkan: impl->adapterName += " [Vulkan]"; break;
             case WGPUBackendType_OpenGL:
@@ -197,6 +235,13 @@ Result<std::unique_ptr<WebGpuDevice::Impl>> openImpl(const WebGpuOptions& option
 
     DeviceRequest deviceRequest;
     WGPUDeviceDescriptor deviceDesc{};
+    const WGPUFeatureName timestampFeature = WGPUFeatureName_TimestampQuery;
+    const bool timestamps = options.timestamps && allowsGpuTimestamps(backendLabel(impl->backendType), impl->softwareAdapter) &&
+                            wgpuAdapterHasFeature(impl->adapter, timestampFeature) != 0;
+    if (timestamps) {
+        deviceDesc.requiredFeatureCount = 1;
+        deviceDesc.requiredFeatures = &timestampFeature;
+    }
     deviceDesc.label = view(options.label);
     deviceDesc.uncapturedErrorCallbackInfo.callback = onUncapturedError;
     deviceDesc.uncapturedErrorCallbackInfo.userdata1 = impl.get();
@@ -216,6 +261,9 @@ Result<std::unique_ptr<WebGpuDevice::Impl>> openImpl(const WebGpuOptions& option
     }
     impl->device = deviceRequest.device;
     impl->queue = wgpuDeviceGetQueue(impl->device);
+    if (timestamps) {
+        (void)setupTimestamps(*impl);  // ohne Query-Set misst das Gerät einfach keine GPU-Zeit
+    }
 
     return impl;
 }
@@ -286,6 +334,7 @@ Result<std::unique_ptr<WebGpuDevice>> WebGpuDevice::create(const WebGpuOptions& 
 void WebGpuDevice::poll() {
     Impl& impl = *impl_;
     impl.pump(false);
+    pollTimestamps(impl);
 
     // Abgeschlossene Readbacks ausliefern. Der Callback der Bibliothek hat nur den Status
     // gesetzt; die Nutzer-Callbacks laufen hier, außerhalb der Bibliotheksaufrufe.
