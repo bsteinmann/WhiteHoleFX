@@ -137,6 +137,7 @@ add_executable(wh_tests
     runtime/operator_controls_test.cpp
     runtime/node_preset_test.cpp
     runtime/benchmark_test.cpp
+    runtime/benchmark_gpu_target_test.cpp
     runtime/benchmark_report_test.cpp
     runtime/live_decks_test.cpp
     runtime/live_bindings_test.cpp
@@ -198,6 +199,7 @@ if(TARGET wh_gpu_webgpu)
         gpu_device/node_catalog_on_device_test.cpp
         gpu_device/generators1d_on_device_test.cpp
         gpu_device/spectrum_on_device_test.cpp
+        gpu_device/benchmark_on_device_test.cpp
         gpu_device/node_patterns_on_device_test.cpp
         gpu_device/spark_nodes_on_device_test.cpp
         gpu_device/maze_node_on_device_test.cpp

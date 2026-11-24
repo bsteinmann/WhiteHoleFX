@@ -5,9 +5,11 @@ wh_add_library(wh_runtime
     SOURCES
         src/graph_layout.cpp
         src/audio_usage.cpp
+        src/benchmark_gpu_target.cpp
         src/benchmark_plan.cpp
         src/benchmark_report.cpp
         src/benchmark_runner.cpp
+        src/benchmark_scenes.cpp
         src/dmx_usage.cpp
         src/dmx_output_usage.cpp
         src/dmx_listener.cpp
