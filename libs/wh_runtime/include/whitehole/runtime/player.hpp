@@ -433,7 +433,8 @@ public:
     void setLiveClock(std::function<double()> clock) { liveClock_ = std::move(clock); }
 
     /// Look-Auswahl im Live-Betrieb per DMX-Kanal (siehe live_dmx.hpp): Solange Pakete kommen, löst jeder step()
-    /// bei einem Wechsel des berechneten Look-Index liveTrigger aus. `std::nullopt` schaltet es ab. Gehört wie
+    /// bei einem Wechsel des berechneten Look-Index liveTrigger aus; bei laufender Cuelist springt der Kanal stattdessen
+    /// zu dem Cue (cueFire), den der Wert wählt (Stufen über die Cue-Zahl). `std::nullopt` schaltet es ab. Gehört wie
     /// der Master zum Auftritt, nicht zum Projekt: wird nicht gespeichert.
     void setLiveDmx(std::optional<LiveDmxSource> source);
     [[nodiscard]] const std::optional<LiveDmxSource>& liveDmx() const noexcept { return liveDmx_; }
@@ -618,6 +619,7 @@ private:
     std::optional<LiveDmxSource> liveDmx_;
     bool liveDmxLive_{false};
     std::optional<int> liveDmxLastIndex_;
+    bool liveDmxCueMode_{false};  // der Auswahl-Kanal bezog sich zuletzt auf Cues (Cuelist läuft), nicht auf Looks
     std::vector<int> flashHeld_;  // gedrückte Flash-Looks (liveDown), zuletzt gedrückter hinten
     int flashReturn_{-1};         // Look, zu dem das Loslassen des letzten Flash-Looks zurückkehrt
     void clearFlash() noexcept { flashHeld_.clear(); flashReturn_ = -1; }

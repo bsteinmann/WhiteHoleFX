@@ -346,3 +346,92 @@ TEST_CASE("APC live: Flash-Looks leuchten rot, aktiv grün", "[midi][midi_live]"
     rig.frame();
     CHECK(rig.leds()[57] == 1);  // gehalten und aktiv: grün
 }
+
+namespace {
+
+// Drei Cues auf die drei Looks; "Zwei" mit Delay, damit das Blinken im Delay sichtbar wird.
+std::vector<project::Cue> cueList() {
+    project::Cue a;
+    a.name = "A";
+    a.look = "Eins";
+    a.fade = 0.0;
+    project::Cue b;
+    b.name = "B";
+    b.look = "Zwei";
+    b.fade = 0.5;
+    b.delay = 1.0;
+    project::Cue c;
+    c.name = "C";
+    c.look = "Drei";
+    c.fade = 0.0;
+    return {a, b, c};
+}
+
+}  // namespace
+
+TEST_CASE("APC Cuelist: Pads springen zu Cues, die Look-Pads schalten nicht mehr direkt", "[midi][midi_live][cues]") {
+    Rig rig;
+    REQUIRE(rig.player.setCues(cueList()).ok());
+    REQUIRE(rig.player.cuesStart().ok());
+    REQUIRE(rig.player.step().ok());
+    rig.frame();
+    CHECK(rig.player.cueStatus().current == 0);
+    CHECK(rig.leds()[56] == 1);   // Cue 1 aktuell: grün
+    CHECK(rig.leds()[57] == 6);   // Cue 2 ist der nächste: gelb blinkend
+    CHECK(rig.leds()[58] == 5);   // Cue 3 belegt: gelb
+    CHECK(rig.leds()[82] == 2);   // GO blinkt: es gibt einen nächsten Cue
+
+    rig.pad(2);  // Sprung zu Cue 3 (überspringt Cue 2), ohne Delay
+    rig.frame();
+    CHECK(rig.player.cueStatus().current == 2);
+    rig.frame();
+    CHECK(rig.player.liveStatus().current == 2);  // Look "Drei" über den Cue-Ablauf
+    rig.frame();
+    CHECK(rig.leds()[58] == 1);
+    CHECK(rig.leds()[56] == 5);
+    CHECK(rig.leds()[82] == 0);   // kein nächster Cue mehr: GO aus
+
+    rig.pad(0);   // und zurück zu Cue 1: rückwärts springen geht
+    rig.frame();
+    CHECK(rig.player.cueStatus().current == 0);
+    rig.pad(5);   // nur drei Cues
+    rig.frame();
+    CHECK(rig.player.cueStatus().current == 0);
+}
+
+TEST_CASE("APC Cuelist: ein Cue mit Delay blinkt grün, GO löst den nächsten Cue aus", "[midi][midi_live][cues]") {
+    Rig rig;
+    REQUIRE(rig.player.setCues(cueList()).ok());
+    REQUIRE(rig.player.cuesStart().ok());
+    REQUIRE(rig.player.step().ok());
+    rig.frame();
+
+    rig.library->midi->apply(midi::noteOn(0, 82, 127));  // GO: Cue 2 (Delay 1 s)
+    rig.frame();
+    CHECK(rig.player.cueStatus().current == 1);
+    CHECK(rig.player.cueStatus().pending == 1);
+    rig.frame();
+    CHECK(rig.leds()[57] == 2);  // wartet im Delay: grün blinkend
+    CHECK(rig.player.liveStatus().armed == -1);  // der Look ist noch nicht geladen: GO ging an den Cue-Ablauf, nicht an liveGo
+
+    rig.clock = 1.2;
+    rig.frame();
+    rig.frame();
+    CHECK(rig.player.liveStatus().fading);
+    CHECK(rig.player.liveStatus().incoming == 1);
+    CHECK(rig.leds()[57] == 1);  // Cue 2 läuft: grün
+}
+
+TEST_CASE("APC Cuelist: nach dem Stopp rufen die Pads wieder Looks ab", "[midi][midi_live][cues]") {
+    Rig rig;
+    REQUIRE(rig.player.setCues(cueList()).ok());
+    REQUIRE(rig.player.cuesStart().ok());
+    REQUIRE(rig.player.step().ok());
+    rig.player.cuesStop();
+    rig.frame();
+    rig.pad(1);
+    rig.frame();
+    CHECK(rig.player.liveStatus().fading);
+    CHECK(rig.player.liveStatus().incoming == 1);
+    CHECK(rig.player.cueStatus().current == -1);
+}

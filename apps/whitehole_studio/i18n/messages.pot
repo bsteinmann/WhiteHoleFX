@@ -126,11 +126,11 @@ msgstr ""
 msgid "%1 (Profil)"
 msgstr ""
 
-#: settings_dialog.cpp:218
+#: settings_dialog.cpp:220
 msgid "%1 (Standard)"
 msgstr ""
 
-#: midi_settings_page.cpp:34 settings_dialog.cpp:52 settings_dialog.cpp:222
+#: midi_settings_page.cpp:34 settings_dialog.cpp:52 settings_dialog.cpp:224
 msgid "%1 (nicht gefunden)"
 msgstr ""
 
@@ -682,11 +682,11 @@ msgstr ""
 msgid "Auf gewählten anwenden"
 msgstr ""
 
-#: settings_dialog.cpp:253
+#: settings_dialog.cpp:255
 msgid "Aufnahmegeräte lassen sich nicht auflisten: %1"
 msgstr ""
 
-#: live_controls_page.cpp:77 midi_settings_page.cpp:27 settings_dialog.cpp:204
+#: live_controls_page.cpp:77 midi_settings_page.cpp:27 settings_dialog.cpp:206
 msgid "Aus"
 msgstr ""
 
@@ -1039,7 +1039,7 @@ msgid "Der Ausgang: Was hier ankommt, wird auf die LEDs gesendet. Mit „Mode“
 msgstr ""
 
 #: settings_dialog.cpp:193
-msgid "Der Auswahl-Kanal teilt sich in so viele gleich große Stufen, wie das Projekt Looks hat; 0 heißt kein Wechsel. Ohne Überblendzeit-Kanal (aus) gilt die im Look gespeicherte Zeit, sonst setzt der Kanalwert 0 bis 255 die Zeit auf 0 bis 10 Sekunden. Wirkt nur im laufenden Live-Betrieb; bleibt das Signal weg, bleibt der zuletzt gezeigte Look stehen."
+msgid "Der Auswahl-Kanal teilt sich in so viele gleich große Stufen, wie das Projekt Looks hat; 0 heißt kein Wechsel. Ohne Überblendzeit-Kanal (aus) gilt die im Look gespeicherte Zeit, sonst setzt der Kanalwert 0 bis 255 die Zeit auf 0 bis 10 Sekunden. Läuft die Cuelist, springt derselbe Kanal stattdessen direkt zu einem Cue (Stufen = Zahl der Cues, der Cue behält seine eigene Verzögerung und Überblendzeit). Wirkt nur im laufenden Live-Betrieb; bleibt das Signal weg, bleibt der zuletzt gezeigte Look stehen."
 msgstr ""
 
 #: dmx_patch_table.cpp:51
@@ -1114,7 +1114,7 @@ msgstr ""
 msgid "Die Prüfung ist fehlgeschlagen:\n%1"
 msgstr ""
 
-#: settings_dialog.cpp:257
+#: settings_dialog.cpp:259
 msgid "Die Quelle speist die Audio-Nodes (Pegel, Frequenzband, Beat, Spektrum)."
 msgstr ""
 
@@ -1670,7 +1670,7 @@ msgstr ""
 msgid "Gelb"
 msgstr ""
 
-#: settings_dialog.cpp:206
+#: settings_dialog.cpp:208
 msgid "Gerät:"
 msgstr ""
 
@@ -1922,7 +1922,7 @@ msgstr ""
 msgid "Kein Ziel (freies Rechteck)"
 msgstr ""
 
-#: settings_dialog.cpp:255
+#: settings_dialog.cpp:257
 msgid "Keine Aufnahmegeräte gefunden. Ein Audio-Interface anschließen und das Fenster neu öffnen."
 msgstr ""
 
@@ -2986,7 +2986,7 @@ msgstr ""
 msgid "Stage Config"
 msgstr ""
 
-#: settings_dialog.cpp:205
+#: settings_dialog.cpp:207
 msgid "Standardgerät des Systems"
 msgstr ""
 
@@ -3270,15 +3270,15 @@ msgstr ""
 msgid "Vorweg überspringen"
 msgstr ""
 
-#: settings_dialog.cpp:207
+#: settings_dialog.cpp:209
 msgid "WAV-Datei in Schleife:"
 msgstr ""
 
-#: settings_dialog.cpp:266
+#: settings_dialog.cpp:268
 msgid "WAV-Datei wählen"
 msgstr ""
 
-#: settings_dialog.cpp:266
+#: settings_dialog.cpp:268
 msgid "WAV-Dateien (*.wav)"
 msgstr ""
 
@@ -3434,7 +3434,7 @@ msgstr ""
 msgid "Wähle zuerst einen Controller in der Tabelle."
 msgstr ""
 
-#: settings_dialog.cpp:210
+#: settings_dialog.cpp:212
 msgid "Wählen …"
 msgstr ""
 

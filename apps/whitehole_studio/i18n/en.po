@@ -126,11 +126,11 @@ msgstr "%1 (%2)"
 msgid "%1 (Profil)"
 msgstr "%1 (profile)"
 
-#: settings_dialog.cpp:218
+#: settings_dialog.cpp:220
 msgid "%1 (Standard)"
 msgstr "%1 (default)"
 
-#: midi_settings_page.cpp:34 settings_dialog.cpp:52 settings_dialog.cpp:222
+#: midi_settings_page.cpp:34 settings_dialog.cpp:52 settings_dialog.cpp:224
 msgid "%1 (nicht gefunden)"
 msgstr "%1 (not found)"
 
@@ -682,11 +682,11 @@ msgstr "Drag onto the canvas: add a node.\nDrag a node here: remove it."
 msgid "Auf gewählten anwenden"
 msgstr "Apply to selected"
 
-#: settings_dialog.cpp:253
+#: settings_dialog.cpp:255
 msgid "Aufnahmegeräte lassen sich nicht auflisten: %1"
 msgstr "Cannot list capture devices: %1"
 
-#: live_controls_page.cpp:77 midi_settings_page.cpp:27 settings_dialog.cpp:204
+#: live_controls_page.cpp:77 midi_settings_page.cpp:27 settings_dialog.cpp:206
 msgid "Aus"
 msgstr "Off"
 
@@ -1039,8 +1039,8 @@ msgid "Der Ausgang: Was hier ankommt, wird auf die LEDs gesendet. Mit „Mode“
 msgstr "The output: whatever arrives here is sent to the LEDs. \"Mode\" scales into an area or cuts a window; plus brightness."
 
 #: settings_dialog.cpp:193
-msgid "Der Auswahl-Kanal teilt sich in so viele gleich große Stufen, wie das Projekt Looks hat; 0 heißt kein Wechsel. Ohne Überblendzeit-Kanal (aus) gilt die im Look gespeicherte Zeit, sonst setzt der Kanalwert 0 bis 255 die Zeit auf 0 bis 10 Sekunden. Wirkt nur im laufenden Live-Betrieb; bleibt das Signal weg, bleibt der zuletzt gezeigte Look stehen."
-msgstr "The select channel divides into as many equal steps as the project has looks; 0 means no change. Without a fade-time channel (off), the look's own fade time applies; otherwise the channel value 0 to 255 sets the time to 0 to 10 seconds. Only works while live mode is running; if the signal disappears, the last shown look stays."
+msgid "Der Auswahl-Kanal teilt sich in so viele gleich große Stufen, wie das Projekt Looks hat; 0 heißt kein Wechsel. Ohne Überblendzeit-Kanal (aus) gilt die im Look gespeicherte Zeit, sonst setzt der Kanalwert 0 bis 255 die Zeit auf 0 bis 10 Sekunden. Läuft die Cuelist, springt derselbe Kanal stattdessen direkt zu einem Cue (Stufen = Zahl der Cues, der Cue behält seine eigene Verzögerung und Überblendzeit). Wirkt nur im laufenden Live-Betrieb; bleibt das Signal weg, bleibt der zuletzt gezeigte Look stehen."
+msgstr "The select channel divides into as many equal steps as the project has looks; 0 means no change. Without a fade-time channel (off), the look's own fade time applies; otherwise the channel value 0 to 255 sets the time to 0 to 10 seconds. While the cue list is running, the same channel instead jumps straight to a cue (steps = number of cues; the cue keeps its own delay and fade time). Only works while live mode is running; if the signal disappears, the last shown look stays."
 
 #: dmx_patch_table.cpp:51
 msgid "Der Controller bestimmt das Protokoll. Pool-Kanäle ohne Patch werden nicht gesendet."
@@ -1114,7 +1114,7 @@ msgstr "The brightness of the mask decides how much of the content is visible. \
 msgid "Die Prüfung ist fehlgeschlagen:\n%1"
 msgstr "The check failed:\n%1"
 
-#: settings_dialog.cpp:257
+#: settings_dialog.cpp:259
 msgid "Die Quelle speist die Audio-Nodes (Pegel, Frequenzband, Beat, Spektrum)."
 msgstr "The source feeds the audio nodes (level, frequency band, beat, spectrum)."
 
@@ -1670,7 +1670,7 @@ msgstr "Loaded: %1"
 msgid "Gelb"
 msgstr "Yellow"
 
-#: settings_dialog.cpp:206
+#: settings_dialog.cpp:208
 msgid "Gerät:"
 msgstr "Device:"
 
@@ -1922,7 +1922,7 @@ msgstr "No signal on this universe."
 msgid "Kein Ziel (freies Rechteck)"
 msgstr "No target (free rectangle)"
 
-#: settings_dialog.cpp:255
+#: settings_dialog.cpp:257
 msgid "Keine Aufnahmegeräte gefunden. Ein Audio-Interface anschließen und das Fenster neu öffnen."
 msgstr "No capture devices found. Connect an audio interface and reopen the window."
 
@@ -2986,7 +2986,7 @@ msgstr "Language"
 msgid "Stage Config"
 msgstr "Stage Config"
 
-#: settings_dialog.cpp:205
+#: settings_dialog.cpp:207
 msgid "Standardgerät des Systems"
 msgstr "System default device"
 
@@ -3270,15 +3270,15 @@ msgstr "Split preview"
 msgid "Vorweg überspringen"
 msgstr "Skip before"
 
-#: settings_dialog.cpp:207
+#: settings_dialog.cpp:209
 msgid "WAV-Datei in Schleife:"
 msgstr "WAV file in a loop:"
 
-#: settings_dialog.cpp:266
+#: settings_dialog.cpp:268
 msgid "WAV-Datei wählen"
 msgstr "Choose WAV file"
 
-#: settings_dialog.cpp:266
+#: settings_dialog.cpp:268
 msgid "WAV-Dateien (*.wav)"
 msgstr "WAV files (*.wav)"
 
@@ -3434,7 +3434,7 @@ msgstr "Select fixtures in the list first."
 msgid "Wähle zuerst einen Controller in der Tabelle."
 msgstr "Select a controller in the table first."
 
-#: settings_dialog.cpp:210
+#: settings_dialog.cpp:212
 msgid "Wählen …"
 msgstr "Choose …"
 

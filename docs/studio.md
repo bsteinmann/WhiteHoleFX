@@ -631,8 +631,13 @@ Stufen passt sich der Look-Zahl an, es gibt also keine feste Tabelle). Ohne Übe
 gespeicherte Zeit; mit Kanal setzt der Wert 0 bis 255 die Zeit auf 0 bis 10 Sekunden. Ausgelöst wird nur bei einem
 Wechsel des Werts, nicht auf jedem Frame erneut, damit eine laufende Überblendung nicht ständig von vorn beginnt;
 bleibt das Signal länger als 5 Sekunden weg, bleibt der zuletzt gezeigte Look stehen. Wirkt nur, solange der
-Live-Betrieb läuft (siehe oben); außerhalb davon passiert nichts. Noch offen (zweiter Teil desselben
-Backlog-Punkts): per DMX in der Cuelist direkt zu einem bestimmten Cue springen, nicht nur linear vor/zurück.
+Live-Betrieb läuft (siehe oben); außerhalb davon passiert nichts.
+**Cue-Sprung:** Läuft die Cuelist (Cues → Start), wählt derselbe Auswahl-Kanal stattdessen direkt einen Cue
+(Stufen = Zahl der Cues, 0 = kein Wechsel); der Cue behält seine eigene Verzögerung und Überblendzeit, der
+Überblendzeit-Kanal gilt dann nicht. Beim Umschalten zwischen Looks und Cuelist übernimmt das Studio den
+aktuellen Kanalwert, ohne sofort auszulösen. Auf dem MIDI-Controller feuern die Pads in diesem Modus Cues
+(Pad n = Cue n), GO ruft den nächsten Cue auf, und die LEDs zeigen den Cue-Stand (aktueller Cue grün, in
+Verzögerung grün blinkend, nächster Cue gelb blinkend, übrige gelb).
 
 **Fenster „DMX-Monitor" (nachträglich freigegebene Erweiterung):** Ansicht → DMX-Monitor (F6) öffnet ein
 eigenes, nicht-modales Fenster mit den Reitern „Eingang" und „Ausgang" — nach demselben Muster wie „Stage
