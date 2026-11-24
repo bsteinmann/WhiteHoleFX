@@ -197,13 +197,14 @@ void MidiLiveController::updateLeds(bool live) {
             if (!note) {
                 break;
             }
-            midi::PadLed led = midi::PadLed::Off;
-            if (status.fading && i == status.incoming) {
-                led = midi::PadLed::Yellow;
+            // belegt gelb, Flash-Look rot, vorgeladen gelb blinkend, aktiv (auch einblendend) grün
+            midi::PadLed led = player_.looks()[static_cast<std::size_t>(i)].trigger == project::LookTrigger::Flash
+                                   ? midi::PadLed::Red
+                                   : midi::PadLed::Yellow;
+            if ((status.fading && i == status.incoming) || i == status.current) {
+                led = midi::PadLed::Green;
             } else if (i == status.armed) {
                 led = midi::PadLed::YellowBlink;
-            } else if (i == status.current) {
-                led = midi::PadLed::Green;
             }
             wanted[*note] = static_cast<int>(led);
         }

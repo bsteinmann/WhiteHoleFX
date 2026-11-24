@@ -32,7 +32,7 @@ MIDI-Nodes lesen sie weiter). Dafür muss unter Einstellungen → MIDI der Einga
 
 - **Pads → Looks:** Raster wie im Live-Fenster, erste Zeile oben (Look 1 = Pad links oben). Ein Druck blendet zum Look über; mit
   „Mit GO“ im Live-Fenster lädt er ihn nur vor. Pads ohne Look tun nichts.
-- **LEDs:** grün = läuft, gelb blinkend = vorgeladen, gelb = blendet gerade ein, sonst aus. Gesendet wird nur, was sich ändert; beim
+- **LEDs:** gelb = belegt, grün = läuft (auch beim Einblenden), gelb blinkend = vorgeladen, rot = Flash-Look (nicht aktiv); ohne Look bleibt das Pad aus. Gesendet wird nur, was sich ändert; beim
   Verlassen des Live-Modus und beim Beenden des Programms gehen alle aus.
 - **Tasten** (Profil „Looks 4 x 8 mit GO und Fadern“): Seitentaste 1 (oben) = GO (blinkt, wenn etwas vorgeladen ist), Seitentaste 2 =
   Live beenden (leuchtet im Live-Modus).

@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- **APC-mini-LEDs neu belegt.** Belegtes Pad gelb, aktiver Look grün (auch beim Einblenden), Flash-Look rot, vorgeladener Look gelb blinkend. Vorher war ein belegtes, nicht aktives Pad aus. Tests: `tests/runtime/midi_live_test.cpp`.
 - **Live-Fenster: Rasterbreite einstellbar.** Bei mehr als 16 Looks wurden die Knöpfe ab der fünften Zeile abgeschnitten. Das Raster liegt jetzt in einem Scrollbereich, und die Spaltenzahl (1 bis 16, Standard 4) stellst du unter „Einstellungen“ im Live-Fenster ein (wird beim Nutzer gespeichert, nicht im Projekt). Das Live-Fenster bekommt zwei Drittel der Höhe, die Vorschau darüber wird kleiner.
 - **MIDI, Stufe 1: Grundlage (noch ohne Nodes und ohne APC-Belegung).** Neue Bibliothek `wh_midi`: `MidiStore` (letzter Stand von
   Reglern und Noten, begrenzte Ereignisliste), `MidiReceiver`, Geräteschnittstelle `IMidiInput`/`IMidiOutput` und Portsuche über
