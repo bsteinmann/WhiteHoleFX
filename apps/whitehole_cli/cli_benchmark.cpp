@@ -27,6 +27,7 @@ int runBenchmarkCommand(const Options& options, const nodes::BuiltinLibrary& lib
     gpu::WebGpuOptions gpuOptions;
     gpuOptions.forceFallbackAdapter = options.software;
     gpuOptions.label = "WhiteHoleFX Benchmark";
+    gpuOptions.timestamps = true;
     auto device = gpu::WebGpuDevice::create(gpuOptions);
     if (!device.ok()) {
         std::cerr << "Fehler: " << device.error().message << "\n";
@@ -36,7 +37,8 @@ int runBenchmarkCommand(const Options& options, const nodes::BuiltinLibrary& lib
                                    : options.benchmark == "leds"     ? BenchmarkSeries::Leds
                                                                      : BenchmarkSeries::Both;
     const auto plan = benchmarkPlan(series, options.benchmarkQuick ? BenchmarkMode::Quick : BenchmarkMode::Full);
-    std::cerr << "GPU-Adapter: " << device.value()->adapterName() << (options.software ? " (Software)" : "") << "\n"
+    std::cerr << "GPU-Adapter: " << device.value()->adapterName() << (options.software ? " (Software)" : "")
+              << (device.value()->measuresGpuTime() ? "" : ", ohne GPU-Zeitstempel") << "\n"
               << "Benchmark: " << plan.size() << " Stufen, je etwa 12 s (Strg+C bricht ab).\n";
 
     GpuBenchmarkTarget target{*device.value(), library};
@@ -49,7 +51,8 @@ int runBenchmarkCommand(const Options& options, const nodes::BuiltinLibrary& lib
     const BenchmarkLimits limits;
     const BenchmarkRun run = runBenchmark(plan, target, limits, hooks);
 
-    const BenchmarkSystemInfo info{device.value()->adapterName(), "", "", WH_VERSION, WH_BUILD_ID};
+    const BenchmarkSystemInfo info{device.value()->deviceName(), device.value()->backendName(),
+                                   device.value()->driverInfo(), WH_VERSION, WH_BUILD_ID};
     std::cout << benchmarkMarkdown(run, info, limits);
     if (!options.benchmarkOut.empty()) {
         const bool csv = options.benchmarkOut.size() > 4 &&

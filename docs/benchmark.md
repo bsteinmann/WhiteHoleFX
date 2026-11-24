@@ -36,8 +36,9 @@ Shader dann übersetzt werden), etwa 10 s Messen, mindestens fünf Frames.
 
 ## Ergebnis
 
-Markdown-Tabelle (zum Einfügen in ein Issue) oder CSV, mit Gerät, Programmversion und Commit. Spalten: Median, 95. Perzentil,
-CPU-Zeit (Aufzeichnen, Einreichen, CPU-Nodes) und GPU-Zeit (noch leer, die Zeitstempel folgen). Darunter je Reihe die größte
+Markdown-Tabelle (zum Einfügen in ein Issue) oder CSV, mit Gerät, Grafikschnittstelle, Treiber, Programmversion und Commit. Spalten: Median, 95. Perzentil,
+CPU-Zeit (Aufzeichnen, Einreichen, CPU-Nodes) und GPU-Zeit (über Zeitstempel-Abfragen der GPU, vom Anfang des ersten bis
+zum Ende des letzten Compute-Passes eines Frames; leer, wenn Adapter oder Treiber keine Zeitstempel kann). Darunter je Reihe die größte
 Stufe, bei der jede Szene stabil lief (95. Perzentil unter 33 ms, nicht am Limit).
 
 Kennzeichen in der Spalte Ergebnis: `ok`, `over` (über Grenze), `skipped` (übersprungen), `not-run` (Lauf vorher

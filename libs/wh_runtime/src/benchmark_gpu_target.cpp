@@ -15,6 +15,7 @@ namespace whitehole::runtime {
 namespace {
 
 using Clock = std::chrono::steady_clock;
+constexpr int kGpuTimePolls = 50;  // Geräte ohne Zeitstempel kostet das nur ein paar leere poll()-Aufrufe
 
 double msSince(Clock::time_point start) {
     return std::chrono::duration<double, std::milli>(Clock::now() - start).count();
@@ -141,6 +142,7 @@ Result<BenchmarkFrame> GpuBenchmarkTarget::frame() {
     time.time = Seconds{seconds_};
     time.delta = Seconds{1.0 / 30.0};
     seconds_ += 1.0 / 30.0;  // Szenen laufen wie bei 30 fps weiter, unabhängig von der gemessenen Zeit
+    (void)device_.takeGpuMilliseconds();  // ein verspäteter Wert des vorigen Frames gehört nicht zu diesem
     const auto submitted = device_.submit([&](gpu::ICommandRecorder& recorder) {
         if (canvas_) {
             canvas_->record(time, recorder);
@@ -188,6 +190,13 @@ Result<BenchmarkFrame> GpuBenchmarkTarget::frame() {
         return *pending->error;
     }
     result.totalMs = msSince(start);
+    // Die Zeitstempel werden nach dem Frame gemappt; meist sind sie mit dem Readback fertig, sonst kurz nachfragen.
+    for (int i = 0; i < kGpuTimePolls; ++i) {
+        if ((result.gpuMs = device_.takeGpuMilliseconds())) {
+            break;
+        }
+        device_.poll();
+    }
     return result;
 }
 

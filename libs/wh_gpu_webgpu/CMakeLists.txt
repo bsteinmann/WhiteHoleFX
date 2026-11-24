@@ -31,6 +31,7 @@ wh_add_library(wh_gpu_webgpu
         src/webgpu_convert.cpp
         src/webgpu_device.cpp
         src/webgpu_resources.cpp
+        src/webgpu_timestamps.cpp
     PUBLIC_DEPS
         wh_core
         wh_gpu)

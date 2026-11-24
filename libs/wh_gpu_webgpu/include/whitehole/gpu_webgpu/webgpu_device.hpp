@@ -26,6 +26,7 @@
 
 #include <cstdint>
 #include <memory>
+#include <optional>
 #include <string>
 #include <string_view>
 #include <vector>
@@ -39,6 +40,9 @@ struct WebGpuOptions {
     /// Bevorzugt einen Software-Adapter (z. B. lavapipe). Nützlich für Tests ohne GPU.
     bool forceFallbackAdapter{false};
     std::string label{"WhiteHoleFX"};
+    /// GPU-Zeitstempel anfordern (nur Benchmark; der Adapter muss das Feature haben, sonst ohne). Siehe
+    /// takeGpuMilliseconds.
+    bool timestamps{false};
 };
 
 /// Zeilenlänge in Bytes, die copyTextureToBuffer im Zielpuffer verwendet:
@@ -74,6 +78,16 @@ public:
     Result<void> submit(const RecordFn& record) override;
     void readbackAsync(BufferHandle buffer, ReadbackFn onComplete) override;
     void poll() override;
+
+    std::optional<double> takeGpuMilliseconds() override;
+    /// Ob das Gerät GPU-Zeit misst (WebGpuOptions::timestamps und Adapter mit Zeitstempeln).
+    [[nodiscard]] bool measuresGpuTime() const noexcept;
+    /// Adaptername ohne Zusatz wie " [Vulkan]".
+    [[nodiscard]] const std::string& deviceName() const noexcept;
+    /// Treiberbeschreibung des Adapters (z. B. Versionsnummer), leer wenn unbekannt.
+    [[nodiscard]] const std::string& driverInfo() const noexcept;
+    /// "Vulkan", "OpenGL", "DX12", "Metal" oder leer.
+    [[nodiscard]] std::string backendName() const;
 
     /// Fehlermeldungen der GPU, die seit dem letzten Aufruf eingegangen sind.
     [[nodiscard]] std::vector<std::string> takeErrors();

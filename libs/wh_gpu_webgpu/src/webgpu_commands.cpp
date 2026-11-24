@@ -113,6 +113,7 @@ private:
     void beginPass() {
         if (pass_ == nullptr) {
             WGPUComputePassDescriptor pd{};
+            pd.timestampWrites = passTimestampWrites(impl_, timestampWrites_);
             pass_ = wgpuCommandEncoderBeginComputePass(encoder_, &pd);
         }
     }
@@ -194,6 +195,7 @@ private:
     WebGpuDevice::Impl& impl_;
     WGPUCommandEncoder encoder_;
     WGPUComputePassEncoder pass_{nullptr};
+    WGPUPassTimestampWrites timestampWrites_{};
     std::vector<WGPUBindGroup> bindGroups_;
     std::string error_;
 };
@@ -219,12 +221,14 @@ Result<void> WebGpuDevice::submit(const RecordFn& record) {
 
     std::string recorderError;
     WGPUCommandBuffer commands = nullptr;
+    beginFrameTimestamps(impl);
     {
         Recorder recorder{impl, encoder};
         record(recorder);
         recorder.closePass();
         recorderError = recorder.error();
         if (recorderError.empty()) {
+            resolveFrameTimestamps(impl, encoder);
             commands = wgpuCommandEncoderFinish(encoder, nullptr);
         }
     }  // Recorder gibt Pass und Bind-Groups frei, bevor der Encoder verschwindet
@@ -239,6 +243,7 @@ Result<void> WebGpuDevice::submit(const RecordFn& record) {
     }
     wgpuQueueSubmit(impl.queue, 1, &commands);
     wgpuCommandBufferRelease(commands);
+    afterSubmitTimestamps(impl);
 
     impl.pump(false);
     const std::vector<std::string> errors = impl.drainErrors();

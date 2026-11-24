@@ -11,6 +11,7 @@
 #include <cstdint>
 #include <deque>
 #include <mutex>
+#include <optional>
 #include <string>
 #include <unordered_map>
 #include <vector>
@@ -53,6 +54,23 @@ struct ReadbackState {
     bool done{false};
 };
 
+/// GPU-Zeitmessung je submit (nur mit WebGpuOptions::timestamps und wenn der Adapter es kann, siehe
+/// webgpu_timestamps.cpp): Anfang des ersten und Ende des letzten Compute-Passes eines Frames.
+struct TimestampState {
+    WGPUQuerySet querySet{nullptr};
+    WGPUBuffer resolve{nullptr};  // QueryResolve | CopySrc, 2 × u64
+    WGPUBuffer read{nullptr};     // MapRead | CopyDst
+    double nsPerTick{1.0};
+    bool recording{false};        // der laufende submit schreibt Zeitstempel
+    bool firstPass{true};
+    bool wrote{false};            // mindestens ein Pass hat geschrieben
+    bool resolved{false};
+    bool mapPending{false};
+    bool mapDone{false};
+    WGPUMapAsyncStatus mapStatus{WGPUMapAsyncStatus_Error};
+    std::optional<double> lastMs;
+};
+
 struct WebGpuDevice::Impl {
     WGPUInstance instance{nullptr};
     WGPUAdapter adapter{nullptr};
@@ -61,6 +79,8 @@ struct WebGpuDevice::Impl {
     std::string adapterName;
     std::string deviceName;  // Name ohne Zusatz "[Vulkan]"
     WGPUBackendType backendType{WGPUBackendType_Undefined};
+    std::string driver;  // Treiberbeschreibung des Adapters (WGPUAdapterInfo::description), leer wenn unbekannt
+    TimestampState timestamps;
 
     std::uint64_t nextId{0};
     std::unordered_map<std::uint64_t, BufferEntry> buffers;
@@ -78,6 +98,21 @@ struct WebGpuDevice::Impl {
     /// Lässt die Bibliothek wartende Arbeit abarbeiten (Callbacks, Fehlermeldungen).
     void pump(bool wait);
 };
+
+// Zeitstempel (webgpu_timestamps.cpp). Alle Funktionen tun nichts, solange setupTimestamps keinen Query-Set angelegt hat.
+/// Nach dem Anlegen des Geräts: Query-Set und Puffer anlegen. false, wenn das nicht ging (dann ohne Zeitstempel).
+bool setupTimestamps(WebGpuDevice::Impl& impl);
+void releaseTimestamps(WebGpuDevice::Impl& impl) noexcept;
+/// Vor dem Aufzeichnen eines submit: misst dieser Frame mit (nicht, solange der vorige Wert noch gemappt wird)?
+void beginFrameTimestamps(WebGpuDevice::Impl& impl);
+/// Für jeden Compute-Pass: füllt `writes` und liefert den Zeiger für WGPUComputePassDescriptor, sonst nullptr.
+const WGPUPassTimestampWrites* passTimestampWrites(WebGpuDevice::Impl& impl, WGPUPassTimestampWrites& writes);
+/// Nach dem letzten Pass, vor wgpuCommandEncoderFinish: Werte in den Lese-Puffer kopieren.
+void resolveFrameTimestamps(WebGpuDevice::Impl& impl, WGPUCommandEncoder encoder);
+/// Nach wgpuQueueSubmit: Lese-Puffer mappen.
+void afterSubmitTimestamps(WebGpuDevice::Impl& impl);
+/// In poll(): gemappten Wert lesen.
+void pollTimestamps(WebGpuDevice::Impl& impl);
 
 // webgpu_convert.cpp
 [[nodiscard]] WGPUStringView view(const std::string& s) noexcept;

@@ -12,7 +12,7 @@
 //   zurückgelesen (die Ausgabe braucht sie auf der CPU).
 //
 // Zeiten je Frame: CPU = Aufzeichnen und Einreichen (enthält die CPU-Nodes), gesamt = Beginn bis Readback fertig.
-// GPU-Zeit liefert dieses Ziel noch nicht (Zeitstempel folgen); `gpuMs` bleibt leer.
+// GPU-Zeit: aus IGpuDevice::takeGpuMilliseconds (Zeitstempel, WebGpuOptions::timestamps); ohne sie bleibt `gpuMs` leer.
 // Threads: wie das Gerät, alle Aufrufe von einem Thread.
 #pragma once
 

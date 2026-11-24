@@ -14,10 +14,17 @@ using namespace whitehole;
 using namespace whitehole::runtime;
 
 TEST_CASE("Benchmark auf dem Gerät: jede Szene misst in beiden Reihen", "[gpu_device][benchmark]") {
-    const auto device = gputest::makeDevice();
-    if (!device) {
+    gpu::WebGpuOptions options;
+    options.timestamps = true;
+    auto made = gpu::WebGpuDevice::create(options);
+    if (!made.ok()) {
+        options.forceFallbackAdapter = true;
+        made = gpu::WebGpuDevice::create(options);
+    }
+    if (!made.ok()) {
         SKIP("Kein WebGPU-Adapter verfügbar");
     }
+    const auto device = std::move(made.value());
     auto lib = nodes::BuiltinLibrary::create();
     REQUIRE(lib.ok());
     GpuBenchmarkTarget target{*device, *lib.value()};
@@ -39,6 +46,11 @@ TEST_CASE("Benchmark auf dem Gerät: jede Szene misst in beiden Reihen", "[gpu_d
         CHECK(r.stats.frames >= limits.minFrames);
         CHECK(r.stats.medianMs > 0.0);
         CHECK(r.stats.medianMs >= r.stats.cpuMedianMs);
+        if (device->measuresGpuTime()) {
+            REQUIRE(r.stats.gpuMedianMs.has_value());  // jeder Frame hat eine GPU-Zeit
+            CHECK(*r.stats.gpuMedianMs > 0.0);
+            CHECK(*r.stats.gpuMedianMs <= r.stats.maxMs + 1.0);
+        }
     }
-    UNSCOPED_INFO(benchmarkMarkdown(run, BenchmarkSystemInfo{device->adapterName(), "", "", "test", ""}, limits));
+    UNSCOPED_INFO(benchmarkMarkdown(run, BenchmarkSystemInfo{device->deviceName(), device->backendName(), device->driverInfo(), "test", ""}, limits));
 }

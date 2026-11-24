@@ -94,3 +94,16 @@ TEST_CASE("Benchmark-GPU-Ziel zusammen mit dem Runner: Schnelltest läuft durch"
         CHECK(r.stats.frames == limits.minFrames);
     }
 }
+
+TEST_CASE("Benchmark-GPU-Ziel: GPU-Zeit kommt vom Gerät, sonst bleibt sie leer", "[benchmark]") {
+    const auto lib = library();
+    test::FakeGpuDevice device;
+    GpuBenchmarkTarget target{device, *lib};
+    REQUIRE(target.prepare({BenchmarkKind::Leds, BenchmarkScene::Plasma, 0, 0, 1'000}).ok());
+    CHECK_FALSE(target.frame().value().gpuMs.has_value());
+    device.setGpuMillisecondsPerPoll(3.5);
+    const auto frame = target.frame();
+    REQUIRE(frame.ok());
+    REQUIRE(frame.value().gpuMs.has_value());
+    CHECK(*frame.value().gpuMs == 3.5);
+}

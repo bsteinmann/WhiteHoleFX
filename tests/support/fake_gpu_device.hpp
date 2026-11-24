@@ -6,6 +6,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <map>
+#include <optional>
 #include <set>
 #include <span>
 #include <utility>
@@ -93,6 +94,9 @@ public:
 
     void poll() override {
         ++pollCount_;
+        if (gpuMsPerPoll_) {
+            gpuMs_ = gpuMsPerPoll_;
+        }
         if (holdReadbacks_) {
             return;
         }
@@ -103,7 +107,12 @@ public:
         }
     }
 
+    std::optional<double> takeGpuMilliseconds() override { return std::exchange(gpuMs_, std::nullopt); }
+
     // --- Testhilfen ---
+
+    /// GPU-Zeit, die jedes poll() bereitstellt (wie ein echtes Gerät nach dem Mappen der Zeitstempel); Benchmark-Tests.
+    void setGpuMillisecondsPerPoll(std::optional<double> ms) noexcept { gpuMsPerPoll_ = ms; }
 
     /// Solange gehalten wird, bleiben Readbacks in der Warteschlange.
     void holdReadbacks(bool hold) noexcept { holdReadbacks_ = hold; }
@@ -200,6 +209,8 @@ private:
     std::map<std::uint64_t, std::vector<std::byte>> buffers_;
     std::vector<Pending> pending_;
     bool holdReadbacks_{false};
+    std::optional<double> gpuMs_;
+    std::optional<double> gpuMsPerPoll_;
     bool failNextSubmit_{false};
     bool failNextPipeline_{false};
     int buffersUntilFailure_{-1};
