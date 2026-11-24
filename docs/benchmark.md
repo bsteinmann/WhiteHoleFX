@@ -4,7 +4,27 @@ Warum es diese Seite gibt: Ob eine Grafikkarte eine bestimmte Auflösung oder LE
 soll man messen statt raten können, und die Ergebnisse verschiedener Rechner sollen vergleichbar sein. Plan und
 Entscheidungen stehen in [entwurf-benchmark.md](entwurf-benchmark.md); hier steht, was es heute gibt.
 
-## Aufruf
+## Eigenes Programm: whitehole_benchmark
+
+Für alle, die nur wissen wollen, was ihr Rechner schafft: `whitehole_benchmark` (unter Windows `whitehole_benchmark.exe`)
+braucht weder ein Projekt noch das Studio und kein Qt. Doppelklick genügt: Es läuft der volle Test beider Reihen (etwa
+6 Minuten), zeigt den Fortschritt, schreibt `whitehole-benchmark-<Datum>-<Uhrzeit>.md` und `.csv` in den aktuellen Ordner
+und wartet am Ende auf Enter, damit das Fenster offen bleibt. Beide Dateien eignen sich zum Anhängen an ein Issue.
+
+```
+whitehole_benchmark                       # voller Lauf, beide Reihen
+whitehole_benchmark --quick               # Schnelltest, etwa eine halbe Minute
+whitehole_benchmark --series leds         # nur LED-Reihe (projection, leds oder both)
+whitehole_benchmark --software            # Software-Adapter statt der Grafikkarte
+whitehole_benchmark --out-dir Messungen   # Ordner für die Dateien (wird angelegt)
+whitehole_benchmark --no-wait             # am Ende nicht auf Enter warten (Skripte)
+```
+
+Gemessen wird dasselbe wie mit `whitehole_cli --benchmark`; beide benutzen die Bibliothek `wh_benchmark_run`. Rückgabewert:
+0 vollständig, 1 abgebrochen, 2 keine GPU, Datei nicht schreibbar oder falsche Option. Vor dem Test andere Programme
+schließen, vor allem das Studio, Spiele und Browser mit Videos: Sie nehmen der Grafikkarte Zeit weg.
+
+## Aufruf mit whitehole_cli
 
 ```
 whitehole_cli --benchmark both                 # beide Messreihen, voller Lauf (28 Stufen, etwa 5,5 Minuten)
@@ -15,7 +35,7 @@ whitehole_cli --benchmark projection --out ergebnis.md   # zusätzlich als Datei
 Kein Projekt, kein Netzwerk: Gemessen werden vier fest eingebaute Szenen (Plasma, Partikel, Labyrinth, „Schichten“ aus
 Plasma + Partikel → Kaleidoskop + Labyrinth). Strg+C bricht nach dem laufenden Frame ab; der Bericht erscheint trotzdem.
 `--software` misst den Software-Adapter. Rückgabewert: 0 vollständig, 1 abgebrochen, 2 keine GPU oder Datei nicht schreibbar.
-Der Knopf im Studio folgt.
+Ein Knopf im Studio ist zurückgestellt; das eigene Programm oben deckt den Zweck ab.
 
 ## Messreihen
 
