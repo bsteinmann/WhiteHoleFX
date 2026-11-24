@@ -9,6 +9,9 @@
 #include <QMenu>
 #include <QProgressBar>
 #include <QPushButton>
+#include <QScrollArea>
+#include <QSignalBlocker>
+#include <QSpinBox>
 #include <QShortcut>
 #include <QVBoxLayout>
 
@@ -21,7 +24,6 @@ namespace {
 
 QString fromStd(const std::string& text) { return QString::fromUtf8(text.data(), static_cast<qsizetype>(text.size())); }
 
-constexpr int kColumns = 4;
 constexpr const char* kIdle = "#2d2f36";
 constexpr const char* kLive = "#1f9d4c";
 constexpr const char* kArmed = "#d9822b";
@@ -74,13 +76,33 @@ LivePanel::LivePanel(runtime::Player& player, QWidget* parent) : QWidget{parent}
     barLayout->addWidget(hint);
     learnRow_ = new QWidget{settingsBar_};
     barLayout->addWidget(learnRow_);
+    auto* columnsRow = new QHBoxLayout;
+    columnsRow->addWidget(new QLabel{tr("Rasterbreite (Spalten):"), settingsBar_});
+    columnsBox_ = new QSpinBox{settingsBar_};
+    columnsBox_->setRange(1, 16);
+    columnsBox_->setValue(columns_);
+    columnsBox_->setToolTip(tr("Wie viele Look-Knöpfe nebeneinander stehen; mehr Spalten brauchen weniger Höhe"));
+    columnsRow->addWidget(columnsBox_);
+    columnsRow->addStretch(1);
+    barLayout->addLayout(columnsRow);
+    connect(columnsBox_, &QSpinBox::valueChanged, this, [this](int value) {
+        setColumns(value);
+        Q_EMIT columnsChanged(value);
+    });
     settingsBar_->setVisible(false);
     layout->addWidget(settingsBar_);
 
-    gridHost_ = new QWidget{this};
+    // Das Raster liegt in einem Scrollbereich: ab der fünften Zeile (mehr als 16 Looks) würden die Knöpfe sonst abgeschnitten
+    auto* scroll = new QScrollArea{this};
+    scroll->setObjectName(QStringLiteral("liveGridScroll"));
+    scroll->setWidgetResizable(true);
+    scroll->setFrameShape(QFrame::NoFrame);
+    scroll->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    gridHost_ = new QWidget{scroll};
     grid_ = new QGridLayout{gridHost_};
     grid_->setSpacing(8);
-    layout->addWidget(gridHost_, 1);
+    scroll->setWidget(gridHost_);
+    layout->addWidget(scroll, 1);
 
     auto* options = new QHBoxLayout;
     useGo_ = new QCheckBox{tr("Mit GO (vorladen)"), this};
@@ -125,6 +147,19 @@ LivePanel::LivePanel(runtime::Player& player, QWidget* parent) : QWidget{parent}
                 trigger(i);
             }
         });
+    }
+    rebuild();
+}
+
+void LivePanel::setColumns(int columns) {
+    columns = std::clamp(columns, 1, 16);
+    if (columns == columns_) {
+        return;
+    }
+    columns_ = columns;
+    {
+        const QSignalBlocker blocker{columnsBox_};
+        columnsBox_->setValue(columns_);
     }
     rebuild();
 }
@@ -192,7 +227,7 @@ void LivePanel::rebuild() {
             });
         }
 
-        grid_->addWidget(cell, index / kColumns, index % kColumns);
+        grid_->addWidget(cell, index / columns_, index % columns_);
         cells_.push_back(cell);
         buttons_.push_back(button);
         optionRows_.push_back(row);

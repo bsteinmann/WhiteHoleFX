@@ -11,6 +11,8 @@
 #include <QAction>
 #include <QApplication>
 #include <QCheckBox>
+#include <QPushButton>
+#include <QScrollArea>
 #include <QDockWidget>
 #include <QKeySequence>
 #include <QMenu>
@@ -50,6 +52,10 @@ void MainWindow::buildLive() {
     });
     connect(lookPanel_, &LookPanel::loadedIntoEditor, this, &MainWindow::afterRestore);
     connect(lookPanel_, &LookPanel::liveRequested, this, [this](int first) { enterLive(first); });
+    connect(livePanel_, &LivePanel::columnsChanged, this, [this](int columns) {
+        appSettings_.liveColumns = columns;
+        saveAppSettings(appSettings_);
+    });
     connect(livePanel_, &LivePanel::leaveRequested, this, [this]() { leaveLive(); });
     // Die Schaltfläche "Einstellungen" im Live-Fenster blendet mit den Einstellungen auch die Menüleiste ein und aus
     connect(livePanel_, &LivePanel::settingsToggled, this, [this](bool shown) {
@@ -125,7 +131,9 @@ bool MainWindow::enterLive(int first) {
     }
     hideEditDocks();
     liveDock_->show();
-    resizeDocks({liveDock_}, {320}, Qt::Vertical);
+    // Das vorschaubild darf klein sein: das Look-Raster bekommt den größten Teil der Höhe
+    resizeDocks({liveDock_}, {std::max(320, height() * 2 / 3)}, Qt::Vertical);
+    livePanel_->setColumns(appSettings_.liveColumns);
     liveMode_ = true;
     setLiveChrome(true);
     setChecked(true);
@@ -234,6 +242,18 @@ QString MainWindow::exerciseLive() {
     }
     if (newAction_->isEnabled() || openAction_->isEnabled() || !runAction_->shortcut().isEmpty() || undoAction_->isEnabled()) {
         return tr("Live: Neu/Öffnen, Leertaste oder Rückgängig sind im Live-Modus nicht gesperrt");
+    }
+    if (const auto* scroll = livePanel_->findChild<QScrollArea*>(QStringLiteral("liveGridScroll"));
+        scroll == nullptr || !scroll->widgetResizable() || scroll->widget()->findChildren<QPushButton*>().size() < livePanel_->buttonCount()) {
+        return QStringLiteral("Live: Das Look-Raster liegt nicht im Scrollbereich");
+    }
+    {
+        const int before = livePanel_->buttonCount();
+        livePanel_->setColumns(2);
+        if (livePanel_->columns() != 2 || livePanel_->buttonCount() != before) {
+            return QStringLiteral("Live: Die Rasterbreite lässt sich nicht ändern");
+        }
+        livePanel_->setColumns(appSettings_.liveColumns);
     }
     // Auftrittsansicht: ohne Menüleiste und ohne Einstellungen; die Schaltfläche blendet beides gemeinsam ein
     QApplication::processEvents();  // Qt zeigt Widgets, die nach dem Anzeigen des Fensters entstehen, erst über die Ereignisschleife

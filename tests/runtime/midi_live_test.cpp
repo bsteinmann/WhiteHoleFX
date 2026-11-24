@@ -154,7 +154,7 @@ TEST_CASE("APC live: Live-Start setzt das Raster, Pad blendet über, Ende lösch
     rig.frame();
     auto leds = rig.leds();
     CHECK(leds[56] == 1);  // Look 1 läuft: grün
-    CHECK(leds[57] == 0);
+    CHECK(leds[57] == 5);  // Look 2 ist belegt: gelb
     CHECK(leds[83] == 1);  // Taste "Live beenden" leuchtet
     CHECK(leds[82] == 0);  // GO: nichts vorgeladen
     CHECK(leds[60] == 0);  // rechte Hälfte gelöscht
@@ -169,7 +169,7 @@ TEST_CASE("APC live: Live-Start setzt das Raster, Pad blendet über, Ende lösch
     CHECK(rig.player.liveStatus().fadeSeconds == Approx(0.5));  // Zeit des Looks
     rig.frame();  // LEDs nach dem Player-Schritt
     leds = rig.leds();
-    CHECK(leds[57] == 5);  // blendet ein: gelb
+    CHECK(leds[57] == 1);  // blendet ein: grün
     CHECK(leds[56] == 1);  // der alte ist noch zu sehen
 
     rig.clock = 1.0;
@@ -177,7 +177,7 @@ TEST_CASE("APC live: Live-Start setzt das Raster, Pad blendet über, Ende lösch
     rig.frame();
     leds = rig.leds();
     CHECK(leds[57] == 1);
-    CHECK(leds[56] == 0);
+    CHECK(leds[56] == 5);  // nicht mehr aktiv, aber belegt: gelb
 
     rig.player.stopLive();
     rig.frame();
@@ -331,4 +331,18 @@ TEST_CASE("APC live: Pad an einem Flash-Look - Loslassen kehrt zurück", "[midi]
     rig.library->midi->apply(midi::noteOff(0, *rig.controller.profile().noteForLook(1)));
     rig.frame(options);
     CHECK(rig.player.liveStatus().current == 0);
+}
+
+TEST_CASE("APC live: Flash-Looks leuchten rot, aktiv grün", "[midi][midi_live]") {
+    Rig rig;
+    rig.live();
+    REQUIRE(rig.player.setLookTrigger(1, project::LookTrigger::Flash, std::nullopt).ok());
+    rig.frame();
+    CHECK(rig.leds()[57] == 3);  // belegt, Flash: rot
+    CHECK(rig.leds()[56] == 1);  // Look 1 läuft: grün
+    REQUIRE(rig.player.liveDown(1).ok());
+    rig.clock = 1.0;
+    rig.frame();
+    rig.frame();
+    CHECK(rig.leds()[57] == 1);  // gehalten und aktiv: grün
 }
