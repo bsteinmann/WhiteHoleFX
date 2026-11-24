@@ -381,6 +381,10 @@ void MainWindow::refreshImage() {
     preview::PreviewOptions options;
     options.width = static_cast<std::uint32_t>(std::clamp(preview_->width(), 64, 4096));
     options.height = static_cast<std::uint32_t>(std::clamp(preview_->height(), 64, 4096));
+    if (liveMode_ && player_->splitPreview()) {
+        refreshSplitImage(options);
+        return;
+    }
     if (previewController_ != nullptr) {
         options.frame = previewController_->frozenFrame();  // während des Ziehens bleibt die Ansicht stehen
     }

@@ -50,6 +50,9 @@ public:
     /// Spalten des Look-Rasters (1 bis 16, Standard 4); baut das Raster neu. Löst columnsChanged nicht aus.
     void setColumns(int columns);
     [[nodiscard]] int columns() const { return columns_; }
+    /// Haken „Vorschau teilen“ (links Ausgabe, rechts vorgeladener Look). Löst splitPreviewChanged nicht aus.
+    void setSplitPreview(bool on);
+    [[nodiscard]] bool splitPreview() const;
     /// Gleicht Farben, Name und Balken mit dem Zustand des Players ab (jeden Frame; billig).
     void refresh();
 
@@ -96,6 +99,7 @@ Q_SIGNALS:
     void settingsToggled(bool shown);
     /// Der Nutzer hat die Rasterbreite in den Einstellungen geändert.
     void columnsChanged(int columns);
+    void splitPreviewChanged(bool on);
 
 private:
     [[nodiscard]] static QString styleFor(const QString& color);
@@ -130,6 +134,7 @@ private:
     bool settingsShown_{false};
     int columns_{4};
     QSpinBox* columnsBox_{nullptr};
+    QCheckBox* splitCheck_{nullptr};
 };
 
 }  // namespace whitehole::studio

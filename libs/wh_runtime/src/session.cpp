@@ -10,6 +10,7 @@
 
 #include "whitehole/core/hash.hpp"
 #include "whitehole/engine/readback_ring.hpp"
+#include "whitehole/executor/sampling_shader.hpp"
 
 namespace whitehole::runtime {
 
@@ -77,6 +78,7 @@ public:
                 const std::lock_guard<std::mutex> lock{mutex_};
                 latest_ = std::move(colors);
             }
+            takeSecondary(frame.bytes);
         }
         {
             // DMX-Kanäle der Output-Nodes: der Stand der letzten Auswertung (höchstens einen Frame alt, weil das Bild
@@ -85,6 +87,38 @@ public:
             frame.channels = channels_;
         }
         next_.publish(std::move(frame));
+    }
+
+    /// Zusatzbereich hinter den Hauptfarben (siehe sampling_shader.hpp): Kopf mit Kennung, dann eine Farbe je LED.
+    void takeSecondary(const std::vector<std::byte>& bytes) {
+        const std::uint32_t expected = expectedTag_.load();
+        if (expected == 0) {
+            return;
+        }
+        const std::size_t head = ledCount_ * sizeof(ColorRgba);
+        if (bytes.size() < head + (ledCount_ + 1) * sizeof(ColorRgba)) {
+            return;
+        }
+        float tag = 0.0F;
+        std::memcpy(&tag, bytes.data() + head, sizeof tag);
+        if (static_cast<std::uint32_t>(tag) != expected) {
+            return;  // ein Readback von vor der Wahl, oder der Bereich wurde nicht neu geschrieben
+        }
+        std::vector<ColorRgba> colors(ledCount_);
+        std::memcpy(colors.data(), bytes.data() + head + sizeof(ColorRgba), ledCount_ * sizeof(ColorRgba));
+        const std::lock_guard<std::mutex> lock{mutex_};
+        secondary_ = std::move(colors);
+    }
+
+    void expectSecondary(std::uint32_t tag) {
+        expectedTag_.store(tag);
+        const std::lock_guard<std::mutex> lock{mutex_};
+        secondary_.clear();
+    }
+
+    std::vector<ColorRgba> secondary() const {
+        const std::lock_guard<std::mutex> lock{mutex_};
+        return secondary_;
     }
 
     void setChannels(std::vector<ChannelWrite> channels) {
@@ -117,6 +151,8 @@ private:
     std::atomic<bool> blackout_{false};
     mutable std::mutex mutex_;
     std::vector<ColorRgba> latest_;
+    std::vector<ColorRgba> secondary_;
+    std::atomic<std::uint32_t> expectedTag_{0};  // 0 = kein Zusatzausgang gewählt
     std::vector<ChannelWrite> channels_;
     TestPattern pattern_;
     std::chrono::steady_clock::time_point since_{std::chrono::steady_clock::now()};
@@ -166,6 +202,7 @@ Result<std::unique_ptr<Session>> Session::create(const project::Project& project
     executor::SamplingStageConfig stageConfig;
     stageConfig.target = *project.target;
     stageConfig.ledCapacity = static_cast<std::uint32_t>(map.world.size());
+    stageConfig.secondary = options.secondaryColors;
     auto created = executor::SamplingRenderStage::create(deps.device, deps.snippets, deps.kernels, stageConfig);
     if (!created.ok()) {
         return created.error();
@@ -176,7 +213,7 @@ Result<std::unique_ptr<Session>> Session::create(const project::Project& project
     }
     // Ein Graph, der sich nicht übersetzen lässt, soll beim Start auffallen und nicht erst als
     // schwarzes Bild: setGraph meldet den Fehler und merkt ihn sich zusätzlich in der Stage.
-    if (const Result<void> r = stage->setGraph(project.graph); !r.ok()) {
+    if (const Result<void> r = stage->setGraph(project.graph, options.secondaryTargets); !r.ok()) {
         return r.error();
     }
 
@@ -190,6 +227,7 @@ Result<std::unique_ptr<Session>> Session::create(const project::Project& project
         deps.device, deps.clock, *ring.value(),
         engine::RenderEngineConfig{stage->output(), stage->outputSizeBytes()});
     engine->setStages({stage});
+    engine->setCopySizeBytes(stage->mainSizeBytes());  // den Zusatzbereich erst lesen, wenn einer gewählt ist
 
     return std::unique_ptr<Session>{new Session{deps.device, map, std::move(worker), std::move(tap), std::move(stage),
                                                 std::move(ring).value(), std::move(engine), options.readbackSlots}};
@@ -241,6 +279,20 @@ SessionStats Session::stats() const {
 }
 
 std::vector<ColorRgba> Session::latestColors() const { return tap_->latest(); }
+
+std::vector<ColorRgba> Session::latestSecondaryColors() const { return tap_->secondary(); }
+
+Result<void> Session::selectSecondary(std::optional<std::uint32_t> extra) {
+    if (!stage_->hasSecondary()) {
+        return {};
+    }
+    // Die Kennung steht im Shader als f32: unter 2^24 bleibt sie exakt; 0 heißt "keiner".
+    secondaryTag_ = secondaryTag_ % 0xFFFFFFU + 1U;
+    const std::uint32_t tag = extra ? secondaryTag_ : 0U;
+    tap_->expectSecondary(tag);
+    engine_->setCopySizeBytes(extra ? stage_->outputSizeBytes() : stage_->mainSizeBytes());
+    return stage_->selectExtra(extra.value_or(executor::kNoSamplingExtra), tag);
+}
 
 Result<void> Session::renderFrame() {
     const Result<void> r = engine_->renderFrame();

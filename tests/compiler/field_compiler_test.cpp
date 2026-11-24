@@ -327,3 +327,35 @@ TEST_CASE("packParameters: ein inzwischen entfernter Node lässt seine Bytes nul
         CHECK(std::to_integer<unsigned>(b) == 0U);
     }
 }
+
+TEST_CASE("compileField: zusätzliche Ausgänge bekommen eigene Einstiege, gemeinsame Nodes nur einmal") {
+    const CompilerFixture fixture = makeCompilerFixture();
+    graph::Graph graph{fixture.registry};
+    const NodeId a = add(graph, "c.const");
+    const NodeId b = add(graph, "c.noise");
+    const NodeId sum = add(graph, "c.add");
+    link(graph, a, sum, "a");
+    link(graph, b, sum, "b");
+    const NodeId loose = add(graph, "c.noise2");  // nicht am Ziel: kommt nur über die Extras in den Shader
+
+    const std::vector<graph::PortRef> extras{out(b), out(loose)};
+    const auto compiled = compileField(graph, fixture.library, out(sum), extras);
+    REQUIRE(compiled.ok());
+    const std::string& wgsl = compiled.value().wgsl;
+    CHECK(contains(wgsl, "fn wh_field(p: vec3<f32>) -> vec4<f32> {\n    return wh_f3(p);\n}"));
+    CHECK(contains(wgsl, "fn wh_field_extra0(p: vec3<f32>) -> vec4<f32> {\n    return wh_f2(p);\n}"));
+    CHECK(contains(wgsl, "fn wh_field_extra1(p: vec3<f32>) -> vec4<f32> {\n    return wh_f4(p);\n}"));
+    CHECK(count(wgsl, "fn wh_f2(") == 1U);
+
+    // Ohne Extras bleibt der Shader wie bisher (gleicher Hash), mit Extras ändert sich die Struktur.
+    const auto plain = compileField(graph, fixture.library, out(sum));
+    REQUIRE(plain.ok());
+    CHECK_FALSE(contains(plain.value().wgsl, "wh_field_extra"));
+    CHECK(plain.value().structureHash != compiled.value().structureHash);
+
+    // Extras werden geprüft wie das Ziel.
+    const std::vector<graph::PortRef> wrong{graph::PortRef{sum, "a"}};
+    CHECK(compileField(graph, fixture.library, out(sum), wrong).error().code == ErrorCode::InvalidArgument);
+    const std::vector<graph::PortRef> missing{out(NodeId{999})};
+    CHECK(compileField(graph, fixture.library, out(sum), missing).error().code == ErrorCode::NotFound);
+}

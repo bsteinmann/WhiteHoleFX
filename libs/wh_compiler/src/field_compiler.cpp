@@ -89,7 +89,28 @@ public:
     FieldCompiler(const graph::Graph& graph, const ISnippetLibrary& snippets)
         : graph_{graph}, snippets_{snippets} {}
 
-    Result<CompiledField> compile(const graph::PortRef& target) {
+    Result<CompiledField> compile(const graph::PortRef& target, std::span<const graph::PortRef> extras) {
+        if (Result<void> checked = checkTarget(target); !checked.ok()) {
+            return checked.error();
+        }
+        if (Result<void> visited = visit(target.node); !visited.ok()) {
+            return visited.error();
+        }
+        std::vector<NodeId> extraNodes;
+        for (const graph::PortRef& extra : extras) {
+            if (Result<void> checked = checkTarget(extra); !checked.ok()) {
+                return checked.error();
+            }
+            if (Result<void> visited = visit(extra.node); !visited.ok()) {
+                return visited.error();
+            }
+            extraNodes.push_back(extra.node);
+        }
+        return assemble(target.node, extraNodes);
+    }
+
+private:
+    Result<void> checkTarget(const graph::PortRef& target) const {
         const NodeInstance* node = graph_.findNode(target.node);
         if (node == nullptr) {
             return Error{ErrorCode::NotFound, "Ziel-Node existiert nicht"};
@@ -104,14 +125,9 @@ public:
             return Error{ErrorCode::InvalidArgument,
                          describe(*node) + ": Das Ziel muss ein Field-Ausgang sein"};
         }
-
-        if (Result<void> visited = visit(target.node); !visited.ok()) {
-            return visited.error();
-        }
-        return assemble(target.node);
+        return {};
     }
 
-private:
     Result<void> visit(NodeId id) {
         if (emitted_.contains(id)) {
             return {};
@@ -394,7 +410,7 @@ private:
         return expanded;
     }
 
-    Result<CompiledField> assemble(NodeId target) const {
+    Result<CompiledField> assemble(NodeId target, const std::vector<NodeId>& extras) const {
         CompiledField result;
         result.layout = layout_.build();
         result.nodes = order_;
@@ -408,6 +424,10 @@ private:
             bindingLine(kParametersBinding, "wh_params: WhParams") + "\n" + preludes_ + functions_ +
             "fn wh_field(p: vec3<f32>) -> vec4<f32> {\n    return " + functionName(target) +
             "(p);\n}\n";
+        for (std::size_t i = 0; i < extras.size(); ++i) {
+            result.wgsl += "fn wh_field_extra" + std::to_string(i) + "(p: vec3<f32>) -> vec4<f32> {\n    return " +
+                           functionName(extras[i]) + "(p);\n}\n";
+        }
 
         result.structureHash = fnv1a64(result.wgsl);
         return result;
@@ -427,9 +447,9 @@ private:
 }  // namespace
 
 Result<CompiledField> compileField(const graph::Graph& graph, const ISnippetLibrary& snippets,
-                                   const graph::PortRef& target) {
+                                   const graph::PortRef& target, std::span<const graph::PortRef> extras) {
     FieldCompiler compiler{graph, snippets};
-    return compiler.compile(target);
+    return compiler.compile(target, extras);
 }
 
 }  // namespace whitehole::compiler

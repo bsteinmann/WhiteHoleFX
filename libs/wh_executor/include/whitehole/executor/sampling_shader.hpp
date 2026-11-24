@@ -9,7 +9,12 @@
 // Bindings (Gruppe 0 gehört der Feldbibliothek):
 //   @group(1) @binding(0)  Positionen  array<vec4<f32>>, xyz im Einheitswürfel, w = 0
 //   @group(1) @binding(1)  Farben      array<vec4<f32>>, linear RGBA, eine pro LED
-//   @group(1) @binding(2)  WhLeds      Anzahl der gültigen LEDs
+//   @group(1) @binding(2)  WhLeds      Anzahl der gültigen LEDs, gewählter Zusatzausgang, dessen Lage und Kennung
+//
+// Zusatzausgänge (geteilte Vorschau im Live-Betrieb): Hat die Feldbibliothek Einstiege `wh_field_extra<i>`, tastet der
+// Shader zusätzlich genau einen davon ab (WhLeds.extra, ungültig = keiner; ein einheitlicher Zweig, die anderen kosten
+// nichts). Ergebnis: an Stelle `base` ein Kopf vec4(kennung, 0, 0, 0), ab `base + 1` eine Farbe je LED. Die Kennung
+// zeigt dem Leser, zu welcher Auswahl das Bild gehört (ein Readback kommt ein paar Frames später an).
 //
 // Die Anzahl steht im Uniform, nicht in arrayLength(): Die Puffer sind für eine
 // Höchstzahl ausgelegt, das Layout darf kleiner sein.
@@ -19,6 +24,7 @@
 // und der Shader setzt den Index aus beiden Dimensionen zusammen.
 #pragma once
 
+#include <cstddef>
 #include <cstdint>
 #include <string>
 #include <string_view>
@@ -36,8 +42,14 @@ inline constexpr std::uint32_t kSamplingInfoBinding = 2;
 inline constexpr std::uint32_t kSamplingWorkgroupSize = 64;
 inline constexpr std::uint32_t kMaxGroupsPerDimension = 65535;
 
-/// Hängt den Einstieg `main` an die Feldbibliothek.
-[[nodiscard]] std::string samplingShader(std::string_view fieldLibrary);
+/// Kein Zusatzausgang gewählt (WhLeds.extra).
+inline constexpr std::uint32_t kNoSamplingExtra = 0xFFFFFFFFU;
+
+/// Hängt den Einstieg `main` an die Feldbibliothek; `extraCount` Zusatzausgänge (`wh_field_extra0` ...) stehen in ihr.
+[[nodiscard]] std::string samplingShader(std::string_view fieldLibrary, std::size_t extraCount = 0);
+
+/// Wie viele Zusatzausgänge (`fn wh_field_extra<i>(`, lückenlos ab 0) die Feldbibliothek hat.
+[[nodiscard]] std::size_t countFieldExtras(std::string_view fieldLibrary);
 
 /// Dispatch-Größe für `ledCount` LEDs (x * y * 64 >= ledCount, x <= 65535).
 [[nodiscard]] DispatchSize samplingDispatch(std::uint64_t ledCount) noexcept;

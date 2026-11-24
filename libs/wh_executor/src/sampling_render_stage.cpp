@@ -23,11 +23,12 @@ std::vector<std::byte> packPositions(std::span<const Vec3> positions) {
     return bytes;
 }
 
-SamplingRenderStage::SamplingRenderStage(gpu::IGpuDevice& device, std::uint64_t capacity,
+SamplingRenderStage::SamplingRenderStage(gpu::IGpuDevice& device, std::uint64_t capacity, bool secondary,
                                          gpu::BufferHandle positions, gpu::BufferHandle colors,
                                          gpu::BufferHandle info, std::unique_ptr<FieldPass> pass)
     : device_{device},
       capacity_{capacity},
+      secondary_{secondary},
       positions_{positions},
       colors_{colors},
       info_{info},
@@ -76,8 +77,9 @@ Result<std::unique_ptr<SamplingRenderStage>> SamplingRenderStage::create(
         rollback();
         return positions.error();
     }
+    const std::uint64_t colorBytes = config.secondary ? 2 * bytes + kBytesPerLed : bytes;
     const Result<gpu::BufferHandle> colors =
-        makeBuffer(bytes, gpu::Usage::Storage | gpu::Usage::CopySource, ".colors");
+        makeBuffer(colorBytes, gpu::Usage::Storage | gpu::Usage::CopySource, ".colors");
     if (!colors.ok()) {
         rollback();
         return colors.error();
@@ -91,14 +93,14 @@ Result<std::unique_ptr<SamplingRenderStage>> SamplingRenderStage::create(
 
     Result<std::unique_ptr<FieldPass>> pass = FieldPass::create(
         device, snippets, kernels, config.target, config.label,
-        [](std::string_view library) -> Result<std::string> { return samplingShader(library); });
+        [](std::string_view library) -> Result<std::string> { return samplingShader(library, countFieldExtras(library)); });
     if (!pass.ok()) {
         rollback();
         return pass.error();
     }
 
     return std::unique_ptr<SamplingRenderStage>(
-        new SamplingRenderStage(device, config.ledCapacity, positions.value(), colors.value(),
+        new SamplingRenderStage(device, config.ledCapacity, config.secondary, positions.value(), colors.value(),
                                 info.value(), std::move(pass.value())));
 }
 
@@ -117,10 +119,8 @@ Result<void> SamplingRenderStage::setMap(const mapping::LedMap& map) {
         return written;
     }
     const auto count = static_cast<std::uint32_t>(map.unit.size());
-    const std::array<std::uint32_t, 4> info{count, 0U, 0U, 0U};
-    if (const Result<void> written = device_.writeBuffer(info_, 0, std::as_bytes(std::span{info}));
-        !written.ok()) {
-        return written;
+    if (const Result<void> written = writeInfo(count); !written.ok()) {
+        return written;  // die alte Anzahl bleibt, wie die alten Positionen
     }
     ledCount_ = count;
     // Räumlich, sobald irgendeine LED z > 0 hat (flache Anlagen bleiben bei z = 0, siehe LedMap::unit).
@@ -145,6 +145,25 @@ Result<void> SamplingRenderStage::setMap(const mapping::LedMap& map) {
     const float rows = (spacing > 0.0F && sizeY > 0.0F) ? std::round(sizeY / spacing) : 0.0F;
     pass_->setResolution(columns, rows);
     return {};
+}
+
+Result<void> SamplingRenderStage::writeInfo(std::uint32_t count) {
+    const std::array<std::uint32_t, 4> info{count, secondary_ ? extra_ : kNoSamplingExtra,
+                                            static_cast<std::uint32_t>(capacity_), tag_};
+    return device_.writeBuffer(info_, 0, std::as_bytes(std::span{info}));
+}
+
+Result<void> SamplingRenderStage::setGraph(const graph::Graph& graph, std::span<const graph::PortRef> extras) {
+    if (!extras.empty() && !secondary_) {
+        return Error{ErrorCode::InvalidArgument, "Die Abtast-Stage hat keinen Platz für Zusatzausgänge"};
+    }
+    return pass_->setGraph(graph, extras);
+}
+
+Result<void> SamplingRenderStage::selectExtra(std::uint32_t extra, std::uint32_t tag) {
+    extra_ = extra;
+    tag_ = tag;
+    return writeInfo(ledCount_);
 }
 
 void SamplingRenderStage::record(const FrameTime& time, gpu::ICommandRecorder& recorder) {

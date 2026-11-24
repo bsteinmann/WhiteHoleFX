@@ -139,6 +139,7 @@ add_executable(wh_tests
     runtime/live_decks_test.cpp
     runtime/live_bindings_test.cpp
     runtime/live_flash_test.cpp
+    runtime/live_split_preview_test.cpp
     runtime/live_manual_fade_test.cpp
     runtime/midi_live_test.cpp
     runtime/player_live_test.cpp
@@ -205,6 +206,7 @@ if(TARGET wh_gpu_webgpu)
         gpu_device/warps_on_device_test.cpp
         gpu_device/volume_on_device_test.cpp
         gpu_device/session_on_device_test.cpp
+        gpu_device/split_preview_on_device_test.cpp
         gpu_device/projection_on_device_test.cpp
         gpu_device/sampling_on_device_test.cpp
         gpu_device/stage_on_device_test.cpp

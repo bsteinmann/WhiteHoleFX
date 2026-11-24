@@ -36,6 +36,7 @@ AppSettings loadAppSettings() {
     result.midiInput = s.value(QStringLiteral("midi/input")).toString();
     result.midiOutput = s.value(QStringLiteral("midi/output")).toString();
     result.liveColumns = std::clamp(s.value(QStringLiteral("live/columns"), 4).toInt(), 1, 16);
+    result.liveSplitPreview = s.value(QStringLiteral("live/splitPreview"), true).toBool();
     result.midiProfile = s.value(QStringLiteral("midi/profile")).toString();
     result.midiProfiles = s.value(QStringLiteral("midi/profiles")).toStringList();
     result.liveBindings = s.value(QStringLiteral("midi/liveBindings")).toStringList();
@@ -76,6 +77,7 @@ void saveAppSettings(const AppSettings& settings) {
     s.setValue(QStringLiteral("midi/input"), settings.midiInput);
     s.setValue(QStringLiteral("midi/output"), settings.midiOutput);
     s.setValue(QStringLiteral("live/columns"), settings.liveColumns);
+    s.setValue(QStringLiteral("live/splitPreview"), settings.liveSplitPreview);
     s.setValue(QStringLiteral("midi/profile"), settings.midiProfile);
     s.setValue(QStringLiteral("midi/profiles"), settings.midiProfiles);
     s.setValue(QStringLiteral("midi/liveBindings"), settings.liveBindings);

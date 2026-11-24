@@ -32,6 +32,7 @@
 #include "whitehole/core/result.hpp"
 #include "whitehole/engine/render_stage.hpp"
 #include "whitehole/executor/field_pass.hpp"
+#include "whitehole/graph/graph_model.hpp"
 #include "whitehole/mapping/led_map.hpp"
 
 namespace whitehole::executor {
@@ -42,6 +43,9 @@ struct SamplingStageConfig {
     graph::PortRef target;  // Field-Ausgang, der abgetastet wird
     std::uint32_t ledCapacity{0};
     std::string label{"wh.leds"};
+    /// Platz für einen Zusatzausgang (geteilte Vorschau): der Farbpuffer wird um einen Kopf und `ledCapacity`
+    /// Farben länger (siehe sampling_shader.hpp). Ohne ihn werden Zusatzausgänge von setGraph abgelehnt.
+    bool secondary{false};
 };
 
 /// Packt Positionen als vec4<f32> (x, y, z, 0), wie der Shader sie liest.
@@ -64,8 +68,11 @@ public:
     /// Bei einem Fehler bleibt die bisherige Karte aktiv.
     Result<void> setMap(const mapping::LedMap& map);
 
-    /// Siehe FieldPass::setGraph.
-    Result<void> setGraph(const graph::Graph& graph) { return pass_->setGraph(graph); }
+    /// Siehe FieldPass::setGraph. `extras` nur mit SamplingStageConfig::secondary (sonst InvalidArgument).
+    Result<void> setGraph(const graph::Graph& graph, std::span<const graph::PortRef> extras = {});
+    /// Wählt, welcher Zusatzausgang (Stelle in `extras` des letzten setGraph) ab dem nächsten Frame mit abgetastet wird;
+    /// kNoSamplingExtra = keiner. `tag` steht im Kopf des Zusatzbereichs (siehe sampling_shader.hpp). Fehler: GpuError.
+    Result<void> selectExtra(std::uint32_t extra, std::uint32_t tag);
     /// Siehe FieldPass::setParameters (nur Werte geändert, kein Neuübersetzen).
     Result<void> setParameters(const graph::Graph& graph) { return pass_->setParameters(graph); }
 
@@ -73,8 +80,14 @@ public:
 
     /// Farben aller LEDs (Storage, CopySource). Das Handle ändert sich nie.
     [[nodiscard]] gpu::BufferHandle output() const noexcept { return colors_; }
-    /// Größe des Ausgabepuffers: ledCapacity * 16 Byte.
-    [[nodiscard]] std::uint64_t outputSizeBytes() const noexcept { return capacity_ * kBytesPerLed; }
+    /// Größe des Ausgabepuffers: ledCapacity * 16 Byte, mit Zusatzbereich (2 * ledCapacity + 1) * 16 Byte.
+    [[nodiscard]] std::uint64_t outputSizeBytes() const noexcept {
+        return (secondary_ ? 2 * capacity_ + 1 : capacity_) * kBytesPerLed;
+    }
+    /// Nur die Farben des Hauptausgangs: ledCapacity * 16 Byte (der Anfang des Ausgabepuffers).
+    [[nodiscard]] std::uint64_t mainSizeBytes() const noexcept { return capacity_ * kBytesPerLed; }
+    /// Ob es den Zusatzbereich gibt (SamplingStageConfig::secondary).
+    [[nodiscard]] bool hasSecondary() const noexcept { return secondary_; }
     /// Anzahl der gültigen LEDs (0 bis zum ersten setMap).
     [[nodiscard]] std::uint32_t ledCount() const noexcept { return ledCount_; }
 
@@ -85,12 +98,17 @@ public:
     [[nodiscard]] const values::ValueStore& values() const noexcept { return pass_->values(); }
 
 private:
-    SamplingRenderStage(gpu::IGpuDevice& device, std::uint64_t capacity, gpu::BufferHandle positions,
+    SamplingRenderStage(gpu::IGpuDevice& device, std::uint64_t capacity, bool secondary, gpu::BufferHandle positions,
                         gpu::BufferHandle colors, gpu::BufferHandle info,
                         std::unique_ptr<FieldPass> pass);
 
+    Result<void> writeInfo(std::uint32_t count);
+
     gpu::IGpuDevice& device_;
     std::uint64_t capacity_;
+    bool secondary_;
+    std::uint32_t extra_{0xFFFFFFFFU};
+    std::uint32_t tag_{0};
     gpu::BufferHandle positions_;
     gpu::BufferHandle colors_;
     gpu::BufferHandle info_;

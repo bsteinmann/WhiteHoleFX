@@ -91,3 +91,19 @@ TEST_CASE("packPositions: vec4 je Position mit w = 0") {
     CHECK(values[7] == 0.0F);
     CHECK(packPositions({}).empty());
 }
+
+TEST_CASE("samplingShader tastet höchstens einen Zusatzausgang ab, mit Kopf und Kennung") {
+    const std::string library = "fn wh_field(p: vec3<f32>) -> vec4<f32> { return vec4<f32>(1.0); }\n"
+                                "fn wh_field_extra0(p: vec3<f32>) -> vec4<f32> { return vec4<f32>(0.5); }\n"
+                                "fn wh_field_extra1(p: vec3<f32>) -> vec4<f32> { return vec4<f32>(0.25); }\n";
+    CHECK(countFieldExtras(library) == 2U);
+    CHECK(countFieldExtras("fn wh_field(p: vec3<f32>) -> vec4<f32> { return vec4<f32>(1.0); }") == 0U);
+    const std::string text = samplingShader(library, 2);
+    CHECK(contains(text, "if (wh_leds.extra < 2u)"));
+    CHECK(contains(text, "wh_colors[wh_leds.base] = vec4<f32>(f32(wh_leds.tag), 0.0, 0.0, 0.0);"));
+    CHECK(contains(text, "if (wh_leds.extra == 0u) {\n            c = wh_field_extra0(wh_positions[i].xyz);"));
+    CHECK(contains(text, "else if (wh_leds.extra == 1u)"));
+    CHECK(contains(text, "wh_colors[wh_leds.base + 1u + i] = c;"));
+    CHECK_FALSE(contains(samplingShader(library), "wh_leds.extra"));  // ohne Anzahl: wie bisher
+    CHECK(kNoSamplingExtra == 0xFFFFFFFFU);
+}

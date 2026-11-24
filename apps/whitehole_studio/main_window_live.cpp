@@ -56,6 +56,11 @@ void MainWindow::buildLive() {
         appSettings_.liveColumns = columns;
         saveAppSettings(appSettings_);
     });
+    connect(livePanel_, &LivePanel::splitPreviewChanged, this, [this](bool on) {
+        appSettings_.liveSplitPreview = on;
+        saveAppSettings(appSettings_);
+        player_->setSplitPreview(on);  // im laufenden Live-Betrieb: einmal neu aufbauen
+    });
     connect(livePanel_, &LivePanel::leaveRequested, this, [this]() { leaveLive(); });
     // Die Schaltfläche "Einstellungen" im Live-Fenster blendet mit den Einstellungen auch die Menüleiste ein und aus
     connect(livePanel_, &LivePanel::settingsToggled, this, [this](bool shown) {
@@ -123,6 +128,8 @@ bool MainWindow::enterLive(int first) {
         setChecked(false);
         return false;
     }
+    player_->setSplitPreview(appSettings_.liveSplitPreview);  // vor dem Start: kein zusätzlicher Neuaufbau
+    livePanel_->setSplitPreview(appSettings_.liveSplitPreview);
     const Result<void> r = player_->startLive(first);
     if (!r.ok()) {
         statusBar()->showMessage(fromStd(r.error().message), 8000);
@@ -294,6 +301,28 @@ QString MainWindow::exerciseLive() {
     livePanel_->setUseGo(true);
     if (!livePanel_->trigger(0) || player_->liveStatus().armed != 0) {
         return tr("Live: Vorladen merkt sich den Look nicht");
+    }
+    // Geteilte Vorschau: rechts der vorgeladene Look; der Haken schaltet sie um (und zurück)
+    if (player_->splitPreview() != appSettings_.liveSplitPreview ||
+        (player_->splitPreview() && player_->previewLook() != std::optional<int>{0})) {
+        return QStringLiteral("Live: Die geteilte Vorschau zeigt den vorgeladenen Look nicht");
+    }
+    if (auto* split = livePanel_->findChild<QCheckBox*>(QStringLiteral("liveSplitPreview")); split != nullptr) {
+        const bool before = player_->splitPreview();
+        split->click();
+        tick();
+        QApplication::processEvents();
+        const bool flipped = player_->splitPreview() == !before && appSettings_.liveSplitPreview == !before;
+        split->click();
+        tick();
+        if (!flipped || player_->splitPreview() != before) {
+            return QStringLiteral("Live: Der Haken „Vorschau teilen“ schaltet die geteilte Vorschau nicht um");
+        }
+        if (player_->liveStatus().armed != 0) {
+            return QStringLiteral("Live: Umschalten der Vorschau verliert den vorgeladenen Look");
+        }
+    } else {
+        return QStringLiteral("Live: Der Haken „Vorschau teilen“ fehlt");
     }
     if (!livePanel_->go() || player_->liveStatus().current != 0 || player_->liveStatus().fading) {
         return tr("Live: GO mit 0 s schaltet nicht sofort um");

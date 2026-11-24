@@ -232,3 +232,36 @@ TEST_CASE("Decks: Sonderfälle") {
     // Unbrauchbare Zeiten
     CHECK_FALSE(decks.advance(-1.0));
 }
+
+TEST_CASE("Decks: Ausgänge und Vorschau-Deck für die geteilte Vorschau", "[secondary]") {
+    Lab lab;
+    const project::Project project = parse(lab, kProjectWithLooks);
+    runtime::LiveDecks decks{lab.registry};
+    CHECK(decks.deckOutputs().empty());  // vor start()
+    REQUIRE(decks.start(project.looks[0], 0).ok());
+    REQUIRE(decks.deckOutputs().size() == 2);
+    CHECK_FALSE(decks.previewDeck().has_value());  // nichts vorgeladen
+    // Beide Ausgänge lassen sich als Zusatzausgänge mit übersetzen
+    const std::vector<graph::PortRef> extras = decks.deckOutputs();
+    REQUIRE(compiler::compileField(decks.graph(), lab.snippets, decks.target(), extras).ok());
+
+    REQUIRE(decks.arm(project.looks[1], 1).ok());
+    CHECK(decks.previewDeck() == 1U);  // Deck B hält den vorgeladenen Look
+    const std::vector<graph::PortRef> armed = decks.deckOutputs();
+    REQUIRE(armed.size() == 2);
+    CHECK(armed[0] == extras[0]);  // das sichtbare Deck bleibt unberührt
+    CHECK_FALSE(armed[1] == extras[1]);
+
+    REQUIRE(decks.go(1.0).ok());
+    (void)decks.advance(0.5);
+    CHECK(decks.previewDeck() == 1U);  // während des Einblendens: weiter der neue Look
+    (void)decks.advance(0.6);
+    CHECK_FALSE(decks.previewDeck().has_value());  // fertig: B ist sichtbar, nichts mehr vorgeladen
+    CHECK(decks.deckOutputs() == armed);           // am Ende des Fades ändert sich nichts am Shader
+
+    REQUIRE(decks.arm(project.looks[0], 0).ok());
+    CHECK(decks.previewDeck() == 0U);  // jetzt ist A verdeckt
+    REQUIRE(decks.armBlank().ok());
+    CHECK(decks.previewDeck() == 0U);  // Schwarz vorgeladen
+    CHECK(decks.status().armed == -1);
+}

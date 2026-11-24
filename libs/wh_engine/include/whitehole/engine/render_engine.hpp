@@ -46,6 +46,11 @@ public:
     /// Fehler: nur wenn das Einreichen an die GPU scheitert.
     Result<void> renderFrame();
 
+    /// Kopiert ab dem nächsten Frame nur die ersten `bytes` des Ausgabepuffers (höchstens outputSizeBytes der
+    /// Konfiguration; 0 = alles). Für einen Zusatzbereich, der nur zeitweise gebraucht wird: der Rest des Slots
+    /// behält dann alten Inhalt, den der Leser erkennen muss. Nur auf dem Engine-Thread.
+    void setCopySizeBytes(std::uint64_t bytes) noexcept;
+
     [[nodiscard]] EngineStats stats() const noexcept;
 
 private:
@@ -53,6 +58,7 @@ private:
     IFrameClock& clock_;
     ReadbackRing& ring_;
     RenderEngineConfig config_;
+    std::uint64_t copyBytes_;
     std::vector<std::shared_ptr<IRenderStage>> stages_;
     std::atomic<std::uint64_t> rendered_{0};
     std::atomic<std::uint64_t> dropped_{0};
