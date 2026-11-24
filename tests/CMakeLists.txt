@@ -136,6 +136,8 @@ add_executable(wh_tests
     runtime/point_file_test.cpp
     runtime/operator_controls_test.cpp
     runtime/node_preset_test.cpp
+    runtime/benchmark_test.cpp
+    runtime/benchmark_report_test.cpp
     runtime/live_decks_test.cpp
     runtime/live_bindings_test.cpp
     runtime/live_flash_test.cpp
