@@ -43,6 +43,7 @@ Raum sitzt, und tastet die Funktion genau dort ab.
 | `wh_runtime` | Session und Player: Projekt zu laufender Ausgabe zusammensetzen, Graph/Layout/Parameter bearbeiten, Rückgängig; Prüfbericht |
 | `apps/whitehole_studio` | Qt-6-Oberfläche: Vorschau, Parameter, Node-Editor, Layout-Editor, Rückgängig (optional, siehe [Oberfläche](docs/studio.md)) |
 | `apps/whitehole_cli` | Konsolen-Runner: `--check`, rendern und senden |
+| `apps/whitehole_benchmark` | Benchmark als eigenes Programm: misst, welche Projektionsgröße und LED-Zahl der Rechner flüssig schafft (siehe [Benchmark](docs/benchmark.md)) |
 
 Abhängigkeiten zeigen nur nach unten. Kein Modul außer `apps/whitehole_studio` kennt Qt.
 

@@ -10,6 +10,7 @@ target_link_libraries(whitehole_cli PRIVATE
     whitehole::preview
     whitehole::project
     whitehole::runtime
+    wh_benchmark_run
     wh_warnings)
 if(TARGET wh_gpu_webgpu)
     target_link_libraries(whitehole_cli PRIVATE wh_gpu_webgpu)

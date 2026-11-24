@@ -139,6 +139,8 @@ add_executable(wh_tests
     runtime/benchmark_test.cpp
     runtime/benchmark_gpu_target_test.cpp
     runtime/benchmark_report_test.cpp
+    runtime/benchmark_files_test.cpp
+    runtime/benchmark_args_test.cpp
     runtime/live_decks_test.cpp
     runtime/live_bindings_test.cpp
     runtime/live_flash_test.cpp
@@ -179,6 +181,10 @@ target_link_libraries(wh_tests PRIVATE
 
 target_include_directories(wh_tests PRIVATE "${PROJECT_SOURCE_DIR}/apps/whitehole_cli")
 target_sources(wh_tests PRIVATE "${PROJECT_SOURCE_DIR}/apps/whitehole_cli/cli_options.cpp")
+target_include_directories(wh_tests PRIVATE "${PROJECT_SOURCE_DIR}/apps/benchmark_run")
+target_sources(wh_tests PRIVATE "${PROJECT_SOURCE_DIR}/apps/benchmark_run/benchmark_files.cpp")
+target_include_directories(wh_tests PRIVATE "${PROJECT_SOURCE_DIR}/apps/whitehole_benchmark")
+target_sources(wh_tests PRIVATE "${PROJECT_SOURCE_DIR}/apps/whitehole_benchmark/benchmark_args.cpp")
 
 if(WIN32)
     target_link_libraries(wh_tests PRIVATE ws2_32)
