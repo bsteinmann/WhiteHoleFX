@@ -28,6 +28,7 @@
 #include "whitehole/runtime/player.hpp"
 
 class QCheckBox;
+class QSpinBox;
 class QDoubleSpinBox;
 class QGridLayout;
 class QLabel;
