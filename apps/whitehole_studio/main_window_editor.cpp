@@ -6,11 +6,13 @@
 #include <QDockWidget>
 #include <QMimeData>
 #include <QPoint>
+#include <QResizeEvent>
 #include <QSplitter>
 #include <QStandardPaths>
 #include <QStatusBar>
 #include <QTemporaryDir>
 
+#include <algorithm>
 #include <filesystem>
 #include <string>
 
@@ -166,6 +168,20 @@ QString MainWindow::exercisePalette() {
     onUndo();
     if (editor_->nodeCount() != before) {
         return tr("Palette: Rückgängig lässt %1 statt %2 Nodes").arg(editor_->nodeCount()).arg(before);
+    }
+    // Einpass-Schleife (Stillstand 24.11.): Ändert sich nur der Viewport (Scrollbalken kommt oder geht), darf die
+    // Ansicht nicht neu eingepasst werden.
+    editor_->reset();
+    QApplication::processEvents();
+    const int fits = editor_->fitCount();
+    QWidget* view = editor_->viewport();
+    const QSize old = view->size();
+    QResizeEvent narrower{QSize{std::max(old.width() - 17, 1), old.height()}, old};
+    QApplication::sendEvent(view, &narrower);
+    QResizeEvent back{old, narrower.size()};
+    QApplication::sendEvent(view, &back);
+    if (editor_->fitCount() != fits) {
+        return tr("Node-Editor: passt nach Scrollbalken-Wechsel neu ein (%1 statt %2)").arg(editor_->fitCount()).arg(fits);
     }
     for (int i = 0; i < 3; ++i) {
         tick();

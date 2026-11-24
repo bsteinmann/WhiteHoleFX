@@ -179,6 +179,8 @@ void NodeEditor::showAll() {
     for (const auto& [id, item] : nodes_) {
         content = content.united(item->sceneBoundingRect());
     }
+    fitArea_ = maximumViewportSize();
+    ++fitCount_;
     resetTransform();
     if (content.isNull()) {
         return;
@@ -379,8 +381,12 @@ void NodeEditor::keyPressEvent(QKeyEvent* event) {
 
 void NodeEditor::resizeEvent(QResizeEvent* event) {
     QGraphicsView::resizeEvent(event);
-    if (fitPending_) {
-        showAll();  // solange niemand die Ansicht angefasst hat, folgt sie der Fenstergröße
+    // Solange niemand die Ansicht angefasst hat, folgt sie der Fenstergröße - aber nur, wenn sich die verfügbare Fläche
+    // ändert. Blendet Qt nach dem Einpassen einen Scrollbalken ein oder aus, ändert das nur den Viewport, nicht
+    // maximumViewportSize(). Sonst schaukeln sich Einpassen und Scrollbalken gegenseitig auf und der Hauptthread kommt
+    // aus der Ereigniswarteschlange nicht mehr heraus (Stillstand 24.11., Beispiel techno, bei einer bestimmten Fenstergröße).
+    if (fitPending_ && maximumViewportSize() != fitArea_) {
+        showAll();
     }
 }
 

@@ -1,5 +1,9 @@
 # Änderungen
 
+## Unreleased
+
+- **Stillstand im Node-Editor behoben (Beispiel techno, Windows).** Bei bestimmten Fenstergrößen schaukelten sich das automatische Einpassen der Ansicht und die Scrollbalken gegenseitig auf: Einpassen ändert den Bereich, Qt blendet einen Scrollbalken ein oder aus, der Viewport wird schmaler oder breiter, der Editor passt neu ein, und so weiter. Der Hauptthread kam aus der Ereigniswarteschlange nicht mehr heraus (Stillstandsberichte vom 24.11., Version 1.1.0). Jetzt passt der Editor nur neu ein, wenn sich die verfügbare Fläche ohne Scrollbalken (`maximumViewportSize()`) ändert. Rauchtest „Node-Palette“ prüft, dass ein reiner Viewport-Wechsel nicht neu einpasst.
+
 ## 1.1.0
 
 Neue Funktionen seit 1.0.0: „Projektion“ (Fixtures als 2D-Fläche, Box-Würfel, Studio-Auswahl), Glow in der 3D-Vorschau standardmäßig aus. Fehlerbehebungen: Datei → Öffnen unter Windows, Absturz beim Fokuswechsel, übersprungene Pixel auf 0 setzbar, Output-Node duplizieren, Testmodus-Knopf. Die Einzelheiten stehen unten.

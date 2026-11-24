@@ -2286,7 +2286,7 @@ msgstr "Valores predeterminados de nodos"
 msgid "Node-Typ suchen …"
 msgstr "Buscar tipo de nodo …"
 
-#: main_window_editor.cpp:65
+#: main_window_editor.cpp:67
 msgid "Nodes"
 msgstr "Nodos"
 
@@ -2778,7 +2778,7 @@ msgstr "Parar"
 msgid "Strenge &Eingänge"
 msgstr "Entradas &estrictas"
 
-#: main_window_editor.cpp:180
+#: main_window_editor.cpp:196
 msgid "Strenge Eingänge"
 msgstr "Entradas estrictas"
 

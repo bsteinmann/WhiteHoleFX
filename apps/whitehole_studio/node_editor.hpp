@@ -21,6 +21,7 @@
 #include <QGraphicsScene>
 #include <QGraphicsView>
 #include <QPointF>
+#include <QSize>
 #include <QString>
 
 #include <map>
@@ -184,6 +185,8 @@ public:
     QString exerciseWireFit();
 
     [[nodiscard]] int nodeCount() const noexcept { return static_cast<int>(nodes_.size()); }
+    /// Wie oft `showAll` bisher eingepasst hat (für den Rauchtest gegen die Einpass-Schleife).
+    [[nodiscard]] int fitCount() const noexcept { return fitCount_; }
     [[nodiscard]] int wireCount() const noexcept { return static_cast<int>(wires_.size()); }
 
     [[nodiscard]] QSize sizeHint() const override { return {720, 300}; }
@@ -320,6 +323,8 @@ private:
     bool panning_{false};
     QPoint panLast_;
     bool fitPending_{false};
+    QSize fitArea_;  // verfügbare Fläche (ohne Scrollbalken) beim letzten Einpassen
+    int fitCount_{0};
 };
 
 }  // namespace whitehole::studio
