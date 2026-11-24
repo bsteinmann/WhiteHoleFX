@@ -83,6 +83,8 @@ public:
     /// Ein Frame samt Vorschau (der Timer ruft das auf; Tests und --grab auch).
     void tick();
     void refreshImage();
+    /// Live-Betrieb mit „Vorschau teilen“: links die Ausgabe, rechts der vorgeladene Look (main_window_split_preview.cpp).
+    void refreshSplitImage(const preview::PreviewOptions& options);
 
     /// Rauchtest: stellt jeden aktiven Regler einmal um (wie ein Mensch es täte) und liefert die
     /// Zahl der Änderungen. Für --exercise in der CI.

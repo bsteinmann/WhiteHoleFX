@@ -227,4 +227,26 @@ LiveStatus LiveDecks::status() const noexcept {
     return s;
 }
 
+std::vector<graph::PortRef> LiveDecks::deckOutputs() const {
+    std::vector<graph::PortRef> outputs;
+    for (const bool deckIsA : {true, false}) {
+        for (const graph::Connection& connection : graph_.connections()) {
+            if (connection.to.node == mixer_ && connection.to.portKey == inputOf(deckIsA)) {
+                outputs.push_back(connection.from);
+            }
+        }
+    }
+    if (outputs.size() != 2) {
+        return {};  // vor start() (oder ein Deck ohne Eingang): keine Vorschau
+    }
+    return outputs;
+}
+
+std::optional<std::uint32_t> LiveDecks::previewDeck() const noexcept {
+    if (!armed_ && !fading_) {
+        return std::nullopt;
+    }
+    return other(visible_) == Deck::A ? 0U : 1U;
+}
+
 }  // namespace whitehole::runtime

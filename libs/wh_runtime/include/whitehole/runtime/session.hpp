@@ -20,6 +20,8 @@
 #include <cstdint>
 #include <memory>
 #include <optional>
+#include <span>
+#include <vector>
 
 #include "whitehole/compiler/node_definition.hpp"
 #include "whitehole/core/result.hpp"
@@ -63,6 +65,11 @@ struct SessionOptions {
     /// Merkt sich die Farben des letzten Frames (für die Vorschau). Kostet je Frame eine Kopie
     /// von 16 Byte je LED; darum nur auf Wunsch.
     bool keepLatestColors{false};
+    /// Platz für einen Zusatzausgang (geteilte Vorschau im Live-Betrieb, siehe applyGraph/selectSecondary). Kostet
+    /// GPU-Speicher für eine zweite Farbe je LED; gerechnet und zurückgelesen wird er nur, solange einer gewählt ist.
+    bool secondaryColors{false};
+    /// Zusatzausgänge für den ersten Graphen (wie `extras` von applyGraph); nur mit secondaryColors.
+    std::vector<graph::PortRef> secondaryTargets;
 };
 
 struct SessionStats {
@@ -88,7 +95,18 @@ public:
     /// Übernimmt einen geänderten Graphen (z. B. neue Parameterwerte) im laufenden Betrieb.
     /// Ändert sich nur ein Wert, entsteht keine neue Pipeline. Bei einem Fehler läuft der letzte
     /// gute Zustand weiter; der Fehler steht in stageError().
-    Result<void> applyGraph(const graph::Graph& graph) { return stage_->setGraph(graph); }
+    /// `extras`: zusätzliche Field-Ausgänge für die geteilte Vorschau (nur mit SessionOptions::secondaryColors, sonst
+    /// InvalidArgument); welcher davon abgetastet wird, wählt selectSecondary.
+    Result<void> applyGraph(const graph::Graph& graph, std::span<const graph::PortRef> extras = {}) {
+        return stage_->setGraph(graph, extras);
+    }
+    /// Wählt den Zusatzausgang (Stelle in `extras` des letzten applyGraph), der ab dem nächsten Frame mit abgetastet
+    /// und zurückgelesen wird; std::nullopt = keiner (kostet dann nichts). Ohne secondaryColors wirkungslos.
+    /// Fehler: GpuError.
+    Result<void> selectSecondary(std::optional<std::uint32_t> extra);
+    /// Farben des gewählten Zusatzausgangs aus dem zuletzt gelieferten Frame (linear, eine je LED, ohne Master und
+    /// Testbild). Leer, solange keiner gewählt ist oder noch kein Frame mit der aktuellen Wahl ankam. Thread-sicher.
+    [[nodiscard]] std::vector<ColorRgba> latestSecondaryColors() const;
 
     /// Wie applyGraph, aber nur für geänderte Parameterwerte: übersetzt nicht neu und ist deshalb billig genug
     /// für jeden Frame. Nur benutzen, wenn sich weder Nodes noch Kabel noch Textparameter geändert haben.
@@ -139,6 +157,7 @@ private:
     std::unique_ptr<engine::ReadbackRing> ring_;
     std::unique_ptr<engine::RenderEngine> engine_;           // zuletzt angelegt, zuerst entfernt
     std::size_t slots_;
+    std::uint32_t secondaryTag_{0};  // zählt bei jeder Wahl hoch, damit alte Readbacks nicht als neue gelten
 };
 
 }  // namespace whitehole::runtime

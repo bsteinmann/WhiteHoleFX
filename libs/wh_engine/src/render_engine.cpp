@@ -8,7 +8,11 @@ namespace whitehole::engine {
 
 RenderEngine::RenderEngine(gpu::IGpuDevice& device, IFrameClock& clock, ReadbackRing& ring,
                            RenderEngineConfig config)
-    : device_{device}, clock_{clock}, ring_{ring}, config_{config} {}
+    : device_{device}, clock_{clock}, ring_{ring}, config_{config}, copyBytes_{config.outputSizeBytes} {}
+
+void RenderEngine::setCopySizeBytes(std::uint64_t bytes) noexcept {
+    copyBytes_ = (bytes == 0 || bytes > config_.outputSizeBytes) ? config_.outputSizeBytes : bytes;
+}
 
 void RenderEngine::setStages(std::vector<std::shared_ptr<IRenderStage>> stages) {
     stages_ = std::move(stages);
@@ -30,7 +34,7 @@ Result<void> RenderEngine::renderFrame() {
         for (const auto& stage : stages_) {
             stage->record(time, recorder);
         }
-        recorder.copyBufferToBuffer(config_.outputBuffer, slot->buffer, config_.outputSizeBytes);
+        recorder.copyBufferToBuffer(config_.outputBuffer, slot->buffer, copyBytes_);
     });
     if (!submitted.ok()) {
         ring_.release(*slot);

@@ -2,6 +2,7 @@
 #pragma once
 
 #include <cstdint>
+#include <span>
 #include <string>
 #include <vector>
 
@@ -55,8 +56,13 @@ struct CompiledField {
 ///  - Scalar oder Farbe an einem Field-Eingang wird ein Konstanten-Slot
 ///    (SlotOrigin::FieldConstant) und im Shader ein konstantes Feld. Die Quelle
 ///    wird nicht übersetzt; ihren Wert liefert packParameters.
+///
+/// Zusätzliche Ausgänge (`extras`, z. B. die beiden Decks des Live-Betriebs für die geteilte Vorschau): je einer wird
+/// mit übersetzt und bekommt den Einstieg `fn wh_field_extra<i>(p: vec3<f32>) -> vec4<f32>` (i = Stelle in `extras`).
+/// Sie werden geprüft wie `target` (dieselben Fehler). Nodes, die beide erreichen, stehen nur einmal im Shader.
 [[nodiscard]] Result<CompiledField> compileField(const graph::Graph& graph,
                                                  const ISnippetLibrary& snippets,
-                                                 const graph::PortRef& target);
+                                                 const graph::PortRef& target,
+                                                 std::span<const graph::PortRef> extras = {});
 
 }  // namespace whitehole::compiler

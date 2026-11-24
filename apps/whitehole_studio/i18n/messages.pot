@@ -106,7 +106,7 @@ msgstr ""
 msgid "%1  (%2 LEDs)"
 msgstr ""
 
-#: live_panel.cpp:272
+#: live_panel.cpp:287
 msgid "%1  →  %2"
 msgstr ""
 
@@ -246,11 +246,11 @@ msgstr ""
 msgid "&Live"
 msgstr ""
 
-#: main_window_live.cpp:99
+#: main_window_live.cpp:104
 msgid "&Live-Modus"
 msgstr ""
 
-#: main_window_live.cpp:94
+#: main_window_live.cpp:99
 msgid "&Look speichern …"
 msgstr ""
 
@@ -326,7 +326,7 @@ msgstr ""
 msgid "(eigene Form)"
 msgstr ""
 
-#: live_panel.cpp:272
+#: live_panel.cpp:287
 msgid "(kein Look)"
 msgstr ""
 
@@ -714,7 +714,7 @@ msgstr ""
 msgid "Aus-LEDs &unsichtbar"
 msgstr ""
 
-#: stage_setup_window.cpp:39
+#: main_window_split_preview.cpp:82 stage_setup_window.cpp:39
 msgid "Ausgabe"
 msgstr ""
 
@@ -806,7 +806,7 @@ msgstr ""
 msgid "Benutzerbibliothek lässt sich nicht speichern: %1"
 msgstr ""
 
-#: live_panel.cpp:273
+#: live_panel.cpp:288
 msgid "Bereit: %1 - GO drücken"
 msgstr ""
 
@@ -844,6 +844,10 @@ msgstr ""
 
 #: look_panel.cpp:75
 msgid "Blendet die Bearbeitung aus und zeigt große Knöpfe für alle Looks (F9)"
+msgstr ""
+
+#: main_window_split_preview.cpp:74
+msgid "Blendet ein: %1"
 msgstr ""
 
 #: node_info_texts.cpp:27
@@ -902,7 +906,7 @@ msgstr ""
 msgid "Cue −"
 msgstr ""
 
-#: main_window_live.cpp:77
+#: main_window_live.cpp:82
 msgid "Cuelist"
 msgstr ""
 
@@ -1026,7 +1030,7 @@ msgstr ""
 msgid "Den Look „%1“ löschen?"
 msgstr ""
 
-#: main_window_live.cpp:96
+#: main_window_live.cpp:101
 msgid "Den aktuellen Effekt als Look in die Liste legen (Strg+L)"
 msgstr ""
 
@@ -1058,7 +1062,7 @@ msgstr ""
 msgid "Der Kanalwert 0 bis 255 setzt den Master auf 0 bis 100 %. Solange Pakete kommen, folgt der Master-Regler dem Pult; bleibt das Signal weg, hält der Master seinen Wert. Der Empfang oben muss für das gewählte Protokoll eingeschaltet sein."
 msgstr ""
 
-#: live_panel.cpp:210
+#: live_panel.cpp:225
 msgid "Der Look läuft nur, solange der Knopf (oder das Pad) gehalten wird"
 msgstr ""
 
@@ -1082,7 +1086,7 @@ msgstr ""
 msgid "Die Cuelist ist leer. Erst Cues anlegen (Dock „Cuelist“)."
 msgstr ""
 
-#: live_panel.cpp:298 live_panel_looks.cpp:107
+#: live_panel.cpp:313 live_panel_looks.cpp:107
 msgid "Die Cuelist läuft und schaltet die Looks selbst. Erst in der Cuelist auf Stopp drücken."
 msgstr ""
 
@@ -1218,7 +1222,7 @@ msgstr ""
 msgid "Effekte (2D)"
 msgstr ""
 
-#: live_panel.cpp:111
+#: live_panel.cpp:119
 msgid "Eigene Überblendzeit:"
 msgstr ""
 
@@ -1234,7 +1238,7 @@ msgstr ""
 msgid "Ein Kabel lässt sich nur zwischen passenden Typen ziehen."
 msgstr ""
 
-#: live_panel.cpp:110
+#: live_panel.cpp:118
 msgid "Ein Klick lädt den Look nur vor. GO (Leertaste) startet dann die Überblendung."
 msgstr ""
 
@@ -1586,7 +1590,7 @@ msgstr ""
 msgid "Flammen: Aufsteigendes, flackerndes Feuer mit einstellbarer Skalierung, Tempo und Flammenhöhe."
 msgstr ""
 
-#: live_panel.cpp:209
+#: live_panel.cpp:224
 msgid "Flash"
 msgstr ""
 
@@ -1630,7 +1634,7 @@ msgstr ""
 msgid "Färbt ein Bild nach seiner Helligkeit mit bis zu vier Farben um (von dunkel nach hell). „Shift“ lässt die Farben wandern."
 msgstr ""
 
-#: main_window_live.cpp:122
+#: main_window_live.cpp:127
 msgid "Für den Live-Modus erst Looks speichern (Dock „Looks“)."
 msgstr ""
 
@@ -1638,7 +1642,7 @@ msgstr ""
 msgid "GO"
 msgstr ""
 
-#: live_panel.cpp:122
+#: live_panel.cpp:130
 msgid "GO  (Leertaste)"
 msgstr ""
 
@@ -1898,6 +1902,10 @@ msgstr ""
 msgid "Kein GPU-Adapter: %1"
 msgstr ""
 
+#: main_window_split_preview.cpp:80
+msgid "Kein Look vorgeladen"
+msgstr ""
+
 #: main_window.cpp:271
 msgid "Kein Projekt"
 msgstr ""
@@ -2082,11 +2090,15 @@ msgstr ""
 msgid "Links ab"
 msgstr ""
 
+#: live_panel.cpp:91
+msgid "Links die Ausgabe, rechts der vorgeladene Look (während des Überblendens der einblendende). Kostet etwas Rechenzeit, solange ein Look vorgeladen ist"
+msgstr ""
+
 #: main_window_controls.cpp:154
 msgid "Liste leeren"
 msgstr ""
 
-#: main_window_live.cpp:87
+#: main_window_live.cpp:92
 msgid "Live"
 msgstr ""
 
@@ -2158,7 +2170,7 @@ msgstr ""
 msgid "Look-Auswahl im Live-Betrieb über einen DMX-Kanal steuern"
 msgstr ""
 
-#: main_window_live.cpp:82
+#: main_window_live.cpp:87
 msgid "Looks"
 msgstr ""
 
@@ -2282,7 +2294,7 @@ msgstr ""
 msgid "Mischt zwei Bilder: 0 zeigt nur A, 1 nur B, dazwischen eine Überblendung."
 msgstr ""
 
-#: live_panel.cpp:109
+#: live_panel.cpp:117
 msgid "Mit GO (vorladen)"
 msgstr ""
 
@@ -2838,6 +2850,10 @@ msgstr ""
 msgid "Schrittfolge mit bis zu acht Werten. Jedes Einschalten von „Advance“ geht einen Schritt weiter (vorwärts, rückwärts, hin und her oder zufällig)."
 msgstr ""
 
+#: main_window_split_preview.cpp:73
+msgid "Schwarz"
+msgstr ""
+
 #: node_info_texts.cpp:171
 msgid "Schwingung (LFO): Sinus, Dreieck, Sägezahn oder Rechteck mit Frequenz, Phase und Wertebereich. Der Klassiker zum Bewegen von Parametern."
 msgstr ""
@@ -2982,7 +2998,7 @@ msgstr ""
 msgid "Starte …"
 msgstr ""
 
-#: live_panel.cpp:112
+#: live_panel.cpp:120
 msgid "Statt der Zeit, die beim Look gespeichert ist"
 msgstr ""
 
@@ -3238,8 +3254,16 @@ msgstr ""
 msgid "Vorgefertigtes Profil: zum Ändern erst kopieren"
 msgstr ""
 
+#: main_window_split_preview.cpp:74
+msgid "Vorgeladen: %1"
+msgstr ""
+
 #: layout_panel_groups.cpp:212
 msgid "Vorschau"
+msgstr ""
+
+#: live_panel.cpp:88
+msgid "Vorschau teilen"
 msgstr ""
 
 #: patch_table.cpp:50
@@ -3394,6 +3418,10 @@ msgstr ""
 msgid "Wird durch eine Verbindung im Graphen gesteuert."
 msgstr ""
 
+#: main_window_split_preview.cpp:80
+msgid "Wird geladen …"
+msgstr ""
+
 #: parameter_panel.cpp:207
 msgid "Wähle einen Node im Node-Editor, um seine Parameter zu sehen. Mit „Anheften“ bleibt ein Node hier stehen."
 msgstr ""
@@ -3450,7 +3478,7 @@ msgstr ""
 msgid "Zeit"
 msgstr ""
 
-#: live_panel.cpp:212
+#: live_panel.cpp:227
 msgid "Zeit zum Einblenden beim Drücken"
 msgstr ""
 
@@ -3458,7 +3486,7 @@ msgstr ""
 msgid "Zeit zum Einblenden beim Drücken (s):"
 msgstr ""
 
-#: live_panel.cpp:214
+#: live_panel.cpp:229
 msgid "Zeit zum Zurückblenden beim Loslassen"
 msgstr ""
 
@@ -3554,7 +3582,7 @@ msgstr ""
 msgid "Zurückblenden mit eigener Zeit …"
 msgstr ""
 
-#: main_window_live.cpp:103
+#: main_window_live.cpp:108
 msgid "Zwischen Bearbeiten und Live-Betrieb wechseln (F9)"
 msgstr ""
 
@@ -3686,7 +3714,7 @@ msgstr ""
 msgid "Überblendet von Bild A zu Bild B (Position 0 bis 1). „Progressive“ lässt beide in der Mitte voll leuchten."
 msgstr ""
 
-#: live_panel.cpp:194
+#: live_panel.cpp:209
 msgid "Überblendzeit %1 s. Rechtsklick: umschalten oder flashen"
 msgstr ""
 

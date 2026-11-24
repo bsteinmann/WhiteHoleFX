@@ -48,6 +48,7 @@ add_executable(whitehole_studio
     main_window_dmx_monitor.cpp
     main_window_editor.cpp
     main_window_live.cpp
+    main_window_split_preview.cpp
     main_window_help.cpp
     main_window_update.cpp
     update_checker.cpp

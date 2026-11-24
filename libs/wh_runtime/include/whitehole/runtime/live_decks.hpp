@@ -19,6 +19,7 @@
 // Reine Logik auf einem Graphen: ohne GPU, ohne Uhr (die Zeit kommt als Parameter), daher genau testbar.
 #pragma once
 
+#include <cstdint>
 #include <memory>
 #include <optional>
 #include <vector>
@@ -76,6 +77,13 @@ public:
     [[nodiscard]] const graph::Graph& graph() const noexcept { return graph_; }
     [[nodiscard]] const graph::PortRef& target() const noexcept { return target_; }
     [[nodiscard]] LiveStatus status() const noexcept;
+
+    /// Die Ausgänge, die an den Mischer gehen: [0] = Deck A, [1] = Deck B (für die geteilte Vorschau als
+    /// Zusatzausgänge des Shaders; sie ändern sich nur, wenn ein Look geladen wird). Leer vor start().
+    [[nodiscard]] std::vector<graph::PortRef> deckOutputs() const;
+    /// Welches Deck (0 = A, 1 = B) gerade den vorgeladenen oder einblendenden Look hält; nullopt, wenn nichts
+    /// vorgeladen ist und nichts einblendet. Der Look dazu steht in status() (armed bzw. incoming, -1 = Schwarz).
+    [[nodiscard]] std::optional<std::uint32_t> previewDeck() const noexcept;
 
 private:
     enum class Deck { A, B };

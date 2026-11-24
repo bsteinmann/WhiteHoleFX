@@ -135,3 +135,28 @@ TEST_CASE("RenderEngine gibt den Slot frei, wenn das Einreichen scheitert") {
     CHECK(rig.engine->renderFrame().ok());  // der nächste Frame läuft normal
     CHECK(rig.engine->stats().framesRendered == 1U);
 }
+
+TEST_CASE("RenderEngine kopiert auf Wunsch nur den Anfang des Ausgabepuffers") {
+    Rig rig{1};
+    rig.device.fill(rig.output, std::byte{0x11});
+    REQUIRE(rig.engine->renderFrame().ok());
+    rig.device.poll();
+    REQUIRE(rig.mailbox.takeLatest().has_value());
+
+    rig.device.fill(rig.output, std::byte{0x22});
+    rig.engine->setCopySizeBytes(4);
+    REQUIRE(rig.engine->renderFrame().ok());
+    rig.device.poll();
+    const auto partial = rig.mailbox.takeLatest();
+    REQUIRE(partial.has_value());
+    REQUIRE(partial->bytes.size() == Rig::kBytes);
+    CHECK(std::to_integer<unsigned>(partial->bytes[3]) == 0x22U);
+    CHECK(std::to_integer<unsigned>(partial->bytes[4]) == 0x11U);  // alter Inhalt des Slots
+
+    rig.engine->setCopySizeBytes(0);  // 0 = wieder alles
+    REQUIRE(rig.engine->renderFrame().ok());
+    rig.device.poll();
+    const auto full = rig.mailbox.takeLatest();
+    REQUIRE(full.has_value());
+    CHECK(std::to_integer<unsigned>(full->bytes[7]) == 0x22U);
+}

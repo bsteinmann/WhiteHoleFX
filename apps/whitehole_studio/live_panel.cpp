@@ -84,12 +84,20 @@ LivePanel::LivePanel(runtime::Player& player, QWidget* parent) : QWidget{parent}
     columnsBox_->setValue(columns_);
     columnsBox_->setToolTip(tr("Wie viele Look-Knöpfe nebeneinander stehen; mehr Spalten brauchen weniger Höhe"));
     columnsRow->addWidget(columnsBox_);
+    columnsRow->addSpacing(16);
+    splitCheck_ = new QCheckBox{tr("Vorschau teilen"), settingsBar_};
+    splitCheck_->setObjectName(QStringLiteral("liveSplitPreview"));
+    splitCheck_->setChecked(true);
+    splitCheck_->setToolTip(tr("Links die Ausgabe, rechts der vorgeladene Look (während des Überblendens der einblendende). "
+                               "Kostet etwas Rechenzeit, solange ein Look vorgeladen ist"));
+    columnsRow->addWidget(splitCheck_);
     columnsRow->addStretch(1);
     barLayout->addLayout(columnsRow);
     connect(columnsBox_, &QSpinBox::valueChanged, this, [this](int value) {
         setColumns(value);
         Q_EMIT columnsChanged(value);
     });
+    connect(splitCheck_, &QCheckBox::toggled, this, [this](bool on) { Q_EMIT splitPreviewChanged(on); });
     settingsBar_->setVisible(false);
     layout->addWidget(settingsBar_);
 
@@ -151,6 +159,13 @@ LivePanel::LivePanel(runtime::Player& player, QWidget* parent) : QWidget{parent}
     }
     rebuild();
 }
+
+void LivePanel::setSplitPreview(bool on) {
+    const QSignalBlocker blocker{splitCheck_};
+    splitCheck_->setChecked(on);
+}
+
+bool LivePanel::splitPreview() const { return splitCheck_->isChecked(); }
 
 void LivePanel::setColumns(int columns) {
     columns = std::clamp(columns, 1, 16);

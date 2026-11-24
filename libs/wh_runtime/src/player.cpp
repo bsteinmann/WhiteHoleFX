@@ -125,6 +125,9 @@ Result<void> Player::start() {
     auto clock = std::make_unique<engine::SteadyFrameClock>();
     SessionOptions options;
     options.keepLatestColors = true;
+    // Geteilte Vorschau: Platz für das verdeckte Deck nur im Live-Betrieb (player_live_preview.cpp)
+    options.secondaryColors = live_.has_value() && splitPreview_;
+    options.secondaryTargets = previewTargets();
     // Im Live-Betrieb rechnet die Session den Graphen der Decks, nicht den des Editors.
     std::optional<project::Project> liveProject;
     if (live_) {
@@ -144,6 +147,7 @@ Result<void> Player::start() {
         session_->setTestPattern(testPattern_);
     }
     refreshCompleteness();
+    previewSelected_.reset();  // die neue Session hat noch nichts gewählt
     stepError_.reset();
     graphDirty_ = false;
     valuesDirty_ = false;
@@ -195,7 +199,7 @@ Result<void> Player::step() {
         // Ein Fehler (z. B. Shader lässt sich nicht übersetzen) lässt den letzten guten Zustand
         // laufen und steht in status().lastError. Eine Lücke auf dem Weg zum Ausgang (Pflicht-Eingang ohne Kabel)
         // hält dagegen nicht den letzten Look: refreshCompleteness schaltet die LEDs aus.
-        (void)session_->applyGraph(activeGraph());
+        (void)session_->applyGraph(activeGraph(), previewTargets());
         refreshCompleteness();
         if (structural) {
             liveLast_ = liveNow();  // das Übersetzen des Shaders soll nicht von der Überblendzeit abgehen
@@ -204,6 +208,7 @@ Result<void> Player::step() {
         valuesDirty_ = false;
         (void)session_->applyParameters(activeGraph());
     }
+    selectPreview(structural);
     const Result<void> r = session_->renderFrame();
     if (!r.ok()) {
         stepError_ = r.error();
@@ -330,6 +335,18 @@ std::optional<LedInfo> Player::ledInfoAt(const preview::ViewFrame& frame, float 
 }
 
 void Player::previewInputs(preview::PreviewOptions& options, std::vector<ColorRgba>& colors) const {
+    previewGamma(options);
+    if (session_) {
+        colors = session_->latestColors();
+        if (colors.empty()) {
+            colors.assign(map_.world.size(), ColorRgba{0.0F, 0.0F, 0.0F, 1.0F});
+        }
+    } else {
+        colors = preview::layoutColors(map_);
+    }
+}
+
+void Player::previewGamma(preview::PreviewOptions& options) const {
     // Die Vorschau zeigt, was die LEDs ausgeben: je Fixture das Gamma seines Patches.
     if (options.fixtureGamma.empty()) {
         for (const mapping::FixtureRange& range : map_.ranges) {
@@ -341,14 +358,6 @@ void Player::previewInputs(preview::PreviewOptions& options, std::vector<ColorRg
             }
             options.fixtureGamma.push_back(gamma);
         }
-    }
-    if (session_) {
-        colors = session_->latestColors();
-        if (colors.empty()) {
-            colors.assign(map_.world.size(), ColorRgba{0.0F, 0.0F, 0.0F, 1.0F});
-        }
-    } else {
-        colors = preview::layoutColors(map_);
     }
 }
 

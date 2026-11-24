@@ -48,6 +48,7 @@ struct AppSettings {
     QStringList midiProfiles;
     /// Spalten des Look-Rasters im Live-Fenster (1 bis 16).
     int liveColumns{4};
+    bool liveSplitPreview{true};  // Live-Fenster: Vorschau teilen (links Ausgabe, rechts vorgeladener Look)
     /// Belegung der Live-Steuerung (runtime::serializeBindings), Reiter "Steuerung" und Live-Fenster.
     QStringList liveBindings;
     /// "off", "default", "device:<Name>" oder "file:<Pfad>".

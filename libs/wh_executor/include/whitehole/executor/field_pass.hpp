@@ -73,7 +73,9 @@ public:
 
     /// Übernimmt einen Snapshot des Graphen; baut die Pipeline nur bei neuer Struktur.
     /// Bei einem Fehler bleibt der bisherige Zustand bestehen.
-    Result<void> setGraph(const graph::Graph& graph);
+    /// `extras`: zusätzliche Field-Ausgänge, die mit übersetzt werden (Einstiege `wh_field_extra<i>`, siehe compileField);
+    /// sie gelten, bis setGraph sie erneut setzt.
+    Result<void> setGraph(const graph::Graph& graph, std::span<const graph::PortRef> extras = {});
 
     /// Schnellweg für den Fall, dass sich nur Parameterwerte geändert haben (Regler, Überblendung): übernimmt
     /// die Werte, ohne den Graphen neu zu übersetzen. Der Aufrufer muss sicher sein, dass sich weder Nodes

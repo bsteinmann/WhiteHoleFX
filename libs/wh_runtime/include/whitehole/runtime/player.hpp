@@ -446,6 +446,21 @@ public:
     /// ausgewertet wurden, tauchen auf; ein Node ohne Verbraucher liefert nichts.
     [[nodiscard]] std::vector<LiveSignal> liveSignals() const;
 
+    /// Geteilte Vorschau (player_live_preview.cpp): Im Live-Betrieb rechnet der Shader zusätzlich das verdeckte Deck
+    /// mit, solange dort ein Look vorgeladen ist oder einblendet, damit die Oberfläche ihn neben der Ausgabe zeigen
+    /// kann. Standard: aus (kostet nichts). Ein Wechsel baut eine laufende Live-Ausgabe einmal neu auf.
+    void setSplitPreview(bool on);
+    [[nodiscard]] bool splitPreview() const noexcept { return splitPreview_; }
+    /// Look, den die rechte Hälfte zeigt: der vorgeladene oder (während der Überblendung) der einblendende; -1 =
+    /// Schwarz vorgeladen. std::nullopt: nichts vorgeladen, nicht live oder geteilte Vorschau aus.
+    [[nodiscard]] std::optional<int> previewLook() const noexcept;
+    /// Bild des vorgeladenen bzw. einblendenden Looks wie image()/image3d(), mit den Farben des letzten Frames, der
+    /// ihn schon enthielt. Fehler: InvalidArgument (nichts geladen), NotFound (previewLook() leer oder noch kein
+    /// Frame mit ihm angekommen).
+    [[nodiscard]] Result<preview::Image> previewImage(const preview::PreviewOptions& options) const;
+    [[nodiscard]] Result<preview::Image> previewImage3d(const preview::Camera3d& camera,
+                                                        const preview::PreviewOptions& options) const;
+
     // --- Cuelist (Issue #21) ---------------------------------------------------------------------------------
     // Die Cues stehen im Projekt (Zeilen `cue ...`). Der Ablauf braucht den Live-Betrieb: cuesStart() startet ihn,
     // zeigt den ersten Cue sofort und lässt dann die Auslöser (GO, Zeit, Taste, DMX, Beat) die weiteren auslösen.
@@ -534,6 +549,8 @@ public:
 private:
     /// Gamma je Fixture und aktuelle Farben für die Vorschau (2D und 3D).
     void previewInputs(preview::PreviewOptions& options, std::vector<ColorRgba>& colors) const;
+    /// Nur das Gamma je Fixture (previewInputs ohne die Farben).
+    void previewGamma(preview::PreviewOptions& options) const;
 
     Result<void> adopt(project::Project project, std::string path);
 
@@ -558,6 +575,11 @@ private:
     void pollLiveDmx();
     void advanceCues();
     Result<void> executeCue(int index);
+    /// Zusatzausgänge des Shaders für die geteilte Vorschau (die beiden Decks), sonst leer.
+    [[nodiscard]] std::vector<graph::PortRef> previewTargets() const;
+    /// Gibt der Session das Deck weiter, das mitgerechnet werden soll (nur bei einem Wechsel oder nach `reloaded`).
+    void selectPreview(bool reloaded);
+
     [[nodiscard]] double liveNow() const {
         return liveClock_ ? liveClock_()
                           : std::chrono::duration<double>(std::chrono::steady_clock::now().time_since_epoch()).count();
@@ -608,6 +630,9 @@ private:
     std::optional<Error> cueError_;
     bool blackout_{false};
     bool incomplete_{false};  // der Weg zum Ausgang hat eine Lücke: LEDs aus (siehe outputIncomplete)
+    bool splitPreview_{false};
+    /// Was der Session zuletzt als Vorschau-Deck gemeldet wurde (äußeres optional leer = noch nichts gemeldet).
+    std::optional<std::optional<std::uint32_t>> previewSelected_;
 };
 
 }  // namespace whitehole::runtime

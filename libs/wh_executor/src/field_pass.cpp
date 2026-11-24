@@ -106,7 +106,7 @@ Result<void> FieldPass::rebuildPipeline(const compiler::CompiledField& compiled)
     return {};
 }
 
-Result<void> FieldPass::setGraph(const graph::Graph& graph) {
+Result<void> FieldPass::setGraph(const graph::Graph& graph, std::span<const graph::PortRef> extras) {
     const auto fail = [this](const Error& error) -> Result<void> {
         graphError_ = error;
         return error;
@@ -117,7 +117,7 @@ Result<void> FieldPass::setGraph(const graph::Graph& graph) {
     const graph::Graph& effective = merged ? merged->graph : graph;
     const graph::PortRef& effectiveTarget = merged ? merged->target : target_;
 
-    Result<compiler::CompiledField> compiled = compiler::compileField(effective, snippets_, effectiveTarget);
+    Result<compiler::CompiledField> compiled = compiler::compileField(effective, snippets_, effectiveTarget, extras);
     if (!compiled.ok()) {
         return fail(compiled.error());
     }

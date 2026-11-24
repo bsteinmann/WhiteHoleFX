@@ -365,3 +365,51 @@ TEST_CASE("setParameters ohne bisherigen Graphen verhält sich wie setGraph") {
     fx.render(0.0);
     CHECK(fx.stage->stats().pipelinesBuilt == 1U);
 }
+
+TEST_CASE("Zusatzausgang: größerer Farbpuffer, Auswahl im Uniform, ohne Platz abgelehnt", "[secondary]") {
+    SamplingFixture plain{16};
+    const NodeId other = plain.lab.add("wh.generator.plasma");
+    const std::vector<graph::PortRef> extras{graph::PortRef{other, "out"}};
+    CHECK(plain.stage->setGraph(plain.lab.graph, extras).error().code == ErrorCode::InvalidArgument);
+    CHECK_FALSE(plain.stage->hasSecondary());
+    CHECK(plain.stage->outputSizeBytes() == plain.stage->mainSizeBytes());
+
+    Lab lab;
+    FakeGpuDevice device;
+    const NodeId gradient = lab.add("wh.generator.gradient");
+    const NodeId plasma = lab.add("wh.generator.plasma");
+    executor::SamplingStageConfig config;
+    config.target = graph::PortRef{gradient, "out"};
+    config.ledCapacity = 16;
+    config.secondary = true;
+    auto created = executor::SamplingRenderStage::create(device, lab.snippets, lab.kernels, config);
+    REQUIRE(created.ok());
+    auto& stage = *created.value();
+    CHECK(stage.hasSecondary());
+    CHECK(stage.mainSizeBytes() == 16U * executor::kBytesPerLed);
+    CHECK(stage.outputSizeBytes() == 33U * executor::kBytesPerLed);
+    CHECK(device.bufferBytes(stage.output()).size() == 33U * executor::kBytesPerLed);
+
+    const std::vector<graph::PortRef> deckOutputs{graph::PortRef{gradient, "out"}, graph::PortRef{plasma, "out"}};
+    REQUIRE(stage.setGraph(lab.graph, deckOutputs).ok());
+    REQUIRE(stage.setMap(bake(4, 2)).ok());
+    REQUIRE_FALSE(device.pipelineDescs().empty());
+    const std::string& code = device.pipelineDescs().back().shader.code;
+    CHECK(code.find("fn wh_field_extra1(") != std::string::npos);
+    CHECK(code.find("if (wh_leds.extra < 2u)") != std::string::npos);
+
+    REQUIRE(stage.selectExtra(1, 7).ok());
+    FrameTime time;
+    REQUIRE(device.submit([&](gpu::ICommandRecorder& r) { stage.record(time, r); }).ok());
+    REQUIRE_FALSE(device.dispatches().empty());
+    const std::vector<std::byte> info = device.bufferBytes(
+        bufferAt(device.dispatches().back(), executor::kSamplingBindGroup, executor::kSamplingInfoBinding));
+    std::uint32_t words[4] = {};
+    REQUIRE(info.size() == sizeof words);
+    std::memcpy(words, info.data(), sizeof words);
+    CHECK(words[0] == 8U);   // LEDs
+    CHECK(words[1] == 1U);   // gewählter Zusatzausgang
+    CHECK(words[2] == 16U);  // Kopf hinter den Hauptfarben
+    CHECK(words[3] == 7U);   // Kennung
+    REQUIRE(stage.selectExtra(executor::kNoSamplingExtra, 0).ok());
+}
