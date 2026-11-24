@@ -13,6 +13,7 @@
 #include <mutex>
 #include <optional>
 #include <string>
+#include <string_view>
 #include <unordered_map>
 #include <vector>
 
@@ -79,6 +80,7 @@ struct WebGpuDevice::Impl {
     std::string adapterName;
     std::string deviceName;  // Name ohne Zusatz "[Vulkan]"
     WGPUBackendType backendType{WGPUBackendType_Undefined};
+    bool softwareAdapter{false};  // CPU-Adapter (WARP, lavapipe, llvmpipe) laut Adaptertyp oder Name
     std::string driver;  // Treiberbeschreibung des Adapters (WGPUAdapterInfo::description), leer wenn unbekannt
     TimestampState timestamps;
 
@@ -98,6 +100,9 @@ struct WebGpuDevice::Impl {
     /// Lässt die Bibliothek wartende Arbeit abarbeiten (Callbacks, Fehlermeldungen).
     void pump(bool wait);
 };
+
+/// Kurzname der Grafikschnittstelle ("Vulkan", "OpenGL", "DX12", "Metal"), leer wenn unbekannt.
+std::string_view backendLabel(WGPUBackendType type) noexcept;
 
 // Zeitstempel (webgpu_timestamps.cpp). Alle Funktionen tun nichts, solange setupTimestamps keinen Query-Set angelegt hat.
 /// Nach dem Anlegen des Geräts: Query-Set und Puffer anlegen. false, wenn das nicht ging (dann ohne Zeitstempel).

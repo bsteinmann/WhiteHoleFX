@@ -142,8 +142,8 @@ const std::string& WebGpuDevice::driverInfo() const noexcept {
     return impl_->driver;
 }
 
-std::string WebGpuDevice::backendName() const {
-    switch (impl_->backendType) {
+std::string_view backendLabel(WGPUBackendType type) noexcept {
+    switch (type) {
         case WGPUBackendType_Vulkan: return "Vulkan";
         case WGPUBackendType_OpenGL:
         case WGPUBackendType_OpenGLES: return "OpenGL";
@@ -151,6 +151,10 @@ std::string WebGpuDevice::backendName() const {
         case WGPUBackendType_Metal: return "Metal";
         default: return {};
     }
+}
+
+std::string WebGpuDevice::backendName() const {
+    return std::string{backendLabel(impl_->backendType)};
 }
 
 bool WebGpuDevice::measuresGpuTime() const noexcept {
@@ -212,6 +216,8 @@ Result<std::unique_ptr<WebGpuDevice::Impl>> openImpl(const WebGpuOptions& option
         }
         impl->deviceName = impl->adapterName;
         impl->backendType = info.backendType;
+        impl->softwareAdapter =
+            info.adapterType == WGPUAdapterType_CPU || impl->deviceName.find("Basic Render") != std::string::npos;
         impl->driver = toString(info.description);
         if (impl->driver == impl->deviceName) {
             impl->driver.clear();  // manche Backends wiederholen hier nur den Namen
@@ -230,7 +236,8 @@ Result<std::unique_ptr<WebGpuDevice::Impl>> openImpl(const WebGpuOptions& option
     DeviceRequest deviceRequest;
     WGPUDeviceDescriptor deviceDesc{};
     const WGPUFeatureName timestampFeature = WGPUFeatureName_TimestampQuery;
-    const bool timestamps = options.timestamps && wgpuAdapterHasFeature(impl->adapter, timestampFeature) != 0;
+    const bool timestamps = options.timestamps && allowsGpuTimestamps(backendLabel(impl->backendType), impl->softwareAdapter) &&
+                            wgpuAdapterHasFeature(impl->adapter, timestampFeature) != 0;
     if (timestamps) {
         deviceDesc.requiredFeatureCount = 1;
         deviceDesc.requiredFeatures = &timestampFeature;

@@ -38,7 +38,7 @@ Shader dann übersetzt werden), etwa 10 s Messen, mindestens fünf Frames.
 
 Markdown-Tabelle (zum Einfügen in ein Issue) oder CSV, mit Gerät, Grafikschnittstelle, Treiber, Programmversion und Commit. Spalten: Median, 95. Perzentil,
 CPU-Zeit (Aufzeichnen, Einreichen, CPU-Nodes) und GPU-Zeit (über Zeitstempel-Abfragen der GPU, vom Anfang des ersten bis
-zum Ende des letzten Compute-Passes eines Frames; leer, wenn Adapter oder Treiber keine Zeitstempel kann). Auf NVIDIA-Karten zusätzlich die höchste Temperatur und der niedrigste Grafiktakt je Stufe (über NVML, das der Treiber
+zum Ende des letzten Compute-Passes eines Frames; leer, wenn Adapter oder Treiber keine Zeitstempel kann; beim Software-Adapter von Windows, D3D12/WARP, gibt es sie nie, weil wgpu-native dort schon beim Anlegen des Geräts mit dem Zeitstempel-Feature abstürzt). Auf NVIDIA-Karten zusätzlich die höchste Temperatur und der niedrigste Grafiktakt je Stufe (über NVML, das der Treiber
 mitbringt; sinkt der Takt bei steigender Temperatur, bremst die Karte wegen Hitze). Andere Hersteller: ohne diese Spalten.
 Darunter je Reihe die größte
 Stufe, bei der jede Szene stabil lief (95. Perzentil unter 33 ms, nicht am Limit).

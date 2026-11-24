@@ -56,6 +56,12 @@ struct WebGpuOptions {
 /// 745 und 750). `WebGpuDevice::create` wechselt dort von selbst auf OpenGL, wenn `WHITEHOLEFX_GPU_BACKEND` nichts vorgibt.
 [[nodiscard]] bool prefersOpenGl(std::string_view deviceName) noexcept;
 
+/// Ob auf einem Adapter mit dieser Grafikschnittstelle (`WebGpuDevice::backendName`, z. B. "DX12") GPU-Zeitstempel
+/// angefordert werden dürfen. Nein beim Software-Adapter von Windows (D3D12/WARP): Dort stürzt wgpu-native schon beim
+/// Anlegen des Geräts mit dem Zeitstempel-Feature ab (CI-Lauf vom 24.11.). Echte Grafikkarten und die Software-Adapter
+/// unter Linux (lavapipe, llvmpipe) sind nicht betroffen.
+[[nodiscard]] bool allowsGpuTimestamps(std::string_view backend, bool softwareAdapter) noexcept;
+
 class WebGpuDevice final : public IGpuDevice {
 public:
     /// Fehler: GpuError, wenn kein Adapter oder Gerät verfügbar ist.

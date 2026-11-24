@@ -34,6 +34,10 @@ WGPUBuffer makeBuffer(WGPUDevice device, WGPUBufferUsage usage, const char* labe
 
 }  // namespace
 
+bool allowsGpuTimestamps(std::string_view backend, bool softwareAdapter) noexcept {
+    return !(softwareAdapter && backend == "DX12");
+}
+
 bool setupTimestamps(WebGpuDevice::Impl& impl) {
     TimestampState& ts = impl.timestamps;
     WGPUQuerySetDescriptor qd{};
