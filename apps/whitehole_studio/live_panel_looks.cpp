@@ -13,6 +13,9 @@
 #include <QInputDialog>
 #include <QLabel>
 #include <QMenu>
+#include <QIcon>
+#include <QImage>
+#include <QPixmap>
 #include <QPushButton>
 #include <QSignalBlocker>
 
@@ -38,6 +41,18 @@ QString LivePanel::buttonText(int index) const {
         text += tr("  · Flash");
     }
     return text;
+}
+
+QIcon LivePanel::thumbnailIcon(int index) const {
+    const project::Look& look = player_.looks()[static_cast<std::size_t>(index)];
+    if (!look.thumbnail) {
+        return {};
+    }
+    const project::LookThumbnail& thumb = *look.thumbnail;
+    const QImage image{thumb.rgb.data(), static_cast<int>(thumb.width), static_cast<int>(thumb.height),
+                       static_cast<int>(thumb.width) * 3, QImage::Format_RGB888};
+    // Das Bild liegt nur im Speicher des Looks; die Pixmap kopiert es (copy), bevor der Look sich ändern kann.
+    return QIcon{QPixmap::fromImage(image.copy())};
 }
 
 QString LivePanel::flashInText(int index) const {

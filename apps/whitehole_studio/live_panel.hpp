@@ -31,6 +31,7 @@ class QCheckBox;
 class QSpinBox;
 class QDoubleSpinBox;
 class QGridLayout;
+class QIcon;
 class QLabel;
 class QProgressBar;
 class QShortcut;
@@ -100,6 +101,8 @@ Q_SIGNALS:
 private:
     [[nodiscard]] static QString styleFor(const QString& color);
     [[nodiscard]] QString buttonText(int index) const;
+    /// Standbild des Looks als Icon für den Knopf; leer, wenn der Look keines hat (ältere Projekte).
+    [[nodiscard]] QIcon thumbnailIcon(int index) const;
     [[nodiscard]] QString flashInText(int index) const;
     [[nodiscard]] QString returnText(int index) const;
     /// Gleicht Knopftext, Flash-Haken und Zurückblend-Knopf eines Looks mit dem Player ab.

@@ -13,6 +13,7 @@
 #include "project_stage.hpp"
 #include "project_names.hpp"
 #include "project_nodegroup.hpp"
+#include "project_thumbnail.hpp"
 #include "whitehole/project/project.hpp"
 
 namespace whitehole::project {
@@ -262,6 +263,14 @@ Result<std::string> writeProject(const Project& project) {
             out << " return " << formatDouble(*look.returnSeconds);
         }
         out << "\n";
+        if (look.thumbnail) {
+            if (look.thumbnail->width == 0 || look.thumbnail->height == 0 || look.thumbnail->width > kMaxThumbnailSide ||
+                look.thumbnail->height > kMaxThumbnailSide ||
+                look.thumbnail->rgb.size() != static_cast<std::size_t>(look.thumbnail->width) * look.thumbnail->height * 3) {
+                return Error{ErrorCode::InvalidArgument, "Das Standbild des Looks \"" + look.name + "\" ist ungültig"};
+            }
+            out << detail::formatThumbnail(*look.thumbnail);
+        }
         if (const Result<void> graph = writeGraph(out, look.graph, look.target, "Das Ziel des Looks"); !graph.ok()) {
             return graph.error();
         }
