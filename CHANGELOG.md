@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- **Vorschaubilder auf den Look-Knöpfen.** Beim Speichern eines Looks nimmt WhiteHoleFX die aktuelle Ausgabe als Standbild (32 × 18 Pixel, nicht animiert) auf; das Live-Fenster zeigt es auf dem Look-Knopf. Das Bild steht im Projekt (`thumb <breite> <höhe> <hex>` im `look`-Block, siehe `docs/project-format.md`); ältere Projekte ohne Bild bleiben gültig, ihre Knöpfe zeigen nur den Namen (neu speichern holt das Bild nach). Neue Dateien: `project_thumbnail.hpp/cpp`, `look_thumbnail.hpp/cpp`. Tests: `tests/runtime/look_thumbnail_test.cpp`, Rauchtest „Live“.
 - **APC-mini-LEDs neu belegt.** Belegtes Pad gelb, aktiver Look grün (auch beim Einblenden), Flash-Look rot, vorgeladener Look gelb blinkend. Vorher war ein belegtes, nicht aktives Pad aus. Tests: `tests/runtime/midi_live_test.cpp`.
 - **Live-Fenster: Rasterbreite einstellbar.** Bei mehr als 16 Looks wurden die Knöpfe ab der fünften Zeile abgeschnitten. Das Raster liegt jetzt in einem Scrollbereich, und die Spaltenzahl (1 bis 16, Standard 4) stellst du unter „Einstellungen“ im Live-Fenster ein (wird beim Nutzer gespeichert, nicht im Projekt). Das Live-Fenster bekommt zwei Drittel der Höhe, die Vorschau darüber wird kleiner.
 - **MIDI, Stufe 1: Grundlage (noch ohne Nodes und ohne APC-Belegung).** Neue Bibliothek `wh_midi`: `MidiStore` (letzter Stand von
