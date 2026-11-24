@@ -63,6 +63,13 @@ Drücken die Zeit des Looks (im Live-Fenster ggf. die eigene Überblendzeit); ei
 Cue), beendet das Flash und der neue Look bleibt stehen. Die Logik steckt im Player (`liveDown`/`liveUp`), damit sie für alle
 Eingänge gleich gilt.
 
+## Cues per Pad abrufen
+
+Solange die Cuelist läuft (Cues → Start), feuern die Pads Cues statt Looks: Pad n ruft Cue n auf (gleiches Raster wie für Looks), GO ruft den
+nächsten Cue auf. Der Cue behält seine eigene Verzögerung und Überblendzeit. LEDs: aktueller Cue grün, in Verzögerung grün blinkend,
+nächster Cue gelb blinkend, übrige gelb; GO blinkt, solange ein nächster Cue existiert. Per DMX gilt dasselbe für den Auswahl-Kanal der
+Live-Steuerung (siehe `docs/studio.md`). Code: `MidiLiveController::handle`/`updateLeds`, `Player::cueFire`.
+
 ## Steuerung frei belegen (MIDI und DMX)
 
 GO, Live beenden, Master, Überblendzeit und manuelle Überblendung lassen sich per **Lernen** auf beliebige Tasten, Regler oder

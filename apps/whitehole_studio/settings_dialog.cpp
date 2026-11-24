@@ -192,7 +192,9 @@ QWidget* SettingsDialog::buildDmxPage(const AppSettings& current) {
     form->addRow(tr("Live-Look: Überblendzeit-Kanal (0 = aus):"), liveFadeChannel_);
     form->addRow(note(tr("Der Auswahl-Kanal teilt sich in so viele gleich große Stufen, wie das Projekt Looks hat; "
                          "0 heißt kein Wechsel. Ohne Überblendzeit-Kanal (aus) gilt die im Look gespeicherte Zeit, "
-                         "sonst setzt der Kanalwert 0 bis 255 die Zeit auf 0 bis 10 Sekunden. Wirkt nur im laufenden "
+                         "sonst setzt der Kanalwert 0 bis 255 die Zeit auf 0 bis 10 Sekunden. Läuft die Cuelist, "
+                         "springt derselbe Kanal stattdessen direkt zu einem Cue (Stufen = Zahl der Cues, der Cue "
+                         "behält seine eigene Verzögerung und Überblendzeit). Wirkt nur im laufenden "
                          "Live-Betrieb; bleibt das Signal weg, bleibt der zuletzt gezeigte Look stehen."),
                      page));
     return page;

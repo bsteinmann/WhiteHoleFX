@@ -151,3 +151,76 @@ TEST_CASE("Live per DMX: Abschalten, ungültiger Kanal, veraltetes Signal hält 
     REQUIRE(rig.player.step().ok());
     CHECK_FALSE(rig.player.liveFromDmx());
 }
+
+namespace {
+
+// Drei Cues: Look 0, Look 1, Schwarz; der Ablauf läuft, GO löst nichts selbsttätig aus.
+std::vector<project::Cue> threeCues() {
+    project::Cue first;
+    first.name = "Eins";
+    first.look = "Ruhig";
+    first.fade = 0.0;
+    project::Cue second;
+    second.name = "Zwei";
+    second.look = "Schnell";
+    second.fade = 1.0;
+    project::Cue third;
+    third.name = "Aus";
+    third.fade = 0.0;
+    return {first, second, third};
+}
+
+}  // namespace
+
+TEST_CASE("Cue-Sprung per DMX: der Auswahl-Kanal wählt bei laufender Cuelist einen Cue", "[player][live_dmx][cues]") {
+    Rig rig;
+    REQUIRE(rig.player.setCues(threeCues()).ok());
+    REQUIRE(rig.player.cuesStart().ok());
+    rig.player.setLiveDmx(runtime::LiveDmxSource{DmxProtocol::ArtNet, 2, 1, 0});
+    REQUIRE(rig.player.cuesRunning());
+    CHECK(rig.player.cueStatus().current == 0);
+
+    rig.library->dmx->write(DmxProtocol::ArtNet, 2, std::vector<std::uint8_t>{0});  // 0: kein Wechsel
+    REQUIRE(rig.player.step().ok());
+    CHECK(rig.player.cueStatus().current == 0);
+
+    // 3 Cues: Stufen 1..85 / 86..170 / 171..255. Wert 100 -> Cue 2 (Index 1), über den Cue-Ablauf (Zeit des Cues: 1 s)
+    rig.library->dmx->write(DmxProtocol::ArtNet, 2, std::vector<std::uint8_t>{100});
+    REQUIRE(rig.player.step().ok());
+    CHECK(rig.player.cueStatus().current == 1);
+    CHECK(rig.player.liveFromDmx());
+    REQUIRE(rig.player.step().ok());
+    CHECK(rig.player.liveStatus().incoming == 1);
+    CHECK(rig.player.liveStatus().fadeSeconds == Approx(1.0));  // die Zeit des Cues, nicht des Looks
+
+    // Derselbe Wert löst nicht erneut aus; ein Sprung zurück geht (anders als GO) auch rückwärts
+    rig.clock = 0.5;
+    REQUIRE(rig.player.step().ok());
+    CHECK(rig.player.cueStatus().current == 1);
+    rig.library->dmx->write(DmxProtocol::ArtNet, 2, std::vector<std::uint8_t>{10});
+    REQUIRE(rig.player.step().ok());
+    CHECK(rig.player.cueStatus().current == 0);
+}
+
+TEST_CASE("Cue-Sprung per DMX: ein schon hoher Regler springt nicht beim Start der Cuelist", "[player][live_dmx][cues]") {
+    Rig rig;
+    REQUIRE(rig.player.setCues(threeCues()).ok());
+    rig.player.setLiveDmx(runtime::LiveDmxSource{DmxProtocol::ArtNet, 2, 1, 0});
+    rig.library->dmx->write(DmxProtocol::ArtNet, 2, std::vector<std::uint8_t>{200});  // Look 1 (Look-Modus)
+    REQUIRE(rig.player.step().ok());
+    CHECK(rig.player.liveStatus().incoming == 1);
+
+    REQUIRE(rig.player.cuesStart().ok());
+    REQUIRE(rig.player.step().ok());  // Wert 200 wäre Cue 3 (Index 2): wird beim Moduswechsel nur vermerkt
+    CHECK(rig.player.cueStatus().current == 0);
+    rig.library->dmx->write(DmxProtocol::ArtNet, 2, std::vector<std::uint8_t>{120});
+    REQUIRE(rig.player.step().ok());
+    CHECK(rig.player.cueStatus().current == 1);
+
+    // Nach dem Stopp der Cuelist wählt der Kanal wieder Looks (und springt auch dort nicht von selbst)
+    rig.player.cuesStop();
+    REQUIRE(rig.player.step().ok());
+    rig.library->dmx->write(DmxProtocol::ArtNet, 2, std::vector<std::uint8_t>{250});  // Look 1 von 2
+    REQUIRE(rig.player.step().ok());
+    CHECK(rig.player.liveStatus().incoming == 1);
+}

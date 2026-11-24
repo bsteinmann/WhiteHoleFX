@@ -86,6 +86,16 @@ void MidiLiveController::handle(const midi::MidiMessage& message, const MidiLive
     if (message.channel != kChannel || !live) {
         return;
     }
+    if (player_.cuesRunning()) {
+        // Cue-Sprung: Bei laufender Cuelist rufen die Pads Cues ab (Raster wie bei den Looks), nicht Looks - die stehen
+        // dann im Cue-Ablauf. Loslassen tut nichts (kein Flash).
+        if (message.kind == midi::MessageKind::NoteOn) {
+            if (const auto cue = profile_.lookForNote(message.data1); cue && *cue < static_cast<int>(player_.cues().size())) {
+                report(player_.cueFire(*cue), result);
+            }
+        }
+        return;
+    }
     if (message.kind == midi::MessageKind::NoteOff) {
         if (const auto look = profile_.lookForNote(message.data1); look && *look < static_cast<int>(player_.looks().size())) {
             report(player_.liveUp(*look), result);  // nur Flash-Looks reagieren
@@ -123,7 +133,11 @@ void MidiLiveController::act(LiveFunction function, int value, const MidiLiveOpt
             return;
         case LiveFunction::Go:
             if (live) {
-                report(player_.liveGo(fadeFader_ ? fadeFader_ : options.fadeOverride), result);
+                if (player_.cuesRunning()) {
+                    player_.cueGo();  // die Cuelist läuft: GO löst ihren nächsten Cue aus (wie der GO-Knopf im Fenster)
+                } else {
+                    report(player_.liveGo(fadeFader_ ? fadeFader_ : options.fadeOverride), result);
+                }
             }
             return;
         case LiveFunction::Stop:
@@ -190,29 +204,54 @@ MidiLiveResult MidiLiveController::step(const MidiLiveOptions& options) {
 void MidiLiveController::updateLeds(bool live) {
     std::array<int, 128> wanted{};
     if (live) {
-        const LiveStatus status = player_.liveStatus();
-        const int looks = static_cast<int>(player_.looks().size());
-        for (int i = 0; i < looks; ++i) {
-            const auto note = profile_.noteForLook(i);
-            if (!note) {
-                break;
+        const bool cueMode = player_.cuesRunning();
+        bool goBlinks = false;
+        if (cueMode) {
+            // Cuelist: ein Pad je Cue. Aktuell grün, im Delay grün blinkend, der nächste gelb blinkend, die übrigen gelb.
+            const CueRunnerStatus cues = player_.cueStatus();
+            const int count = static_cast<int>(player_.cues().size());
+            for (int i = 0; i < count; ++i) {
+                const auto note = profile_.noteForLook(i);
+                if (!note) {
+                    break;
+                }
+                midi::PadLed led = midi::PadLed::Yellow;
+                if (i == cues.pending) {
+                    led = midi::PadLed::GreenBlink;
+                } else if (i == cues.current) {
+                    led = midi::PadLed::Green;
+                } else if (i == cues.next) {
+                    led = midi::PadLed::YellowBlink;
+                }
+                wanted[*note] = static_cast<int>(led);
             }
-            // belegt gelb, Flash-Look rot, vorgeladen gelb blinkend, aktiv (auch einblendend) grün
-            midi::PadLed led = player_.looks()[static_cast<std::size_t>(i)].trigger == project::LookTrigger::Flash
-                                   ? midi::PadLed::Red
-                                   : midi::PadLed::Yellow;
-            if ((status.fading && i == status.incoming) || i == status.current) {
-                led = midi::PadLed::Green;
-            } else if (i == status.armed) {
-                led = midi::PadLed::YellowBlink;
+            goBlinks = cues.next >= 0;  // GO löst den nächsten Cue aus: es gibt einen
+        } else {
+            const LiveStatus status = player_.liveStatus();
+            const int looks = static_cast<int>(player_.looks().size());
+            for (int i = 0; i < looks; ++i) {
+                const auto note = profile_.noteForLook(i);
+                if (!note) {
+                    break;
+                }
+                // belegt gelb, Flash-Look rot, vorgeladen gelb blinkend, aktiv (auch einblendend) grün
+                midi::PadLed led = player_.looks()[static_cast<std::size_t>(i)].trigger == project::LookTrigger::Flash
+                                       ? midi::PadLed::Red
+                                       : midi::PadLed::Yellow;
+                if ((status.fading && i == status.incoming) || i == status.current) {
+                    led = midi::PadLed::Green;
+                } else if (i == status.armed) {
+                    led = midi::PadLed::YellowBlink;
+                }
+                wanted[*note] = static_cast<int>(led);
             }
-            wanted[*note] = static_cast<int>(led);
+            goBlinks = status.armed >= 0;
         }
         // Tasten-LEDs nur auf Kanal 1 (dort sitzt der Controller); eine Belegung auf anderem Kanal bleibt dunkel
         const MidiBinding go = effectiveMidi(bindings_, profile_, LiveFunction::Go);
         const MidiBinding stop = effectiveMidi(bindings_, profile_, LiveFunction::Stop);
         if (go.channel == kChannel && go.number >= 0) {
-            wanted[static_cast<std::size_t>(go.number)] = status.armed >= 0 ? kButtonBlink : 0;
+            wanted[static_cast<std::size_t>(go.number)] = goBlinks ? kButtonBlink : 0;
         }
         if (stop.channel == kChannel && stop.number >= 0) {
             wanted[static_cast<std::size_t>(stop.number)] = kButtonOn;

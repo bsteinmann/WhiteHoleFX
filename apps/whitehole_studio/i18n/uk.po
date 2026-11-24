@@ -126,11 +126,11 @@ msgstr "%1 (%2)"
 msgid "%1 (Profil)"
 msgstr "%1 (профіль)"
 
-#: settings_dialog.cpp:218
+#: settings_dialog.cpp:220
 msgid "%1 (Standard)"
 msgstr "%1 (стандартно)"
 
-#: midi_settings_page.cpp:34 settings_dialog.cpp:52 settings_dialog.cpp:222
+#: midi_settings_page.cpp:34 settings_dialog.cpp:52 settings_dialog.cpp:224
 msgid "%1 (nicht gefunden)"
 msgstr "%1 (не знайдено)"
 
@@ -682,11 +682,11 @@ msgstr "Перетягніть на поле: додати ноду.\nПерет
 msgid "Auf gewählten anwenden"
 msgstr "Застосувати до вибраного"
 
-#: settings_dialog.cpp:253
+#: settings_dialog.cpp:255
 msgid "Aufnahmegeräte lassen sich nicht auflisten: %1"
 msgstr "Не вдалося отримати список пристроїв запису: %1"
 
-#: live_controls_page.cpp:77 midi_settings_page.cpp:27 settings_dialog.cpp:204
+#: live_controls_page.cpp:77 midi_settings_page.cpp:27 settings_dialog.cpp:206
 msgid "Aus"
 msgstr "Вимк."
 
@@ -1039,8 +1039,8 @@ msgid "Der Ausgang: Was hier ankommt, wird auf die LEDs gesendet. Mit „Mode“
 msgstr "Вихід: усе, що сюди надходить, надсилається на LED. Через «Mode» масштабується в область або вирізається як вікно, плюс яскравість."
 
 #: settings_dialog.cpp:193
-msgid "Der Auswahl-Kanal teilt sich in so viele gleich große Stufen, wie das Projekt Looks hat; 0 heißt kein Wechsel. Ohne Überblendzeit-Kanal (aus) gilt die im Look gespeicherte Zeit, sonst setzt der Kanalwert 0 bis 255 die Zeit auf 0 bis 10 Sekunden. Wirkt nur im laufenden Live-Betrieb; bleibt das Signal weg, bleibt der zuletzt gezeigte Look stehen."
-msgstr "Канал вибору ділиться на стільки рівних ступенів, скільки луків у проєкті; 0 означає без зміни. Без каналу часу переходу (вимкнено) діє власний час луку, інакше значення каналу (0..255) задає час від 0 до 10 секунд. Діє лише під час роботи live-режиму; якщо сигнал зникає, залишається останній показаний лук."
+msgid "Der Auswahl-Kanal teilt sich in so viele gleich große Stufen, wie das Projekt Looks hat; 0 heißt kein Wechsel. Ohne Überblendzeit-Kanal (aus) gilt die im Look gespeicherte Zeit, sonst setzt der Kanalwert 0 bis 255 die Zeit auf 0 bis 10 Sekunden. Läuft die Cuelist, springt derselbe Kanal stattdessen direkt zu einem Cue (Stufen = Zahl der Cues, der Cue behält seine eigene Verzögerung und Überblendzeit). Wirkt nur im laufenden Live-Betrieb; bleibt das Signal weg, bleibt der zuletzt gezeigte Look stehen."
+msgstr "Канал вибору ділиться на стільки рівних сходинок, скільки в проєкті Look; 0 означає відсутність зміни. Без каналу часу переходу (вимкнено) діє час, збережений у Look; інакше значення каналу від 0 до 255 задає час від 0 до 10 секунд. Поки працює список Cue, той самий канал натомість стрибає одразу до Cue (сходинки = кількість Cue; Cue зберігає власну затримку й час переходу). Діє лише під час роботи живого режиму; якщо сигнал зникає, залишається останній показаний Look."
 
 #: dmx_patch_table.cpp:51
 msgid "Der Controller bestimmt das Protokoll. Pool-Kanäle ohne Patch werden nicht gesendet."
@@ -1114,7 +1114,7 @@ msgstr "Яскравість маски визначає, наскільки в�
 msgid "Die Prüfung ist fehlgeschlagen:\n%1"
 msgstr "Перевірка не вдалася:\n%1"
 
-#: settings_dialog.cpp:257
+#: settings_dialog.cpp:259
 msgid "Die Quelle speist die Audio-Nodes (Pegel, Frequenzband, Beat, Spektrum)."
 msgstr "Джерело живить аудіо-ноди (рівень, смуга частот, біт, спектр)."
 
@@ -1670,7 +1670,7 @@ msgstr "Завантажено: %1"
 msgid "Gelb"
 msgstr "Жовтий"
 
-#: settings_dialog.cpp:206
+#: settings_dialog.cpp:208
 msgid "Gerät:"
 msgstr "Пристрій:"
 
@@ -1922,7 +1922,7 @@ msgstr "Немає сигналу в цьому universe."
 msgid "Kein Ziel (freies Rechteck)"
 msgstr "Без цілі (вільний прямокутник)"
 
-#: settings_dialog.cpp:255
+#: settings_dialog.cpp:257
 msgid "Keine Aufnahmegeräte gefunden. Ein Audio-Interface anschließen und das Fenster neu öffnen."
 msgstr "Пристроїв запису не знайдено. Підключіть аудіоінтерфейс і знову відкрийте вікно."
 
@@ -2986,7 +2986,7 @@ msgstr "Мова"
 msgid "Stage Config"
 msgstr "Stage Config"
 
-#: settings_dialog.cpp:205
+#: settings_dialog.cpp:207
 msgid "Standardgerät des Systems"
 msgstr "Пристрій системи за замовчуванням"
 
@@ -3270,15 +3270,15 @@ msgstr "Розділений перегляд"
 msgid "Vorweg überspringen"
 msgstr "Пропустити спочатку"
 
-#: settings_dialog.cpp:207
+#: settings_dialog.cpp:209
 msgid "WAV-Datei in Schleife:"
 msgstr "Файл WAV у циклі:"
 
-#: settings_dialog.cpp:266
+#: settings_dialog.cpp:268
 msgid "WAV-Datei wählen"
 msgstr "Оберіть файл WAV"
 
-#: settings_dialog.cpp:266
+#: settings_dialog.cpp:268
 msgid "WAV-Dateien (*.wav)"
 msgstr "Файли WAV (*.wav)"
 
@@ -3434,7 +3434,7 @@ msgstr "Спершу оберіть фікстури у списку."
 msgid "Wähle zuerst einen Controller in der Tabelle."
 msgstr "Спершу виберіть контролер у таблиці."
 
-#: settings_dialog.cpp:210
+#: settings_dialog.cpp:212
 msgid "Wählen …"
 msgstr "Обрати …"
 
