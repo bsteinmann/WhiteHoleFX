@@ -2,7 +2,9 @@
 //
 // Warum es die Datei gibt: Die Szenen müssen sich auf einer echten GPU übersetzen und rendern lassen, und der Zaun-
 // Readback der Projektion muss wirklich auf das Ende der Arbeit warten. Grenzwerte gibt es keine: CI-Runner sind geteilt
-// und haben keine GPU (Entwurf docs/entwurf-benchmark.md, Abschnitt Tests). Ohne Adapter übersprungen.
+// und haben keine GPU (Entwurf docs/entwurf-benchmark.md, Abschnitt Tests). Ohne Adapter übersprungen. Auch die
+// Abbruchregel „Einzelframe über 500 ms“ ist hier abgeschaltet: Ein langsamer Software-Adapter würde sonst den Test
+// zufällig scheitern lassen (so geschehen auf D3D12/WARP mit 504 ms für „Schichten“).
 //
 // Jede Kombination aus Zeitstempel (an/aus), Szene und Reihe läuft einzeln (GENERATE): Stürzt ein Adapter ab, nennt Catch2
 // im Kopf der Meldung, welche Kombination es war, statt nur „der Test“. Das war nötig, als der Windows-Software-Adapter
@@ -51,6 +53,8 @@ TEST_CASE("Benchmark auf dem Gerät: jede Szene misst in beiden Reihen", "[gpu_d
     BenchmarkLimits limits;
     limits.warmupSeconds = 0.05;
     limits.measureSeconds = 0.2;
+    limits.frameAbortMs = 1e9;  // der Software-Adapter der CI braucht für „Schichten“ um die 500 ms je Frame: Der Test
+                                // prüft, dass jede Szene misst, nicht wie schnell, also nie wegen der Zeit abbrechen
     const BenchmarkRun run = runBenchmark(plan, target, limits);
     INFO(run.abortReason);
     REQUIRE_FALSE(run.aborted);
