@@ -2,6 +2,7 @@
 #include <cmath>
 
 #include "whitehole/runtime/live_look.hpp"
+#include "whitehole/runtime/look_thumbnail.hpp"
 #include "whitehole/runtime/player.hpp"
 
 namespace whitehole::runtime {
@@ -35,11 +36,24 @@ Result<int> Player::saveLook(const std::string& name, std::optional<double> fade
         return look.error();
     }
     modified_ = true;
+    // Standbild der aktuellen Ausgabe für den Look-Knopf; gelingt es nicht, bleibt ein altes erhalten.
+    {
+        preview::PreviewOptions options;
+        options.width = kThumbnailWidth * 4;
+        options.height = kThumbnailHeight * 4;
+        options.margin = 4;
+        if (const auto shot = image(options); shot.ok()) {
+            look.value().thumbnail = makeLookThumbnail(shot.value());
+        }
+    }
     if (existing >= 0) {
         project::Look& old = project_->looks[static_cast<std::size_t>(existing)];
         look.value().trigger = old.trigger;  // Auslösen bleibt beim Überschreiben erhalten
         look.value().flashInSeconds = old.flashInSeconds;
         look.value().returnSeconds = old.returnSeconds;
+        if (!look.value().thumbnail) {
+            look.value().thumbnail = old.thumbnail;
+        }
         old = std::move(look).value();
         return existing;
     }

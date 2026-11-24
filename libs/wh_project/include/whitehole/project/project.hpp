@@ -40,6 +40,16 @@ inline constexpr int kFormatVersion = 1;
 ///   Flash:  der Look läuft nur, solange gehalten; beim Loslassen zurück zum vorherigen. Hat Vorrang vor "Mit GO".
 enum class LookTrigger : std::uint8_t { Toggle, Flash };
 
+/// Winziges Standbild eines Looks (RGB, 3 Bytes je Pixel, Zeile für Zeile), das beim Speichern aufgenommen wird und
+/// im Live-Fenster auf dem Look-Knopf erscheint. Nur Anzeige, ohne Einfluss auf die Ausgabe.
+struct LookThumbnail {
+    std::uint32_t width{0};
+    std::uint32_t height{0};
+    std::vector<std::uint8_t> rgb;  // width * height * 3 Bytes
+};
+
+inline constexpr std::uint32_t kMaxThumbnailSide = 64;
+
 struct Look {
     explicit Look(std::shared_ptr<const graph::INodeRegistry> registry) : graph{std::move(registry)} {}
 
@@ -50,6 +60,8 @@ struct Look {
     std::optional<double> flashInSeconds;
     /// Nur Flash: Zeit für das Zurückblenden beim Loslassen. Leer = die Überblendzeit dieses Looks.
     std::optional<double> returnSeconds;
+    /// Standbild für den Look-Knopf; leer, wenn der Look noch keines hat (ältere Projekte).
+    std::optional<LookThumbnail> thumbnail;
     graph::Graph graph;
     graph::PortRef target;    // Field-Ausgang des Looks
 };

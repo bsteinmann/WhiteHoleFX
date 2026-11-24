@@ -3,6 +3,7 @@
 
 #include <QCheckBox>
 #include <QDoubleSpinBox>
+#include <QIcon>
 #include <QGridLayout>
 #include <QHBoxLayout>
 #include <QLabel>
@@ -200,6 +201,10 @@ void LivePanel::rebuild() {
         cellLayout->setSpacing(4);
         auto* button = new QPushButton{buttonText(index), cell};
         button->setMinimumHeight(72);
+        if (const QIcon icon = thumbnailIcon(index); !icon.isNull()) {
+            button->setIcon(icon);
+            button->setIconSize(QSize{64, 36});
+        }
         button->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
         button->setToolTip(tr("Überblendzeit %1 s. Rechtsklick: umschalten oder flashen").arg(looks[i].fadeSeconds, 0, 'f', 1));
         // Drücken und Loslassen statt Klick: ein Flash-Look läuft, solange gehalten (live_panel_looks.cpp)

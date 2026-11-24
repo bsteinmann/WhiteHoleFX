@@ -50,7 +50,7 @@ msgstr "   |   Master %1 %"
 msgid "   |   TESTMODUS"
 msgstr "   |   ТЕСТОВИЙ РЕЖИМ"
 
-#: live_panel_looks.cpp:38
+#: live_panel_looks.cpp:41
 msgid "  · Flash"
 msgstr "  · Flash"
 
@@ -106,7 +106,7 @@ msgstr "Видалити \"%1\" з бібліотеки?"
 msgid "%1  (%2 LEDs)"
 msgstr "%1  (%2 LED)"
 
-#: live_panel.cpp:282
+#: live_panel.cpp:287
 msgid "%1  →  %2"
 msgstr "%1  →  %2"
 
@@ -326,7 +326,7 @@ msgstr "(Чорний)"
 msgid "(eigene Form)"
 msgstr "(власна форма)"
 
-#: live_panel.cpp:282
+#: live_panel.cpp:287
 msgid "(kein Look)"
 msgstr "(немає Look)"
 
@@ -806,7 +806,7 @@ msgstr "Не вдається записати бібліотеку корист
 msgid "Benutzerbibliothek lässt sich nicht speichern: %1"
 msgstr "Не вдається зберегти бібліотеку користувача: %1"
 
-#: live_panel.cpp:283
+#: live_panel.cpp:288
 msgid "Bereit: %1 - GO drücken"
 msgstr "Готово: %1 - натисніть GO"
 
@@ -838,7 +838,7 @@ msgstr "До восьми комет одночасно, кожна зі сво�
 msgid "Blau"
 msgstr "Синій"
 
-#: live_panel.cpp:57
+#: live_panel.cpp:58
 msgid "Blendet Flash je Look, die Belegung von MIDI und DMX und die Menüleiste ein oder aus"
 msgstr "Показує або ховає спалах для кожного Look, прив’язку MIDI і DMX та рядок меню"
 
@@ -1062,7 +1062,7 @@ msgstr "Cue спрацьовує, коли значення каналу зро�
 msgid "Der Kanalwert 0 bis 255 setzt den Master auf 0 bis 100 %. Solange Pakete kommen, folgt der Master-Regler dem Pult; bleibt das Signal weg, hält der Master seinen Wert. Der Empfang oben muss für das gewählte Protokoll eingeschaltet sein."
 msgstr "Значення каналу від 0 до 255 задає Master від 0 до 100 %. Поки надходять пакети, регулятор Master слідує за пультом; якщо сигнал зникає, Master тримає своє значення. Приймання вгорі має бути ввімкнене для обраного протоколу."
 
-#: live_panel.cpp:220
+#: live_panel.cpp:225
 msgid "Der Look läuft nur, solange der Knopf (oder das Pad) gehalten wird"
 msgstr "Look працює, лише поки кнопку (або пад) утримують"
 
@@ -1086,7 +1086,7 @@ msgstr "У бібліотеці вже є група \"%1\". Замінити?"
 msgid "Die Cuelist ist leer. Erst Cues anlegen (Dock „Cuelist“)."
 msgstr "Cuelist порожній. Спершу створіть Cue (док «Cuelist»)."
 
-#: live_panel.cpp:308 live_panel_looks.cpp:92
+#: live_panel.cpp:313 live_panel_looks.cpp:107
 msgid "Die Cuelist läuft und schaltet die Looks selbst. Erst in der Cuelist auf Stopp drücken."
 msgstr "Cuelist працює й сам перемикає Look. Спершу натисніть Стоп у Cuelist."
 
@@ -1222,7 +1222,7 @@ msgstr "Плоска хвиля: смуги, що рухаються в одно
 msgid "Effekte (2D)"
 msgstr "Ефекти (2D)"
 
-#: live_panel.cpp:118
+#: live_panel.cpp:119
 msgid "Eigene Überblendzeit:"
 msgstr "Власний час переходу:"
 
@@ -1238,7 +1238,7 @@ msgstr "Звіт (.txt) і дамп пам'яті (.dmp) лежать у тец�
 msgid "Ein Kabel lässt sich nur zwischen passenden Typen ziehen."
 msgstr "Кабель можна провести лише між сумісними типами."
 
-#: live_panel.cpp:117
+#: live_panel.cpp:118
 msgid "Ein Klick lädt den Look nur vor. GO (Leertaste) startet dann die Überblendung."
 msgstr "Клік лише попередньо завантажує Look. Перехід починається по GO (пробіл)."
 
@@ -1262,19 +1262,19 @@ msgstr "Входи та виходи"
 msgid "Ein- und Ausgang eines MIDI-Controllers, zum Beispiel eines Akai APC mini. Die Wahl gilt für diesen Rechner und Auftritt, nicht für das Projekt."
 msgstr "Вхід і вихід MIDI-контролера, наприклад Akai APC mini. Вибір стосується цього комп’ютера й виступу, а не проєкту."
 
-#: live_panel_looks.cpp:136
+#: live_panel_looks.cpp:151
 msgid "Einblenden"
 msgstr "Поява"
 
-#: live_panel_looks.cpp:189
+#: live_panel_looks.cpp:204
 msgid "Einblenden mit der Zeit des Looks (%1 s)"
 msgstr "Поява з часом Look (%1 с)"
 
-#: live_panel_looks.cpp:190
+#: live_panel_looks.cpp:205
 msgid "Einblenden mit eigener Zeit (%1 s) …"
 msgstr "Поява з власним часом (%1 с) …"
 
-#: live_panel_looks.cpp:191
+#: live_panel_looks.cpp:206
 msgid "Einblenden mit eigener Zeit …"
 msgstr "Поява з власним часом …"
 
@@ -1350,7 +1350,7 @@ msgstr "Вхід: %1"
 msgid "Einrasten"
 msgstr "Прилипання"
 
-#: live_panel.cpp:55 main_window_settings.cpp:49 output_form.cpp:89
+#: live_panel.cpp:56 main_window_settings.cpp:49 output_form.cpp:89
 msgid "Einstellungen"
 msgstr "Налаштування"
 
@@ -1590,11 +1590,11 @@ msgstr "Розміщувати й обертати фікстури на сце�
 msgid "Flammen: Aufsteigendes, flackerndes Feuer mit einstellbarer Skalierung, Tempo und Flammenhöhe."
 msgstr "Полум'я: вогонь, що здіймається й мерехтить, з налаштовуваним масштабом, темпом і висотою полум'я."
 
-#: live_panel.cpp:219
+#: live_panel.cpp:224
 msgid "Flash"
 msgstr "Спалах"
 
-#: live_panel_looks.cpp:158
+#: live_panel_looks.cpp:173
 msgid "Flashen (nur solange gedrückt)"
 msgstr "Спалах (лише поки натиснуто)"
 
@@ -1642,7 +1642,7 @@ msgstr "Для режиму Live спершу збережіть Look (док «
 msgid "GO"
 msgstr "GO"
 
-#: live_panel.cpp:129
+#: live_panel.cpp:130
 msgid "GO  (Leertaste)"
 msgstr "GO  (пробіл)"
 
@@ -2090,7 +2090,7 @@ msgstr "Ліворуч"
 msgid "Links ab"
 msgstr "Ліворуч від"
 
-#: live_panel.cpp:90
+#: live_panel.cpp:91
 msgid "Links die Ausgabe, rechts der vorgeladene Look (während des Überblendens der einblendende). Kostet etwas Rechenzeit, solange ein Look vorgeladen ist"
 msgstr "Ліворуч вихід, праворуч завантажений look (під час переходу — той, що з'являється). Потребує трохи обчислень, поки look завантажено"
 
@@ -2294,7 +2294,7 @@ msgstr "Кілька вибирайте з Ctrl або Shift. Клік на св
 msgid "Mischt zwei Bilder: 0 zeigt nur A, 1 nur B, dazwischen eine Überblendung."
 msgstr "Змішує два зображення: 0 показує лише A, 1 лише B, між ними — перехід."
 
-#: live_panel.cpp:116
+#: live_panel.cpp:117
 msgid "Mit GO (vorladen)"
 msgstr "За GO (попереднє завантаження)"
 
@@ -2746,7 +2746,7 @@ msgstr "Сітка"
 msgid "Raster in der Vorschau anzeigen"
 msgstr "Показувати сітку в попередньому перегляді"
 
-#: live_panel.cpp:80
+#: live_panel.cpp:81
 msgid "Rasterbreite (Spalten):"
 msgstr "Ширина сітки (стовпці):"
 
@@ -2806,11 +2806,11 @@ msgstr "Регулятор %1, канал %2"
 msgid "Reihenfolge (schnellste zuerst)"
 msgstr "Порядок (найшвидша перша)"
 
-#: live_panel_looks.cpp:45
+#: live_panel_looks.cpp:60
 msgid "Rein: %1 s"
 msgstr "Вхід: %1 с"
 
-#: live_panel_looks.cpp:45
+#: live_panel_looks.cpp:60
 msgid "Rein: Look-Zeit"
 msgstr "Вхід: час Look"
 
@@ -2998,7 +2998,7 @@ msgstr "Старт"
 msgid "Starte …"
 msgstr "Запуск …"
 
-#: live_panel.cpp:119
+#: live_panel.cpp:120
 msgid "Statt der Zeit, die beim Look gespeichert ist"
 msgstr "Замість часу, що збережений у Look"
 
@@ -3010,7 +3010,7 @@ msgstr "Зоряне небо: мерехтливі зорі з регульов
 msgid "Steuerung"
 msgstr "Керування"
 
-#: live_panel_looks.cpp:207
+#: live_panel_looks.cpp:222
 msgid "Steuerung belegen:"
 msgstr "Прив’язати керування:"
 
@@ -3158,7 +3158,7 @@ msgstr "U%1: %2–%3"
 msgid "Umbenennen …"
 msgstr "Перейменувати …"
 
-#: live_panel_looks.cpp:157
+#: live_panel_looks.cpp:172
 msgid "Umschalten (bleibt an)"
 msgstr "Перемкнути (лишається)"
 
@@ -3194,7 +3194,7 @@ msgstr "Унизу"
 msgid "Unten ⤓"
 msgstr "Вниз ⤓"
 
-#: live_panel.cpp:73
+#: live_panel.cpp:74
 msgid "Unter jedem Look: Flash (läuft nur, solange der Knopf gehalten wird) und die Zeit zum Zurückblenden."
 msgstr "Під кожним Look: спалах (працює, лише поки кнопку утримують) і час повернення з плавним переходом."
 
@@ -3262,7 +3262,7 @@ msgstr "Завантажено: %1"
 msgid "Vorschau"
 msgstr "Попередній перегляд"
 
-#: live_panel.cpp:87
+#: live_panel.cpp:88
 msgid "Vorschau teilen"
 msgstr "Розділений перегляд"
 
@@ -3382,7 +3382,7 @@ msgstr "Як у 2D-вигляді; сірі точки переднього ша
 msgid "Wie oft die Spirale um die Säule läuft (0 = gerade nach oben)"
 msgstr "Скільки разів спіраль обвиває колону (0 = прямо вгору)"
 
-#: live_panel.cpp:84
+#: live_panel.cpp:85
 msgid "Wie viele Look-Knöpfe nebeneinander stehen; mehr Spalten brauchen weniger Höhe"
 msgstr "Скільки кнопок Look стоїть поруч; більше стовпців потребує менше висоти"
 
@@ -3478,19 +3478,19 @@ msgstr "Рядки (горизонтально)"
 msgid "Zeit"
 msgstr "Час"
 
-#: live_panel.cpp:222
+#: live_panel.cpp:227
 msgid "Zeit zum Einblenden beim Drücken"
 msgstr "Час плавної появи при натисканні"
 
-#: live_panel_looks.cpp:137
+#: live_panel_looks.cpp:152
 msgid "Zeit zum Einblenden beim Drücken (s):"
 msgstr "Час плавної появи при натисканні (с):"
 
-#: live_panel.cpp:224
+#: live_panel.cpp:229
 msgid "Zeit zum Zurückblenden beim Loslassen"
 msgstr "Час плавного повернення при відпусканні"
 
-#: live_panel_looks.cpp:137
+#: live_panel_looks.cpp:152
 msgid "Zeit zum Zurückblenden beim Loslassen (s):"
 msgstr "Час повернення після відпускання (с):"
 
@@ -3554,31 +3554,31 @@ msgstr "Випадкові клітинки, що наростають і зга
 msgid "Zum Aneinanderreihen mindestens zwei Fixtures wählen"
 msgstr "Для розміщення в ряд оберіть щонайменше дві фікстури"
 
-#: live_panel.cpp:58
+#: live_panel.cpp:59
 msgid "Zurück zum Editor (Esc)"
 msgstr "Назад до редактора (Esc)"
 
-#: live_panel_looks.cpp:50
+#: live_panel_looks.cpp:65
 msgid "Zurück: %1 s"
 msgstr "Назад: %1 с"
 
-#: live_panel_looks.cpp:50
+#: live_panel_looks.cpp:65
 msgid "Zurück: Look-Zeit"
 msgstr "Назад: час Look"
 
-#: live_panel_looks.cpp:136
+#: live_panel_looks.cpp:151
 msgid "Zurückblenden"
 msgstr "Повернення"
 
-#: live_panel_looks.cpp:193
+#: live_panel_looks.cpp:208
 msgid "Zurückblenden mit der Zeit des Looks (%1 s)"
 msgstr "Повернення з часом Look (%1 с)"
 
-#: live_panel_looks.cpp:194
+#: live_panel_looks.cpp:209
 msgid "Zurückblenden mit eigener Zeit (%1 s) …"
 msgstr "Повернення з власним часом (%1 с) …"
 
-#: live_panel_looks.cpp:195
+#: live_panel_looks.cpp:210
 msgid "Zurückblenden mit eigener Zeit …"
 msgstr "Повернення з власним часом …"
 
@@ -3714,7 +3714,7 @@ msgstr "Через цю карту приймання sACN входить у mul
 msgid "Überblendet von Bild A zu Bild B (Position 0 bis 1). „Progressive“ lässt beide in der Mitte voll leuchten."
 msgstr "Плавно переходить від зображення A до B (позиція від 0 до 1). «Progressive» дає обом повністю світитися посередині."
 
-#: live_panel.cpp:204
+#: live_panel.cpp:209
 msgid "Überblendzeit %1 s. Rechtsklick: umschalten oder flashen"
 msgstr "Час переходу %1 с. Правий клік: перемкнути або спалах"
 

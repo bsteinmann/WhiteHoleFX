@@ -254,6 +254,20 @@ QString MainWindow::exerciseLive() {
         scroll == nullptr || !scroll->widgetResizable() || scroll->widget()->findChildren<QPushButton*>().size() < livePanel_->buttonCount()) {
         return QStringLiteral("Live: Das Look-Raster liegt nicht im Scrollbereich");
     }
+    if (!player_->looks()[0].thumbnail || !player_->looks()[1].thumbnail) {
+        return QStringLiteral("Live: Gespeicherte Looks haben kein Vorschaubild");
+    }
+    {
+        int withIcon = 0;
+        for (const QPushButton* button : livePanel_->findChildren<QPushButton*>()) {
+            withIcon += button->icon().isNull() ? 0 : 1;
+        }
+        if (withIcon != livePanel_->buttonCount()) {
+            return QStringLiteral("Live: Die Look-Knöpfe zeigen nicht alle ihr Vorschaubild (%1 von %2)")
+                .arg(withIcon)
+                .arg(livePanel_->buttonCount());
+        }
+    }
     {
         const int before = livePanel_->buttonCount();
         livePanel_->setColumns(2);

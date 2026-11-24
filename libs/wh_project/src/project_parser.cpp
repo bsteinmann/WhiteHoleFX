@@ -14,6 +14,7 @@
 #include "project_fixture_parser.hpp"
 #include "project_names.hpp"
 #include "project_nodegroup.hpp"
+#include "project_thumbnail.hpp"
 #include "whitehole/project/project.hpp"
 
 namespace whitehole::project {
@@ -167,6 +168,15 @@ std::optional<Error> Parser::handleOutside(const Line& line) {
         project_.regions.push_back(std::move(region));
     } else if (key == "look") {
         error = beginLook(r, line.number);
+    } else if (key == "thumb") {
+        if (!look_) {
+            r.fail("\"thumb\" gehört in einen look-Block");
+        } else {
+            LookThumbnail thumbnail = detail::parseThumbnail(r);
+            if (r.ok()) {
+                look_->thumbnail = std::move(thumbnail);
+            }
+        }
     } else if (key == "endlook") {
         error = endLook(r);
     } else {
