@@ -56,6 +56,7 @@ endif()
 
 option(WHITEHOLEFX_BUILD_APPS "Konsolen-Runner bauen" ON)
 if(WHITEHOLEFX_BUILD_APPS)
+    add_subdirectory(apps/benchmark_run)
     add_subdirectory(apps/whitehole_cli)
 endif()
 if(WHITEHOLEFX_BUILD_STUDIO)
