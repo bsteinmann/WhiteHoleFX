@@ -11,6 +11,7 @@
 #include <QAction>
 #include <QApplication>
 #include <QCheckBox>
+#include <QScrollArea>
 #include <QDockWidget>
 #include <QKeySequence>
 #include <QMenu>
@@ -234,6 +235,10 @@ QString MainWindow::exerciseLive() {
     }
     if (newAction_->isEnabled() || openAction_->isEnabled() || !runAction_->shortcut().isEmpty() || undoAction_->isEnabled()) {
         return tr("Live: Neu/Öffnen, Leertaste oder Rückgängig sind im Live-Modus nicht gesperrt");
+    }
+    if (const auto* scroll = livePanel_->findChild<QScrollArea*>(QStringLiteral("liveGridScroll"));
+        scroll == nullptr || !scroll->widgetResizable() || scroll->widget()->findChildren<QPushButton*>().size() < livePanel_->buttonCount()) {
+        return QStringLiteral("Live: Das Look-Raster liegt nicht im Scrollbereich");
     }
     // Auftrittsansicht: ohne Menüleiste und ohne Einstellungen; die Schaltfläche blendet beides gemeinsam ein
     QApplication::processEvents();  // Qt zeigt Widgets, die nach dem Anzeigen des Fensters entstehen, erst über die Ereignisschleife

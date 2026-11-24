@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- **Live-Fenster: Raster scrollt.** Bei mehr als 16 Looks wurden die Knöpfe ab der fünften Zeile abgeschnitten; das Raster liegt jetzt in einem Scrollbereich.
 - **MIDI, Stufe 1: Grundlage (noch ohne Nodes und ohne APC-Belegung).** Neue Bibliothek `wh_midi`: `MidiStore` (letzter Stand von
   Reglern und Noten, begrenzte Ereignisliste), `MidiReceiver`, Geräteschnittstelle `IMidiInput`/`IMidiOutput` und Portsuche über
   den Namen (überlebt Ab- und Anstecken). Die Geräte spricht RtMidi 6.0.0 an (ALSA unter Linux, WinMM unter Windows;
