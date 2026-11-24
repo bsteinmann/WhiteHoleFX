@@ -26,6 +26,11 @@ oder Vsync.
 
 Reihenfolge vom kleinsten zum größten Aufwand, damit die Grenze früh erkannt wird.
 
+**Entscheidung des Nutzers (24.11.):** Die Messreihen sind **wählbar: Projektion, LEDs oder beide**. „Beide“ heißt zwei getrennte Reihen
+nacheinander (Projektion: 3 Auflösungen × 4 Szenen, LEDs: 4 Größen × 4 Szenen), kein Kreuzprodukt. Die Auswahl steht im
+Dialog vor dem Start (und als `--benchmark projection|leds|both` im CLI). Dauer voller Lauf: je Reihe rund 2,4 bis 3,2 Minuten,
+beide zusammen etwa 5,5 Minuten.
+
 ## 4. Abbruchkriterien (nach jedem Durchlauf)
 
 - Median deutlich über dem Budget (etwa das Doppelte von 33 ms): größere Stufen werden als „über Grenze“ markiert und
@@ -98,7 +103,7 @@ Was schon da ist und was fehlt, nach Durchsicht von `wh_engine`, `wh_executor`, 
    Schichten“ ist noch zu definieren (fester Graph aus mehreren Generatoren und Blend-Nodes). Die Szenen sollen im Programm
    fest eingebaut sein (nicht als Beispieldateien), damit Messungen vergleichbar bleiben; alle Nodes sind zeitlich
    deterministisch (Zufall aus Hashfunktion, siehe `builtin_values.cpp`).
-8. **Laufzeit:** Voller Lauf = 48 Stufen (3 × 4 × 4) × ca. 12 s ≈ 10 Minuten ohne Abbrüche; Schnelltest = 3 Stufen × 12 s ≈ 36 s
+8. **Laufzeit:** Ein Kreuzprodukt hätte 48 Stufen (3 × 4 × 4) × ca. 12 s ≈ 10 Minuten gebraucht; mit zwei getrennten Reihen sind es 28 Stufen ≈ 5,5 Minuten ohne Abbrüche; Schnelltest = 3 Stufen × 12 s ≈ 36 s
    (passt zu „unter einer Minute“).
 9. **Testbarkeit lokal:** Qt lässt sich hier nicht bauen. Darum den Kern (Matrix, Stufen, Statistik, Abbruchkriterien,
    Berichtsformat, CSV/Markdown, Referenzvergleich) Qt-frei in einer Bibliothek (`wh_runtime/benchmark`) bauen, mit Catch2
@@ -108,8 +113,7 @@ Was schon da ist und was fehlt, nach Durchsicht von `wh_engine`, `wh_executor`, 
 
 ## 10. Offene Fragen an den Nutzer
 
-- **A:** Soll die Matrix zwei getrennte Reihen sein (Projektion: 3 Auflösungen × 4 Szenen; LEDs: 4 Größen × 4 Szenen) statt
-  eines Kreuzprodukts? Das senkt die Laufzeit des vollen Laufs auf rund 5 Minuten.
+- **A (entschieden 24.11.):** Zwei wählbare Reihen (Projektion, LEDs, beide), siehe Abschnitt 3.
 - **B:** Reicht für die Temperatur zunächst NVIDIA (NVML), und ist „leer, wenn nicht verfügbar“ in Ordnung?
 - **C:** Darf der Kern zuerst als `whitehole_cli --benchmark` entstehen (lokal prüfbar), der Studio-Knopf danach?
 - **D:** Welche Modelle: Schritt 1 (Zeitstempel, Abbruchlogik, Engine-Eingriff) mit Opus, Schritt 2 und 3 (Modi, Vergleich,
