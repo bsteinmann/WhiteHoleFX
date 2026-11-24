@@ -11,6 +11,7 @@
 #include <QAction>
 #include <QApplication>
 #include <QCheckBox>
+#include <QPushButton>
 #include <QScrollArea>
 #include <QDockWidget>
 #include <QKeySequence>
