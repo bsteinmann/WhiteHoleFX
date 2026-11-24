@@ -27,6 +27,7 @@
 
 #include "whitehole/core/result.hpp"
 #include "whitehole/runtime/benchmark_plan.hpp"
+#include "whitehole/runtime/benchmark_sensors.hpp"
 
 namespace whitehole::runtime {
 
@@ -63,6 +64,8 @@ struct BenchmarkStageResult {
     BenchmarkStats stats;
     bool atLimit{false};   // 95. Perzentil stark ausreißend
     std::string note;      // Grund bei Skipped/Failed
+    std::optional<unsigned> maxTemperatureC;  // höchste GPU-Temperatur während der Messung (Sensoren, sonst leer)
+    std::optional<unsigned> minClockMHz;      // niedrigster Grafiktakt während der Messung (Einbruch durch Hitze)
 };
 
 struct BenchmarkRun {
@@ -75,6 +78,7 @@ struct BenchmarkHooks {
     std::function<double()> nowSeconds;                         // leer: steady_clock
     std::function<void(std::size_t index, std::size_t count)> stageStarted;  // vor jeder Stufe (auch übersprungenen)
     const std::atomic<bool>* cancel{nullptr};                   // true: nach dem laufenden Frame abbrechen
+    IGpuSensors* sensors{nullptr};                              // gelesen zu Beginn der Messung und dann jede Sekunde
 };
 
 [[nodiscard]] BenchmarkRun runBenchmark(const std::vector<BenchmarkStage>& plan, IBenchmarkTarget& target,

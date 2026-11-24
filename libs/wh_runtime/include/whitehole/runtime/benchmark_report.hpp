@@ -32,7 +32,8 @@ struct BenchmarkSystemInfo {
 /// Kennzeichen des Ergebnisses: "ok", "over", "skipped", "not-run", "failed".
 [[nodiscard]] const char* benchmarkOutcomeId(BenchmarkOutcome outcome) noexcept;
 
-/// Kopfzeilen mit `#` (System), dann `kind,stage,scene,points,outcome,frames,median_ms,p95_ms,max_ms,cpu_ms,gpu_ms,at_limit,note`.
+/// Kopfzeilen mit `#` (System), dann
+/// `kind,stage,scene,points,outcome,frames,median_ms,p95_ms,max_ms,cpu_ms,gpu_ms,at_limit,temp_c,clock_mhz,note`.
 [[nodiscard]] std::string benchmarkCsv(const BenchmarkRun& run, const BenchmarkSystemInfo& info);
 /// Systemangaben, Tabelle, Empfehlung je Reihe und ggf. Abbruchgrund.
 [[nodiscard]] std::string benchmarkMarkdown(const BenchmarkRun& run, const BenchmarkSystemInfo& info,

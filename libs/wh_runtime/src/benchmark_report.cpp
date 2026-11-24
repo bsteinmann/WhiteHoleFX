@@ -46,6 +46,10 @@ std::string mdCell(const std::string& text) {
     return out;
 }
 
+std::string optionalNumber(const std::optional<unsigned>& value) {
+    return value ? std::to_string(*value) : std::string{};
+}
+
 bool measured(BenchmarkOutcome o) {
     return o == BenchmarkOutcome::Ok || o == BenchmarkOutcome::OverBudget;
 }
@@ -102,7 +106,7 @@ std::string benchmarkCsv(const BenchmarkRun& run, const BenchmarkSystemInfo& inf
     out << "# device," << csvField(info.device) << "\n# backend," << csvField(info.backend) << "\n# driver,"
         << csvField(info.driver) << "\n# version," << csvField(info.version) << "\n# build," << csvField(info.build)
         << "\n";
-    out << "kind,stage,scene,points,outcome,frames,median_ms,p95_ms,max_ms,cpu_ms,gpu_ms,at_limit,note\n";
+    out << "kind,stage,scene,points,outcome,frames,median_ms,p95_ms,max_ms,cpu_ms,gpu_ms,at_limit,temp_c,clock_mhz,note\n";
     for (const BenchmarkStageResult& r : run.stages) {
         const bool m = measured(r.outcome);
         out << kindId(r.stage.kind) << ',' << csvField(benchmarkStageLabel(r.stage)) << ','
@@ -111,7 +115,8 @@ std::string benchmarkCsv(const BenchmarkRun& run, const BenchmarkSystemInfo& inf
             << (m ? ms(r.stats.p95Ms) : "") << ',' << (m ? ms(r.stats.maxMs) : "") << ','
             << (m ? ms(r.stats.cpuMedianMs) : "") << ','
             << (m && r.stats.gpuMedianMs ? ms(*r.stats.gpuMedianMs) : "") << ',' << (r.atLimit ? "1" : "0") << ','
-            << csvField(r.note) << '\n';
+            << optionalNumber(r.maxTemperatureC) << ',' << optionalNumber(r.minClockMHz) << ',' << csvField(r.note)
+            << '\n';
     }
     return out.str();
 }
@@ -122,8 +127,13 @@ std::string benchmarkMarkdown(const BenchmarkRun& run, const BenchmarkSystemInfo
     out << "**WhiteHoleFX-Benchmark** " << mdCell(info.version) << " (" << mdCell(info.build) << ")\n\n";
     out << "- Gerät: " << mdCell(info.device) << (info.backend.empty() ? "" : " [" + mdCell(info.backend) + "]")
         << "\n- Treiber: " << (info.driver.empty() ? std::string{"unbekannt"} : mdCell(info.driver)) << "\n\n";
-    out << "| Reihe | Stufe | Szene | Ergebnis | Median ms | P95 ms | CPU ms | GPU ms | Hinweis |\n";
-    out << "|---|---|---|---|---:|---:|---:|---:|---|\n";
+    bool sensors = false;  // Spalten Temperatur/Takt nur, wenn es Werte gibt (sonst nur NVIDIA-Nutzer betroffen)
+    for (const BenchmarkStageResult& r : run.stages) {
+        sensors = sensors || r.maxTemperatureC || r.minClockMHz;
+    }
+    out << "| Reihe | Stufe | Szene | Ergebnis | Median ms | P95 ms | CPU ms | GPU ms |"
+        << (sensors ? " max °C | min MHz |" : "") << " Hinweis |\n";
+    out << "|---|---|---|---|---:|---:|---:|---:|" << (sensors ? "---:|---:|" : "") << "---|\n";
     for (const BenchmarkStageResult& r : run.stages) {
         const bool m = measured(r.outcome);
         std::string note = r.note;
@@ -134,7 +144,11 @@ std::string benchmarkMarkdown(const BenchmarkRun& run, const BenchmarkSystemInfo
             << benchmarkSceneId(r.stage.scene) << " | " << benchmarkOutcomeId(r.outcome) << " | "
             << (m ? ms(r.stats.medianMs) : "") << " | " << (m ? ms(r.stats.p95Ms) : "") << " | "
             << (m ? ms(r.stats.cpuMedianMs) : "") << " | "
-            << (m && r.stats.gpuMedianMs ? ms(*r.stats.gpuMedianMs) : "") << " | " << mdCell(note) << " |\n";
+            << (m && r.stats.gpuMedianMs ? ms(*r.stats.gpuMedianMs) : "") << " | ";
+        if (sensors) {
+            out << optionalNumber(r.maxTemperatureC) << " | " << optionalNumber(r.minClockMHz) << " | ";
+        }
+        out << mdCell(note) << " |\n";
     }
     out << "\n";
     for (const BenchmarkKind kind : {BenchmarkKind::Projection, BenchmarkKind::Leds}) {

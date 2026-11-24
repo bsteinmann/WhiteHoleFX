@@ -1,9 +1,11 @@
 // benchmark_runner.cpp: Ablauf je Stufe und Abbruchregeln (siehe benchmark_runner.hpp).
 #include "whitehole/runtime/benchmark_runner.hpp"
 
+#include <algorithm>
 #include <chrono>
 #include <map>
 #include <tuple>
+#include <utility>
 
 namespace whitehole::runtime {
 
@@ -37,7 +39,9 @@ BenchmarkRun runBenchmark(const std::vector<BenchmarkStage>& plan, IBenchmarkTar
     BenchmarkRun run;
     run.stages.reserve(plan.size());
     for (const BenchmarkStage& stage : plan) {
-        run.stages.push_back(BenchmarkStageResult{stage, BenchmarkOutcome::NotRun, {}, false, {}});
+        BenchmarkStageResult row;
+        row.stage = stage;
+        run.stages.push_back(std::move(row));
     }
     std::map<SeriesKey, Previous> previous;
     const auto fail = [&](BenchmarkStageResult& result, std::string reason) {
@@ -82,6 +86,16 @@ BenchmarkRun runBenchmark(const std::vector<BenchmarkStage>& plan, IBenchmarkTar
         std::vector<BenchmarkFrame> frames;
         std::size_t frameIndex = 0;
         const double start = now();
+        double nextSensorRead = limits.warmupSeconds;
+        const auto sample = [&] {
+            const GpuSensorReading reading = hooks.sensors->read();
+            if (reading.temperatureC) {
+                result.maxTemperatureC = std::max(result.maxTemperatureC.value_or(0U), *reading.temperatureC);
+            }
+            if (reading.graphicsClockMHz) {
+                result.minClockMHz = std::min(result.minClockMHz.value_or(~0U), *reading.graphicsClockMHz);
+            }
+        };
         for (;;) {
             if (cancelled(hooks)) {
                 fail(result, "abgebrochen");
@@ -106,6 +120,10 @@ BenchmarkRun runBenchmark(const std::vector<BenchmarkStage>& plan, IBenchmarkTar
             // Gemessen wird nur, was nach dem Aufwärmen begonnen hat; der erste Frame zählt nie (Shader-Übersetzung).
             if (frameStart >= limits.warmupSeconds && frameIndex > 1) {
                 frames.push_back(got);
+            }
+            if (hooks.sensors != nullptr && elapsed >= nextSensorRead) {
+                sample();
+                nextSensorRead = elapsed + 1.0;
             }
             if (elapsed >= limits.warmupSeconds + limits.measureSeconds && frames.size() >= limits.minFrames) {
                 break;

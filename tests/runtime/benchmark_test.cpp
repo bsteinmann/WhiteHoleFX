@@ -240,3 +240,42 @@ TEST_CASE("Benchmark: auch langsame Stufen haben mindestens fünf gemessene Fram
     CHECK(run.stages[0].stats.frames == 5);
     CHECK(run.stages[0].stats.medianMs == 400.0);
 }
+
+TEST_CASE("Benchmark: Sensoren liefern höchste Temperatur und niedrigsten Takt der Messung", "[benchmark]") {
+    struct Heating final : IBenchmarkTarget, IGpuSensors {
+        double clock{0.0};
+        unsigned reads{0};
+        Result<void> prepare(const BenchmarkStage&) override { return {}; }
+        Result<BenchmarkFrame> frame() override {
+            clock += 0.05;
+            return BenchmarkFrame{1.0, std::nullopt, 50.0};
+        }
+        GpuSensorReading read() override {
+            ++reads;
+            return GpuSensorReading{60U + reads, 1800U - 50U * reads};  // wird wärmer und taktet herunter
+        }
+    } rig;
+    BenchmarkHooks hooks;
+    hooks.nowSeconds = [&rig] { return rig.clock; };
+    hooks.sensors = &rig;
+    BenchmarkLimits limits = shortLimits();
+    limits.measureSeconds = 3.0;
+    const BenchmarkRun run = runBenchmark({{BenchmarkKind::Leds, BenchmarkScene::Plasma, 0, 0, 1'000}}, rig, limits, hooks);
+    REQUIRE(rig.reads >= 3);
+    CHECK(run.stages[0].maxTemperatureC == 60U + rig.reads);
+    CHECK(run.stages[0].minClockMHz == 1800U - 50U * rig.reads);
+
+    FakeTarget plain;  // ohne Sensoren bleiben die Felder leer
+    const BenchmarkRun none = runBenchmark({{BenchmarkKind::Leds, BenchmarkScene::Plasma, 0, 0, 1'000}}, plain,
+                                           shortLimits(), clockOf(plain));
+    CHECK_FALSE(none.stages[0].maxTemperatureC.has_value());
+}
+
+TEST_CASE("GPU-Sensoren: Namensvergleich und ohne NVML kein Sensor", "[benchmark]") {
+    CHECK(gpuNamesMatch("NVIDIA GeForce GTX 1060 6GB", "NVIDIA GeForce GTX 1060 6GB"));
+    CHECK(gpuNamesMatch("NVIDIA GeForce GTX 1060 6GB", "nvidia geforce gtx 1060"));
+    CHECK_FALSE(gpuNamesMatch("NVIDIA GeForce GTX 1060 6GB", "Intel(R) UHD Graphics 630"));
+    CHECK_FALSE(gpuNamesMatch("", "x"));
+    // Auf Rechnern ohne passende NVIDIA-Karte (CI, Software-Adapter) gibt es keinen Sensor; abstürzen darf es nicht.
+    CHECK(openNvidiaSensors("llvmpipe (LLVM)") == nullptr);
+}

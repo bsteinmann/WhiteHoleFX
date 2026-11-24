@@ -55,13 +55,15 @@ TEST_CASE("Benchmark-Export: CSV mit Systemkopf und maskierten Feldern", "[bench
     run.stages = {row(1'000, BenchmarkScene::Plasma, BenchmarkOutcome::Ok, 2.5, 3.25),
                   row(10'000, BenchmarkScene::Plasma, BenchmarkOutcome::Skipped, 0, 0)};
     run.stages[0].stats.gpuMedianMs = 1.5;
+    run.stages[0].maxTemperatureC = 71U;
+    run.stages[0].minClockMHz = 1650U;
     run.stages[1].note = "kleinere Stufe über Grenze, \"zu langsam\"";
     const std::string csv = benchmarkCsv(run, info());
     CHECK_THAT(csv, ContainsSubstring("# device,NVIDIA GeForce GTX 1060\n"));
     CHECK_THAT(csv, ContainsSubstring("# build,\"commit-a8f82c684b, lauf 1\"\n"));
-    CHECK_THAT(csv, ContainsSubstring("kind,stage,scene,points,outcome,frames,median_ms,p95_ms,max_ms,cpu_ms,gpu_ms,at_limit,note\n"));
-    CHECK_THAT(csv, ContainsSubstring("leds,1000 LEDs,plasma,1000,ok,100,2.50,3.25,4.25,0.62,1.50,0,\n"));
-    CHECK_THAT(csv, ContainsSubstring("leds,10000 LEDs,plasma,10000,skipped,0,,,,,,0,\"kleinere Stufe über Grenze, \"\"zu langsam\"\"\"\n"));
+    CHECK_THAT(csv, ContainsSubstring("kind,stage,scene,points,outcome,frames,median_ms,p95_ms,max_ms,cpu_ms,gpu_ms,at_limit,temp_c,clock_mhz,note\n"));
+    CHECK_THAT(csv, ContainsSubstring("leds,1000 LEDs,plasma,1000,ok,100,2.50,3.25,4.25,0.62,1.50,0,71,1650,\n"));
+    CHECK_THAT(csv, ContainsSubstring("leds,10000 LEDs,plasma,10000,skipped,0,,,,,,0,,,\"kleinere Stufe über Grenze, \"\"zu langsam\"\"\"\n"));
 }
 
 TEST_CASE("Benchmark-Export: Markdown mit Tabelle, Empfehlung und Abbruchgrund", "[benchmark]") {
@@ -79,4 +81,15 @@ TEST_CASE("Benchmark-Export: Markdown mit Tabelle, Empfehlung und Abbruchgrund",
     CHECK_THAT(md, ContainsSubstring("- Stabil bei 30 fps (leds): keine Stufe\n"));
     CHECK_THAT(md, ContainsSubstring("- Abgebrochen: 10000 LEDs layers: Gerät verloren\n"));
     CHECK_THAT(md, !ContainsSubstring("(projection)"));  // Reihe lief nicht
+}
+
+TEST_CASE("Benchmark-Export: Markdown zeigt Temperatur und Takt nur, wenn es Werte gibt", "[benchmark]") {
+    BenchmarkRun run;
+    run.stages = {row(1'000, BenchmarkScene::Plasma, BenchmarkOutcome::Ok, 2, 3)};
+    CHECK_THAT(benchmarkMarkdown(run, info()), !ContainsSubstring("°C"));
+    run.stages[0].maxTemperatureC = 68U;
+    run.stages[0].minClockMHz = 1708U;
+    const std::string md = benchmarkMarkdown(run, info());
+    CHECK_THAT(md, ContainsSubstring("| GPU ms | max °C | min MHz | Hinweis |"));
+    CHECK_THAT(md, ContainsSubstring("| 0.50 |  | 68 | 1708 |  |\n"));
 }

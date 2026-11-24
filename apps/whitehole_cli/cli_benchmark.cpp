@@ -42,8 +42,10 @@ int runBenchmarkCommand(const Options& options, const nodes::BuiltinLibrary& lib
               << "Benchmark: " << plan.size() << " Stufen, je etwa 12 s (Strg+C bricht ab).\n";
 
     GpuBenchmarkTarget target{*device.value(), library};
+    const auto sensors = openNvidiaSensors(device.value()->deviceName());  // erstmal nur NVIDIA, sonst nullptr
     BenchmarkHooks hooks;
     hooks.cancel = &cancel;
+    hooks.sensors = sensors.get();
     hooks.stageStarted = [&plan](std::size_t i, std::size_t count) {
         std::cerr << "  Stufe " << (i + 1) << "/" << count << ": " << benchmarkStageLabel(plan[i]) << " "
                   << benchmarkSceneId(plan[i].scene) << "\n";
