@@ -44,6 +44,7 @@ wh_add_library(wh_runtime
         src/look_thumbnail.cpp
         src/player_live.cpp
         src/player_live_flash.cpp
+        src/player_live_grid.cpp
         src/player_live_preview.cpp
         src/player_arrange.cpp
         src/player_projection.cpp

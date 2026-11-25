@@ -2,7 +2,9 @@
 # Reine Textverarbeitung, kein Netzwerk und keine GPU. Kein Qt.
 wh_add_library(wh_project
     SOURCES
+        src/live_grid.cpp
         src/project_cue.cpp
+        src/project_livegrid.cpp
         src/project_nodegroup.cpp
         src/project_stage.cpp
         src/output_target.cpp

@@ -384,6 +384,17 @@ public:
     /// und Überblendzeit bleiben, wenn `fadeSeconds` fehlt). Liefert den Index. Fehler: InvalidArgument
     /// (Name, Zeit, kein Ausgang), sonst die der Graph-Operationen.
     Result<int> saveLook(const std::string& name, std::optional<double> fadeSeconds = std::nullopt);
+    /// Das feste Live-Raster (Felder mit Looks belegen, docs/entwurf-live-raster.md); ein leeres Raster (`defined()` falsch),
+    /// solange kein Projekt geladen ist oder ensureLiveGrid noch nicht lief. Ein neu gespeicherter Look kommt ins erste
+    /// freie Feld (Umschalten), falls eines frei ist; Umbenennen und Löschen eines Looks ziehen die Felder nach.
+    [[nodiscard]] const project::LiveGrid& liveGrid() const;
+    /// Hat das Projekt noch kein Raster (ältere Datei), entsteht es aus den Looks (makeLiveGridFromLooks, `columns` Spalten,
+    /// mindestens `rows` Zeilen). Ändert nichts am Änderungsstand: erst beim nächsten Speichern steht es in der Datei.
+    /// Hat das Projekt eines, passiert nichts. Fehler: kein Projekt, `columns` ungültig, Looks passen nicht in 16 Zeilen.
+    Result<void> ensureLiveGrid(int columns, int rows);
+    /// Neue Rastergröße (je 1..16); belegte Felder behalten Zeile und Spalte, Felder außerhalb werden leer. Geht nicht im
+    /// Live-Betrieb. Fehler: kein Projekt, kein Raster (ensureLiveGrid), Größe ungültig.
+    Result<void> setLiveGridSize(int columns, int rows);
     /// Fehler: NotFound (Index), InvalidArgument (Name ungültig oder schon vergeben, Zeit außerhalb 0..600).
     Result<void> removeLook(int index);
     Result<void> renameLook(int index, const std::string& name);

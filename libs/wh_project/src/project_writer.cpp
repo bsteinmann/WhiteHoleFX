@@ -10,6 +10,7 @@
 #include <variant>
 
 #include "project_cue.hpp"
+#include "project_livegrid.hpp"
 #include "project_stage.hpp"
 #include "project_names.hpp"
 #include "project_nodegroup.hpp"
@@ -275,6 +276,12 @@ Result<std::string> writeProject(const Project& project) {
             return graph.error();
         }
         out << "endlook\n";
+    }
+    if (project.liveGrid.defined()) {
+        if (const Result<void> grid = detail::checkLiveGrid(project.liveGrid, project.looks); !grid.ok()) {
+            return grid.error();
+        }
+        out << "\n" << detail::formatLiveGrid(project.liveGrid);
     }
     if (!project.cues.empty()) {
         out << "\n";

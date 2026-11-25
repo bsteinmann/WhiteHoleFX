@@ -3,6 +3,9 @@
 Warum es dieses Papier gibt: Der Wunsch vom 25.11. ändert das Datenmodell des Live-Modus (Flash/Zeiten wandern vom Look
 auf das Feld, neue Zeilen im Projektformat). Das soll vor dem Bauen abgestimmt sein, nicht erst im Pull Request.
 
+**Stand 25.11.:** Entwurf freigegeben (Belegung im Projekt, neuer Look automatisch ins nächste freie Feld). Schritt 1 und
+der Raster-Teil von Schritt 2 (Player-Zugriffe) sind umgesetzt; das Auslösen auf Feldern, die Eingänge und das Studio folgen.
+
 ## 0. Wunsch des Nutzers (25.11.)
 
 - Das Raster (Spalten × Zeilen, seit PR „festes Raster“) ist **fest**, die Felder werden **frei mit Looks belegt**.
@@ -16,7 +19,7 @@ auf das Feld, neue Zeilen im Projektformat). Das soll vor dem Bauen abgestimmt s
 - `project::LiveCell { std::optional<std::string> look; LookTrigger trigger; optional<double> flashInSeconds, returnSeconds; }`.
   `look` ist der **Name** (Looknamen sind eindeutig, `findLook`); Umbenennen und Löschen eines Looks zieht die Felder nach
   (Umbenennen ändert den Namen im Feld, Löschen leert das Feld).
-- Projektdatei: ein Block `livegrid <spalten> <zeilen>`, darin je belegtem Feld `cell <index> "<look>" [flash] [in s] [return s]`.
+- Projektdatei: ein Block `livegrid <spalten> <zeilen>`, darin je belegtem Feld `cell <zeile> <spalte> look "<look>" [flash] [in s] [return s]` (Zeile und Spalte ab 1, lesbarer als ein Index).
   Leere Felder stehen nicht in der Datei.
 - Die Größe (Spalten/Zeilen) zieht mit der Belegung ins Projekt, denn ein Feldindex ist nur mit der Spaltenzahl
   eindeutig. `AppSettings.liveColumns/liveRows` bleiben als Vorgabe für neue Projekte und für die Übernahme (2.).

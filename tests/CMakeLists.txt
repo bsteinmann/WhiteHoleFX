@@ -101,6 +101,7 @@ add_executable(wh_tests
     project/project_library_test.cpp
     project/project_destinations_test.cpp
     project/cue_test.cpp
+    project/live_grid_test.cpp
     project/node_group_file_test.cpp
     project/output_target_test.cpp
     fuzz/parser_fuzz_test.cpp
@@ -146,6 +147,7 @@ add_executable(wh_tests
     runtime/live_flash_test.cpp
     runtime/live_split_preview_test.cpp
     runtime/look_thumbnail_test.cpp
+    runtime/live_grid_test.cpp
     runtime/live_manual_fade_test.cpp
     runtime/midi_live_test.cpp
     runtime/player_live_test.cpp

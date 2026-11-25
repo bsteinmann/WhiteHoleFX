@@ -58,6 +58,10 @@ Result<int> Player::saveLook(const std::string& name, std::optional<double> fade
         return existing;
     }
     project_->looks.push_back(std::move(look).value());
+    // Neuer Look: ins erste freie Feld des Rasters (Umschalten), falls ein Raster da ist und eines frei ist
+    if (const int free = project::firstFreeLiveCell(project_->liveGrid); free >= 0) {
+        project_->liveGrid.cells[static_cast<std::size_t>(free)].look = project_->looks.back().name;
+    }
     return static_cast<int>(project_->looks.size()) - 1;
 }
 
@@ -72,6 +76,7 @@ Result<void> Player::removeLook(int index) {
         return Error{ErrorCode::InvalidArgument, "Im Live-Betrieb lassen sich Looks nicht löschen"};
     }
     const std::string removed = project_->looks[static_cast<std::size_t>(index)].name;
+    project::clearLookInLiveGrid(project_->liveGrid, removed);
     for (project::Cue& cue : project_->cues) {
         if (cue.look == removed) {
             cue.look.clear();  // der Cue blendet dann nach Schwarz, statt dass die Datei nicht mehr lesbar ist
@@ -102,6 +107,7 @@ Result<void> Player::renameLook(int index, const std::string& name) {
             cue.look = name;
         }
     }
+    project::renameLookInLiveGrid(project_->liveGrid, oldName, name);
     project_->looks[static_cast<std::size_t>(index)].name = name;
     modified_ = true;
     return {};
