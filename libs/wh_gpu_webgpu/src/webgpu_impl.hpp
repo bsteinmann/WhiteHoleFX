@@ -10,6 +10,8 @@
 
 #include <cstdint>
 #include <deque>
+#include <memory>
+#include <thread>
 #include <mutex>
 #include <optional>
 #include <string>
@@ -72,6 +74,28 @@ struct TimestampState {
     std::optional<double> lastMs;
 };
 
+/// Pipeline vor dem teuren Übersetzen: Layouts und geprüftes Shadermodul (webgpu_resources.cpp).
+struct PreparedPipeline {
+    std::vector<DeclaredBinding> bindings;
+    std::vector<WGPUBindGroupLayout> layouts;
+    WGPUPipelineLayout pipelineLayout{nullptr};
+    WGPUShaderModule module{nullptr};
+    std::string label;
+    std::string entryPoint;
+    std::size_t codeSize{0};
+};
+
+/// Eine Pipeline, die ein eigener Thread übersetzt (webgpu_pipeline_async.cpp). `done`, `pipeline` und `error` schreibt
+/// der Thread unter `mutex`; alles andere gehört dem Engine-Thread.
+struct CompilingPipeline {
+    PreparedPipeline prepared;
+    std::mutex mutex;
+    bool done{false};
+    WGPUComputePipeline pipeline{nullptr};
+    std::string error;
+    std::thread worker;
+};
+
 struct WebGpuDevice::Impl {
     WGPUInstance instance{nullptr};
     WGPUAdapter adapter{nullptr};
@@ -89,6 +113,14 @@ struct WebGpuDevice::Impl {
     std::unordered_map<std::uint64_t, TextureEntry> textures;
     std::unordered_map<std::uint64_t, PipelineEntry> pipelines;
     std::vector<ReadbackState*> readbacks;  // nicht abgeschlossen oder nicht ausgeliefert
+    /// Pipelines, die im Hintergrund entstehen (Marke -> Zustand), und verworfene, deren Thread noch läuft.
+    std::unordered_map<std::uint64_t, std::shared_ptr<CompilingPipeline>> compiling;
+    std::vector<std::shared_ptr<CompilingPipeline>> abandoned;
+    std::uint64_t nextTicket{0};
+    /// Wartet auf alle Hintergrund-Threads und gibt ihre Ergebnisse frei (vor dem Freigeben des Geräts).
+    void joinCompiling() noexcept;
+    /// Gibt verworfene, fertig übersetzte Pipelines frei (in poll()).
+    void reapAbandoned() noexcept;
 
     // Von der Fehler-Callback-Funktion beschrieben, vom Gerät gelesen.
     std::mutex errorMutex;
@@ -118,6 +150,16 @@ void resolveFrameTimestamps(WebGpuDevice::Impl& impl, WGPUCommandEncoder encoder
 void afterSubmitTimestamps(WebGpuDevice::Impl& impl);
 /// In poll(): gemappten Wert lesen.
 void pollTimestamps(WebGpuDevice::Impl& impl);
+
+// webgpu_resources.cpp: Pipeline in Schritten anlegen (auch für das Übersetzen im Hintergrund).
+[[nodiscard]] Result<PreparedPipeline> preparePipeline(WebGpuDevice::Impl& impl, const ComputePipelineDesc& desc);
+/// Das teure Übersetzen; darf auf einem anderen Thread laufen (wgpu-Geräte sind thread-sicher).
+[[nodiscard]] WGPUComputePipeline compilePrepared(WGPUDevice device, const PreparedPipeline& prepared);
+/// Gibt Modul und Pipeline-Layout frei, die Bind-Group-Layouts nur ohne `keepLayouts`.
+void releasePrepared(PreparedPipeline& prepared, bool keepLayouts) noexcept;
+/// Trägt eine fertige Pipeline ein (übernimmt Layouts und Bindungen aus `prepared`).
+[[nodiscard]] ComputePipelineHandle registerPipeline(WebGpuDevice::Impl& impl, WGPUComputePipeline pipeline,
+                                                     PreparedPipeline& prepared);
 
 // webgpu_convert.cpp
 [[nodiscard]] WGPUStringView view(const std::string& s) noexcept;

@@ -6,6 +6,7 @@
 #include <functional>
 #include <optional>
 #include <span>
+#include <unordered_map>
 
 #include "whitehole/core/result.hpp"
 #include "whitehole/gpu/gpu_types.hpp"
@@ -36,6 +37,38 @@ public:
     [[nodiscard]] virtual Result<ComputePipelineHandle> createComputePipeline(
         const ComputePipelineDesc& desc) = 0;
 
+    /// Wie createComputePipeline, aber das teure Übersetzen durch den Treiber (bis zu Hunderte Millisekunden) darf im
+    /// Hintergrund laufen, während weiter Frames entstehen. Fehler im Shadertext meldet schon dieser Aufruf; das Ergebnis
+    /// holt takeComputePipeline ab. Standard (Geräte ohne Hintergrund): legt sofort an, takeComputePipeline ist dann
+    /// gleich fertig. Fehler: die von createComputePipeline.
+    [[nodiscard]] virtual Result<PipelineTicket> beginComputePipeline(const ComputePipelineDesc& desc) {
+        Result<ComputePipelineHandle> made = createComputePipeline(desc);
+        if (!made.ok()) {
+            return made.error();
+        }
+        const PipelineTicket ticket{++nextTicket_};
+        readyTickets_.emplace(ticket.value(), made.value());
+        return ticket;
+    }
+    /// Ergebnis einer Marke: std::nullopt, solange der Treiber noch übersetzt; sonst die Pipeline oder der Fehler. Danach
+    /// ist die Marke verbraucht. Fehler: ShaderError, NotFound (unbekannte Marke).
+    [[nodiscard]] virtual std::optional<Result<ComputePipelineHandle>> takeComputePipeline(PipelineTicket ticket) {
+        const auto it = readyTickets_.find(ticket.value());
+        if (it == readyTickets_.end()) {
+            return Result<ComputePipelineHandle>{Error{ErrorCode::NotFound, "Unbekannte Pipeline-Marke"}};
+        }
+        const ComputePipelineHandle handle = it->second;
+        readyTickets_.erase(it);
+        return Result<ComputePipelineHandle>{handle};
+    }
+    /// Verwirft eine Marke; eine fertige oder noch entstehende Pipeline wird freigegeben.
+    virtual void cancelComputePipeline(PipelineTicket ticket) noexcept {
+        if (const auto it = readyTickets_.find(ticket.value()); it != readyTickets_.end()) {
+            destroy(it->second);
+            readyTickets_.erase(it);
+        }
+    }
+
     virtual void destroy(TextureHandle handle) noexcept = 0;
     virtual void destroy(BufferHandle handle) noexcept = 0;
     virtual void destroy(ComputePipelineHandle handle) noexcept = 0;
@@ -58,6 +91,10 @@ public:
     /// GPU-Laufzeit des zuletzt fertig gemessenen submit in Millisekunden; danach vergessen. nullopt, wenn das Gerät
     /// keine Zeitstempel misst (Standard, siehe WebGpuOptions::timestamps) oder noch kein Wert da ist. Für den Benchmark.
     [[nodiscard]] virtual std::optional<double> takeGpuMilliseconds() { return std::nullopt; }
+
+private:
+    std::uint64_t nextTicket_{0};
+    std::unordered_map<std::uint64_t, ComputePipelineHandle> readyTickets_;  // Standardweg: sofort fertig
 };
 
 }  // namespace whitehole::gpu

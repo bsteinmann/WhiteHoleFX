@@ -111,6 +111,11 @@ public:
     /// Wie applyGraph, aber nur für geänderte Parameterwerte: übersetzt nicht neu und ist deshalb billig genug
     /// für jeden Frame. Nur benutzen, wenn sich weder Nodes noch Kabel noch Textparameter geändert haben.
     Result<void> applyParameters(const graph::Graph& graph) { return stage_->setParameters(graph); }
+    /// Neue Strukturen im Hintergrund übersetzen, solange die bisherige weiterläuft (Live-Betrieb: kein Stillstand beim
+    /// Vorladen eines Looks). Standard: aus.
+    void setBackgroundCompile(bool on) noexcept { stage_->setBackgroundCompile(on); }
+    /// Wartet eine neue Struktur noch auf den Treiber? Solange zeigt die Ausgabe den bisherigen Graphen.
+    [[nodiscard]] bool graphPending() const noexcept { return stage_->graphPending(); }
 
     /// Ein Frame. Siehe RenderEngine::renderFrame. Danach gehen die DMX-Kanäle der Output-Nodes an die Ausgabe.
     Result<void> renderFrame();

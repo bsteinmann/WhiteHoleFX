@@ -69,6 +69,7 @@ add_executable(wh_tests
     executor/canvas_shader_test.cpp
     executor/canvas_stage_graph_test.cpp
     executor/sampling_render_stage_test.cpp
+    executor/background_compile_test.cpp
     executor/sampling_shader_test.cpp
     mapping/fixture_test.cpp
     mapping/fixture_pose_test.cpp
@@ -224,7 +225,8 @@ if(TARGET wh_gpu_webgpu)
         gpu_device/projection_on_device_test.cpp
         gpu_device/sampling_on_device_test.cpp
         gpu_device/stage_on_device_test.cpp
-        gpu_device/webgpu_device_test.cpp)
+        gpu_device/webgpu_device_test.cpp
+        gpu_device/webgpu_async_pipeline_test.cpp)
     target_include_directories(wh_gpu_tests PRIVATE support)
     target_link_libraries(wh_gpu_tests PRIVATE
         wh_gpu_webgpu

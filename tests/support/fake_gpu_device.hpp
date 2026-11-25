@@ -52,6 +52,49 @@ public:
 
     void destroy(gpu::TextureHandle handle) noexcept override { liveTextures_.erase(handle.value()); }
     void destroy(gpu::BufferHandle handle) noexcept override { buffers_.erase(handle.value()); }
+    // Übersetzen im Hintergrund: ohne holdCompiles sofort fertig (wie ein Gerät ohne Hintergrund), sonst erst nach
+    // finishCompiles().
+    Result<gpu::PipelineTicket> beginComputePipeline(const gpu::ComputePipelineDesc& desc) override {
+        ++compilesBegun_;
+        Result<gpu::ComputePipelineHandle> made = createComputePipeline(desc);
+        if (!made.ok()) {
+            return made.error();
+        }
+        const gpu::PipelineTicket ticket{++lastTicket_};
+        if (failNextCompile_) {
+            failNextCompile_ = false;
+            destroy(made.value());
+            compiles_.emplace(ticket.value(), Result<gpu::ComputePipelineHandle>{Error{ErrorCode::ShaderError, "Treiber"}});
+        } else {
+            compiles_.emplace(ticket.value(), made);
+        }
+        if (!holdCompiles_) {
+            compilesReady_.insert(ticket.value());
+        }
+        return ticket;
+    }
+    std::optional<Result<gpu::ComputePipelineHandle>> takeComputePipeline(gpu::PipelineTicket ticket) override {
+        const auto it = compiles_.find(ticket.value());
+        if (it == compiles_.end()) {
+            return Result<gpu::ComputePipelineHandle>{Error{ErrorCode::NotFound, "Unbekannte Marke"}};
+        }
+        if (!compilesReady_.contains(ticket.value())) {
+            return std::nullopt;
+        }
+        Result<gpu::ComputePipelineHandle> result = it->second;
+        compiles_.erase(it);
+        return result;
+    }
+    void cancelComputePipeline(gpu::PipelineTicket ticket) noexcept override {
+        ++compilesCancelled_;
+        if (const auto it = compiles_.find(ticket.value()); it != compiles_.end()) {
+            if (it->second.ok()) {
+                destroy(it->second.value());
+            }
+            compiles_.erase(it);
+        }
+    }
+
     void destroy(gpu::ComputePipelineHandle handle) noexcept override {
         livePipelines_.erase(handle.value());
     }
@@ -118,6 +161,17 @@ public:
     void holdReadbacks(bool hold) noexcept { holdReadbacks_ = hold; }
     void failNextSubmit() noexcept { failNextSubmit_ = true; }
     void failNextPipeline() noexcept { failNextPipeline_ = true; }
+    /// Hintergrund-Übersetzen erst mit finishCompiles() fertig melden.
+    void holdCompiles(bool hold) noexcept { holdCompiles_ = hold; }
+    void finishCompiles() {
+        for (const auto& [id, result] : compiles_) {
+            compilesReady_.insert(id);
+        }
+    }
+    /// Das nächste Hintergrund-Übersetzen scheitert erst beim Abholen (wie ein Treiberfehler).
+    void failNextCompile() noexcept { failNextCompile_ = true; }
+    [[nodiscard]] int compilesBegun() const noexcept { return compilesBegun_; }
+    [[nodiscard]] int compilesCancelled() const noexcept { return compilesCancelled_; }
     void failNextBuffer() noexcept { buffersUntilFailure_ = 0; }
     /// Lässt createBuffer nach `skip` erfolgreichen Aufrufen einmal scheitern.
     void failBufferAfter(int skip) noexcept { buffersUntilFailure_ = skip; }
@@ -213,6 +267,13 @@ private:
     std::optional<double> gpuMsPerPoll_;
     bool failNextSubmit_{false};
     bool failNextPipeline_{false};
+    bool holdCompiles_{false};
+    bool failNextCompile_{false};
+    int compilesBegun_{0};
+    int compilesCancelled_{0};
+    std::uint64_t lastTicket_{0};
+    std::map<std::uint64_t, Result<gpu::ComputePipelineHandle>> compiles_;
+    std::set<std::uint64_t> compilesReady_;
     int buffersUntilFailure_{-1};
     int writesUntilFailure_{-1};
     std::vector<DispatchRecord> dispatches_;

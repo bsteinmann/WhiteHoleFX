@@ -56,6 +56,13 @@ Ohne Adapter werden die Tests übersprungen. Für einen Lauf ohne GPU unter Linu
 - **Zeilen mit 256 Byte Ausrichtung.** `copyTextureToBuffer` schreibt Zeilen mit
   `paddedBytesPerRow()` Bytes (Vorgabe von WebGPU). Wer ein Canvas zurückliest, muss das
   beim Auslesen berücksichtigen.
+- **Übersetzen im Hintergrund.** Das teure Übersetzen eines Shaders durch den Treiber (bis zu Hunderte Millisekunden)
+  kann auf einem eigenen Thread laufen: `beginComputePipeline()` prüft den WGSL-Text sofort (Fehler kommen gleich), das
+  Ergebnis holt `takeComputePipeline()` ab (`std::nullopt`, solange der Treiber arbeitet), `cancelComputePipeline()`
+  verwirft. Der Arbeits-Thread fängt Fehler mit einem eigenen Error-Scope; der gilt in wgpu-native für das ganze Gerät,
+  ein Fehler eines anderen Aufrufs in genau diesem Zeitfenster landet darum beim Übersetzen. Der Live-Betrieb nutzt das
+  (`FieldPass::setBackgroundCompile`): Beim Vorladen eines Looks läuft die Ausgabe mit dem bisherigen Shader weiter, die
+  Überblendung beginnt, sobald der neue fertig ist; zuletzt benutzte Pipelines (24) bleiben im Zwischenspeicher.
 - **Puffergrößen** werden auf Vielfache von 4 aufgerundet; `writeBuffer` verlangt Offset
   und Länge als Vielfache von 4.
 

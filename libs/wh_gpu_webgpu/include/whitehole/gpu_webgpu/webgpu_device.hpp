@@ -74,6 +74,10 @@ public:
     [[nodiscard]] Result<TextureHandle> createTexture(const TextureDesc& desc) override;
     [[nodiscard]] Result<BufferHandle> createBuffer(const BufferDesc& desc) override;
     [[nodiscard]] Result<ComputePipelineHandle> createComputePipeline(const ComputePipelineDesc& desc) override;
+    /// Übersetzt auf einem eigenen Thread (webgpu_pipeline_async.cpp); WGSL-Fehler meldet schon dieser Aufruf.
+    [[nodiscard]] Result<PipelineTicket> beginComputePipeline(const ComputePipelineDesc& desc) override;
+    [[nodiscard]] std::optional<Result<ComputePipelineHandle>> takeComputePipeline(PipelineTicket ticket) override;
+    void cancelComputePipeline(PipelineTicket ticket) noexcept override;
 
     void destroy(TextureHandle handle) noexcept override;
     void destroy(BufferHandle handle) noexcept override;

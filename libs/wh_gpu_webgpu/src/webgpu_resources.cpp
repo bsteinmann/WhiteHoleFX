@@ -116,8 +116,7 @@ Result<BufferHandle> WebGpuDevice::createBuffer(const BufferDesc& desc) {
     return handle;
 }
 
-Result<ComputePipelineHandle> WebGpuDevice::createComputePipeline(const ComputePipelineDesc& desc) {
-    Impl& impl = *impl_;
+Result<PreparedPipeline> preparePipeline(WebGpuDevice::Impl& impl, const ComputePipelineDesc& desc) {
     if (desc.shader.language != ShaderLanguage::Wgsl) {
         return Error{ErrorCode::Unsupported, "Das WebGPU-Backend versteht nur WGSL"};
     }
@@ -127,16 +126,18 @@ Result<ComputePipelineHandle> WebGpuDevice::createComputePipeline(const ComputeP
     }
     impl.drainErrors();
 
+    PreparedPipeline prepared;
+    prepared.bindings = std::move(declared.value());
     std::uint32_t groupCount = 0;
-    for (const DeclaredBinding& d : declared.value()) {
+    for (const DeclaredBinding& d : prepared.bindings) {
         groupCount = std::max(groupCount, d.group + 1U);
     }
 
     // Layouts: eine Gruppe ohne Bindungen bekommt ein leeres Layout.
-    std::vector<WGPUBindGroupLayout> layouts(groupCount, nullptr);
+    prepared.layouts.assign(groupCount, nullptr);
     for (std::uint32_t group = 0; group < groupCount; ++group) {
         std::vector<WGPUBindGroupLayoutEntry> entries;
-        for (const DeclaredBinding& d : declared.value()) {
+        for (const DeclaredBinding& d : prepared.bindings) {
             if (d.group == group) {
                 entries.push_back(layoutEntry(d));
             }
@@ -144,51 +145,88 @@ Result<ComputePipelineHandle> WebGpuDevice::createComputePipeline(const ComputeP
         WGPUBindGroupLayoutDescriptor ld{};
         ld.entryCount = entries.size();
         ld.entries = entries.data();
-        layouts[group] = wgpuDeviceCreateBindGroupLayout(impl.device, &ld);
+        prepared.layouts[group] = wgpuDeviceCreateBindGroupLayout(impl.device, &ld);
     }
 
     WGPUPipelineLayoutDescriptor pld{};
-    pld.bindGroupLayoutCount = layouts.size();
-    pld.bindGroupLayouts = layouts.data();
-    WGPUPipelineLayout pipelineLayout = wgpuDeviceCreatePipelineLayout(impl.device, &pld);
+    pld.bindGroupLayoutCount = prepared.layouts.size();
+    pld.bindGroupLayouts = prepared.layouts.data();
+    prepared.pipelineLayout = wgpuDeviceCreatePipelineLayout(impl.device, &pld);
 
+    // Das Modul prüft den WGSL-Text (Parser, Validierung): billig, Fehler kommen hier sofort. Teuer ist erst das
+    // Übersetzen durch den Treiber beim Anlegen der Pipeline.
     WGPUShaderSourceWGSL wgsl{};
     wgsl.chain.sType = WGPUSType_ShaderSourceWGSL;
     wgsl.code = WGPUStringView{desc.shader.code.data(), desc.shader.code.size()};
     WGPUShaderModuleDescriptor smd{};
     smd.nextInChain = &wgsl.chain;
     smd.label = view(desc.label);
-    WGPUShaderModule module = wgpuDeviceCreateShaderModule(impl.device, &smd);
+    prepared.module = wgpuDeviceCreateShaderModule(impl.device, &smd);
+    prepared.label = desc.label;
+    prepared.entryPoint = desc.shader.entryPoint;
+    prepared.codeSize = desc.shader.code.size();
+    return prepared;
+}
 
-    WGPUComputePipelineDescriptor cpd{};
-    cpd.label = view(desc.label);
-    cpd.layout = pipelineLayout;
-    cpd.compute.module = module;
-    cpd.compute.entryPoint = view(desc.shader.entryPoint);
-    const auto compileStart = std::chrono::steady_clock::now();
-    WGPUComputePipeline pipeline = wgpuDeviceCreateComputePipeline(impl.device, &cpd);
-    impl.pump(true);
-    // Fehlersuche (Issue #26): Wer im Terminal startet, sieht, wenn der Treiber lange für einen Shader braucht.
-    const auto compileMs = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - compileStart).count();
-    if (compileMs > 300) {
-        std::fprintf(stderr, "Shader übersetzt in %lld ms (%zu Zeichen)\n", static_cast<long long>(compileMs), desc.shader.code.size());
+void releasePrepared(PreparedPipeline& prepared, bool keepLayouts) noexcept {
+    if (prepared.module != nullptr) {
+        wgpuShaderModuleRelease(prepared.module);
+        prepared.module = nullptr;
     }
+    if (prepared.pipelineLayout != nullptr) {
+        wgpuPipelineLayoutRelease(prepared.pipelineLayout);
+        prepared.pipelineLayout = nullptr;
+    }
+    if (!keepLayouts) {
+        for (WGPUBindGroupLayout layout : prepared.layouts) {
+            if (layout != nullptr) {
+                wgpuBindGroupLayoutRelease(layout);
+            }
+        }
+        prepared.layouts.clear();
+    }
+}
+
+WGPUComputePipeline compilePrepared(WGPUDevice device, const PreparedPipeline& prepared) {
+    WGPUComputePipelineDescriptor cpd{};
+    cpd.label = view(prepared.label);
+    cpd.layout = prepared.pipelineLayout;
+    cpd.compute.module = prepared.module;
+    cpd.compute.entryPoint = view(prepared.entryPoint);
+    const auto compileStart = std::chrono::steady_clock::now();
+    WGPUComputePipeline pipeline = wgpuDeviceCreateComputePipeline(device, &cpd);
+    // Fehlersuche (Issue #26): Wer im Terminal startet, sieht, wenn der Treiber lange für einen Shader braucht.
+    const auto compileMs =
+        std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - compileStart).count();
+    if (compileMs > 300) {
+        std::fprintf(stderr, "Shader übersetzt in %lld ms (%zu Zeichen)\n", static_cast<long long>(compileMs), prepared.codeSize);
+    }
+    return pipeline;
+}
+
+ComputePipelineHandle registerPipeline(WebGpuDevice::Impl& impl, WGPUComputePipeline pipeline, PreparedPipeline& prepared) {
+    const ComputePipelineHandle handle{++impl.nextId};
+    impl.pipelines[handle.value()] = PipelineEntry{pipeline, std::move(prepared.layouts), std::move(prepared.bindings)};
+    prepared.layouts.clear();
+    return handle;
+}
+
+Result<ComputePipelineHandle> WebGpuDevice::createComputePipeline(const ComputePipelineDesc& desc) {
+    Impl& impl = *impl_;
+    Result<PreparedPipeline> prepared = preparePipeline(impl, desc);
+    if (!prepared.ok()) {
+        return prepared.error();
+    }
+    WGPUComputePipeline pipeline = compilePrepared(impl.device, prepared.value());
+    impl.pump(true);
     const std::vector<std::string> errors = impl.drainErrors();
-
-    wgpuShaderModuleRelease(module);
-    wgpuPipelineLayoutRelease(pipelineLayout);
-
+    releasePrepared(prepared.value(), true);
     if (pipeline == nullptr || !errors.empty()) {
         if (pipeline != nullptr) wgpuComputePipelineRelease(pipeline);
-        for (WGPUBindGroupLayout layout : layouts) {
-            if (layout != nullptr) wgpuBindGroupLayoutRelease(layout);
-        }
+        releasePrepared(prepared.value(), false);
         return Error{ErrorCode::ShaderError, withErrors("Die Compute-Pipeline ließ sich nicht anlegen", errors)};
     }
-
-    const ComputePipelineHandle handle{++impl.nextId};
-    impl.pipelines[handle.value()] = PipelineEntry{pipeline, std::move(layouts), std::move(declared.value())};
-    return handle;
+    return registerPipeline(impl, pipeline, prepared.value());
 }
 
 void WebGpuDevice::destroy(TextureHandle handle) noexcept {

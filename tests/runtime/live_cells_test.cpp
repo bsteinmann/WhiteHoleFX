@@ -214,3 +214,17 @@ TEST_CASE("Felder: nur das abgerufene Feld gilt als aktiv, auch bei demselben Lo
     rig.run(0.1);
     CHECK(rig.player.liveStatus().currentCell == -1);
 }
+
+TEST_CASE("Hintergrund-Übersetzen: die Überblendung wartet, bis der neue Shader fertig ist", "[live][background]") {
+    Rig rig;
+    rig.device.holdCompiles(true);
+    REQUIRE(rig.player.liveTrigger(2, 1.0).ok());  // Drei, 1 s
+    rig.run(0.0);
+    rig.run(0.5);  // Treiber übersetzt noch: die Ausgabe zeigt den bisherigen Stand, der Fade steht
+    CHECK(rig.player.liveStatus().fading);
+    CHECK(rig.player.liveStatus().progress == Approx(0.0));
+    rig.device.finishCompiles();
+    rig.run(0.0);  // umgeschaltet
+    rig.run(0.5);
+    CHECK(rig.player.liveStatus().progress == Approx(0.5));
+}

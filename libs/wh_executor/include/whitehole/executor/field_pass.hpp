@@ -20,6 +20,11 @@
 // Pufferfehler), bleibt der letzte gute Zustand aktiv und rendert weiter. Der Fehler
 // steht in graphError().
 //
+// Übersetzen im Hintergrund (setBackgroundCompile, im Live-Betrieb an): Ändert sich die Struktur, läuft die bisherige
+// Pipeline mit dem bisherigen Graphen weiter, bis der Treiber die neue übersetzt hat (IGpuDevice::beginComputePipeline);
+// record() schaltet dann um. Zuletzt benutzte Pipelines bleiben in einem kleinen Zwischenspeicher, ein Wechsel zurück zu
+// einer schon übersetzten Struktur ist dann sofort da. Ohne vorherige Pipeline wird immer sofort übersetzt.
+//
 // Threading: alles auf dem Engine-Thread. Gerät und Bibliotheken müssen den Pass überleben.
 #pragma once
 
@@ -108,6 +113,10 @@ public:
     }
 
     [[nodiscard]] bool ready() const noexcept { return pipeline_.has_value() && graph_.has_value(); }
+    /// Übersetzen im Hintergrund und Zwischenspeicher an/aus (Standard: aus, setGraph übersetzt sofort).
+    void setBackgroundCompile(bool on) noexcept { background_ = on; }
+    /// Wartet eine neue Struktur noch auf den Treiber? Solange zeigt der Pass den bisherigen Graphen.
+    [[nodiscard]] bool pending() const noexcept { return pending_.has_value(); }
     [[nodiscard]] const std::optional<Error>& graphError() const noexcept { return graphError_; }
     [[nodiscard]] const std::optional<Error>& frameError() const noexcept { return frameError_; }
     [[nodiscard]] StageStats stats() const noexcept { return stats_; }
@@ -120,7 +129,13 @@ private:
               EntryFn entry, gpu::BufferHandle frameBuffer);
 
     Result<void> rebuildPipeline(const compiler::CompiledField& compiled);
+    /// Setzt eine fertige Pipeline ein (Parameterpuffer passend); die bisherige kommt in den Zwischenspeicher (Hintergrund-
+    /// modus) oder wird freigegeben. Bei einem Fehler wird `pipeline` freigegeben und der alte Zustand bleibt.
+    Result<void> installPipeline(gpu::ComputePipelineHandle pipeline, const compiler::CompiledField& compiled, bool fresh);
     void releasePipeline() noexcept;
+    void cancelPending() noexcept;
+    void pollPending();  // in record(): fertige Hintergrund-Pipeline einsetzen
+    [[nodiscard]] std::optional<gpu::ComputePipelineHandle> takeCached(std::uint64_t hash) noexcept;
 
     gpu::IGpuDevice& device_;
     const compiler::ISnippetLibrary& snippets_;
@@ -142,6 +157,20 @@ private:
     std::uint64_t structureHash_{0};
     std::optional<gpu::ComputePipelineHandle> pipeline_;
     std::optional<gpu::BufferHandle> parameterBuffer_;
+
+    struct Pending {
+        gpu::PipelineTicket ticket;
+        compiler::CompiledField compiled;
+        graph::Graph graph;
+    };
+    struct Cached {
+        std::uint64_t hash{0};
+        gpu::ComputePipelineHandle pipeline;
+    };
+    static constexpr std::size_t kCacheSize = 24;
+    bool background_{false};
+    std::optional<Pending> pending_;
+    std::vector<Cached> cache_;  // zuletzt benutzte Pipelines, die neueste hinten
     std::vector<gpu::Binding> bindings_;  // wiederverwendet, damit record() nicht allokiert
 
     std::optional<Error> graphError_;

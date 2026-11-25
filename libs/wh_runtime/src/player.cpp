@@ -146,6 +146,8 @@ Result<void> Player::start() {
     if (testPattern_.active()) {
         session_->setTestPattern(testPattern_);
     }
+    // Live-Betrieb: ein neu vorgeladener Look wird im Hintergrund übersetzt, die Ausgabe läuft solange weiter
+    session_->setBackgroundCompile(live_.has_value());
     refreshCompleteness();
     previewSelected_.reset();  // die neue Session hat noch nichts gewählt
     stepError_.reset();
@@ -183,7 +185,9 @@ Result<void> Player::step() {
     if (live_) {
         // Die Überblendung läuft mit der Uhrzeit, nicht mit der Zahl der Frames
         const double now = liveNow();
-        const double elapsed = liveLast_ ? now - *liveLast_ : 0.0;
+        // Solange der Shader mit dem neuen Look noch übersetzt wird, zeigt die Ausgabe den bisherigen Stand: die
+        // Überblendung wartet, statt unsichtbar weiterzulaufen und beim Umschalten zu springen
+        const double elapsed = liveLast_ && !session_->graphPending() ? now - *liveLast_ : 0.0;
         liveLast_ = now;
         if (live_->advance(elapsed)) {
             valuesDirty_ = true;
