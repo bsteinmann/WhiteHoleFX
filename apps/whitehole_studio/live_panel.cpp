@@ -1,6 +1,8 @@
 // live_panel.cpp: große Look-Knöpfe, GO, Überblendzeit, Fortschritt.
 #include "live_panel.hpp"
 
+#include "look_button.hpp"
+
 #include <QCheckBox>
 #include <QDoubleSpinBox>
 #include <QIcon>
@@ -199,10 +201,12 @@ void LivePanel::rebuild() {
         auto* cellLayout = new QVBoxLayout{cell};
         cellLayout->setContentsMargins(0, 0, 0, 0);
         cellLayout->setSpacing(4);
-        auto* button = new QPushButton{buttonText(index), cell};
+        auto* button = new LookButton{buttonText(index), cell};
         button->setMinimumHeight(72);
         if (const QIcon icon = thumbnailIcon(index); !icon.isNull()) {
             button->setIcon(icon);
+            // Das Bild wächst mit dem Knopf (LookButton); bis zur ersten Größenänderung gilt das Seitenverhältnis
+            button->setImageSize(icon.availableSizes().value(0, QSize{32, 18}));
             button->setIconSize(QSize{64, 36});
         }
         button->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);

@@ -26,6 +26,7 @@
 
 #include "cue_panel.hpp"
 #include "live_panel.hpp"
+#include "look_button.hpp"
 #include "look_panel.hpp"
 #include <memory>
 #include "main_window.hpp"
@@ -267,6 +268,9 @@ QString MainWindow::exerciseLive() {
                 .arg(withIcon)
                 .arg(livePanel_->buttonCount());
         }
+    }
+    if (const QString iconError = checkLookIconSize(); !iconError.isEmpty()) {
+        return iconError;
     }
     {
         const int before = livePanel_->buttonCount();
