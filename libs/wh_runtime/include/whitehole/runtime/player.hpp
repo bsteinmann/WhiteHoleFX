@@ -396,8 +396,8 @@ public:
     /// 600 s; `in`/`return` entfallen beim Umschalten (Toggle). Geht auch im Live-Betrieb. Fehler: kein Raster, Feld
     /// außerhalb, unbekannter Look, Zeit ungültig.
     Result<void> setLiveCell(int cell, project::LiveCell value);
-    /// Neue Rastergröße (je 1..16); belegte Felder behalten Zeile und Spalte, Felder außerhalb werden leer. Geht nicht im
-    /// Live-Betrieb. Fehler: kein Projekt, kein Raster (ensureLiveGrid), Größe ungültig.
+    /// Neue Rastergröße (je 1..16); belegte Felder behalten Zeile und Spalte, Felder außerhalb werden leer. Geht auch im
+    /// Live-Betrieb (beendet gehaltene Flash-Felder). Fehler: kein Projekt, kein Raster (ensureLiveGrid), Größe ungültig.
     Result<void> setLiveGridSize(int columns, int rows);
     /// Fehler: NotFound (Index), InvalidArgument (Name ungültig oder schon vergeben, Zeit außerhalb 0..600).
     Result<void> removeLook(int index);

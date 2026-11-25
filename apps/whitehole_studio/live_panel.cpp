@@ -1,7 +1,7 @@
-// live_panel.cpp: große Look-Knöpfe, GO, Überblendzeit, Fortschritt.
+// live_panel.cpp: Aufbau des Live-Fensters, GO, Überblendzeit, Fortschritt und Farben der Felder. Die Felder des Rasters
+// selbst (Aufbau, Menü, Belegen) stehen in live_panel_cells.cpp.
 #include "live_panel.hpp"
 
-#include "look_button.hpp"
 
 #include <QCheckBox>
 #include <QDoubleSpinBox>
@@ -33,6 +33,10 @@ constexpr const char* kArmed = "#d9822b";
 constexpr const char* kIncoming = "#c9b21e";
 
 }  // namespace
+
+QString LivePanel::emptyStyle() {
+    return QStringLiteral("QPushButton { background: transparent; border: 1px dashed #555; border-radius: 6px; color: #777; }");
+}
 
 QString LivePanel::styleFor(const QString& color) {
     return QStringLiteral(
@@ -189,105 +193,28 @@ void LivePanel::setGrid(int columns, int rows) {
     }
     columns_ = columns;
     rows_ = rows;
-    {
-        const QSignalBlocker columnsBlocker{columnsBox_};
-        const QSignalBlocker rowsBlocker{rowsBox_};
-        columnsBox_->setValue(columns_);
-        rowsBox_->setValue(rows_);
+    syncGridBoxes();
+    // Hat das Projekt schon ein Raster, bekommt es die neue Größe (belegte Felder behalten Zeile und Spalte);
+    // sonst gelten die Werte als Vorgabe für das Raster, das rebuild() aus den Looks anlegt.
+    if (player_.liveGrid().defined()) {
+        if (const Result<void> r = player_.setLiveGridSize(columns_, rows_); !r.ok()) {
+            Q_EMIT failed(fromStd(r.error().message));
+        }
     }
     rebuild();
 }
 
-int LivePanel::effectiveRows() const {
-    const int looks = static_cast<int>(player_.looks().size());
-    return std::max(rows_, (looks + columns_ - 1) / columns_);
+void LivePanel::setDefaultGrid(int columns, int rows) {
+    columns_ = std::clamp(columns, 1, 16);
+    rows_ = std::clamp(rows, 1, 16);
+    syncGridBoxes();
 }
 
-void LivePanel::rebuild() {
-    for (QWidget* cell : cells_) {
-        grid_->removeWidget(cell);
-        delete cell;  // nimmt Knopf, Flash-Haken und Zurückblend-Knopf mit
-    }
-    cells_.clear();
-    buttons_.clear();
-    optionRows_.clear();
-    flashChecks_.clear();
-    inButtons_.clear();
-    returnButtons_.clear();
-    const auto& looks = player_.looks();
-    for (std::size_t i = 0; i < looks.size(); ++i) {
-        const int index = static_cast<int>(i);
-        // Eine Zelle je Look: der große Knopf, darunter (nur bei offenen Einstellungen) Flash und Zurückblenden
-        auto* cell = new QWidget{gridHost_};
-        auto* cellLayout = new QVBoxLayout{cell};
-        cellLayout->setContentsMargins(0, 0, 0, 0);
-        cellLayout->setSpacing(4);
-        auto* button = new LookButton{buttonText(index), cell};
-        button->setMinimumHeight(96);
-        if (const QIcon icon = thumbnailIcon(index); !icon.isNull()) {
-            button->setIcon(icon);
-            // LookButton zeichnet das Bild selbst, so groß wie der Knopf erlaubt (das Icon dient nur als Bildquelle)
-        }
-        button->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-        button->setToolTip(tr("Überblendzeit %1 s. Rechtsklick: umschalten oder flashen").arg(looks[i].fadeSeconds, 0, 'f', 1));
-        // Drücken und Loslassen statt Klick: ein Flash-Look läuft, solange gehalten (live_panel_looks.cpp)
-        connect(button, &QPushButton::pressed, this, [this, index]() { press(index); });
-        connect(button, &QPushButton::released, this, [this, index]() { release(index); });
-        button->setContextMenuPolicy(Qt::CustomContextMenu);
-        connect(button, &QWidget::customContextMenuRequested, this, [this, index, button](const QPoint& at) {
-            QMenu* menu = lookMenu(index);
-            menu->exec(button->mapToGlobal(at));
-            menu->deleteLater();
-        });
-        cellLayout->addWidget(button, 1);
-
-        auto* row = new QWidget{cell};
-        auto* rowLayout = new QGridLayout{row};
-        rowLayout->setContentsMargins(0, 0, 0, 0);
-        auto* flash = new QCheckBox{tr("Flash"), row};
-        flash->setToolTip(tr("Der Look läuft nur, solange der Knopf (oder das Pad) gehalten wird"));
-        auto* ins = new QPushButton{row};
-        ins->setToolTip(tr("Zeit zum Einblenden beim Drücken"));
-        auto* returns = new QPushButton{row};
-        returns->setToolTip(tr("Zeit zum Zurückblenden beim Loslassen"));
-        rowLayout->addWidget(flash, 0, 0, 1, 2);
-        rowLayout->addWidget(ins, 1, 0);
-        rowLayout->addWidget(returns, 1, 1);
-        row->setVisible(settingsShown_);
-        cellLayout->addWidget(row);
-        // clicked statt toggled: ein vom Player nachgezogener Haken (syncLookOptions) löst nichts aus
-        connect(flash, &QCheckBox::clicked, this, [this, index](bool on) {
-            const std::optional<double> keep = player_.looks()[static_cast<std::size_t>(index)].returnSeconds;
-            (void)setLookTrigger(index, on ? project::LookTrigger::Flash : project::LookTrigger::Toggle,
-                                 on ? keep : std::optional<double>{});
-            syncLookOptions(index);  // scheitert das Setzen, springt der Haken zurück
-        });
-        for (QPushButton* timeButton : {ins, returns}) {  // beide Zeiten: das Menü des Looks (Zeiten zum Wählen)
-            connect(timeButton, &QPushButton::clicked, this, [this, index, timeButton]() {
-                QMenu* menu = lookMenu(index);
-                menu->exec(timeButton->mapToGlobal(QPoint{0, timeButton->height()}));
-                menu->deleteLater();
-            });
-        }
-
-        grid_->addWidget(cell, index / columns_, index % columns_);
-        cells_.push_back(cell);
-        buttons_.push_back(button);
-        optionRows_.push_back(row);
-        flashChecks_.push_back(flash);
-        inButtons_.push_back(ins);
-        returnButtons_.push_back(returns);
-        syncLookOptions(index);
-    }
-    // Festes Raster: alle Spalten und Zeilen gleich groß, nicht belegte Felder bleiben leer
-    for (int c = 0; c < std::max(grid_->columnCount(), columns_); ++c) {
-        grid_->setColumnStretch(c, c < columns_ ? 1 : 0);
-    }
-    const int shownRows = effectiveRows();
-    for (int r = 0; r < std::max(grid_->rowCount(), shownRows); ++r) {
-        grid_->setRowStretch(r, r < shownRows ? 1 : 0);
-    }
-    refresh();
+void LivePanel::syncGridBoxes() {
+    const QSignalBlocker columnsBlocker{columnsBox_};
+    const QSignalBlocker rowsBlocker{rowsBox_};
+    columnsBox_->setValue(columns_);
+    rowsBox_->setValue(rows_);
 }
 
 void LivePanel::refresh() {
@@ -304,12 +231,17 @@ void LivePanel::refresh() {
                    : QString{};
     };
     for (int i = 0; i < buttonCount(); ++i) {
+        const int look = player_.cellLook(i);  // derselbe Look in zwei Feldern färbt beide
+        if (look < 0) {
+            buttons_[static_cast<std::size_t>(i)]->setStyleSheet(emptyStyle());
+            continue;
+        }
         const char* color = kIdle;
-        if (st.fading && i == st.incoming) {
+        if (st.fading && look == st.incoming) {
             color = kIncoming;
-        } else if (i == st.current) {
+        } else if (look == st.current) {
             color = kLive;
-        } else if (i == st.armed && !st.fading) {
+        } else if (look == st.armed && !st.fading) {
             color = kArmed;
         }
         buttons_[static_cast<std::size_t>(i)]->setStyleSheet(styleFor(QString::fromLatin1(color)));
@@ -344,7 +276,11 @@ bool LivePanel::trigger(int index) {
         Q_EMIT failed(tr("Die Cuelist läuft und schaltet die Looks selbst. Erst in der Cuelist auf Stopp drücken."));
         return false;
     }
-    const Result<void> r = useGo_->isChecked() ? player_.liveArm(index) : player_.liveTrigger(index, fadeOverride());
+    const int look = player_.cellLook(index);  // `index` ist ein Feld des Rasters
+    if (look < 0) {
+        return false;  // leeres Feld
+    }
+    const Result<void> r = useGo_->isChecked() ? player_.liveArm(look) : player_.liveTrigger(look, fadeOverride());
     if (!r.ok()) {
         Q_EMIT failed(fromStd(r.error().message));
         return false;

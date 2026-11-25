@@ -3,8 +3,8 @@
 Warum es dieses Papier gibt: Der Wunsch vom 25.11. ändert das Datenmodell des Live-Modus (Flash/Zeiten wandern vom Look
 auf das Feld, neue Zeilen im Projektformat). Das soll vor dem Bauen abgestimmt sein, nicht erst im Pull Request.
 
-**Stand 25.11.:** Entwurf freigegeben (Belegung im Projekt, neuer Look automatisch ins nächste freie Feld). Schritt 1 und
-der Raster-Teil von Schritt 2 (Player-Zugriffe) sind umgesetzt; das Auslösen auf Feldern, die Eingänge und das Studio folgen.
+**Stand 25.11.:** Entwurf freigegeben (Belegung im Projekt, neuer Look automatisch ins nächste freie Feld). Schritte 1 bis 3 sind umgesetzt (Projektformat,
+Player/MIDI/DMX auf Feldern, Studio-Oberfläche); offen: Verschieben der Felder per Ziehen.
 
 ## 0. Wunsch des Nutzers (25.11.)
 

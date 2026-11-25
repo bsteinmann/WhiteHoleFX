@@ -67,9 +67,6 @@ Result<void> Player::setLiveGridSize(int columns, int rows) {
     if (!project_) {
         return Error{ErrorCode::InvalidArgument, "Es ist kein Projekt geladen"};
     }
-    if (live_) {
-        return Error{ErrorCode::InvalidArgument, "Im Live-Betrieb lässt sich die Rastergröße nicht ändern"};
-    }
     if (!project_->liveGrid.defined()) {
         return Error{ErrorCode::InvalidArgument, "Das Projekt hat noch kein Live-Raster"};
     }
@@ -80,6 +77,7 @@ Result<void> Player::setLiveGridSize(int columns, int rows) {
         return {};
     }
     project::resizeLiveGrid(project_->liveGrid, columns, rows);
+    clearFlash();  // gehaltene Felder können verschwunden oder verschoben sein
     modified_ = true;
     return {};
 }
