@@ -45,11 +45,19 @@ so aus wie heute. Beim Speichern steht der Block in der Datei. **Einbahnstraße:
 - Neu gespeicherter Look: wird ins nächste freie Feld gelegt, falls eines frei ist (sonst nur gespeichert).
 - Verschieben per Ziehen: später, nicht in der ersten Stufe.
 
+## 4a. Vorschaubilder
+
+- Das Standbild gehört weiter zum **Look** (wird beim Speichern des Looks aufgenommen, 96 × 54 Pixel, PR #65) und erscheint
+  auf **jedem Feld**, das den Look enthält. Liegt ein Look in zwei Feldern, zeigen beide dasselbe Bild.
+- Die Felder bleiben `LookButton`s: das Bild wächst mit der Feldgröße (Seitenverhältnis bleibt). Ein leeres Feld zeigt
+  keinen Knopf, nur eine schwach umrandete Fläche, damit man es zum Belegen findet.
+- Kein Bild (alter Look ohne Standbild): Feld zeigt nur den Namen, wie heute. Neu speichern nimmt das Bild auf.
+
 ## 5. Schritte
 
 1. Kern: `LiveGrid`/`LiveCell`, Parser/Writer, Übernahme, Nachziehen bei Umbenennen/Löschen, Tests (Catch2).
 2. Player: Felder auslösen/loslassen, MIDI/DMX/Tasten auf Felder, Pad-LEDs; Tests.
-3. Studio: Raster zeigt Felder, Rechtsklick-Belegung, Einstellungen je Feld; Rauchtest, Übersetzungen.
+3. Studio: Raster zeigt Felder mit Vorschaubild, leere Felder als Fläche, Rechtsklick-Belegung, Einstellungen je Feld; Rauchtest, Übersetzungen.
 4. Doku (`project-format.md`, `studio.md`, `entwurf-midi.md`), Changelog.
 
 ## 6. Offen
