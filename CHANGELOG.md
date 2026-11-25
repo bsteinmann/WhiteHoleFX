@@ -1,7 +1,10 @@
 # Änderungen
 
-## Unreleased
+## 1.1.1
 
+Nur Fehlerkorrekturen gegenüber 1.1.0, keine neuen Funktionen.
+
+- **Live-Fenster: Look-Raster scrollt.** Ab 17 Looks (mehr als vier Zeilen) wurden die unteren Knöpfe abgeschnitten und waren nicht erreichbar; das Raster liegt jetzt in einem Scrollbereich. Neue Prüfung im Studio-Rauchtest (`main_window_live.cpp`).
 - **Stillstand im Node-Editor behoben (Beispiel techno, Windows).** Bei bestimmten Fenstergrößen schaukelten sich das automatische Einpassen der Ansicht und die Scrollbalken gegenseitig auf: Einpassen ändert den Bereich, Qt blendet einen Scrollbalken ein oder aus, der Viewport wird schmaler oder breiter, der Editor passt neu ein, und so weiter. Der Hauptthread kam aus der Ereigniswarteschlange nicht mehr heraus (Stillstandsberichte vom 24.11., Version 1.1.0). Jetzt passt der Editor nur neu ein, wenn sich die verfügbare Fläche ohne Scrollbalken (`maximumViewportSize()`) ändert. Rauchtest „Node-Palette“ prüft, dass ein reiner Viewport-Wechsel nicht neu einpasst.
 
 ## 1.1.0

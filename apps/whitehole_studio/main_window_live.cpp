@@ -14,6 +14,8 @@
 #include <QKeySequence>
 #include <QMenu>
 #include <QMenuBar>
+#include <QPushButton>
+#include <QScrollArea>
 #include <QSignalBlocker>
 #include <QStatusBar>
 #include <QToolBar>
@@ -205,6 +207,11 @@ QString MainWindow::exerciseLive() {
     }
     if (lookPanel_->lookCount() != 2 || livePanel_->buttonCount() != 2) {
         return tr("Live: Listen zeigen %1 / %2 statt 2 Looks").arg(lookPanel_->lookCount()).arg(livePanel_->buttonCount());
+    }
+    if (const auto* scroll = livePanel_->findChild<QScrollArea*>(QStringLiteral("liveGridScroll"));
+        scroll == nullptr || !scroll->widgetResizable() ||
+        scroll->widget()->findChildren<QPushButton*>().size() < livePanel_->buttonCount()) {
+        return QStringLiteral("Live: Das Look-Raster liegt nicht im Scrollbereich");  // Rauchtest, ohne tr()
     }
     if (!lookPanel_->moveSelected(-1) || !lookPanel_->renameLook(0, QStringLiteral("Zwei neu"))) {
         return tr("Live: Ordnen oder Umbenennen scheitert");

@@ -8,6 +8,7 @@
 #include <QLabel>
 #include <QProgressBar>
 #include <QPushButton>
+#include <QScrollArea>
 #include <QShortcut>
 #include <QVBoxLayout>
 
@@ -52,10 +53,17 @@ LivePanel::LivePanel(runtime::Player& player, QWidget* parent) : QWidget{parent}
     progress_->setFixedHeight(10);
     layout->addWidget(progress_);
 
-    gridHost_ = new QWidget{this};
+    // Das Raster liegt in einem Scrollbereich: ab der fünften Zeile (mehr als 16 Looks) würden die Knöpfe sonst abgeschnitten
+    auto* scroll = new QScrollArea{this};
+    scroll->setObjectName(QStringLiteral("liveGridScroll"));
+    scroll->setWidgetResizable(true);
+    scroll->setFrameShape(QFrame::NoFrame);
+    scroll->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    gridHost_ = new QWidget{scroll};
     grid_ = new QGridLayout{gridHost_};
     grid_->setSpacing(8);
-    layout->addWidget(gridHost_, 1);
+    scroll->setWidget(gridHost_);
+    layout->addWidget(scroll, 1);
 
     auto* options = new QHBoxLayout;
     useGo_ = new QCheckBox{tr("Mit GO (vorladen)"), this};

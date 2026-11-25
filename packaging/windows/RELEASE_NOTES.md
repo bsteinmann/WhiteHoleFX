@@ -1,4 +1,4 @@
-**Vorabversion (0.x) für Windows (64 Bit) und Linux.** Alle Einzelheiten stehen in `CHANGELOG.md`.
+**Version 1.1.1 für Windows (64 Bit) und Linux.** Alle Einzelheiten stehen in `CHANGELOG.md`.
 
 **Windows:** ZIP herunterladen, in einen eigenen Ordner entpacken, `whitehole_studio.exe` starten.
 
@@ -22,16 +22,11 @@ keinen Ruf, nicht dass etwas daran auffällig wäre. So gehst du vor:
 
 Stimmt die Prüfsumme nicht, bitte nicht starten und melden.
 
-### Neu seit v0.51.0
+### Neu in 1.1.1 (nur Fehlerkorrekturen)
 
-- **Node-Editor:** Rechtsklick auf einen Ein- oder Ausgang zeigt passende Nodes und verbindet sie sofort; Skalierung am Kabel
-  (`Wert × Faktor + Offset`); Parameterfenster zeigt nur den gewählten Node, mit Suche und Anheften.
-- **Neue Nodes:** sechs 1D-Generatoren für Strips (Achse wählbar), Strobe Gate.
-- **Stage Config mit vier Reitern** (Fixtures, Layout, Ausgabe, Test): Bibliothek der Bauformen (Matrix, Kreis, Strip, Säule,
-  Ring), Drehung von Fixtures, Achsen-Griff und Drehringe in der Bühnenansicht, Einrasten an anderen Fixtures,
-  Controller-Bibliothek mit Protokoll (Art-Net, sACN, DDP) pro Controller.
-- **Windows:** Programmsymbol und Startbildschirm, Node-Editor bleibt nach dem Ablegen aus der Palette sichtbar,
-  Update-Benachrichtigung (Hilfe → Auf Updates prüfen …, erst nach Zustimmung).
+- **Node-Editor:** Bei bestimmten Fenstergrößen schaukelten sich das automatische Einpassen der Ansicht und die Scrollbalken
+  gegenseitig auf, das Programm stand still (zuerst aufgefallen beim Beispiel „techno“ unter Windows). Behoben.
+- **Live-Fenster:** Ab 17 Looks wurden die unteren Knöpfe abgeschnitten und waren nicht erreichbar. Das Raster scrollt jetzt.
 
 ### Hinweise
 
