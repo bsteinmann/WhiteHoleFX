@@ -68,15 +68,16 @@ Result<void> Player::setLookFlashIn(int index, std::optional<double> seconds) {
     return {};
 }
 
-Result<void> Player::flashDown(int key, int look, std::optional<double> flashIn, double back,
+Result<void> Player::flashDown(int key, int look, int cell, std::optional<double> flashIn, double back,
                                std::optional<double> fadeSeconds) {
     if (flashHeld_.empty()) {
         const LiveStatus status = live_->status();
         flashReturn_ = status.fading ? status.incoming : status.current;  // was gerade zu sehen ist bzw. kommt
+        flashReturnCell_ = status.fading ? status.incomingCell : status.currentCell;
     }
     std::erase_if(flashHeld_, [key](const HeldFlash& held) { return held.key == key; });
-    flashHeld_.push_back({key, look, back});
-    if (const Result<void> armed = armLook(look); !armed.ok()) {
+    flashHeld_.push_back({key, look, cell, back});
+    if (const Result<void> armed = armLook(look, cell); !armed.ok()) {
         return armed;
     }
     // Die eigene Einblendzeit gilt vor der Zeit des Live-Fensters und der des Looks
@@ -98,13 +99,15 @@ Result<void> Player::flashUp(int key) {
         return {};  // ein darunter gehaltener Look: das Bild bleibt beim zuletzt gedrückten
     }
     const int target = flashHeld_.empty() ? flashReturn_ : flashHeld_.back().look;
+    const int targetCell = flashHeld_.empty() ? flashReturnCell_ : flashHeld_.back().cell;
     if (flashHeld_.empty()) {
         flashReturn_ = -1;
+        flashReturnCell_ = -1;
     }
     if (!inRange(target, project_->looks.size())) {
         return {};
     }
-    if (const Result<void> armed = armLook(target); !armed.ok()) {
+    if (const Result<void> armed = armLook(target, targetCell); !armed.ok()) {
         return armed;
     }
     return goLook(back);
@@ -121,7 +124,7 @@ Result<void> Player::liveDown(int index, std::optional<double> fadeSeconds, bool
     if (look.trigger != project::LookTrigger::Flash) {
         return useGo ? liveArm(index) : liveTrigger(index, fadeSeconds);
     }
-    return flashDown(index, index, look.flashInSeconds, look.returnSeconds.value_or(look.fadeSeconds), fadeSeconds);
+    return flashDown(index, index, -1, look.flashInSeconds, look.returnSeconds.value_or(look.fadeSeconds), fadeSeconds);
 }
 
 Result<void> Player::liveUp(int index) { return flashUp(index); }
@@ -147,17 +150,28 @@ Result<void> Player::liveCellDown(int cell, std::optional<double> fadeSeconds, b
     }
     const project::LiveCell& entry = project_->liveGrid.cells[static_cast<std::size_t>(cell)];
     if (entry.trigger != project::LookTrigger::Flash) {
-        return useGo ? liveArm(look) : liveTrigger(look, fadeSeconds);
+        clearFlash();
+        if (const Result<void> armed = armLook(look, cell); !armed.ok() || useGo) {
+            return armed;
+        }
+        return goLook(fadeSeconds);
     }
     const double back = entry.returnSeconds.value_or(project_->looks[static_cast<std::size_t>(look)].fadeSeconds);
-    return flashDown(-(cell + 1), look, entry.flashInSeconds, back, fadeSeconds);
+    return flashDown(-(cell + 1), look, cell, entry.flashInSeconds, back, fadeSeconds);
 }
 
 Result<void> Player::liveCellUp(int cell) { return flashUp(-(cell + 1)); }
 
 Result<void> Player::liveCellTrigger(int cell, std::optional<double> fadeSeconds) {
     const int look = cellLook(cell);
-    return look < 0 ? Result<void>{} : liveTrigger(look, fadeSeconds);
+    if (look < 0) {
+        return {};
+    }
+    clearFlash();
+    if (const Result<void> armed = armLook(look, cell); !armed.ok()) {
+        return armed;
+    }
+    return goLook(fadeSeconds);
 }
 
 }  // namespace whitehole::runtime

@@ -160,8 +160,9 @@ TEST_CASE("Felder: MIDI-Pads lösen Felder aus, leere Felder bleiben dunkel", "[
     CHECK(rig.shown() == 1);
     rig.frame();
     leds = rig.leds();
-    CHECK(leds[57] == 1);  // derselbe Look: beide Felder zeigen ihn als aktiv
-    CHECK(leds[58] == 1);
+    CHECK(leds[58] == 1);  // nur das gedrückte Feld leuchtet, nicht das andere mit demselben Look
+    CHECK(leds[57] == 5);
+    CHECK(rig.player.liveStatus().incomingCell == 2);
     rig.pad(0, 2, false);  // loslassen: zurück zu Eins
     rig.frame();
     CHECK(rig.player.liveStatus().incoming == 0);
@@ -192,4 +193,24 @@ TEST_CASE("Felder: der DMX-Auswahlkanal zählt Felder, nicht Looks", "[live][liv
     rig.library->dmx->write(input::DmxProtocol::ArtNet, 2, std::vector<std::uint8_t>{72});  // Feld 2 (Flash-Feld) schaltet um
     REQUIRE(rig.player.step().ok());
     CHECK(rig.player.liveFlashHeld().empty());
+}
+
+TEST_CASE("Felder: nur das abgerufene Feld gilt als aktiv, auch bei demselben Look", "[live][livegrid]") {
+    Rig rig;
+    CHECK(rig.player.liveStatus().currentCell == 0);  // Start: erstes Feld mit dem Startlook
+    REQUIRE(rig.player.liveCellDown(1, std::nullopt, true).ok());  // Zwei über Feld 1 vorladen
+    CHECK(rig.player.liveStatus().armedCell == 1);
+    REQUIRE(rig.player.liveGo(0.0).ok());
+    rig.run(0.1);
+    CHECK(rig.player.liveStatus().current == 1);
+    CHECK(rig.player.liveStatus().currentCell == 1);  // nicht Feld 2, obwohl dort derselbe Look liegt
+    // Flash über Feld 2 und zurück: kehrt zu Feld 1 zurück
+    REQUIRE(rig.player.liveCellDown(2).ok());
+    CHECK(rig.player.liveStatus().incomingCell == 2);
+    REQUIRE(rig.player.liveCellUp(2).ok());
+    CHECK(rig.player.liveStatus().incomingCell == 1);
+    // Abruf ohne Feld (Look-Index): kein Feld bekannt
+    REQUIRE(rig.player.liveTrigger(2, 0.0).ok());
+    rig.run(0.1);
+    CHECK(rig.player.liveStatus().currentCell == -1);
 }

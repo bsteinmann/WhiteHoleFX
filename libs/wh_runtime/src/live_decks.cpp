@@ -20,7 +20,7 @@ const char* inputOf(bool deckIsA) { return deckIsA ? "a" : "b"; }
 
 LiveDecks::LiveDecks(std::shared_ptr<const graph::INodeRegistry> registry) : graph_{std::move(registry)} {}
 
-Result<void> LiveDecks::start(const project::Look& look, int index) {
+Result<void> LiveDecks::start(const project::Look& look, int index, int cell) {
     // Von vorn: ein neuer Graph mit dem Mischer als Ausgang
     graph_ = graph::Graph{graph_.registryPtr()};
     a_ = Slot{};
@@ -37,7 +37,7 @@ Result<void> LiveDecks::start(const project::Look& look, int index) {
     progress_ = 1.0;
     amount_ = 0.0;
     fill(Deck::B);
-    if (const Result<void> loaded = load(Deck::A, look, index); !loaded.ok()) {
+    if (const Result<void> loaded = load(Deck::A, look, index, cell); !loaded.ok()) {
         return loaded;
     }
     setAmount(0.0);
@@ -66,7 +66,7 @@ void LiveDecks::fill(Deck deck) {
     structureChanged_ = true;
 }
 
-Result<void> LiveDecks::load(Deck deck, const project::Look& look, int index) {
+Result<void> LiveDecks::load(Deck deck, const project::Look& look, int index, int cell) {
     clear(deck);
     auto placed = placeLook(graph_, look, Vec2{});
     if (!placed.ok()) {
@@ -90,6 +90,7 @@ Result<void> LiveDecks::load(Deck deck, const project::Look& look, int index) {
     Slot& s = slot(deck);
     s.nodes = std::move(placed.value().nodes);
     s.look = index;
+    s.cell = cell;
     const Result<ConnectionId> connected =
         graph_.connect(placed.value().output, graph::PortRef{mixer_, inputOf(deck == Deck::A)});
     if (!connected.ok()) {
@@ -110,13 +111,13 @@ void LiveDecks::finishFade() {
     setAmount(visible_ == Deck::A ? 0.0 : 1.0);
 }
 
-Result<void> LiveDecks::arm(const project::Look& look, int index) {
+Result<void> LiveDecks::arm(const project::Look& look, int index, int cell) {
     if (fading_) {
         finishFade();
     }
     const Deck hidden = other(visible_);
     armed_ = false;
-    if (const Result<void> loaded = load(hidden, look, index); !loaded.ok()) {
+    if (const Result<void> loaded = load(hidden, look, index, cell); !loaded.ok()) {
         return loaded;
     }
     armed_ = true;
@@ -224,6 +225,9 @@ LiveStatus LiveDecks::status() const noexcept {
     s.progress = progress_;
     s.fadeSeconds = fadeSeconds_;
     s.manual = fading_ && manual_;
+    s.currentCell = shown.cell;
+    s.armedCell = s.armed >= 0 ? hidden.cell : -1;
+    s.incomingCell = fading_ ? hidden.cell : -1;
     return s;
 }
 

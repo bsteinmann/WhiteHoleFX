@@ -654,14 +654,16 @@ private:
     struct HeldFlash {
         int key;
         int look;
+        int cell;  // Feld (-1 = über liveDown, nicht über ein Feld)
         double back;
     };
     std::vector<HeldFlash> flashHeld_;  // gedrückte Flash-Looks bzw. -Felder, zuletzt gedrückter hinten
-    Result<void> flashDown(int key, int look, std::optional<double> flashIn, double back, std::optional<double> fadeSeconds);
+    Result<void> flashDown(int key, int look, int cell, std::optional<double> flashIn, double back, std::optional<double> fadeSeconds);
     Result<void> flashUp(int key);
     int flashReturn_{-1};         // Look, zu dem das Loslassen des letzten Flash-Looks zurückkehrt
-    void clearFlash() noexcept { flashHeld_.clear(); flashReturn_ = -1; }
-    Result<void> armLook(int index);                                  // liveArm ohne clearFlash
+    int flashReturnCell_{-1};     // dessen Feld (-1 = nicht über ein Feld)
+    void clearFlash() noexcept { flashHeld_.clear(); flashReturn_ = -1; flashReturnCell_ = -1; }
+    Result<void> armLook(int index, int cell = -1);                   // liveArm ohne clearFlash; `cell` = Feld, aus dem der Look kommt
     Result<void> goLook(std::optional<double> fadeSeconds);           // liveGo ohne clearFlash
     CueRunner cueRunner_;
     bool cueGo_{false};

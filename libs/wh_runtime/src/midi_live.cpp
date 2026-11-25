@@ -264,9 +264,14 @@ void MidiLiveController::updateLeds(bool live) {
                     midi::PadLed led = grid.cells[static_cast<std::size_t>(cell)].trigger == project::LookTrigger::Flash
                                            ? midi::PadLed::Red
                                            : midi::PadLed::Yellow;
-                    if ((status.fading && look == status.incoming) || look == status.current) {
+                    // Kam der Look über ein Feld, leuchtet nur dieses Pad; sonst jedes Pad mit dem Look
+                    const auto matches = [cell, look](int statusCell, int statusLook) {
+                        return statusCell >= 0 ? statusCell == cell : statusLook >= 0 && look == statusLook;
+                    };
+                    if ((status.fading && matches(status.incomingCell, status.incoming)) ||
+                        matches(status.currentCell, status.current)) {
                         led = midi::PadLed::Green;
-                    } else if (look == status.armed) {
+                    } else if (matches(status.armedCell, status.armed)) {
                         led = midi::PadLed::YellowBlink;
                     }
                     wanted[*note] = static_cast<int>(led);

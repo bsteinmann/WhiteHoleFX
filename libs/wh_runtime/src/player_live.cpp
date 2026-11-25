@@ -205,7 +205,15 @@ Result<void> Player::loadLookIntoEditor(int index) {
 Result<void> Player::startLiveLook(int index) {
     live_.emplace(project_->graph.registryPtr());
     liveLast_.reset();
-    if (const Result<void> started = live_->start(project_->looks[static_cast<std::size_t>(index)], index); !started.ok()) {
+    // Das Startbild gehört zum ersten Feld, das den Look trägt (damit nicht alle Felder mit ihm aufleuchten)
+    int cell = -1;
+    for (std::size_t i = 0; i < project_->liveGrid.cells.size(); ++i) {
+        if (project_->liveGrid.cells[i].look == project_->looks[static_cast<std::size_t>(index)].name) {
+            cell = static_cast<int>(i);
+            break;
+        }
+    }
+    if (const Result<void> started = live_->start(project_->looks[static_cast<std::size_t>(index)], index, cell); !started.ok()) {
         live_.reset();
         return started;
     }
@@ -250,7 +258,7 @@ Result<void> Player::liveArm(int index) {
     return armLook(index);
 }
 
-Result<void> Player::armLook(int index) {
+Result<void> Player::armLook(int index, int cell) {
     if (!project_) {
         return noProject();
     }
@@ -260,7 +268,7 @@ Result<void> Player::armLook(int index) {
     if (!inRange(index, project_->looks.size())) {
         return noSuchLook(index);
     }
-    return live_->arm(project_->looks[static_cast<std::size_t>(index)], index);
+    return live_->arm(project_->looks[static_cast<std::size_t>(index)], index, cell);
 }
 
 Result<void> Player::liveGo(std::optional<double> fadeSeconds) {

@@ -231,17 +231,21 @@ void LivePanel::refresh() {
                    : QString{};
     };
     for (int i = 0; i < buttonCount(); ++i) {
-        const int look = player_.cellLook(i);  // derselbe Look in zwei Feldern färbt beide
+        const int look = player_.cellLook(i);
         if (look < 0) {
             buttons_[static_cast<std::size_t>(i)]->setStyleSheet(emptyStyle());
             continue;
         }
+        // Kam der Look über ein Feld, leuchtet nur dieses Feld; sonst (Cue, DMX-Look-Auswahl) jedes Feld mit dem Look
+        const auto matches = [i, look](int statusCell, int statusLook) {
+            return statusCell >= 0 ? statusCell == i : statusLook >= 0 && look == statusLook;
+        };
         const char* color = kIdle;
-        if (st.fading && look == st.incoming) {
+        if (st.fading && matches(st.incomingCell, st.incoming)) {
             color = kIncoming;
-        } else if (look == st.current) {
+        } else if (matches(st.currentCell, st.current)) {
             color = kLive;
-        } else if (look == st.armed && !st.fading) {
+        } else if (!st.fading && matches(st.armedCell, st.armed)) {
             color = kArmed;
         }
         buttons_[static_cast<std::size_t>(i)]->setStyleSheet(styleFor(QString::fromLatin1(color)));
