@@ -51,6 +51,13 @@ public:
     /// Spalten des Look-Rasters (1 bis 16, Standard 4); baut das Raster neu. Löst columnsChanged nicht aus.
     void setColumns(int columns);
     [[nodiscard]] int columns() const { return columns_; }
+    /// Zeilen des festen Rasters (1 bis 16, Standard 4); baut das Raster neu. Löst gridChanged nicht aus.
+    void setRows(int rows);
+    [[nodiscard]] int rows() const { return rows_; }
+    /// Spalten und Zeilen auf einmal (ein Neuaufbau). Löst gridChanged nicht aus.
+    void setGrid(int columns, int rows);
+    /// Zeilen, die das Raster wirklich hat: die eingestellten, bei mehr Looks als Zellen entsprechend mehr.
+    [[nodiscard]] int effectiveRows() const;
     /// Haken „Vorschau teilen“ (links Ausgabe, rechts vorgeladener Look). Löst splitPreviewChanged nicht aus.
     void setSplitPreview(bool on);
     [[nodiscard]] bool splitPreview() const;
@@ -99,7 +106,7 @@ Q_SIGNALS:
     /// Die Einstellungen wurden ein- oder ausgeblendet (Schaltfläche oben rechts oder setSettingsShown).
     void settingsToggled(bool shown);
     /// Der Nutzer hat die Rasterbreite in den Einstellungen geändert.
-    void columnsChanged(int columns);
+    void gridChanged(int columns, int rows);
     void splitPreviewChanged(bool on);
 
 private:
@@ -136,7 +143,9 @@ private:
     QWidget* learnRow_{nullptr};            // gefüllt von setLearning
     bool settingsShown_{false};
     int columns_{4};
+    int rows_{4};
     QSpinBox* columnsBox_{nullptr};
+    QSpinBox* rowsBox_{nullptr};
     QCheckBox* splitCheck_{nullptr};
 };
 

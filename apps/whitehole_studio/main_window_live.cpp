@@ -53,8 +53,9 @@ void MainWindow::buildLive() {
     });
     connect(lookPanel_, &LookPanel::loadedIntoEditor, this, &MainWindow::afterRestore);
     connect(lookPanel_, &LookPanel::liveRequested, this, [this](int first) { enterLive(first); });
-    connect(livePanel_, &LivePanel::columnsChanged, this, [this](int columns) {
+    connect(livePanel_, &LivePanel::gridChanged, this, [this](int columns, int rows) {
         appSettings_.liveColumns = columns;
+        appSettings_.liveRows = rows;
         saveAppSettings(appSettings_);
     });
     connect(livePanel_, &LivePanel::splitPreviewChanged, this, [this](bool on) {
@@ -141,7 +142,7 @@ bool MainWindow::enterLive(int first) {
     liveDock_->show();
     // Das vorschaubild darf klein sein: das Look-Raster bekommt den größten Teil der Höhe
     resizeDocks({liveDock_}, {std::max(320, height() * 2 / 3)}, Qt::Vertical);
-    livePanel_->setColumns(appSettings_.liveColumns);
+    livePanel_->setGrid(appSettings_.liveColumns, appSettings_.liveRows);
     liveMode_ = true;
     setLiveChrome(true);
     setChecked(true);
@@ -274,11 +275,12 @@ QString MainWindow::exerciseLive() {
     }
     {
         const int before = livePanel_->buttonCount();
-        livePanel_->setColumns(2);
-        if (livePanel_->columns() != 2 || livePanel_->buttonCount() != before) {
-            return QStringLiteral("Live: Die Rasterbreite lässt sich nicht ändern");
+        livePanel_->setGrid(2, 3);
+        if (livePanel_->columns() != 2 || livePanel_->rows() != 3 || livePanel_->buttonCount() != before ||
+            livePanel_->effectiveRows() != std::max(3, (before + 1) / 2)) {
+            return QStringLiteral("Live: Raster (Spalten, Zeilen) lässt sich nicht ändern");
         }
-        livePanel_->setColumns(appSettings_.liveColumns);
+        livePanel_->setGrid(appSettings_.liveColumns, appSettings_.liveRows);
     }
     // Auftrittsansicht: ohne Menüleiste und ohne Einstellungen; die Schaltfläche blendet beides gemeinsam ein
     QApplication::processEvents();  // Qt zeigt Widgets, die nach dem Anzeigen des Fensters entstehen, erst über die Ereignisschleife

@@ -86,6 +86,12 @@ LivePanel::LivePanel(runtime::Player& player, QWidget* parent) : QWidget{parent}
     columnsBox_->setValue(columns_);
     columnsBox_->setToolTip(tr("Wie viele Look-Knöpfe nebeneinander stehen; mehr Spalten brauchen weniger Höhe"));
     columnsRow->addWidget(columnsBox_);
+    columnsRow->addWidget(new QLabel{tr("Zeilen:"), settingsBar_});
+    rowsBox_ = new QSpinBox{settingsBar_};
+    rowsBox_->setRange(1, 16);
+    rowsBox_->setValue(rows_);
+    rowsBox_->setToolTip(tr("Zeilen des festen Rasters; nicht belegte Felder bleiben leer. Bei mehr Looks als Feldern kommen Zeilen dazu"));
+    columnsRow->addWidget(rowsBox_);
     columnsRow->addSpacing(16);
     splitCheck_ = new QCheckBox{tr("Vorschau teilen"), settingsBar_};
     splitCheck_->setObjectName(QStringLiteral("liveSplitPreview"));
@@ -95,10 +101,12 @@ LivePanel::LivePanel(runtime::Player& player, QWidget* parent) : QWidget{parent}
     columnsRow->addWidget(splitCheck_);
     columnsRow->addStretch(1);
     barLayout->addLayout(columnsRow);
-    connect(columnsBox_, &QSpinBox::valueChanged, this, [this](int value) {
-        setColumns(value);
-        Q_EMIT columnsChanged(value);
-    });
+    for (QSpinBox* box : {columnsBox_, rowsBox_}) {
+        connect(box, &QSpinBox::valueChanged, this, [this](int) {
+            setGrid(columnsBox_->value(), rowsBox_->value());
+            Q_EMIT gridChanged(columns_, rows_);
+        });
+    }
     connect(splitCheck_, &QCheckBox::toggled, this, [this](bool on) { Q_EMIT splitPreviewChanged(on); });
     settingsBar_->setVisible(false);
     layout->addWidget(settingsBar_);
@@ -169,17 +177,30 @@ void LivePanel::setSplitPreview(bool on) {
 
 bool LivePanel::splitPreview() const { return splitCheck_->isChecked(); }
 
-void LivePanel::setColumns(int columns) {
+void LivePanel::setColumns(int columns) { setGrid(columns, rows_); }
+
+void LivePanel::setRows(int rows) { setGrid(columns_, rows); }
+
+void LivePanel::setGrid(int columns, int rows) {
     columns = std::clamp(columns, 1, 16);
-    if (columns == columns_) {
+    rows = std::clamp(rows, 1, 16);
+    if (columns == columns_ && rows == rows_) {
         return;
     }
     columns_ = columns;
+    rows_ = rows;
     {
-        const QSignalBlocker blocker{columnsBox_};
+        const QSignalBlocker columnsBlocker{columnsBox_};
+        const QSignalBlocker rowsBlocker{rowsBox_};
         columnsBox_->setValue(columns_);
+        rowsBox_->setValue(rows_);
     }
     rebuild();
+}
+
+int LivePanel::effectiveRows() const {
+    const int looks = static_cast<int>(player_.looks().size());
+    return std::max(rows_, (looks + columns_ - 1) / columns_);
 }
 
 void LivePanel::rebuild() {
@@ -257,6 +278,14 @@ void LivePanel::rebuild() {
         inButtons_.push_back(ins);
         returnButtons_.push_back(returns);
         syncLookOptions(index);
+    }
+    // Festes Raster: alle Spalten und Zeilen gleich groß, nicht belegte Felder bleiben leer
+    for (int c = 0; c < std::max(grid_->columnCount(), columns_); ++c) {
+        grid_->setColumnStretch(c, c < columns_ ? 1 : 0);
+    }
+    const int shownRows = effectiveRows();
+    for (int r = 0; r < std::max(grid_->rowCount(), shownRows); ++r) {
+        grid_->setRowStretch(r, r < shownRows ? 1 : 0);
     }
     refresh();
 }
