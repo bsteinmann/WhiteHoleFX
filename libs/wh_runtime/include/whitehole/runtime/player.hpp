@@ -392,6 +392,10 @@ public:
     /// mindestens `rows` Zeilen). Ändert nichts am Änderungsstand: erst beim nächsten Speichern steht es in der Datei.
     /// Hat das Projekt eines, passiert nichts. Fehler: kein Projekt, `columns` ungültig, Looks passen nicht in 16 Zeilen.
     Result<void> ensureLiveGrid(int columns, int rows);
+    /// Belegt Feld `cell` (Index zeilenweise) oder leert es (leerer `look`). Nur ein Look der Datei ist erlaubt; Zeiten 0 bis
+    /// 600 s; `in`/`return` entfallen beim Umschalten (Toggle). Geht auch im Live-Betrieb. Fehler: kein Raster, Feld
+    /// außerhalb, unbekannter Look, Zeit ungültig.
+    Result<void> setLiveCell(int cell, project::LiveCell value);
     /// Neue Rastergröße (je 1..16); belegte Felder behalten Zeile und Spalte, Felder außerhalb werden leer. Geht nicht im
     /// Live-Betrieb. Fehler: kein Projekt, kein Raster (ensureLiveGrid), Größe ungültig.
     Result<void> setLiveGridSize(int columns, int rows);
@@ -435,8 +439,23 @@ public:
     Result<void> setLookFlashIn(int index, std::optional<double> seconds);
     Result<void> liveDown(int index, std::optional<double> fadeSeconds = std::nullopt, bool useGo = false);
     Result<void> liveUp(int index);
+    /// Wie liveDown/liveUp, aber für ein Feld des Live-Rasters (docs/entwurf-live-raster.md): Umschalten oder Flash, die
+    /// Zeiten und der Modus stammen vom *Feld*, nicht vom Look; ein leeres Feld (oder eines mit unbekanntem Look) tut nichts.
+    /// Fehler: Live-Betrieb nicht gestartet, Feld außerhalb des Rasters.
+    Result<void> liveCellDown(int cell, std::optional<double> fadeSeconds = std::nullopt, bool useGo = false);
+    Result<void> liveCellUp(int cell);
+    /// Schaltet den Look des Feldes um, auch wenn das Feld flasht (für Eingänge ohne Loslassen, z. B. den DMX-Auswahlkanal).
+    Result<void> liveCellTrigger(int cell, std::optional<double> fadeSeconds = std::nullopt);
+    /// Look-Index des Feldes oder -1 (leer, unbekannter Look, Feld außerhalb).
+    [[nodiscard]] int cellLook(int cell) const;
     /// Gehaltene Flash-Looks, zuletzt gedrückter hinten (für Anzeige und Tests).
-    [[nodiscard]] const std::vector<int>& liveFlashHeld() const noexcept { return flashHeld_; }
+    [[nodiscard]] std::vector<int> liveFlashHeld() const {
+        std::vector<int> looks;
+        for (const HeldFlash& held : flashHeld_) {
+            looks.push_back(held.look);
+        }
+        return looks;
+    }
     /// Manuelle Überblendung zum vorgeladenen Look (Fader 0..1, siehe LiveDecks::setManualProgress).
     /// Fehler: InvalidArgument (nicht live). Ohne vorgeladenen Look wirkungslos.
     Result<void> liveManualFade(double progress);
@@ -631,7 +650,15 @@ private:
     bool liveDmxLive_{false};
     std::optional<int> liveDmxLastIndex_;
     bool liveDmxCueMode_{false};  // der Auswahl-Kanal bezog sich zuletzt auf Cues (Cuelist läuft), nicht auf Looks
-    std::vector<int> flashHeld_;  // gedrückte Flash-Looks (liveDown), zuletzt gedrückter hinten
+    /// Ein gehaltenes Flash: `key` ist der Look-Index (liveDown) oder -(Feld+1) (liveCellDown), `back` die Zeit zum Zurückblenden.
+    struct HeldFlash {
+        int key;
+        int look;
+        double back;
+    };
+    std::vector<HeldFlash> flashHeld_;  // gedrückte Flash-Looks bzw. -Felder, zuletzt gedrückter hinten
+    Result<void> flashDown(int key, int look, std::optional<double> flashIn, double back, std::optional<double> fadeSeconds);
+    Result<void> flashUp(int key);
     int flashReturn_{-1};         // Look, zu dem das Loslassen des letzten Flash-Looks zurückkehrt
     void clearFlash() noexcept { flashHeld_.clear(); flashReturn_ = -1; }
     Result<void> armLook(int index);                                  // liveArm ohne clearFlash

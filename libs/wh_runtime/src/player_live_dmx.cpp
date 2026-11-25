@@ -33,7 +33,9 @@ void Player::pollLiveDmx() {
     }
     liveDmxLive_ = true;
     liveDmxCueMode_ = cueMode;
-    const std::size_t count = cueMode ? project_->cues.size() : project_->looks.size();
+    const bool grid = project_->liveGrid.defined();  // mit Raster wählt der Kanal ein Feld, sonst einen Look
+    const std::size_t count = cueMode ? project_->cues.size()
+                                      : (grid ? project_->liveGrid.cells.size() : project_->looks.size());
     const std::optional<int> index = lookIndexFromDmxValue(selectSample->values[0], count);
     if (modeChanged) {
         // Anderer Bezug (Cues statt Looks): der Stand des Kanals beim Wechsel gilt als gesehen, ein schon hoher Regler
@@ -59,7 +61,7 @@ void Player::pollLiveDmx() {
             fadeSeconds = static_cast<double>(fadeSample->values[0]) / 255.0 * kLiveDmxMaxFadeSeconds;
         }
     }
-    (void)liveTrigger(*index, fadeSeconds);
+    (void)(grid ? liveCellTrigger(*index, fadeSeconds) : liveTrigger(*index, fadeSeconds));
 }
 
 }  // namespace whitehole::runtime

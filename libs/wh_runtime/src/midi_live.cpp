@@ -1,6 +1,8 @@
 // midi_live.cpp: Umsetzung zu midi_live.hpp.
 #include "whitehole/runtime/midi_live.hpp"
 
+#include <algorithm>
+
 #include "whitehole/runtime/player.hpp"
 
 namespace whitehole::runtime {
@@ -96,8 +98,13 @@ void MidiLiveController::handle(const midi::MidiMessage& message, const MidiLive
         }
         return;
     }
+    const bool grid = player_.liveGrid().defined();  // mit Raster lösen die Pads Felder aus, sonst (alte Wege) Looks
     if (message.kind == midi::MessageKind::NoteOff) {
-        if (const auto look = profile_.lookForNote(message.data1); look && *look < static_cast<int>(player_.looks().size())) {
+        if (grid) {
+            if (const int cell = cellForPad(message.data1); cell >= 0) {
+                report(player_.liveCellUp(cell), result);  // nur flashende Felder reagieren
+            }
+        } else if (const auto look = profile_.lookForNote(message.data1); look && *look < static_cast<int>(player_.looks().size())) {
             report(player_.liveUp(*look), result);  // nur Flash-Looks reagieren
         }
         return;
@@ -106,6 +113,12 @@ void MidiLiveController::handle(const midi::MidiMessage& message, const MidiLive
         return;
     }
     const std::optional<double> fade = fadeFader_ ? fadeFader_ : options.fadeOverride;
+    if (grid) {
+        if (const int cell = cellForPad(message.data1); cell >= 0) {
+            report(player_.liveCellDown(cell, fade, options.useGo), result);  // flashende Felder: Vorrang vor "Mit GO"
+        }
+        return;
+    }
     if (const auto look = profile_.lookForNote(message.data1);
                look && *look < static_cast<int>(player_.looks().size())) {
         report(player_.liveDown(*look, fade, options.useGo), result);  // Flash-Looks: Vorrang vor "Mit GO"
@@ -201,6 +214,17 @@ MidiLiveResult MidiLiveController::step(const MidiLiveOptions& options) {
     return result;
 }
 
+int MidiLiveController::cellForPad(std::uint8_t note) const {
+    const auto position = profile_.lookForNote(note);
+    if (!position) {
+        return -1;
+    }
+    const project::LiveGrid& grid = player_.liveGrid();
+    const int row = *position / profile_.columns;
+    const int column = *position % profile_.columns;
+    return row < grid.rows && column < grid.columns ? row * grid.columns + column : -1;
+}
+
 void MidiLiveController::updateLeds(bool live) {
     std::array<int, 128> wanted{};
     if (live) {
@@ -226,6 +250,29 @@ void MidiLiveController::updateLeds(bool live) {
                 wanted[*note] = static_cast<int>(led);
             }
             goBlinks = cues.next >= 0;  // GO löst den nächsten Cue aus: es gibt einen
+        } else if (const project::LiveGrid& grid = player_.liveGrid(); grid.defined()) {
+            // Raster: ein Pad je Feld (Raster des Profils links oben im Raster); leere Felder bleiben dunkel
+            const LiveStatus status = player_.liveStatus();
+            for (int row = 0; row < grid.rows; ++row) {
+                for (int column = 0; column < std::min(grid.columns, profile_.columns); ++column) {
+                    const int cell = row * grid.columns + column;
+                    const int look = player_.cellLook(cell);
+                    const auto note = profile_.noteForLook(row * profile_.columns + column);
+                    if (look < 0 || !note) {
+                        continue;
+                    }
+                    midi::PadLed led = grid.cells[static_cast<std::size_t>(cell)].trigger == project::LookTrigger::Flash
+                                           ? midi::PadLed::Red
+                                           : midi::PadLed::Yellow;
+                    if ((status.fading && look == status.incoming) || look == status.current) {
+                        led = midi::PadLed::Green;
+                    } else if (look == status.armed) {
+                        led = midi::PadLed::YellowBlink;
+                    }
+                    wanted[*note] = static_cast<int>(led);
+                }
+            }
+            goBlinks = status.armed >= 0;
         } else {
             const LiveStatus status = player_.liveStatus();
             const int looks = static_cast<int>(player_.looks().size());

@@ -4,6 +4,10 @@
 // Zugriffe auf das Projekt; player_live.cpp bleibt so beim Speichern, Umbenennen und Löschen von Looks.
 #include "whitehole/runtime/player.hpp"
 
+#include <cmath>
+
+#include "whitehole/runtime/live_look.hpp"
+
 namespace whitehole::runtime {
 
 const project::LiveGrid& Player::liveGrid() const {
@@ -23,6 +27,39 @@ Result<void> Player::ensureLiveGrid(int columns, int rows) {
         return Error{ErrorCode::InvalidArgument, "Das Live-Raster lässt sich so nicht anlegen (Spalten 1 bis 16, höchstens 16 Zeilen)"};
     }
     project_->liveGrid = std::move(grid);  // bewusst kein modified_: die Datei ändert sich erst beim nächsten Speichern
+    return {};
+}
+
+Result<void> Player::setLiveCell(int cell, project::LiveCell value) {
+    if (!project_ || !project_->liveGrid.defined()) {
+        return Error{ErrorCode::InvalidArgument, "Das Projekt hat noch kein Live-Raster"};
+    }
+    project::LiveGrid& grid = project_->liveGrid;
+    if (cell < 0 || static_cast<std::size_t>(cell) >= grid.cells.size()) {
+        return Error{ErrorCode::NotFound, "Es gibt kein Feld Nummer " + std::to_string(cell + 1)};
+    }
+    if (value.empty()) {
+        value = project::LiveCell{};
+    } else if (findLook(project_->looks, value.look) < 0) {
+        return Error{ErrorCode::NotFound, "Es gibt keinen Look \"" + value.look + "\""};
+    }
+    for (const std::optional<double>& seconds : {value.flashInSeconds, value.returnSeconds}) {
+        if (seconds && !(std::isfinite(*seconds) && *seconds >= 0.0 && *seconds <= project::kMaxFadeSeconds)) {
+            return Error{ErrorCode::InvalidArgument, "Die Zeit liegt zwischen 0 und 600 Sekunden"};
+        }
+    }
+    if (value.trigger != project::LookTrigger::Flash) {
+        value.flashInSeconds.reset();  // ohne Flash gibt es kein Einblenden/Zurückblenden beim Drücken/Loslassen
+        value.returnSeconds.reset();
+    }
+    project::LiveCell& target = grid.cells[static_cast<std::size_t>(cell)];
+    if (target.look == value.look && target.trigger == value.trigger && target.flashInSeconds == value.flashInSeconds &&
+        target.returnSeconds == value.returnSeconds) {
+        return {};
+    }
+    target = std::move(value);
+    clearFlash();  // ein gehaltenes Flash kennt das alte Feld nicht mehr
+    modified_ = true;
     return {};
 }
 

@@ -106,3 +106,39 @@ TEST_CASE("Live-Raster: Größe ändern und im Projekt behalten", "[live][livegr
     REQUIRE(text.ok());
     CHECK(text.value().find("livegrid 3 3\ncell 1 1 look A\n") != std::string::npos);
 }
+
+TEST_CASE("Live-Raster: Felder belegen und prüfen", "[live][livegrid]") {
+    Rig rig;
+    REQUIRE(rig.player.saveLook("A", 1.0).ok());
+    project::LiveCell plain;
+    plain.look = "A";
+    CHECK_FALSE(rig.player.setLiveCell(0, plain).ok());  // noch kein Raster
+    REQUIRE(rig.player.ensureLiveGrid(2, 2).ok());
+    // der Look ist durch das Anlegen schon auf Feld 0; ihn zusätzlich auf Feld 3 legen, als Flash
+    project::LiveCell flash;
+    flash.look = "A";
+    flash.trigger = project::LookTrigger::Flash;
+    flash.flashInSeconds = 0.25;
+    flash.returnSeconds = 2.0;
+    REQUIRE(rig.player.setLiveCell(3, flash).ok());
+    CHECK(rig.player.liveGrid().cells[0].look == "A");
+    CHECK(rig.player.liveGrid().cells[3].trigger == project::LookTrigger::Flash);
+    CHECK(rig.player.liveGrid().cells[3].returnSeconds == 2.0);
+    CHECK(rig.player.modified());
+
+    CHECK_FALSE(rig.player.setLiveCell(9, flash).ok());
+    project::LiveCell unknown;
+    unknown.look = "Gibtsnicht";
+    CHECK_FALSE(rig.player.setLiveCell(1, unknown).ok());
+    flash.returnSeconds = 700.0;
+    CHECK_FALSE(rig.player.setLiveCell(1, flash).ok());
+
+    project::LiveCell toggle;
+    toggle.look = "A";
+    toggle.flashInSeconds = 1.0;  // entfällt beim Umschalten
+    REQUIRE(rig.player.setLiveCell(1, toggle).ok());
+    CHECK_FALSE(rig.player.liveGrid().cells[1].flashInSeconds.has_value());
+
+    REQUIRE(rig.player.setLiveCell(1, project::LiveCell{}).ok());  // leeren
+    CHECK(rig.player.liveGrid().cells[1].empty());
+}

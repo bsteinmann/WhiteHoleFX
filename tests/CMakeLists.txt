@@ -148,6 +148,7 @@ add_executable(wh_tests
     runtime/live_split_preview_test.cpp
     runtime/look_thumbnail_test.cpp
     runtime/live_grid_test.cpp
+    runtime/live_cells_test.cpp
     runtime/live_manual_fade_test.cpp
     runtime/midi_live_test.cpp
     runtime/player_live_test.cpp
