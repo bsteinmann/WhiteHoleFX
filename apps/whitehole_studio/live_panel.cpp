@@ -202,12 +202,10 @@ void LivePanel::rebuild() {
         cellLayout->setContentsMargins(0, 0, 0, 0);
         cellLayout->setSpacing(4);
         auto* button = new LookButton{buttonText(index), cell};
-        button->setMinimumHeight(72);
+        button->setMinimumHeight(96);
         if (const QIcon icon = thumbnailIcon(index); !icon.isNull()) {
             button->setIcon(icon);
-            // Das Bild wächst mit dem Knopf (LookButton); bis zur ersten Größenänderung gilt das Seitenverhältnis
-            button->setImageSize(icon.availableSizes().value(0, QSize{32, 18}));
-            button->setIconSize(QSize{64, 36});
+            // LookButton zeichnet das Bild selbst, so groß wie der Knopf erlaubt (das Icon dient nur als Bildquelle)
         }
         button->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
         button->setToolTip(tr("Überblendzeit %1 s. Rechtsklick: umschalten oder flashen").arg(looks[i].fadeSeconds, 0, 'f', 1));
