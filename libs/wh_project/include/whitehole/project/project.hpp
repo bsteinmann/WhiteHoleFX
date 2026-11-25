@@ -48,7 +48,7 @@ struct LookThumbnail {
     std::vector<std::uint8_t> rgb;  // width * height * 3 Bytes
 };
 
-inline constexpr std::uint32_t kMaxThumbnailSide = 64;
+inline constexpr std::uint32_t kMaxThumbnailSide = 128;
 
 struct Look {
     explicit Look(std::shared_ptr<const graph::INodeRegistry> registry) : graph{std::move(registry)} {}

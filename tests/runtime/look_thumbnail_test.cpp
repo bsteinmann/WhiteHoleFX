@@ -87,7 +87,7 @@ TEST_CASE("Look speichern nimmt ein Standbild auf, die Projektdatei behält es",
 
     const auto text = project::writeProject(*player.project());
     REQUIRE(text.ok());
-    CHECK(text.value().find("\n  thumb 32 18 ") != std::string::npos);
+    CHECK(text.value().find("\n  thumb 96 54 ") != std::string::npos);
     const auto again = project::parseProject(text.value(), library->registry);
     REQUIRE(again.ok());
     REQUIRE(again.value().looks.size() == 1);
@@ -116,7 +116,7 @@ TEST_CASE("thumb in der Projektdatei: Fehler und ältere Dateien", "[live][thumb
     CHECK_FALSE(parse("  thumb 2 1 " + hexOf(1, "0a1b2c")).ok());  // zu kurz
     CHECK_FALSE(parse("  thumb 2 1 " + hexOf(2, "zz1b2c")).ok());  // kein Hex
     CHECK_FALSE(parse("  thumb 0 1 ").ok());
-    CHECK_FALSE(parse("  thumb 65 1 00").ok());
+    CHECK_FALSE(parse("  thumb 129 1 00").ok());
     CHECK_FALSE(parse("  thumb 1 1").ok());
     CHECK_FALSE(project::parseProject("whitehole-project 1\nthumb 1 1 000000\n", library->registry).ok());  // außerhalb
 }

@@ -13,8 +13,8 @@
 
 namespace whitehole::runtime {
 
-inline constexpr std::uint32_t kThumbnailWidth = 32;
-inline constexpr std::uint32_t kThumbnailHeight = 18;
+inline constexpr std::uint32_t kThumbnailWidth = 96;
+inline constexpr std::uint32_t kThumbnailHeight = 54;
 
 /// Verkleinert `image` (RGBA) per Mittelwert auf `width` x `height` (RGB, Alpha über Schwarz gelegt).
 /// Leer, wenn das Bild leer oder kleiner als das Ziel ist oder die Maße ungültig sind.
