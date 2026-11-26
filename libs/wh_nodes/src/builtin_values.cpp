@@ -10,6 +10,7 @@
 #include <numbers>
 
 #include "builtin_internal.hpp"
+#include "whitehole/core/phase_offset.hpp"
 
 namespace whitehole::nodes::detail {
 
@@ -20,13 +21,18 @@ using values::KernelOutputs;
 
 double fract(double value) { return value - std::floor(value); }
 
-// Ausgang = Zeit * Tempo + Versatz. Tempo darf negativ sein (Rückwärtslauf).
+// Ausgang = Phase des Tempos + Versatz. Tempo darf negativ sein (Rückwärtslauf). Wer das Tempo verstellt, lässt die
+// Zeit nicht springen: Sie läuft vom aktuellen Stand mit dem neuen Tempo weiter (PhaseOffset, `offset` verschiebt
+// dagegen absichtlich sofort).
 class TimeKernel final : public values::ICpuKernel {
 public:
     void evaluate(const KernelContext& context, KernelOutputs& outputs) override {
-        outputs.set("seconds", context.time.time.count() * context.inputs.number("speed", 1.0) +
+        outputs.set("seconds", speed_.phase(context.time.time.count(), context.inputs.number("speed", 1.0)) +
                                    context.inputs.number("offset", 0.0));
     }
+
+private:
+    PhaseOffset speed_;
 };
 
 class NumberKernel final : public values::ICpuKernel {
@@ -60,20 +66,22 @@ double wave(std::int64_t shape, double u) {
     }
 }
 
-// Zustandslos: Die Phase folgt der absoluten Zeit. Das macht Springen im Zeitverlauf
-// (Offline-Rendern, Scrubben) exakt, hat aber einen Preis: Ändert sich die Frequenz
-// während des Laufs, springt die Phase. Ein akkumulierender Oszillator wäre die
-// Alternative, wenn Frequenzmodulation gebraucht wird.
+// Die Phase folgt der absoluten Zeit (Springen im Zeitverlauf, Offline-Rendern und Scrubben bleiben exakt) und ändert
+// sich beim Verstellen der Frequenz nicht schlagartig: PhaseOffset verschiebt nur den Versatz so, dass die Phase im
+// selben Augenblick gleich bleibt. Der Parameter `phase` dagegen verschiebt absichtlich sofort.
 class LfoKernel final : public values::ICpuKernel {
 public:
     void evaluate(const KernelContext& context, KernelOutputs& outputs) override {
         const auto& in = context.inputs;
-        const double u =
-            fract(context.time.time.count() * in.number("frequency", 0.5) + in.number("phase", 0.0));
+        const double u = fract(frequency_.phase(context.time.time.count(), in.number("frequency", 0.5)) +
+                               in.number("phase", 0.0));
         const double low = in.number("min", 0.0);
         const double high = in.number("max", 1.0);
         outputs.set("out", low + (high - low) * wave(in.integer("shape", 0), u));
     }
+
+private:
+    PhaseOffset frequency_;
 };
 
 // Neuer Zufallswert `rate`-mal pro Sekunde; dazwischen weich überblendet oder gehalten.
@@ -81,7 +89,7 @@ class RandomKernel final : public values::ICpuKernel {
 public:
     void evaluate(const KernelContext& context, KernelOutputs& outputs) override {
         const auto& in = context.inputs;
-        const double position = context.time.time.count() * in.number("rate", 1.0);
+        const double position = rate_.phase(context.time.time.count(), in.number("rate", 1.0));
         const double cell = std::floor(position);
         const double f = position - cell;
         const auto index = static_cast<std::int64_t>(cell);
@@ -95,6 +103,9 @@ public:
         const double b = hashToUnit(index + 1, seed);
         outputs.set("out", a + (b - a) * (f * f * (3.0 - 2.0 * f)));
     }
+
+private:
+    PhaseOffset rate_;
 };
 
 // Rechnet einen Bereich in einen anderen um. Ein leerer Eingangsbereich liefert outMin.

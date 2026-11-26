@@ -13,29 +13,44 @@ using namespace whitehole;
 using Catch::Approx;
 using whitehole::test::Lab;
 
-TEST_CASE("Time: Tempo und Versatz") {
+namespace {
+
+/// Time-Node mit festem Tempo und Versatz, bei t = 3 gelesen (frisches Lab: das Tempo wird nie verstellt).
+double timeAt3(double speed, double offset, bool sliderRange = false) {
     Lab lab;
     const NodeId time = lab.add("wh.value.time");
     lab.feed(time, "seconds");
+    if (sliderRange) {
+        lab.set(time, "speedMin", 0.0);
+        lab.set(time, "speedMax", 0.5);
+    }
+    lab.set(time, "speed", speed);
+    lab.set(time, "offset", offset);
+    return lab.sample(time, 3.0, "seconds");
+}
 
+}  // namespace
+
+TEST_CASE("Time: Tempo und Versatz") {
+    CHECK(timeAt3(1.0, 0.0) == Approx(3.0));
+    CHECK(timeAt3(2.0, 1.0) == Approx(7.0));
+    CHECK(timeAt3(-1.0, 0.0) == Approx(-3.0));
+    CHECK(timeAt3(5000.0, 0.0) == Approx(3000.0));  // wird auf 1000 begrenzt
+    // Der Bereich des Schiebereglers (speedMin/speedMax) ist nur Bedienhilfe: er begrenzt das Tempo nicht.
+    CHECK(timeAt3(10.0, 0.0, true) == Approx(30.0));
+}
+
+TEST_CASE("Time: das Tempo zu verstellen lässt die Zeit nicht springen, der Versatz schon") {
+    Lab lab;
+    const NodeId time = lab.add("wh.value.time");
+    lab.feed(time, "seconds");
     CHECK(lab.sample(time, 3.0, "seconds") == Approx(3.0));
 
-    lab.set(time, "speed", 2.0);
-    lab.set(time, "offset", 1.0);
-    CHECK(lab.sample(time, 3.0, "seconds") == Approx(7.0));
-
-    lab.set(time, "speed", -1.0);
-    lab.set(time, "offset", 0.0);
-    CHECK(lab.sample(time, 3.0, "seconds") == Approx(-3.0));
-
-    lab.set(time, "speed", 5000.0);  // wird auf 1000 begrenzt
-    CHECK(lab.sample(time, 3.0, "seconds") == Approx(3000.0));
-
-    // Der Bereich des Schiebereglers (speedMin/speedMax) ist nur Bedienhilfe: er begrenzt das Tempo nicht.
-    lab.set(time, "speedMin", 0.0);
-    lab.set(time, "speedMax", 0.5);
-    lab.set(time, "speed", 10.0);
-    CHECK(lab.sample(time, 3.0, "seconds") == Approx(30.0));
+    lab.set(time, "speed", 2.0);                             // bei t = 3 verstellt: dort bleibt es bei 3
+    CHECK(lab.sample(time, 3.0, "seconds") == Approx(3.0));
+    CHECK(lab.sample(time, 4.0, "seconds") == Approx(5.0));  // danach mit Tempo 2
+    lab.set(time, "offset", 1.0);                            // der Versatz ist absichtlich ein Sprung
+    CHECK(lab.sample(time, 4.0, "seconds") == Approx(6.0));
 }
 
 TEST_CASE("Number und Color reichen ihren Parameter durch") {
@@ -112,10 +127,34 @@ TEST_CASE("LFO: Frequenz lässt sich von einem anderen Wert steuern") {
 
     lab.set(speed, "value", 1.0);
     CHECK(lab.sample(lfo, 0.25) == Approx(0.25));
-    lab.set(speed, "value", 2.0);
-    CHECK(lab.sample(lfo, 0.25) == Approx(0.5));
+    lab.set(speed, "value", 2.0);                    // bei t = 0,25 verstellt: dort bleibt die Phase bei 0,25
+    CHECK(lab.sample(lfo, 0.25) == Approx(0.25));
+    CHECK(lab.sample(lfo, 0.375) == Approx(0.5));    // danach mit 2 Hz: 0,25 + 0,125 * 2
+}
+
+TEST_CASE("LFO: Frequenz wird auf 100 Hz begrenzt") {
+    Lab lab;
+    const NodeId speed = lab.add("wh.value.number");
+    const NodeId lfo = lab.add("wh.value.lfo");
+    lab.feed(lfo, "out");
+    lab.set(lfo, "shape", std::int64_t{2});
+    lab.connect(speed, "out", lfo, "frequency");
     lab.set(speed, "value", 500.0);  // über dem Bereich des Parameters: auf 100 Hz begrenzt
     CHECK(lab.sample(lfo, 0.0025) == Approx(0.25));
+}
+
+TEST_CASE("LFO: die Frequenz zu verstellen lässt die Welle nicht springen, die Phase schon") {
+    Lab lab;
+    const NodeId lfo = lab.add("wh.value.lfo");
+    lab.feed(lfo, "out");
+    lab.set(lfo, "shape", std::int64_t{2});  // Sägezahn: Wert = Phase
+    lab.set(lfo, "frequency", 0.5);
+    CHECK(lab.sample(lfo, 1.0) == Approx(0.5));
+    lab.set(lfo, "frequency", 4.0);
+    CHECK(lab.sample(lfo, 1.0) == Approx(0.5));  // kein Sprung
+    CHECK(lab.sample(lfo, 1.0625) == Approx(0.75));  // danach mit 4 Hz: 0,5 + 0,0625 * 4
+    lab.set(lfo, "phase", 0.25);                  // die Phase ist absichtlich ein Sprung
+    CHECK(lab.sample(lfo, 1.0625) == Approx(0.0));
 }
 
 TEST_CASE("Random: Wertebereich, Reproduzierbarkeit, Seed und Rate") {
@@ -143,9 +182,16 @@ TEST_CASE("Random: Wertebereich, Reproduzierbarkeit, Seed und Rate") {
         CHECK(a.sample(ra, 5.5) != before);
     }
     SECTION("doppelte Rate entspricht doppelter Zeit") {
-        const double slow = a.sample(ra, 3.2);
+        Lab fast;
+        const NodeId rf = fast.add("wh.value.random");
+        fast.feed(rf, "out");
+        fast.set(rf, "rate", 2.0);
+        CHECK(fast.sample(rf, 1.6) == Approx(a.sample(ra, 3.2)));
+    }
+    SECTION("die Rate zu verstellen lässt den Wert nicht springen") {
+        const double before = a.sample(ra, 3.2);
         a.set(ra, "rate", 2.0);
-        CHECK(a.sample(ra, 1.6) == Approx(slow));
+        CHECK(a.sample(ra, 3.2) == Approx(before));
     }
 }
 
