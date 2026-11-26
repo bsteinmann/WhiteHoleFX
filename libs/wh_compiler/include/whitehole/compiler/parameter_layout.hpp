@@ -50,10 +50,19 @@ enum class SlotOrigin : std::uint8_t {
 };
 
 /// Schlüssel des Phase-Slots zum Parameter `parameterKey`: ein eigener Name im Struct, damit der Slot nicht mit dem
-/// des Parameters selbst zusammenfällt.
-[[nodiscard]] std::string phaseSlotKey(std::string_view parameterKey);
-/// Umkehrung von phaseSlotKey: der Schlüssel des Parameters, zu dem ein Phase-Slot gehört.
+/// des Parameters selbst zusammenfällt. Mit `curve` (siehe applyPhaseCurve) gehört die Kurve zum Namen, denn derselbe
+/// Parameter kann mit verschiedenen Kurven integriert werden: "phase_<key>" bzw. "phase_<curve>__<key>".
+[[nodiscard]] std::string phaseSlotKey(std::string_view parameterKey, std::string_view curve = {});
+/// Umkehrungen von phaseSlotKey: der Schlüssel des Parameters bzw. die Kurve ("" = keine), zu denen ein Phase-Slot gehört.
 [[nodiscard]] std::string parameterKeyOfPhaseSlot(std::string_view slotKey);
+[[nodiscard]] std::string curveOfPhaseSlot(std::string_view slotKey);
+
+/// Erlaubte Kurven von @phase(schluessel, kurve): "" (der Wert selbst), "abs" (Betrag, Richtung steckt woanders),
+/// "quadratic" (auf 0..1 begrenzt, quadriert, mal 3: Tempo-Kurve von Noise), "reciprocal" (1 / max(Wert, 0,05): Teilchen
+/// pro Lebensdauer). Unbekannte Namen: false.
+[[nodiscard]] bool isPhaseCurve(std::string_view curve) noexcept;
+/// Wendet die Kurve auf den Reglerwert an, bevor integriert wird. Unbekannte Kurven wirken wie "".
+[[nodiscard]] double applyPhaseCurve(std::string_view curve, double value) noexcept;
 
 struct ParameterSlot {
     NodeId node;

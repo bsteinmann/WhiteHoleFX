@@ -335,14 +335,19 @@ private:
         };
         // @phase(key): eigener Float-Slot je (Node, Schlüssel) - auch wenn der Platzhalter mehrfach vorkommt -, den
         // packParameters aus der Rate des Parameters und dem PhaseTracker füllt (phase_tracker.hpp).
-        bindings.phase = [&](std::string_view key) -> Result<std::string> {
+        bindings.phase = [&](std::string_view key, std::string_view curve) -> Result<std::string> {
             const graph::ParameterDescriptor* parameter = descriptor.findParameter(key);
             if (parameter == nullptr || gpuTypeOf(parameter->defaultValue) != GpuType::Float) {
                 return Error{ErrorCode::InvalidArgument,
                              describeNode(node) + ": @phase(" + std::string{key} +
                                  ") ist kein Zahlen-Parameter (Float, Ganzzahl oder Schalter)"};
             }
-            const std::string slotKey = phaseSlotKey(key);
+            if (!isPhaseCurve(curve)) {
+                return Error{ErrorCode::InvalidArgument,
+                             describeNode(node) + ": @phase(" + std::string{key} + ", " + std::string{curve} +
+                                 "): unbekannte Kurve (erlaubt: abs, quadratic, reciprocal)"};
+            }
+            const std::string slotKey = phaseSlotKey(key, curve);
             if (phaseSlots_.emplace(node.id.value(), slotKey).second) {
                 layout_.add(node.id, slotKey, GpuType::Float, SlotOrigin::Phase);
             }

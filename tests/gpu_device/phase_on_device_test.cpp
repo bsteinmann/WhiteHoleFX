@@ -105,3 +105,36 @@ TEST_CASE("Labyrinth: Speed 0 hält die Animation an, später wieder aufdrehen l
     CHECK(sameImage(resumed, stopped));
     CHECK_FALSE(sameImage(canvas.grab(41.0), stopped));
 }
+
+namespace {
+
+/// Gleiche Probe wie beim Labyrinth für einen beliebigen Node: Regler verstellen -> im selben Augenblick dasselbe Bild,
+/// danach läuft es weiter.
+void checkNoJump(const char* typeId, const char* key, double before, double after, bool changesLater = true) {
+    REQUIRE_DEVICE();
+    Lab lab;
+    const NodeId node = lab.add(typeId);
+    lab.set(node, key, before);
+    LongLivedCanvas canvas{*device, lab, node};
+
+    (void)canvas.grab(1.0);
+    const Pixels atFive = canvas.grab(5.0);
+    lab.set(node, key, after);
+    const Pixels sameMoment = canvas.grab(5.0);
+    CHECK(sameImage(sameMoment, atFive));
+    if (changesLater) {
+        CHECK_FALSE(sameImage(canvas.grab(5.5), sameMoment));
+    }
+    // Ohne die Phase (frisch gerendert mit dem neuen Wert zur selben Zeit) sähe es anders aus - das war der Sprung.
+    CHECK_FALSE(sameImage(render(*device, lab, node, kWidth, kHeight, 5.0), atFive));
+}
+
+}  // namespace
+
+TEST_CASE("Noise: den Speed-Regler zu verstellen lässt das Bild nicht springen", "[gpu_device][nodes]") {
+    checkNoJump("wh.generator.noise", "speed", 0.3, 0.9);
+}
+
+TEST_CASE("Text: das Tempo zu verstellen lässt die Laufschrift nicht springen", "[gpu_device][nodes]") {
+    checkNoJump("wh.generator.text", "speed", 6.0, 20.0);  // gleiche Richtung: ein Vorzeichenwechsel spiegelt die Schrift
+}

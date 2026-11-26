@@ -127,7 +127,7 @@ var asum = 0.0;
 for (var i = 0; i < 48; i = i + 1) {
     if (i < n) {
         let fi = f32(i);
-        let u = @time / life + fi / f32(n);
+        let u = @phase(lifetime, reciprocal) + fi / f32(n);
         let whole = floor(u);
         let cyc = whole - 997.0 * floor(whole / 997.0);
         let age = fract(u) * life;

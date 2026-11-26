@@ -113,15 +113,27 @@ Result<std::string> expandSnippet(std::string_view body, const SnippetBindings& 
         }
         const std::string_view args = body.substr(nameEnd + 1, close - nameEnd - 1);
 
-        if (name == "param" || name == "phase" || name == "text" || name == "textlen") {
+        if (name == "phase") {
+            const std::size_t comma = findTopLevelComma(args);
+            const std::string_view key = trim(comma == std::string_view::npos ? args : args.substr(0, comma));
+            const std::string_view curve = comma == std::string_view::npos ? std::string_view{} : trim(args.substr(comma + 1));
+            if (key.empty()) {
+                return invalid("@phase ohne Schlüssel");
+            }
+            if (!bindings.phase) {
+                return invalid("@phase wird hier nicht unterstützt");
+            }
+            Result<std::string> value = bindings.phase(key, curve);
+            if (!value.ok()) {
+                return value;
+            }
+            result += value.value();
+        } else if (name == "param" || name == "text" || name == "textlen") {
             const std::string_view key = trim(args);
             if (key.empty()) {
                 return invalid("@" + std::string{name} + " ohne Schlüssel");
             }
-            const auto& resolve = name == "param"   ? bindings.parameter
-                                  : name == "phase" ? bindings.phase
-                                  : name == "text"  ? bindings.text
-                                                    : bindings.textLength;
+            const auto& resolve = name == "param" ? bindings.parameter : name == "text" ? bindings.text : bindings.textLength;
             if (!resolve) {
                 return invalid("@" + std::string{name} + " wird hier nicht unterstützt");
             }

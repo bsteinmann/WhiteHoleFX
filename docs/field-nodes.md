@@ -21,10 +21,13 @@ fn wh_field(p: vec3<f32>) -> vec4<f32>
   bei unberührtem Regler ist der Wert bitgleich zu `Zeit * Regler`. Der Compiler legt dafür einen eigenen Slot je
   (Node, Parameter) an (`SlotOrigin::Phase`), `packParameters` füllt ihn mit Hilfe des `PhaseTracker` (je `FieldPass`
   ein Verfolger, der Versatz hängt an der Node-Nummer: Strukturwechsel behalten ihn, ein neu eingesetzter Node beginnt
-  bei `Zeit * Regler` wie früher). Der Wert gilt für den Parameter *ohne* Umrechnung: Wer die Rate vorher klemmt oder
-  umformt (`sp * sp * 3.0`, `1.0 / life`, `abs(speed)`), kann `@phase` nicht benutzen; das betrifft noch **Noise**
-  (Speed), **Particles** (Lifetime) und **Text** (Speed, Richtung per Vorzeichen), deren Regler bei der Bewegung
-  weiter springen. Wird auch beim Springen der Zeit (Zeitleiste, Neustart) nicht falsch, weil die Phase eine reine
+  bei `Zeit * Regler` wie früher). Wird die Rate im Shader umgeformt, gibt `@phase(schluessel, kurve)` die Umrechnung an, die
+  *vor* dem Integrieren auf den Reglerwert wirkt: `abs` (Betrag; die Richtung steckt woanders, z. B. Text),
+  `quadratic` (auf 0..1 begrenzt, quadriert, mal 3; Tempo-Kurve von Noise), `reciprocal` (1 / max(Wert, 0,05); Particles:
+  Durchläufe pro Lebensdauer). Grenze: Bei **Particles** skaliert die Lebensdauer zusätzlich die Flugstrecke jedes
+  Teilchens (`Alter × Lifetime`); der Zeitpunkt, zu dem ein Teilchen neu entsteht, springt nicht mehr, seine Bahn ändert sich
+  mit dem Regler aber weiterhin im selben Augenblick. Beim **Text** ist das Umschalten der Richtung (Vorzeichen von
+  `speed`) ein Spiegeln der Schrift, kein stetiger Übergang. Wird auch beim Springen der Zeit (Zeitleiste, Neustart) nicht falsch, weil die Phase eine reine
   Funktion der Zeit für den aktuellen Reglerstand ist.
 - `@aspect`/`@aspectZ` (nur für Node-Autoren) sind die echten Seitenverhältnisse der Leinwand (Breite/Höhe
   bzw. Breite/Tiefe), aus der tatsächlichen Ausdehnung der LED-Karte in Weltkoordinaten berechnet (bei der

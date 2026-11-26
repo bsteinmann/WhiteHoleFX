@@ -104,9 +104,9 @@ TEST_CASE("PhaseTracker: eine nicht endliche Rate legt nichts an und ändert nic
 
 TEST_CASE("PhaseTracker::retain vergisst Einträge, die das Layout nicht mehr braucht") {
     PhaseTracker tracker;
-    (void)tracker.phase(NodeId{1}, "speed", 1.0, 2.0);
-    (void)tracker.phase(NodeId{2}, "speed", 1.0, 2.0);
-    (void)tracker.phase(NodeId{1}, "other", 1.0, 2.0);
+    (void)tracker.phase(NodeId{1}, phaseSlotKey("speed"), 1.0, 2.0);
+    (void)tracker.phase(NodeId{2}, phaseSlotKey("speed"), 1.0, 2.0);
+    (void)tracker.phase(NodeId{1}, phaseSlotKey("other"), 1.0, 2.0);
 
     LayoutBuilder builder;
     builder.add(NodeId{1}, "speed", GpuType::Float);                                 // Parameter-Slot zählt nicht

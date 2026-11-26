@@ -52,10 +52,22 @@ float floatAt(const std::vector<std::byte>& bytes, std::uint32_t offset) {
 TEST_CASE("expandSnippet: @phase wird über die Bindings aufgelöst") {
     SnippetBindings bindings;
     bindings.time = "T";
-    bindings.phase = [](std::string_view key) -> Result<std::string> { return "PH." + std::string{key}; };
+    bindings.phase = [](std::string_view key, std::string_view curve) -> Result<std::string> {
+        return "PH." + std::string{key} + (curve.empty() ? "" : "~" + std::string{curve});
+    };
 
     CHECK(expandSnippet("x = fract(@phase(speed)) + @time;", bindings).value() == "x = fract(PH.speed) + T;");
     CHECK(expandSnippet("@phase( spaced )", bindings).value() == "PH.spaced");
+}
+
+TEST_CASE("expandSnippet: @phase mit Kurve als zweitem Argument") {
+    SnippetBindings bindings;
+    bindings.phase = [](std::string_view key, std::string_view curve) -> Result<std::string> {
+        return "PH." + std::string{key} + "~" + std::string{curve};
+    };
+    CHECK(expandSnippet("fract(@phase(speed, abs))", bindings).value() == "fract(PH.speed~abs)");
+    CHECK(expandSnippet("@phase( lifetime , reciprocal )", bindings).value() == "PH.lifetime~reciprocal");
+    CHECK(expandSnippet("@phase(speed)", bindings).value() == "PH.speed~");
 }
 
 TEST_CASE("expandSnippet: @phase ohne Bindung oder ohne Schlüssel ist ein Fehler") {
@@ -65,7 +77,7 @@ TEST_CASE("expandSnippet: @phase ohne Bindung oder ohne Schlüssel ist ein Fehle
     CHECK(unsupported.error().message.find("@phase") != std::string::npos);
 
     SnippetBindings bindings;
-    bindings.phase = [](std::string_view key) -> Result<std::string> { return std::string{key}; };
+    bindings.phase = [](std::string_view key, std::string_view) -> Result<std::string> { return std::string{key}; };
     CHECK_FALSE(expandSnippet("@phase()", bindings).ok());
     CHECK_FALSE(expandSnippet("@phase", bindings).ok());
 }
@@ -168,4 +180,56 @@ TEST_CASE("packParameters: der Phase-Slot eines kompilierten Nodes folgt dem Reg
     bytes = pack(11.0);
     CHECK(floatAt(bytes, speedAt) == 40.0F);  // danach mit der neuen Rate
     CHECK(floatAt(bytes, driftAt) == 5.5F);
+}
+
+TEST_CASE("Phase-Kurven: Schlüssel, Umrechnung und unbekannte Namen") {
+    CHECK(phaseSlotKey("speed", "abs") == "phase_abs__speed");
+    CHECK(parameterKeyOfPhaseSlot("phase_abs__speed") == "speed");
+    CHECK(curveOfPhaseSlot("phase_abs__speed") == "abs");
+    CHECK(curveOfPhaseSlot(phaseSlotKey("speed")) == "");
+    CHECK(parameterKeyOfPhaseSlot(phaseSlotKey("speed")) == "speed");
+
+    CHECK(applyPhaseCurve("", -2.5) == -2.5);
+    CHECK(applyPhaseCurve("abs", -2.5) == 2.5);
+    CHECK(applyPhaseCurve("quadratic", 0.5) == 0.75);   // 0,5 * 0,5 * 3
+    CHECK(applyPhaseCurve("quadratic", 7.0) == 3.0);    // auf 1 begrenzt
+    CHECK(applyPhaseCurve("quadratic", -1.0) == 0.0);
+    CHECK(applyPhaseCurve("reciprocal", 2.0) == 0.5);
+    CHECK(applyPhaseCurve("reciprocal", 0.0) == 20.0);  // untere Grenze 0,05 wie im Shader
+    CHECK(isPhaseCurve("") );
+    CHECK(isPhaseCurve("quadratic"));
+    CHECK_FALSE(isPhaseCurve("cubic"));
+}
+
+TEST_CASE("compileField: @phase mit Kurve legt je Kurve einen eigenen Slot an, unbekannte Kurve ist ein Fehler") {
+    const auto fixture = makeCompilerFixture();
+    graph::Graph graph{fixture.registry};
+    const NodeId node = add(graph, "c.curved");  // @phase(speed, abs) und @phase(speed)
+
+    const auto compiled = compileField(graph, fixture.library, out(node));
+    REQUIRE(compiled.ok());
+    CHECK(findSlot(compiled.value().layout, node, phaseSlotKey("speed", "abs")) != nullptr);
+    CHECK(findSlot(compiled.value().layout, node, phaseSlotKey("speed")) != nullptr);
+
+    const auto bad = compileField(graph, fixture.library, out(add(graph, "c.badcurve")));
+    REQUIRE_FALSE(bad.ok());
+    CHECK(bad.error().message.find("unbekannte Kurve") != std::string::npos);
+}
+
+TEST_CASE("packParameters: die Kurve wirkt vor dem Integrieren, ein Regler-Wechsel springt trotzdem nicht") {
+    const auto fixture = makeCompilerFixture();
+    graph::Graph graph{fixture.registry};
+    const NodeId node = add(graph, "c.curved");
+    const auto compiled = compileField(graph, fixture.library, out(node));
+    REQUIRE(compiled.ok());
+    const ParameterLayout& layout = compiled.value().layout;
+    const std::uint32_t absAt = findSlot(layout, node, phaseSlotKey("speed", "abs"))->offsetBytes;
+
+    PhaseTracker tracker;
+    REQUIRE(graph.setParameter(node, "speed", -2.0).ok());
+    auto pack = [&](double t) { return packParameters(graph, layout, nullptr, PhaseSource{&tracker, t}); };
+    CHECK(floatAt(pack(3.0), absAt) == 6.0F);   // |-2| * 3
+    REQUIRE(graph.setParameter(node, "speed", 5.0).ok());
+    CHECK(floatAt(pack(3.0), absAt) == 6.0F);   // kein Sprung
+    CHECK(floatAt(pack(4.0), absAt) == 11.0F);  // danach mit |5|
 }

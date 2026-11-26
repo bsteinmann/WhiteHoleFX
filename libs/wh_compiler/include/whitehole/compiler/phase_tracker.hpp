@@ -27,7 +27,7 @@ struct ParameterLayout;
 
 class PhaseTracker {
 public:
-    /// Phase des Reglers `key` an Node `node` zur Zeit `time` (Sekunden) bei der Rate `rate`. Der erste Aufruf legt
+    /// Phase des Phase-Slots `key` (Schlüssel des Slots, siehe phaseSlotKey) an Node `node` zur Zeit `time` (Sekunden) bei der Rate `rate`. Der erste Aufruf legt
     /// den Eintrag an (Versatz 0), jede Änderung der Rate danach verschiebt den Versatz so, dass die Phase bei
     /// `time` unverändert bleibt. Eine nicht endliche Rate ändert nichts und liefert `time * rate`.
     [[nodiscard]] double phase(NodeId node, std::string_view key, double time, double rate);

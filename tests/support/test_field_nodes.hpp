@@ -103,6 +103,12 @@ inline CompilerFixture makeCompilerFixture() {
         {ParameterDescriptor{"speed", "Speed", 3.0, 0.0, 30.0}, parameter("drift", 0.5),
          parameter("count", std::int64_t{2}), parameter("flag", true), parameter("label", std::string{"x"})},
         "let a = fract(@phase(speed) + p.x);\nlet b = @phase(speed) * 0.5 + @phase(drift);\nreturn vec4<f32>(a, b, @param(speed), 1.0);"));
+    definitions.push_back(fieldNode(
+        "c.curved", {outPort("out", PortType::Field)}, {ParameterDescriptor{"speed", "Speed", 1.0, -20.0, 20.0}},
+        "return vec4<f32>(@phase(speed, abs), @phase(speed), @phase(speed, abs), 1.0);"));
+    definitions.push_back(fieldNode("c.badcurve", {outPort("out", PortType::Field)},
+                                    {ParameterDescriptor{"speed", "Speed", 1.0, -20.0, 20.0}},
+                                    "return vec4<f32>(@phase(speed, cubic));"));
     definitions.push_back(fieldNode("c.badphase", {outPort("out", PortType::Field)},
                                     {parameter("label", std::string{"x"})},
                                     "return vec4<f32>(@phase(label));"));

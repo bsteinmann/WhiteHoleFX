@@ -32,7 +32,7 @@ void PhaseTracker::retain(const ParameterLayout& layout) {
     std::set<std::pair<NodeId::rep_type, std::string>> wanted;
     for (const ParameterSlot& slot : layout.slots) {
         if (slot.origin == SlotOrigin::Phase) {
-            wanted.emplace(slot.node.value(), parameterKeyOfPhaseSlot(slot.key));
+            wanted.emplace(slot.node.value(), slot.key);
         }
     }
     for (auto it = entries_.begin(); it != entries_.end();) {
