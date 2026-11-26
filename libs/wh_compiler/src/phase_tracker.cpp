@@ -13,19 +13,7 @@ double PhaseTracker::phase(NodeId node, std::string_view key, double time, doubl
     if (!std::isfinite(rate) || !std::isfinite(time)) {
         return time * rate;
     }
-    const auto id = std::make_pair(node.value(), std::string{key});
-    const auto found = entries_.find(id);
-    if (found == entries_.end()) {
-        entries_.emplace(id, Entry{0.0, rate});
-        return time * rate;
-    }
-    Entry& entry = found->second;
-    if (rate != entry.rate) {
-        // Stetig bleiben: versatz' + time * rate' == versatz + time * rate_alt.
-        entry.offset += time * (entry.rate - rate);
-        entry.rate = rate;
-    }
-    return entry.offset + time * entry.rate;
+    return entries_[std::make_pair(node.value(), std::string{key})].phase(time, rate);
 }
 
 void PhaseTracker::retain(const ParameterLayout& layout) {

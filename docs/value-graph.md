@@ -120,7 +120,9 @@ einen falschen Wert weiterzureichen.
 **Zustand** ist erlaubt. Pro Node im Graphen gibt es genau eine Kernel-Instanz, die über
 Frames hinweg lebt (siehe `wh.value.smooth`). Sie verschwindet, wenn der Node gelöscht
 wird. Wer Zustand hält, verliert die Fähigkeit, direkt auf eine Zeit zu springen. Wo es
-geht, sind Kernel zustandslos und lesen die Zeit aus `context.time` (siehe `wh.value.lfo`).
+geht, lesen Kernel die Zeit aus `context.time` (siehe `wh.value.lfo`). Wer `Zeit × Regler` rechnet (Time, LFO, Random), nimmt
+`PhaseOffset` (`wh_core`): Er hält nur einen Versatz, der sich beim Verstellen des Reglers so anpasst, dass die Phase im selben
+Augenblick gleich bleibt; die Zeit darf trotzdem springen.
 
 **Verboten** im Kernel (Ausnahme: die DMX-Nodes, deren Wert aus dem Netzwerk kommt): Systemuhr, globale Zufallsquellen, Blockieren. Das Ergebnis muss
 bei gleichem Graph und gleicher Zeit gleich sein, sonst sind Offline-Rendern und Tests
@@ -150,12 +152,12 @@ laufen immer. Ein vergessener, unverbundener Node kostet nichts.
 
 | Typ | Ausgang | Parameter | Hinweis |
 |---|---|---|---|
-| `wh.value.time` | `seconds` | `speed`, `offset`, `speedMin`, `speedMax` | Zeit × Tempo + Versatz; negatives Tempo läuft rückwärts. `speedMin`/`speedMax` stellen nur den Bereich des Reglers in der Oberfläche ein |
+| `wh.value.time` | `seconds` | `speed`, `offset`, `speedMin`, `speedMax` | Zeit × Tempo + Versatz; negatives Tempo läuft rückwärts. Beim Verstellen des Tempos springt die Zeit nicht (der `offset` verschiebt dagegen sofort). `speedMin`/`speedMax` stellen nur den Bereich des Reglers in der Oberfläche ein |
 | `wh.value.number` | `out` | `value` | Konstante, oder Relais für einen modulierten Wert |
 | `wh.value.color` | `out` (Color) | `color`, `hue`, `saturation`, `brightness` | Farbquelle für Farbparameter und Field-Eingänge. `hue` verschiebt den Farbton in Umläufen (1 = einmal rum), `saturation` und `brightness` multiplizieren; mit Time, LFO, Random oder Number an diesen Eingängen entsteht Regenbogen, Pulsieren oder Blitzen. Standardwerte 0 / 1 / 1 lassen die Farbe unverändert |
 | `wh.value.colorramp` | `out` (Color) | `count` (2–4), `position`, `speed`, `mode` (0 Pendulum, 1 Loop), `hard`, `advance`, `color1`–`color4` | Überblendet mit `position` (0..1) zwischen den ersten `count` Farben; **`speed`** (Umläufe pro Sekunde, Standard 0, negativ rückwärts, 0 = steht) lässt ihn ohne LFO von selbst wechseln. `mode` entscheidet, was am Ende passiert: Pendulum pendelt zwischen erster und letzter Farbe hin und her, Loop springt von der letzten zurück zur ersten (`position` 0..1 ist dann ein voller Umlauf, ein Sägezahn-LFO also ewiger Farbwechsel). Mit **`hard`** springt er wie ein Sequencer-Schritt direkt auf die jeweils aktuelle Farbe, statt zu überblenden. **`advance`** ist ein zweiter, unabhängiger Weg: jede steigende Flanke schaltet wie ein Taster einen Schritt weiter (immer hart, unabhängig von `position`/`speed`), `mode` entscheidet auch hier über Loop/Pendulum am Ende; einmal benutzt, übernimmt dieser Zähler dauerhaft die Ausgabe. Die Farben können selbst von Color-Nodes kommen; `color3`/`color4` blendet das Parameterfenster aus, solange `count` kleiner ist |
-| `wh.value.lfo` | `out` | `shape` (Auswahlfeld, in der Datei der Index 0–3), `frequency`, `phase`, `min`, `max`, `frequencyMin`, `frequencyMax` | Sinus, Dreieck, Sägezahn, Rechteck; zustandslos. `frequencyMin`/`frequencyMax`: Bereich des Reglers |
-| `wh.value.random` | `out` | `rate`, `seed`, `smooth` | Hash-basiert, reproduzierbar; weich oder gehalten |
+| `wh.value.lfo` | `out` | `shape` (Auswahlfeld, in der Datei der Index 0–3), `frequency`, `phase`, `min`, `max`, `frequencyMin`, `frequencyMax` | Sinus, Dreieck, Sägezahn, Rechteck; beim Verstellen der Frequenz springt die Welle nicht (`phase` verschiebt dagegen sofort). `frequencyMin`/`frequencyMax`: Bereich des Reglers |
+| `wh.value.random` | `out` | `rate`, `seed`, `smooth` | Hash-basiert, reproduzierbar; weich oder gehalten; beim Verstellen der Rate springt der Wert nicht |
 | `wh.value.map` | `out` | `value`, `inMin`, `inMax`, `outMin`, `outMax`, `clamp` | Bereich umrechnen |
 | `wh.value.smooth` | `out` | `value`, `time` | Tiefpass erster Ordnung; hat Zustand |
 | `wh.value.dmx` | `value`, `on` (Boolean), `present` (Boolean) | `source` (0 Art-Net, 1 sACN), `universe`, `channel`, `bits16`, `min`, `max`, `threshold`, `timeout`, `hold` | DMX-Eingang, siehe unten |
@@ -262,9 +264,10 @@ Strobe, ein Fader-Regler auf den Nebel).
   läuft auf einem eigenen Kanal: `KernelOutputs::setSpectrum`, `ValueStore::spectrum` und
   `IValueLookup::spectrum`. Punktwolken und Bilder bekommen eigene Kanäle, wenn diese Nodes
   entstehen; `registerCpuDefinitions` lehnt solche Ausgänge bis dahin ausdrücklich ab.
-- **`wh.value.lfo` ist zustandslos.** Ändert sich die Frequenz im Lauf, springt die
-  Phase, weil sie aus der absoluten Zeit folgt. Für saubere Frequenzmodulation braucht es
-  später einen akkumulierenden Oszillator als eigenen Node.
+- **Frequenzmodulation beim LFO** läuft über `PhaseOffset`: Die Phase bleibt beim Ändern der Frequenz
+  stetig und folgt weiter der absoluten Zeit. Wird die Frequenz jeden Frame moduliert, ergibt das die
+  Summe über die Frames (Euler vorwärts, mit der Rate des vorigen Frames); ein eigener Oszillator-Node
+  ist dafür nicht mehr nötig.
 - **Der Evaluator legt pro Node und Frame kleine Maps an.** Bei den üblichen Graphen ist
   das unerheblich. Wird es messbar, kommt ein vorab berechneter Auswertungsplan, der nur
   bei Strukturänderungen neu entsteht.

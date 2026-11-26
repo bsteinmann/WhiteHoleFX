@@ -20,6 +20,7 @@
 #include <utility>
 
 #include "whitehole/core/ids.hpp"
+#include "whitehole/core/phase_offset.hpp"
 
 namespace whitehole::compiler {
 
@@ -39,11 +40,7 @@ public:
     [[nodiscard]] std::size_t size() const noexcept { return entries_.size(); }
 
 private:
-    struct Entry {
-        double offset{0.0};
-        double rate{0.0};
-    };
-    std::map<std::pair<NodeId::rep_type, std::string>, Entry> entries_;
+    std::map<std::pair<NodeId::rep_type, std::string>, PhaseOffset> entries_;
 };
 
 }  // namespace whitehole::compiler
