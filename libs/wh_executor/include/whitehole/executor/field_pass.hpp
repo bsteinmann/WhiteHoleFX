@@ -41,6 +41,7 @@
 #include <vector>
 
 #include "whitehole/compiler/field_compiler.hpp"
+#include "whitehole/compiler/phase_tracker.hpp"
 #include "whitehole/core/result.hpp"
 #include "whitehole/core/services.hpp"
 #include "whitehole/gpu/gpu_device.hpp"
@@ -178,6 +179,9 @@ private:
 
     std::optional<graph::Graph> graph_;
     compiler::ParameterLayout layout_;
+    /// Versätze der Phase-Slots (@phase), damit eine Animation beim Verstellen eines Reglers stetig weiterläuft.
+    /// Hängt an den Node-Nummern des Graphen und überlebt deshalb einen Strukturwechsel, solange der Node bleibt.
+    compiler::PhaseTracker phases_;
     std::uint64_t structureHash_{0};
     std::optional<gpu::ComputePipelineHandle> pipeline_;
     std::optional<gpu::BufferHandle> parameterBuffer_;

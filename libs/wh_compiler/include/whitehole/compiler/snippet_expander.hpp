@@ -16,6 +16,11 @@ struct SnippetBindings {
     std::function<Result<std::string>(std::string_view port, std::string_view coordinate)> input;
     /// @param(schluessel)
     std::function<Result<std::string>(std::string_view key)> parameter;
+    /// @phase(schluessel) oder @phase(schluessel, kurve): die aufsummierte Phase eines Zahlen-Parameters, also das
+    /// Integral seines Werts (nach der Kurve, "" = keine) über die Zeit (siehe phase_tracker.hpp). Statt
+    /// `@time * @param(speed)`, damit die Animation beim Verstellen des Reglers nicht springt. Optional: ohne Funktion
+    /// ist der Platzhalter ein Fehler.
+    std::function<Result<std::string>(std::string_view key, std::string_view curve)> phase;
     /// @spectrum(port, index): ein Band des Spektrums am Eingang `port`; `index` ist bereits
     /// expandiert und ein u32-Ausdruck (0..31). Optional: ohne Funktion ist der Platzhalter ein Fehler.
     std::function<Result<std::string>(std::string_view port, std::string_view index)> spectrum;
@@ -37,8 +42,8 @@ struct SnippetBindings {
     std::string rows;
 };
 
-/// Platzhalter: @in(port, koordinate), @param(schluessel), @spectrum(port, band), @text(schluessel),
-/// @textlen(schluessel), @time, @volume, @aspect, @aspectZ, @columns, @rows.
+/// Platzhalter: @in(port, koordinate), @param(schluessel), @phase(schluessel[, kurve]), @spectrum(port, band),
+/// @text(schluessel), @textlen(schluessel), @time, @volume, @aspect, @aspectZ, @columns, @rows.
 /// - Klammern in `koordinate` dürfen verschachtelt sein, auch weitere Platzhalter.
 /// - Alles außerhalb von Platzhaltern bleibt unverändert.
 /// Fehler (InvalidArgument): unbekannter Platzhalter, fehlende oder unpassende

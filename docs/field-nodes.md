@@ -14,6 +14,21 @@ fn wh_field(p: vec3<f32>) -> vec4<f32>
 
 - `p` liegt in [0,1]³. Bei einem 2D-Canvas ist `p.z = 0`.
 - `@volume` (nur für Node-Autoren) ist wahr, wenn die LED-Karte Ausdehnung in z hat. Nodes mit `space` *Auto* (Sphere, Box, Ripples, Metaballs, Starfield, Fading Pixels, Expanding Shapes) wählen damit selbst zwischen 2D und 3D.
+- `@phase(schluessel)` (nur für Node-Autoren) ist die **aufsummierte Phase** eines Zahlen-Parameters, also das Integral
+  seines Werts über die Zeit. Dafür statt `@time * @param(speed)` benutzen: Wer den Regler `speed` verstellt, ändert
+  sonst das ganze Produkt auf einmal, und die Animation springt (beim Labyrinth tauchten die Läufer an neuen Stellen
+  auf). Mit `@phase(speed)` bleibt die Phase im Augenblick der Änderung gleich und läuft mit der neuen Rate weiter;
+  bei unberührtem Regler ist der Wert bitgleich zu `Zeit * Regler`. Der Compiler legt dafür einen eigenen Slot je
+  (Node, Parameter) an (`SlotOrigin::Phase`), `packParameters` füllt ihn mit Hilfe des `PhaseTracker` (je `FieldPass`
+  ein Verfolger, der Versatz hängt an der Node-Nummer: Strukturwechsel behalten ihn, ein neu eingesetzter Node beginnt
+  bei `Zeit * Regler` wie früher). Wird die Rate im Shader umgeformt, gibt `@phase(schluessel, kurve)` die Umrechnung an, die
+  *vor* dem Integrieren auf den Reglerwert wirkt: `abs` (Betrag; die Richtung steckt woanders, z. B. Text),
+  `quadratic` (auf 0..1 begrenzt, quadriert, mal 3; Tempo-Kurve von Noise), `reciprocal` (1 / max(Wert, 0,05); Particles:
+  Durchläufe pro Lebensdauer). Grenze: Bei **Particles** skaliert die Lebensdauer zusätzlich die Flugstrecke jedes
+  Teilchens (`Alter × Lifetime`); der Zeitpunkt, zu dem ein Teilchen neu entsteht, springt nicht mehr, seine Bahn ändert sich
+  mit dem Regler aber weiterhin im selben Augenblick. Beim **Text** ist das Umschalten der Richtung (Vorzeichen von
+  `speed`) ein Spiegeln der Schrift, kein stetiger Übergang. Wird auch beim Springen der Zeit (Zeitleiste, Neustart) nicht falsch, weil die Phase eine reine
+  Funktion der Zeit für den aktuellen Reglerstand ist.
 - `@aspect`/`@aspectZ` (nur für Node-Autoren) sind die echten Seitenverhältnisse der Leinwand (Breite/Höhe
   bzw. Breite/Tiefe), aus der tatsächlichen Ausdehnung der LED-Karte in Weltkoordinaten berechnet (bei der
   Canvas-Textur/Vorschau exakt aus der Pixelauflösung). Ohne bekannte Ausdehnung auf einer Achse (eine

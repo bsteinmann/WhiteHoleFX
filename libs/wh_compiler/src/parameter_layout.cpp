@@ -1,17 +1,22 @@
 // parameter_layout.cpp: Umsetzung zu parameter_layout.hpp. Lage der Node-Parameter im Uniform-Puffer des Feldshaders.
 #include "whitehole/compiler/parameter_layout.hpp"
 
+#include <algorithm>
 #include <array>
+#include <cmath>
 #include <cstring>
 #include <optional>
 #include <utility>
 #include <variant>
 
+#include "whitehole/compiler/phase_tracker.hpp"
 #include "whitehole/graph/parameter_resolve.hpp"
 
 namespace whitehole::compiler {
 
 namespace {
+
+constexpr std::string_view kPhasePrefix = "phase_";
 
 struct SizeAlign {
     std::uint32_t size;
@@ -123,6 +128,53 @@ std::string memberName(NodeId node, std::string_view key) {
     return "n" + std::to_string(node.value()) + "_" + std::string{key};
 }
 
+std::string phaseSlotKey(std::string_view parameterKey, std::string_view curve) {
+    std::string key{kPhasePrefix};
+    if (!curve.empty()) {
+        key += std::string{curve} + "__";
+    }
+    return key + std::string{parameterKey};
+}
+
+namespace {
+
+/// Der Teil nach "phase_" und die Stelle des Trenners "__" (npos = keine Kurve).
+std::string_view afterPrefix(std::string_view slotKey) {
+    return slotKey.substr(slotKey.starts_with(kPhasePrefix) ? kPhasePrefix.size() : 0);
+}
+
+}  // namespace
+
+std::string parameterKeyOfPhaseSlot(std::string_view slotKey) {
+    const std::string_view rest = afterPrefix(slotKey);
+    const std::size_t split = rest.find("__");
+    return std::string{split == std::string_view::npos ? rest : rest.substr(split + 2)};
+}
+
+std::string curveOfPhaseSlot(std::string_view slotKey) {
+    const std::string_view rest = afterPrefix(slotKey);
+    const std::size_t split = rest.find("__");
+    return split == std::string_view::npos ? std::string{} : std::string{rest.substr(0, split)};
+}
+
+bool isPhaseCurve(std::string_view curve) noexcept {
+    return curve.empty() || curve == "abs" || curve == "quadratic" || curve == "reciprocal";
+}
+
+double applyPhaseCurve(std::string_view curve, double value) noexcept {
+    if (curve == "abs") {
+        return std::fabs(value);
+    }
+    if (curve == "quadratic") {
+        const double clamped = std::min(std::max(value, 0.0), 1.0);
+        return clamped * clamped * 3.0;
+    }
+    if (curve == "reciprocal") {
+        return 1.0 / std::max(value, 0.05);
+    }
+    return value;
+}
+
 void LayoutBuilder::add(NodeId node, std::string key, GpuType type, SlotOrigin origin) {
     const SizeAlign layout = sizeAlignOf(type);
     ParameterSlot slot;
@@ -183,12 +235,31 @@ std::optional<graph::ParameterValue> valueOfSlot(const graph::Graph& graph,
 }  // namespace
 
 std::vector<std::byte> packParameters(const graph::Graph& graph, const ParameterLayout& layout,
-                                      const graph::IValueLookup* values) {
+                                      const graph::IValueLookup* values, const PhaseSource& phases) {
     std::vector<std::byte> bytes(layout.sizeBytes, std::byte{0});
 
     for (const ParameterSlot& slot : layout.slots) {
         const graph::NodeInstance* node = graph.findNode(slot.node);
         if (node == nullptr) {
+            continue;
+        }
+        if (slot.origin == SlotOrigin::Phase) {
+            // Die Rate ist der aktuelle Wert des Parameters (auch moduliert); die Phase macht der Verfolger daraus.
+            ParameterSlot source = slot;
+            source.key = parameterKeyOfPhaseSlot(slot.key);
+            source.origin = SlotOrigin::Parameter;
+            const std::optional<graph::ParameterValue> rate = valueOfSlot(graph, *node, source, values);
+            std::array<float, 4> floats{};
+            if (!rate.has_value() || toFloats(*rate, floats) != 1) {
+                continue;
+            }
+            const double seconds = phases.time;
+            const double rateValue = applyPhaseCurve(curveOfPhaseSlot(slot.key), static_cast<double>(floats[0]));
+            const double phase = phases.tracker != nullptr
+                                     ? phases.tracker->phase(slot.node, slot.key, seconds, rateValue)
+                                     : seconds * rateValue;
+            const float asFloat = static_cast<float>(phase);
+            std::memcpy(bytes.data() + slot.offsetBytes, &asFloat, sizeof asFloat);
             continue;
         }
         if (slot.origin == SlotOrigin::SpectrumInput) {

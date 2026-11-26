@@ -39,6 +39,8 @@ add_executable(wh_tests
     compiler/field_inputs_test.cpp
     compiler/node_definition_test.cpp
     compiler/parameter_layout_test.cpp
+    compiler/phase_compile_test.cpp
+    compiler/phase_tracker_test.cpp
     compiler/shader_names_test.cpp
     compiler/snippet_expander_test.cpp
     input/dmx_nodes_test.cpp
@@ -69,6 +71,7 @@ add_executable(wh_tests
     executor/canvas_render_stage_test.cpp
     executor/canvas_shader_test.cpp
     executor/canvas_stage_graph_test.cpp
+    executor/phase_continuity_test.cpp
     executor/sampling_render_stage_test.cpp
     executor/background_compile_test.cpp
     executor/sampling_shader_test.cpp
@@ -214,6 +217,7 @@ if(TARGET wh_gpu_webgpu)
         gpu_device/node_patterns_on_device_test.cpp
         gpu_device/spark_nodes_on_device_test.cpp
         gpu_device/maze_node_on_device_test.cpp
+        gpu_device/phase_on_device_test.cpp
         gpu_device/cells_auto_on_device_test.cpp
         gpu_device/expanding_on_device_test.cpp
         gpu_device/pong_display_on_device_test.cpp

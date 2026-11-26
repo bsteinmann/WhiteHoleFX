@@ -40,7 +40,7 @@ var start = 0.0;
 if (i32(floor(@param(mode) + 0.5)) == 0) {
     let speed = @param(speed);
     let period = textW + canvasW + max(@param(gap), 0.0);
-    let s = abs(speed) * @time;
+    let s = @phase(speed, abs);
     let m = s - period * floor(s / period);
     start = select(canvasW - m, m - textW, speed < 0.0);
 } else {

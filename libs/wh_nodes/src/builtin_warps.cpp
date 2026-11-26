@@ -36,7 +36,7 @@ constexpr const char* kTunnelBody = R"wgsl(let asp = select(@aspect, max(@param(
 let c = vec2<f32>(@param(cx), @param(cy));
 let d = (p.xy - c) * vec2<f32>(asp, 1.0);
 let r = max(length(d), 0.0001);
-let depth = @param(depth) / r + @time * @param(speed);
+let depth = @param(depth) / r + @phase(speed);
 let u = atan2(d.y, d.x) / 6.2831853 * floor(max(@param(repeat), 1.0)) + depth * @param(twist);
 let src = @in(source, vec3<f32>(fract(u), fract(depth), p.z));
 let f = select(1.0, smoothstep(0.0, @param(fade), r), @param(fade) > 0.0001);

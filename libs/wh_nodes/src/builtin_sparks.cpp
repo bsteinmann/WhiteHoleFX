@@ -67,7 +67,7 @@ var asum = 0.0;
 for (var i = 0; i < 3; i = i + 1) {
     if (i < n) {
         let fi = f32(i);
-        let t = @time * rate * (1.0 + 0.17 * fi) + fi * 0.37;
+        let t = @phase(rate) * (1.0 + 0.17 * fi) + fi * 0.37;
         let whole = floor(t);
         let ev = whole - 997.0 * floor(whole / 997.0);
         let h0 = wh_spark_hash(vec2<f32>(ev, fi * 17.0 + 1.0));
@@ -127,7 +127,7 @@ var asum = 0.0;
 for (var i = 0; i < 48; i = i + 1) {
     if (i < n) {
         let fi = f32(i);
-        let u = @time / life + fi / f32(n);
+        let u = @phase(lifetime, reciprocal) + fi / f32(n);
         let whole = floor(u);
         let cyc = whole - 997.0 * floor(whole / 997.0);
         let age = fract(u) * life;

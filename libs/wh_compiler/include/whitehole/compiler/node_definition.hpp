@@ -19,6 +19,9 @@ namespace whitehole::compiler {
 ///   @in(port, koordinate)   Wert des Field-Eingangs an der Koordinate
 ///   @param(schluessel)      Parameterwert des Nodes (liegt im Uniform-Puffer)
 ///   @time                   Zeit des aktuellen Frames in Sekunden
+///   @phase(schluessel)      aufsummierte Phase eines Zahlen-Parameters (Integral seines Werts über die Zeit);
+///                           statt `@time * @param(speed)`, damit die Animation beim Verstellen des Reglers
+///                           nicht springt (siehe phase_tracker.hpp)
 ///   @volume                 bool: die LED-Karte hat Ausdehnung in z (Canvas: immer falsch)
 /// Der Name `p` ist belegt; lokale Variablen dürfen nicht so heißen.
 ///

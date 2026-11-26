@@ -28,7 +28,7 @@ constexpr const char* kCellHashPrelude = R"wgsl(fn wh_cell_hash(p: vec2<f32>) ->
 // `softness` ist die Breite des Rands, gemessen am Feld (nicht in Koordinaten). Mit space = Volume bekommt
 // jede Kugel auch eine z-Bahn und der Abstand wird im Raum gemessen; Flat rechnet wie bisher nur in x/y.
 constexpr const char* kMetaballsBody = R"wgsl(let n = i32(clamp(floor(@param(count)), 1.0, 6.0));
-let ph = @time * @param(speed);
+let ph = @phase(speed);
 let r = max(@param(size), 0.001);
 var f = 0.0;
 for (var i = 0; i < 6; i = i + 1) {
@@ -71,7 +71,7 @@ if (@param(motion) > 0.5) {
     let hc = wh_cell_hash(vec2<f32>(lane, 1.0));
     let hd = wh_cell_hash(vec2<f32>(lane, 2.0));
     let maxR = 0.75;  // reicht über die Bildecke hinaus (Abstand Mitte -> Ecke ist rund 0.707)
-    let headR = fract(hp + @time * @param(warpSpeed) * (0.5 + hc)) * maxR;
+    let headR = fract(hp + @phase(warpSpeed) * (0.5 + hc)) * maxR;
     let trailLen = max(clamp(@param(trail), 0.0, 1.0) * headR, 0.001);
     let behind = headR - r;
     let fade = 1.0 - clamp(behind / trailLen, 0.0, 1.0);
@@ -80,14 +80,14 @@ if (@param(motion) > 0.5) {
     return vec4<f32>(col.rgb, col.a * fade * on);
 }
 let vol = ((@param(space) > 0.5 && @param(space) < 1.5) || (@param(space) >= 1.5 && @volume));
-let q = vec3<f32>(p.x, p.y + @time * @param(drift), select(0.0, p.z, vol)) * cellScale;
+let q = vec3<f32>(p.x, p.y + @phase(drift), select(0.0, p.z, vol)) * cellScale;
 let cell3 = floor(q);
 let id = cell3.xy + vec2<f32>(cell3.z * 19.0, cell3.z * 11.0);
 let h1 = wh_cell_hash(id);
 let h2 = wh_cell_hash(id + vec2<f32>(13.0, 7.0));
 let h3 = wh_cell_hash(id + vec2<f32>(3.0, 41.0));
 let on = select(0.0, 1.0, h1 < @param(density));
-let tw = 0.65 + 0.35 * sin(@time * @param(twinkle) * (1.0 + 3.0 * h2) + h3 * 6.2831853);
+let tw = 0.65 + 0.35 * sin(@phase(twinkle) * (1.0 + 3.0 * h2) + h3 * 6.2831853);
 let f = fract(q) - vec3<f32>(0.5, 0.5, 0.5);
 let d = length(vec3<f32>(f.x, f.y, select(0.0, f.z, vol))) * 2.0;
 let sz = clamp(@param(size), 0.05, 1.0);
@@ -109,7 +109,7 @@ let id = cell3.xy + vec2<f32>(cell3.z * 19.0, cell3.z * 11.0);
 let h1 = wh_cell_hash(id);
 let h2 = wh_cell_hash(id + vec2<f32>(13.0, 7.0));
 let h3 = wh_cell_hash(id + vec2<f32>(3.0, 41.0));
-let t = @time * @param(rate) * mix(0.6, 1.4, h2) + h3;
+let t = @phase(rate) * mix(0.6, 1.4, h2) + h3;
 let age = fract(t);
 let cycle = floor(t);
 let lit = wh_cell_hash(id + vec2<f32>(cycle * 7.13, cycle * 3.71)) < @param(density);
@@ -130,7 +130,7 @@ let cols = select(colsAuto, max(floor(@param(columns)), 1.0), @param(columns) > 
 let rows = select(rowsAuto, max(floor(@param(rows)), 1.0), @param(rows) > 0.0);
 let cell = min(floor(vec2<f32>(p.x * cols, p.y * rows)), vec2<f32>(cols - 1.0, rows - 1.0));
 let phase = wh_cell_hash(cell + vec2<f32>(13.0, 7.0));
-let t = @time * max(@param(rate), 0.0) + phase;
+let t = @phase(rate) + phase;
 let whole = floor(t);
 let step = whole - 997.0 * floor(whole / 997.0);
 let lit = wh_cell_hash(cell + vec2<f32>(step * 7.13, step * 3.71)) < @param(density);
@@ -153,7 +153,7 @@ var asum = 0.0;
 for (var i = 0; i < 8; i = i + 1) {
     let fi = f32(i);
     if (fi < n) {
-        let y = 0.5 + @param(amplitude) * sin(6.2831853 * (@param(frequency) * p.x + @param(frequencyZ) * p.z) + @time * @param(speed) + fi * spreadRad);
+        let y = 0.5 + @param(amplitude) * sin(6.2831853 * (@param(frequency) * p.x + @param(frequencyZ) * p.z) + @phase(speed) + fi * spreadRad);
         let v = 1.0 - smoothstep(0.0, max(@param(thickness), 0.002), abs(p.y - y));
         let col = colors[i];
         light = light + col.rgb * col.a * v;

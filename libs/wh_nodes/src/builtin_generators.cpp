@@ -58,8 +58,7 @@ return wh_mix_color(@param(colorA), @param(colorB), t);)wgsl";
 // Preludes werden nur einmal eingebunden).
 constexpr const char* kNoiseBody =
     R"wgsl(let s = clamp(@param(scale), 0.0, 1.0);
-let sp = clamp(@param(speed), 0.0, 1.0);
-let q = p * (2.0 + 62.0 * s * s) + vec3<f32>(0.0, 0.0, @time * sp * sp * 3.0);
+let q = p * (2.0 + 62.0 * s * s) + vec3<f32>(0.0, 0.0, @phase(speed, quadratic));
 let fz = fract(q.z);
 let w = fz * fz * (3.0 - 2.0 * fz);
 let dev = (wh_value_noise(q) - 0.5) / sqrt((1.0 - w) * (1.0 - w) + w * w);
@@ -86,7 +85,7 @@ return vec4<f32>(mixed.rgb / max(mixed.a, 0.000001), mixed.a);)wgsl";
 // abgebildet (ein Sinus-Durchlauf = ein voller Umlauf durch die vier Farben).
 constexpr const char* kPlasmaBody =
     R"wgsl(let s = @param(scale);
-let t = @time * @param(speed);
+let t = @phase(speed);
 let q = p * s;
 let z = q.z * @param(depth);
 let v = sin(q.x + t + z) + sin(q.y * 1.3 + t * 1.1 + z * 0.7) + sin((q.x + q.y + t + z) * 0.7) + sin(length(q.xy - vec2<f32>(0.5 * s)) + t - z);
@@ -134,7 +133,7 @@ constexpr const char* kWaveBody =
     R"wgsl(let dv = vec3<f32>(@param(dirX), @param(dirY), @param(dirZ));
 let len = length(dv);
 let n = select(vec3<f32>(1.0, 0.0, 0.0), dv / max(len, 0.000001), len > 0.000001);
-let phase = @param(frequency) * dot(p, n) - @param(speed) * @time;
+let phase = @param(frequency) * dot(p, n) - @phase(speed);
 let w = 0.5 + 0.5 * sin(6.2831853 * phase);
 return wh_mix_color(@param(colorA), @param(colorB), w);)wgsl";
 
@@ -161,7 +160,7 @@ let r2 = wh_hash21(cell + vec2<f32>(17.0, 3.0));
 let r3 = wh_hash21(cell + vec2<f32>(5.0, 29.0));
 let trail = max(@param(trail), 0.01);
 let span = 1.0 + trail;
-let travel = fract(r3 + @time * @param(speed) * mix(0.6, 1.4, r2) / span);
+let travel = fract(r3 + @phase(speed) * mix(0.6, 1.4, r2) / span);
 let headY = 1.0 - travel * span;
 let behind = p.y - headY;
 let strength = select(0.0, 1.0 - behind / trail, behind >= 0.0 && behind <= trail);
@@ -197,7 +196,7 @@ constexpr const char* kRipplePrelude = R"wgsl(fn wh_hash11(x: f32) -> f32 {
 }
 )wgsl";
 
-constexpr const char* kRippleBody = R"wgsl(let t = @time * max(@param(rate), 0.01);
+constexpr const char* kRippleBody = R"wgsl(let t = @phase(rate);
 var v = 0.0;
 for (var i = 0; i < 4; i = i + 1) {
     let k = floor(t) - f32(i);
@@ -214,7 +213,7 @@ return vec4<f32>(col.rgb, col.a * clamp(v, 0.0, 1.0));)wgsl";
 // Feuer: Rauschen, das nach oben wandert, dazu eine Hitze, die mit der Höhe abnimmt (unten y = 0 ist
 // am heißesten). Farbverlauf von Schwarz über Rot und Gelb zu Weiß. `depth` lässt das Rauschen auch
 // in z variieren, damit die Flammen im Würfel nicht in jeder Scheibe gleich aussehen (0 = wie 2D).
-constexpr const char* kFireBody = R"wgsl(let t = @time * @param(speed);
+constexpr const char* kFireBody = R"wgsl(let t = @phase(speed);
 let s = @param(scale);
 let q = vec3<f32>(p.x * s, p.y * s * 0.6 - t, p.z * s * @param(depth));
 let n = wh_value_noise(q) * 0.65 + wh_value_noise(q * 2.0 + vec3<f32>(0.0, 0.0, 3.7)) * 0.35;
