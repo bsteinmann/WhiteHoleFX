@@ -39,7 +39,7 @@ return vec4<f32>(rgb, c.a);)wgsl";
 // Blitzen: `rate` Blitze pro Sekunde, jeder leuchtet `duty` einer Periode und klingt danach über `fade`
 // (ebenfalls Anteil einer Periode) aus. In der Dunkelphase wird das Alpha kleiner, die LEDs gehen aus.
 constexpr const char* kStrobeBody = R"wgsl(let c = @in(source, p);
-let phase = fract(@time * @param(rate));
+let phase = fract(@phase(rate));
 let duty = clamp(@param(duty), 0.0, 1.0);
 var env = 1.0;
 if (phase >= duty) {
@@ -50,7 +50,7 @@ return vec4<f32>(c.rgb, c.a * env);)wgsl";
 // Strobe Gate: wie Strobe, aber nur solange `gate` den Schwellwert `threshold` erreicht (zum Beispiel der Puls einer
 // Kick- oder Hi-Hat-Erkennung, ein Fader oder eine DMX-Taste). Darunter geht das Bild unverändert durch.
 constexpr const char* kStrobeGateBody = R"wgsl(let c = @in(source, p);
-let phase = fract(@time * @param(rate));
+let phase = fract(@phase(rate));
 let duty = clamp(@param(duty), 0.0, 1.0);
 var env = 1.0;
 if (phase >= duty) {

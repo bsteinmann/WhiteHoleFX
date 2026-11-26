@@ -104,7 +104,7 @@ var u = 0.0;
 if (oneshot) {
     u = (d - r) / spacing;
 } else {
-    u = fract((d - @time * @param(speed)) / spacing) - 0.5;
+    u = fract((d - @phase(speed)) / spacing) - 0.5;
 }
 let fill = i32(floor(@param(fill) + 0.5));
 let half = w * 0.5;

@@ -36,7 +36,7 @@ fn wh_lerp_1d(a: vec4<f32>, b: vec4<f32>, t: f32) -> vec4<f32> {
 // er am Ende wieder von vorn (der Schweif läuft dann um die Ecke), mit "Ping-pong" kehrt er an den Enden um.
 // `speed` ist die Zahl der Durchläufe pro Sekunde, negativ läuft rückwärts.
 constexpr const char* kCometBody = R"wgsl(let u = wh_axis_u(p, @param(axis));
-let phase = fract(@param(speed) * @time);
+let phase = fract(@phase(speed));
 let dir = select(-1.0, 1.0, @param(speed) >= 0.0);
 let len = max(@param(length), 0.001);
 var head = phase;
@@ -54,14 +54,14 @@ return vec4<f32>(col.rgb, col.a * tail);)wgsl";
 
 // Pulswellen: Bänder, die über die Achse laufen. `sharpness` macht aus der weichen Sinuswelle schmale Pulse.
 constexpr const char* kPulseBody = R"wgsl(let u = wh_axis_u(p, @param(axis));
-let phase = @param(frequency) * u - @param(speed) * @time;
+let phase = @param(frequency) * u - @phase(speed);
 let w = 0.5 + 0.5 * sin(6.2831853 * phase);
 let v = pow(w, 1.0 + 9.0 * clamp(@param(sharpness), 0.0, 1.0));
 return wh_lerp_1d(@param(colorA), @param(colorB), v);)wgsl";
 
 // Verlauf über drei Farben A -> B -> C -> A, `repeat` Mal über die Länge, `speed` Durchläufe pro Sekunde.
 constexpr const char* kStripGradientBody = R"wgsl(let u = wh_axis_u(p, @param(axis));
-let t = fract(u * max(@param(repeat), 0.0) - @param(speed) * @time) * 3.0;
+let t = fract(u * max(@param(repeat), 0.0) - @phase(speed)) * 3.0;
 let a = @param(colorA);
 let b = @param(colorB);
 let c = @param(colorC);
@@ -84,7 +84,7 @@ for (var i = 0; i < 8; i = i + 1) {
     }
     let fi = f32(i);
     let rate = 0.6 + 0.8 * wh_hash_1d(fi + 3.0);
-    let head = fract(@param(speed) * rate * @time + wh_hash_1d(fi + 11.0));
+    let head = fract(@phase(speed) * rate + wh_hash_1d(fi + 11.0));
     let d = fract((head - u) * dir);
     if (d < len) {
         v = max(v, pow(clamp(1.0 - d / len, 0.0, 1.0), 2.0));
@@ -104,7 +104,7 @@ let cell = floor(u * n);
 let h1 = wh_hash_1d(cell);
 let h2 = wh_hash_1d(cell + 17.0);
 let on = select(0.0, 1.0, h1 < @param(density));
-let ph = fract(@time * @param(speed) * (0.5 + h2) + h1 * 7.0);
+let ph = fract(@phase(speed) * (0.5 + h2) + h1 * 7.0);
 let v = on * pow(1.0 - ph, 4.0);
 let col = @param(color);
 return vec4<f32>(col.rgb, col.a * v);)wgsl";
