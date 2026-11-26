@@ -12,6 +12,7 @@
 #include <algorithm>
 #include <cmath>
 
+#include "whitehole/runtime/live_look.hpp"
 #include "whitehole/runtime/player.hpp"
 
 namespace whitehole::runtime {
@@ -38,7 +39,7 @@ Result<void> Player::setLookTrigger(int index, project::LookTrigger trigger, std
         return {};
     }
     if (trigger != project::LookTrigger::Flash) {
-        std::erase(flashHeld_, index);  // ein gehaltener Look hört auf zu flashen; das Bild bleibt, wie es ist
+        std::erase_if(flashHeld_, [index](const HeldFlash& held) { return held.key == index; });  // ein gehaltener Look hört auf zu flashen; das Bild bleibt, wie es ist
     }
     look.trigger = trigger;
     look.returnSeconds = returnSeconds;
@@ -67,6 +68,51 @@ Result<void> Player::setLookFlashIn(int index, std::optional<double> seconds) {
     return {};
 }
 
+Result<void> Player::flashDown(int key, int look, int cell, std::optional<double> flashIn, double back,
+                               std::optional<double> fadeSeconds) {
+    if (flashHeld_.empty()) {
+        const LiveStatus status = live_->status();
+        flashReturn_ = status.fading ? status.incoming : status.current;  // was gerade zu sehen ist bzw. kommt
+        flashReturnCell_ = status.fading ? status.incomingCell : status.currentCell;
+    }
+    std::erase_if(flashHeld_, [key](const HeldFlash& held) { return held.key == key; });
+    flashHeld_.push_back({key, look, cell, back});
+    if (const Result<void> armed = armLook(look, cell); !armed.ok()) {
+        return armed;
+    }
+    // Die eigene Einblendzeit gilt vor der Zeit des Live-Fensters und der des Looks
+    return goLook(flashIn ? std::optional<double>{*flashIn} : fadeSeconds);
+}
+
+Result<void> Player::flashUp(int key) {
+    if (!project_ || !live_) {
+        return {};
+    }
+    const auto found = std::find_if(flashHeld_.begin(), flashHeld_.end(), [key](const HeldFlash& held) { return held.key == key; });
+    if (found == flashHeld_.end()) {
+        return {};  // kein gehaltener Flash (umschaltend, oder das Flash wurde schon beendet)
+    }
+    const bool wasShown = std::next(found) == flashHeld_.end();
+    const double back = found->back;
+    flashHeld_.erase(found);
+    if (!wasShown) {
+        return {};  // ein darunter gehaltener Look: das Bild bleibt beim zuletzt gedrückten
+    }
+    const int target = flashHeld_.empty() ? flashReturn_ : flashHeld_.back().look;
+    const int targetCell = flashHeld_.empty() ? flashReturnCell_ : flashHeld_.back().cell;
+    if (flashHeld_.empty()) {
+        flashReturn_ = -1;
+        flashReturnCell_ = -1;
+    }
+    if (!inRange(target, project_->looks.size())) {
+        return {};
+    }
+    if (const Result<void> armed = armLook(target, targetCell); !armed.ok()) {
+        return armed;
+    }
+    return goLook(back);
+}
+
 Result<void> Player::liveDown(int index, std::optional<double> fadeSeconds, bool useGo) {
     if (!project_ || !live_) {
         return Error{ErrorCode::InvalidArgument, "Der Live-Betrieb ist nicht gestartet"};
@@ -78,45 +124,54 @@ Result<void> Player::liveDown(int index, std::optional<double> fadeSeconds, bool
     if (look.trigger != project::LookTrigger::Flash) {
         return useGo ? liveArm(index) : liveTrigger(index, fadeSeconds);
     }
-    if (flashHeld_.empty()) {
-        const LiveStatus status = live_->status();
-        flashReturn_ = status.fading ? status.incoming : status.current;  // was gerade zu sehen ist bzw. kommt
-    }
-    std::erase(flashHeld_, index);
-    flashHeld_.push_back(index);
-    if (const Result<void> armed = armLook(index); !armed.ok()) {
-        return armed;
-    }
-    // Die eigene Einblendzeit des Looks gilt vor der Zeit des Live-Fensters und der des Looks
-    return goLook(look.flashInSeconds ? std::optional<double>{*look.flashInSeconds} : fadeSeconds);
+    return flashDown(index, index, -1, look.flashInSeconds, look.returnSeconds.value_or(look.fadeSeconds), fadeSeconds);
 }
 
-Result<void> Player::liveUp(int index) {
+Result<void> Player::liveUp(int index) { return flashUp(index); }
+
+int Player::cellLook(int cell) const {
+    if (!project_ || !inRange(cell, project_->liveGrid.cells.size())) {
+        return -1;
+    }
+    const project::LiveCell& entry = project_->liveGrid.cells[static_cast<std::size_t>(cell)];
+    return entry.empty() ? -1 : findLook(project_->looks, entry.look);
+}
+
+Result<void> Player::liveCellDown(int cell, std::optional<double> fadeSeconds, bool useGo) {
     if (!project_ || !live_) {
+        return Error{ErrorCode::InvalidArgument, "Der Live-Betrieb ist nicht gestartet"};
+    }
+    if (!inRange(cell, project_->liveGrid.cells.size())) {
+        return Error{ErrorCode::NotFound, "Es gibt kein Feld Nummer " + std::to_string(cell + 1)};
+    }
+    const int look = cellLook(cell);
+    if (look < 0) {
+        return {};  // leeres Feld
+    }
+    const project::LiveCell& entry = project_->liveGrid.cells[static_cast<std::size_t>(cell)];
+    if (entry.trigger != project::LookTrigger::Flash) {
+        clearFlash();
+        if (const Result<void> armed = armLook(look, cell); !armed.ok() || useGo) {
+            return armed;
+        }
+        return goLook(fadeSeconds);
+    }
+    const double back = entry.returnSeconds.value_or(project_->looks[static_cast<std::size_t>(look)].fadeSeconds);
+    return flashDown(-(cell + 1), look, cell, entry.flashInSeconds, back, fadeSeconds);
+}
+
+Result<void> Player::liveCellUp(int cell) { return flashUp(-(cell + 1)); }
+
+Result<void> Player::liveCellTrigger(int cell, std::optional<double> fadeSeconds) {
+    const int look = cellLook(cell);
+    if (look < 0) {
         return {};
     }
-    const auto found = std::find(flashHeld_.begin(), flashHeld_.end(), index);
-    if (found == flashHeld_.end()) {
-        return {};  // kein gehaltener Flash-Look (umschaltend, oder das Flash wurde schon beendet)
-    }
-    const bool wasShown = std::next(found) == flashHeld_.end();
-    flashHeld_.erase(found);
-    if (!wasShown) {
-        return {};  // ein darunter gehaltener Look: das Bild bleibt beim zuletzt gedrückten
-    }
-    const project::Look& released = project_->looks[static_cast<std::size_t>(index)];
-    const double back = released.returnSeconds.value_or(released.fadeSeconds);
-    const int target = flashHeld_.empty() ? flashReturn_ : flashHeld_.back();
-    if (flashHeld_.empty()) {
-        flashReturn_ = -1;
-    }
-    if (!inRange(target, project_->looks.size())) {
-        return {};
-    }
-    if (const Result<void> armed = armLook(target); !armed.ok()) {
+    clearFlash();
+    if (const Result<void> armed = armLook(look, cell); !armed.ok()) {
         return armed;
     }
-    return goLook(back);
+    return goLook(fadeSeconds);
 }
 
 }  // namespace whitehole::runtime

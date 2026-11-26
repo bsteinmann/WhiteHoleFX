@@ -76,6 +76,8 @@ private:
     void act(LiveFunction function, int value, const MidiLiveOptions& options, bool live, MidiLiveResult& result);  // value 0..127
     void syncArmed();
     void updateLeds(bool live);
+    /// Feld des Live-Rasters für eine Pad-Note (das Pad-Raster des Profils liegt links oben im Raster); -1 außerhalb.
+    [[nodiscard]] int cellForPad(std::uint8_t note) const;
     void report(const Result<void>& result, MidiLiveResult& out);
 
     Player& player_;

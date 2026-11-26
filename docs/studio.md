@@ -485,17 +485,20 @@ Ausgangs-Node). Looks stehen in der Projektdatei (`look ... endlook`, siehe [Pro
 - Gespeichert wird mit dem Projekt (Strg+S).
 
 **Live-Modus (F9 oder Menü Live):** versteckt Editor, Parameter, das Fenster Stage Config, Looks-Dock und sperrt
-Neu, Öffnen, Zuletzt geöffnet und Beispiele im Menü Datei. Es zeigt für jeden Look einen großen Knopf. Auch die Menüleiste ist weg; Master und Blackout (Strg+B)
+Neu, Öffnen, Zuletzt geöffnet und Beispiele im Menü Datei. Es zeigt ein festes Raster aus großen Feldern; jedes Feld trägt einen Look (mit dessen Vorschaubild, das mit dem Feld wächst) oder ist leer. Auch die Menüleiste ist weg; Master und Blackout (Strg+B)
 bleiben in der Werkzeugleiste, F9 beendet den Live-Modus weiterhin. Rückgängig ist gesperrt, und die Leertaste ist GO statt Start/Stopp, damit auf der Bühne
 nichts versehentlich angehalten oder geändert wird.
 
 | Bedienung | Wirkung |
 |---|---|
-| Klick auf einen Look oder Taste 1 bis 9 | blendet in der Zeit des Looks zu ihm über |
+| Klick auf ein Feld oder Taste 1 bis 9 (die ersten neun Felder, zeilenweise) | blendet in der Zeit des Looks zu seinem Look über; ein leeres Feld tut nichts |
+| Klick oder Rechtsklick auf ein **leeres Feld** | Menü „Look hierher legen“: den Look wählen, der dort liegen soll. Nicht jeder gespeicherte Look muss im Raster liegen, und derselbe Look darf in mehreren Feldern liegen |
+| Rechtsklick auf ein belegtes Feld | Look wechseln, Feld leeren, Umschalten oder Flashen und die Zeiten zum Ein- und Zurückblenden. Diese Einstellungen gehören zum *Feld*: derselbe Look kann einmal flashen und einmal umschalten |
 | Kästchen „Eigene Überblendzeit“ | gilt für alle Klicks statt der Zeit des Looks (0 = hart) |
 | Kästchen „Mit GO“ | ein Klick lädt den Look nur vor (orange); GO oder Leertaste startet die Überblendung |
 | Schaltfläche „Einstellungen“ (oben rechts) | blendet ein und aus: unter jedem Look den Haken **Flash** und die Zeiten zum Ein- und Zurückblenden, die Zeile „Steuerung belegen“ und die Menüleiste. Beim Start des Live-Modus ist alles ausgeblendet; die Wahl wird nicht gespeichert |
-| Rasterbreite (bei offenen Einstellungen) | Spalten des Look-Rasters, 1 bis 16; mehr Spalten brauchen weniger Höhe. Wird gespeichert (Programmeinstellungen), gilt für alle Projekte |
+| Rasterbreite (bei offenen Einstellungen) | Spalten des Rasters, 1 bis 16; mehr Spalten brauchen weniger Höhe. Die Größe steht im Projekt; die Programmeinstellung gilt nur als Vorgabe für ein Projekt, das noch kein Raster hat |
+| Zeilen (bei offenen Einstellungen) | Zeilen des Rasters, 1 bis 16 (Standard 4). Spalten × Zeilen ergeben die Felder, alle gleich groß. Beim Verkleinern fallen belegte Felder außerhalb weg (die Looks bleiben im Projekt). Ältere Projekte bekommen das Raster beim Öffnen aus ihren Looks (zeilenweise). Ein neu gespeicherter Look kommt ins erste freie Feld |
 | Vorschau teilen (bei offenen Einstellungen, Standard an) | Die Vorschau über dem Live-Fenster zeigt links die Ausgabe und rechts den vorgeladenen Look, beide laufend; während einer Überblendung rechts den einblendenden Look, sonst „Kein Look vorgeladen“. Rechenzeit kostet die rechte Hälfte nur, solange ein Look vorgeladen ist oder einblendet (der Shader tastet das verdeckte Deck dann ein zweites Mal ab). Wird gespeichert (Programmeinstellungen); Umschalten baut die Ausgabe einmal neu auf |
 | Haken „Flash“ unter einem Look (oder Rechtsklick auf den Look) | „Umschalten (bleibt an)“ oder „Flashen (nur solange gedrückt)“; für Flash außerdem die Zeit zum Einblenden beim Drücken („Rein“) und zum Zurückblenden beim Loslassen („Zurück“), jeweils mit der Zeit des Looks oder mit eigener Zeit. Steht im Projekt (`trigger flash`, `in`, `return`) und gilt für Knöpfe, MIDI-Pads und alle anderen Eingänge. Ein Flash-Look hat Vorrang vor „Mit GO“; die Tasten 1–9 schalten auch einen Flash-Look nur um (sie kennen kein Loslassen) |
 | Zeile „Steuerung belegen“ (nur bei offenen Einstellungen) | Lernen-Knopf je Funktion (GO, Live beenden, Master, Überblendzeit, manuelle Überblendung) für MIDI oder DMX - dieselbe Belegung wie im Reiter „Steuerung“ der Einstellungen |
@@ -503,11 +506,16 @@ nichts versehentlich angehalten oder geändert wird.
 
 Farben: grün läuft, orange vorgeladen, gelb blendet gerade ein. Ein Balken zeigt den Fortschritt.
 
-Technik: Zwei Decks und ein Crossfade. Beim **Vorladen** wird der Look ins verdeckte Deck kopiert; wenn
-sich dadurch die Struktur ändert, entsteht einmal eine neue Shader-Pipeline, das kann einen kurzen Ruckler
-geben. Der **Fade selbst** ändert nur einen Zahlenwert und läuft ohne Neuübersetzung. Wer es auf der Bühne
-ruckelfrei braucht, nutzt „Mit GO“ und lädt vorher. Der Editor-Graph ruht im Live-Betrieb; Rückgängig ist
-gesperrt. Ein Projekt zu laden beendet den Live-Modus.
+Technik: Zwei Decks und ein Crossfade. Beim **Vorladen** wird der Look ins verdeckte Deck kopiert; ändert sich
+dadurch die Struktur, braucht das Live-Bild einen neuen Shader. Den übersetzt der Grafiktreiber im Hintergrund: Die
+Ausgabe läuft solange mit dem bisherigen weiter, die Überblendung beginnt, sobald er fertig ist. Damit auch ein Flash
+oder ein Abruf ohne Vorladen sofort sitzt, übersetzt WhiteHole Studio, sobald ein Look steht, für jedes belegte Feld
+die passende Kombination vorab (Flash-Felder zuerst, je Feld etwa so lange wie ein Vorladen); bis zu 48 übersetzte
+Kombinationen bleiben im Zwischenspeicher. Wird ein Feld gedrückt, bevor seine Kombination fertig ist, kommt es
+entsprechend später, die Ausgabe stockt dabei nicht. Manche Treiber (etwa der Software-Treiber lavapipe) übersetzen
+erst beim ersten Einsatz eines Shaders zu Ende; dort bleibt beim ersten Abruf einer Kombination ein kurzer Ruckler.
+Der **Fade selbst** ändert nur einen Zahlenwert und läuft ohne Neuübersetzung. Der Editor-Graph ruht im
+Live-Betrieb; Rückgängig ist gesperrt. Ein Projekt zu laden beendet den Live-Modus.
 
 ## Cuelist
 

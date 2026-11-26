@@ -78,6 +78,7 @@ bool waitFor(WebGpuDevice::Impl& impl, const Request& request) {
 }  // namespace
 
 WebGpuDevice::Impl::~Impl() {
+    joinCompiling();  // Hintergrund-Threads benutzen noch das Gerät
     releaseTimestamps(*this);  // zuerst: ein später Map-Rückruf zeigt auf `timestamps`, das bis zum Ende lebt
     for (auto& [id, entry] : pipelines) {
         for (WGPUBindGroupLayout layout : entry.layouts) {
@@ -335,6 +336,7 @@ void WebGpuDevice::poll() {
     Impl& impl = *impl_;
     impl.pump(false);
     pollTimestamps(impl);
+    impl.reapAbandoned();
 
     // Abgeschlossene Readbacks ausliefern. Der Callback der Bibliothek hat nur den Status
     // gesetzt; die Nutzer-Callbacks laufen hier, außerhalb der Bibliotheksaufrufe.

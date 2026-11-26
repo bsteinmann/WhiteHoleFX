@@ -16,10 +16,13 @@ namespace whitehole::gpu {
 struct TextureTag {};
 struct BufferTag {};
 struct ComputePipelineTag {};
+struct PipelineTicketTag {};
 
 using TextureHandle = StrongId<TextureTag>;
 using BufferHandle = StrongId<BufferTag>;
 using ComputePipelineHandle = StrongId<ComputePipelineTag>;
+/// Marke für eine Pipeline, die im Hintergrund übersetzt wird (IGpuDevice::beginComputePipeline).
+using PipelineTicket = StrongId<PipelineTicketTag>;
 
 enum class TextureFormat : std::uint8_t { Rgba8Unorm, Rgba16Float, Rgba32Float, R32Float };
 

@@ -38,6 +38,11 @@ struct LiveStatus {
     double progress{1.0};  // 0..1 des laufenden Fades (1 = kein Fade)
     double fadeSeconds{0.0};
     bool manual{false};  // der laufende Fade folgt einem Fader (setManualProgress), nicht der Uhr
+    /// Feld des Live-Rasters, aus dem der jeweilige Look kam (-1 = nicht über ein Feld, z. B. Cue oder Look-Auswahl).
+    /// Liegt ein Look in zwei Feldern, zeigt nur das abgerufene Feld ihn als aktiv.
+    int currentCell{-1};
+    int armedCell{-1};
+    int incomingCell{-1};
 };
 
 class LiveDecks {
@@ -45,12 +50,12 @@ public:
     explicit LiveDecks(std::shared_ptr<const graph::INodeRegistry> registry);
 
     /// Baut den Live-Graphen auf und zeigt `look` sofort (Deck A). Fehler: die von placeLook und connect.
-    Result<void> start(const project::Look& look, int index);
+    Result<void> start(const project::Look& look, int index, int cell = -1);
 
     /// Lädt `look` in das verdeckte Deck. Läuft gerade ein Fade, wird er zuerst abgeschlossen (die Ansicht
     /// springt dann sofort auf den neuen Look). Fehler: die von placeLook; bei einem Fehler bleibt das
     /// sichtbare Deck unberührt, das verdeckte zeigt einen durchsichtigen Platzhalter.
-    Result<void> arm(const project::Look& look, int index);
+    Result<void> arm(const project::Look& look, int index, int cell = -1);
 
     /// Lädt Schwarz (eine durchsichtige Fläche) ins verdeckte Deck: go() blendet dann den aktuellen Look aus (Cuelist).
     Result<void> armBlank();
@@ -77,6 +82,8 @@ public:
     [[nodiscard]] const graph::Graph& graph() const noexcept { return graph_; }
     [[nodiscard]] const graph::PortRef& target() const noexcept { return target_; }
     [[nodiscard]] LiveStatus status() const noexcept;
+    /// Ist gerade Deck A zu sehen (sonst B)? Davon hängt ab, in welches Deck der nächste Look kommt.
+    [[nodiscard]] bool showsDeckA() const noexcept { return visible_ == Deck::A; }
 
     /// Die Ausgänge, die an den Mischer gehen: [0] = Deck A, [1] = Deck B (für die geteilte Vorschau als
     /// Zusatzausgänge des Shaders; sie ändern sich nur, wenn ein Look geladen wird). Leer vor start().
@@ -90,10 +97,11 @@ private:
     struct Slot {
         std::vector<NodeId> nodes;
         int look{-1};
+        int cell{-1};  // Feld des Live-Rasters, aus dem der Look kam; -1 = keines
     };
 
     [[nodiscard]] Slot& slot(Deck deck) noexcept { return deck == Deck::A ? a_ : b_; }
-    Result<void> load(Deck deck, const project::Look& look, int index);
+    Result<void> load(Deck deck, const project::Look& look, int index, int cell);
     void clear(Deck deck);
     void fill(Deck deck);  // durchsichtiger Platzhalter in einem leeren Deck
     void finishFade();

@@ -384,6 +384,21 @@ public:
     /// und Überblendzeit bleiben, wenn `fadeSeconds` fehlt). Liefert den Index. Fehler: InvalidArgument
     /// (Name, Zeit, kein Ausgang), sonst die der Graph-Operationen.
     Result<int> saveLook(const std::string& name, std::optional<double> fadeSeconds = std::nullopt);
+    /// Das feste Live-Raster (Felder mit Looks belegen, docs/entwurf-live-raster.md); ein leeres Raster (`defined()` falsch),
+    /// solange kein Projekt geladen ist oder ensureLiveGrid noch nicht lief. Ein neu gespeicherter Look kommt ins erste
+    /// freie Feld (Umschalten), falls eines frei ist; Umbenennen und Löschen eines Looks ziehen die Felder nach.
+    [[nodiscard]] const project::LiveGrid& liveGrid() const;
+    /// Hat das Projekt noch kein Raster (ältere Datei), entsteht es aus den Looks (makeLiveGridFromLooks, `columns` Spalten,
+    /// mindestens `rows` Zeilen). Ändert nichts am Änderungsstand: erst beim nächsten Speichern steht es in der Datei.
+    /// Hat das Projekt eines, passiert nichts. Fehler: kein Projekt, `columns` ungültig, Looks passen nicht in 16 Zeilen.
+    Result<void> ensureLiveGrid(int columns, int rows);
+    /// Belegt Feld `cell` (Index zeilenweise) oder leert es (leerer `look`). Nur ein Look der Datei ist erlaubt; Zeiten 0 bis
+    /// 600 s; `in`/`return` entfallen beim Umschalten (Toggle). Geht auch im Live-Betrieb. Fehler: kein Raster, Feld
+    /// außerhalb, unbekannter Look, Zeit ungültig.
+    Result<void> setLiveCell(int cell, project::LiveCell value);
+    /// Neue Rastergröße (je 1..16); belegte Felder behalten Zeile und Spalte, Felder außerhalb werden leer. Geht auch im
+    /// Live-Betrieb (beendet gehaltene Flash-Felder). Fehler: kein Projekt, kein Raster (ensureLiveGrid), Größe ungültig.
+    Result<void> setLiveGridSize(int columns, int rows);
     /// Fehler: NotFound (Index), InvalidArgument (Name ungültig oder schon vergeben, Zeit außerhalb 0..600).
     Result<void> removeLook(int index);
     Result<void> renameLook(int index, const std::string& name);
@@ -424,8 +439,23 @@ public:
     Result<void> setLookFlashIn(int index, std::optional<double> seconds);
     Result<void> liveDown(int index, std::optional<double> fadeSeconds = std::nullopt, bool useGo = false);
     Result<void> liveUp(int index);
+    /// Wie liveDown/liveUp, aber für ein Feld des Live-Rasters (docs/entwurf-live-raster.md): Umschalten oder Flash, die
+    /// Zeiten und der Modus stammen vom *Feld*, nicht vom Look; ein leeres Feld (oder eines mit unbekanntem Look) tut nichts.
+    /// Fehler: Live-Betrieb nicht gestartet, Feld außerhalb des Rasters.
+    Result<void> liveCellDown(int cell, std::optional<double> fadeSeconds = std::nullopt, bool useGo = false);
+    Result<void> liveCellUp(int cell);
+    /// Schaltet den Look des Feldes um, auch wenn das Feld flasht (für Eingänge ohne Loslassen, z. B. den DMX-Auswahlkanal).
+    Result<void> liveCellTrigger(int cell, std::optional<double> fadeSeconds = std::nullopt);
+    /// Look-Index des Feldes oder -1 (leer, unbekannter Look, Feld außerhalb).
+    [[nodiscard]] int cellLook(int cell) const;
     /// Gehaltene Flash-Looks, zuletzt gedrückter hinten (für Anzeige und Tests).
-    [[nodiscard]] const std::vector<int>& liveFlashHeld() const noexcept { return flashHeld_; }
+    [[nodiscard]] std::vector<int> liveFlashHeld() const {
+        std::vector<int> looks;
+        for (const HeldFlash& held : flashHeld_) {
+            looks.push_back(held.look);
+        }
+        return looks;
+    }
     /// Manuelle Überblendung zum vorgeladenen Look (Fader 0..1, siehe LiveDecks::setManualProgress).
     /// Fehler: InvalidArgument (nicht live). Ohne vorgeladenen Look wirkungslos.
     Result<void> liveManualFade(double progress);
@@ -620,10 +650,20 @@ private:
     bool liveDmxLive_{false};
     std::optional<int> liveDmxLastIndex_;
     bool liveDmxCueMode_{false};  // der Auswahl-Kanal bezog sich zuletzt auf Cues (Cuelist läuft), nicht auf Looks
-    std::vector<int> flashHeld_;  // gedrückte Flash-Looks (liveDown), zuletzt gedrückter hinten
+    /// Ein gehaltenes Flash: `key` ist der Look-Index (liveDown) oder -(Feld+1) (liveCellDown), `back` die Zeit zum Zurückblenden.
+    struct HeldFlash {
+        int key;
+        int look;
+        int cell;  // Feld (-1 = über liveDown, nicht über ein Feld)
+        double back;
+    };
+    std::vector<HeldFlash> flashHeld_;  // gedrückte Flash-Looks bzw. -Felder, zuletzt gedrückter hinten
+    Result<void> flashDown(int key, int look, int cell, std::optional<double> flashIn, double back, std::optional<double> fadeSeconds);
+    Result<void> flashUp(int key);
     int flashReturn_{-1};         // Look, zu dem das Loslassen des letzten Flash-Looks zurückkehrt
-    void clearFlash() noexcept { flashHeld_.clear(); flashReturn_ = -1; }
-    Result<void> armLook(int index);                                  // liveArm ohne clearFlash
+    int flashReturnCell_{-1};     // dessen Feld (-1 = nicht über ein Feld)
+    void clearFlash() noexcept { flashHeld_.clear(); flashReturn_ = -1; flashReturnCell_ = -1; }
+    Result<void> armLook(int index, int cell = -1);                   // liveArm ohne clearFlash; `cell` = Feld, aus dem der Look kommt
     Result<void> goLook(std::optional<double> fadeSeconds);           // liveGo ohne clearFlash
     CueRunner cueRunner_;
     bool cueGo_{false};
@@ -635,6 +675,17 @@ private:
     bool splitPreview_{false};
     /// Was der Session zuletzt als Vorschau-Deck gemeldet wurde (äußeres optional leer = noch nichts gemeldet).
     std::optional<std::optional<std::uint32_t>> previewSelected_;
+    /// Vorab-Übersetzen der Felder im Live-Betrieb (player_live_prefetch.cpp): für welchen sichtbaren Look und welches
+    /// Deck die Liste gilt, welche Looks gewünscht sind und wie viele davon schon bestellt.
+    struct LivePrefetch {
+        int look{-2};  // -2 = noch nichts bestellt
+        bool deckA{true};
+        std::vector<int> wanted;
+        std::size_t next{0};
+    };
+    LivePrefetch livePrefetch_;
+    void prefetchLive();  // in step(): höchstens ein Feld je Frame bestellen
+    [[nodiscard]] std::vector<int> livePrefetchLooks() const;
 };
 
 }  // namespace whitehole::runtime

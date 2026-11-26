@@ -121,6 +121,7 @@ public:
     QString exerciseGroupParameters();
     /// Rauchtest: Looks speichern/ordnen/umbenennen, Live-Modus mit Überblendung, GO und Rückkehr.
     QString exerciseLive();
+    QString exerciseLiveGrid();  // Teil von exerciseLive: Raster, Felder belegen und leeren (main_window_live_grid.cpp)
     QString exerciseCues();
     /// Rauchtest: Fenster "DMX-Monitor" (main_window_dmx_monitor.cpp) öffnet sich mit den Reitern Eingang/
     /// Ausgang; der Eingangs-Reiter zeigt geschriebene Werte an der richtigen Zelle.

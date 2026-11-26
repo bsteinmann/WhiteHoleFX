@@ -48,6 +48,7 @@ add_executable(whitehole_studio
     main_window_dmx_monitor.cpp
     main_window_editor.cpp
     main_window_live.cpp
+    main_window_live_grid.cpp
     main_window_split_preview.cpp
     main_window_help.cpp
     main_window_update.cpp
@@ -80,6 +81,7 @@ add_executable(whitehole_studio
     live_learn.cpp
     live_learn.hpp
     live_panel.cpp
+    live_panel_cells.cpp
     live_panel_looks.cpp
     live_panel.hpp
     look_button.cpp

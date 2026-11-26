@@ -53,8 +53,9 @@ void MainWindow::buildLive() {
     });
     connect(lookPanel_, &LookPanel::loadedIntoEditor, this, &MainWindow::afterRestore);
     connect(lookPanel_, &LookPanel::liveRequested, this, [this](int first) { enterLive(first); });
-    connect(livePanel_, &LivePanel::columnsChanged, this, [this](int columns) {
+    connect(livePanel_, &LivePanel::gridChanged, this, [this](int columns, int rows) {
         appSettings_.liveColumns = columns;
+        appSettings_.liveRows = rows;
         saveAppSettings(appSettings_);
     });
     connect(livePanel_, &LivePanel::splitPreviewChanged, this, [this](bool on) {
@@ -141,7 +142,7 @@ bool MainWindow::enterLive(int first) {
     liveDock_->show();
     // Das vorschaubild darf klein sein: das Look-Raster bekommt den größten Teil der Höhe
     resizeDocks({liveDock_}, {std::max(320, height() * 2 / 3)}, Qt::Vertical);
-    livePanel_->setColumns(appSettings_.liveColumns);
+    livePanel_->setDefaultGrid(appSettings_.liveColumns, appSettings_.liveRows);  // gilt nur für Projekte ohne Raster
     liveMode_ = true;
     setLiveChrome(true);
     setChecked(true);
@@ -239,11 +240,21 @@ QString MainWindow::exerciseLive() {
     if (!lookPanel_->saveLookAs(QStringLiteral("Eins")) || !lookPanel_->saveLookAs(QStringLiteral("Zwei"))) {
         return tr("Live: Looks lassen sich nicht speichern");
     }
-    if (lookPanel_->lookCount() != 2 || livePanel_->buttonCount() != 2) {
-        return tr("Live: Listen zeigen %1 / %2 statt 2 Looks").arg(lookPanel_->lookCount()).arg(livePanel_->buttonCount());
+    const auto occupied = [this]() {
+        const auto& cells = player_->liveGrid().cells;
+        return static_cast<int>(std::count_if(cells.begin(), cells.end(), [](const project::LiveCell& c) { return !c.empty(); }));
+    };
+    if (lookPanel_->lookCount() != 2 || occupied() != 2 || livePanel_->buttonCount() != player_->liveGrid().cellCount()) {
+        return tr("Live: Listen zeigen %1 Looks, %2 belegte von %3 Feldern statt 2 Looks")
+            .arg(lookPanel_->lookCount()).arg(occupied()).arg(livePanel_->buttonCount());
     }
     if (!lookPanel_->moveSelected(-1) || !lookPanel_->renameLook(0, QStringLiteral("Zwei neu"))) {
         return tr("Live: Ordnen oder Umbenennen scheitert");
+    }
+    // Die Felder hängen am Namen, nicht an der Reihenfolge der Looks: für die Tests unten Feld i = Look i legen
+    if (player_->liveGrid().cells[0].look != player_->looks()[1].name || player_->liveGrid().cells[1].look != "Zwei neu" ||
+        !livePanel_->assignLook(0, player_->looks()[0].name) || !livePanel_->assignLook(1, player_->looks()[1].name)) {
+        return QStringLiteral("Live: Die Felder folgen dem Umbenennen oder Ordnen nicht");
     }
     if (!enterLive(0) || !player_->liveActive() || !liveDock_->isVisible() || editorDock_->isVisible()) {
         return tr("Live: Wechsel in den Live-Modus scheitert");
@@ -263,22 +274,17 @@ QString MainWindow::exerciseLive() {
         for (const QPushButton* button : livePanel_->findChildren<QPushButton*>()) {
             withIcon += button->icon().isNull() ? 0 : 1;
         }
-        if (withIcon != livePanel_->buttonCount()) {
-            return QStringLiteral("Live: Die Look-Knöpfe zeigen nicht alle ihr Vorschaubild (%1 von %2)")
+        if (withIcon != occupied()) {
+            return QStringLiteral("Live: Die belegten Felder zeigen nicht alle ihr Vorschaubild (%1 von %2)")
                 .arg(withIcon)
-                .arg(livePanel_->buttonCount());
+                .arg(occupied());
         }
     }
     if (const QString iconError = checkLookIconSize(); !iconError.isEmpty()) {
         return iconError;
     }
-    {
-        const int before = livePanel_->buttonCount();
-        livePanel_->setColumns(2);
-        if (livePanel_->columns() != 2 || livePanel_->buttonCount() != before) {
-            return QStringLiteral("Live: Die Rasterbreite lässt sich nicht ändern");
-        }
-        livePanel_->setColumns(appSettings_.liveColumns);
+    if (const QString gridError = exerciseLiveGrid(); !gridError.isEmpty()) {
+        return gridError;
     }
     // Auftrittsansicht: ohne Menüleiste und ohne Einstellungen; die Schaltfläche blendet beides gemeinsam ein
     QApplication::processEvents();  // Qt zeigt Widgets, die nach dem Anzeigen des Fensters entstehen, erst über die Ereignisschleife
@@ -291,12 +297,12 @@ QString MainWindow::exerciseLive() {
         return QStringLiteral("Live: Die Einstellungen blenden Menüleiste und Flash-Haken nicht ein");
     }
     livePanel_->flashCheck(0)->click();
-    if (player_->looks()[0].trigger != project::LookTrigger::Flash) {
-        return QStringLiteral("Live: Der Flash-Haken stellt den Look nicht auf Flash");
+    if (player_->liveGrid().cells[0].trigger != project::LookTrigger::Flash) {
+        return QStringLiteral("Live: Der Flash-Haken stellt das Feld nicht auf Flash");
     }
     livePanel_->flashCheck(0)->click();
-    if (player_->looks()[0].trigger != project::LookTrigger::Toggle || livePanel_->flashCheck(0)->isChecked()) {
-        return QStringLiteral("Live: Der Flash-Haken stellt den Look nicht auf Umschalten zurück");
+    if (player_->liveGrid().cells[0].trigger != project::LookTrigger::Toggle || livePanel_->flashCheck(0)->isChecked()) {
+        return QStringLiteral("Live: Der Flash-Haken stellt das Feld nicht auf Umschalten zurück");
     }
     livePanel_->setSettingsShown(false);
     if (menuBar()->isVisibleTo(this) || livePanel_->flashCheck(0)->isVisibleTo(livePanel_)) {
@@ -357,10 +363,10 @@ QString MainWindow::exerciseLive() {
         return tr("Live: %1").arg(problem());
     }
     // Flash: Look 1 blitzt, solange gedrückt (Vorrang vor "Mit GO"), Loslassen kehrt zu Look 2 zurück (0 s: sofort)
-    if (!livePanel_->setLookTrigger(0, project::LookTrigger::Flash, 0.0) || player_->looks()[0].trigger != project::LookTrigger::Flash) {
+    if (!livePanel_->setLookTrigger(0, project::LookTrigger::Flash, 0.0) || player_->liveGrid().cells[0].trigger != project::LookTrigger::Flash) {
         return QStringLiteral("Live: Flash lässt sich nicht einstellen");
     }
-    if (!livePanel_->setLookFlashIn(0, 0.0) || player_->looks()[0].flashInSeconds != 0.0) {
+    if (!livePanel_->setLookFlashIn(0, 0.0) || player_->liveGrid().cells[0].flashInSeconds != 0.0) {
         return QStringLiteral("Live: Die Einblendzeit eines Flash-Looks lässt sich nicht einstellen");
     }
     if (const std::unique_ptr<QMenu> menu{livePanel_->lookMenu(0)}; menu->actions().size() < 6) {
@@ -376,7 +382,7 @@ QString MainWindow::exerciseLive() {
     }
     livePanel_->setUseGo(false);
     (void)livePanel_->setLookTrigger(0, project::LookTrigger::Toggle, std::nullopt);
-    if (player_->looks()[0].flashInSeconds.has_value()) {
+    if (player_->liveGrid().cells[0].flashInSeconds.has_value()) {
         return QStringLiteral("Live: Umschalten behält die Einblendzeit eines Flash-Looks");
     }
     livePanel_->setSettingsShown(true);  // auch mit offenen Einstellungen muss der Editor die Menüleiste zurückbekommen

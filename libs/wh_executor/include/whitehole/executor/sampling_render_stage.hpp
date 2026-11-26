@@ -75,6 +75,15 @@ public:
     Result<void> selectExtra(std::uint32_t extra, std::uint32_t tag);
     /// Siehe FieldPass::setParameters (nur Werte geändert, kein Neuübersetzen).
     Result<void> setParameters(const graph::Graph& graph) { return pass_->setParameters(graph); }
+    /// Neue Strukturen im Hintergrund übersetzen (FieldPass::setBackgroundCompile).
+    void setBackgroundCompile(bool on) noexcept { pass_->setBackgroundCompile(on); }
+    /// Wartet eine neue Struktur noch auf den Treiber (bis dahin läuft der bisherige Graph)?
+    [[nodiscard]] bool graphPending() const noexcept { return pass_->pending(); }
+    /// Siehe FieldPass::prefetch. `extras` wie bei setGraph.
+    Result<void> prefetch(const graph::Graph& graph, std::span<const graph::PortRef> extras = {});
+    /// Siehe FieldPass::cancelPrefetches.
+    void cancelPrefetches() noexcept { pass_->cancelPrefetches(); }
+    [[nodiscard]] std::size_t prefetchesOpen() const noexcept { return pass_->prefetchesOpen(); }
 
     void record(const FrameTime& time, gpu::ICommandRecorder& recorder) override;
 

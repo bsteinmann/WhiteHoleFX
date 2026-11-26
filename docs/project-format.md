@@ -270,6 +270,27 @@ cue name "Feuer" look Feuer trigger key F5 delay 1.5 fade 1.5
 cue name "Ende" trigger go fade 4
 ```
 
+### `livegrid <spalten> <zeilen>` und `cell <zeile> <spalte> look <look> ...` (Live-Raster)
+
+Das feste Raster des Live-Modus (Entwurf: `docs/entwurf-live-raster.md`). `livegrid` legt die Größe fest (je 1 bis 16),
+jede `cell`-Zeile belegt ein Feld mit einem Look der Datei; **Zeile und Spalte zählen ab 1**. Nicht genannte Felder sind
+leer. Derselbe Look darf in mehreren Feldern liegen, jedes Feld hat seine eigenen Einstellungen:
+
+```
+livegrid 4 3
+cell 1 1 look Nebel
+cell 1 2 look Nebel flash in 0.25 return 2
+cell 2 1 look "Bunte Welle"
+```
+
+- `flash`: das Feld flasht (läuft nur, solange gehalten). `in <s>` und `return <s>` (je 0 bis 600) gibt es nur zusammen mit
+  `flash`; ohne sie gilt die Überblendzeit des Looks.
+- `livegrid` darf nur einmal vorkommen und muss vor den `cell`-Zeilen stehen. Ein Feld außerhalb, ein doppelt belegtes
+  Feld oder ein Look, den es nicht gibt, ist ein Fehler.
+- Ältere Dateien ohne `livegrid` bleiben gültig: der Player baut das Raster dann aus den Looks (zeilenweise, mit dem
+  `trigger`/`in`/`return` des Looks); beim nächsten Speichern steht es in der Datei. `trigger`, `in` und `return` im
+  `look`-Block bleiben als Vorgabe für diese Übernahme. Programme bis 1.1.x lesen Dateien mit `livegrid` nicht.
+
 ## Fehlermeldungen
 
 Jede Meldung nennt die Zeile: `Zeile 7: Node-Typ "wh.x" hat keinen Parameter "tempo"`. Fehler in

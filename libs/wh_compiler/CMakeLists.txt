@@ -4,6 +4,7 @@
 wh_add_library(wh_compiler
     SOURCES
         src/field_compiler.cpp
+        src/shader_text.cpp
         src/node_definition.cpp
         src/parameter_layout.cpp
         src/snippet_expander.cpp

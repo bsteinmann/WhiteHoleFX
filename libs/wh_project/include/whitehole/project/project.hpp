@@ -27,6 +27,7 @@
 #include "whitehole/output/output_pipeline.hpp"
 #include "whitehole/output/output_plan.hpp"
 #include "whitehole/project/cue.hpp"
+#include "whitehole/project/live_grid.hpp"
 
 namespace whitehole::project {
 
@@ -35,11 +36,6 @@ inline constexpr int kFormatVersion = 1;
 /// Ein gespeicherter Effekt ("Look"): die Nodes vom Generator bis zum Ausgang als eigener kleiner Graph,
 /// dazu der Field-Ausgang und die Zeit, in der er beim Live-Betrieb eingeblendet wird. Looks gehören zur
 /// Projektdatei (Abschnitt `look ... endlook`), damit eine Show in einer Datei bleibt.
-/// Wie ein Look im Live-Betrieb ausgelöst wird (docs/entwurf-midi.md, Abschnitt 5).
-///   Toggle: ein Druck blendet dauerhaft um (wie bisher).
-///   Flash:  der Look läuft nur, solange gehalten; beim Loslassen zurück zum vorherigen. Hat Vorrang vor "Mit GO".
-enum class LookTrigger : std::uint8_t { Toggle, Flash };
-
 /// Winziges Standbild eines Looks (RGB, 3 Bytes je Pixel, Zeile für Zeile), das beim Speichern aufgenommen wird und
 /// im Live-Fenster auf dem Look-Knopf erscheint. Nur Anzeige, ohne Einfluss auf die Ausgabe.
 struct LookThumbnail {
@@ -113,6 +109,10 @@ struct Project {
     /// Die Look-Liste für den Live-Betrieb, in der Reihenfolge der Datei. Namen sind eindeutig.
     std::vector<Look> looks;
 
+    /// Das feste Live-Raster mit seinen belegten Feldern (Datei: `livegrid` und `cell`-Zeilen). `columns == 0` heißt:
+    /// die Datei hat keines; der Player baut es dann aus den Looks (makeLiveGridFromLooks).
+    LiveGrid liveGrid;
+
     /// Die Cuelist (Issue #21): Looks in fester Reihenfolge mit Auslösern und Zeiten. Leer = keine Cuelist.
     std::vector<Cue> cues;
 
@@ -125,6 +125,10 @@ struct Project {
     /// und Looks) tragen dasselbe als Graph::strictInputs; applyStrictInputs() hält beides gleich.
     bool strictInputs{false};
 };
+
+/// Übernahme alter Projekte: ein Raster mit `columns` Spalten (mindestens `rows` Zeilen, bei mehr Looks entsprechend
+/// mehr), die Looks zeilenweise darin, mit Trigger und Zeiten des Looks. Leer, wenn `columns` nicht in 1..16 liegt.
+[[nodiscard]] LiveGrid makeLiveGridFromLooks(const std::vector<Look>& looks, int columns, int rows);
 
 /// Setzt strictInputs im Projekt und in allen Graphen (Hauptgraph und Looks).
 void applyStrictInputs(Project& project, bool strict);

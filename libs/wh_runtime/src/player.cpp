@@ -9,7 +9,6 @@
 
 #include "whitehole/output/packet_sink.hpp"
 #include "whitehole/runtime/graph_layout.hpp"
-#include "whitehole/runtime/node_display_name.hpp"
 
 namespace whitehole::runtime {
 
@@ -146,6 +145,9 @@ Result<void> Player::start() {
     if (testPattern_.active()) {
         session_->setTestPattern(testPattern_);
     }
+    // Live-Betrieb: ein neu vorgeladener Look wird im Hintergrund übersetzt, die Ausgabe läuft solange weiter
+    session_->setBackgroundCompile(live_.has_value());
+    livePrefetch_ = LivePrefetch{};  // die neue Session hat noch nichts vorab übersetzt
     refreshCompleteness();
     previewSelected_.reset();  // die neue Session hat noch nichts gewählt
     stepError_.reset();
@@ -183,7 +185,9 @@ Result<void> Player::step() {
     if (live_) {
         // Die Überblendung läuft mit der Uhrzeit, nicht mit der Zahl der Frames
         const double now = liveNow();
-        const double elapsed = liveLast_ ? now - *liveLast_ : 0.0;
+        // Solange der Shader mit dem neuen Look noch übersetzt wird, zeigt die Ausgabe den bisherigen Stand: die
+        // Überblendung wartet, statt unsichtbar weiterzulaufen und beim Umschalten zu springen
+        const double elapsed = liveLast_ && !session_->graphPending() ? now - *liveLast_ : 0.0;
         liveLast_ = now;
         if (live_->advance(elapsed)) {
             valuesDirty_ = true;
@@ -208,6 +212,7 @@ Result<void> Player::step() {
         valuesDirty_ = false;
         (void)session_->applyParameters(activeGraph());
     }
+    prefetchLive();
     selectPreview(structural);
     const Result<void> r = session_->renderFrame();
     if (!r.ok()) {
@@ -238,49 +243,6 @@ PlayerStatus Player::status() const {
         }
     }
     return s;
-}
-
-std::vector<NodeInfo> Player::nodes() const {
-    std::vector<NodeInfo> result;
-    if (!project_) {
-        return result;
-    }
-    const graph::Graph& g = project_->graph;
-    const auto names = nodeDisplayNames(g);  // Typ+Nummer, plus eigener Name in Klammern, siehe node_display_name.hpp
-    for (const graph::NodeInstance& node : g.nodes()) {
-        const graph::NodeDescriptor* descriptor = g.registry().find(node.typeId);
-        // Auch Nodes ohne Parameter (z. B. Add) erscheinen: Das Dock zeigt dann einen Hinweis, statt sie zu verschweigen.
-        if (descriptor == nullptr) {
-            continue;
-        }
-        NodeInfo info;
-        info.id = node.id;
-        info.typeId = node.typeId;
-        const auto nameIt = names.find(node.id.value());
-        info.title = nameIt != names.end() ? nameIt->second : descriptor->displayName;
-        for (const graph::ParameterDescriptor& p : descriptor->parameters) {
-            ParameterInfo parameter;
-            parameter.key = p.key;
-            parameter.displayName = p.displayName;
-            parameter.defaultValue = p.defaultValue;
-            const auto it = node.parameters.find(p.key);
-            parameter.value = it != node.parameters.end() ? it->second : p.defaultValue;
-            parameter.minValue = p.minValue;
-            parameter.maxValue = p.maxValue;
-            parameter.choices = p.choices;
-            parameter.visibleWhenAtLeastKey = p.visibleWhenAtLeastKey;
-            parameter.visibleWhenAtLeast = p.visibleWhenAtLeast;
-            if (const graph::Connection* wire = g.findInputConnection(node.id, p.key)) {
-                parameter.driven = true;
-                parameter.connection = wire->id;
-                parameter.scale = wire->scale;
-                parameter.offset = wire->offset;
-            }
-            info.parameters.push_back(std::move(parameter));
-        }
-        result.push_back(std::move(info));
-    }
-    return result;
 }
 
 Result<graph::ParameterValue> Player::setParameter(NodeId node, const std::string& key,

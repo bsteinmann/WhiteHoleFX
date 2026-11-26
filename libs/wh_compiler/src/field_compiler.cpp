@@ -10,6 +10,7 @@
 #include <variant>
 #include <vector>
 
+#include "shader_text.hpp"
 #include "whitehole/compiler/snippet_expander.hpp"
 #include "whitehole/core/hash.hpp"
 #include "whitehole/core/utf8.hpp"
@@ -17,6 +18,11 @@
 namespace whitehole::compiler {
 
 namespace {
+
+using detail::bindingLine;
+using detail::functionName;
+using detail::indent;
+using detail::memberRef;
 
 using graph::NodeDescriptor;
 using graph::NodeInstance;
@@ -31,10 +37,6 @@ std::string describe(const NodeInstance& node) {
     return "Node #" + std::to_string(node.id.value()) + " (" + node.typeId + ")";
 }
 
-std::string functionName(NodeId id) {
-    return "wh_f" + std::to_string(id.value());
-}
-
 std::size_t countFieldOutputs(const NodeDescriptor& descriptor) {
     std::size_t count = 0;
     for (const PortDescriptor& port : descriptor.ports) {
@@ -43,32 +45,6 @@ std::size_t countFieldOutputs(const NodeDescriptor& descriptor) {
         }
     }
     return count;
-}
-
-/// Rückt jede nichtleere Zeile um vier Leerzeichen ein und schließt mit Zeilenumbruch ab.
-std::string indent(const std::string& text) {
-    std::string result;
-    const std::string_view view{text};
-    std::size_t start = 0;
-    while (start < view.size()) {
-        std::size_t end = view.find('\n', start);
-        if (end == std::string_view::npos) {
-            end = view.size();
-        }
-        const std::string_view line = view.substr(start, end - start);
-        if (!line.empty()) {
-            result += "    ";
-            result += line;
-        }
-        result += '\n';
-        start = end + 1;
-    }
-    return result;
-}
-
-std::string bindingLine(std::uint32_t binding, const std::string& declaration) {
-    return "@group(" + std::to_string(kFieldBindGroup) + ") @binding(" + std::to_string(binding) +
-           ") var<uniform> " + declaration + ";\n";
 }
 
 /// Wie ein Field-Eingang im Snippet aufgelöst wird.
@@ -231,7 +207,7 @@ private:
         const bool isColor = type == PortType::Color;
         layout_.add(node.id, portKey, isColor ? GpuType::Vec4 : GpuType::Float,
                     SlotOrigin::FieldConstant);
-        const std::string member = "wh_params." + memberName(node.id, portKey);
+        const std::string member = "wh_params." + memberRef(node.id, portKey);
         if (isColor) {
             return InputBinding{InputBinding::Kind::Constant, member};
         }
@@ -350,7 +326,7 @@ private:
                                  ") verweist auf keinen Spektrum- oder Wellenform-Eingang"};
             }
             // array<vec4<f32>, 8>: Band i steht in Element i/4, Komponente i%4.
-            const std::string member = "wh_params." + memberName(node.id, port);
+            const std::string member = "wh_params." + memberRef(node.id, port);
             const std::string idx = "(" + std::string{index} + ")";
             return member + "[" + idx + " / 4u][" + idx + " % 4u]";
         };
@@ -398,7 +374,7 @@ private:
                              describe(node) + ": @param(" + std::string{key} +
                                  ") ist kein GPU-fähiger Parameter"};
             }
-            return "wh_params." + memberName(node.id, key);
+            return "wh_params." + memberRef(node.id, key);
         };
 
         Result<std::string> expanded = expandSnippet(snippet.body, bindings);
@@ -414,6 +390,9 @@ private:
         CompiledField result;
         result.layout = layout_.build();
         result.nodes = order_;
+        for (ParameterSlot& slot : result.layout.slots) {
+            slot.member = memberRef(slot.node, slot.key);  // Platzhalter wie in den Funktionsrümpfen
+        }
 
         result.wgsl =
             "// Von WhiteHoleFX erzeugt (Feldcompiler). Nicht von Hand ändern.\n"
@@ -429,6 +408,8 @@ private:
                            functionName(extras[i]) + "(p);\n}\n";
         }
 
+        // Namen nach Ausgabereihenfolge statt Node-Nummer: gleiche Struktur, gleicher Text (shader_text.hpp)
+        detail::resolveShaderNames(result.wgsl, result.layout, order_);
         result.structureHash = fnv1a64(result.wgsl);
         return result;
     }

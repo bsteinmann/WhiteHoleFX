@@ -39,6 +39,7 @@ add_executable(wh_tests
     compiler/field_inputs_test.cpp
     compiler/node_definition_test.cpp
     compiler/parameter_layout_test.cpp
+    compiler/shader_names_test.cpp
     compiler/snippet_expander_test.cpp
     input/dmx_nodes_test.cpp
     input/dmx_packets_test.cpp
@@ -69,6 +70,7 @@ add_executable(wh_tests
     executor/canvas_shader_test.cpp
     executor/canvas_stage_graph_test.cpp
     executor/sampling_render_stage_test.cpp
+    executor/background_compile_test.cpp
     executor/sampling_shader_test.cpp
     mapping/fixture_test.cpp
     mapping/fixture_pose_test.cpp
@@ -101,6 +103,7 @@ add_executable(wh_tests
     project/project_library_test.cpp
     project/project_destinations_test.cpp
     project/cue_test.cpp
+    project/live_grid_test.cpp
     project/node_group_file_test.cpp
     project/output_target_test.cpp
     fuzz/parser_fuzz_test.cpp
@@ -146,6 +149,8 @@ add_executable(wh_tests
     runtime/live_flash_test.cpp
     runtime/live_split_preview_test.cpp
     runtime/look_thumbnail_test.cpp
+    runtime/live_grid_test.cpp
+    runtime/live_cells_test.cpp
     runtime/live_manual_fade_test.cpp
     runtime/midi_live_test.cpp
     runtime/player_live_test.cpp
@@ -221,7 +226,8 @@ if(TARGET wh_gpu_webgpu)
         gpu_device/projection_on_device_test.cpp
         gpu_device/sampling_on_device_test.cpp
         gpu_device/stage_on_device_test.cpp
-        gpu_device/webgpu_device_test.cpp)
+        gpu_device/webgpu_device_test.cpp
+        gpu_device/webgpu_async_pipeline_test.cpp)
     target_include_directories(wh_gpu_tests PRIVATE support)
     target_link_libraries(wh_gpu_tests PRIVATE
         wh_gpu_webgpu

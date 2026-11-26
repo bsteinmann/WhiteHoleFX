@@ -155,7 +155,11 @@ Muster damit als Säule durch den Würfel; Outline und Text bleiben zweidimensio
 
 ### Regeln für das Snippet
 
-`body` ist der Rumpf von `fn wh_f<ID>(p: vec3<f32>) -> vec4<f32>` und endet mit `return`.
+`body` ist der Rumpf von `fn wh_f<N>(p: vec3<f32>) -> vec4<f32>` und endet mit `return`. `N` ist die Stelle
+der Node in der Ausgabe des Shaders (1, 2, 3 …), nicht ihre Node-Nummer; ebenso heißen die Parameter `wh_params.n<N>_<schlüssel>`.
+So ergibt dieselbe Struktur immer denselben Text, auch wenn ihre Nodes andere Nummern haben (der Live-Betrieb setzt
+Looks bei jedem Vorladen neu ein), und der Pipeline-Zwischenspeicher trifft. Snippets nennen diese Namen nie selbst,
+sie benutzen die Platzhalter.
 Es gibt elf Platzhalter:
 
 | Platzhalter | Wird ersetzt durch |

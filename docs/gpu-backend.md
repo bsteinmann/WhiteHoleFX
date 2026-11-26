@@ -56,6 +56,23 @@ Ohne Adapter werden die Tests übersprungen. Für einen Lauf ohne GPU unter Linu
 - **Zeilen mit 256 Byte Ausrichtung.** `copyTextureToBuffer` schreibt Zeilen mit
   `paddedBytesPerRow()` Bytes (Vorgabe von WebGPU). Wer ein Canvas zurückliest, muss das
   beim Auslesen berücksichtigen.
+- **Übersetzen im Hintergrund.** Das teure Übersetzen eines Shaders durch den Treiber (bis zu Hunderte Millisekunden)
+  kann auf einem eigenen Thread laufen: `beginComputePipeline()` prüft den WGSL-Text sofort (Fehler kommen gleich), das
+  Ergebnis holt `takeComputePipeline()` ab (`std::nullopt`, solange der Treiber arbeitet), `cancelComputePipeline()`
+  verwirft. `prefetchComputePipeline()` bestellt nachrangig (eine Pipeline, die vielleicht bald gebraucht wird),
+  `promoteComputePipeline()` macht einen solchen Auftrag dringend. Ein einziger Übersetzer-Thread arbeitet die Aufträge
+  nacheinander ab, dringende vor nachrangigen; ein verworfener, noch wartender Auftrag wird gar nicht erst übersetzt.
+  Nacheinander, weil der Thread Fehler mit einem eigenen Error-Scope fängt und der in wgpu-native für das ganze Gerät
+  gilt: Zwei gleichzeitige Übersetzungen könnten sich ihre Fehler vertauschen, und ein Fehler eines anderen Aufrufs in
+  genau diesem Zeitfenster landet beim Übersetzen. Der Live-Betrieb nutzt das (`FieldPass::setBackgroundCompile`): Beim
+  Vorladen eines Looks läuft die Ausgabe mit dem bisherigen Shader weiter, die Überblendung beginnt, sobald der neue
+  fertig ist; zuletzt benutzte Pipelines (48) bleiben im Zwischenspeicher. Dessen Schlüssel ist der Hash des
+  Shader-Texts. Er trifft auch nach einem erneuten Einsetzen desselben Looks (neue Node-Nummern), weil der Feldcompiler
+  Funktionen und Parameter nach ihrer Stelle in der Ausgabe benennt, nicht nach der Node-Nummer
+  (`libs/wh_compiler/src/shader_text.hpp`). Sobald ein Look steht, bestellt der Player für jedes belegte Feld des
+  Live-Rasters die Kombination mit diesem Look vorab (`FieldPass::prefetch`, `player_live_prefetch.cpp`), Flash-Felder
+  zuerst, eines je Frame. Grenze: Manche Treiber (lavapipe) übersetzen erst beim ersten Einsatz zu Ende; das lässt sich
+  so nicht vorziehen.
 - **Puffergrößen** werden auf Vielfache von 4 aufgerundet; `writeBuffer` verlangt Offset
   und Länge als Vielfache von 4.
 

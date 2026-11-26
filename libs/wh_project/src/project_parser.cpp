@@ -9,6 +9,7 @@
 #include <variant>
 
 #include "project_cue.hpp"
+#include "project_livegrid.hpp"
 #include "project_destinations.hpp"
 #include "project_stage.hpp"
 #include "project_fixture_parser.hpp"
@@ -121,7 +122,7 @@ std::optional<Error> Parser::handleOutside(const Line& line) {
     const std::string key = r.word("Schlüsselwort");
     std::optional<Error> error;
     if (look_ && (key == "settings" || key == "destination" || key == "dmxpatch" || key == "fixture" ||
-                  key == "fixturetype" || key == "cue" || key == "group" || key == "region")) {
+                  key == "fixturetype" || key == "cue" || key == "livegrid" || key == "cell" || key == "group" || key == "region")) {
         r.fail("\"" + key + "\" gehört nicht in einen look-Block");
     } else if (key == "settings") {
         error = settings(r);
@@ -150,6 +151,12 @@ std::optional<Error> Parser::handleOutside(const Line& line) {
         error = output(r);
     } else if (key == "cue") {
         project_.cues.push_back(detail::parseCue(r));
+    } else if (key == "livegrid") {
+        if (LiveGrid grid = detail::parseLiveGridHeader(r, project_.liveGrid); r.ok()) {
+            project_.liveGrid = std::move(grid);
+        }
+    } else if (key == "cell") {
+        detail::parseLiveCell(r, project_.liveGrid);
     } else if (key == "group") {
         FixtureGroup group = detail::parseGroup(r);
         for (const FixtureGroup& other : project_.groups) {
@@ -596,6 +603,9 @@ Result<Project> Parser::finish() {
     }
     if (const Result<void> cues = detail::checkCues(project_.cues, project_.looks); !cues.ok()) {
         return cues.error();
+    }
+    if (const Result<void> grid = detail::checkLiveGrid(project_.liveGrid, project_.looks); !grid.ok()) {
+        return grid.error();
     }
     if (const Result<void> resolved = detail::resolveDestinationProtocols(project_, explicitProtocol_); !resolved.ok()) {
         return resolved.error();
