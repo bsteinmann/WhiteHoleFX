@@ -1,4 +1,4 @@
-**Vorabversion (0.x) für Windows (64 Bit) und Linux.** Alle Einzelheiten stehen in `CHANGELOG.md`.
+**Version 1.2.0 für Windows (64 Bit) und Linux.** Alle Einzelheiten stehen in `CHANGELOG.md`.
 
 **Windows:** ZIP herunterladen, in einen eigenen Ordner entpacken, `whitehole_studio.exe` starten.
 
@@ -22,16 +22,12 @@ keinen Ruf, nicht dass etwas daran auffällig wäre. So gehst du vor:
 
 Stimmt die Prüfsumme nicht, bitte nicht starten und melden.
 
-### Neu seit v0.51.0
+### Neu in 1.2.0
 
-- **Node-Editor:** Rechtsklick auf einen Ein- oder Ausgang zeigt passende Nodes und verbindet sie sofort; Skalierung am Kabel
-  (`Wert × Faktor + Offset`); Parameterfenster zeigt nur den gewählten Node, mit Suche und Anheften.
-- **Neue Nodes:** sechs 1D-Generatoren für Strips (Achse wählbar), Strobe Gate.
-- **Stage Config mit vier Reitern** (Fixtures, Layout, Ausgabe, Test): Bibliothek der Bauformen (Matrix, Kreis, Strip, Säule,
-  Ring), Drehung von Fixtures, Achsen-Griff und Drehringe in der Bühnenansicht, Einrasten an anderen Fixtures,
-  Controller-Bibliothek mit Protokoll (Art-Net, sACN, DDP) pro Controller.
-- **Windows:** Programmsymbol und Startbildschirm, Node-Editor bleibt nach dem Ablegen aus der Palette sichtbar,
-  Update-Benachrichtigung (Hilfe → Auf Updates prüfen …, erst nach Zustimmung).
+- **MIDI:** Eingang und Ausgang (Einstellungen → MIDI), neue Nodes **MIDI CC** und **MIDI Note** mit Knopf „Lernen“, Akai APC mini (mk1) im Live-Modus mit Pad-Farben, Tasten und Fadern.
+- **Live-Modus:** festes Raster mit frei belegbaren Feldern, Looks flashen (nur solange gehalten), Vorschaubilder auf den Knöpfen, geteilte Vorschau, manuelle Überblendung, frei belegbare Steuerung per MIDI oder DMX (auch Cue-Sprung), Schaltfläche „Einstellungen“ im Live-Fenster.
+- **Benchmark:** `whitehole_benchmark` (Doppelklick, ohne Projekt) und `whitehole_cli --benchmark` messen Projektion und LED-Ausgabe.
+- **Fehlerbehebungen:** Kein Stocken mehr beim Drücken, Loslassen und Vorladen von Looks. Animationen (z. B. Labyrinth) und die Werte-Nodes Time, LFO und Random springen nicht mehr, wenn man Tempo, Frequenz oder Rate verstellt. Dazu die Korrekturen aus 1.1.1 (Node-Editor-Stillstand, scrollendes Look-Raster).
 
 ### Hinweise
 
