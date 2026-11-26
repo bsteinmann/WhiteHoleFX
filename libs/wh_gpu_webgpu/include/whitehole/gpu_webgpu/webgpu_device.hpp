@@ -76,6 +76,8 @@ public:
     [[nodiscard]] Result<ComputePipelineHandle> createComputePipeline(const ComputePipelineDesc& desc) override;
     /// Übersetzt auf einem eigenen Thread (webgpu_pipeline_async.cpp); WGSL-Fehler meldet schon dieser Aufruf.
     [[nodiscard]] Result<PipelineTicket> beginComputePipeline(const ComputePipelineDesc& desc) override;
+    [[nodiscard]] Result<PipelineTicket> prefetchComputePipeline(const ComputePipelineDesc& desc) override;
+    void promoteComputePipeline(PipelineTicket ticket) noexcept override;
     [[nodiscard]] std::optional<Result<ComputePipelineHandle>> takeComputePipeline(PipelineTicket ticket) override;
     void cancelComputePipeline(PipelineTicket ticket) noexcept override;
 

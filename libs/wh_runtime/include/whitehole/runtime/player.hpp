@@ -675,6 +675,17 @@ private:
     bool splitPreview_{false};
     /// Was der Session zuletzt als Vorschau-Deck gemeldet wurde (äußeres optional leer = noch nichts gemeldet).
     std::optional<std::optional<std::uint32_t>> previewSelected_;
+    /// Vorab-Übersetzen der Felder im Live-Betrieb (player_live_prefetch.cpp): für welchen sichtbaren Look und welches
+    /// Deck die Liste gilt, welche Looks gewünscht sind und wie viele davon schon bestellt.
+    struct LivePrefetch {
+        int look{-2};  // -2 = noch nichts bestellt
+        bool deckA{true};
+        std::vector<int> wanted;
+        std::size_t next{0};
+    };
+    LivePrefetch livePrefetch_;
+    void prefetchLive();  // in step(): höchstens ein Feld je Frame bestellen
+    [[nodiscard]] std::vector<int> livePrefetchLooks() const;
 };
 
 }  // namespace whitehole::runtime

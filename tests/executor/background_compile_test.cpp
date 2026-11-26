@@ -158,3 +158,75 @@ TEST_CASE("Hintergrund: Werte während des Wartens gelten ab dem Umschalten", "[
     std::memcpy(&value, bytes.data() + amount->offsetBytes, sizeof value);
     CHECK(value == 0.75F);
 }
+
+// Vorab übersetzen (FieldPass::prefetch): Live-Betrieb, die Felder des laufenden Looks (Rückmeldung vom 26.11.).
+namespace {
+
+/// Der Graph mit Mix (zweite Struktur); danach ist das Labor wieder bei der ersten Struktur.
+graph::Graph mixVariant(Fixture& fx) {
+    fx.insertMix();
+    graph::Graph copy = fx.lab.graph;
+    fx.removeMix();
+    return copy;
+}
+
+}  // namespace
+
+TEST_CASE("Vorab: eine vorab übersetzte Struktur ist sofort da", "[executor][background][prefetch]") {
+    Fixture fx;
+    REQUIRE(fx.stage->setGraph(fx.lab.graph).ok());
+    const gpu::ComputePipelineHandle first = fx.render();
+    const graph::Graph wanted = mixVariant(fx);
+
+    REQUIRE(fx.stage->prefetch(wanted).ok());
+    CHECK(fx.device.prefetchesBegun() == 1);
+    CHECK(fx.device.compilesBegun() == 0);
+    CHECK(fx.stage->prefetchesOpen() == 1U);
+    CHECK_FALSE(fx.stage->graphPending());
+    CHECK(fx.render() == first);  // das laufende Bild bleibt, wie es ist
+    fx.device.finishCompiles();
+    CHECK(fx.render() == first);
+    CHECK(fx.stage->prefetchesOpen() == 0U);  // fertig: liegt im Zwischenspeicher
+
+    REQUIRE(fx.stage->setGraph(wanted).ok());
+    CHECK_FALSE(fx.stage->graphPending());  // sofort, ohne zu warten
+    CHECK(fx.device.compilesBegun() == 0);
+    CHECK(fx.render() != first);
+}
+
+TEST_CASE("Vorab: ein noch laufender Vorab-Auftrag wird vorgezogen, nicht doppelt übersetzt", "[executor][background][prefetch]") {
+    Fixture fx;
+    REQUIRE(fx.stage->setGraph(fx.lab.graph).ok());
+    const gpu::ComputePipelineHandle first = fx.render();
+    const graph::Graph wanted = mixVariant(fx);
+    REQUIRE(fx.stage->prefetch(wanted).ok());
+
+    REQUIRE(fx.stage->setGraph(wanted).ok());  // gebraucht, bevor der Treiber fertig ist
+    CHECK(fx.stage->graphPending());
+    CHECK(fx.device.compilesBegun() == 0);
+    CHECK(fx.device.promotions() == 1);
+    CHECK(fx.stage->prefetchesOpen() == 0U);
+    CHECK(fx.render() == first);
+    fx.device.finishCompiles();
+    CHECK(fx.render() != first);
+    CHECK_FALSE(fx.stage->graphPending());
+}
+
+TEST_CASE("Vorab: Bekanntes wird nicht bestellt, Verwerfen, ohne Hintergrund nichts", "[executor][background][prefetch]") {
+    Fixture fx;
+    REQUIRE(fx.stage->setGraph(fx.lab.graph).ok());
+    (void)fx.render();
+    const graph::Graph wanted = mixVariant(fx);
+
+    REQUIRE(fx.stage->prefetch(fx.lab.graph).ok());  // läuft schon
+    REQUIRE(fx.stage->prefetch(wanted).ok());
+    REQUIRE(fx.stage->prefetch(wanted).ok());  // schon bestellt
+    CHECK(fx.device.prefetchesBegun() == 1);
+    fx.stage->cancelPrefetches();
+    CHECK(fx.device.compilesCancelled() == 1);
+    CHECK(fx.stage->prefetchesOpen() == 0U);
+
+    fx.stage->setBackgroundCompile(false);
+    REQUIRE(fx.stage->prefetch(wanted).ok());
+    CHECK(fx.device.prefetchesBegun() == 1);  // ohne Hintergrund wird nichts vorab übersetzt
+}

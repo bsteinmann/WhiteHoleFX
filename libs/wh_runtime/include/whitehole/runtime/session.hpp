@@ -116,6 +116,13 @@ public:
     void setBackgroundCompile(bool on) noexcept { stage_->setBackgroundCompile(on); }
     /// Wartet eine neue Struktur noch auf den Treiber? Solange zeigt die Ausgabe den bisherigen Graphen.
     [[nodiscard]] bool graphPending() const noexcept { return stage_->graphPending(); }
+    /// Einen Graphen vorab übersetzen, der vielleicht bald mit applyGraph kommt (nur im Hintergrundmodus, siehe
+    /// FieldPass::prefetch); `extras` wie bei applyGraph.
+    Result<void> prefetchGraph(const graph::Graph& graph, std::span<const graph::PortRef> extras = {}) {
+        return stage_->prefetch(graph, extras);
+    }
+    /// Offene Vorab-Aufträge verwerfen (FieldPass::cancelPrefetches).
+    void cancelPrefetches() noexcept { stage_->cancelPrefetches(); }
 
     /// Ein Frame. Siehe RenderEngine::renderFrame. Danach gehen die DMX-Kanäle der Output-Nodes an die Ausgabe.
     Result<void> renderFrame();

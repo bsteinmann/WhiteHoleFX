@@ -136,3 +136,44 @@ TEST_CASE("Hintergrund-Pipeline: verworfene Marken und Abbau mitten im Übersetz
     device.reset();
     SUCCEED();
 }
+
+TEST_CASE("Hintergrund-Pipeline: Vorab-Aufträge, Vorziehen und Verwerfen in der Warteschlange", "[gpu_device][background]") {
+    std::unique_ptr<WebGpuDevice> device = makeDevice();
+    if (!device) {
+        SKIP("Kein WebGPU-Adapter verfügbar");
+    }
+    // Mehrere Vorab-Aufträge und ein dringender: alle werden nacheinander fertig, jeder liefert eine eigene Pipeline
+    std::vector<PipelineTicket> later;
+    for (int i = 0; i < 4; ++i) {
+        const Result<PipelineTicket> ticket = device->prefetchComputePipeline(pipelineOf(kFillShader));
+        REQUIRE(ticket.ok());
+        later.push_back(ticket.value());
+    }
+    const Result<PipelineTicket> now = device->beginComputePipeline(pipelineOf(kFillShader));
+    REQUIRE(now.ok());
+    device->promoteComputePipeline(later[3]);       // wird gebraucht: vor die übrigen Vorab-Aufträge
+    device->promoteComputePipeline(PipelineTicket{999});  // unbekannte Marke: nichts
+    device->cancelComputePipeline(later[1]);         // wartet vermutlich noch: wird gar nicht erst übersetzt
+    const std::optional<Result<ComputePipelineHandle>> cancelled = device->takeComputePipeline(later[1]);
+    REQUIRE(cancelled.has_value());
+    CHECK_FALSE(cancelled->ok());
+
+    const std::optional<Result<ComputePipelineHandle>> urgent = waitFor(*device, now.value());
+    REQUIRE(urgent.has_value());
+    REQUIRE(urgent->ok());
+    for (const std::size_t i : {std::size_t{0}, std::size_t{2}, std::size_t{3}}) {
+        const std::optional<Result<ComputePipelineHandle>> done = waitFor(*device, later[i]);
+        REQUIRE(done.has_value());
+        REQUIRE(done->ok());
+        CHECK(done->value().value() != urgent->value().value());
+        device->destroy(done->value());
+    }
+    device->destroy(urgent->value());
+
+    // Abbau mit noch wartenden Aufträgen: der Destruktor gibt sie frei, ohne sie zu übersetzen
+    for (int i = 0; i < 3; ++i) {
+        REQUIRE(device->prefetchComputePipeline(pipelineOf(kFillShader)).ok());
+    }
+    device.reset();
+    SUCCEED();
+}

@@ -506,11 +506,16 @@ nichts versehentlich angehalten oder geändert wird.
 
 Farben: grün läuft, orange vorgeladen, gelb blendet gerade ein. Ein Balken zeigt den Fortschritt.
 
-Technik: Zwei Decks und ein Crossfade. Beim **Vorladen** wird der Look ins verdeckte Deck kopiert; wenn
-sich dadurch die Struktur ändert, entsteht einmal eine neue Shader-Pipeline, das kann einen kurzen Ruckler
-geben. Der **Fade selbst** ändert nur einen Zahlenwert und läuft ohne Neuübersetzung. Wer es auf der Bühne
-ruckelfrei braucht, nutzt „Mit GO“ und lädt vorher. Der Editor-Graph ruht im Live-Betrieb; Rückgängig ist
-gesperrt. Ein Projekt zu laden beendet den Live-Modus.
+Technik: Zwei Decks und ein Crossfade. Beim **Vorladen** wird der Look ins verdeckte Deck kopiert; ändert sich
+dadurch die Struktur, braucht das Live-Bild einen neuen Shader. Den übersetzt der Grafiktreiber im Hintergrund: Die
+Ausgabe läuft solange mit dem bisherigen weiter, die Überblendung beginnt, sobald er fertig ist. Damit auch ein Flash
+oder ein Abruf ohne Vorladen sofort sitzt, übersetzt WhiteHole Studio, sobald ein Look steht, für jedes belegte Feld
+die passende Kombination vorab (Flash-Felder zuerst, je Feld etwa so lange wie ein Vorladen); bis zu 48 übersetzte
+Kombinationen bleiben im Zwischenspeicher. Wird ein Feld gedrückt, bevor seine Kombination fertig ist, kommt es
+entsprechend später, die Ausgabe stockt dabei nicht. Manche Treiber (etwa der Software-Treiber lavapipe) übersetzen
+erst beim ersten Einsatz eines Shaders zu Ende; dort bleibt beim ersten Abruf einer Kombination ein kurzer Ruckler.
+Der **Fade selbst** ändert nur einen Zahlenwert und läuft ohne Neuübersetzung. Der Editor-Graph ruht im
+Live-Betrieb; Rückgängig ist gesperrt. Ein Projekt zu laden beendet den Live-Modus.
 
 ## Cuelist
 

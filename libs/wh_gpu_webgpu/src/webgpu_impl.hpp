@@ -8,6 +8,7 @@
 #include <webgpu/webgpu.h>
 #include <webgpu/wgpu.h>  // wgpuDevicePoll (Erweiterung von wgpu-native)
 
+#include <condition_variable>
 #include <cstdint>
 #include <deque>
 #include <memory>
@@ -85,15 +86,27 @@ struct PreparedPipeline {
     std::size_t codeSize{0};
 };
 
-/// Eine Pipeline, die ein eigener Thread übersetzt (webgpu_pipeline_async.cpp). `done`, `pipeline` und `error` schreibt
-/// der Thread unter `mutex`; alles andere gehört dem Engine-Thread.
+/// Ein Auftrag für den Übersetzer-Thread (webgpu_pipeline_async.cpp). `started`, `done`, `pipeline` und `error` stehen
+/// unter CompileQueue::mutex. `prepared` liest der Thread erst, nachdem er den Auftrag aus der Schlange genommen hat;
+/// der Engine-Thread nur davor (Verwerfen eines wartenden Auftrags) oder danach (`done`).
 struct CompilingPipeline {
     PreparedPipeline prepared;
-    std::mutex mutex;
+    bool urgent{true};  // beginComputePipeline; false: prefetchComputePipeline
+    bool started{false};
     bool done{false};
     WGPUComputePipeline pipeline{nullptr};
     std::string error;
-    std::thread worker;
+};
+
+/// Ein einziger Übersetzer-Thread arbeitet die Aufträge nacheinander ab, dringende vor vorab bestellten. Nacheinander,
+/// weil der Error-Scope in wgpu-native für das ganze Gerät gilt: Zwei gleichzeitige Übersetzungen könnten sich ihre
+/// Fehler vertauschen. Ein verworfener Auftrag, der noch wartet, wird gar nicht erst übersetzt.
+struct CompileQueue {
+    std::mutex mutex;
+    std::condition_variable wake;
+    std::deque<std::shared_ptr<CompilingPipeline>> waiting;
+    bool stopping{false};
+    std::thread worker;  // beim ersten Auftrag gestartet
 };
 
 struct WebGpuDevice::Impl {
@@ -113,11 +126,14 @@ struct WebGpuDevice::Impl {
     std::unordered_map<std::uint64_t, TextureEntry> textures;
     std::unordered_map<std::uint64_t, PipelineEntry> pipelines;
     std::vector<ReadbackState*> readbacks;  // nicht abgeschlossen oder nicht ausgeliefert
-    /// Pipelines, die im Hintergrund entstehen (Marke -> Zustand), und verworfene, deren Thread noch läuft.
+    /// Pipelines, die im Hintergrund entstehen (Marke -> Auftrag), und verworfene, die der Thread gerade übersetzt.
     std::unordered_map<std::uint64_t, std::shared_ptr<CompilingPipeline>> compiling;
     std::vector<std::shared_ptr<CompilingPipeline>> abandoned;
     std::uint64_t nextTicket{0};
-    /// Wartet auf alle Hintergrund-Threads und gibt ihre Ergebnisse frei (vor dem Freigeben des Geräts).
+    CompileQueue compileQueue;
+    /// Gemeinsamer Weg von beginComputePipeline und prefetchComputePipeline.
+    [[nodiscard]] Result<PipelineTicket> beginCompile(const ComputePipelineDesc& desc, bool urgent);
+    /// Hält den Übersetzer-Thread an, wartet auf ihn und gibt alle Aufträge frei (vor dem Freigeben des Geräts).
     void joinCompiling() noexcept;
     /// Gibt verworfene, fertig übersetzte Pipelines frei (in poll()).
     void reapAbandoned() noexcept;

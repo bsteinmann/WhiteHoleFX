@@ -61,6 +61,14 @@ public:
         readyTickets_.erase(it);
         return Result<ComputePipelineHandle>{handle};
     }
+    /// Wie beginComputePipeline, aber nachrangig: für eine Pipeline, die vielleicht bald gebraucht wird (Live-Betrieb:
+    /// die Flash-Kombinationen des laufenden Looks). Das Gerät übersetzt sie erst, wenn nichts Dringendes wartet.
+    /// Standard: wie beginComputePipeline.
+    [[nodiscard]] virtual Result<PipelineTicket> prefetchComputePipeline(const ComputePipelineDesc& desc) {
+        return beginComputePipeline(desc);
+    }
+    /// Eine nachrangige Marke wird dringend (sie wird jetzt gebraucht): vor die übrigen Vorab-Aufträge. Standard: nichts.
+    virtual void promoteComputePipeline(PipelineTicket ticket) noexcept { (void)ticket; }
     /// Verwirft eine Marke; eine fertige oder noch entstehende Pipeline wird freigegeben.
     virtual void cancelComputePipeline(PipelineTicket ticket) noexcept {
         if (const auto it = readyTickets_.find(ticket.value()); it != readyTickets_.end()) {

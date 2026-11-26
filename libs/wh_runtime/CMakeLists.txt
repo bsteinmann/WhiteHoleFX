@@ -32,6 +32,7 @@ wh_add_library(wh_runtime
         src/live_signals.cpp
         src/player_signals.cpp
         src/player_dock.cpp
+        src/player_nodes.cpp
         src/player_targets.cpp
         src/player_master.cpp
         src/live_dmx.cpp
@@ -46,6 +47,7 @@ wh_add_library(wh_runtime
         src/player_live_flash.cpp
         src/player_live_grid.cpp
         src/player_live_preview.cpp
+        src/player_live_prefetch.cpp
         src/player_arrange.cpp
         src/player_projection.cpp
         src/player_paste.cpp

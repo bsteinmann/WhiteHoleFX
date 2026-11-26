@@ -56,6 +56,15 @@ public:
     // finishCompiles().
     Result<gpu::PipelineTicket> beginComputePipeline(const gpu::ComputePipelineDesc& desc) override {
         ++compilesBegun_;
+        return startCompile(desc);
+    }
+    /// Vorab bestellt: zählt getrennt (prefetchesBegun), sonst wie beginComputePipeline.
+    Result<gpu::PipelineTicket> prefetchComputePipeline(const gpu::ComputePipelineDesc& desc) override {
+        ++prefetchesBegun_;
+        return startCompile(desc);
+    }
+    void promoteComputePipeline(gpu::PipelineTicket ticket) noexcept override { ++promotions_; (void)ticket; }
+    Result<gpu::PipelineTicket> startCompile(const gpu::ComputePipelineDesc& desc) {
         Result<gpu::ComputePipelineHandle> made = createComputePipeline(desc);
         if (!made.ok()) {
             return made.error();
@@ -171,6 +180,8 @@ public:
     /// Das nächste Hintergrund-Übersetzen scheitert erst beim Abholen (wie ein Treiberfehler).
     void failNextCompile() noexcept { failNextCompile_ = true; }
     [[nodiscard]] int compilesBegun() const noexcept { return compilesBegun_; }
+    [[nodiscard]] int prefetchesBegun() const noexcept { return prefetchesBegun_; }
+    [[nodiscard]] int promotions() const noexcept { return promotions_; }
     [[nodiscard]] int compilesCancelled() const noexcept { return compilesCancelled_; }
     void failNextBuffer() noexcept { buffersUntilFailure_ = 0; }
     /// Lässt createBuffer nach `skip` erfolgreichen Aufrufen einmal scheitern.
@@ -270,6 +281,8 @@ private:
     bool holdCompiles_{false};
     bool failNextCompile_{false};
     int compilesBegun_{0};
+    int prefetchesBegun_{0};
+    int promotions_{0};
     int compilesCancelled_{0};
     std::uint64_t lastTicket_{0};
     std::map<std::uint64_t, Result<gpu::ComputePipelineHandle>> compiles_;

@@ -229,28 +229,58 @@ TEST_CASE("Hintergrund-Übersetzen: die Überblendung wartet, bis der neue Shade
     CHECK(rig.player.liveStatus().progress == Approx(0.5));
 }
 
-TEST_CASE("Hintergrund-Übersetzen: Flash loslassen und erneut drücken übersetzt nicht neu", "[live][background]") {
+TEST_CASE("Hintergrund-Übersetzen: Flash-Felder sind vorab übersetzt, Drücken und Loslassen übersetzen nicht", "[live][background]") {
     // Rückmeldung vom 26.11.: Flash-Looks stockten bei jedem Drücken und Loslassen. Der Shader-Text hing an den
-    // Node-Nummern, die jedes Vorladen neu vergibt, und der Zwischenspeicher traf nie.
+    // Node-Nummern, die jedes Vorladen neu vergibt (der Zwischenspeicher traf nie), und das erste Drücken einer neuen
+    // Kombination musste warten. Jetzt bestellt der Player die Felder des laufenden Looks vorab, ein Feld je Frame.
     Rig rig;
-    rig.run(0.1);
+    for (int i = 0; i < 4; ++i) {
+        rig.run(0.05);
+    }
+    // Zwei (Flash-Feld zuerst), dann Eins; Drei ist wie Eins ein Plasma mit Standardwerten, also derselbe Shader
+    CHECK(rig.device.prefetchesBegun() == 2);
     const int start = rig.device.compilesBegun();
-    REQUIRE(rig.player.liveCellDown(2).ok());  // Flash "Zwei" über "Eins": eine neue Kombination
+    REQUIRE(rig.player.liveCellDown(2).ok());  // Flash "Zwei" über "Eins"
     rig.run(0.0);
-    rig.run(0.5);
-    CHECK(rig.device.compilesBegun() == start + 1);
-    REQUIRE(rig.player.liveCellUp(2).ok());  // zurück zu "Eins": dieselbe Struktur wie gerade, nichts zu übersetzen
+    CHECK(rig.shown() == 1);
+    CHECK(rig.device.compilesBegun() == start);  // kam aus dem Zwischenspeicher
+    REQUIRE(rig.player.liveCellUp(2).ok());     // zurück zu "Eins": dieselbe Struktur wie gerade
     rig.run(0.0);
     rig.run(5.0);
-    CHECK(rig.device.compilesBegun() == start + 1);
     CHECK(rig.shown() == 0);
-    REQUIRE(rig.player.liveCellDown(2).ok());  // zweites Mal: aus dem Zwischenspeicher
+    REQUIRE(rig.player.liveCellDown(2).ok());  // zweites Mal
     rig.run(0.0);
-    rig.run(0.5);
     CHECK(rig.shown() == 1);
     REQUIRE(rig.player.liveCellUp(2).ok());
     rig.run(0.0);
     rig.run(5.0);
-    CHECK(rig.device.compilesBegun() == start + 1);
     CHECK(rig.shown() == 0);
+    CHECK(rig.device.compilesBegun() == start);
+}
+
+TEST_CASE("Hintergrund-Übersetzen: abgerufen, bevor die Vorab-Übersetzung fertig ist, wird sie vorgezogen", "[live][background]") {
+    Rig rig;  // der Aufbau-Frame hat das Flash-Feld (Zwei) schon vorab übersetzt
+    rig.device.holdCompiles(true);
+    rig.run(0.05);  // bestellt Eins (über Eins), der Treiber arbeitet noch
+    REQUIRE(rig.device.prefetchesBegun() == 2);
+    const int start = rig.device.compilesBegun();
+    REQUIRE(rig.player.liveCellTrigger(0, 1.0).ok());  // Eins noch einmal abrufen: genau diese Kombination
+    rig.run(0.0);
+    CHECK(rig.device.promotions() == 1);
+    CHECK(rig.device.compilesBegun() == start);  // nicht ein zweites Mal übersetzt
+    rig.device.finishCompiles();
+    rig.run(0.0);
+    rig.run(0.5);
+    CHECK(rig.player.liveStatus().progress == Approx(0.5));
+}
+
+TEST_CASE("Hintergrund-Übersetzen: ein anderer Look verwirft die offenen Vorab-Aufträge", "[live][background]") {
+    Rig rig;
+    rig.device.holdCompiles(true);
+    rig.run(0.05);  // Eins bestellt, offen
+    const int cancelled = rig.device.compilesCancelled();
+    REQUIRE(rig.player.liveCellTrigger(1, 0.0).ok());  // Zwei sofort (vorab übersetzt: aus dem Zwischenspeicher)
+    rig.run(0.0);
+    CHECK(rig.player.liveStatus().current == 1);
+    CHECK(rig.device.compilesCancelled() == cancelled + 1);  // der Auftrag für "über Eins" verfällt
 }

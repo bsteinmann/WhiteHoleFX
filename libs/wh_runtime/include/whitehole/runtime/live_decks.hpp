@@ -82,6 +82,8 @@ public:
     [[nodiscard]] const graph::Graph& graph() const noexcept { return graph_; }
     [[nodiscard]] const graph::PortRef& target() const noexcept { return target_; }
     [[nodiscard]] LiveStatus status() const noexcept;
+    /// Ist gerade Deck A zu sehen (sonst B)? Davon hängt ab, in welches Deck der nächste Look kommt.
+    [[nodiscard]] bool showsDeckA() const noexcept { return visible_ == Deck::A; }
 
     /// Die Ausgänge, die an den Mischer gehen: [0] = Deck A, [1] = Deck B (für die geteilte Vorschau als
     /// Zusatzausgänge des Shaders; sie ändern sich nur, wenn ein Look geladen wird). Leer vor start().

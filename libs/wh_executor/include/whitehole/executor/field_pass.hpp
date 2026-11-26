@@ -24,6 +24,9 @@
 // Pipeline mit dem bisherigen Graphen weiter, bis der Treiber die neue übersetzt hat (IGpuDevice::beginComputePipeline);
 // record() schaltet dann um. Zuletzt benutzte Pipelines bleiben in einem kleinen Zwischenspeicher, ein Wechsel zurück zu
 // einer schon übersetzten Struktur ist dann sofort da. Ohne vorherige Pipeline wird immer sofort übersetzt.
+// Vorab übersetzen (prefetch): Der Aufrufer nennt Graphen, die vielleicht bald kommen (Live-Betrieb: die Felder des
+// laufenden Looks, Rückmeldung vom 26.11.: das erste Drücken eines Flash stockte). Ihre Pipelines entstehen nachrangig
+// und landen im Zwischenspeicher; ein noch laufender Vorab-Auftrag wird bei Bedarf vorgezogen statt doppelt übersetzt.
 //
 // Threading: alles auf dem Engine-Thread. Gerät und Bibliotheken müssen den Pass überleben.
 #pragma once
@@ -112,6 +115,16 @@ public:
         rows_ = rows;
     }
 
+    /// Vorab übersetzen (nur im Hintergrundmodus und mit laufender Pipeline, sonst nichts): Die Pipeline zu `graph`
+    /// entsteht nachrangig (IGpuDevice::prefetchComputePipeline) und kommt in den Zwischenspeicher. Eine schon bekannte
+    /// Struktur (laufend, wartend, zwischengespeichert, bestellt) kostet nur das Übersetzen in WGSL.
+    /// Fehler: die von compileField und vom Gerät (der Graph wird übergangen, der laufende Zustand bleibt).
+    Result<void> prefetch(const graph::Graph& graph, std::span<const graph::PortRef> extras = {});
+    /// Verwirft alle offenen Vorab-Aufträge (z. B. weil ein anderer Look läuft). Fertige bleiben im Zwischenspeicher.
+    void cancelPrefetches() noexcept;
+    /// Offene Vorab-Aufträge (für Tests).
+    [[nodiscard]] std::size_t prefetchesOpen() const noexcept { return prefetches_.size(); }
+
     [[nodiscard]] bool ready() const noexcept { return pipeline_.has_value() && graph_.has_value(); }
     /// Übersetzen im Hintergrund und Zwischenspeicher an/aus (Standard: aus, setGraph übersetzt sofort).
     void setBackgroundCompile(bool on) noexcept { background_ = on; }
@@ -134,8 +147,19 @@ private:
     Result<void> installPipeline(gpu::ComputePipelineHandle pipeline, const compiler::CompiledField& compiled, bool fresh);
     void releasePipeline() noexcept;
     void cancelPending() noexcept;
-    void pollPending();  // in record(): fertige Hintergrund-Pipeline einsetzen
+    void pollPending();     // in record(): fertige Hintergrund-Pipeline einsetzen
+    void pollPrefetches();  // in record(): fertige Vorab-Pipelines in den Zwischenspeicher
     [[nodiscard]] std::optional<gpu::ComputePipelineHandle> takeCached(std::uint64_t hash) noexcept;
+    /// Legt eine Pipeline in den Zwischenspeicher (die älteste fällt bei Überlauf heraus, ein Duplikat wird freigegeben).
+    void remember(std::uint64_t hash, gpu::ComputePipelineHandle pipeline) noexcept;
+    /// Läuft, wartet, liegt im Zwischenspeicher oder ist vorab bestellt?
+    [[nodiscard]] bool known(std::uint64_t hash) const noexcept;
+    /// Übersetzt einen Graphen wie setGraph (mit den unsichtbaren Addern aus output_merge.hpp).
+    struct Compiled {
+        compiler::CompiledField field;
+        graph::Graph graph;
+    };
+    [[nodiscard]] Result<Compiled> compile(const graph::Graph& graph, std::span<const graph::PortRef> extras) const;
 
     gpu::IGpuDevice& device_;
     const compiler::ISnippetLibrary& snippets_;
@@ -167,9 +191,15 @@ private:
         std::uint64_t hash{0};
         gpu::ComputePipelineHandle pipeline;
     };
-    static constexpr std::size_t kCacheSize = 24;
+    struct Prefetch {
+        std::uint64_t hash{0};
+        gpu::PipelineTicket ticket;
+    };
+    // Groß genug für alle Felder eines Live-Rasters über dem laufenden Look plus die zuletzt benutzten Kombinationen.
+    static constexpr std::size_t kCacheSize = 48;
     bool background_{false};
     std::optional<Pending> pending_;
+    std::vector<Prefetch> prefetches_;  // vorab bestellt, noch nicht abgeholt
     std::vector<Cached> cache_;  // zuletzt benutzte Pipelines, die neueste hinten
     std::vector<gpu::Binding> bindings_;  // wiederverwendet, damit record() nicht allokiert
 

@@ -1,6 +1,7 @@
 // field_pass.cpp: Umsetzung zu field_pass.hpp. Der gemeinsame Ablauf aller Pässe, die ein Feld auswerten.
 #include "whitehole/executor/field_pass.hpp"
 
+#include <algorithm>
 #include <array>
 #include <cstddef>
 #include <cstdint>
@@ -27,6 +28,7 @@ FieldPass::FieldPass(gpu::IGpuDevice& device, const compiler::ISnippetLibrary& s
 
 FieldPass::~FieldPass() {
     cancelPending();
+    cancelPrefetches();
     for (const Cached& cached : cache_) {
         device_.destroy(cached.pipeline);
     }
@@ -106,11 +108,7 @@ Result<void> FieldPass::installPipeline(gpu::ComputePipelineHandle pipeline, con
     // Ressourcen, die ein eingereichter Frame noch nutzt, bis dieser fertig ist.
     if (pipeline_.has_value()) {
         if (background_) {
-            cache_.push_back(Cached{structureHash_, *pipeline_});
-            if (cache_.size() > kCacheSize) {
-                device_.destroy(cache_.front().pipeline);
-                cache_.erase(cache_.begin());
-            }
+            remember(structureHash_, *pipeline_);
         } else {
             device_.destroy(*pipeline_);
         }
@@ -137,6 +135,90 @@ std::optional<gpu::ComputePipelineHandle> FieldPass::takeCached(std::uint64_t ha
         }
     }
     return std::nullopt;
+}
+
+void FieldPass::remember(std::uint64_t hash, gpu::ComputePipelineHandle pipeline) noexcept {
+    for (const Cached& cached : cache_) {
+        if (cached.hash == hash) {
+            device_.destroy(pipeline);  // schon da (z. B. vorab übersetzt und zugleich benutzt)
+            return;
+        }
+    }
+    cache_.push_back(Cached{hash, pipeline});
+    if (cache_.size() > kCacheSize) {
+        device_.destroy(cache_.front().pipeline);
+        cache_.erase(cache_.begin());
+    }
+}
+
+bool FieldPass::known(std::uint64_t hash) const noexcept {
+    if (pipeline_.has_value() && hash == structureHash_) {
+        return true;
+    }
+    if (pending_ && pending_->compiled.structureHash == hash) {
+        return true;
+    }
+    const auto same = [hash](const auto& entry) { return entry.hash == hash; };
+    return std::ranges::any_of(cache_, same) || std::ranges::any_of(prefetches_, same);
+}
+
+Result<FieldPass::Compiled> FieldPass::compile(const graph::Graph& graph, std::span<const graph::PortRef> extras) const {
+    // Mehrere Output-Nodes werden hier unsichtbar über Add-Nodes zusammengefasst (siehe output_merge.hpp).
+    std::optional<graph::MergedOutputs> merged = graph::mergeOutputs(graph, target_);
+    const graph::PortRef& effectiveTarget = merged ? merged->target : target_;
+    Result<compiler::CompiledField> compiled =
+        compiler::compileField(merged ? merged->graph : graph, snippets_, effectiveTarget, extras);
+    if (!compiled.ok()) {
+        return compiled.error();
+    }
+    return Compiled{std::move(compiled.value()), merged ? std::move(merged->graph) : graph};
+}
+
+Result<void> FieldPass::prefetch(const graph::Graph& graph, std::span<const graph::PortRef> extras) {
+    if (!background_ || !pipeline_.has_value()) {
+        return {};
+    }
+    Result<Compiled> compiled = compile(graph, extras);
+    if (!compiled.ok()) {
+        return compiled.error();
+    }
+    const std::uint64_t hash = compiled.value().field.structureHash;
+    if (known(hash)) {
+        return {};
+    }
+    Result<std::string> shader = entry_(compiled.value().field.wgsl);
+    if (!shader.ok()) {
+        return shader.error();
+    }
+    Result<gpu::PipelineTicket> ticket = device_.prefetchComputePipeline(FieldPassDesc(std::move(shader.value()), label_));
+    if (!ticket.ok()) {
+        return ticket.error();
+    }
+    prefetches_.push_back(Prefetch{hash, ticket.value()});
+    pollPrefetches();  // Geräte ohne Hintergrund sind sofort fertig
+    return {};
+}
+
+void FieldPass::cancelPrefetches() noexcept {
+    for (const Prefetch& open : prefetches_) {
+        device_.cancelComputePipeline(open.ticket);
+    }
+    prefetches_.clear();
+}
+
+void FieldPass::pollPrefetches() {
+    for (auto it = prefetches_.begin(); it != prefetches_.end();) {
+        std::optional<Result<gpu::ComputePipelineHandle>> done = device_.takeComputePipeline(it->ticket);
+        if (!done) {
+            ++it;
+            continue;
+        }
+        if (done->ok()) {
+            remember(it->hash, done->value());
+        }
+        // Ein Fehler hier ist kein Fehler des laufenden Bilds; kommt die Struktur wirklich, meldet setGraph ihn
+        it = prefetches_.erase(it);
+    }
 }
 
 void FieldPass::cancelPending() noexcept {
@@ -176,52 +258,56 @@ Result<void> FieldPass::setGraph(const graph::Graph& graph, std::span<const grap
         return error;
     };
 
-    // Mehrere Output-Nodes werden hier unsichtbar über Add-Nodes zusammengefasst (siehe output_merge.hpp).
-    std::optional<graph::MergedOutputs> merged = graph::mergeOutputs(graph, target_);
-    const graph::Graph& effective = merged ? merged->graph : graph;
-    const graph::PortRef& effectiveTarget = merged ? merged->target : target_;
-
-    Result<compiler::CompiledField> compiled = compiler::compileField(effective, snippets_, effectiveTarget, extras);
+    Result<Compiled> compiled = compile(graph, extras);
     if (!compiled.ok()) {
         return fail(compiled.error());
     }
-
-    const std::uint64_t hash = compiled.value().structureHash;
+    compiler::CompiledField& field = compiled.value().field;
+    const std::uint64_t hash = field.structureHash;
     if (pipeline_.has_value() && hash == structureHash_) {
         cancelPending();  // zurück zur laufenden Struktur: die wartende wird nicht mehr gebraucht
     } else if (pending_ && pending_->compiled.structureHash == hash) {
-        pending_->compiled = std::move(compiled.value());  // dieselbe Struktur wartet schon: nur Werte nachziehen
-        pending_->graph = effective;
+        pending_->compiled = std::move(field);  // dieselbe Struktur wartet schon: nur Werte nachziehen
+        pending_->graph = std::move(compiled.value().graph);
         return {};
     } else if (background_ && pipeline_.has_value()) {
         cancelPending();
         if (const std::optional<gpu::ComputePipelineHandle> cached = takeCached(hash)) {
-            if (const Result<void> installed = installPipeline(*cached, compiled.value(), false); !installed.ok()) {
+            if (const Result<void> installed = installPipeline(*cached, field, false); !installed.ok()) {
                 return fail(installed.error());
             }
         } else {
-            Result<std::string> shader = entry_(compiled.value().wgsl);
-            if (!shader.ok()) {
-                return fail(shader.error());
+            std::optional<gpu::PipelineTicket> ticket;
+            const auto ordered = std::ranges::find_if(prefetches_, [hash](const Prefetch& open) { return open.hash == hash; });
+            if (ordered != prefetches_.end()) {
+                ticket = ordered->ticket;  // schon vorab bestellt: vorziehen statt ein zweites Mal übersetzen
+                prefetches_.erase(ordered);
+                device_.promoteComputePipeline(*ticket);
+            } else {
+                Result<std::string> shader = entry_(field.wgsl);
+                if (!shader.ok()) {
+                    return fail(shader.error());
+                }
+                Result<gpu::PipelineTicket> begun = device_.beginComputePipeline(FieldPassDesc(std::move(shader.value()), label_));
+                if (!begun.ok()) {
+                    return fail(begun.error());
+                }
+                ticket = begun.value();
             }
-            Result<gpu::PipelineTicket> ticket = device_.beginComputePipeline(FieldPassDesc(std::move(shader.value()), label_));
-            if (!ticket.ok()) {
-                return fail(ticket.error());
-            }
-            pending_.emplace(Pending{ticket.value(), std::move(compiled.value()), effective});
+            pending_.emplace(Pending{*ticket, std::move(field), std::move(compiled.value().graph)});
             graphError_.reset();
             pollPending();  // Geräte ohne Hintergrund sind sofort fertig
             return {};
         }
     } else {
         cancelPending();
-        if (const Result<void> built = rebuildPipeline(compiled.value()); !built.ok()) {
+        if (const Result<void> built = rebuildPipeline(field); !built.ok()) {
             return fail(built.error());
         }
     }
     structureHash_ = hash;
-    layout_ = compiled.value().layout;
-    graph_ = effective;
+    layout_ = field.layout;
+    graph_ = std::move(compiled.value().graph);
     graphError_.reset();
     return {};
 }
@@ -252,6 +338,7 @@ bool FieldPass::record(const FrameTime& time, gpu::ICommandRecorder& recorder,
                        std::span<const gpu::Binding> consumerBindings, const DispatchSize& size) {
     frameError_.reset();
     pollPending();
+    pollPrefetches();
     if (!ready()) {
         ++stats_.framesSkipped;
         return false;

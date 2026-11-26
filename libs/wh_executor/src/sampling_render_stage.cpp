@@ -160,6 +160,13 @@ Result<void> SamplingRenderStage::setGraph(const graph::Graph& graph, std::span<
     return pass_->setGraph(graph, extras);
 }
 
+Result<void> SamplingRenderStage::prefetch(const graph::Graph& graph, std::span<const graph::PortRef> extras) {
+    if (!extras.empty() && !secondary_) {
+        return Error{ErrorCode::InvalidArgument, "Die Abtast-Stage hat keinen Platz für Zusatzausgänge"};
+    }
+    return pass_->prefetch(graph, extras);
+}
+
 Result<void> SamplingRenderStage::selectExtra(std::uint32_t extra, std::uint32_t tag) {
     extra_ = extra;
     tag_ = tag;
