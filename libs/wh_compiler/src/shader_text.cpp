@@ -53,6 +53,10 @@ void resolveShaderNames(std::string& wgsl, ParameterLayout& layout, const std::v
     }
 }
 
+std::string describeNode(const graph::NodeInstance& node) {
+    return "Node #" + std::to_string(node.id.value()) + " (" + node.typeId + ")";
+}
+
 std::string indent(const std::string& text) {
     std::string result;
     const std::string_view view{text};

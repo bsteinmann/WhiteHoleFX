@@ -248,6 +248,7 @@ void FieldPass::pollPending() {
     }
     structureHash_ = finished.compiled.structureHash;
     layout_ = finished.compiled.layout;
+    phases_.retain(layout_);
     graph_ = std::move(finished.graph);
     graphError_.reset();
 }
@@ -307,6 +308,7 @@ Result<void> FieldPass::setGraph(const graph::Graph& graph, std::span<const grap
     }
     structureHash_ = hash;
     layout_ = field.layout;
+    phases_.retain(layout_);
     graph_ = std::move(compiled.value().graph);
     graphError_.reset();
     return {};
@@ -349,8 +351,9 @@ bool FieldPass::record(const FrameTime& time, gpu::ICommandRecorder& recorder,
         frameError_ = evaluated.error();
     }
 
-    // 2. Parameterpuffer
-    const std::vector<std::byte> parameters = compiler::packParameters(*graph_, layout_, &store_);
+    // 2. Parameterpuffer. Die Phase-Slots (@phase) laufen mit dem Verfolger weiter, wenn ein Regler verstellt wird.
+    const std::vector<std::byte> parameters = compiler::packParameters(
+        *graph_, layout_, &store_, compiler::PhaseSource{&phases_, time.time.count()});
     if (const Result<void> written = device_.writeBuffer(*parameterBuffer_, 0, parameters); !written.ok()) {
         frameError_ = written.error();
         ++stats_.framesSkipped;

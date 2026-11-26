@@ -16,6 +16,7 @@
 
 #include "whitehole/compiler/parameter_layout.hpp"
 #include "whitehole/core/ids.hpp"
+#include "whitehole/graph/graph_model.hpp"
 
 namespace whitehole::compiler::detail {
 
@@ -28,6 +29,9 @@ namespace whitehole::compiler::detail {
 /// Ersetzt alle Platzhalter in `wgsl` durch die Stelle der Node in `order` (ab 1) und benennt die Slots des
 /// Layouts gleich. Eine Node, die nicht in `order` steht, behält ihre Nummer (sollte nicht vorkommen).
 void resolveShaderNames(std::string& wgsl, ParameterLayout& layout, const std::vector<NodeId>& order);
+
+/// "Node #7 (wh.generator.plasma)": Kopf der Fehlermeldungen des Compilers.
+[[nodiscard]] std::string describeNode(const graph::NodeInstance& node);
 
 /// Rückt jede nichtleere Zeile um vier Leerzeichen ein und schließt mit Zeilenumbruch ab.
 [[nodiscard]] std::string indent(const std::string& text);

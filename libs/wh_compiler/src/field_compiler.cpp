@@ -11,15 +11,16 @@
 #include <vector>
 
 #include "shader_text.hpp"
+#include "text_bindings.hpp"
 #include "whitehole/compiler/snippet_expander.hpp"
 #include "whitehole/core/hash.hpp"
-#include "whitehole/core/utf8.hpp"
 
 namespace whitehole::compiler {
 
 namespace {
 
 using detail::bindingLine;
+using detail::describeNode;
 using detail::functionName;
 using detail::indent;
 using detail::memberRef;
@@ -29,13 +30,6 @@ using graph::NodeInstance;
 using graph::PortDescriptor;
 using graph::PortDirection;
 using graph::PortType;
-
-/// So viele Zeichen eines Textparameters kommen in den Shader (der Rest wird abgeschnitten).
-constexpr std::size_t kMaxTextCodePoints = 256;
-
-std::string describe(const NodeInstance& node) {
-    return "Node #" + std::to_string(node.id.value()) + " (" + node.typeId + ")";
-}
 
 std::size_t countFieldOutputs(const NodeDescriptor& descriptor) {
     std::size_t count = 0;
@@ -95,11 +89,11 @@ private:
         const PortDescriptor* port =
             descriptor == nullptr ? nullptr : descriptor->findPort(target.portKey);
         if (port == nullptr) {
-            return Error{ErrorCode::NotFound, describe(*node) + ": Ziel-Port existiert nicht"};
+            return Error{ErrorCode::NotFound, describeNode(*node) + ": Ziel-Port existiert nicht"};
         }
         if (port->direction != PortDirection::Output || port->type != PortType::Field) {
             return Error{ErrorCode::InvalidArgument,
-                         describe(*node) + ": Das Ziel muss ein Field-Ausgang sein"};
+                         describeNode(*node) + ": Das Ziel muss ein Field-Ausgang sein"};
         }
         return {};
     }
@@ -118,24 +112,24 @@ private:
         }
         const NodeDescriptor* descriptor = graph_.registry().find(node->typeId);
         if (descriptor == nullptr) {
-            return Error{ErrorCode::NotFound, describe(*node) + ": Node-Typ ist nicht registriert"};
+            return Error{ErrorCode::NotFound, describeNode(*node) + ": Node-Typ ist nicht registriert"};
         }
         if (descriptor->domain != graph::NodeDomain::Field) {
             return Error{ErrorCode::Unsupported,
-                         describe(*node) + " liegt nicht in der Field-Domäne. CPU-Nodes liefern "
+                         describeNode(*node) + " liegt nicht in der Field-Domäne. CPU-Nodes liefern "
                                            "Werte über wh_values; Raster-Nodes folgen mit den "
                                            "Raster-Pässen (Schritt 4b, Teil B)"};
         }
         if (countFieldOutputs(*descriptor) != 1) {
             return Error{ErrorCode::Unsupported,
-                         describe(*node) + ": Field-Nodes brauchen genau einen Field-Ausgang"};
+                         describeNode(*node) + ": Field-Nodes brauchen genau einen Field-Ausgang"};
         }
         if (node->bypassed) {
             return visitBypassed(*node, *descriptor);
         }
         const NodeSnippet* snippet = snippets_.find(node->typeId);
         if (snippet == nullptr) {
-            return Error{ErrorCode::NotFound, describe(*node) + ": kein Shader-Snippet vorhanden"};
+            return Error{ErrorCode::NotFound, describeNode(*node) + ": kein Shader-Snippet vorhanden"};
         }
 
         visiting_.insert(id);
@@ -233,7 +227,7 @@ private:
                     const PortDescriptor* sourcePort =
                         sourceDescriptor == nullptr ? nullptr : sourceDescriptor->findPort(connection->from.portKey);
                     if (sourcePort == nullptr || sourcePort->type != port.type) {
-                        return Error{ErrorCode::NotFound, describe(node) + ": Die Quelle des Eingangs '" +
+                        return Error{ErrorCode::NotFound, describeNode(node) + ": Die Quelle des Eingangs '" +
                                                               port.key + "' hat nicht den passenden Typ (Spektrum oder Wellenform)"};
                     }
                 }
@@ -246,7 +240,7 @@ private:
                 // ändert sich nichts. Ohne solchen Parameter hat der Wert kein Ziel.
                 if (connection != nullptr && descriptor.findParameter(port.key) == nullptr) {
                     return Error{ErrorCode::Unsupported,
-                                 describe(node) + ": Der Eingang '" + port.key +
+                                 describeNode(node) + ": Der Eingang '" + port.key +
                                      "' hat keinen gleichnamigen Parameter, den er modulieren "
                                      "könnte (siehe parameter_resolve.hpp)"};
                 }
@@ -255,7 +249,7 @@ private:
             if (connection == nullptr) {
                 if (graph::isRequiredInput(port, graph_.strictInputs())) {
                     return Error{ErrorCode::InvalidArgument,
-                                 describe(node) + ": Pflicht-Eingang '" + port.key +
+                                 describeNode(node) + ": Pflicht-Eingang '" + port.key +
                                      "' ist nicht verbunden"};
                 }
                 inputCalls[port.key] = InputBinding{};
@@ -269,7 +263,7 @@ private:
                 sourceDescriptor == nullptr ? nullptr
                                             : sourceDescriptor->findPort(connection->from.portKey);
             if (sourcePort == nullptr) {
-                return Error{ErrorCode::NotFound, describe(node) + ": Die Quelle des Eingangs '" +
+                return Error{ErrorCode::NotFound, describeNode(node) + ": Die Quelle des Eingangs '" +
                                                       port.key + "' existiert nicht mehr"};
             }
             if (sourcePort->type == PortType::Scalar || sourcePort->type == PortType::Color) {
@@ -278,7 +272,7 @@ private:
             }
             if (sourcePort->type != PortType::Field) {
                 return Error{ErrorCode::Unsupported,
-                             describe(node) + ": Bilder als Feld-Eingang folgen mit den "
+                             describeNode(node) + ": Bilder als Feld-Eingang folgen mit den "
                                               "Raster-Pässen (Schritt 4b, Teil B)"};
             }
             if (Result<void> visited = visit(connection->from.node); !visited.ok()) {
@@ -290,9 +284,8 @@ private:
         return {};
     }
 
-    static Result<std::string> expandBody(const NodeInstance& node, const NodeDescriptor& descriptor,
-                                          const NodeSnippet& snippet,
-                                          const InputBindings& inputCalls) {
+    Result<std::string> expandBody(const NodeInstance& node, const NodeDescriptor& descriptor,
+                                   const NodeSnippet& snippet, const InputBindings& inputCalls) {
         SnippetBindings bindings;
         bindings.time = "wh_frame.time";
         bindings.volume = "(wh_frame.volume != 0u)";
@@ -304,7 +297,7 @@ private:
             const auto it = inputCalls.find(port);
             if (it == inputCalls.end()) {
                 return Error{ErrorCode::InvalidArgument,
-                             describe(node) + ": @in(" + std::string{port} +
+                             describeNode(node) + ": @in(" + std::string{port} +
                                  ") verweist auf keinen Field-Eingang"};
             }
             switch (it->second.kind) {
@@ -322,7 +315,7 @@ private:
             if (found == nullptr || !graph::carriesBands(found->type) ||
                 found->direction != PortDirection::Input) {
                 return Error{ErrorCode::InvalidArgument,
-                             describe(node) + ": @spectrum(" + std::string{port} +
+                             describeNode(node) + ": @spectrum(" + std::string{port} +
                                  ") verweist auf keinen Spektrum- oder Wellenform-Eingang"};
             }
             // array<vec4<f32>, 8>: Band i steht in Element i/4, Komponente i%4.
@@ -330,57 +323,36 @@ private:
             const std::string idx = "(" + std::string{index} + ")";
             return member + "[" + idx + " / 4u][" + idx + " % 4u]";
         };
-        // Text wird beim Kompilieren in den Shader geschrieben (kein Uniform-Slot): Ändert sich der Text,
-        // ändert sich die Struktur, und die Pipeline wird neu gebaut. Dafür braucht der Shader keinen
-        // Puffer für Zeichenketten.
-        const auto textOf = [&](std::string_view key) -> Result<std::vector<std::uint32_t>> {
-            const graph::ParameterDescriptor* parameter = descriptor.findParameter(key);
-            if (parameter == nullptr || !std::holds_alternative<std::string>(parameter->defaultValue)) {
-                return Error{ErrorCode::InvalidArgument,
-                             describe(node) + ": @text(" + std::string{key} + ") ist kein Textparameter"};
-            }
-            const auto stored = node.parameters.find(std::string{key});
-            const std::string& value = stored != node.parameters.end() && std::holds_alternative<std::string>(stored->second)
-                                           ? std::get<std::string>(stored->second)
-                                           : std::get<std::string>(parameter->defaultValue);
-            return Result<std::vector<std::uint32_t>>{decodeUtf8(value, kMaxTextCodePoints)};
-        };
-        bindings.text = [&](std::string_view key) -> Result<std::string> {
-            Result<std::vector<std::uint32_t>> points = textOf(key);
-            if (!points.ok()) {
-                return points.error();
-            }
-            std::vector<std::uint32_t> list = std::move(points.value());
-            if (list.empty()) {
-                list.push_back(0);  // WGSL kennt keine Felder der Länge 0
-            }
-            std::string text = "array<u32, " + std::to_string(list.size()) + ">(";
-            for (std::size_t i = 0; i < list.size(); ++i) {
-                text += (i == 0 ? "" : ", ") + std::to_string(list[i]) + "u";
-            }
-            return text + ")";
-        };
-        bindings.textLength = [&](std::string_view key) -> Result<std::string> {
-            Result<std::vector<std::uint32_t>> points = textOf(key);
-            if (!points.ok()) {
-                return points.error();
-            }
-            return std::to_string(points.value().size()) + "u";
-        };
+        detail::bindTextPlaceholders(bindings, node, descriptor);
         bindings.parameter = [&](std::string_view key) -> Result<std::string> {
             const graph::ParameterDescriptor* parameter = descriptor.findParameter(key);
             if (parameter == nullptr || !gpuTypeOf(parameter->defaultValue).has_value()) {
                 return Error{ErrorCode::InvalidArgument,
-                             describe(node) + ": @param(" + std::string{key} +
+                             describeNode(node) + ": @param(" + std::string{key} +
                                  ") ist kein GPU-fähiger Parameter"};
             }
             return "wh_params." + memberRef(node.id, key);
+        };
+        // @phase(key): eigener Float-Slot je (Node, Schlüssel) - auch wenn der Platzhalter mehrfach vorkommt -, den
+        // packParameters aus der Rate des Parameters und dem PhaseTracker füllt (phase_tracker.hpp).
+        bindings.phase = [&](std::string_view key) -> Result<std::string> {
+            const graph::ParameterDescriptor* parameter = descriptor.findParameter(key);
+            if (parameter == nullptr || gpuTypeOf(parameter->defaultValue) != GpuType::Float) {
+                return Error{ErrorCode::InvalidArgument,
+                             describeNode(node) + ": @phase(" + std::string{key} +
+                                 ") ist kein Zahlen-Parameter (Float, Ganzzahl oder Schalter)"};
+            }
+            const std::string slotKey = phaseSlotKey(key);
+            if (phaseSlots_.emplace(node.id.value(), slotKey).second) {
+                layout_.add(node.id, slotKey, GpuType::Float, SlotOrigin::Phase);
+            }
+            return "wh_params." + memberRef(node.id, slotKey);
         };
 
         Result<std::string> expanded = expandSnippet(snippet.body, bindings);
         if (!expanded.ok()) {
             Error error = expanded.error();
-            error.message = describe(node) + ": " + error.message;
+            error.message = describeNode(node) + ": " + error.message;
             return error;
         }
         return expanded;
@@ -420,6 +392,7 @@ private:
     std::vector<NodeId> order_;
     std::unordered_set<NodeId> emitted_;
     std::unordered_set<NodeId> visiting_;
+    std::set<std::pair<NodeId::rep_type, std::string>> phaseSlots_;
     std::set<std::string> seenPreludes_;
     std::string preludes_;
     std::string functions_;

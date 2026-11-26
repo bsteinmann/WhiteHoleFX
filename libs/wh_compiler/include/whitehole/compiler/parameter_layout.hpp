@@ -14,6 +14,8 @@
 
 namespace whitehole::compiler {
 
+class PhaseTracker;
+
 /// GPU-Typen, die ein Parameter annehmen kann. Bool, Ganz- und Gleitkommazahlen
 /// gehen als f32 auf die GPU, Farben als vec4<f32>. Texte haben keine
 /// GPU-Entsprechung und kommen nicht in den Puffer.
@@ -42,7 +44,16 @@ enum class SlotOrigin : std::uint8_t {
     /// Ein Spektrum, das an einem Eingang vom Typ AudioSpectrum hängt. `key` ist der Schlüssel
     /// des Eingangs. Ohne Verbindung oder Wert bleibt der Slot null (kein Ton).
     SpectrumInput,
+    /// Die aufsummierte Phase eines Float-Parameters (Platzhalter @phase, siehe phase_tracker.hpp). `key` ist
+    /// phaseSlotKey(Parameterschlüssel); packParameters liest die Rate aus dem Parameter und die Phase vom Verfolger.
+    Phase,
 };
+
+/// Schlüssel des Phase-Slots zum Parameter `parameterKey`: ein eigener Name im Struct, damit der Slot nicht mit dem
+/// des Parameters selbst zusammenfällt.
+[[nodiscard]] std::string phaseSlotKey(std::string_view parameterKey);
+/// Umkehrung von phaseSlotKey: der Schlüssel des Parameters, zu dem ein Phase-Slot gehört.
+[[nodiscard]] std::string parameterKeyOfPhaseSlot(std::string_view slotKey);
 
 struct ParameterSlot {
     NodeId node;
@@ -104,16 +115,25 @@ private:
 /// WGSL-Deklaration `struct WhParams { ... }` passend zum Layout.
 [[nodiscard]] std::string wgslParameterStruct(const ParameterLayout& layout);
 
+/// Zeitpunkt und Verfolger für die Phase-Slots (@phase). Ohne Verfolger ist die Phase schlicht `time * rate`,
+/// also genau das, was `@time * @param(...)` immer ergeben hat.
+struct PhaseSource {
+    PhaseTracker* tracker{nullptr};
+    double time{0.0};
+};
+
 /// Füllt den Uniform-Puffer mit den aktuellen Werten des Graphen.
 ///
 /// Parameter-Slots erhalten den gespeicherten Wert oder, bei verbundenem
 /// gleichnamigem Eingang, den Wert der Quelle (`values`; nullptr heißt: immer der
 /// gespeicherte Wert). Konstanten-Slots erhalten den Wert ihrer Quelle.
+/// Phase-Slots erhalten die Phase der Rate, die der Parameter gerade hat (`phases`).
 /// Fehlt ein Node, ein Wert oder passt der Typ nicht mehr, bleiben die Bytes des
 /// Slots null. Ändert nur Werte, nie die Struktur: Dafür muss nichts neu
 /// kompiliert werden, auch nicht beim Verbinden oder Trennen von Modulationen.
 [[nodiscard]] std::vector<std::byte> packParameters(const graph::Graph& graph,
                                                     const ParameterLayout& layout,
-                                                    const graph::IValueLookup* values = nullptr);
+                                                    const graph::IValueLookup* values = nullptr,
+                                                    const PhaseSource& phases = {});
 
 }  // namespace whitehole::compiler

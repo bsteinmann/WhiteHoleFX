@@ -152,7 +152,7 @@ for (var i = 0; i < 8; i = i + 1) {
             // sich die Form nie ändert, nur gleichmäßig weiterläuft. Phase verteilt die Läufer gleichmäßig
             // über den Umfang, plus ein Seed-Versatz für Abwechslung zwischen Presets.
             let phase = fi / f32(runners) * wallPerim + wh_maze_hash(vec3<f32>(rs, 5.0, 5.0)) * wallPerim;
-            let headS = @time * max(@param(speed), 0.0) + phase;
+            let headS = @phase(speed) + phase;
             for (var j = 0; j < 24; j = j + 1) {
                 let fj = f32(j);
                 if (fj > trail) {
@@ -183,7 +183,7 @@ for (var i = 0; i < 8; i = i + 1) {
             }
             continue;
         }
-        let steps = @time * max(@param(speed), 0.0) + wh_maze_hash(vec3<f32>(rs, 1.0, 1.0)) * 24.0;
+        let steps = @phase(speed) + wh_maze_hash(vec3<f32>(rs, 1.0, 1.0)) * 24.0;
         let epoch = floor(steps / 24.0);
         let m = steps - epoch * 24.0;  // Schritte in der aktuellen Epoche (mit Bruchteil)
         for (var e = 0; e < 2; e = e + 1) {

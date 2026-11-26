@@ -48,6 +48,8 @@ inline graph::ParameterDescriptor parameter(const std::string& key, graph::Param
 ///  c.nosnippet  nur Beschreibung, kein Snippet
 ///  c.knob       Field-Eingang source plus modulierbare Parameter amount (Scalar, 0..1),
 ///               flag (Boolean) und tint (Color); Eingänge heißen wie die Parameter
+///  c.runner     Ausgang; Parameter speed (Float, 0..30), drift, count (Ganzzahl), flag (Schalter), label (Text);
+///               benutzt @phase(speed) zweimal und @phase(drift) einmal; c.badphase: @phase auf Text/Farbe/Unbekanntes
 ///  Quellen (CPU-Domäne): c.scalar (Scalar), c.color (Color), c.flag (Boolean),
 ///               c.image (Image, nur um "Bild als Feld-Eingang" zu prüfen)
 inline CompilerFixture makeCompilerFixture() {
@@ -95,6 +97,17 @@ inline CompilerFixture makeCompilerFixture() {
         {ParameterDescriptor{"amount", "Amount", 0.5, 0.0, 1.0}, parameter("flag", true),
          parameter("tint", ColorRgba{1.0F, 1.0F, 1.0F, 1.0F})},
         "return @in(source, p) * @param(tint) * @param(amount) * @param(flag);"));
+
+    definitions.push_back(fieldNode(
+        "c.runner", {outPort("out", PortType::Field)},
+        {ParameterDescriptor{"speed", "Speed", 3.0, 0.0, 30.0}, parameter("drift", 0.5),
+         parameter("count", std::int64_t{2}), parameter("flag", true), parameter("label", std::string{"x"})},
+        "let a = fract(@phase(speed) + p.x);\nlet b = @phase(speed) * 0.5 + @phase(drift);\nreturn vec4<f32>(a, b, @param(speed), 1.0);"));
+    definitions.push_back(fieldNode("c.badphase", {outPort("out", PortType::Field)},
+                                    {parameter("label", std::string{"x"})},
+                                    "return vec4<f32>(@phase(label));"));
+    definitions.push_back(fieldNode("c.unknownphase", {outPort("out", PortType::Field)}, {},
+                                    "return vec4<f32>(@phase(nope));"));
 
     definitions.push_back(fieldNode("c.raster", {outPort("out", PortType::Field)}, {},
                                     "return vec4<f32>(0.0);"));

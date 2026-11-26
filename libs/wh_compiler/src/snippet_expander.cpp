@@ -100,7 +100,8 @@ Result<std::string> expandSnippet(std::string_view body, const SnippetBindings& 
             i = nameEnd;
             continue;
         }
-        if (name != "in" && name != "param" && name != "spectrum" && name != "text" && name != "textlen") {
+        if (name != "in" && name != "param" && name != "phase" && name != "spectrum" && name != "text" &&
+            name != "textlen") {
             return invalid("unbekannter Platzhalter '@" + std::string{name} + "'");
         }
         if (nameEnd >= body.size() || body[nameEnd] != '(') {
@@ -112,12 +113,15 @@ Result<std::string> expandSnippet(std::string_view body, const SnippetBindings& 
         }
         const std::string_view args = body.substr(nameEnd + 1, close - nameEnd - 1);
 
-        if (name == "param" || name == "text" || name == "textlen") {
+        if (name == "param" || name == "phase" || name == "text" || name == "textlen") {
             const std::string_view key = trim(args);
             if (key.empty()) {
                 return invalid("@" + std::string{name} + " ohne Schlüssel");
             }
-            const auto& resolve = name == "param" ? bindings.parameter : name == "text" ? bindings.text : bindings.textLength;
+            const auto& resolve = name == "param"   ? bindings.parameter
+                                  : name == "phase" ? bindings.phase
+                                  : name == "text"  ? bindings.text
+                                                    : bindings.textLength;
             if (!resolve) {
                 return invalid("@" + std::string{name} + " wird hier nicht unterstützt");
             }

@@ -7,6 +7,8 @@ wh_add_library(wh_compiler
         src/shader_text.cpp
         src/node_definition.cpp
         src/parameter_layout.cpp
+        src/phase_tracker.cpp
         src/snippet_expander.cpp
+        src/text_bindings.cpp
     PUBLIC_DEPS
         wh_graph)
