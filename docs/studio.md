@@ -478,7 +478,7 @@ Ausgangs-Node). Looks stehen in der Projektdatei (`look ... endlook`, siehe [Pro
 
 **Dock „Looks“ (zum Bearbeiten):**
 
-- *Aktuellen Effekt als Look speichern ...* legt einen Look an; ein gleichnamiger wird nach Rückfrage ersetzt. Dabei wird die aktuelle Ausgabe als kleines Standbild (32 × 18 Pixel) mitgespeichert; es erscheint im Live-Fenster auf dem Look-Knopf und steht in der Projektdatei. Es ist ein Schnappschuss, nicht animiert, und bleibt beim Überschreiben nur erhalten, wenn kein neues aufgenommen werden kann.
+- *Aktuellen Effekt als Look speichern ...* legt einen Look an; ein gleichnamiger wird nach Rückfrage ersetzt. Dabei wird die aktuelle Ausgabe als kleines Standbild (96 × 54 Pixel) mitgespeichert; es erscheint im Live-Fenster auf dem Look-Knopf und steht in der Projektdatei. Es ist ein Schnappschuss, nicht animiert, und bleibt beim Überschreiben nur erhalten, wenn kein neues aufgenommen werden kann.
 - Die Liste zeigt Nummer, Name und Überblendzeit. Darunter: Überblendzeit einstellen (0 = hart),
   mit aktuellem Effekt überschreiben, **in den Editor laden** (auch Doppelklick; ein Schritt Rückgängig),
   umbenennen, löschen, nach oben/unten.

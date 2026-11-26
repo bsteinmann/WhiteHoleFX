@@ -240,7 +240,7 @@ endlook
 ```
 
 Optional steht im Look eine Zeile `thumb <breite> <höhe> <hex>`: das Standbild für den Look-Knopf im Live-Fenster
-(RGB, 3 Bytes je Pixel, Zeile für Zeile, als Hex-Text; Breite und Höhe 1 bis 64, heute 32 × 18). Es wird beim Speichern des
+(RGB, 3 Bytes je Pixel, Zeile für Zeile, als Hex-Text; Breite und Höhe 1 bis 128, heute 96 × 54 (bis 1.1.x: 32 × 18; alte Standbilder bleiben lesbar)). Es wird beim Speichern des
 Looks aus der aktuellen Ausgabe aufgenommen und ist reine Anzeige. Ältere Dateien ohne die Zeile bleiben gültig (der Knopf
 zeigt dann nur den Namen); ältere Programme lehnen die Zeile ab.
 

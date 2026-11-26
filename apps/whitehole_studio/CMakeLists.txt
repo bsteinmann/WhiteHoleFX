@@ -82,6 +82,8 @@ add_executable(whitehole_studio
     live_panel.cpp
     live_panel_looks.cpp
     live_panel.hpp
+    look_button.cpp
+    look_button.hpp
     look_panel.cpp
     look_panel.hpp
     main_window_exercise.cpp
