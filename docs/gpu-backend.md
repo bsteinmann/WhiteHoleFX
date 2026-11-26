@@ -63,6 +63,9 @@ Ohne Adapter werden die Tests übersprungen. Für einen Lauf ohne GPU unter Linu
   ein Fehler eines anderen Aufrufs in genau diesem Zeitfenster landet darum beim Übersetzen. Der Live-Betrieb nutzt das
   (`FieldPass::setBackgroundCompile`): Beim Vorladen eines Looks läuft die Ausgabe mit dem bisherigen Shader weiter, die
   Überblendung beginnt, sobald der neue fertig ist; zuletzt benutzte Pipelines (24) bleiben im Zwischenspeicher.
+  Dessen Schlüssel ist der Hash des Shader-Texts. Er trifft auch nach einem erneuten Einsetzen desselben Looks (neue
+  Node-Nummern), weil der Feldcompiler Funktionen und Parameter nach ihrer Stelle in der Ausgabe benennt, nicht nach
+  der Node-Nummer (`libs/wh_compiler/src/shader_text.hpp`).
 - **Puffergrößen** werden auf Vielfache von 4 aufgerundet; `writeBuffer` verlangt Offset
   und Länge als Vielfache von 4.
 

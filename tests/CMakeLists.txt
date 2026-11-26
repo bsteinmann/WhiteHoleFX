@@ -39,6 +39,7 @@ add_executable(wh_tests
     compiler/field_inputs_test.cpp
     compiler/node_definition_test.cpp
     compiler/parameter_layout_test.cpp
+    compiler/shader_names_test.cpp
     compiler/snippet_expander_test.cpp
     input/dmx_nodes_test.cpp
     input/dmx_packets_test.cpp

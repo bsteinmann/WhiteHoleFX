@@ -164,14 +164,16 @@ TEST_CASE("Konstante: Skalar an einem Field-Eingang") {
     REQUIRE(compiled.ok());
     const CompiledField& result = compiled.value();
 
-    const std::string member = "wh_params." + memberName(shift, "source");
-    CHECK(contains(result.wgsl, "vec4<f32>(" + member + ", " + member + ", " + member + ", 1.0)"));
-    CHECK(contains(result.wgsl, memberName(shift, "source") + ": f32,"));
-    CHECK_FALSE(contains(result.wgsl, "wh_f" + std::to_string(scalar.value())));
-    CHECK(result.nodes == std::vector<NodeId>{shift});
-
+    // Im Shader heißt die Node nach ihrer Stelle in der Ausgabe (hier die erste), nicht nach ihrer Nummer
     const ParameterSlot* slot = slotFor(result.layout, shift, "source");
     REQUIRE(slot != nullptr);
+    CHECK(slot->member == "n1_source");
+    const std::string member = "wh_params." + slot->member;
+    CHECK(contains(result.wgsl, "vec4<f32>(" + member + ", " + member + ", " + member + ", 1.0)"));
+    CHECK(contains(result.wgsl, slot->member + ": f32,"));
+    CHECK_FALSE(contains(result.wgsl, "fn wh_f2("));  // der Skalar (CPU) bekommt keine Funktion
+    CHECK(result.nodes == std::vector<NodeId>{shift});
+
     CHECK(slot->origin == SlotOrigin::FieldConstant);
     CHECK(slot->type == GpuType::Float);
 
@@ -200,11 +202,11 @@ TEST_CASE("Konstante: Farbe an einem Field-Eingang") {
     REQUIRE(compiled.ok());
     const CompiledField& result = compiled.value();
 
-    CHECK(contains(result.wgsl, "return wh_f1(p) + wh_params." + memberName(sum, "b") + ";"));
-    CHECK(contains(result.wgsl, memberName(sum, "b") + ": vec4<f32>,"));
-
     const ParameterSlot* slot = slotFor(result.layout, sum, "b");
     REQUIRE(slot != nullptr);
+    CHECK(slot->member == "n2_b");  // zweite Node der Ausgabe (die Farbe ist ein CPU-Node)
+    CHECK(contains(result.wgsl, "return wh_f1(p) + wh_params." + slot->member + ";"));
+    CHECK(contains(result.wgsl, slot->member + ": vec4<f32>,"));
     CHECK(slot->type == GpuType::Vec4);
     CHECK(slot->origin == SlotOrigin::FieldConstant);
     CHECK(slot->offsetBytes % 16U == 0U);

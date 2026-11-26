@@ -228,3 +228,29 @@ TEST_CASE("Hintergrund-Übersetzen: die Überblendung wartet, bis der neue Shade
     rig.run(0.5);
     CHECK(rig.player.liveStatus().progress == Approx(0.5));
 }
+
+TEST_CASE("Hintergrund-Übersetzen: Flash loslassen und erneut drücken übersetzt nicht neu", "[live][background]") {
+    // Rückmeldung vom 26.11.: Flash-Looks stockten bei jedem Drücken und Loslassen. Der Shader-Text hing an den
+    // Node-Nummern, die jedes Vorladen neu vergibt, und der Zwischenspeicher traf nie.
+    Rig rig;
+    rig.run(0.1);
+    const int start = rig.device.compilesBegun();
+    REQUIRE(rig.player.liveCellDown(2).ok());  // Flash "Zwei" über "Eins": eine neue Kombination
+    rig.run(0.0);
+    rig.run(0.5);
+    CHECK(rig.device.compilesBegun() == start + 1);
+    REQUIRE(rig.player.liveCellUp(2).ok());  // zurück zu "Eins": dieselbe Struktur wie gerade, nichts zu übersetzen
+    rig.run(0.0);
+    rig.run(5.0);
+    CHECK(rig.device.compilesBegun() == start + 1);
+    CHECK(rig.shown() == 0);
+    REQUIRE(rig.player.liveCellDown(2).ok());  // zweites Mal: aus dem Zwischenspeicher
+    rig.run(0.0);
+    rig.run(0.5);
+    CHECK(rig.shown() == 1);
+    REQUIRE(rig.player.liveCellUp(2).ok());
+    rig.run(0.0);
+    rig.run(5.0);
+    CHECK(rig.device.compilesBegun() == start + 1);
+    CHECK(rig.shown() == 0);
+}
