@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- **Flash-Felder: Standardzeit 0,1 s.** Stellst du im Live-Fenster ein Feld neu auf Flash (Haken oder Rechtsklick), blendet es mit 0,1 s ein und zurück, statt die Überblendzeit des Looks zu übernehmen. Beide Zeiten bleiben je Feld einstellbar, auch „Zeit des Looks“. Schon gespeicherte Flash-Felder und ältere Projekte bleiben unverändert. Neu: `project::fillFlashDefaults` und `kDefaultFlashSeconds` (`live_grid.hpp`), aufgerufen von `LivePanel::setLookTrigger` beim Wechsel auf Flash. Test: `tests/project/live_grid_test.cpp`, Doku `docs/midi.md`.
 - **Windows-Release-Paket enthält `whitehole_benchmark.exe`.** Der Release-Workflow (`release.yml`) kopierte nur `whitehole_cli.exe` ins ZIP; das Benchmark-Programm aus 1.2.0 fehlte deshalb im Release (das CI-Paket aus `ci.yml` hatte es). Jetzt steht es wie `whitehole_cli.exe` neben `whitehole_studio.exe`.
 
 ## 1.2.0
