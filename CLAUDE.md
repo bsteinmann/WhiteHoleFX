@@ -267,6 +267,14 @@ Fix-Ideen, Tests). Zuerst Punkt 0 dort (`.pdb` vom Nutzer besorgen, läuft am 20
   Rückfrage). Berührt `Player::setLiveGridSize` (`player_live_grid.cpp`, setzt `clearFlash()`) und braucht Catch2-Tests sowie
   CHANGELOG. Verworfen: C (Verkleinern bei belegten Feldern verweigern) und D (weggefallene Felder im Projekt merken, ändert das
   Dateiformat); D bleibt als Idealfall denkbar, falls „kleiner, dann wieder größer“ den Zustand exakt zurückbringen soll.
+- **Flash-Looks: Standardzeit 0,1 s** (vom Nutzer am 27.11. gewünscht, ins Todo aufgenommen, noch nicht angefangen): Ein auf „Flash“
+  gestelltes Feld/ein Look soll Ein- und Zurückblendzeit standardmäßig auf 0,1 s haben. Stand heute: ohne Angabe
+  (`flashInSeconds`/`returnSeconds` leer, `LiveCell` in `live_grid.hpp`, Anzeige „Rein/Zurück: Look-Zeit“ in
+  `live_panel_cells.cpp`) gilt die Überblendzeit des Looks bzw. die eigene Zeit des Live-Fensters. Offen, vor der Umsetzung klären:
+  ob 0,1 s nur beim *neuen* Umstellen auf Flash als Vorgabe eingetragen wird oder auch für schon vorhandene Flash-Felder ohne
+  eigene Zeit gilt (Änderung des Verhaltens bestehender Projekte), und ob „Look-Zeit“ weiter wählbar bleibt. Berührt
+  `Player::setLookTrigger`/`liveCellDown`, Projektdatei-Vorgabe (`look … trigger flash in … return …`), Catch2-Tests
+  (`live_flash_test.cpp`), `docs/`, CHANGELOG.
 - „Zonen"-Node, Projektions-/HDMI-Ausgabe, Remote-Web-UI, Headless-Player/Pi-Support, ukrainische
   Muttersprachler-Durchsicht der Übersetzungen, GitHub-Releases ab 0.71.0 und Issue #13 schließen — alle
   diese Punkte brauchen vorher die ausdrückliche Freigabe des Nutzers (siehe Sicherheitsregel oben).
