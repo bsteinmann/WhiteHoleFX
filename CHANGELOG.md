@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- **Live-Raster verkleinern: Looks verschwinden nicht mehr.** Beim Verkleinern fielen belegte Felder außerhalb der neuen Größe stillschweigend weg (der Look blieb im Projekt, lag aber auf keinem Knopf). Jetzt behalten Felder, die noch hineinpassen, ihre Zeile und Spalte, die übrigen belegten Felder rücken mit ihren Einstellungen in die ersten freien Felder nach (`project::resizeLiveGrid`). Hätte auch dann ein Look keinen Platz, fragt das Live-Fenster vorher nach (Zahlenfelder unter „Einstellungen“, `LivePanel::requestGrid`); bei „Abbrechen“ zeigen die Felder wieder die alte Größe. Neu: `project::liveGridCellsLost`, `Player::liveGridCellsLost`, `Player::setLiveGridSize(…, allowDrop)`. Programmaufrufe (`setGrid`, Einstellungen) fragen nicht nach. Tests: `tests/project/live_grid_test.cpp`, `tests/runtime/live_grid_test.cpp`, Studio-Rauchtest (`main_window_live_grid.cpp`); Doku `docs/studio.md`; neue Texte in en/fr/es/uk.
 - **Windows-Release-Paket enthält `whitehole_benchmark.exe`.** Der Release-Workflow (`release.yml`) kopierte nur `whitehole_cli.exe` ins ZIP; das Benchmark-Programm aus 1.2.0 fehlte deshalb im Release (das CI-Paket aus `ci.yml` hatte es). Jetzt steht es wie `whitehole_cli.exe` neben `whitehole_studio.exe`.
 
 ## 1.2.0
