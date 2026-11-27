@@ -36,6 +36,10 @@ QCheckBox* LivePanel::flashCheck(int index) const {
     return index >= 0 && index < static_cast<int>(flashChecks_.size()) ? flashChecks_[static_cast<std::size_t>(index)] : nullptr;
 }
 
+QCheckBox* LivePanel::overlayCheck(int index) const {
+    return index >= 0 && index < static_cast<int>(overlayChecks_.size()) ? overlayChecks_[static_cast<std::size_t>(index)] : nullptr;
+}
+
 void LivePanel::setSettingsShown(bool shown) {
     if (shown == settingsShown_) {
         return;

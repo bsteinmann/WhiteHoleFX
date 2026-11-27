@@ -662,13 +662,24 @@ private:
         int look;
         int cell;  // Feld (-1 = über liveDown, nicht über ein Feld)
         double back;
+        bool overlay{false};  // liegt über dem laufenden Look (LiveCell::flashOverlay), statt ihn zu ersetzen
     };
     std::vector<HeldFlash> flashHeld_;  // gedrückte Flash-Looks bzw. -Felder, zuletzt gedrückter hinten
-    Result<void> flashDown(int key, int look, int cell, std::optional<double> flashIn, double back, std::optional<double> fadeSeconds);
+    Result<void> flashDown(int key, int look, int cell, std::optional<double> flashIn, double back, std::optional<double> fadeSeconds,
+                           bool overlay = false);
+    Result<void> showOverlay(int look, int cell, double seconds);  // arm + goOverlay
     Result<void> flashUp(int key);
     int flashReturn_{-1};         // Look, zu dem das Loslassen des letzten Flash-Looks zurückkehrt
     int flashReturnCell_{-1};     // dessen Feld (-1 = nicht über ein Feld)
-    void clearFlash() noexcept { flashHeld_.clear(); flashReturn_ = -1; flashReturnCell_ = -1; }
+    void clearFlash() noexcept {
+        flashHeld_.clear();
+        flashReturn_ = -1;
+        flashReturnCell_ = -1;
+        if (live_ && live_->status().overlay) {
+            live_->endOverlay();  // ein Overlay-Flash bliebe sonst stehen
+            valuesDirty_ = true;
+        }
+    }
     Result<void> armLook(int index, int cell = -1);                   // liveArm ohne clearFlash; `cell` = Feld, aus dem der Look kommt
     Result<void> goLook(std::optional<double> fadeSeconds);           // liveGo ohne clearFlash
     CueRunner cueRunner_;

@@ -30,6 +30,9 @@ struct LiveCell {
     std::optional<double> flashInSeconds;
     /// Nur Flash: Zeit für das Zurückblenden beim Loslassen. Leer = die Überblendzeit des Looks.
     std::optional<double> returnSeconds;
+    /// Nur Flash: der Flash liegt über dem laufenden Look (der weiterläuft und aktiv bleibt), statt ihn zu ersetzen. Wirkt nur
+    /// bei Looks mit durchsichtigen Stellen; Ein- und Zurückblendzeit gelten dann als Verlauf der Deckkraft.
+    bool flashOverlay{false};
 
     [[nodiscard]] bool empty() const noexcept { return look.empty(); }
 };

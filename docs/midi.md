@@ -60,7 +60,15 @@ Loslassen zum vorherigen Look zurück. Beide Zeiten sind je Look einstellbar: **
 (`return`, beim Loslassen), jeweils die Überblendzeit des Looks oder eine eigene Zeit (0 = hart). Ohne eigene Einblendzeit gilt beim
 Drücken die Zeit des Looks (im Live-Fenster ggf. die eigene Überblendzeit); eine Einblendzeit am Look geht vor. Stellst du ein Feld neu auf Flash, tragen Ein- und Zurückblendzeit zunächst **0,1 s** ein (ein kurzer Stoß; beide bleiben je Feld einstellbar, auch zurück auf „Zeit des Looks“). Schon gespeicherte Flash-Felder behalten ihre Zeiten (auch „Zeit des Looks“). Flash hat Vorrang vor
 „Mit GO“. Mehrere gehaltene Flash-Looks stapeln sich, erst das letzte Loslassen kehrt zurück; wer inzwischen umschaltet (Pad, GO,
-Cue), beendet das Flash und der neue Look bleibt stehen. Die Logik steckt im Player (`liveDown`/`liveUp`), damit sie für alle
+Cue), beendet das Flash und der neue Look bleibt stehen.
+
+**Overlay** (je Feld, Haken „Overlay“ neben „Flash“ oder Rechtsklick „Über den laufenden Look legen“; in der Datei
+`cell … flash overlay`): das Flash ersetzt den laufenden Look nicht, sondern legt sich darüber. Der laufende Look läuft weiter
+und bleibt aktiv (grün), das Overlay-Feld leuchtet im Live-Fenster gelb, das Pad bleibt rot. Ein- und Zurückblendzeit gelten
+als Verlauf der Deckkraft. Sichtbar wird der Unterschied nur bei Flash-Looks mit durchsichtigen Stellen (z. B. über Key
+oder Mask); ein deckender Look verdeckt den laufenden ganz. Auch hier zählt nur das zuletzt gehaltene Flash: ein zweites
+Overlay ersetzt das erste (beim Loslassen kehrt das darunter gehaltene zurück), ein ersetzendes Flash beendet gehaltene
+Overlays, Umschalten beendet das Overlay sofort. Die Logik steckt im Player (`liveDown`/`liveUp`), damit sie für alle
 Eingänge gleich gilt.
 
 ## Cues per Pad abrufen

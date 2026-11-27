@@ -267,8 +267,8 @@ void LivePanel::refresh() {
             return statusCell >= 0 ? statusCell == i : statusLook >= 0 && look == statusLook;
         };
         const char* color = kIdle;
-        if (st.fading && matches(st.incomingCell, st.incoming)) {
-            color = kIncoming;
+        if ((st.fading && matches(st.incomingCell, st.incoming)) || (st.overlay && matches(st.overlayCell, st.overlayLook))) {
+            color = kIncoming;  // einblendend, oder ein Flash-Overlay über dem laufenden (grünen) Look
         } else if (matches(st.currentCell, st.current)) {
             color = kLive;
         } else if (!st.fading && matches(st.armedCell, st.armed)) {

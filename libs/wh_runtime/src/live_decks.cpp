@@ -14,6 +14,12 @@ constexpr const char* kMixerType = "wh.blend.crossfade";
 
 constexpr const char* kFillerType = "wh.generator.solid";
 
+// Modi des Mischers (Reihenfolge in builtin_blends.cpp): Linear für Überblendungen, die beiden Overlay-Modi für ein Flash
+// als Overlay - welches Deck oben liegt, hängt davon ab, welches gerade sichtbar ist.
+constexpr std::int64_t kModeLinear = 0;
+constexpr std::int64_t kModeOverlayBOverA = 2;
+constexpr std::int64_t kModeOverlayAOverB = 3;
+
 const char* inputOf(bool deckIsA) { return deckIsA ? "a" : "b"; }
 
 }  // namespace
@@ -36,6 +42,8 @@ Result<void> LiveDecks::start(const project::Look& look, int index, int cell) {
     fading_ = false;
     progress_ = 1.0;
     amount_ = 0.0;
+    overlay_ = false;
+    overlayCarry_.reset();
     fill(Deck::B);
     if (const Result<void> loaded = load(Deck::A, look, index, cell); !loaded.ok()) {
         return loaded;
@@ -112,6 +120,11 @@ void LiveDecks::finishFade() {
 }
 
 Result<void> LiveDecks::arm(const project::Look& look, int index, int cell) {
+    overlayCarry_.reset();
+    if (overlay_) {
+        overlayCarry_ = overlayLevel_;
+        endOverlay();
+    }
     if (fading_) {
         finishFade();
     }
@@ -125,6 +138,8 @@ Result<void> LiveDecks::arm(const project::Look& look, int index, int cell) {
 }
 
 Result<void> LiveDecks::armBlank() {
+    endOverlay();
+    overlayCarry_.reset();
     if (fading_) {
         finishFade();
     }
@@ -142,6 +157,7 @@ Result<void> LiveDecks::go(double fadeSeconds) {
     if (!std::isfinite(fadeSeconds) || fadeSeconds < 0.0) {
         return Error{ErrorCode::InvalidArgument, "Die Überblendzeit ist ungültig"};
     }
+    overlayCarry_.reset();
     fadeSeconds_ = fadeSeconds;
     if (fading_ && manual_) {
         manual_ = false;  // von der erreichten Stelle aus mit der Uhr weiter (advance)
@@ -156,6 +172,9 @@ Result<void> LiveDecks::go(double fadeSeconds) {
 }
 
 bool LiveDecks::advance(double seconds) {
+    if (overlay_) {
+        return advanceOverlay(seconds);
+    }
     if (!fading_ || manual_) {
         return false;
     }
@@ -208,6 +227,69 @@ void LiveDecks::setAmount(double amount) {
     (void)graph_.setParameter(mixer_, "amount", amount_);
 }
 
+Result<void> LiveDecks::goOverlay(double fadeSeconds) {
+    if (!armed_ || fading_) {
+        return Error{ErrorCode::InvalidArgument, "Es ist kein Look vorgeladen"};
+    }
+    if (!std::isfinite(fadeSeconds) || fadeSeconds < 0.0) {
+        return Error{ErrorCode::InvalidArgument, "Die Überblendzeit ist ungültig"};
+    }
+    armed_ = false;
+    overlay_ = true;
+    overlayLevel_ = overlayCarry_.value_or(0.0);
+    overlayCarry_.reset();
+    overlayTarget_ = 1.0;
+    overlaySeconds_ = fadeSeconds;
+    if (fadeSeconds <= 0.0) {
+        overlayLevel_ = 1.0;
+    }
+    setMode(visible_ == Deck::A ? kModeOverlayBOverA : kModeOverlayAOverB);
+    setAmount(overlayLevel_);
+    return {};
+}
+
+bool LiveDecks::releaseOverlay(double fadeSeconds) {
+    if (!overlay_) {
+        return false;
+    }
+    overlayTarget_ = 0.0;
+    overlaySeconds_ = std::isfinite(fadeSeconds) && fadeSeconds > 0.0 ? fadeSeconds : 0.0;
+    if (overlaySeconds_ <= 0.0 || overlayLevel_ <= 0.0) {  // sofort, oder noch gar nicht eingeblendet
+        endOverlay();
+    }
+    return true;
+}
+
+void LiveDecks::endOverlay() noexcept {
+    if (!overlay_) {
+        return;
+    }
+    overlay_ = false;
+    overlayLevel_ = 0.0;
+    overlayTarget_ = 0.0;
+    setMode(kModeLinear);
+    setAmount(visible_ == Deck::A ? 0.0 : 1.0);
+}
+
+bool LiveDecks::advanceOverlay(double seconds) {
+    if (overlayLevel_ == overlayTarget_) {
+        return false;
+    }
+    const double step = overlaySeconds_ > 0.0 ? (std::isfinite(seconds) && seconds > 0.0 ? seconds / overlaySeconds_ : 0.0) : 1.0;
+    overlayLevel_ = overlayTarget_ > overlayLevel_ ? std::min(overlayTarget_, overlayLevel_ + step)
+                                                   : std::max(overlayTarget_, overlayLevel_ - step);
+    if (overlayLevel_ <= 0.0 && overlayTarget_ <= 0.0) {
+        endOverlay();
+        return true;
+    }
+    setAmount(overlayLevel_);
+    return true;
+}
+
+void LiveDecks::setMode(std::int64_t mode) noexcept {
+    (void)graph_.setParameter(mixer_, "mode", graph::ParameterValue{mode});
+}
+
 bool LiveDecks::takeStructureChanged() noexcept {
     const bool changed = structureChanged_;
     structureChanged_ = false;
@@ -228,6 +310,10 @@ LiveStatus LiveDecks::status() const noexcept {
     s.currentCell = shown.cell;
     s.armedCell = s.armed >= 0 ? hidden.cell : -1;
     s.incomingCell = fading_ ? hidden.cell : -1;
+    s.overlay = overlay_;
+    s.overlayLook = overlay_ ? hidden.look : -1;
+    s.overlayCell = overlay_ ? hidden.cell : -1;
+    s.overlayLevel = overlay_ ? overlayLevel_ : 0.0;
     return s;
 }
 
@@ -247,7 +333,7 @@ std::vector<graph::PortRef> LiveDecks::deckOutputs() const {
 }
 
 std::optional<std::uint32_t> LiveDecks::previewDeck() const noexcept {
-    if (!armed_ && !fading_) {
+    if (!armed_ && !fading_ && !overlay_) {
         return std::nullopt;
     }
     return other(visible_) == Deck::A ? 0U : 1U;

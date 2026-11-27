@@ -40,13 +40,28 @@ let result = vec4<f32>(light / max(alpha, 0.000001), alpha);
 return wh_mix_color(a, result, clamp(@param(amount), 0.0, 1.0));)wgsl";
 
 // "Crossfade": Linear blendet A aus, während B einblendet. Progressive lässt beide in der Mitte
-// voll leuchten (Summe, wie ein Überblenden zweier Lichtkanäle).
+// voll leuchten (Summe, wie ein Überblenden zweier Lichtkanäle). Die beiden Overlay-Modi lassen das untere
+// Bild ganz stehen und legen das obere mit seinem Alpha mal `amount` darüber (Flash als Overlay im Live-Modus:
+// der laufende Look bleibt sichtbar, egal ob er gerade in Deck A oder B liegt).
 constexpr const char* kCrossfadeBody = R"wgsl(let t = clamp(@param(amount), 0.0, 1.0);
 let a = @in(a, p);
 let b = @in(b, p);
+let m = @param(mode);
+if (m > 1.5) {
+    var top = b;
+    var below = a;
+    if (m > 2.5) {
+        top = a;
+        below = b;
+    }
+    let ta = top.a * t;
+    let alpha = ta + below.a * (1.0 - ta);
+    let light = ta * top.rgb + (1.0 - ta) * below.a * below.rgb;
+    return vec4<f32>(light / max(alpha, 0.000001), alpha);
+}
 var wa = 1.0 - t;
 var wb = t;
-if (@param(mode) > 0.5) {
+if (m > 0.5) {
     wa = min(1.0, 2.0 * (1.0 - t));
     wb = min(1.0, 2.0 * t);
 }
@@ -92,7 +107,7 @@ std::vector<compiler::NodeDefinition> blendNodes() {
 
     nodes.push_back(fieldNode("wh.blend.crossfade", "Crossfade", "Blend",
                               {blendInput("a", "A"), blendInput("b", "B"), fieldOutput()},
-                              {choice("mode", "Mode", {"Linear", "Progressive"}),
+                              {choice("mode", "Mode", {"Linear", "Progressive", "Overlay B over A", "Overlay A over B"}),
                                number("amount", "Position", 0.5, 0.0, 1.0)},
                               kCrossfadeBody, kColorPrelude));
 

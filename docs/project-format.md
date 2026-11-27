@@ -285,6 +285,8 @@ cell 2 1 look "Bunte Welle"
 
 - `flash`: das Feld flasht (läuft nur, solange gehalten). `in <s>` und `return <s>` (je 0 bis 600) gibt es nur zusammen mit
   `flash`; ohne sie gilt die Überblendzeit des Looks.
+- `overlay` (nur zusammen mit `flash`): das Flash legt sich über den laufenden Look, statt ihn zu ersetzen
+  (`cell 1 2 look Nebel flash overlay in 0.25 return 2`). Programme ohne Overlay-Unterstützung lesen solche Zeilen nicht.
 - `livegrid` darf nur einmal vorkommen und muss vor den `cell`-Zeilen stehen. Ein Feld außerhalb, ein doppelt belegtes
   Feld oder ein Look, den es nicht gibt, ist ein Fehler.
 - Ältere Dateien ohne `livegrid` bleiben gültig: der Player baut das Raster dann aus den Looks (zeilenweise, mit dem

@@ -97,6 +97,8 @@ public:
     bool setLookTrigger(int index, project::LookTrigger trigger, std::optional<double> returnSeconds);
     /// Zeit, in der ein Flash-Feld beim Drücken einblendet (leer = Zeit des Looks bzw. die eigene Zeit des Live-Fensters).
     bool setLookFlashIn(int index, std::optional<double> seconds);
+    /// Flash-Feld als Overlay: legt sich beim Drücken über den laufenden Look, statt ihn zu ersetzen (LiveCell::flashOverlay).
+    bool setFlashOverlay(int index, bool overlay);
     /// Legt den Look mit dem Namen `lookName` auf Feld `index` (ein belegtes Feld behält Modus und Zeiten, ein leeres übernimmt
     /// die Vorgaben des Looks) und baut das Raster neu auf. false bei unbekanntem Look oder Feld.
     bool assignLook(int index, const std::string& lookName);
@@ -117,6 +119,8 @@ public:
     [[nodiscard]] bool settingsShown() const { return settingsShown_; }
     /// Das Feld "Flash" unter dem Look-Knopf (nur sichtbar, solange die Einstellungen offen sind); nullptr bei ungültigem Index.
     [[nodiscard]] QCheckBox* flashCheck(int index) const;
+    /// Das Feld "Overlay" daneben (nur bei Flash bedienbar); nullptr bei ungültigem Index.
+    [[nodiscard]] QCheckBox* overlayCheck(int index) const;
 
 Q_SIGNALS:
     void failed(const QString& message);
@@ -151,6 +155,7 @@ private:
     std::vector<QPushButton*> buttons_;      // die Look-Knöpfe selbst
     std::vector<QWidget*> optionRows_;       // Reihe "Flash / Zurückblenden" unter dem Knopf (nur bei offenen Einstellungen)
     std::vector<QCheckBox*> flashChecks_;
+    std::vector<QCheckBox*> overlayChecks_;
     std::vector<QPushButton*> inButtons_;
     std::vector<QPushButton*> returnButtons_;
     std::vector<QShortcut*> digitKeys_;  // Tasten 1 bis 9 (aus, solange die Cuelist läuft)

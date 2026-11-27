@@ -7,6 +7,8 @@
 // Regeln: Flash hat Vorrang vor "Mit GO". Beim ersten gedrückten Flash-Look wird der sichtbare Look gemerkt; mehrere
 // gehaltene Flash-Looks stapeln sich (der zuletzt gedrückte ist zu sehen), erst das Loslassen des letzten kehrt zurück.
 // Schaltet inzwischen jemand um (liveTrigger/liveArm/liveGo), endet das Flash und der neue Look bleibt stehen.
+// Overlay (LiveCell::flashOverlay): das Flash legt sich über den laufenden Look, statt ihn zu ersetzen; der Look läuft weiter
+// und bleibt aktiv. Auch hier ist nur der zuletzt gedrückte Flash zu sehen. Ein ersetzendes Flash beendet gehaltene Overlays.
 // Zeiten: Einblenden beim Drücken = `in` des Looks, sonst die eigene Zeit des Live-Fensters, sonst die Überblendzeit des
 // Looks; Zurückblenden beim Loslassen = `return` des Looks, sonst dessen Überblendzeit.
 #include <algorithm>
@@ -68,15 +70,39 @@ Result<void> Player::setLookFlashIn(int index, std::optional<double> seconds) {
     return {};
 }
 
+Result<void> Player::showOverlay(int look, int cell, double seconds) {
+    if (const Result<void> armed = armLook(look, cell); !armed.ok()) {
+        return armed;
+    }
+    const Result<void> shown = live_->goOverlay(seconds);
+    if (shown.ok()) {
+        valuesDirty_ = true;
+        liveLast_.reset();  // das Einblenden beginnt mit dem nächsten Frame
+    }
+    return shown;
+}
+
 Result<void> Player::flashDown(int key, int look, int cell, std::optional<double> flashIn, double back,
-                               std::optional<double> fadeSeconds) {
+                               std::optional<double> fadeSeconds, bool overlay) {
     if (flashHeld_.empty()) {
         const LiveStatus status = live_->status();
         flashReturn_ = status.fading ? status.incoming : status.current;  // was gerade zu sehen ist bzw. kommt
         flashReturnCell_ = status.fading ? status.incomingCell : status.currentCell;
     }
     std::erase_if(flashHeld_, [key](const HeldFlash& held) { return held.key == key; });
-    flashHeld_.push_back({key, look, cell, back});
+    if (!overlay) {
+        std::erase_if(flashHeld_, [](const HeldFlash& held) { return held.overlay; });  // arm() beendet das Overlay im Bild
+    }
+    flashHeld_.push_back({key, look, cell, back, overlay});
+    if (overlay) {
+        double seconds = project_->looks[static_cast<std::size_t>(look)].fadeSeconds;
+        if (flashIn) {
+            seconds = *flashIn;
+        } else if (fadeSeconds) {
+            seconds = *fadeSeconds;
+        }
+        return showOverlay(look, cell, seconds);
+    }
     if (const Result<void> armed = armLook(look, cell); !armed.ok()) {
         return armed;
     }
@@ -94,9 +120,28 @@ Result<void> Player::flashUp(int key) {
     }
     const bool wasShown = std::next(found) == flashHeld_.end();
     const double back = found->back;
+    const bool wasOverlay = found->overlay;
     flashHeld_.erase(found);
     if (!wasShown) {
         return {};  // ein darunter gehaltener Look: das Bild bleibt beim zuletzt gedrückten
+    }
+    if (wasOverlay) {
+        if (!flashHeld_.empty() && flashHeld_.back().overlay) {
+            return showOverlay(flashHeld_.back().look, flashHeld_.back().cell, back);  // das darunter gehaltene Overlay
+        }
+        const LiveStatus status = live_->status();
+        const bool returned = status.current == flashReturn_ && status.currentCell == flashReturnCell_;
+        if (!flashHeld_.empty() || returned) {
+            live_->releaseOverlay(back);  // darunter liegt das ersetzende Flash bzw. der Look von vorher: nur ausblenden
+            valuesDirty_ = true;
+            liveLast_.reset();
+            if (flashHeld_.empty()) {
+                flashReturn_ = -1;
+                flashReturnCell_ = -1;
+            }
+            return {};
+        }
+        // Das ersetzende Flash darunter wurde schon losgelassen: zurück zum Look von vorher (das Overlay endet dabei)
     }
     const int target = flashHeld_.empty() ? flashReturn_ : flashHeld_.back().look;
     const int targetCell = flashHeld_.empty() ? flashReturnCell_ : flashHeld_.back().cell;
@@ -157,7 +202,7 @@ Result<void> Player::liveCellDown(int cell, std::optional<double> fadeSeconds, b
         return goLook(fadeSeconds);
     }
     const double back = entry.returnSeconds.value_or(project_->looks[static_cast<std::size_t>(look)].fadeSeconds);
-    return flashDown(-(cell + 1), look, cell, entry.flashInSeconds, back, fadeSeconds);
+    return flashDown(-(cell + 1), look, cell, entry.flashInSeconds, back, fadeSeconds, entry.flashOverlay);
 }
 
 Result<void> Player::liveCellUp(int cell) { return flashUp(-(cell + 1)); }

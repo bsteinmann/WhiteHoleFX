@@ -43,6 +43,12 @@ struct LiveStatus {
     int currentCell{-1};
     int armedCell{-1};
     int incomingCell{-1};
+    /// Flash als Overlay (goOverlay): das verdeckte Deck liegt mit `overlayLevel` (0..1) Deckkraft über dem laufenden Look,
+    /// der sichtbar und `current` bleibt. Ein Overlay und ein Fade schließen sich aus.
+    bool overlay{false};
+    int overlayLook{-1};
+    int overlayCell{-1};
+    double overlayLevel{0.0};
 };
 
 class LiveDecks {
@@ -74,6 +80,18 @@ public:
     /// Fades übergibt an die Uhr und blendet von der erreichten Stelle zu Ende. Ohne vorgeladenen Look (oder während
     /// eines Zeit-Fades) wirkungslos. Liefert true, wenn sich dadurch ein Wert im Graphen geändert hat.
     bool setManualProgress(double progress);
+
+    /// Legt den vorgeladenen Look als Overlay über den sichtbaren, statt zu ihm überzublenden: der sichtbare Look läuft weiter,
+    /// der vorgeladene blendet in `fadeSeconds` (0 = sofort) auf volle Deckkraft ein. Folgt goOverlay direkt auf ein arm(),
+    /// das ein anderes Overlay beendet hat, beginnt es bei dessen Deckkraft (kein Flackern beim Wechsel zwischen Overlays).
+    /// Fehler: InvalidArgument (nichts vorgeladen, Zeit ungültig).
+    Result<void> goOverlay(double fadeSeconds);
+    /// Blendet ein Overlay in `fadeSeconds` (0 = sofort) aus; danach ist nur der sichtbare Look zu sehen. Ohne Overlay
+    /// wirkungslos (false).
+    bool releaseOverlay(double fadeSeconds);
+    /// Beendet ein Overlay sofort (arm(), armBlank() und start() tun das auch). Der Look bleibt im verdeckten Deck liegen,
+    /// wie nach einem gewöhnlichen Fade.
+    void endOverlay() noexcept;
 
     /// Hat arm() oder start() den Aufbau des Graphen verändert (Nodes kamen oder gingen)? Wird mit dem
     /// Abfragen zurückgesetzt. Danach genügt ein Wertabgleich, bis der nächste Look geladen wird.
@@ -107,6 +125,8 @@ private:
     void finishFade();
     void setAmount(double amount);
     void showProgress();  // Mischwert aus progress_ und dem sichtbaren Deck
+    void setMode(std::int64_t mode) noexcept;  // Modus des Mischers (0 Linear, 2/3 Overlay, builtin_blends.cpp)
+    bool advanceOverlay(double seconds);
     [[nodiscard]] static Deck other(Deck deck) noexcept { return deck == Deck::A ? Deck::B : Deck::A; }
 
     graph::Graph graph_;
@@ -122,6 +142,11 @@ private:
     double fadeSeconds_{0.0};
     double amount_{0.0};
     bool structureChanged_{false};
+    bool overlay_{false};
+    double overlayLevel_{0.0};
+    double overlayTarget_{0.0};
+    double overlaySeconds_{0.0};
+    std::optional<double> overlayCarry_;  // Deckkraft eines von arm() beendeten Overlays, für ein direkt folgendes goOverlay
 };
 
 }  // namespace whitehole::runtime

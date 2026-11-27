@@ -54,6 +54,10 @@ msgstr "   |   TEST MODE"
 msgid "  · Flash"
 msgstr "  · Flash"
 
+#: live_panel_cells.cpp:44
+msgid "  · Overlay"
+msgstr "  · Overlay"
+
 #: midi_profile_box.cpp:100
 msgid " (Kopie)"
 msgstr " (copy)"
@@ -974,9 +978,13 @@ msgstr "DMX Monitor"
 msgid "Dabei wird nur die öffentliche Seite des neuesten Releases abgefragt. Gesendet werden Programmname und Versionsnummer (und, wie bei jedem Netzwerkzugriff, deine IP-Adresse), nichts über dich oder deine Projekte. Es wird nichts installiert. Du kannst das jederzeit im Menü Hilfe ändern."
 msgstr "Only the public page of the latest release is requested. What is sent: the program name and version number (and, as with any network access, your IP address), nothing about you or your projects. Nothing is installed. You can change this at any time in the Help menu."
 
-#: live_panel_cells.cpp:309
+#: live_panel_cells.cpp:337
 msgid "Das Feld läuft nur, solange der Knopf (oder das Pad) gehalten wird"
 msgstr "The cell only runs while the button (or pad) is held"
+
+#: live_panel_cells.cpp:343
+msgid "Das Flash legt sich über den laufenden Look, statt ihn zu ersetzen (nur bei Looks mit durchsichtigen Stellen sichtbar)"
+msgstr "The flash lies over the running look instead of replacing it (only visible with looks that have transparent areas)"
 
 #: add_fixture_dialog.cpp:146 shape_form.cpp:133
 msgid "Das Kabel beginnt an dieser Seite statt an der gegenüberliegenden"
@@ -1074,6 +1082,10 @@ msgstr "The channel value 0 to 255 sets the master to 0 to 100 %. While packets 
 msgid "Der Master kommt gerade vom DMX-Kanal (Einstellungen → DMX-Eingang)"
 msgstr "The master is currently coming from the DMX channel (Settings → DMX input)"
 
+#: live_panel_cells.cpp:243
+msgid "Der laufende Look bleibt an; durchsichtige Stellen des Flash-Looks zeigen ihn"
+msgstr "The running look stays on; transparent areas of the flash look show it"
+
 #: main_window_help.cpp:35
 msgid "Die Anleitung im Browser öffnen"
 msgstr "Open the manual in the browser"
@@ -1090,7 +1102,7 @@ msgstr "The library already contains a group \"%1\". Replace it?"
 msgid "Die Cuelist ist leer. Erst Cues anlegen (Dock „Cuelist“)."
 msgstr "The cue list is empty. Create cues first (Cue list dock)."
 
-#: live_panel.cpp:306 live_panel_looks.cpp:57
+#: live_panel.cpp:306 live_panel_looks.cpp:61
 msgid "Die Cuelist läuft und schaltet die Looks selbst. Erst in der Cuelist auf Stopp drücken."
 msgstr "The cue list is running and switches the looks itself. Press Stop in the cue list first."
 
@@ -1270,19 +1282,19 @@ msgstr "Input and output"
 msgid "Ein- und Ausgang eines MIDI-Controllers, zum Beispiel eines Akai APC mini. Die Wahl gilt für diesen Rechner und Auftritt, nicht für das Projekt."
 msgstr "Input and output of a MIDI controller, for example an Akai APC mini. The choice applies to this computer and performance, not to the project."
 
-#: live_panel_cells.cpp:167
+#: live_panel_cells.cpp:188
 msgid "Einblenden"
 msgstr "Fade in"
 
-#: live_panel_cells.cpp:239
+#: live_panel_cells.cpp:266
 msgid "Einblenden mit der Zeit des Looks (%1 s)"
 msgstr "Fade in with the look’s time (%1 s)"
 
-#: live_panel_cells.cpp:240
+#: live_panel_cells.cpp:267
 msgid "Einblenden mit eigener Zeit (%1 s) …"
 msgstr "Fade in with own time (%1 s) …"
 
-#: live_panel_cells.cpp:241
+#: live_panel_cells.cpp:268
 msgid "Einblenden mit eigener Zeit …"
 msgstr "Fade in with own time …"
 
@@ -1510,7 +1522,7 @@ msgstr "Gradient of up to four colors. \"Position\" picks the spot, or it runs o
 msgid "Favoriten"
 msgstr "Favorites"
 
-#: live_panel_cells.cpp:200
+#: live_panel_cells.cpp:221
 msgid "Feld leeren"
 msgstr "Clear cell"
 
@@ -1606,11 +1618,11 @@ msgstr "Place and rotate fixtures on the stage (own window)"
 msgid "Flammen: Aufsteigendes, flackerndes Feuer mit einstellbarer Skalierung, Tempo und Flammenhöhe."
 msgstr "Flames: rising, flickering fire with adjustable scale, speed and flame height."
 
-#: live_panel_cells.cpp:308
+#: live_panel_cells.cpp:336
 msgid "Flash"
 msgstr "Flash"
 
-#: live_panel_cells.cpp:208
+#: live_panel_cells.cpp:229
 msgid "Flashen (nur solange gedrückt)"
 msgstr "Flash (only while held)"
 
@@ -2034,7 +2046,7 @@ msgstr "Layout"
 msgid "Layout auf Würfel abbilden"
 msgstr "Map layout onto cube"
 
-#: live_panel_cells.cpp:284
+#: live_panel_cells.cpp:312
 msgid "Leeres Feld. Klick oder Rechtsklick: Look hierher legen"
 msgstr "Empty cell. Click or right-click: put a look here"
 
@@ -2170,7 +2182,7 @@ msgstr "Look %1"
 msgid "Look ersetzen"
 msgstr "Replace look"
 
-#: live_panel_cells.cpp:188
+#: live_panel_cells.cpp:209
 msgid "Look hierher legen"
 msgstr "Put look here"
 
@@ -2186,7 +2198,7 @@ msgstr "Save look"
 msgid "Look umbenennen"
 msgstr "Rename look"
 
-#: live_panel_cells.cpp:188
+#: live_panel_cells.cpp:209
 msgid "Look wechseln"
 msgstr "Change look"
 
@@ -2573,6 +2585,10 @@ msgstr "User library folder cannot be created: %1"
 #: crash_notice.cpp:38 crash_notice.cpp:51
 msgid "Ordner öffnen"
 msgstr "Open folder"
+
+#: live_panel_cells.cpp:342
+msgid "Overlay"
+msgstr "Overlay"
 
 #: main_window_actions.cpp:62
 msgid "Pakete (Art-Net, sACN, DDP) wirklich ins Netz schicken"
@@ -3042,7 +3058,7 @@ msgstr "Starfield: twinkling stars with adjustable density, size and twinkle spe
 msgid "Steuerung"
 msgstr "Controls"
 
-#: live_panel_looks.cpp:83
+#: live_panel_looks.cpp:87
 msgid "Steuerung belegen:"
 msgstr "Assign controls:"
 
@@ -3190,7 +3206,7 @@ msgstr "U%1: %2–%3"
 msgid "Umbenennen …"
 msgstr "Rename …"
 
-#: live_panel_cells.cpp:207
+#: live_panel_cells.cpp:228
 msgid "Umschalten (bleibt an)"
 msgstr "Toggle (stays on)"
 
@@ -3518,19 +3534,19 @@ msgstr "Rows:"
 msgid "Zeit"
 msgstr "Time"
 
-#: live_panel_cells.cpp:311
+#: live_panel_cells.cpp:339
 msgid "Zeit zum Einblenden beim Drücken"
 msgstr "Time to fade in on press"
 
-#: live_panel_cells.cpp:168
+#: live_panel_cells.cpp:189
 msgid "Zeit zum Einblenden beim Drücken (s):"
 msgstr "Time to fade in on press (s):"
 
-#: live_panel_cells.cpp:313
+#: live_panel_cells.cpp:341
 msgid "Zeit zum Zurückblenden beim Loslassen"
 msgstr "Time to fade back on release"
 
-#: live_panel_cells.cpp:168
+#: live_panel_cells.cpp:189
 msgid "Zeit zum Zurückblenden beim Loslassen (s):"
 msgstr "Time to fade back on release (s):"
 
@@ -3606,19 +3622,19 @@ msgstr "Back: %1 s"
 msgid "Zurück: Look-Zeit"
 msgstr "Back: look time"
 
-#: live_panel_cells.cpp:167
+#: live_panel_cells.cpp:188
 msgid "Zurückblenden"
 msgstr "Fade back"
 
-#: live_panel_cells.cpp:243
+#: live_panel_cells.cpp:270
 msgid "Zurückblenden mit der Zeit des Looks (%1 s)"
 msgstr "Fade back with the look’s time (%1 s)"
 
-#: live_panel_cells.cpp:244
+#: live_panel_cells.cpp:271
 msgid "Zurückblenden mit eigener Zeit (%1 s) …"
 msgstr "Fade back with own time (%1 s) …"
 
-#: live_panel_cells.cpp:245
+#: live_panel_cells.cpp:272
 msgid "Zurückblenden mit eigener Zeit …"
 msgstr "Fade back with own time …"
 
@@ -3746,6 +3762,10 @@ msgstr "Opens GitHub: create a new issue"
 msgid "Über WhiteHoleFX"
 msgstr "About WhiteHoleFX"
 
+#: live_panel_cells.cpp:239
+msgid "Über den laufenden Look legen (Overlay)"
+msgstr "Lay over the running look (overlay)"
+
 #: settings_dialog.cpp:124
 msgid "Über diese Karte tritt der sACN-Empfang den Multicast-Gruppen bei. Art-Net-Broadcast und Unicast-Pakete kommen weiterhin von jeder Karte an."
 msgstr "sACN reception joins the multicast groups on this card. Art-Net broadcast and unicast packets still arrive on every card."
@@ -3754,7 +3774,7 @@ msgstr "sACN reception joins the multicast groups on this card. Art-Net broadcas
 msgid "Überblendet von Bild A zu Bild B (Position 0 bis 1). „Progressive“ lässt beide in der Mitte voll leuchten."
 msgstr "Fades from image A to image B (position 0 to 1). \"Progressive\" lets both shine fully in the middle."
 
-#: live_panel_cells.cpp:282
+#: live_panel_cells.cpp:310
 msgid "Überblendzeit %1 s. Rechtsklick: Look, Modus und Zeiten ändern"
 msgstr "Fade time %1 s. Right-click: change look, mode and times"
 
