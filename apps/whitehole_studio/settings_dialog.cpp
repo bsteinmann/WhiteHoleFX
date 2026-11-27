@@ -95,7 +95,11 @@ SettingsDialog::SettingsDialog(const AppSettings& current, const graph::INodeReg
     connect(masterChannel_, &QSpinBox::valueChanged, this, masterToControls);
     defaultsPage_ = new NodeDefaultsPage{registry, current.nodeDefaults, this};
     tabs->addTab(defaultsPage_, tr("Node-Standardwerte"));
-    auto* buttons = new QDialogButtonBox{QDialogButtonBox::Ok | QDialogButtonBox::Cancel, this};
+    auto* buttons = new QDialogButtonBox{QDialogButtonBox::Ok | QDialogButtonBox::Apply | QDialogButtonBox::Cancel, this};
+    applyButton_ = buttons->button(QDialogButtonBox::Apply);
+    applyButton_->setText(tr("Übernehmen"));
+    applyButton_->setToolTip(tr("Die Einstellungen sofort anwenden, ohne den Dialog zu schließen"));
+    connect(applyButton_, &QPushButton::clicked, this, [this]() { Q_EMIT applyRequested(settings()); });
     connect(buttons, &QDialogButtonBox::accepted, this, &QDialog::accept);
     connect(buttons, &QDialogButtonBox::rejected, this, &QDialog::reject);
     auto* box = new QVBoxLayout{this};

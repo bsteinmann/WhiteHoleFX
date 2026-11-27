@@ -15,15 +15,36 @@ LiveGrid makeEmptyLiveGrid(int columns, int rows) {
     return grid;
 }
 
-void resizeLiveGrid(LiveGrid& grid, int columns, int rows) {
+LiveGridResize resizeLiveGrid(LiveGrid& grid, int columns, int rows) {
     LiveGrid result = makeEmptyLiveGrid(columns, rows);
-    for (int row = 0; row < std::min(grid.rows, result.rows); ++row) {
-        for (int col = 0; col < std::min(grid.columns, result.columns); ++col) {
-            result.cells[static_cast<std::size_t>(row * result.columns + col)] =
-                std::move(grid.cells[static_cast<std::size_t>(row * grid.columns + col)]);
+    LiveGridResize info;
+    std::vector<LiveCell> outside;  // belegte Felder, die nicht mehr an ihre Stelle passen, in der alten Reihenfolge
+    for (int row = 0; row < grid.rows; ++row) {
+        for (int col = 0; col < grid.columns; ++col) {
+            LiveCell& cell = grid.cells[static_cast<std::size_t>(row * grid.columns + col)];
+            if (row < result.rows && col < result.columns) {
+                result.cells[static_cast<std::size_t>(row * result.columns + col)] = std::move(cell);
+            } else if (!cell.empty()) {
+                outside.push_back(std::move(cell));
+            }
         }
     }
+    for (LiveCell& cell : outside) {
+        const int slot = firstFreeLiveCell(result);
+        if (slot < 0) {
+            ++info.dropped;
+            continue;
+        }
+        result.cells[static_cast<std::size_t>(slot)] = std::move(cell);
+        ++info.moved;
+    }
     grid = std::move(result);
+    return info;
+}
+
+int liveGridCellsLost(const LiveGrid& grid, int columns, int rows) {
+    LiveGrid copy = grid;
+    return resizeLiveGrid(copy, columns, rows).dropped;
 }
 
 int firstFreeLiveCell(const LiveGrid& grid) noexcept {
@@ -33,6 +54,15 @@ int firstFreeLiveCell(const LiveGrid& grid) noexcept {
         }
     }
     return -1;
+}
+
+void fillFlashDefaults(LiveCell& cell) noexcept {
+    if (!cell.flashInSeconds) {
+        cell.flashInSeconds = kDefaultFlashSeconds;
+    }
+    if (!cell.returnSeconds) {
+        cell.returnSeconds = kDefaultFlashSeconds;
+    }
 }
 
 void renameLookInLiveGrid(LiveGrid& grid, std::string_view oldName, const std::string& newName) {

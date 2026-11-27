@@ -127,6 +127,68 @@ TEST_CASE("livegrid: Fehlermeldungen", "[project][livegrid]") {
     CHECK(project::parseProject(kHead + "livegrid 2 2\n", lib.registry).ok());  // ein leeres Raster ist gültig
 }
 
+TEST_CASE("livegrid: Verkleinern lässt belegte Felder nachrücken statt sie zu verlieren", "[project][livegrid]") {
+    // 3 x 2: Zeile 1 = A B -, Zeile 2 = - C D (Index 0, 1, 4, 5); Flash-Zeiten gehören zum Feld und wandern mit
+    LiveGrid grid = project::makeEmptyLiveGrid(3, 2);
+    grid.cells[0].look = "A";
+    grid.cells[1].look = "B";
+    grid.cells[4].look = "C";
+    grid.cells[5].look = "D";
+    grid.cells[5].trigger = LookTrigger::Flash;
+    grid.cells[5].flashInSeconds = 0.25;
+
+    CHECK(project::liveGridCellsLost(grid, 3, 2) == 0);  // gleiche Größe
+    CHECK(project::liveGridCellsLost(grid, 2, 2) == 0);  // D (Zeile 2, Spalte 3) rückt in das freie Feld 2/1
+    CHECK(project::liveGridCellsLost(grid, 2, 1) == 2);  // nur 2 Plätze für 4 Looks
+    CHECK(grid.cells[5].look == "D");                    // die Abfrage ändert nichts
+
+    LiveGrid smaller = grid;
+    const project::LiveGridResize info = project::resizeLiveGrid(smaller, 2, 2);
+    CHECK(info.moved == 1);
+    CHECK(info.dropped == 0);
+    CHECK(smaller.cells[0].look == "A");
+    CHECK(smaller.cells[1].look == "B");
+    CHECK(smaller.cells[2].look == "D");  // erstes freies Feld (Zeile 2, Spalte 1) ...
+    CHECK(smaller.cells[2].trigger == LookTrigger::Flash);  // ... mit seinen Einstellungen
+    CHECK(smaller.cells[2].flashInSeconds == 0.25);
+    CHECK(smaller.cells[3].look == "C");  // C lag in Zeile 2, Spalte 2 und bleibt dort
+
+    LiveGrid tiny = grid;
+    const project::LiveGridResize lost = project::resizeLiveGrid(tiny, 2, 1);
+    CHECK(lost.moved == 0);  // Zeile 2 fällt ganz weg und es gibt keinen freien Platz mehr
+    CHECK(lost.dropped == 2);
+    CHECK(tiny.cells[0].look == "A");
+    CHECK(tiny.cells[1].look == "B");
+}
+
+TEST_CASE("livegrid: neu auf Flash gestellt gilt 0,1 s, eigene Zeiten bleiben", "[project][livegrid]") {
+    CHECK(project::kDefaultFlashSeconds == 0.1);
+
+    project::LiveCell fresh;
+    fresh.look = "A";
+    fresh.trigger = LookTrigger::Flash;
+    project::fillFlashDefaults(fresh);
+    CHECK(fresh.flashInSeconds == 0.1);
+    CHECK(fresh.returnSeconds == 0.1);
+
+    project::LiveCell own;  // eine schon gesetzte Zeit (auch 0 = sofort) wird nie überschrieben
+    own.look = "A";
+    own.trigger = LookTrigger::Flash;
+    own.flashInSeconds = 0.0;
+    project::fillFlashDefaults(own);
+    CHECK(own.flashInSeconds == 0.0);
+    CHECK(own.returnSeconds == 0.1);  // nur die fehlende Zeit bekommt die Vorgabe
+
+    project::LiveCell both;
+    both.look = "A";
+    both.trigger = LookTrigger::Flash;
+    both.flashInSeconds = 2.5;
+    both.returnSeconds = 1.5;
+    project::fillFlashDefaults(both);
+    CHECK(both.flashInSeconds == 2.5);
+    CHECK(both.returnSeconds == 1.5);
+}
+
 TEST_CASE("livegrid: Hilfsfunktionen", "[project][livegrid]") {
     LiveGrid grid = project::makeEmptyLiveGrid(3, 2);
     CHECK(grid.cellCount() == 6);
