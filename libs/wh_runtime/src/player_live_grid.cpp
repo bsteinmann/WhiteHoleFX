@@ -51,10 +51,11 @@ Result<void> Player::setLiveCell(int cell, project::LiveCell value) {
     if (value.trigger != project::LookTrigger::Flash) {
         value.flashInSeconds.reset();  // ohne Flash gibt es kein Einblenden/Zurückblenden beim Drücken/Loslassen
         value.returnSeconds.reset();
+        value.flashOverlay = false;
     }
     project::LiveCell& target = grid.cells[static_cast<std::size_t>(cell)];
     if (target.look == value.look && target.trigger == value.trigger && target.flashInSeconds == value.flashInSeconds &&
-        target.returnSeconds == value.returnSeconds) {
+        target.returnSeconds == value.returnSeconds && target.flashOverlay == value.flashOverlay) {
         return {};
     }
     target = std::move(value);

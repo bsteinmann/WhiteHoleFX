@@ -41,7 +41,7 @@ QString LivePanel::buttonText(int index) const {
     QString text = index < 9 ? QStringLiteral("%1   ").arg(index + 1) : QString{};
     text += fromStd(player_.looks()[static_cast<std::size_t>(look)].name);
     if (cell.trigger == project::LookTrigger::Flash) {
-        text += tr("  · Flash");
+        text += cell.flashOverlay ? tr("  · Overlay") : tr("  · Flash");
     }
     return text;
 }
@@ -81,6 +81,11 @@ void LivePanel::syncLookOptions(int index) {
         flashChecks_[i]->setChecked(flash);
     }
     flashChecks_[i]->setEnabled(occupied);
+    {
+        const QSignalBlocker blocker{overlayChecks_[i]};
+        overlayChecks_[i]->setChecked(flash && player_.liveGrid().cells[i].flashOverlay);
+    }
+    overlayChecks_[i]->setEnabled(flash);
     inButtons_[i]->setText(flashInText(index));
     inButtons_[i]->setEnabled(flash);  // ohne Flash gibt es weder etwas ein- noch zurückzublenden
     returnButtons_[i]->setText(returnText(index));
@@ -119,6 +124,22 @@ bool LivePanel::setLookFlashIn(int index, std::optional<double> seconds) {
     }
     project::LiveCell cell = player_.liveGrid().cells[static_cast<std::size_t>(index)];
     cell.flashInSeconds = seconds;
+    if (!changeCell(index, cell)) {
+        return false;
+    }
+    syncLookOptions(index);
+    return true;
+}
+
+bool LivePanel::setFlashOverlay(int index, bool overlay) {
+    if (player_.cellLook(index) < 0) {
+        return false;
+    }
+    project::LiveCell cell = player_.liveGrid().cells[static_cast<std::size_t>(index)];
+    if (cell.trigger != project::LookTrigger::Flash) {
+        return false;  // nur ein Flash kann sich überlagern
+    }
+    cell.flashOverlay = overlay;
     if (!changeCell(index, cell)) {
         return false;
     }
@@ -215,6 +236,12 @@ QMenu* LivePanel::lookMenu(int index) {
     connect(flashing, &QAction::triggered, this, [this, index]() {
         (void)setLookTrigger(index, project::LookTrigger::Flash, player_.liveGrid().cells[static_cast<std::size_t>(index)].returnSeconds);
     });
+    QAction* overlay = menu->addAction(tr("Über den laufenden Look legen (Overlay)"));
+    overlay->setCheckable(true);
+    overlay->setChecked(flash && cell.flashOverlay);
+    overlay->setEnabled(flash);
+    overlay->setToolTip(tr("Der laufende Look bleibt an; durchsichtige Stellen des Flash-Looks zeigen ihn"));
+    connect(overlay, &QAction::triggered, this, [this, index](bool on) { (void)setFlashOverlay(index, on); });
     // Zwei Zeiten für Flash: beim Drücken einblenden und beim Loslassen zurückblenden; jeweils Zeit des Looks oder eigene
     const auto addTimes = [this, menu, index, flash](const QString& byLookText, const QString& ownText, bool hasOwn, bool returnTime) {
         menu->addSeparator();
@@ -256,6 +283,7 @@ void LivePanel::rebuild() {
     buttons_.clear();
     optionRows_.clear();
     flashChecks_.clear();
+    overlayChecks_.clear();
     inButtons_.clear();
     returnButtons_.clear();
     // Ältere Projekte haben noch kein Raster: es entsteht aus den Looks (mit mehr Spalten, wenn sie sonst nicht passen)
@@ -311,7 +339,10 @@ void LivePanel::rebuild() {
         ins->setToolTip(tr("Zeit zum Einblenden beim Drücken"));
         auto* returns = new QPushButton{row};
         returns->setToolTip(tr("Zeit zum Zurückblenden beim Loslassen"));
-        rowLayout->addWidget(flash, 0, 0, 1, 2);
+        auto* overlay = new QCheckBox{tr("Overlay"), row};
+        overlay->setToolTip(tr("Das Flash legt sich über den laufenden Look, statt ihn zu ersetzen (nur bei Looks mit durchsichtigen Stellen sichtbar)"));
+        rowLayout->addWidget(flash, 0, 0);
+        rowLayout->addWidget(overlay, 0, 1);
         rowLayout->addWidget(ins, 1, 0);
         rowLayout->addWidget(returns, 1, 1);
         row->setVisible(settingsShown_);
@@ -324,6 +355,10 @@ void LivePanel::rebuild() {
                                      on ? keep : std::optional<double>{});
             }
             syncLookOptions(index);  // scheitert das Setzen, springt der Haken zurück
+        });
+        connect(overlay, &QCheckBox::clicked, this, [this, index](bool on) {
+            (void)setFlashOverlay(index, on);
+            syncLookOptions(index);
         });
         for (QPushButton* timeButton : {ins, returns}) {  // beide Zeiten: das Menü des Feldes (Zeiten zum Wählen)
             connect(timeButton, &QPushButton::clicked, this, [this, index, timeButton]() {
@@ -338,6 +373,7 @@ void LivePanel::rebuild() {
         buttons_.push_back(button);
         optionRows_.push_back(row);
         flashChecks_.push_back(flash);
+        overlayChecks_.push_back(overlay);
         inButtons_.push_back(ins);
         returnButtons_.push_back(returns);
         syncLookOptions(index);

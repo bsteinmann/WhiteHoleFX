@@ -3,6 +3,8 @@
 // Warum es diese Datei gibt: Das Raster mit frei belegbaren Feldern (docs/entwurf-live-raster.md) braucht eigene
 // Prüfungen (Größe ändern, leeres Feld belegen, derselbe Look als Flash, Feld leeren), und main_window_live.cpp ist schon
 // über dem Limit der Dateigröße. Qt läuft nur in der CI, dort fängt dieser Test Fehler auf.
+#include <QApplication>
+#include <QCheckBox>
 #include <QMenu>
 
 #include <algorithm>
@@ -76,6 +78,33 @@ QString MainWindow::exerciseLiveGrid() {
         grid.cells[static_cast<std::size_t>(freeCell)].trigger != project::LookTrigger::Flash ||
         grid.cells[0].trigger != project::LookTrigger::Toggle) {
         return QStringLiteral("Live: Flash gehört nicht zum einzelnen Feld, sondern zum Look");
+    }
+    // Overlay: der Haken setzt das Feld, das Drücken legt den Look über den laufenden, Loslassen nimmt ihn wieder weg
+    const auto cellIndex = static_cast<std::size_t>(freeCell);
+    QCheckBox* overlay = livePanel_->overlayCheck(freeCell);
+    if (overlay == nullptr || !overlay->isEnabled()) {
+        return QStringLiteral("Live: Der Overlay-Haken fehlt oder ist bei einem Flash-Feld gesperrt");
+    }
+    overlay->click();
+    if (!grid.cells[cellIndex].flashOverlay || !overlay->isChecked()) {
+        return QStringLiteral("Live: Der Overlay-Haken stellt das Feld nicht auf Overlay");
+    }
+    if (const std::unique_ptr<QMenu> menu{livePanel_->lookMenu(freeCell)}; menu->actions().isEmpty()) {
+        return QStringLiteral("Live: Das Menü eines Overlay-Feldes ist leer");
+    }
+    const int before = player_->liveStatus().current;
+    if (!livePanel_->press(freeCell) || !player_->liveStatus().overlay || player_->liveStatus().current != before) {
+        livePanel_->release(freeCell);
+        return QStringLiteral("Live: Ein Overlay-Feld legt sich nicht über den laufenden Look");
+    }
+    livePanel_->release(freeCell);
+    for (int i = 0; i < 3; ++i) {
+        tick();
+        QApplication::processEvents();
+    }
+    if (!livePanel_->setLookTrigger(freeCell, project::LookTrigger::Toggle, std::nullopt) || grid.cells[cellIndex].flashOverlay ||
+        overlay->isEnabled()) {
+        return QStringLiteral("Live: Umschalten setzt Overlay nicht zurück");
     }
     if (!livePanel_->clearCell(freeCell) || player_->cellLook(freeCell) >= 0 || player_->cellLook(0) != 0) {
         return QStringLiteral("Live: Ein Feld lässt sich nicht leeren");

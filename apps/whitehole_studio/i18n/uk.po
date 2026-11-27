@@ -54,6 +54,10 @@ msgstr "   |   ТЕСТОВИЙ РЕЖИМ"
 msgid "  · Flash"
 msgstr "  · Flash"
 
+#: live_panel_cells.cpp:44
+msgid "  · Overlay"
+msgstr "  · Накладання"
+
 #: midi_profile_box.cpp:100
 msgid " (Kopie)"
 msgstr " (копія)"
@@ -974,9 +978,13 @@ msgstr "Монітор DMX"
 msgid "Dabei wird nur die öffentliche Seite des neuesten Releases abgefragt. Gesendet werden Programmname und Versionsnummer (und, wie bei jedem Netzwerkzugriff, deine IP-Adresse), nichts über dich oder deine Projekte. Es wird nichts installiert. Du kannst das jederzeit im Menü Hilfe ändern."
 msgstr "Запитується лише публічна сторінка останнього релізу. Надсилаються назва програми та номер версії (і, як при будь-якому мережевому доступі, ваша IP-адреса), нічого про вас чи ваші проєкти. Нічого не встановлюється. Ви можете змінити це в будь-який час у меню «Довідка»."
 
-#: live_panel_cells.cpp:309
+#: live_panel_cells.cpp:337
 msgid "Das Feld läuft nur, solange der Knopf (oder das Pad) gehalten wird"
 msgstr "Клітинка працює, лише поки кнопку (або пад) утримують"
+
+#: live_panel_cells.cpp:343
+msgid "Das Flash legt sich über den laufenden Look, statt ihn zu ersetzen (nur bei Looks mit durchsichtigen Stellen sichtbar)"
+msgstr "Спалах накладається на поточний лук, а не замінює його (видно лише в луках із прозорими ділянками)"
 
 #: add_fixture_dialog.cpp:146 shape_form.cpp:133
 msgid "Das Kabel beginnt an dieser Seite statt an der gegenüberliegenden"
@@ -1074,6 +1082,10 @@ msgstr "Значення каналу від 0 до 255 задає Master від
 msgid "Der Master kommt gerade vom DMX-Kanal (Einstellungen → DMX-Eingang)"
 msgstr "Master зараз надходить з каналу DMX (Налаштування → Вхід DMX)"
 
+#: live_panel_cells.cpp:243
+msgid "Der laufende Look bleibt an; durchsichtige Stellen des Flash-Looks zeigen ihn"
+msgstr "Поточний лук лишається ввімкненим; прозорі ділянки спалаху показують його"
+
 #: main_window_help.cpp:35
 msgid "Die Anleitung im Browser öffnen"
 msgstr "Відкрити посібник у браузері"
@@ -1090,7 +1102,7 @@ msgstr "У бібліотеці вже є група \"%1\". Замінити?"
 msgid "Die Cuelist ist leer. Erst Cues anlegen (Dock „Cuelist“)."
 msgstr "Cuelist порожній. Спершу створіть Cue (док «Cuelist»)."
 
-#: live_panel.cpp:306 live_panel_looks.cpp:57
+#: live_panel.cpp:306 live_panel_looks.cpp:61
 msgid "Die Cuelist läuft und schaltet die Looks selbst. Erst in der Cuelist auf Stopp drücken."
 msgstr "Cuelist працює й сам перемикає Look. Спершу натисніть Стоп у Cuelist."
 
@@ -1270,19 +1282,19 @@ msgstr "Входи та виходи"
 msgid "Ein- und Ausgang eines MIDI-Controllers, zum Beispiel eines Akai APC mini. Die Wahl gilt für diesen Rechner und Auftritt, nicht für das Projekt."
 msgstr "Вхід і вихід MIDI-контролера, наприклад Akai APC mini. Вибір стосується цього комп’ютера й виступу, а не проєкту."
 
-#: live_panel_cells.cpp:167
+#: live_panel_cells.cpp:188
 msgid "Einblenden"
 msgstr "Поява"
 
-#: live_panel_cells.cpp:239
+#: live_panel_cells.cpp:266
 msgid "Einblenden mit der Zeit des Looks (%1 s)"
 msgstr "Поява з часом Look (%1 с)"
 
-#: live_panel_cells.cpp:240
+#: live_panel_cells.cpp:267
 msgid "Einblenden mit eigener Zeit (%1 s) …"
 msgstr "Поява з власним часом (%1 с) …"
 
-#: live_panel_cells.cpp:241
+#: live_panel_cells.cpp:268
 msgid "Einblenden mit eigener Zeit …"
 msgstr "Поява з власним часом …"
 
@@ -1510,7 +1522,7 @@ msgstr "Градієнт з до чотирьох кольорів. «Position»
 msgid "Favoriten"
 msgstr "Обране"
 
-#: live_panel_cells.cpp:200
+#: live_panel_cells.cpp:221
 msgid "Feld leeren"
 msgstr "Очистити клітинку"
 
@@ -1606,11 +1618,11 @@ msgstr "Розміщувати й обертати фікстури на сце�
 msgid "Flammen: Aufsteigendes, flackerndes Feuer mit einstellbarer Skalierung, Tempo und Flammenhöhe."
 msgstr "Полум'я: вогонь, що здіймається й мерехтить, з налаштовуваним масштабом, темпом і висотою полум'я."
 
-#: live_panel_cells.cpp:308
+#: live_panel_cells.cpp:336
 msgid "Flash"
 msgstr "Спалах"
 
-#: live_panel_cells.cpp:208
+#: live_panel_cells.cpp:229
 msgid "Flashen (nur solange gedrückt)"
 msgstr "Спалах (лише поки натиснуто)"
 
@@ -2034,7 +2046,7 @@ msgstr "Layout"
 msgid "Layout auf Würfel abbilden"
 msgstr "Відобразити Layout на куб"
 
-#: live_panel_cells.cpp:284
+#: live_panel_cells.cpp:312
 msgid "Leeres Feld. Klick oder Rechtsklick: Look hierher legen"
 msgstr "Порожня клітинка. Клік або права кнопка: покласти сюди Look"
 
@@ -2170,7 +2182,7 @@ msgstr "Look %1"
 msgid "Look ersetzen"
 msgstr "Замінити Look"
 
-#: live_panel_cells.cpp:188
+#: live_panel_cells.cpp:209
 msgid "Look hierher legen"
 msgstr "Покласти сюди Look"
 
@@ -2186,7 +2198,7 @@ msgstr "Зберегти Look"
 msgid "Look umbenennen"
 msgstr "Перейменувати Look"
 
-#: live_panel_cells.cpp:188
+#: live_panel_cells.cpp:209
 msgid "Look wechseln"
 msgstr "Змінити Look"
 
@@ -2573,6 +2585,10 @@ msgstr "Не вдається створити теку бібліотеки к�
 #: crash_notice.cpp:38 crash_notice.cpp:51
 msgid "Ordner öffnen"
 msgstr "Відкрити теку"
+
+#: live_panel_cells.cpp:342
+msgid "Overlay"
+msgstr "Накладання"
 
 #: main_window_actions.cpp:62
 msgid "Pakete (Art-Net, sACN, DDP) wirklich ins Netz schicken"
@@ -3042,7 +3058,7 @@ msgstr "Зоряне небо: мерехтливі зорі з регульов
 msgid "Steuerung"
 msgstr "Керування"
 
-#: live_panel_looks.cpp:83
+#: live_panel_looks.cpp:87
 msgid "Steuerung belegen:"
 msgstr "Прив’язати керування:"
 
@@ -3190,7 +3206,7 @@ msgstr "U%1: %2–%3"
 msgid "Umbenennen …"
 msgstr "Перейменувати …"
 
-#: live_panel_cells.cpp:207
+#: live_panel_cells.cpp:228
 msgid "Umschalten (bleibt an)"
 msgstr "Перемкнути (лишається)"
 
@@ -3518,19 +3534,19 @@ msgstr "Рядки:"
 msgid "Zeit"
 msgstr "Час"
 
-#: live_panel_cells.cpp:311
+#: live_panel_cells.cpp:339
 msgid "Zeit zum Einblenden beim Drücken"
 msgstr "Час плавної появи при натисканні"
 
-#: live_panel_cells.cpp:168
+#: live_panel_cells.cpp:189
 msgid "Zeit zum Einblenden beim Drücken (s):"
 msgstr "Час плавної появи при натисканні (с):"
 
-#: live_panel_cells.cpp:313
+#: live_panel_cells.cpp:341
 msgid "Zeit zum Zurückblenden beim Loslassen"
 msgstr "Час плавного повернення при відпусканні"
 
-#: live_panel_cells.cpp:168
+#: live_panel_cells.cpp:189
 msgid "Zeit zum Zurückblenden beim Loslassen (s):"
 msgstr "Час повернення після відпускання (с):"
 
@@ -3606,19 +3622,19 @@ msgstr "Назад: %1 с"
 msgid "Zurück: Look-Zeit"
 msgstr "Назад: час Look"
 
-#: live_panel_cells.cpp:167
+#: live_panel_cells.cpp:188
 msgid "Zurückblenden"
 msgstr "Повернення"
 
-#: live_panel_cells.cpp:243
+#: live_panel_cells.cpp:270
 msgid "Zurückblenden mit der Zeit des Looks (%1 s)"
 msgstr "Повернення з часом Look (%1 с)"
 
-#: live_panel_cells.cpp:244
+#: live_panel_cells.cpp:271
 msgid "Zurückblenden mit eigener Zeit (%1 s) …"
 msgstr "Повернення з власним часом (%1 с) …"
 
-#: live_panel_cells.cpp:245
+#: live_panel_cells.cpp:272
 msgid "Zurückblenden mit eigener Zeit …"
 msgstr "Повернення з власним часом …"
 
@@ -3746,6 +3762,10 @@ msgstr "Відкриває GitHub: створити нове Issue"
 msgid "Über WhiteHoleFX"
 msgstr "Про WhiteHoleFX"
 
+#: live_panel_cells.cpp:239
+msgid "Über den laufenden Look legen (Overlay)"
+msgstr "Накласти на поточний лук (накладання)"
+
 #: settings_dialog.cpp:124
 msgid "Über diese Karte tritt der sACN-Empfang den Multicast-Gruppen bei. Art-Net-Broadcast und Unicast-Pakete kommen weiterhin von jeder Karte an."
 msgstr "Через цю карту приймання sACN входить у multicast-групи. Широкомовні пакети Art-Net та unicast-пакети й надалі приходять з будь-якої карти."
@@ -3754,7 +3774,7 @@ msgstr "Через цю карту приймання sACN входить у mul
 msgid "Überblendet von Bild A zu Bild B (Position 0 bis 1). „Progressive“ lässt beide in der Mitte voll leuchten."
 msgstr "Плавно переходить від зображення A до B (позиція від 0 до 1). «Progressive» дає обом повністю світитися посередині."
 
-#: live_panel_cells.cpp:282
+#: live_panel_cells.cpp:310
 msgid "Überblendzeit %1 s. Rechtsklick: Look, Modus und Zeiten ändern"
 msgstr "Час переходу %1 с. Права кнопка: змінити Look, режим і час"
 

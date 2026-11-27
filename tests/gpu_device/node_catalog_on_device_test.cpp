@@ -119,6 +119,31 @@ TEST_CASE("Crossfade: linear und progressiv", "[gpu_device][nodes]") {
     CHECK(isColor(run(1, 1.0), 0.0F, 0.0F, 1.0F));
 }
 
+TEST_CASE("Crossfade: Overlay legt das obere Deck mit Alpha mal Position über das untere", "[gpu_device][nodes]") {
+    REQUIRE_DEVICE();
+    const auto run = [&](std::int64_t mode, double amount, float topAlpha) {
+        Lab lab;
+        const NodeId red = lab.add("wh.generator.solid");
+        lab.set(red, "color", ColorRgba{1.0F, 0.0F, 0.0F, 1.0F});
+        const NodeId blue = lab.add("wh.generator.solid");
+        lab.set(blue, "color", ColorRgba{0.0F, 0.0F, 1.0F, topAlpha});
+        const NodeId fade = lab.add("wh.blend.crossfade");
+        lab.set(fade, "mode", mode);
+        lab.set(fade, "amount", amount);
+        // Modus 2: B (blau) über A (rot); Modus 3: A über B, darum die Eingänge vertauscht
+        lab.connect(red, "out", fade, mode == 2 ? "a" : "b");
+        lab.connect(blue, "out", fade, mode == 2 ? "b" : "a");
+        return render(*device, lab, fade, 2, 2).at(0, 0);
+    };
+    for (const std::int64_t mode : {std::int64_t{2}, std::int64_t{3}}) {
+        CHECK(isColor(run(mode, 0.0, 1.0F), 1.0F, 0.0F, 0.0F));  // unten bleibt ganz stehen
+        CHECK(isColor(run(mode, 1.0, 1.0F), 0.0F, 0.0F, 1.0F));  // deckend oben verdeckt alles
+        CHECK(isColor(run(mode, 1.0, 0.0F), 1.0F, 0.0F, 0.0F));  // durchsichtig oben: unten scheint durch
+        CHECK(isColor(run(mode, 1.0, 0.5F), 0.5F, 0.0F, 0.5F));  // halb durchsichtig
+        CHECK(isColor(run(mode, 0.5, 1.0F), 0.5F, 0.0F, 0.5F));  // halbe Deckkraft
+    }
+}
+
 TEST_CASE("Mask und Key: Helligkeit bestimmt die Deckkraft", "[gpu_device][nodes]") {
     REQUIRE_DEVICE();
     const auto masked = [&](std::int64_t mode, bool invert) {

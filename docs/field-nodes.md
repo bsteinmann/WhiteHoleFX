@@ -109,7 +109,7 @@ beliebigen Koordinaten abtastet.
 | `wh.transform.twist` | Twist: verdreht den Raum um eine Achse durch die Mitte (`axis` X, Y oder Z), je weiter eine Ebene von der Mitte entfernt ist, desto stärker (`angle` Grad pro Einheit); aus einer geraden Säule wird eine Spirale | 3D |
 | `wh.blend.mix`, `wh.blend.add` | Überblenden, Addieren | beliebig |
 | `wh.blend.blend` | B über A mit Modus (Auswahlfeld): Add, Multiply, Screen, Subtract, Difference, Lighten, Darken, Over; `amount` überblendet zwischen A und dem Ergebnis | beliebig |
-| `wh.blend.crossfade` | Überblenden mit `amount` (Position): *Linear* blendet A aus, während B einblendet; *Progressive* lässt beide in der Mitte voll leuchten | beliebig |
+| `wh.blend.crossfade` | Überblenden mit `amount` (Position): *Linear* blendet A aus, während B einblendet; *Progressive* lässt beide in der Mitte voll leuchten; *Overlay B over A* / *Overlay A over B* lassen das untere Bild ganz stehen und legen das obere mit seinem Alpha mal `amount` darüber (Flash als Overlay im Live-Modus) | beliebig |
 | `wh.blend.mask` | Die Helligkeit der Maske bestimmt, wie viel vom Inhalt zu sehen ist: *Shape* als harte Form (Schwelle, Weichheit), *Intensity* behält Verläufe und weiche Ränder; `invert` kehrt um. So wird eine Form mit dem Inhalt eines anderen Effekts gefüllt | beliebig |
 | `wh.blend.key` | Schwarz wird durchsichtig (Alpha folgt der Helligkeit, Schwelle und Weichheit einstellbar); danach mit Blend (Over) oder Add über etwas legen | beliebig |
 | `wh.modifier.coloradjust` | Farbton (in Umläufen), Sättigung, Helligkeit, Gamma, Invertieren | beliebig |

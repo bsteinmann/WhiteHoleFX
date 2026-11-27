@@ -64,6 +64,8 @@ void parseLiveCell(Reader& r, LiveGrid& grid) {
             cell.look = r.word("Lookname");
         } else if (key == "flash") {
             cell.trigger = LookTrigger::Flash;
+        } else if (key == "overlay") {
+            cell.flashOverlay = true;
         } else if (key == "in") {
             cell.flashInSeconds = seconds(r, "in");
         } else if (key == "return") {
@@ -79,8 +81,8 @@ void parseLiveCell(Reader& r, LiveGrid& grid) {
         r.fail("Die cell-Zeile braucht einen look");
         return;
     }
-    if (cell.trigger != LookTrigger::Flash && (cell.flashInSeconds || cell.returnSeconds)) {
-        r.fail("\"in\" und \"return\" gibt es nur zusammen mit \"flash\"");
+    if (cell.trigger != LookTrigger::Flash && (cell.flashInSeconds || cell.returnSeconds || cell.flashOverlay)) {
+        r.fail("\"in\", \"return\" und \"overlay\" gibt es nur zusammen mit \"flash\"");
         return;
     }
     LiveCell& target = grid.cells[static_cast<std::size_t>((row - 1) * static_cast<std::uint32_t>(grid.columns) + (column - 1))];
@@ -106,6 +108,9 @@ std::string formatLiveGrid(const LiveGrid& grid) {
             out << "cell " << row + 1 << ' ' << col + 1 << " look " << quoteWord(cell.look);
             if (cell.trigger == LookTrigger::Flash) {
                 out << " flash";
+                if (cell.flashOverlay) {
+                    out << " overlay";
+                }
                 if (cell.flashInSeconds) {
                     out << " in " << formatDouble(*cell.flashInSeconds);
                 }
