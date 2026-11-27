@@ -106,7 +106,7 @@ msgstr ""
 msgid "%1  (%2 LEDs)"
 msgstr ""
 
-#: live_panel.cpp:254
+#: live_panel.cpp:280
 msgid "%1  →  %2"
 msgstr ""
 
@@ -148,6 +148,10 @@ msgstr ""
 
 #: main_window.cpp:273
 msgid "%1 LEDs, angehalten"
+msgstr ""
+
+#: live_panel.cpp:202
+msgid "%1 Look(s) hätten im kleineren Raster keinen Platz mehr und würden aus dem Raster genommen (die Looks bleiben im Projekt und lassen sich wieder auf ein Feld legen). Trotzdem verkleinern?"
 msgstr ""
 
 #: live_learn.cpp:39
@@ -326,7 +330,7 @@ msgstr ""
 msgid "(eigene Form)"
 msgstr ""
 
-#: live_panel.cpp:254
+#: live_panel.cpp:280
 msgid "(kein Look)"
 msgstr ""
 
@@ -806,7 +810,7 @@ msgstr ""
 msgid "Benutzerbibliothek lässt sich nicht speichern: %1"
 msgstr ""
 
-#: live_panel.cpp:255
+#: live_panel.cpp:281
 msgid "Bereit: %1 - GO drücken"
 msgstr ""
 
@@ -838,7 +842,7 @@ msgstr ""
 msgid "Blau"
 msgstr ""
 
-#: live_panel.cpp:64
+#: live_panel.cpp:65
 msgid "Blendet Flash je Look, die Belegung von MIDI und DMX und die Menüleiste ein oder aus"
 msgstr ""
 
@@ -970,7 +974,7 @@ msgstr ""
 msgid "Dabei wird nur die öffentliche Seite des neuesten Releases abgefragt. Gesendet werden Programmname und Versionsnummer (und, wie bei jedem Netzwerkzugriff, deine IP-Adresse), nichts über dich oder deine Projekte. Es wird nichts installiert. Du kannst das jederzeit im Menü Hilfe ändern."
 msgstr ""
 
-#: live_panel_cells.cpp:305
+#: live_panel_cells.cpp:309
 msgid "Das Feld läuft nur, solange der Knopf (oder das Pad) gehalten wird"
 msgstr ""
 
@@ -1086,7 +1090,7 @@ msgstr ""
 msgid "Die Cuelist ist leer. Erst Cues anlegen (Dock „Cuelist“)."
 msgstr ""
 
-#: live_panel.cpp:280 live_panel_looks.cpp:57
+#: live_panel.cpp:306 live_panel_looks.cpp:57
 msgid "Die Cuelist läuft und schaltet die Looks selbst. Erst in der Cuelist auf Stopp drücken."
 msgstr ""
 
@@ -1226,7 +1230,7 @@ msgstr ""
 msgid "Effekte (2D)"
 msgstr ""
 
-#: live_panel.cpp:133
+#: live_panel.cpp:135
 msgid "Eigene Überblendzeit:"
 msgstr ""
 
@@ -1242,7 +1246,7 @@ msgstr ""
 msgid "Ein Kabel lässt sich nur zwischen passenden Typen ziehen."
 msgstr ""
 
-#: live_panel.cpp:132
+#: live_panel.cpp:134
 msgid "Ein Klick lädt den Look nur vor. GO (Leertaste) startet dann die Überblendung."
 msgstr ""
 
@@ -1266,19 +1270,19 @@ msgstr ""
 msgid "Ein- und Ausgang eines MIDI-Controllers, zum Beispiel eines Akai APC mini. Die Wahl gilt für diesen Rechner und Auftritt, nicht für das Projekt."
 msgstr ""
 
-#: live_panel_cells.cpp:163
+#: live_panel_cells.cpp:167
 msgid "Einblenden"
 msgstr ""
 
-#: live_panel_cells.cpp:235
+#: live_panel_cells.cpp:239
 msgid "Einblenden mit der Zeit des Looks (%1 s)"
 msgstr ""
 
-#: live_panel_cells.cpp:236
+#: live_panel_cells.cpp:240
 msgid "Einblenden mit eigener Zeit (%1 s) …"
 msgstr ""
 
-#: live_panel_cells.cpp:237
+#: live_panel_cells.cpp:241
 msgid "Einblenden mit eigener Zeit …"
 msgstr ""
 
@@ -1354,7 +1358,7 @@ msgstr ""
 msgid "Einrasten"
 msgstr ""
 
-#: live_panel.cpp:62 main_window_settings.cpp:65 output_form.cpp:89
+#: live_panel.cpp:63 main_window_settings.cpp:65 output_form.cpp:89
 msgid "Einstellungen"
 msgstr ""
 
@@ -1506,7 +1510,7 @@ msgstr ""
 msgid "Favoriten"
 msgstr ""
 
-#: live_panel_cells.cpp:196
+#: live_panel_cells.cpp:200
 msgid "Feld leeren"
 msgstr ""
 
@@ -1602,11 +1606,11 @@ msgstr ""
 msgid "Flammen: Aufsteigendes, flackerndes Feuer mit einstellbarer Skalierung, Tempo und Flammenhöhe."
 msgstr ""
 
-#: live_panel_cells.cpp:304
+#: live_panel_cells.cpp:308
 msgid "Flash"
 msgstr ""
 
-#: live_panel_cells.cpp:204
+#: live_panel_cells.cpp:208
 msgid "Flashen (nur solange gedrückt)"
 msgstr ""
 
@@ -1654,7 +1658,7 @@ msgstr ""
 msgid "GO"
 msgstr ""
 
-#: live_panel.cpp:144
+#: live_panel.cpp:146
 msgid "GO  (Leertaste)"
 msgstr ""
 
@@ -2030,7 +2034,7 @@ msgstr ""
 msgid "Layout auf Würfel abbilden"
 msgstr ""
 
-#: live_panel_cells.cpp:280
+#: live_panel_cells.cpp:284
 msgid "Leeres Feld. Klick oder Rechtsklick: Look hierher legen"
 msgstr ""
 
@@ -2106,7 +2110,7 @@ msgstr ""
 msgid "Links ab"
 msgstr ""
 
-#: live_panel.cpp:103
+#: live_panel.cpp:104
 msgid "Links die Ausgabe, rechts der vorgeladene Look (während des Überblendens der einblendende). Kostet etwas Rechenzeit, solange ein Look vorgeladen ist"
 msgstr ""
 
@@ -2166,7 +2170,7 @@ msgstr ""
 msgid "Look ersetzen"
 msgstr ""
 
-#: live_panel_cells.cpp:184
+#: live_panel_cells.cpp:188
 msgid "Look hierher legen"
 msgstr ""
 
@@ -2182,7 +2186,7 @@ msgstr ""
 msgid "Look umbenennen"
 msgstr ""
 
-#: live_panel_cells.cpp:184
+#: live_panel_cells.cpp:188
 msgid "Look wechseln"
 msgstr ""
 
@@ -2318,7 +2322,7 @@ msgstr ""
 msgid "Mischt zwei Bilder: 0 zeigt nur A, 1 nur B, dazwischen eine Überblendung."
 msgstr ""
 
-#: live_panel.cpp:131
+#: live_panel.cpp:133
 msgid "Mit GO (vorladen)"
 msgstr ""
 
@@ -2770,7 +2774,11 @@ msgstr ""
 msgid "Raster in der Vorschau anzeigen"
 msgstr ""
 
-#: live_panel.cpp:87
+#: live_panel.cpp:201
+msgid "Raster verkleinern"
+msgstr ""
+
+#: live_panel.cpp:88
 msgid "Rasterbreite (Spalten):"
 msgstr ""
 
@@ -3022,7 +3030,7 @@ msgstr ""
 msgid "Starte …"
 msgstr ""
 
-#: live_panel.cpp:134
+#: live_panel.cpp:136
 msgid "Statt der Zeit, die beim Look gespeichert ist"
 msgstr ""
 
@@ -3182,7 +3190,7 @@ msgstr ""
 msgid "Umbenennen …"
 msgstr ""
 
-#: live_panel_cells.cpp:203
+#: live_panel_cells.cpp:207
 msgid "Umschalten (bleibt an)"
 msgstr ""
 
@@ -3218,7 +3226,7 @@ msgstr ""
 msgid "Unten ⤓"
 msgstr ""
 
-#: live_panel.cpp:80
+#: live_panel.cpp:81
 msgid "Unter jedem Look: Flash (läuft nur, solange der Knopf gehalten wird) und die Zeit zum Zurückblenden."
 msgstr ""
 
@@ -3286,7 +3294,7 @@ msgstr ""
 msgid "Vorschau"
 msgstr ""
 
-#: live_panel.cpp:100
+#: live_panel.cpp:101
 msgid "Vorschau teilen"
 msgstr ""
 
@@ -3406,7 +3414,7 @@ msgstr ""
 msgid "Wie oft die Spirale um die Säule läuft (0 = gerade nach oben)"
 msgstr ""
 
-#: live_panel.cpp:91
+#: live_panel.cpp:92
 msgid "Wie viele Look-Knöpfe nebeneinander stehen; mehr Spalten brauchen weniger Höhe"
 msgstr ""
 
@@ -3498,11 +3506,11 @@ msgstr ""
 msgid "Zeilen (waagrecht)"
 msgstr ""
 
-#: live_panel.cpp:97
+#: live_panel.cpp:98
 msgid "Zeilen des festen Rasters; nicht belegte Felder bleiben leer. Bei mehr Looks als Feldern kommen Zeilen dazu"
 msgstr ""
 
-#: live_panel.cpp:93
+#: live_panel.cpp:94
 msgid "Zeilen:"
 msgstr ""
 
@@ -3510,19 +3518,19 @@ msgstr ""
 msgid "Zeit"
 msgstr ""
 
-#: live_panel_cells.cpp:307
+#: live_panel_cells.cpp:311
 msgid "Zeit zum Einblenden beim Drücken"
 msgstr ""
 
-#: live_panel_cells.cpp:164
+#: live_panel_cells.cpp:168
 msgid "Zeit zum Einblenden beim Drücken (s):"
 msgstr ""
 
-#: live_panel_cells.cpp:309
+#: live_panel_cells.cpp:313
 msgid "Zeit zum Zurückblenden beim Loslassen"
 msgstr ""
 
-#: live_panel_cells.cpp:164
+#: live_panel_cells.cpp:168
 msgid "Zeit zum Zurückblenden beim Loslassen (s):"
 msgstr ""
 
@@ -3586,7 +3594,7 @@ msgstr ""
 msgid "Zum Aneinanderreihen mindestens zwei Fixtures wählen"
 msgstr ""
 
-#: live_panel.cpp:65
+#: live_panel.cpp:66
 msgid "Zurück zum Editor (Esc)"
 msgstr ""
 
@@ -3598,19 +3606,19 @@ msgstr ""
 msgid "Zurück: Look-Zeit"
 msgstr ""
 
-#: live_panel_cells.cpp:163
+#: live_panel_cells.cpp:167
 msgid "Zurückblenden"
 msgstr ""
 
-#: live_panel_cells.cpp:239
+#: live_panel_cells.cpp:243
 msgid "Zurückblenden mit der Zeit des Looks (%1 s)"
 msgstr ""
 
-#: live_panel_cells.cpp:240
+#: live_panel_cells.cpp:244
 msgid "Zurückblenden mit eigener Zeit (%1 s) …"
 msgstr ""
 
-#: live_panel_cells.cpp:241
+#: live_panel_cells.cpp:245
 msgid "Zurückblenden mit eigener Zeit …"
 msgstr ""
 
@@ -3746,7 +3754,7 @@ msgstr ""
 msgid "Überblendet von Bild A zu Bild B (Position 0 bis 1). „Progressive“ lässt beide in der Mitte voll leuchten."
 msgstr ""
 
-#: live_panel_cells.cpp:278
+#: live_panel_cells.cpp:282
 msgid "Überblendzeit %1 s. Rechtsklick: Look, Modus und Zeiten ändern"
 msgstr ""
 

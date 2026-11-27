@@ -5,7 +5,9 @@
 // über dem Limit der Dateigröße. Qt läuft nur in der CI, dort fängt dieser Test Fehler auf.
 #include <QMenu>
 
+#include <algorithm>
 #include <memory>
+#include <vector>
 
 #include "live_panel.hpp"
 #include "main_window.hpp"
@@ -27,6 +29,37 @@ QString MainWindow::exerciseLiveGrid() {
         return QStringLiteral("Live: Raster (Spalten, Zeilen) lässt sich nicht ändern");
     }
     livePanel_->setGrid(columns, rows);
+    // Verkleinern per Eingabe: Gingen Looks verloren, fragt das Panel vorher nach (hier mit einer Funktion statt eines Dialogs)
+    const std::vector<project::LiveCell> savedCells = grid.cells;  // der bestätigte Fall verwirft Looks: danach zurücksetzen
+    int asked = 0;
+    bool answer = false;
+    livePanel_->setShrinkConfirm([&](int) {
+        ++asked;
+        return answer;
+    });
+    const int occupied = static_cast<int>(
+        std::count_if(grid.cells.begin(), grid.cells.end(), [](const project::LiveCell& c) { return !c.empty(); }));
+    if (occupied > 1) {  // auf 1 x 1 behält nur ein Feld seinen Look
+        if (livePanel_->requestGrid(1, 1) || asked != 1 || livePanel_->columns() != columns || livePanel_->rows() != rows ||
+            grid.columns != columns || grid.rows != rows) {
+            livePanel_->setShrinkConfirm({});
+            return QStringLiteral("Live: Raster verkleinern ohne Bestätigung verändert das Raster");
+        }
+        answer = true;
+        if (!livePanel_->requestGrid(1, 1) || asked != 2 || grid.columns != 1 || grid.rows != 1) {
+            livePanel_->setShrinkConfirm({});
+            return QStringLiteral("Live: Raster verkleinern mit Bestätigung klappt nicht");
+        }
+        livePanel_->setGrid(columns, rows);
+        for (std::size_t i = 0; i < savedCells.size(); ++i) {  // Ausgangszustand für die folgenden Prüfungen
+            if (!player_->setLiveCell(static_cast<int>(i), savedCells[i]).ok()) {
+                livePanel_->setShrinkConfirm({});
+                return QStringLiteral("Live: Raster nach dem Verkleinern lässt sich nicht wiederherstellen");
+            }
+        }
+        livePanel_->refresh();
+    }
+    livePanel_->setShrinkConfirm({});
     // Leeres Feld belegen: derselbe Look liegt dann zweimal, einmal als Flash
     const int freeCell = project::firstFreeLiveCell(grid);
     if (freeCell < 0 || player_->cellLook(freeCell) >= 0 || livePanel_->trigger(freeCell)) {

@@ -10,6 +10,7 @@
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QMenu>
+#include <QMessageBox>
 #include <QProgressBar>
 #include <QPushButton>
 #include <QScrollArea>
@@ -107,8 +108,9 @@ LivePanel::LivePanel(runtime::Player& player, QWidget* parent) : QWidget{parent}
     barLayout->addLayout(columnsRow);
     for (QSpinBox* box : {columnsBox_, rowsBox_}) {
         connect(box, &QSpinBox::valueChanged, this, [this](int) {
-            setGrid(columnsBox_->value(), rowsBox_->value());
-            Q_EMIT gridChanged(columns_, rows_);
+            if (requestGrid(columnsBox_->value(), rowsBox_->value())) {
+                Q_EMIT gridChanged(columns_, rows_);
+            }
         });
     }
     connect(splitCheck_, &QCheckBox::toggled, this, [this](bool on) { Q_EMIT splitPreviewChanged(on); });
@@ -184,6 +186,30 @@ bool LivePanel::splitPreview() const { return splitCheck_->isChecked(); }
 void LivePanel::setColumns(int columns) { setGrid(columns, rows_); }
 
 void LivePanel::setRows(int rows) { setGrid(columns_, rows); }
+
+bool LivePanel::requestGrid(int columns, int rows) {
+    columns = std::clamp(columns, 1, 16);
+    rows = std::clamp(rows, 1, 16);
+    if (columns == columns_ && rows == rows_) {
+        return true;
+    }
+    // Würden belegte Felder trotz Nachrücken wegfallen, vorher fragen: die Looks verschwänden sonst aus dem Raster
+    // (sie blieben im Projekt, wären aber auf keinem Knopf mehr zu finden)
+    const int lost = player_.liveGridCellsLost(columns, rows);
+    if (lost > 0) {
+        const bool confirmed = confirmShrink_ ? confirmShrink_(lost) : QMessageBox::question(
+            this, tr("Raster verkleinern"),
+            tr("%1 Look(s) hätten im kleineren Raster keinen Platz mehr und würden aus dem Raster genommen (die Looks bleiben "
+               "im Projekt und lassen sich wieder auf ein Feld legen). Trotzdem verkleinern?").arg(lost),
+            QMessageBox::Yes | QMessageBox::Cancel, QMessageBox::Cancel) == QMessageBox::Yes;
+        if (!confirmed) {
+            syncGridBoxes();  // die Zahlenfelder zeigen wieder die alte Größe
+            return false;
+        }
+    }
+    setGrid(columns, rows);
+    return true;
+}
 
 void LivePanel::setGrid(int columns, int rows) {
     columns = std::clamp(columns, 1, 16);

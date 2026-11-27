@@ -48,8 +48,20 @@ struct LiveGrid {
 /// Leeres Raster in der Größe `columns` x `rows` (je auf 1..16 begrenzt).
 [[nodiscard]] LiveGrid makeEmptyLiveGrid(int columns, int rows);
 
-/// Neue Größe; belegte Felder behalten ihre Zeile und Spalte, Felder außerhalb fallen weg (die Looks bleiben im Projekt).
-void resizeLiveGrid(LiveGrid& grid, int columns, int rows);
+/// Was beim Ändern der Rastergröße mit den belegten Feldern passiert ist.
+struct LiveGridResize {
+    int moved{0};    // belegte Felder außerhalb der neuen Größe, die in ein freies Feld nachgerückt sind
+    int dropped{0};  // belegte Felder, für die kein freies Feld mehr da war (der Look bleibt im Projekt, liegt aber in keinem Feld)
+};
+
+/// Neue Größe; belegte Felder, die noch hineinpassen, behalten ihre Zeile und Spalte. Belegte Felder außerhalb rücken in die
+/// ersten freien Felder des neuen Rasters nach (zeilenweise, in der alten Reihenfolge); passt etwas nicht mehr, fällt es weg
+/// (die Looks bleiben im Projekt). Wunsch vom 27.11.: beim Verkleinern sollen Looks nicht stillschweigend verschwinden.
+LiveGridResize resizeLiveGrid(LiveGrid& grid, int columns, int rows);
+
+/// Wie viele belegte Felder bei der neuen Größe *trotz Nachrücken* wegfallen würden (0 = es bleibt alles im Raster).
+/// Ändert das Raster nicht.
+[[nodiscard]] int liveGridCellsLost(const LiveGrid& grid, int columns, int rows);
 
 /// Erstes leeres Feld (zeilenweise) oder -1.
 [[nodiscard]] int firstFreeLiveCell(const LiveGrid& grid) noexcept;
