@@ -139,7 +139,7 @@ QString MainWindow::exerciseSettings() {
     probe.midiProfile = QStringLiteral("Test-Profil");
     probe.midiProfiles = QStringList{QStringLiteral("Test-Profil|apcmini1|8|-1|-1|56|48|49")};
     probe.liveBindings = QStringList{QStringLiteral("go midi 3 12"), QStringLiteral("crossfade dmx sacn 7 512")};
-    probe.tempoSource = 3;
+    probe.tempoSource = 4;
     probe.tempoFixedBpm = 90.5;
     probe.tempoDmxProtocol = 1;
     probe.tempoDmxUniverse = 12;

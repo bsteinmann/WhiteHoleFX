@@ -35,6 +35,12 @@ struct MidiBytes {
 };
 [[nodiscard]] MidiBytes toBytes(const MidiMessage& message) noexcept;
 
+/// MIDI-Echtzeitmeldungen für die Tempo-Uhr (MIDI-Clock): Clock (0xF8, 24 je Viertel), Start (0xFA), Continue (0xFB),
+/// Stop (0xFC). Bewusst getrennt von MidiMessage: sie haben keinen Kanal und keine Daten, und Noten/Regler-Code bleibt unberührt.
+enum class MidiRealtime : std::uint8_t { Clock, Start, Continue, Stop };
+/// Liest ein einzelnes Echtzeit-Byte. Leer bei allem anderen.
+[[nodiscard]] std::optional<MidiRealtime> parseMidiRealtime(std::span<const std::uint8_t> bytes) noexcept;
+
 [[nodiscard]] MidiMessage noteOn(std::uint8_t channel, std::uint8_t note, std::uint8_t velocity) noexcept;
 [[nodiscard]] MidiMessage noteOff(std::uint8_t channel, std::uint8_t note) noexcept;
 [[nodiscard]] MidiMessage controlChange(std::uint8_t channel, std::uint8_t controller, std::uint8_t value) noexcept;

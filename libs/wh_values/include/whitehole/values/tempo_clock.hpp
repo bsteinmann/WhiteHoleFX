@@ -10,7 +10,8 @@
 //
 // Quellen: Tap (tap(), z. B. Taste im Live-Fenster, MIDI-Taste, DMX-Kanal), ein fester Wert, Audio-Beat (externalBeat(): jeder
 // erkannte Schlag ist ein Beat, das Tempo kommt vom Erkenner) und ein DMX-Kanal als BPM-Wert (externalBpm(), nur Tempo, keine
-// Phase). Die Uhr kennt weder Audio noch DMX: der Player liest beide und meldet sie hier. MIDI-Clock folgt in Stufe 3.
+// Phase) und MIDI-Clock (externalBeat() zu jedem Beat der Clock, mit dem Tempo aus deren Abständen). Die Uhr kennt weder Audio
+// noch DMX noch MIDI: der Player liest sie und meldet sie hier.
 //
 // Phase: zählt Beats (0, 1, 2, ...). Ändert sich das Tempo, läuft sie stetig weiter. Ein Tap setzt den Beat auf den Zeitpunkt
 // des Taps (die Phase "rastet" auf die nächste ganze Zahl ein); der Sprung wird nicht hart gezeigt, sondern in
@@ -28,7 +29,7 @@ namespace whitehole::values {
 
 class TempoClock {
 public:
-    enum class Source : std::uint8_t { Tap, Fixed, Audio, Dmx };
+    enum class Source : std::uint8_t { Tap, Fixed, Audio, Dmx, MidiClock };
 
     /// Dauer, über die ein Einrasten der Phase angeglichen wird.
     static constexpr double kSettleSeconds = 0.25;
@@ -58,8 +59,8 @@ public:
     /// Ein Tap; wird mit dem nächsten update() zu dessen Zeit verrechnet. Nur bei Quelle Tap wirksam.
     void tap();
 
-    /// Ein Beat von außen (Audio-Erkenner), mit dessen geschätztem Tempo (0 = Tempo unverändert). Wird wie ein Tap mit dem
-    /// nächsten update() verrechnet (die Phase rastet ein), das Tempo kommt aber vom Erkenner. Nur bei Quelle Audio wirksam.
+    /// Ein Beat von außen (Audio-Erkenner oder MIDI-Clock), mit dessen Tempo (0 = Tempo unverändert). Wird wie ein Tap mit dem
+    /// nächsten update() verrechnet (die Phase rastet ein), das Tempo kommt aber von außen. Nur bei Quelle Audio oder MidiClock.
     void externalBeat(double bpm);
     /// Ein Tempo von außen (DMX-Kanal); die Phase läuft stetig weiter. Nur bei Quelle Dmx wirksam; 0 oder ungültig = unverändert.
     void externalBpm(double bpm);

@@ -14,6 +14,7 @@ Result<void> MidiReceiver::start(const std::string& portName) {
         return {};
     }
     const std::shared_ptr<MidiStore> store = store_;
+    input_->setRealtimeHandler([store](MidiRealtime event) { store->applyRealtime(event); });
     return input_->open(portName, [store](const MidiMessage& message) { store->apply(message); });
 }
 

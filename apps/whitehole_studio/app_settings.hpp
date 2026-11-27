@@ -53,7 +53,8 @@ struct AppSettings {
     bool liveSplitPreview{true};  // Live-Fenster: Vorschau teilen (links Ausgabe, rechts vorgeladener Look)
     /// Belegung der Live-Steuerung (runtime::serializeBindings), Reiter "Steuerung" und Live-Fenster.
     QStringList liveBindings;
-    /// Gemeinsame Tempo-Uhr (values::TempoClock): Quelle 0 = Tap, 1 = fester Wert, 2 = Audio-Beat, 3 = DMX-Kanal (Wert = BPM);
+    /// Gemeinsame Tempo-Uhr (values::TempoClock): Quelle 0 = Tap, 1 = fester Wert, 2 = Audio-Beat, 3 = DMX-Kanal (Wert = BPM),
+    /// 4 = MIDI-Clock;
     /// der feste Wert in BPM; der DMX-Kanal (Protokoll 0 = Art-Net, 1 = sACN).
     int tempoSource{0};
     double tempoFixedBpm{120.0};

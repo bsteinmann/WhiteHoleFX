@@ -44,7 +44,8 @@ public:
     void clearDmx(runtime::LiveFunction function);
     [[nodiscard]] QString midiText(runtime::LiveFunction function) const;
     [[nodiscard]] QString dmxText(runtime::LiveFunction function) const;
-    /// Gemeinsame Tempo-Uhr: Quelle (0 = Tap, 1 = fester Wert, 2 = Audio-Beat, 3 = DMX-Kanal) und fester Wert in BPM.
+    /// Gemeinsame Tempo-Uhr: Quelle (0 = Tap, 1 = fester Wert, 2 = Audio-Beat, 3 = DMX-Kanal, 4 = MIDI-Clock) und fester
+    /// Wert in BPM.
     [[nodiscard]] int tempoSource() const;
     [[nodiscard]] double tempoFixedBpm() const;
     /// DMX-Kanal der Quelle "DMX-Kanal" (Protokoll 0 = Art-Net, 1 = sACN).

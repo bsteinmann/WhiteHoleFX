@@ -30,11 +30,11 @@ msgstr "   |   Вивід вимкнено (%1 пакетів не надісл�
 msgid "   |   BLACKOUT"
 msgstr "   |   BLACKOUT"
 
-#: main_window_dmx.cpp:213
+#: main_window_dmx.cpp:214
 msgid "   |   DMX-Eingang %1: %2 Pakete"
 msgstr "   |   Вхід DMX %1: %2 пакетів"
 
-#: main_window_dmx.cpp:203
+#: main_window_dmx.cpp:204
 msgid "   |   DMX-Nodes im Projekt, Eingang aus (Einstellungen)"
 msgstr "   |   У проєкті є DMX-ноди, вхід вимкнено (Налаштування)"
 
@@ -62,11 +62,11 @@ msgstr "  · Накладання"
 msgid " (Kopie)"
 msgstr " (копія)"
 
-#: main_window_dmx.cpp:211
+#: main_window_dmx.cpp:212
 msgid " + sACN"
 msgstr " + sACN"
 
-#: live_controls_page.cpp:112
+#: live_controls_page.cpp:113
 msgid " BPM"
 msgstr " BPM"
 
@@ -118,7 +118,7 @@ msgstr "%1  (%2 LED)"
 msgid "%1  →  %2"
 msgstr "%1  →  %2"
 
-#: main_window_controls.cpp:62 main_window_dmx.cpp:189 main_window_midi_live.cpp:91
+#: main_window_controls.cpp:62 main_window_dmx.cpp:190 main_window_midi_live.cpp:91
 msgid "%1 %"
 msgstr "%1 %"
 
@@ -130,7 +130,7 @@ msgstr "%1 (%2 світлодіодів)"
 msgid "%1 (%2)"
 msgstr "%1 (%2)"
 
-#: live_controls_page.cpp:193
+#: live_controls_page.cpp:194
 msgid "%1 (Profil)"
 msgstr "%1 (профіль)"
 
@@ -1090,7 +1090,7 @@ msgstr "Cue спрацьовує, коли значення каналу зро�
 msgid "Der Kanalwert 0 bis 255 setzt den Master auf 0 bis 100 %. Solange Pakete kommen, folgt der Master-Regler dem Pult; bleibt das Signal weg, hält der Master seinen Wert. Der Empfang oben muss für das gewählte Protokoll eingeschaltet sein."
 msgstr "Значення каналу від 0 до 255 задає Master від 0 до 100 %. Поки надходять пакети, регулятор Master слідує за пультом; якщо сигнал зникає, Master тримає своє значення. Приймання вгорі має бути ввімкнене для обраного протоколу."
 
-#: main_window_dmx.cpp:194
+#: main_window_dmx.cpp:195
 msgid "Der Master kommt gerade vom DMX-Kanal (Einstellungen → DMX-Eingang)"
 msgstr "Master зараз надходить з каналу DMX (Налаштування → Вхід DMX)"
 
@@ -1550,7 +1550,7 @@ msgstr "Розташування вікон скинуто: набуде чин�
 msgid "Fester Wert"
 msgstr "Фіксоване значення"
 
-#: live_controls_page.cpp:140
+#: live_controls_page.cpp:141
 msgid "Fester Wert:"
 msgstr "Фіксоване значення:"
 
@@ -1722,7 +1722,7 @@ msgstr "Жовтий"
 msgid "Gerät:"
 msgstr "Пристрій:"
 
-#: main_window_controls.cpp:46 main_window_dmx.cpp:195
+#: main_window_controls.cpp:46 main_window_dmx.cpp:196
 msgid "Gesamthelligkeit (wirkt auf Vorschau und Ausgabe, nicht im Projekt gespeichert)"
 msgstr "Загальна яскравість (діє на попередній перегляд і вивід, у проєкті не зберігається)"
 
@@ -1922,7 +1922,7 @@ msgstr "Показати чи приховати хід кабелю зі стр
 msgid "Kaleidoskop: Spiegelt einen Ausschnitt um einen Mittelpunkt zu einem Muster mit mehreren Segmenten."
 msgstr "Калейдоскоп: віддзеркалює фрагмент навколо центру в візерунок із кількох сегментів."
 
-#: live_controls_page.cpp:136
+#: live_controls_page.cpp:137
 msgid "Kanal"
 msgstr "Канал"
 
@@ -2285,6 +2285,10 @@ msgstr "Вихід MIDI"
 #: main_window_midi.cpp:34
 msgid "MIDI-Ausgang: %1"
 msgstr "Вихід MIDI: %1"
+
+#: live_controls_page.cpp:107
+msgid "MIDI-Clock (MIDI-Eingang der Seite MIDI)"
+msgstr "MIDI Clock (MIDI-вхід зі сторінки MIDI)"
 
 #: midi_settings_page.cpp:61
 msgid "MIDI-Eingang"
@@ -3190,7 +3194,7 @@ msgstr "Темп"
 msgid "Tempo per Tippen: Jedes Einschalten von „Tap“ zählt als Schlag. Liefert Beat, Pulse, Phase und BPM, oder ein festes Tempo."
 msgstr "Темп натисканням: кожне вмикання «Tap» рахується як удар. Дає біт, Pulse, фазу та BPM, або фіксований темп."
 
-#: live_controls_page.cpp:141
+#: live_controls_page.cpp:142
 msgid "Tempo über DMX:"
 msgstr "Темп через DMX:"
 
@@ -3198,7 +3202,7 @@ msgstr "Темп через DMX:"
 msgid "Tempo-Tap"
 msgstr "Тап темпу"
 
-#: live_controls_page.cpp:139
+#: live_controls_page.cpp:140
 msgid "Tempo-Uhr:"
 msgstr "Годинник темпу:"
 
@@ -3270,7 +3274,7 @@ msgstr "Несподіване завершення минулого разу"
 msgid "Ungespeicherte Änderungen"
 msgstr "Незбережені зміни"
 
-#: add_fixture_dialog.cpp:176 dmx_patch_table.cpp:46 live_controls_page.cpp:134
+#: add_fixture_dialog.cpp:176 dmx_patch_table.cpp:46 live_controls_page.cpp:135
 msgid "Universe"
 msgstr "Universe"
 
@@ -3522,7 +3526,7 @@ msgstr "Керується зв'язком у графі."
 msgid "Wird geladen …"
 msgstr "Завантаження …"
 
-#: live_controls_page.cpp:108
+#: live_controls_page.cpp:109
 msgid "Woher die gemeinsame Tempo-Uhr ihr Tempo nimmt (Node „Tempo“)"
 msgstr "Звідки спільний годинник темпу бере темп (вузол «Tempo»)"
 
@@ -3710,7 +3714,7 @@ msgstr "Напрямок лічби"
 msgid "an oder aus"
 msgstr "увімк. чи вимк."
 
-#: live_controls_page.cpp:198 live_learn.cpp:31 midi_profile_box.cpp:78
+#: live_controls_page.cpp:199 live_learn.cpp:31 midi_profile_box.cpp:78
 msgid "aus"
 msgstr "вимкнено"
 

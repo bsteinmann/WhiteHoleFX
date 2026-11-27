@@ -93,4 +93,52 @@ MidiStats MidiStore::stats() const {
     return stats_;
 }
 
+void MidiStore::applyRealtime(MidiRealtime event) {
+    constexpr std::size_t kTempoTicks = 24;  // eine Viertel: das Tempo mittelt über einen Beat
+    constexpr double kGapSeconds = 1.0;      // längere Pause zwischen zwei Clocks: neue Messung
+    const auto now = now_();
+    const std::lock_guard lock{mutex_};
+    switch (event) {
+        case MidiRealtime::Start:
+            ++clock_.starts;
+            clock_.ticks = 0;
+            clock_.running = true;
+            clockTimes_.clear();
+            return;
+        case MidiRealtime::Continue:
+            clock_.running = true;
+            return;
+        case MidiRealtime::Stop:
+            clock_.running = false;
+            return;
+        case MidiRealtime::Clock:
+            break;
+    }
+    if (lastClock_ && secondsSince(now, *lastClock_) > kGapSeconds) {
+        clockTimes_.clear();
+    }
+    lastClock_ = now;
+    if (clock_.starts == 0) {
+        clock_.running = true;  // ohne Start (Gerät lief schon): Clocks zählen trotzdem
+    }
+    ++clock_.ticks;
+    clockTimes_.push_back(now);
+    if (clockTimes_.size() > kTempoTicks + 1) {
+        clockTimes_.pop_front();
+    }
+    if (clockTimes_.size() >= 7) {  // ein Viertel Beat genügt für eine erste Schätzung
+        const double span = secondsSince(clockTimes_.back(), clockTimes_.front());
+        const double perTick = span / static_cast<double>(clockTimes_.size() - 1);
+        clock_.bpm = perTick > 0.0 ? 60.0 / (perTick * static_cast<double>(kTempoTicks)) : 0.0;
+    }
+}
+
+MidiClockState MidiStore::clock() const {
+    const auto now = now_();
+    const std::lock_guard lock{mutex_};
+    MidiClockState state = clock_;
+    state.ageSeconds = lastClock_ ? secondsSince(now, *lastClock_) : 1e9;
+    return state;
+}
+
 }  // namespace whitehole::midi

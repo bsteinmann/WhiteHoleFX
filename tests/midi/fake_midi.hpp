@@ -30,6 +30,14 @@ public:
         handler_ = nullptr;
     }
     bool isOpen() const override { return open_; }
+    void setRealtimeHandler(MidiRealtimeHandler handler) override { realtime_ = std::move(handler); }
+
+    /// Spielt eine Echtzeitmeldung (MIDI-Clock) ein, als käme sie vom Gerät.
+    void injectRealtime(MidiRealtime event) const {
+        if (open_ && realtime_) {
+            realtime_(event);
+        }
+    }
 
     /// Spielt eine Nachricht ein, als käme sie vom Gerät. Ohne offenen Port passiert nichts.
     void inject(const MidiMessage& message) const {
@@ -42,6 +50,7 @@ public:
 
 private:
     MidiHandler handler_;
+    MidiRealtimeHandler realtime_;
     bool open_{false};
 };
 

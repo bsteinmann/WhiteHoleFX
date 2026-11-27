@@ -30,11 +30,11 @@ msgstr "   |   Salida apagada (%1 paquetes sin enviar)"
 msgid "   |   BLACKOUT"
 msgstr "   |   BLACKOUT"
 
-#: main_window_dmx.cpp:213
+#: main_window_dmx.cpp:214
 msgid "   |   DMX-Eingang %1: %2 Pakete"
 msgstr "   |   Entrada DMX %1: %2 paquetes"
 
-#: main_window_dmx.cpp:203
+#: main_window_dmx.cpp:204
 msgid "   |   DMX-Nodes im Projekt, Eingang aus (Einstellungen)"
 msgstr "   |   Nodos DMX en el proyecto, entrada apagada (Ajustes)"
 
@@ -62,11 +62,11 @@ msgstr "  · Superposición"
 msgid " (Kopie)"
 msgstr " (copia)"
 
-#: main_window_dmx.cpp:211
+#: main_window_dmx.cpp:212
 msgid " + sACN"
 msgstr " + sACN"
 
-#: live_controls_page.cpp:112
+#: live_controls_page.cpp:113
 msgid " BPM"
 msgstr " BPM"
 
@@ -118,7 +118,7 @@ msgstr "%1  (%2 LED)"
 msgid "%1  →  %2"
 msgstr "%1  →  %2"
 
-#: main_window_controls.cpp:62 main_window_dmx.cpp:189 main_window_midi_live.cpp:91
+#: main_window_controls.cpp:62 main_window_dmx.cpp:190 main_window_midi_live.cpp:91
 msgid "%1 %"
 msgstr "%1 %"
 
@@ -130,7 +130,7 @@ msgstr "%1 (%2 LED)"
 msgid "%1 (%2)"
 msgstr "%1 (%2)"
 
-#: live_controls_page.cpp:193
+#: live_controls_page.cpp:194
 msgid "%1 (Profil)"
 msgstr "%1 (perfil)"
 
@@ -1090,7 +1090,7 @@ msgstr "El cue se dispara cuando el valor del canal sube a este número o más"
 msgid "Der Kanalwert 0 bis 255 setzt den Master auf 0 bis 100 %. Solange Pakete kommen, folgt der Master-Regler dem Pult; bleibt das Signal weg, hält der Master seinen Wert. Der Empfang oben muss für das gewählte Protokoll eingeschaltet sein."
 msgstr "El valor del canal de 0 a 255 ajusta el master de 0 a 100 %. Mientras lleguen paquetes, el control master sigue a la mesa; si la señal se corta, el master mantiene su valor. La recepción de arriba debe estar activada para el protocolo elegido."
 
-#: main_window_dmx.cpp:194
+#: main_window_dmx.cpp:195
 msgid "Der Master kommt gerade vom DMX-Kanal (Einstellungen → DMX-Eingang)"
 msgstr "El master viene ahora del canal DMX (Ajustes → Entrada DMX)"
 
@@ -1550,7 +1550,7 @@ msgstr "Disposición de la ventana restablecida: se aplica en el próximo inicio
 msgid "Fester Wert"
 msgstr "Valor fijo"
 
-#: live_controls_page.cpp:140
+#: live_controls_page.cpp:141
 msgid "Fester Wert:"
 msgstr "Valor fijo:"
 
@@ -1722,7 +1722,7 @@ msgstr "Amarillo"
 msgid "Gerät:"
 msgstr "Dispositivo:"
 
-#: main_window_controls.cpp:46 main_window_dmx.cpp:195
+#: main_window_controls.cpp:46 main_window_dmx.cpp:196
 msgid "Gesamthelligkeit (wirkt auf Vorschau und Ausgabe, nicht im Projekt gespeichert)"
 msgstr "Brillo global (afecta a la vista previa y a la salida, no se guarda en el proyecto)"
 
@@ -1922,7 +1922,7 @@ msgstr "Mostrar u ocultar el recorrido del cable con flechas, LED de inicio y n�
 msgid "Kaleidoskop: Spiegelt einen Ausschnitt um einen Mittelpunkt zu einem Muster mit mehreren Segmenten."
 msgstr "Kaleidoscope: mirrors a slice around a center into a pattern with several segments."
 
-#: live_controls_page.cpp:136
+#: live_controls_page.cpp:137
 msgid "Kanal"
 msgstr "Canal"
 
@@ -2285,6 +2285,10 @@ msgstr "Salida MIDI"
 #: main_window_midi.cpp:34
 msgid "MIDI-Ausgang: %1"
 msgstr "Salida MIDI: %1"
+
+#: live_controls_page.cpp:107
+msgid "MIDI-Clock (MIDI-Eingang der Seite MIDI)"
+msgstr "Reloj MIDI (entrada MIDI de la página MIDI)"
 
 #: midi_settings_page.cpp:61
 msgid "MIDI-Eingang"
@@ -3190,7 +3194,7 @@ msgstr "Velocidad"
 msgid "Tempo per Tippen: Jedes Einschalten von „Tap“ zählt als Schlag. Liefert Beat, Pulse, Phase und BPM, oder ein festes Tempo."
 msgstr "Tempo by tapping: each switch-on of \"Tap\" counts as a beat. Outputs beat, pulse, phase and BPM, or a fixed tempo."
 
-#: live_controls_page.cpp:141
+#: live_controls_page.cpp:142
 msgid "Tempo über DMX:"
 msgstr "Tempo por DMX:"
 
@@ -3198,7 +3202,7 @@ msgstr "Tempo por DMX:"
 msgid "Tempo-Tap"
 msgstr "Tap de tempo"
 
-#: live_controls_page.cpp:139
+#: live_controls_page.cpp:140
 msgid "Tempo-Uhr:"
 msgstr "Reloj de tempo:"
 
@@ -3270,7 +3274,7 @@ msgstr "Final inesperado la última vez"
 msgid "Ungespeicherte Änderungen"
 msgstr "Cambios sin guardar"
 
-#: add_fixture_dialog.cpp:176 dmx_patch_table.cpp:46 live_controls_page.cpp:134
+#: add_fixture_dialog.cpp:176 dmx_patch_table.cpp:46 live_controls_page.cpp:135
 msgid "Universe"
 msgstr "Universo"
 
@@ -3522,7 +3526,7 @@ msgstr "Controlado por una conexión en el grafo."
 msgid "Wird geladen …"
 msgstr "Cargando …"
 
-#: live_controls_page.cpp:108
+#: live_controls_page.cpp:109
 msgid "Woher die gemeinsame Tempo-Uhr ihr Tempo nimmt (Node „Tempo“)"
 msgstr "De dónde toma su tempo el reloj de tempo común (nodo «Tempo»)"
 
@@ -3710,7 +3714,7 @@ msgstr "Sentido de recuento"
 msgid "an oder aus"
 msgstr "encendido o apagado"
 
-#: live_controls_page.cpp:198 live_learn.cpp:31 midi_profile_box.cpp:78
+#: live_controls_page.cpp:199 live_learn.cpp:31 midi_profile_box.cpp:78
 msgid "aus"
 msgstr "desactivado"
 

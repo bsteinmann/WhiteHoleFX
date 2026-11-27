@@ -33,6 +33,19 @@ std::optional<MidiMessage> parseMidi(std::span<const std::uint8_t> bytes) noexce
     return message;
 }
 
+std::optional<MidiRealtime> parseMidiRealtime(std::span<const std::uint8_t> bytes) noexcept {
+    if (bytes.size() != 1) {
+        return std::nullopt;
+    }
+    switch (bytes[0]) {
+        case 0xF8: return MidiRealtime::Clock;
+        case 0xFA: return MidiRealtime::Start;
+        case 0xFB: return MidiRealtime::Continue;
+        case 0xFC: return MidiRealtime::Stop;
+        default: return std::nullopt;
+    }
+}
+
 MidiBytes toBytes(const MidiMessage& message) noexcept {
     std::uint8_t high = 0x90;
     switch (message.kind) {

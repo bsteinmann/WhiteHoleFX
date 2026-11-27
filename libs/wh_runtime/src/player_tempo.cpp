@@ -42,6 +42,32 @@ constexpr double kDmxTimeout = 2.0;    // Sekunden ohne DMX = kein Signal (wie d
 
 }  // namespace
 
+void Player::advanceMidiClock(values::TempoClock& clock) {
+    constexpr std::uint64_t kTicksPerBeat = 24;
+    constexpr double kClockTimeout = 0.5;  // Sekunden ohne Clock = keine Clock (die Uhr läuft mit dem letzten Tempo weiter)
+    if (!library_.midi) {
+        return;
+    }
+    const midi::MidiClockState state = library_.midi->clock();
+    if (state.ageSeconds > kClockTimeout || !state.running) {
+        tempoClockSeen_ = false;
+        return;
+    }
+    // Erster Blick, ein Start oder ein Zähler, der zurückging: nur die zuletzt gekommene Clock zählt (nichts nachholen; nach
+    // einem Start beginnt die erste Clock einen Beat)
+    if (!tempoClockSeen_ || state.starts != tempoClockStarts_ || state.ticks < tempoClockTicks_) {
+        tempoClockSeen_ = true;
+        tempoClockStarts_ = state.starts;
+        tempoClockTicks_ = state.ticks > 0 ? state.ticks - 1 : 0;
+    }
+    // Beginnt zwischen dem letzten und dem jetzigen Stand ein Beat (Clock Nummer 1, 25, 49 ...)?
+    const std::uint64_t before = tempoClockTicks_;
+    tempoClockTicks_ = state.ticks;
+    if (state.ticks > before && (state.ticks - 1) / kTicksPerBeat != (before == 0 ? ~std::uint64_t{0} : (before - 1) / kTicksPerBeat)) {
+        clock.externalBeat(state.bpm);
+    }
+}
+
 void Player::advanceTempo() {
     if (!library_.tempo) {
         return;
@@ -63,6 +89,11 @@ void Player::advanceTempo() {
         }
     } else {
         tempoAudioSeen_ = false;
+    }
+    if (source == values::TempoClock::Source::MidiClock) {
+        advanceMidiClock(clock);
+    } else {
+        tempoClockSeen_ = false;
     }
     if (source == values::TempoClock::Source::Dmx && tempoDmx_ && library_.dmx) {
         const auto sample = library_.dmx->read(tempoDmx_->protocol, tempoDmx_->universe, tempoDmx_->channel, 1);

@@ -41,7 +41,7 @@ AppSettings loadAppSettings() {
     result.midiProfile = s.value(QStringLiteral("midi/profile")).toString();
     result.midiProfiles = s.value(QStringLiteral("midi/profiles")).toStringList();
     result.liveBindings = s.value(QStringLiteral("midi/liveBindings")).toStringList();
-    result.tempoSource = std::clamp(s.value(QStringLiteral("tempo/source"), 0).toInt(), 0, 3);
+    result.tempoSource = std::clamp(s.value(QStringLiteral("tempo/source"), 0).toInt(), 0, 4);
     result.tempoDmxProtocol = std::clamp(s.value(QStringLiteral("tempo/dmxProtocol"), 0).toInt(), 0, 1);
     result.tempoDmxUniverse = std::clamp(s.value(QStringLiteral("tempo/dmxUniverse"), 0).toInt(), 0, 63999);
     result.tempoDmxChannel = std::clamp(s.value(QStringLiteral("tempo/dmxChannel"), 1).toInt(), 1, 512);

@@ -1,8 +1,8 @@
 // rtmidi_backend.cpp: MIDI-Ein- und Ausgang über RtMidi (ALSA unter Linux, WinMM unter Windows).
 //
 // Warum es das gibt: Das ist die einzige Stelle, die ein echtes Gerät berührt. RtMidi meldet Fehler als Ausnahmen;
-// sie werden hier in Result umgewandelt, damit der Rest des Programms ausnahmefrei bleibt. Systemmeldungen
-// (SysEx, Takt, Active Sensing) werden ignoriert: Stufe 1 braucht nur Noten und Regler.
+// sie werden hier in Result umgewandelt, damit der Rest des Programms ausnahmefrei bleibt. SysEx und Active Sensing werden
+// ignoriert; Takt-Meldungen (MIDI-Clock) gehen an den Echtzeit-Empfänger (Tempo-Uhr).
 #include <exception>
 #include <vector>
 
@@ -33,7 +33,7 @@ public:
     RtInput() {
         try {
             device_ = std::make_unique<RtMidiIn>(RtMidi::UNSPECIFIED, "WhiteHoleFX");
-            device_->ignoreTypes(true, true, true);
+            device_->ignoreTypes(true, false, true);  // SysEx, Takt, Active Sensing: Takt durchlassen (MIDI-Clock)
         } catch (const RtMidiError&) {
             device_.reset();
         }
@@ -78,6 +78,7 @@ public:
     }
 
     bool isOpen() const override { return device_ && device_->isPortOpen(); }
+    void setRealtimeHandler(MidiRealtimeHandler handler) override { realtime_ = std::move(handler); }
 
 private:
     static void trampoline(double, std::vector<unsigned char>* bytes, void* self) {
@@ -87,11 +88,14 @@ private:
         }
         if (const auto message = parseMidi(*bytes)) {
             input->handler_(*message);
+        } else if (const auto realtime = parseMidiRealtime(*bytes); realtime && input->realtime_) {
+            input->realtime_(*realtime);
         }
     }
 
     std::unique_ptr<RtMidiIn> device_;
     MidiHandler handler_;
+    MidiRealtimeHandler realtime_;
 };
 
 class RtOutput final : public IMidiOutput {

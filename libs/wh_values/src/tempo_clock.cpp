@@ -56,7 +56,7 @@ void TempoClock::tap() {
 
 void TempoClock::externalBeat(double bpm) {
     const std::lock_guard lock{mutex_};
-    if (source_ == Source::Audio) {
+    if (source_ == Source::Audio || source_ == Source::MidiClock) {
         ++pendingBeats_;
         pendingBeatBpm_ = std::isfinite(bpm) && bpm > 0.0 ? bpm : 0.0;
     }

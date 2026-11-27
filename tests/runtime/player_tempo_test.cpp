@@ -3,12 +3,14 @@
 #include <catch2/catch_approx.hpp>
 #include <catch2/catch_test_macros.hpp>
 
+#include <chrono>
 #include <memory>
 #include <vector>
 
 #include "fake_gpu_device.hpp"
 #include "recording_sink.hpp"
 #include "whitehole/input/dmx_store.hpp"
+#include "whitehole/midi/midi_store.hpp"
 #include "whitehole/midi/midi_message.hpp"
 #include "whitehole/nodes/builtin_library.hpp"
 #include "whitehole/runtime/gated_sink.hpp"
@@ -151,4 +153,32 @@ TEST_CASE("Player-Tempo: Quelle DMX liest das Tempo aus einem Kanal", "[runtime]
     rig.library->dmx->write(input::DmxProtocol::ArtNet, 3, std::vector<std::uint8_t>{0, 90});
     rig.run(0.1);
     CHECK(rig.player.tempo().bpm == Approx(140.0));
+}
+
+TEST_CASE("Player-Tempo: Quelle MIDI-Clock - jede 24. Clock nach Start ist ein Beat, das Tempo kommt aus den Abständen",
+          "[runtime][tempo]") {
+    Rig rig;
+    auto midiNow = std::chrono::steady_clock::time_point{} + std::chrono::seconds{50};
+    rig.library->midi = std::make_shared<midi::MidiStore>([&midiNow] { return midiNow; });
+    rig.player.setTempoSource(values::TempoClock::Source::MidiClock);
+    const double tickSeconds = 60.0 / (100.0 * 24.0);  // 100 BPM
+    const auto clockTick = [&] {
+        rig.library->midi->applyRealtime(midi::MidiRealtime::Clock);
+        midiNow += std::chrono::duration_cast<std::chrono::steady_clock::duration>(std::chrono::duration<double>(tickSeconds));
+        rig.run(tickSeconds);
+    };
+    rig.run(0.3);  // mitten im Beat: die erste Clock nach Start rastet auf den nächsten Beat ein (kurz nach einem Beat wäre es derselbe)
+    rig.library->midi->applyRealtime(midi::MidiRealtime::Start);
+    rig.run(0.0);
+    int beats = 0;
+    for (int i = 0; i < 24 * 3; ++i) {
+        clockTick();
+        beats += rig.player.tempo().beatNow ? 1 : 0;
+    }
+    CHECK(rig.player.tempo().bpm == Approx(100.0).epsilon(0.01));
+    CHECK(beats == 3);  // genau ein Beat je 24 Clocks, kein zusätzlicher aus dem eigenen Lauf der Uhr
+    // Stop: keine Beats mehr von der Clock, die Uhr läuft mit dem letzten Tempo weiter
+    rig.library->midi->applyRealtime(midi::MidiRealtime::Stop);
+    rig.run(0.0);
+    CHECK(rig.player.tempo().bpm == Approx(100.0).epsilon(0.01));
 }

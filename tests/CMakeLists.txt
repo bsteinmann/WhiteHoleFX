@@ -52,6 +52,7 @@ add_executable(wh_tests
     midi/midi_learn_test.cpp
     midi/midi_nodes_test.cpp
     midi/midi_test.cpp
+    midi/midi_clock_test.cpp
     nodes/builtin_nodes_test.cpp
     nodes/cells_auto_test.cpp
     nodes/pong_test.cpp
