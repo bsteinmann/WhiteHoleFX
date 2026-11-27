@@ -297,6 +297,23 @@ Fix-Ideen, Tests). Zuerst Punkt 0 dort (`.pdb` vom Nutzer besorgen, läuft am 20
   ständig geöffnet, Abbrechen verlöre den Sinn) und ein Monitor, der den Port vorübergehend selbst öffnet (zu aufwendig).
   Qt lässt sich lokal nicht bauen: Rauchtest im Studio-Test (CI), neue `tr()`-Strings mit Übersetzungen en/fr/es/uk
   (`scripts/i18n.py`), CHANGELOG.
+- **Flash überlagern (Overlay) statt Look ersetzen** (vom Nutzer am 27.11. gewünscht, **Variante C gewählt und am 27.11. ins Todo
+  aufgenommen**, noch nicht angefangen, kein Code geschrieben): Ein Flash blendet den laufenden Look heute aus
+  (`wh.blend.crossfade`, A -> B, `LiveDecks`), ein teilweise durchsichtiger Flash-Look zeigt darunter also Schwarz. Gewünscht:
+  einstellbar je Feld, dass der Flash über den Basis-Look gelegt wird. **Entschieden (27.11.):** nur der *zuletzt gehaltene*
+  Flash ist zu sehen (kein Stapeln); der Basis-Look bleibt in der Anzeige/den LEDs aktiv (grün), der Flash-Look rot wie bisher;
+  Ein- und Zurückblendzeit des Feldes gelten als Deckkraft-Verlauf; Vorgabe bleibt „Ersetzen“, bestehende Projekte unverändert;
+  **kein** Additiv-Modus (nur Ersetzen/Überlagern). Umsetzungsskizze (vor dem Start prüfen): neuer Modus im Crossfade-Node
+  (`builtin_blends.cpp`, `mode` ist ein Laufzeitwert, kein Neuübersetzen): „Overlay B über A“ (A bleibt, B mit Alpha und
+  Deckkraft = `amount`) und „Overlay A über B“ für den Fall, dass das sichtbare Deck B ist; `LiveDecks` bekommt einen
+  Overlay-Zustand (Einblenden/Halten/Ausblenden, `goOverlay`/`releaseOverlay`, `advance` treibt ihn, `arm()` beendet ihn, damit
+  der Basis-Look *nicht* getauscht wird und weiterläuft); `LiveStatus` bekommt `overlay`/`overlayCell`; `Player::flashDown/flashUp`
+  und `clearFlash()` (muss das Overlay beenden, sonst bleibt es hängen) berücksichtigen den Overlay-Zustand; Datenmodell
+  `LiveCell::flashOverlay`, Projektdatei `cell … flash … overlay` (nur zusammen mit `flash`), `Player::setLiveCell`, Auswahl im
+  Live-Fenster (`live_panel_cells.cpp`, Rechtsklick/Einstellungen). Gemischte Stapel (Overlay unter einem Ersetzen-Flash)
+  sind ein Randfall: beim Loslassen des Ersetzen-Flash endet das Overlay darunter. Nur wirksam bei Looks mit Alpha. Berührt
+  `builtin_blends.cpp`, `live_decks.hpp/cpp`, `player_live_flash.cpp`, `live_grid.hpp`, `project_livegrid.cpp`, UI, Catch2-Tests
+  (Mischer auf dem Gerät, `LiveDecks`, Flash, Projektdatei), `docs/`, CHANGELOG, Übersetzungen en/fr/es/uk.
 - „Zonen"-Node, Projektions-/HDMI-Ausgabe, Remote-Web-UI, Headless-Player/Pi-Support, ukrainische
   Muttersprachler-Durchsicht der Übersetzungen, GitHub-Releases ab 0.71.0 und Issue #13 schließen — alle
   diese Punkte brauchen vorher die ausdrückliche Freigabe des Nutzers (siehe Sicherheitsregel oben).
