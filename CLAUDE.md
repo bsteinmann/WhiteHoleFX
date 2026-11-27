@@ -263,46 +263,14 @@ Fix-Ideen, Tests). Zuerst Punkt 0 dort (`.pdb` vom Nutzer besorgen, läuft am 20
   schon anliegendem Trigger im ersten Frame aus (PR #71; weitere `EdgeDetector` ohne `startsLow` nur gemeldet, nicht geändert:
   `builtin_color_values.cpp` advanceEdge_, `builtin_sequence.cpp` resetEdge_/advanceEdge_, `builtin_pong.cpp` serve_/beat_) und
   Einstellungen-Dialog mit Übernehmen-Button (PR #74).
-- **Flash überlagern (Overlay) statt Look ersetzen** (vom Nutzer am 27.11. gewünscht, **Variante C gewählt und am 27.11. ins Todo
-  aufgenommen**, noch nicht angefangen, kein Code geschrieben): Ein Flash blendet den laufenden Look heute aus
-  (`wh.blend.crossfade`, A -> B, `LiveDecks`), ein teilweise durchsichtiger Flash-Look zeigt darunter also Schwarz. Gewünscht:
-  einstellbar je Feld, dass der Flash über den Basis-Look gelegt wird. **Entschieden (27.11.):** nur der *zuletzt gehaltene*
-  Flash ist zu sehen (kein Stapeln); der Basis-Look bleibt in der Anzeige/den LEDs aktiv (grün), der Flash-Look rot wie bisher;
-  Ein- und Zurückblendzeit des Feldes gelten als Deckkraft-Verlauf; Vorgabe bleibt „Ersetzen“, bestehende Projekte unverändert;
-  **kein** Additiv-Modus (nur Ersetzen/Überlagern). Umsetzungsskizze (vor dem Start prüfen): neuer Modus im Crossfade-Node
-  (`builtin_blends.cpp`, `mode` ist ein Laufzeitwert, kein Neuübersetzen): „Overlay B über A“ (A bleibt, B mit Alpha und
-  Deckkraft = `amount`) und „Overlay A über B“ für den Fall, dass das sichtbare Deck B ist; `LiveDecks` bekommt einen
-  Overlay-Zustand (Einblenden/Halten/Ausblenden, `goOverlay`/`releaseOverlay`, `advance` treibt ihn, `arm()` beendet ihn, damit
-  der Basis-Look *nicht* getauscht wird und weiterläuft); `LiveStatus` bekommt `overlay`/`overlayCell`; `Player::flashDown/flashUp`
-  und `clearFlash()` (muss das Overlay beenden, sonst bleibt es hängen) berücksichtigen den Overlay-Zustand; Datenmodell
-  `LiveCell::flashOverlay`, Projektdatei `cell … flash … overlay` (nur zusammen mit `flash`), `Player::setLiveCell`, Auswahl im
-  Live-Fenster (`live_panel_cells.cpp`, Rechtsklick/Einstellungen). Gemischte Stapel (Overlay unter einem Ersetzen-Flash)
-  sind ein Randfall: beim Loslassen des Ersetzen-Flash endet das Overlay darunter. Nur wirksam bei Looks mit Alpha. Berührt
-  `builtin_blends.cpp`, `live_decks.hpp/cpp`, `player_live_flash.cpp`, `live_grid.hpp`, `project_livegrid.cpp`, UI, Catch2-Tests
-  (Mischer auf dem Gerät, `LiveDecks`, Flash, Projektdatei), `docs/`, CHANGELOG, Übersetzungen en/fr/es/uk.
-- **Globale Tempo-Uhr (BPM über Looks hinweg)** (vom Nutzer am 27.11. gewünscht, **Variante A mit B am 27.11. ins Todo aufgenommen**,
-  noch nicht angefangen, kein Code geschrieben): Stand heute lebt der Tempo-Zustand im Kernel des jeweiligen Nodes und geht mit
-  dem Look verloren (`LiveDecks::clear` entfernt dessen Nodes): `wh.value.clock` summiert die Phase selbst auf (`position_` in
-  `builtin_sequence.cpp`, beginnt bei jedem Laden bei 0), `wh.value.tap` hält Tap-Zeiten und gezähltes Tempo im Kernel
-  (`builtin_audio.cpp`, `TapTempoKernel`), `wh.value.beat` hat Puls/Phase aus `BeatClock::lastBeat` (erst ab dem nächsten Schlag
-  stimmig), `wh.value.shot` misst sein Tempo aus den Triggern. Nicht betroffen: das BPM selbst aus Audio (`Analyzer`/`BeatDetector`
-  läuft dauerhaft) sowie DMX/MIDI-Werte (direkt aus `DmxStore`/`MidiStore`). **Entschieden (27.11.):** Variante A: neuer Node
-  „Tempo“ (Master-BPM), der eine gemeinsame Tempo-Uhr liest, die im Programm lebt wie `AudioStore`/`MidiStore` (Muster
-  `BuiltinLibrary`, überlebt Look- und Projektwechsel) und BPM, Beat-Trigger und Phase ausgibt; **dazu Variante B:** Clock, Beat und
-  Shot bekommen die Option „Globales Tempo“ (Vorgabe aus, bestehende Projekte unverändert). Die Phase soll **global
-  synchron** sein (alle Looks teilen denselben Beat) **und** ein gemeinsames BPM liefern (beides). Quellen der Uhr, wählbar in
-  den Einstellungen (Reiter Steuerung): **alle von Anfang an** — Tap (Taste im Live-Fenster, MIDI-Taste, DMX-Kanal), Audio-Beat,
-  MIDI-Clock (Entwurf `docs/entwurf-midi.md`), DMX-Kanal als BPM-Wert, fester Wert. **Entschieden (27.11., zweite Runde):** Beim
-  Quellenwechsel **rastet die Phase ein** (die Uhr setzt sich auf die Phase der neuen Quelle, kein weiches Weiterlaufen); **Tappen
-  zieht die Phase nach** (jeder Tap setzt den Beat bzw. die Phase auf den Tap-Zeitpunkt, nicht nur das Tempo). Das Einrasten gleicht sich **kurz an**, damit Effekte nicht zucken (kein harter
-  Phasensprung; die Angleichzeit ist beim Umsetzen festzulegen, Vorschlag: einige Zehntel Sekunden oder ein Bruchteil eines Beats,
-  muss sich in Tests prüfen lassen). Offen, vor dem Start klären: Dauer/Form der Angleichung,
-  Nicht-Reproduzierbarkeit beim Offline-Rendern (wie bei DMX/MIDI-Nodes dokumentieren). Zeitbezug nur über die
-  Engine-Zeit, nicht über die Systemuhr, damit die Tests genau bleiben. Berührt `wh_nodes` (neuer Node, Optionen an
-  Clock/Beat/Shot), eine neue kleine Bibliothek oder Datei für die Uhr, `Player`/`BuiltinLibrary`, Einstellungen (`AppSettings`,
-  `settings_dialog.cpp`, `live_controls_page.cpp`), Live-Fenster (Tap-Taste), Catch2-Tests, `docs/` (neues Kapitel oder
-  `docs/value-graph.md`), CHANGELOG, Übersetzungen en/fr/es/uk. Groß: in Stufen umsetzen (1 Uhr + Node + Tap/fester Wert,
-  2 Audio/DMX, 3 MIDI-Clock, 4 Optionen an Clock/Beat/Shot). Verworfen: C (Kernel-Zustand je Node-Name über Look-Wechsel retten).
+- **Erledigt am 27.11., zweiter Teil:** **Flash als Overlay** (PR #76; `LiveCell::flashOverlay`, Projektdatei `cell … flash
+  overlay`, Crossfade-Modi *Overlay B over A* / *A over B*, `LiveDecks::goOverlay/releaseOverlay/endOverlay`; Doku `docs/midi.md`)
+  und die **gemeinsame Tempo-Uhr** in allen vier Stufen (PR #77–#80; `values::TempoClock`, `BuiltinLibrary::tempo`, Node
+  `wh.value.tempo`, Quellen Tap/fester Wert/Audio-Beat/DMX-Kanal/MIDI-Clock in Einstellungen → Steuerung, Taste TAP im
+  Live-Fenster, Live-Funktion „Tempo-Tap“, Option `globalTempo` an Clock/Beat/Shot; Doku `docs/tempo.md`). Selbst gewählt, weil
+  vor dem Start offen: Angleichzeit beim Einrasten 0,25 s linear auf dem kürzesten Weg (höchstens ein halber Beat); DMX-Kanal
+  als BPM = Kanalwert (0 = unverändert, auf 30..255 begrenzt); MIDI-Clock ohne Song Position. Mögliche spätere Wünsche (nicht
+  angefordert): Song Position, 16-Bit-DMX-BPM, eigene Angleichzeit einstellbar.
 - „Zonen"-Node, Projektions-/HDMI-Ausgabe, Remote-Web-UI, Headless-Player/Pi-Support, ukrainische
   Muttersprachler-Durchsicht der Übersetzungen, GitHub-Releases ab 0.71.0 und Issue #13 schließen — alle
   diese Punkte brauchen vorher die ausdrückliche Freigabe des Nutzers (siehe Sicherheitsregel oben).
