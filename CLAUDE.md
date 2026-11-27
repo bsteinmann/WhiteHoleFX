@@ -314,6 +314,26 @@ Fix-Ideen, Tests). Zuerst Punkt 0 dort (`.pdb` vom Nutzer besorgen, läuft am 20
   sind ein Randfall: beim Loslassen des Ersetzen-Flash endet das Overlay darunter. Nur wirksam bei Looks mit Alpha. Berührt
   `builtin_blends.cpp`, `live_decks.hpp/cpp`, `player_live_flash.cpp`, `live_grid.hpp`, `project_livegrid.cpp`, UI, Catch2-Tests
   (Mischer auf dem Gerät, `LiveDecks`, Flash, Projektdatei), `docs/`, CHANGELOG, Übersetzungen en/fr/es/uk.
+- **Globale Tempo-Uhr (BPM über Looks hinweg)** (vom Nutzer am 27.11. gewünscht, **Variante A mit B am 27.11. ins Todo aufgenommen**,
+  noch nicht angefangen, kein Code geschrieben): Stand heute lebt der Tempo-Zustand im Kernel des jeweiligen Nodes und geht mit
+  dem Look verloren (`LiveDecks::clear` entfernt dessen Nodes): `wh.value.clock` summiert die Phase selbst auf (`position_` in
+  `builtin_sequence.cpp`, beginnt bei jedem Laden bei 0), `wh.value.tap` hält Tap-Zeiten und gezähltes Tempo im Kernel
+  (`builtin_audio.cpp`, `TapTempoKernel`), `wh.value.beat` hat Puls/Phase aus `BeatClock::lastBeat` (erst ab dem nächsten Schlag
+  stimmig), `wh.value.shot` misst sein Tempo aus den Triggern. Nicht betroffen: das BPM selbst aus Audio (`Analyzer`/`BeatDetector`
+  läuft dauerhaft) sowie DMX/MIDI-Werte (direkt aus `DmxStore`/`MidiStore`). **Entschieden (27.11.):** Variante A: neuer Node
+  „Tempo“ (Master-BPM), der eine gemeinsame Tempo-Uhr liest, die im Programm lebt wie `AudioStore`/`MidiStore` (Muster
+  `BuiltinLibrary`, überlebt Look- und Projektwechsel) und BPM, Beat-Trigger und Phase ausgibt; **dazu Variante B:** Clock, Beat und
+  Shot bekommen die Option „Globales Tempo“ (Vorgabe aus, bestehende Projekte unverändert). Die Phase soll **global
+  synchron** sein (alle Looks teilen denselben Beat) **und** ein gemeinsames BPM liefern (beides). Quellen der Uhr, wählbar in
+  den Einstellungen (Reiter Steuerung): **alle von Anfang an** — Tap (Taste im Live-Fenster, MIDI-Taste, DMX-Kanal), Audio-Beat,
+  MIDI-Clock (Entwurf `docs/entwurf-midi.md`), DMX-Kanal als BPM-Wert, fester Wert. Offen, vor dem Start klären: wie die Uhr
+  zwischen Quellen umschaltet (Rastet die Phase beim Quellenwechsel ein oder läuft sie weiter?), ob Tap/Nudge die Phase
+  nachzieht, Nicht-Reproduzierbarkeit beim Offline-Rendern (wie bei DMX/MIDI-Nodes dokumentieren). Zeitbezug nur über die
+  Engine-Zeit, nicht über die Systemuhr, damit die Tests genau bleiben. Berührt `wh_nodes` (neuer Node, Optionen an
+  Clock/Beat/Shot), eine neue kleine Bibliothek oder Datei für die Uhr, `Player`/`BuiltinLibrary`, Einstellungen (`AppSettings`,
+  `settings_dialog.cpp`, `live_controls_page.cpp`), Live-Fenster (Tap-Taste), Catch2-Tests, `docs/` (neues Kapitel oder
+  `docs/value-graph.md`), CHANGELOG, Übersetzungen en/fr/es/uk. Groß: in Stufen umsetzen (1 Uhr + Node + Tap/fester Wert,
+  2 Audio/DMX, 3 MIDI-Clock, 4 Optionen an Clock/Beat/Shot). Verworfen: C (Kernel-Zustand je Node-Name über Look-Wechsel retten).
 - „Zonen"-Node, Projektions-/HDMI-Ausgabe, Remote-Web-UI, Headless-Player/Pi-Support, ukrainische
   Muttersprachler-Durchsicht der Übersetzungen, GitHub-Releases ab 0.71.0 und Issue #13 schließen — alle
   diese Punkte brauchen vorher die ausdrückliche Freigabe des Nutzers (siehe Sicherheitsregel oben).
