@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- **Einstellungen: Schaltfläche „Übernehmen“.** Der Dialog Einstellungen (Netzwerk, DMX, Audio, MIDI, Steuerung, Node-Standardwerte) hat neben OK und Abbrechen eine dritte Schaltfläche **Übernehmen**: sie wendet die aktuellen Werte sofort an, ohne den Dialog zu schließen (Statuszeile: „Einstellungen übernommen“). So zeigt der MIDI-Monitor („Letzte Nachricht“) für einen frisch gewählten Port sofort etwas. **Abbrechen** nach Übernehmen stellt den Stand wieder her, mit dem der Dialog geöffnet wurde. Rauchtest im Studio-Test.
 - **Windows-Release-Paket enthält `whitehole_benchmark.exe`.** Der Release-Workflow (`release.yml`) kopierte nur `whitehole_cli.exe` ins ZIP; das Benchmark-Programm aus 1.2.0 fehlte deshalb im Release (das CI-Paket aus `ci.yml` hatte es). Jetzt steht es wie `whitehole_cli.exe` neben `whitehole_studio.exe`.
 
 ## 1.2.0
