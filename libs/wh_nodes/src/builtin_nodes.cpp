@@ -35,18 +35,24 @@ std::vector<values::CpuNodeDefinition> builtinCpuDefinitions(std::shared_ptr<inp
                                                                   std::shared_ptr<audio::AudioStore> audio,
                                                                   std::shared_ptr<midi::MidiStore> midi,
                                                                   std::shared_ptr<values::TempoClock> tempo) {
+    if (!tempo) {
+        tempo = std::make_shared<values::TempoClock>();  // ohne Programm-Uhr (Tests): eine gemeinsame für alle Nodes, die nie weiterläuft
+    }
     std::vector<values::CpuNodeDefinition> all = detail::valueNodes();
     std::vector<values::CpuNodeDefinition> inputs = detail::dmxNodes(std::move(dmx));
     all.insert(all.end(), std::make_move_iterator(inputs.begin()), std::make_move_iterator(inputs.end()));
-    for (auto* group : {&detail::mathNodes, &detail::sequenceNodes, &detail::shotNodes, &detail::pongNodes, &detail::dmxOutNodes}) {
+    for (std::vector<values::CpuNodeDefinition> extra : {detail::sequenceNodes(tempo), detail::shotNodes(tempo)}) {
+        all.insert(all.end(), std::make_move_iterator(extra.begin()), std::make_move_iterator(extra.end()));
+    }
+    for (auto* group : {&detail::mathNodes, &detail::pongNodes, &detail::dmxOutNodes}) {
         std::vector<values::CpuNodeDefinition> extra = group();
         all.insert(all.end(), std::make_move_iterator(extra.begin()), std::make_move_iterator(extra.end()));
     }
     std::vector<values::CpuNodeDefinition> midiInputs = detail::midiNodes(std::move(midi));
     all.insert(all.end(), std::make_move_iterator(midiInputs.begin()), std::make_move_iterator(midiInputs.end()));
-    std::vector<values::CpuNodeDefinition> tempoValues = detail::tempoNodes(std::move(tempo));
+    std::vector<values::CpuNodeDefinition> tempoValues = detail::tempoNodes(tempo);
     all.insert(all.end(), std::make_move_iterator(tempoValues.begin()), std::make_move_iterator(tempoValues.end()));
-    std::vector<values::CpuNodeDefinition> audioInputs = detail::audioNodes(audio);
+    std::vector<values::CpuNodeDefinition> audioInputs = detail::audioNodes(audio, tempo);
     all.insert(all.end(), std::make_move_iterator(audioInputs.begin()), std::make_move_iterator(audioInputs.end()));
     std::vector<values::CpuNodeDefinition> audioWaves = detail::audioWaveNodes(audio);
     all.insert(all.end(), std::make_move_iterator(audioWaves.begin()), std::make_move_iterator(audioWaves.end()));

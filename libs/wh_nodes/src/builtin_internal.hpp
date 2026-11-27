@@ -205,10 +205,13 @@ std::vector<compiler::NodeDefinition> blendNodes();
 std::vector<compiler::NodeDefinition> modifierNodes();  // Modifier und Ausgang
 std::vector<values::CpuNodeDefinition> valueNodes();
 std::vector<values::CpuNodeDefinition> mathNodes();      // Math, Compare
-std::vector<values::CpuNodeDefinition> sequenceNodes();  // Envelope, Sequencer, Clock
-std::vector<values::CpuNodeDefinition> shotNodes();      // Shot: Durchlauf 0..1 pro Trigger
+/// Envelope, Sequencer, Clock; Clock mit "Globales Tempo" liest `tempo` (die gemeinsame Tempo-Uhr).
+std::vector<values::CpuNodeDefinition> sequenceNodes(std::shared_ptr<values::TempoClock> tempo);
+/// Shot: Durchlauf 0..1 pro Trigger; mit "Globales Tempo" kommt die Schlaglänge aus `tempo`.
+std::vector<values::CpuNodeDefinition> shotNodes(std::shared_ptr<values::TempoClock> tempo);
 std::vector<values::CpuNodeDefinition> dmxOutNodes();    // DMX Out, DMX Color Out (Senken)
-std::vector<values::CpuNodeDefinition> audioNodes(std::shared_ptr<audio::AudioStore> store);  // Pegel, Band, Spektrum, Beat, Tap
+/// Pegel, Band, Spektrum, Beat, Tap; Beat mit "Globales Tempo" liest `tempo`.
+std::vector<values::CpuNodeDefinition> audioNodes(std::shared_ptr<audio::AudioStore> store, std::shared_ptr<values::TempoClock> tempo);
 std::vector<values::CpuNodeDefinition> audioWaveNodes(std::shared_ptr<audio::AudioStore> store);  // Audio Waveform
 std::vector<compiler::NodeDefinition> pongFieldNodes();   // Pong Display
 std::vector<values::CpuNodeDefinition> pongNodes();       // Pong (Spiel)

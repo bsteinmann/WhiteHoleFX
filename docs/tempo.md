@@ -38,8 +38,19 @@ Einstellungen → **Steuerung**, Abschnitt Tempo-Uhr (Programmeinstellung `tempo
   danach jede 24. ist ein Beat (die Phase rastet ein); ohne Start zählt die Uhr ab der ersten empfangenen Clock. **Stop** oder
   länger als 0,5 s keine Clock: die Uhr läuft mit dem letzten Tempo weiter. Song Position wird nicht ausgewertet.
 
-Wechselt die Quelle, läuft die Phase stetig weiter; mit dem nächsten Tap, Audio-Schlag oder Clock-Beat rastet sie ein. Die
-Option „Globales Tempo“ an Clock, Beat und Shot folgt.
+Wechselt die Quelle, läuft die Phase stetig weiter; mit dem nächsten Tap, Audio-Schlag oder Clock-Beat rastet sie ein.
+
+## Option „Globales Tempo“ an Clock, Beat und Shot
+
+Statt eines eigenen Tempos können diese Nodes die gemeinsame Uhr nutzen (Haken **Global tempo**, Parameter `globalTempo`,
+Vorgabe aus; bestehende Projekte bleiben unverändert):
+
+- **Clock:** Phase und Zähler folgen der Uhr, `ratio` gilt weiter (z. B. 1/4 = ein Tick alle vier Beats, in allen Looks an
+  derselben Stelle). `bpm` und `reset` zählen dann nicht; `running` aus hält die Ausgänge an.
+- **Beat:** Beat, Phase und BPM kommen von der Uhr statt aus dem Audio (`present` ist dann immer an); der Puls klingt wie
+  sonst mit `decay` ab.
+- **Shot:** die Länge eines Schlags kommt aus dem Tempo der Uhr (vor `bpm` und der Messung aus den Triggern); gestartet wird
+  weiter mit dem eigenen Trigger.
 
 ## Phase und Einrasten
 

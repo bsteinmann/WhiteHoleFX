@@ -1283,8 +1283,8 @@ msgid "Ein Look ist ein fertiger Effekt (vom Generator bis zum Ausgang). Speiche
 msgstr "Un look est un effet complet (du générateur à la sortie). Enregistrez vos effets ici et rappelez-les en mode live d'un clic."
 
 #: node_info_texts.cpp:185
-msgid "Ein Trigger startet einen Durchlauf von 0 nach 1, im Tempo der Musik (Schläge oder gemessener Abstand der Trigger). Mehrfach wiederholbar. Mit Map auf Radius, Position oder Helligkeit legen."
-msgstr "Un déclencheur lance un parcours de 0 à 1 au tempo de la musique (temps ou intervalle mesuré des déclencheurs). Peut se répéter plusieurs fois. Envoyez-le via Map vers un rayon, une position ou une luminosité."
+msgid "Ein Trigger startet einen Durchlauf von 0 nach 1, im Tempo der Musik (Schläge oder gemessener Abstand der Trigger, mit „Global tempo“ das der gemeinsamen Tempo-Uhr). Mehrfach wiederholbar. Mit Map auf Radius, Position oder Helligkeit legen."
+msgstr "Un déclencheur lance un parcours de 0 à 1 au tempo de la musique (temps ou intervalle mesuré des déclencheurs, avec « Global tempo » celui de l’horloge de tempo commune). Peut se répéter plusieurs fois. Envoyez-le via Map vers un rayon, une position ou une luminosité."
 
 #: port_legend.cpp:54
 msgid "Ein- und Ausgang"
@@ -1419,8 +1419,8 @@ msgid "Entfernt einen Controller aus der Bibliothek (das Projekt bleibt unverän
 msgstr "Retire un contrôleur de la bibliothèque (le projet reste inchangé)"
 
 #: node_info_texts.cpp:23
-msgid "Erkennt den Takt der Musik und liefert Beat-Impuls, Pulse (klingt ab), Phase und Tempo (BPM). Das Tempo lässt sich auch fest vorgeben."
-msgstr "Detects the beat of the music and outputs a beat trigger, a decaying pulse, phase and tempo (BPM). The tempo can also be fixed by hand."
+msgid "Erkennt den Takt der Musik und liefert Beat-Impuls, Pulse (klingt ab), Phase und Tempo (BPM). Das Tempo lässt sich auch fest vorgeben oder mit „Global tempo“ von der gemeinsamen Tempo-Uhr nehmen."
+msgstr "Détecte le rythme de la musique et fournit une impulsion de temps, une impulsion qui décroît, la phase et le tempo (BPM). Le tempo peut aussi être fixé ou, avec « Global tempo », pris de l’horloge de tempo commune."
 
 #: layout_panel.cpp:212
 msgid "Erst Fixtures wählen (Strg oder Umschalt halten für mehrere)"
@@ -3151,8 +3151,8 @@ msgid "TESTMODUS: %1"
 msgstr "MODE TEST : %1"
 
 #: node_info_texts.cpp:163
-msgid "Taktgeber: Liefert im eingestellten Tempo (BPM) Impulse, Phase und Zähler. Läuft ohne Audio."
-msgstr "Clock: outputs ticks, phase and a counter at the set tempo (BPM). Runs without audio."
+msgid "Taktgeber: Liefert im eingestellten Tempo (BPM) Impulse, Phase und Zähler. Läuft ohne Audio; mit „Global tempo“ im Takt der gemeinsamen Tempo-Uhr (alle Looks gleich)."
+msgstr "Horloge : fournit des impulsions, une phase et un compteur au tempo réglé (BPM). Fonctionne sans audio ; avec « Global tempo », au rythme de l’horloge de tempo commune (identique dans tous les looks)."
 
 #: live_controls_page.cpp:103
 msgid "Tap (Taste TAP oder Funktion „Tempo-Tap“)"

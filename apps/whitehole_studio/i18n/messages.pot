@@ -1283,7 +1283,7 @@ msgid "Ein Look ist ein fertiger Effekt (vom Generator bis zum Ausgang). Speiche
 msgstr ""
 
 #: node_info_texts.cpp:185
-msgid "Ein Trigger startet einen Durchlauf von 0 nach 1, im Tempo der Musik (Schläge oder gemessener Abstand der Trigger). Mehrfach wiederholbar. Mit Map auf Radius, Position oder Helligkeit legen."
+msgid "Ein Trigger startet einen Durchlauf von 0 nach 1, im Tempo der Musik (Schläge oder gemessener Abstand der Trigger, mit „Global tempo“ das der gemeinsamen Tempo-Uhr). Mehrfach wiederholbar. Mit Map auf Radius, Position oder Helligkeit legen."
 msgstr ""
 
 #: port_legend.cpp:54
@@ -1419,7 +1419,7 @@ msgid "Entfernt einen Controller aus der Bibliothek (das Projekt bleibt unverän
 msgstr ""
 
 #: node_info_texts.cpp:23
-msgid "Erkennt den Takt der Musik und liefert Beat-Impuls, Pulse (klingt ab), Phase und Tempo (BPM). Das Tempo lässt sich auch fest vorgeben."
+msgid "Erkennt den Takt der Musik und liefert Beat-Impuls, Pulse (klingt ab), Phase und Tempo (BPM). Das Tempo lässt sich auch fest vorgeben oder mit „Global tempo“ von der gemeinsamen Tempo-Uhr nehmen."
 msgstr ""
 
 #: layout_panel.cpp:212
@@ -3151,7 +3151,7 @@ msgid "TESTMODUS: %1"
 msgstr ""
 
 #: node_info_texts.cpp:163
-msgid "Taktgeber: Liefert im eingestellten Tempo (BPM) Impulse, Phase und Zähler. Läuft ohne Audio."
+msgid "Taktgeber: Liefert im eingestellten Tempo (BPM) Impulse, Phase und Zähler. Läuft ohne Audio; mit „Global tempo“ im Takt der gemeinsamen Tempo-Uhr (alle Looks gleich)."
 msgstr ""
 
 #: live_controls_page.cpp:103

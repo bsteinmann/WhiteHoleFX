@@ -1283,8 +1283,8 @@ msgid "Ein Look ist ein fertiger Effekt (vom Generator bis zum Ausgang). Speiche
 msgstr "Look — це готовий ефект (від генератора до виходу). Зберігайте тут свої ефекти й викликайте їх у режимі Live одним кліком."
 
 #: node_info_texts.cpp:185
-msgid "Ein Trigger startet einen Durchlauf von 0 nach 1, im Tempo der Musik (Schläge oder gemessener Abstand der Trigger). Mehrfach wiederholbar. Mit Map auf Radius, Position oder Helligkeit legen."
-msgstr "Тригер запускає прохід від 0 до 1 у темпі музики (долі або виміряний інтервал між тригерами). Можна повторювати кілька разів. Через Map подайте його на радіус, позицію або яскравість."
+msgid "Ein Trigger startet einen Durchlauf von 0 nach 1, im Tempo der Musik (Schläge oder gemessener Abstand der Trigger, mit „Global tempo“ das der gemeinsamen Tempo-Uhr). Mehrfach wiederholbar. Mit Map auf Radius, Position oder Helligkeit legen."
+msgstr "Тригер запускає прохід від 0 до 1 у темпі музики (долі або виміряний інтервал між тригерами, із «Global tempo» — темп спільного годинника). Можна повторювати кілька разів. Через Map подайте його на радіус, позицію або яскравість."
 
 #: port_legend.cpp:54
 msgid "Ein- und Ausgang"
@@ -1419,8 +1419,8 @@ msgid "Entfernt einen Controller aus der Bibliothek (das Projekt bleibt unverän
 msgstr "Видаляє контролер з бібліотеки (проєкт не змінюється)"
 
 #: node_info_texts.cpp:23
-msgid "Erkennt den Takt der Musik und liefert Beat-Impuls, Pulse (klingt ab), Phase und Tempo (BPM). Das Tempo lässt sich auch fest vorgeben."
-msgstr "Визначає такт музики й дає імпульс біта, Pulse (згасає), фазу та темп (BPM). Темп можна також задати фіксовано."
+msgid "Erkennt den Takt der Musik und liefert Beat-Impuls, Pulse (klingt ab), Phase und Tempo (BPM). Das Tempo lässt sich auch fest vorgeben oder mit „Global tempo“ von der gemeinsamen Tempo-Uhr nehmen."
+msgstr "Визначає такт музики й дає імпульс біта, Pulse (згасає), фазу та темп (BPM). Темп можна також задати фіксовано або із «Global tempo» брати зі спільного годинника темпу."
 
 #: layout_panel.cpp:212
 msgid "Erst Fixtures wählen (Strg oder Umschalt halten für mehrere)"
@@ -3151,8 +3151,8 @@ msgid "TESTMODUS: %1"
 msgstr "ТЕСТОВИЙ РЕЖИМ: %1"
 
 #: node_info_texts.cpp:163
-msgid "Taktgeber: Liefert im eingestellten Tempo (BPM) Impulse, Phase und Zähler. Läuft ohne Audio."
-msgstr "Тактовий генератор: видає імпульси, фазу та лічильник із заданим темпом (BPM). Працює без аудіо."
+msgid "Taktgeber: Liefert im eingestellten Tempo (BPM) Impulse, Phase und Zähler. Läuft ohne Audio; mit „Global tempo“ im Takt der gemeinsamen Tempo-Uhr (alle Looks gleich)."
+msgstr "Тактовий генератор: видає імпульси, фазу та лічильник із заданим темпом (BPM). Працює без аудіо; із «Global tempo» — у такт спільного годинника темпу (однаково в усіх луках)."
 
 #: live_controls_page.cpp:103
 msgid "Tap (Taste TAP oder Funktion „Tempo-Tap“)"
