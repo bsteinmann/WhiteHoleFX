@@ -258,6 +258,15 @@ Fix-Ideen, Tests). Zuerst Punkt 0 dort (`.pdb` vom Nutzer besorgen, läuft am 20
   - *Fazit:* technisch ein überschaubarer, dem DMX-Output sehr ähnlicher Baustein (Protokoll, Store, zwei/
     drei Nodes). Der Aufwand steckt im Drumherum — Geräteprofile für Pad-Farben und MIDI-Learn —, nicht im
     Kern.
+- **Live-Raster verkleinern: Looks verschwinden** (vom Nutzer am 27.11. gemeldet, **Variante B am 27.11. zur Umsetzung vorgemerkt**,
+  noch nicht angefangen, später in einem Rutsch): `project::resizeLiveGrid` (`libs/wh_project/src/live_grid.cpp`) behält beim
+  Verkleinern nur die Felder, die noch ins neue Raster passen; belegte Felder außerhalb fallen weg (Look bleibt im Projekt,
+  liegt aber in keinem Feld, auch beim erneuten Vergrößern nicht zurück). Gewählt: Looks aus wegfallenden Feldern rücken in die
+  ersten freien Felder des kleineren Rasters nach (`firstFreeLiveCell`); reicht der Platz nicht, fragt `LivePanel::setGrid`
+  (`apps/whitehole_studio/live_panel.cpp`) per Dialog, ob abgebrochen oder der Rest verworfen werden soll (Variante A als
+  Rückfrage). Berührt `Player::setLiveGridSize` (`player_live_grid.cpp`, setzt `clearFlash()`) und braucht Catch2-Tests sowie
+  CHANGELOG. Verworfen: C (Verkleinern bei belegten Feldern verweigern) und D (weggefallene Felder im Projekt merken, ändert das
+  Dateiformat); D bleibt als Idealfall denkbar, falls „kleiner, dann wieder größer“ den Zustand exakt zurückbringen soll.
 - „Zonen"-Node, Projektions-/HDMI-Ausgabe, Remote-Web-UI, Headless-Player/Pi-Support, ukrainische
   Muttersprachler-Durchsicht der Übersetzungen, GitHub-Releases ab 0.71.0 und Issue #13 schließen — alle
   diese Punkte brauchen vorher die ausdrückliche Freigabe des Nutzers (siehe Sicherheitsregel oben).
