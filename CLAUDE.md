@@ -328,8 +328,9 @@ Fix-Ideen, Tests). Zuerst Punkt 0 dort (`.pdb` vom Nutzer besorgen, läuft am 20
   den Einstellungen (Reiter Steuerung): **alle von Anfang an** — Tap (Taste im Live-Fenster, MIDI-Taste, DMX-Kanal), Audio-Beat,
   MIDI-Clock (Entwurf `docs/entwurf-midi.md`), DMX-Kanal als BPM-Wert, fester Wert. **Entschieden (27.11., zweite Runde):** Beim
   Quellenwechsel **rastet die Phase ein** (die Uhr setzt sich auf die Phase der neuen Quelle, kein weiches Weiterlaufen); **Tappen
-  zieht die Phase nach** (jeder Tap setzt den Beat bzw. die Phase auf den Tap-Zeitpunkt, nicht nur das Tempo). Offen, vor dem
-  Start klären: wie hart das Einrasten ist (Sprung sofort oder kurze Angleichung, damit Effekte nicht zucken),
+  zieht die Phase nach** (jeder Tap setzt den Beat bzw. die Phase auf den Tap-Zeitpunkt, nicht nur das Tempo). Das Einrasten gleicht sich **kurz an**, damit Effekte nicht zucken (kein harter
+  Phasensprung; die Angleichzeit ist beim Umsetzen festzulegen, Vorschlag: einige Zehntel Sekunden oder ein Bruchteil eines Beats,
+  muss sich in Tests prüfen lassen). Offen, vor dem Start klären: Dauer/Form der Angleichung,
   Nicht-Reproduzierbarkeit beim Offline-Rendern (wie bei DMX/MIDI-Nodes dokumentieren). Zeitbezug nur über die
   Engine-Zeit, nicht über die Systemuhr, damit die Tests genau bleiben. Berührt `wh_nodes` (neuer Node, Optionen an
   Clock/Beat/Shot), eine neue kleine Bibliothek oder Datei für die Uhr, `Player`/`BuiltinLibrary`, Einstellungen (`AppSettings`,
