@@ -54,6 +54,7 @@ jobs:
           New-Item -ItemType Directory -Force -Path symbole | Out-Null
           Move-Item "paket/$name/*.pdb" symbole/ -ErrorAction SilentlyContinue
           Copy-Item build/apps/whitehole_cli/Release/whitehole_cli.exe "paket/$name/"
+          Copy-Item build/apps/whitehole_benchmark/Release/whitehole_benchmark.exe "paket/$name/"
           Copy-Item examples "paket/$name/examples" -Recurse
           Copy-Item docs "paket/$name/docs" -Recurse
           Copy-Item README.md, BUILDING.md, CHANGELOG.md, LICENSE, NOTICE "paket/$name/"
