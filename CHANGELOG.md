@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- **Shot löst auch aus, wenn der Trigger schon im ersten Frame anliegt.** Ein One-Shot in einem per MIDI-Note geflashten Look, der dieselbe Note als Trigger liest, feuerte nicht: Der Look entsteht erst beim Note-On, der Trigger ist im ersten Frame schon „an“, und der Shot zählte den ersten Frame nie als Flanke. Jetzt startet der Flankenerkenner mit „vorher war aus“ (wie das Gate der Envelope). Ein Trigger, der beim Laden dauerhaft anliegt, löst dadurch einmal aus. Tests: `tests/nodes/sequence_nodes_test.cpp` (zwei neue Fälle), `docs/value-graph.md`.
 - **Windows-Release-Paket enthält `whitehole_benchmark.exe`.** Der Release-Workflow (`release.yml`) kopierte nur `whitehole_cli.exe` ins ZIP; das Benchmark-Programm aus 1.2.0 fehlte deshalb im Release (das CI-Paket aus `ci.yml` hatte es). Jetzt steht es wie `whitehole_cli.exe` neben `whitehole_studio.exe`.
 
 ## 1.2.0
