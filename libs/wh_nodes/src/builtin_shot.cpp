@@ -10,6 +10,8 @@
 // Verhalten:
 //   - Ein Trigger (steigende Flanke an `trigger`) startet `repeats` Durchläufe hintereinander. Kommt ein
 //     neuer Trigger während des Laufs, beginnt alles von vorn.
+//     Liegt der Trigger schon im allerersten Frame an (z. B. ein Look, der erst durch die MIDI-Taste entsteht, die
+//     den Trigger liefert), zählt das als Flanke und löst einmal aus (wie das Gate der Envelope).
 //   - Ein Durchlauf dauert `beats` Schläge. Die Länge eines Schlags kommt aus `bpm`, sonst aus dem Abstand der
 //     letzten Trigger (geglättet), sonst aus `beatLength` (nur bis zum zweiten Trigger).
 //   - Die Phase wird aufsummiert, nicht aus der Zeit seit dem Trigger berechnet: Ändert sich das Tempo
@@ -120,7 +122,7 @@ private:
         lastTrigger_ = clock_;
     }
 
-    EdgeDetector triggerEdge_;
+    EdgeDetector triggerEdge_{true};  // "vorher war aus": ein beim Start schon anliegender Trigger löst aus
     double clock_{0.0};
     double lastTrigger_{-1.0};
     double interval_{0.0};
