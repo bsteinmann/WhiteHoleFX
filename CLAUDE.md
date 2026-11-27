@@ -326,9 +326,11 @@ Fix-Ideen, Tests). Zuerst Punkt 0 dort (`.pdb` vom Nutzer besorgen, läuft am 20
   Shot bekommen die Option „Globales Tempo“ (Vorgabe aus, bestehende Projekte unverändert). Die Phase soll **global
   synchron** sein (alle Looks teilen denselben Beat) **und** ein gemeinsames BPM liefern (beides). Quellen der Uhr, wählbar in
   den Einstellungen (Reiter Steuerung): **alle von Anfang an** — Tap (Taste im Live-Fenster, MIDI-Taste, DMX-Kanal), Audio-Beat,
-  MIDI-Clock (Entwurf `docs/entwurf-midi.md`), DMX-Kanal als BPM-Wert, fester Wert. Offen, vor dem Start klären: wie die Uhr
-  zwischen Quellen umschaltet (Rastet die Phase beim Quellenwechsel ein oder läuft sie weiter?), ob Tap/Nudge die Phase
-  nachzieht, Nicht-Reproduzierbarkeit beim Offline-Rendern (wie bei DMX/MIDI-Nodes dokumentieren). Zeitbezug nur über die
+  MIDI-Clock (Entwurf `docs/entwurf-midi.md`), DMX-Kanal als BPM-Wert, fester Wert. **Entschieden (27.11., zweite Runde):** Beim
+  Quellenwechsel **rastet die Phase ein** (die Uhr setzt sich auf die Phase der neuen Quelle, kein weiches Weiterlaufen); **Tappen
+  zieht die Phase nach** (jeder Tap setzt den Beat bzw. die Phase auf den Tap-Zeitpunkt, nicht nur das Tempo). Offen, vor dem
+  Start klären: wie hart das Einrasten ist (Sprung sofort oder kurze Angleichung, damit Effekte nicht zucken),
+  Nicht-Reproduzierbarkeit beim Offline-Rendern (wie bei DMX/MIDI-Nodes dokumentieren). Zeitbezug nur über die
   Engine-Zeit, nicht über die Systemuhr, damit die Tests genau bleiben. Berührt `wh_nodes` (neuer Node, Optionen an
   Clock/Beat/Shot), eine neue kleine Bibliothek oder Datei für die Uhr, `Player`/`BuiltinLibrary`, Einstellungen (`AppSettings`,
   `settings_dialog.cpp`, `live_controls_page.cpp`), Live-Fenster (Tap-Taste), Catch2-Tests, `docs/` (neues Kapitel oder
