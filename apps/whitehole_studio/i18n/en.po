@@ -106,7 +106,7 @@ msgstr "Delete \"%1\" from the library?"
 msgid "%1  (%2 LEDs)"
 msgstr "%1  (%2 LEDs)"
 
-#: live_panel.cpp:250
+#: live_panel.cpp:280
 msgid "%1  →  %2"
 msgstr "%1  →  %2"
 
@@ -149,6 +149,10 @@ msgstr "%1 LEDs, frame %2 (dropped %3), packets %4, send errors %5"
 #: main_window.cpp:273
 msgid "%1 LEDs, angehalten"
 msgstr "%1 LEDs, stopped"
+
+#: live_panel.cpp:202
+msgid "%1 Look(s) hätten im kleineren Raster keinen Platz mehr und würden aus dem Raster genommen (die Looks bleiben im Projekt und lassen sich wieder auf ein Feld legen). Trotzdem verkleinern?"
+msgstr "%1 look(s) would no longer fit in the smaller grid and would be removed from the grid (the looks stay in the project and can be placed on a cell again). Shrink anyway?"
 
 #: live_learn.cpp:39
 msgid "%1 Universe %2, Kanal %3"
@@ -326,7 +330,7 @@ msgstr "(Black)"
 msgid "(eigene Form)"
 msgstr "(own shape)"
 
-#: live_panel.cpp:250
+#: live_panel.cpp:280
 msgid "(kein Look)"
 msgstr "(no look)"
 
@@ -806,7 +810,7 @@ msgstr "User library cannot be written: %1"
 msgid "Benutzerbibliothek lässt sich nicht speichern: %1"
 msgstr "User library cannot be saved: %1"
 
-#: live_panel.cpp:251
+#: live_panel.cpp:281
 msgid "Bereit: %1 - GO drücken"
 msgstr "Ready: %1 - press GO"
 
@@ -838,7 +842,7 @@ msgstr "Up to eight comets at once, each with its own speed and starting point. 
 msgid "Blau"
 msgstr "Blue"
 
-#: live_panel.cpp:64
+#: live_panel.cpp:65
 msgid "Blendet Flash je Look, die Belegung von MIDI und DMX und die Menüleiste ein oder aus"
 msgstr "Shows or hides flash per look, the MIDI and DMX assignments and the menu bar"
 
@@ -970,7 +974,7 @@ msgstr "DMX Monitor"
 msgid "Dabei wird nur die öffentliche Seite des neuesten Releases abgefragt. Gesendet werden Programmname und Versionsnummer (und, wie bei jedem Netzwerkzugriff, deine IP-Adresse), nichts über dich oder deine Projekte. Es wird nichts installiert. Du kannst das jederzeit im Menü Hilfe ändern."
 msgstr "Only the public page of the latest release is requested. What is sent: the program name and version number (and, as with any network access, your IP address), nothing about you or your projects. Nothing is installed. You can change this at any time in the Help menu."
 
-#: live_panel_cells.cpp:304
+#: live_panel_cells.cpp:305
 msgid "Das Feld läuft nur, solange der Knopf (oder das Pad) gehalten wird"
 msgstr "The cell only runs while the button (or pad) is held"
 
@@ -1086,7 +1090,7 @@ msgstr "The library already contains a group \"%1\". Replace it?"
 msgid "Die Cuelist ist leer. Erst Cues anlegen (Dock „Cuelist“)."
 msgstr "The cue list is empty. Create cues first (Cue list dock)."
 
-#: live_panel.cpp:276 live_panel_looks.cpp:57
+#: live_panel.cpp:306 live_panel_looks.cpp:57
 msgid "Die Cuelist läuft und schaltet die Looks selbst. Erst in der Cuelist auf Stopp drücken."
 msgstr "The cue list is running and switches the looks itself. Press Stop in the cue list first."
 
@@ -1222,7 +1226,7 @@ msgstr "Plane wave: stripes moving in one direction (frequency, speed, two color
 msgid "Effekte (2D)"
 msgstr "Effects (2D)"
 
-#: live_panel.cpp:133
+#: live_panel.cpp:135
 msgid "Eigene Überblendzeit:"
 msgstr "Custom fade time:"
 
@@ -1238,7 +1242,7 @@ msgstr "A report (.txt) and a memory dump (.dmp) are in the folder:\n%1\n\nPleas
 msgid "Ein Kabel lässt sich nur zwischen passenden Typen ziehen."
 msgstr "A cable can only be drawn between matching types."
 
-#: live_panel.cpp:132
+#: live_panel.cpp:134
 msgid "Ein Klick lädt den Look nur vor. GO (Leertaste) startet dann die Überblendung."
 msgstr "A click only preloads the look. GO (Space) then starts the fade."
 
@@ -1266,15 +1270,15 @@ msgstr "Input and output of a MIDI controller, for example an Akai APC mini. The
 msgid "Einblenden"
 msgstr "Fade in"
 
-#: live_panel_cells.cpp:234
+#: live_panel_cells.cpp:235
 msgid "Einblenden mit der Zeit des Looks (%1 s)"
 msgstr "Fade in with the look’s time (%1 s)"
 
-#: live_panel_cells.cpp:235
+#: live_panel_cells.cpp:236
 msgid "Einblenden mit eigener Zeit (%1 s) …"
 msgstr "Fade in with own time (%1 s) …"
 
-#: live_panel_cells.cpp:236
+#: live_panel_cells.cpp:237
 msgid "Einblenden mit eigener Zeit …"
 msgstr "Fade in with own time …"
 
@@ -1350,7 +1354,7 @@ msgstr "Input: %1"
 msgid "Einrasten"
 msgstr "Snap"
 
-#: live_panel.cpp:62 main_window_settings.cpp:49 output_form.cpp:89
+#: live_panel.cpp:63 main_window_settings.cpp:49 output_form.cpp:89
 msgid "Einstellungen"
 msgstr "Settings"
 
@@ -1594,11 +1598,11 @@ msgstr "Place and rotate fixtures on the stage (own window)"
 msgid "Flammen: Aufsteigendes, flackerndes Feuer mit einstellbarer Skalierung, Tempo und Flammenhöhe."
 msgstr "Flames: rising, flickering fire with adjustable scale, speed and flame height."
 
-#: live_panel_cells.cpp:303
+#: live_panel_cells.cpp:304
 msgid "Flash"
 msgstr "Flash"
 
-#: live_panel_cells.cpp:203
+#: live_panel_cells.cpp:204
 msgid "Flashen (nur solange gedrückt)"
 msgstr "Flash (only while held)"
 
@@ -1646,7 +1650,7 @@ msgstr "For live mode, save looks first (dock “Looks”)."
 msgid "GO"
 msgstr "GO"
 
-#: live_panel.cpp:144
+#: live_panel.cpp:146
 msgid "GO  (Leertaste)"
 msgstr "GO  (Space)"
 
@@ -2022,7 +2026,7 @@ msgstr "Layout"
 msgid "Layout auf Würfel abbilden"
 msgstr "Map layout onto cube"
 
-#: live_panel_cells.cpp:279
+#: live_panel_cells.cpp:280
 msgid "Leeres Feld. Klick oder Rechtsklick: Look hierher legen"
 msgstr "Empty cell. Click or right-click: put a look here"
 
@@ -2098,7 +2102,7 @@ msgstr "Left"
 msgid "Links ab"
 msgstr "Left edge at"
 
-#: live_panel.cpp:103
+#: live_panel.cpp:104
 msgid "Links die Ausgabe, rechts der vorgeladene Look (während des Überblendens der einblendende). Kostet etwas Rechenzeit, solange ein Look vorgeladen ist"
 msgstr "Output on the left, the loaded look on the right (while fading, the one coming in). Costs some processing time while a look is loaded"
 
@@ -2310,7 +2314,7 @@ msgstr "Select several with Ctrl or Shift. Clicking an LED in the view selects i
 msgid "Mischt zwei Bilder: 0 zeigt nur A, 1 nur B, dazwischen eine Überblendung."
 msgstr "Mixes two images: 0 shows only A, 1 only B, in between a crossfade."
 
-#: live_panel.cpp:131
+#: live_panel.cpp:133
 msgid "Mit GO (vorladen)"
 msgstr "With GO (preload)"
 
@@ -2762,7 +2766,11 @@ msgstr "Grid"
 msgid "Raster in der Vorschau anzeigen"
 msgstr "Show grid in the preview"
 
-#: live_panel.cpp:87
+#: live_panel.cpp:201
+msgid "Raster verkleinern"
+msgstr "Shrink grid"
+
+#: live_panel.cpp:88
 msgid "Rasterbreite (Spalten):"
 msgstr "Grid width (columns):"
 
@@ -3014,7 +3022,7 @@ msgstr "Start"
 msgid "Starte …"
 msgstr "Starting …"
 
-#: live_panel.cpp:134
+#: live_panel.cpp:136
 msgid "Statt der Zeit, die beim Look gespeichert ist"
 msgstr "Instead of the time saved with the look"
 
@@ -3174,7 +3182,7 @@ msgstr "U%1: %2–%3"
 msgid "Umbenennen …"
 msgstr "Rename …"
 
-#: live_panel_cells.cpp:202
+#: live_panel_cells.cpp:203
 msgid "Umschalten (bleibt an)"
 msgstr "Toggle (stays on)"
 
@@ -3210,7 +3218,7 @@ msgstr "Bottom"
 msgid "Unten ⤓"
 msgstr "Bottom ⤓"
 
-#: live_panel.cpp:80
+#: live_panel.cpp:81
 msgid "Unter jedem Look: Flash (läuft nur, solange der Knopf gehalten wird) und die Zeit zum Zurückblenden."
 msgstr "Under each look: flash (runs only while the button is held) and the time to fade back."
 
@@ -3278,7 +3286,7 @@ msgstr "Loaded: %1"
 msgid "Vorschau"
 msgstr "Preview"
 
-#: live_panel.cpp:100
+#: live_panel.cpp:101
 msgid "Vorschau teilen"
 msgstr "Split preview"
 
@@ -3398,7 +3406,7 @@ msgstr "As in the 2D view; gray dots of the front layer hide LEDs behind them"
 msgid "Wie oft die Spirale um die Säule läuft (0 = gerade nach oben)"
 msgstr "How often the spiral winds around the column (0 = straight up)"
 
-#: live_panel.cpp:91
+#: live_panel.cpp:92
 msgid "Wie viele Look-Knöpfe nebeneinander stehen; mehr Spalten brauchen weniger Höhe"
 msgstr "How many look buttons sit side by side; more columns need less height"
 
@@ -3490,11 +3498,11 @@ msgstr "Rows"
 msgid "Zeilen (waagrecht)"
 msgstr "Rows (horizontal)"
 
-#: live_panel.cpp:97
+#: live_panel.cpp:98
 msgid "Zeilen des festen Rasters; nicht belegte Felder bleiben leer. Bei mehr Looks als Feldern kommen Zeilen dazu"
 msgstr "Rows of the fixed grid; unused cells stay empty. With more looks than cells, rows are added"
 
-#: live_panel.cpp:93
+#: live_panel.cpp:94
 msgid "Zeilen:"
 msgstr "Rows:"
 
@@ -3502,7 +3510,7 @@ msgstr "Rows:"
 msgid "Zeit"
 msgstr "Time"
 
-#: live_panel_cells.cpp:306
+#: live_panel_cells.cpp:307
 msgid "Zeit zum Einblenden beim Drücken"
 msgstr "Time to fade in on press"
 
@@ -3510,7 +3518,7 @@ msgstr "Time to fade in on press"
 msgid "Zeit zum Einblenden beim Drücken (s):"
 msgstr "Time to fade in on press (s):"
 
-#: live_panel_cells.cpp:308
+#: live_panel_cells.cpp:309
 msgid "Zeit zum Zurückblenden beim Loslassen"
 msgstr "Time to fade back on release"
 
@@ -3578,7 +3586,7 @@ msgstr "Random cells that fade in and out, between two colors."
 msgid "Zum Aneinanderreihen mindestens zwei Fixtures wählen"
 msgstr "Select at least two fixtures to line up"
 
-#: live_panel.cpp:65
+#: live_panel.cpp:66
 msgid "Zurück zum Editor (Esc)"
 msgstr "Back to editor (Esc)"
 
@@ -3594,15 +3602,15 @@ msgstr "Back: look time"
 msgid "Zurückblenden"
 msgstr "Fade back"
 
-#: live_panel_cells.cpp:238
+#: live_panel_cells.cpp:239
 msgid "Zurückblenden mit der Zeit des Looks (%1 s)"
 msgstr "Fade back with the look’s time (%1 s)"
 
-#: live_panel_cells.cpp:239
+#: live_panel_cells.cpp:240
 msgid "Zurückblenden mit eigener Zeit (%1 s) …"
 msgstr "Fade back with own time (%1 s) …"
 
-#: live_panel_cells.cpp:240
+#: live_panel_cells.cpp:241
 msgid "Zurückblenden mit eigener Zeit …"
 msgstr "Fade back with own time …"
 
@@ -3738,7 +3746,7 @@ msgstr "sACN reception joins the multicast groups on this card. Art-Net broadcas
 msgid "Überblendet von Bild A zu Bild B (Position 0 bis 1). „Progressive“ lässt beide in der Mitte voll leuchten."
 msgstr "Fades from image A to image B (position 0 to 1). \"Progressive\" lets both shine fully in the middle."
 
-#: live_panel_cells.cpp:277
+#: live_panel_cells.cpp:278
 msgid "Überblendzeit %1 s. Rechtsklick: Look, Modus und Zeiten ändern"
 msgstr "Fade time %1 s. Right-click: change look, mode and times"
 

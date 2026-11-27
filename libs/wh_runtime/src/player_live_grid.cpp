@@ -63,7 +63,15 @@ Result<void> Player::setLiveCell(int cell, project::LiveCell value) {
     return {};
 }
 
-Result<void> Player::setLiveGridSize(int columns, int rows) {
+int Player::liveGridCellsLost(int columns, int rows) const {
+    if (!project_ || !project_->liveGrid.defined() || columns < 1 || columns > project::kMaxLiveGridSide || rows < 1 ||
+        rows > project::kMaxLiveGridSide) {
+        return 0;
+    }
+    return project::liveGridCellsLost(project_->liveGrid, columns, rows);
+}
+
+Result<void> Player::setLiveGridSize(int columns, int rows, bool allowDrop) {
     if (!project_) {
         return Error{ErrorCode::InvalidArgument, "Es ist kein Projekt geladen"};
     }
@@ -75,6 +83,12 @@ Result<void> Player::setLiveGridSize(int columns, int rows) {
     }
     if (columns == project_->liveGrid.columns && rows == project_->liveGrid.rows) {
         return {};
+    }
+    if (!allowDrop) {
+        if (const int lost = project::liveGridCellsLost(project_->liveGrid, columns, rows); lost > 0) {
+            return Error{ErrorCode::InvalidArgument,
+                         std::to_string(lost) + " belegte Felder passen nicht mehr ins Raster"};
+        }
     }
     project::resizeLiveGrid(project_->liveGrid, columns, rows);
     clearFlash();  // gehaltene Felder können verschwunden oder verschoben sein

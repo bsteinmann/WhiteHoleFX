@@ -56,9 +56,17 @@ public:
     /// Zeilen des Rasters (1 bis 16); wie setColumns.
     void setRows(int rows);
     [[nodiscard]] int rows() const { return rows_; }
-    /// Spalten und Zeilen auf einmal (ein Neuaufbau). Belegte Felder behalten Zeile und Spalte, Felder außerhalb werden leer.
-    /// Löst gridChanged nicht aus.
+    /// Spalten und Zeilen auf einmal (ein Neuaufbau). Belegte Felder behalten Zeile und Spalte, belegte Felder außerhalb rücken
+    /// in freie Felder nach; was dann noch keinen Platz hat, wird aus dem Raster genommen (der Look bleibt im Projekt).
+    /// Fragt nicht nach (für Programmaufrufe, z. B. beim Wiederherstellen der Einstellungen). Löst gridChanged nicht aus.
     void setGrid(int columns, int rows);
+    /// Wie setGrid, aber für eine Eingabe des Nutzers (die Zahlenfelder unter „Einstellungen“): Gingen dabei Looks aus dem
+    /// Raster verloren, fragt das Panel vorher nach; bei „Abbrechen“ bleiben Raster und Zahlenfelder, wie sie waren.
+    /// Liefert false, wenn abgebrochen wurde.
+    bool requestGrid(int columns, int rows);
+    /// Die Rückfrage von requestGrid, mit der Zahl der Looks, die aus dem Raster fielen (true = trotzdem verkleinern). Ohne
+    /// eigene Funktion erscheint ein Dialog; der Rauchtest setzt eine, weil ein Dialog ohne Publikum blockieren würde.
+    void setShrinkConfirm(std::function<bool(int lost)> confirm) { confirmShrink_ = std::move(confirm); }
     /// Vorgabe für ein Projekt ohne Raster (rebuild() legt es dann mit dieser Größe aus den Looks an); ändert ein vorhandenes
     /// Raster nicht und baut nichts neu. Hat das Projekt eines, gilt dessen Größe (rebuild() zieht die Felder nach).
     void setDefaultGrid(int columns, int rows);
@@ -124,6 +132,7 @@ private:
     [[nodiscard]] static QString styleFor(const QString& color);
     [[nodiscard]] static QString emptyStyle();  // leeres Feld: gestrichelter Rahmen
     void syncGridBoxes();                        // Spalten-/Zeilenfelder auf columns_/rows_ ziehen, ohne Signale
+    std::function<bool(int)> confirmShrink_;     // Rückfrage von requestGrid; leer = Dialog
     bool changeCell(int index, const project::LiveCell& value);  // Player::setLiveCell, Fehler melden
     [[nodiscard]] QString buttonText(int index) const;
     /// Standbild des Looks als Icon für den Knopf; leer, wenn der Look keines hat (ältere Projekte).
