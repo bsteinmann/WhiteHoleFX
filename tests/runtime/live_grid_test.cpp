@@ -107,6 +107,36 @@ TEST_CASE("Live-Raster: Größe ändern und im Projekt behalten", "[live][livegr
     CHECK(text.value().find("livegrid 3 3\ncell 1 1 look A\n") != std::string::npos);
 }
 
+TEST_CASE("Live-Raster: Verkleinern lässt Looks nachrücken und fragt vorher, was verloren ginge", "[live][livegrid]") {
+    Rig rig;
+    REQUIRE(rig.player.saveLook("A", 1.0).ok());
+    REQUIRE(rig.player.saveLook("B", 1.0).ok());
+    REQUIRE(rig.player.saveLook("C", 1.0).ok());
+    REQUIRE(rig.player.ensureLiveGrid(3, 1).ok());  // A B C in einer Zeile
+    CHECK(rig.player.liveGridCellsLost(3, 1) == 0);
+    CHECK(rig.player.liveGridCellsLost(2, 1) == 1);  // C hat keinen Platz mehr
+    CHECK(rig.player.liveGridCellsLost(2, 2) == 0);  // C rückt in das erste freie Feld der zweiten Zeile
+    CHECK(rig.player.liveGridCellsLost(0, 1) == 0);  // ungültige Größe: nichts zu melden
+
+    // ohne Erlaubnis zu verlieren ändert sich nichts
+    const auto refused = rig.player.setLiveGridSize(2, 1, false);
+    REQUIRE_FALSE(refused.ok());
+    CHECK(rig.player.liveGrid().columns == 3);
+    CHECK(rig.player.liveGrid().cells[2].look == "C");
+
+    // nichts geht verloren: erlaubt auch ohne allowDrop, C rückt nach
+    REQUIRE(rig.player.setLiveGridSize(2, 2, false).ok());
+    CHECK(rig.player.liveGrid().columns == 2);
+    CHECK(rig.player.liveGrid().cells[0].look == "A");
+    CHECK(rig.player.liveGrid().cells[1].look == "B");
+    CHECK(rig.player.liveGrid().cells[2].look == "C");
+
+    // mit Erlaubnis fällt weg, was nicht mehr passt; die Looks bleiben im Projekt
+    REQUIRE(rig.player.setLiveGridSize(2, 1, true).ok());
+    CHECK(rig.player.liveGrid().cells.size() == 2);
+    CHECK(rig.player.looks().size() == 3);
+}
+
 TEST_CASE("Live-Raster: Felder belegen und prüfen", "[live][livegrid]") {
     Rig rig;
     REQUIRE(rig.player.saveLook("A", 1.0).ok());

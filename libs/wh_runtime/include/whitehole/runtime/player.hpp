@@ -396,9 +396,15 @@ public:
     /// 600 s; `in`/`return` entfallen beim Umschalten (Toggle). Geht auch im Live-Betrieb. Fehler: kein Raster, Feld
     /// außerhalb, unbekannter Look, Zeit ungültig.
     Result<void> setLiveCell(int cell, project::LiveCell value);
-    /// Neue Rastergröße (je 1..16); belegte Felder behalten Zeile und Spalte, Felder außerhalb werden leer. Geht auch im
-    /// Live-Betrieb (beendet gehaltene Flash-Felder). Fehler: kein Projekt, kein Raster (ensureLiveGrid), Größe ungültig.
-    Result<void> setLiveGridSize(int columns, int rows);
+    /// Neue Rastergröße (je 1..16); belegte Felder behalten Zeile und Spalte, belegte Felder außerhalb rücken in die ersten
+    /// freien Felder nach (project::resizeLiveGrid). Passt etwas auch dann nicht mehr hinein, fällt es weg (der Look bleibt im
+    /// Projekt); mit `allowDrop == false` wird dann stattdessen nichts geändert und ein Fehler gemeldet, damit die
+    /// Oberfläche vorher nachfragen kann (siehe liveGridCellsLost). Geht auch im Live-Betrieb (beendet gehaltene Flash-Felder).
+    /// Fehler: kein Projekt, kein Raster (ensureLiveGrid), Größe ungültig, Felder gingen verloren und `allowDrop` ist aus.
+    Result<void> setLiveGridSize(int columns, int rows, bool allowDrop = true);
+    /// Wie viele belegte Felder bei der neuen Größe trotz Nachrücken wegfielen (0 = nichts geht verloren; auch ohne Projekt
+    /// oder Raster). Ändert nichts.
+    [[nodiscard]] int liveGridCellsLost(int columns, int rows) const;
     /// Fehler: NotFound (Index), InvalidArgument (Name ungültig oder schon vergeben, Zeit außerhalb 0..600).
     Result<void> removeLook(int index);
     Result<void> renameLook(int index, const std::string& name);

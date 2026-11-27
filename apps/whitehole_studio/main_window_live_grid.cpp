@@ -5,6 +5,7 @@
 // über dem Limit der Dateigröße. Qt läuft nur in der CI, dort fängt dieser Test Fehler auf.
 #include <QMenu>
 
+#include <algorithm>
 #include <memory>
 
 #include "live_panel.hpp"
@@ -27,6 +28,29 @@ QString MainWindow::exerciseLiveGrid() {
         return QStringLiteral("Live: Raster (Spalten, Zeilen) lässt sich nicht ändern");
     }
     livePanel_->setGrid(columns, rows);
+    // Verkleinern per Eingabe: Gingen Looks verloren, fragt das Panel vorher nach (hier mit einer Funktion statt eines Dialogs)
+    int asked = 0;
+    bool answer = false;
+    livePanel_->setShrinkConfirm([&](int) {
+        ++asked;
+        return answer;
+    });
+    const int occupied = static_cast<int>(
+        std::count_if(grid.cells.begin(), grid.cells.end(), [](const project::LiveCell& c) { return !c.empty(); }));
+    if (occupied > 1) {  // auf 1 x 1 behält nur ein Feld seinen Look
+        if (livePanel_->requestGrid(1, 1) || asked != 1 || livePanel_->columns() != columns || livePanel_->rows() != rows ||
+            grid.columns != columns || grid.rows != rows) {
+            livePanel_->setShrinkConfirm({});
+            return QStringLiteral("Live: Raster verkleinern ohne Bestätigung verändert das Raster");
+        }
+        answer = true;
+        if (!livePanel_->requestGrid(1, 1) || asked != 2 || grid.columns != 1 || grid.rows != 1) {
+            livePanel_->setShrinkConfirm({});
+            return QStringLiteral("Live: Raster verkleinern mit Bestätigung klappt nicht");
+        }
+        livePanel_->setGrid(columns, rows);  // die Looks bleiben im Projekt; die weggefallenen Felder sind danach leer
+    }
+    livePanel_->setShrinkConfirm({});
     // Leeres Feld belegen: derselbe Look liegt dann zweimal, einmal als Flash
     const int freeCell = project::firstFreeLiveCell(grid);
     if (freeCell < 0 || player_->cellLook(freeCell) >= 0 || livePanel_->trigger(freeCell)) {
