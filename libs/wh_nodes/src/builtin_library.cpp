@@ -11,8 +11,9 @@ Result<std::unique_ptr<BuiltinLibrary>> BuiltinLibrary::create() {
     library->dmx = std::make_shared<input::DmxStore>();
     library->audio = std::make_shared<audio::AudioStore>();
     library->midi = std::make_shared<midi::MidiStore>();
-    const Result<void> registered =
-        registerBuiltinNodes(*library->registry, library->snippets, library->kernels, library->dmx, library->audio, library->midi);
+    library->tempo = std::make_shared<values::TempoClock>();
+    const Result<void> registered = registerBuiltinNodes(*library->registry, library->snippets, library->kernels, library->dmx,
+                                                         library->audio, library->midi, library->tempo);
     if (!registered.ok()) {
         return registered.error();
     }

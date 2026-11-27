@@ -3,7 +3,9 @@
 #include <catch2/catch_approx.hpp>
 #include <catch2/catch_test_macros.hpp>
 
+#include <algorithm>
 #include <memory>
+#include <string>
 #include <vector>
 
 #include "fake_gpu_device.hpp"
@@ -198,4 +200,18 @@ TEST_CASE("Live-Steuerung: veraltete DMX-Werte zählen nicht", "[dmx][midi_live]
     store->write(DmxProtocol::ArtNet, 2, std::vector<std::uint8_t>{255});
     rig.frame();
     CHECK(rig.player.liveStatus().fading);
+}
+
+TEST_CASE("Belegung: Tempo-Tap ist eine Taste ohne Profil-Belegung und übersteht Schreiben/Lesen", "[live][tempo]") {
+    CHECK(runtime::isButton(LiveFunction::Tap));
+    CHECK(runtime::hasDmxBinding(LiveFunction::Tap));
+    const midi::LiveProfile profile;
+    CHECK(runtime::profileBinding(profile, LiveFunction::Tap).number == -1);
+    runtime::LiveBindings bindings;
+    bindings.midiOf(LiveFunction::Tap) = runtime::MidiBinding{2, 61};
+    bindings.dmxOf(LiveFunction::Tap) = input::DmxAddress{DmxProtocol::ArtNet, 4, 17};
+    const std::vector<std::string> lines = runtime::serializeBindings(bindings);
+    CHECK(std::find(lines.begin(), lines.end(), "tap midi 2 61") != lines.end());
+    CHECK(std::find(lines.begin(), lines.end(), "tap dmx artnet 4 17") != lines.end());
+    CHECK(runtime::parseBindings(lines) == bindings);
 }

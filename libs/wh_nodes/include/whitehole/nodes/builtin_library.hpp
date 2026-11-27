@@ -15,6 +15,7 @@
 #include "whitehole/input/dmx_store.hpp"
 #include "whitehole/midi/midi_store.hpp"
 #include "whitehole/values/cpu_kernel.hpp"
+#include "whitehole/values/tempo_clock.hpp"
 
 namespace whitehole::nodes {
 
@@ -28,6 +29,8 @@ struct BuiltinLibrary {
     std::shared_ptr<midi::MidiStore> midi;
     /// Der Speicher, aus dem die Audio-Nodes lesen; ein AudioInput schreibt hinein.
     std::shared_ptr<audio::AudioStore> audio;
+    /// Die gemeinsame Tempo-Uhr (wh.value.tempo); der Player schiebt sie pro Bild weiter, sie überlebt Look-Wechsel.
+    std::shared_ptr<values::TempoClock> tempo;
 
     /// Fehler: die der Registrierung (z. B. doppelte Typ-ID, die es bei Built-ins nicht geben darf).
     [[nodiscard]] static Result<std::unique_ptr<BuiltinLibrary>> create();

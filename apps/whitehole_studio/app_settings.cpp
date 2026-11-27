@@ -41,6 +41,8 @@ AppSettings loadAppSettings() {
     result.midiProfile = s.value(QStringLiteral("midi/profile")).toString();
     result.midiProfiles = s.value(QStringLiteral("midi/profiles")).toStringList();
     result.liveBindings = s.value(QStringLiteral("midi/liveBindings")).toStringList();
+    result.tempoSource = std::clamp(s.value(QStringLiteral("tempo/source"), 0).toInt(), 0, 1);
+    result.tempoFixedBpm = std::clamp(s.value(QStringLiteral("tempo/fixedBpm"), 120.0).toDouble(), 30.0, 300.0);
     result.audioSource = s.value(QStringLiteral("audio/source"), result.audioSource).toString();
     // Eigene Standardwerte: eine Gruppe je Node-Typ. Unlesbare Einträge werden übersprungen.
     QSettings defaults = store();
@@ -83,6 +85,8 @@ void saveAppSettings(const AppSettings& settings) {
     s.setValue(QStringLiteral("midi/profile"), settings.midiProfile);
     s.setValue(QStringLiteral("midi/profiles"), settings.midiProfiles);
     s.setValue(QStringLiteral("midi/liveBindings"), settings.liveBindings);
+    s.setValue(QStringLiteral("tempo/source"), settings.tempoSource);
+    s.setValue(QStringLiteral("tempo/fixedBpm"), settings.tempoFixedBpm);
     s.setValue(QStringLiteral("audio/source"), settings.audioSource);
     s.remove(QStringLiteral("nodeDefaults"));
     for (const auto& [type, values] : settings.nodeDefaults.all()) {

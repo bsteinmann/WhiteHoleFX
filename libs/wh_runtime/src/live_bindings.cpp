@@ -7,7 +7,7 @@ namespace whitehole::runtime {
 
 namespace {
 
-constexpr std::array<const char*, kLiveFunctionCount> kNames{"go", "stop", "master", "fade", "crossfade"};
+constexpr std::array<const char*, kLiveFunctionCount> kNames{"go", "stop", "master", "fade", "crossfade", "tap"};
 
 std::optional<LiveFunction> functionNamed(const std::string& name) {
     for (std::size_t i = 0; i < kNames.size(); ++i) {
@@ -28,6 +28,7 @@ MidiBinding profileBinding(const midi::LiveProfile& profile, LiveFunction functi
         case LiveFunction::Master: return MidiBinding{0, k.masterCc};
         case LiveFunction::FadeTime: return MidiBinding{0, k.fadeCc};
         case LiveFunction::Crossfade: return MidiBinding{0, k.crossfadeCc};
+        case LiveFunction::Tap: return MidiBinding{0, -1};  // kein Profil hat eine Tap-Taste
     }
     return MidiBinding{};
 }

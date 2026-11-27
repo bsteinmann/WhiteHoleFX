@@ -151,6 +151,14 @@ LivePanel::LivePanel(runtime::Player& player, QWidget* parent) : QWidget{parent}
     options->addWidget(customFade_);
     options->addWidget(fade_);
     options->addStretch(1);
+    // Tap für die gemeinsame Tempo-Uhr (Node "Tempo"); beim Drücken, nicht beim Loslassen, damit der Takt genau sitzt
+    tapButton_ = new QPushButton{this};
+    tapButton_->setToolTip(tr("Im Takt tippen: setzt Tempo und Beat der gemeinsamen Tempo-Uhr (Node „Tempo“, Quelle „Tap“)"));
+    connect(tapButton_, &QPushButton::pressed, this, [this]() {
+        player_.tempoTap();
+        refresh();
+    });
+    options->addWidget(tapButton_);
     layout->addLayout(options);
     layout->addWidget(goButton_);
 
@@ -281,6 +289,7 @@ void LivePanel::refresh() {
     nextLabel_->setText(st.armed >= 0 && !st.fading ? tr("Bereit: %1 - GO drücken").arg(nameOf(st.armed)) : QString{});
     progress_->setValue(static_cast<int>(std::lround(std::clamp(st.progress, 0.0, 1.0) * 1000.0)));
     goButton_->setEnabled(st.armed >= 0 && !st.fading);
+    tapButton_->setText(tr("TAP  %1 BPM").arg(player_.tempo().bpm, 0, 'f', 1));
 }
 
 std::optional<double> LivePanel::fadeOverride() const {

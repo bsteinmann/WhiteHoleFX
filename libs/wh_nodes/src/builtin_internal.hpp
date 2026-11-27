@@ -14,6 +14,7 @@
 #include "whitehole/audio/audio_store.hpp"
 #include "whitehole/input/dmx_store.hpp"
 #include "whitehole/midi/midi_store.hpp"
+#include "whitehole/values/tempo_clock.hpp"
 #include "whitehole/values/cpu_kernel.hpp"
 
 namespace whitehole::nodes::detail {
@@ -216,6 +217,8 @@ std::vector<compiler::NodeDefinition> audioFieldNodes();  // Spectrum Bars
 std::vector<values::CpuNodeDefinition> dmxNodes(std::shared_ptr<input::DmxStore> store);
 /// MIDI-Eingang (wh.value.midicc, wh.value.midinote): die Kernel lesen aus `store`; null = ein leerer Speicher (nie ein Signal).
 std::vector<values::CpuNodeDefinition> midiNodes(std::shared_ptr<midi::MidiStore> store);
+/// Tempo (wh.value.tempo): liest die gemeinsame Tempo-Uhr; null = eine eigene, die nie weiterläuft.
+std::vector<values::CpuNodeDefinition> tempoNodes(std::shared_ptr<values::TempoClock> clock);
 
 /// Farbton (in Umläufen, 0..1 wiederholt sich), Sättigung und Helligkeit einer Farbe ändern; bei
 /// 0 / 1 / 1 kommt die Farbe unverändert zurück. Alpha bleibt.

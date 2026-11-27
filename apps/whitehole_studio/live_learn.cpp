@@ -14,7 +14,7 @@ namespace {
 
 constexpr std::array<const char*, runtime::kLiveFunctionCount> kNames{
     QT_TR_NOOP("GO"), QT_TR_NOOP("Live beenden"), QT_TR_NOOP("Master-Helligkeit"), QT_TR_NOOP("Überblendzeit (0–10 s)"),
-    QT_TR_NOOP("Manuelle Überblendung")};
+    QT_TR_NOOP("Manuelle Überblendung"), QT_TR_NOOP("Tempo-Tap")};
 
 int gWaiting = 0;  // Zahl der wartenden Lernen-Knöpfe (nur Hauptthread)
 

@@ -158,6 +158,9 @@ void MidiLiveController::act(LiveFunction function, int value, const MidiLiveOpt
                 result.leaveRequested = true;
             }
             return;
+        case LiveFunction::Tap:
+            player_.tempoTap();  // die Tempo-Uhr läuft immer, nicht nur im Live-Betrieb
+            return;
     }
 }
 

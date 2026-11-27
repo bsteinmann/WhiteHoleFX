@@ -1,5 +1,5 @@
 // live_bindings.hpp: Belegung der Steuerfunktionen im Live-Modus (GO, Live beenden, Master, Überblendzeit, manuelle
-// Überblendung) auf MIDI und DMX.
+// Überblendung, Tempo-Tap) auf MIDI und DMX.
 //
 // Warum es das gibt: Die festen Nummern eines Controller-Profils (midi/live_profile.hpp) sind nur der Anfang. Jede Funktion
 // lässt sich per "Lernen" auf eine andere Taste, einen anderen Regler oder einen DMX-Kanal legen - im Reiter
@@ -24,14 +24,16 @@
 
 namespace whitehole::runtime {
 
-enum class LiveFunction : std::uint8_t { Go, Stop, Master, FadeTime, Crossfade };
-inline constexpr std::size_t kLiveFunctionCount = 5;
+/// Tap: ein Schlag für die gemeinsame Tempo-Uhr (values::TempoClock); wirkt auch außerhalb des Live-Betriebs. Das Profil
+/// sieht dafür keine Taste vor (nur eigene Belegung).
+enum class LiveFunction : std::uint8_t { Go, Stop, Master, FadeTime, Crossfade, Tap };
+inline constexpr std::size_t kLiveFunctionCount = 6;
 inline constexpr std::array<LiveFunction, kLiveFunctionCount> kLiveFunctions{
-    LiveFunction::Go, LiveFunction::Stop, LiveFunction::Master, LiveFunction::FadeTime, LiveFunction::Crossfade};
+    LiveFunction::Go, LiveFunction::Stop, LiveFunction::Master, LiveFunction::FadeTime, LiveFunction::Crossfade, LiveFunction::Tap};
 
 /// Taste (Note, bei DMX: ab 128 = gedrückt) oder Regler (CC, bei DMX: der Wert).
 [[nodiscard]] constexpr bool isButton(LiveFunction function) noexcept {
-    return function == LiveFunction::Go || function == LiveFunction::Stop;
+    return function == LiveFunction::Go || function == LiveFunction::Stop || function == LiveFunction::Tap;
 }
 /// Ob die Funktion eine eigene DMX-Belegung hat (Master nicht, siehe oben).
 [[nodiscard]] constexpr bool hasDmxBinding(LiveFunction function) noexcept { return function != LiveFunction::Master; }
@@ -59,7 +61,7 @@ struct LiveBindings {
 [[nodiscard]] MidiBinding effectiveMidi(const LiveBindings& bindings, const midi::LiveProfile& profile, LiveFunction function) noexcept;
 
 /// Textzeilen: "<funktion> midi <kanal> <nummer>" bzw. "<funktion> dmx <artnet|sacn> <universe> <kanal>";
-/// Funktionen: go, stop, master, fade, crossfade. Unlesbare Zeilen fallen beim Lesen weg.
+/// Funktionen: go, stop, master, fade, crossfade, tap. Unlesbare Zeilen fallen beim Lesen weg.
 [[nodiscard]] std::vector<std::string> serializeBindings(const LiveBindings& bindings);
 [[nodiscard]] LiveBindings parseBindings(const std::vector<std::string>& lines);
 

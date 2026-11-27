@@ -7,5 +7,6 @@ wh_add_library(wh_values
         src/cpu_kernel.cpp
         src/value_evaluator.cpp
         src/value_store.cpp
+        src/tempo_clock.cpp
     PUBLIC_DEPS
         wh_graph)

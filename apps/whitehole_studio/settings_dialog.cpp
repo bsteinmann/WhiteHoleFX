@@ -312,6 +312,8 @@ AppSettings SettingsDialog::settings() const {
     for (const std::string& line : runtime::serializeBindings(controlsPage_->bindings())) {
         result.liveBindings << QString::fromStdString(line);
     }
+    result.tempoSource = controlsPage_->tempoSource();
+    result.tempoFixedBpm = controlsPage_->tempoFixedBpm();
     result.nodeDefaults = defaultsPage_->defaults();
     return result;
 }

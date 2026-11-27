@@ -35,6 +35,7 @@ wh_add_library(wh_runtime
         src/player_nodes.cpp
         src/player_targets.cpp
         src/player_master.cpp
+        src/player_tempo.cpp
         src/live_dmx.cpp
         src/live_bindings.cpp
         src/midi_live.cpp

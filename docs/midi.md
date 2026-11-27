@@ -80,7 +80,7 @@ Live-Steuerung (siehe `docs/studio.md`). Code: `MidiLiveController::handle`/`upd
 
 ## Steuerung frei belegen (MIDI und DMX)
 
-GO, Live beenden, Master, Überblendzeit und manuelle Überblendung lassen sich per **Lernen** auf beliebige Tasten, Regler oder
+GO, Live beenden, Master, Überblendzeit, manuelle Überblendung und Tempo-Tap ([Tempo-Uhr](tempo.md)) lassen sich per **Lernen** auf beliebige Tasten, Regler oder
 DMX-Kanäle legen - im Reiter Einstellungen → **Steuerung** und in der Zeile „Steuerung belegen“ des Live-Fensters (erscheint mit der
 Schaltfläche **Einstellungen** oben rechts); beide schreiben dieselbe Belegung (`runtime::LiveBindings`, Programmeinstellung `midi/liveBindings`). Ohne eigene MIDI-Belegung gilt das Profil;
 „Profil“ setzt zurück. DMX: Tasten lösen bei steigender Flanke über 127 aus, Fader wirken bei jeder Änderung; der erste gelesene
