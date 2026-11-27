@@ -285,6 +285,18 @@ Fix-Ideen, Tests). Zuerst Punkt 0 dort (`.pdb` vom Nutzer besorgen, läuft am 20
   `EdgeDetector` ohne `startsLow` dasselbe Problem hätten (nur melden, nicht ohne Rückfrage ändern). Risiko: ein beim Laden
   dauerhaft anliegender Trigger feuert einmal. Verworfen: B (Schalter „Beim Start auslösen“) und C (neuer Node „Look gestartet“).
   Berührt `builtin_shot.cpp`, Catch2-Tests (Shot), `docs/value-graph.md`, CHANGELOG.
+- **Einstellungen-Dialog: Übernehmen-Button** (vom Nutzer am 27.11. gemeldet, **Variante 1 am 27.11. ins Todo aufgenommen**, noch
+  nicht angefangen): Änderungen im Dialog Einstellungen (Audio, MIDI, DMX, Steuerung; `settings_dialog.cpp`,
+  `MainWindow::applySettings` in `main_window_settings.cpp`) greifen erst nach OK. Folge: Der MIDI-Monitor („Letzte Nachricht“,
+  `midi_settings_page.cpp`) zeigt für einen frisch gewählten Port nichts, bis der Dialog geschlossen und wieder geöffnet wurde.
+  Die Stage Config (Reiter Ausgabe, `output_form.cpp`) übernimmt dagegen schon bei jeder Änderung sofort; dort wurde keine
+  Verzögerung gefunden (offen: ob der Nutzer bei „Outputs“ doch etwas Bestimmtes meinte, z. B. Ziele oder DMX-Ausgangs-Patches).
+  Gewählt: Dritte Schaltfläche **Übernehmen** neben OK und Abbrechen (`QDialogButtonBox::Apply`): wendet die aktuellen Werte an,
+  ohne den Dialog zu schließen; **Abbrechen nach Übernehmen** stellt den Stand wieder her, mit dem der Dialog geöffnet wurde.
+  Optional: Hinweis „Übernommen“ in der Statuszeile. Verworfen: Sofort-Übernahme je Seite (Geräte würden beim Durchklicken
+  ständig geöffnet, Abbrechen verlöre den Sinn) und ein Monitor, der den Port vorübergehend selbst öffnet (zu aufwendig).
+  Qt lässt sich lokal nicht bauen: Rauchtest im Studio-Test (CI), neue `tr()`-Strings mit Übersetzungen en/fr/es/uk
+  (`scripts/i18n.py`), CHANGELOG.
 - „Zonen"-Node, Projektions-/HDMI-Ausgabe, Remote-Web-UI, Headless-Player/Pi-Support, ukrainische
   Muttersprachler-Durchsicht der Übersetzungen, GitHub-Releases ab 0.71.0 und Issue #13 schließen — alle
   diese Punkte brauchen vorher die ausdrückliche Freigabe des Nutzers (siehe Sicherheitsregel oben).
