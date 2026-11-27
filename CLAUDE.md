@@ -275,6 +275,16 @@ Fix-Ideen, Tests). Zuerst Punkt 0 dort (`.pdb` vom Nutzer besorgen, läuft am 20
   unverändert; die Zeiten bleiben wie bisher je Feld einstellbar (ob „Look-Zeit“ dabei weiter wählbar bleibt, ist nicht
   ausdrücklich entschieden, Annahme: ja, um nichts zu entfernen). Berührt `Player::setLookTrigger`/`liveCellDown`,
   Catch2-Tests (`live_flash_test.cpp`), `docs/`, CHANGELOG.
+- **Shot löst nicht aus, wenn der Trigger schon im ersten Frame anliegt** (vom Nutzer am 27.11. gemeldet, **Lösung A am 27.11. ins
+  Todo aufgenommen**, noch nicht angefangen): Ein One-Shot (`wh.value.shot`, `builtin_shot.cpp`) im per MIDI-Note geflashten Look
+  feuerte nicht, wenn derselbe MIDI-Note-Node als Trigger dient. Vermutete Ursache (nicht am Projekt des Nutzers geprüft): Der Look
+  entsteht erst beim Note-On, der `EdgeDetector` des Shots (`triggerEdge_`, ohne `startsLow`) zählt den ersten Aufruf nie als Flanke,
+  der Trigger ist da aber schon „an“. Gewählt: Der Shot-Trigger startet wie das Envelope-Gate (`gateEdge_{true}` in
+  `builtin_sequence.cpp`) mit „vorher war aus“, ein schon anliegender Trigger löst also einmal aus. Kein neuer Parameter. Offen,
+  vor der Umsetzung prüfen: ob die Vermutung stimmt (Test mit Shot im frisch gestarteten Look), und welche weiteren Nodes mit
+  `EdgeDetector` ohne `startsLow` dasselbe Problem hätten (nur melden, nicht ohne Rückfrage ändern). Risiko: ein beim Laden
+  dauerhaft anliegender Trigger feuert einmal. Verworfen: B (Schalter „Beim Start auslösen“) und C (neuer Node „Look gestartet“).
+  Berührt `builtin_shot.cpp`, Catch2-Tests (Shot), `docs/value-graph.md`, CHANGELOG.
 - „Zonen"-Node, Projektions-/HDMI-Ausgabe, Remote-Web-UI, Headless-Player/Pi-Support, ukrainische
   Muttersprachler-Durchsicht der Übersetzungen, GitHub-Releases ab 0.71.0 und Issue #13 schließen — alle
   diese Punkte brauchen vorher die ausdrückliche Freigabe des Nutzers (siehe Sicherheitsregel oben).
