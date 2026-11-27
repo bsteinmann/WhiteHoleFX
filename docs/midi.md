@@ -58,7 +58,7 @@ Jeder Look legt fest, wie er ausgelöst wird (im Live-Fenster unter „Einstellu
 Rechtsklick auf den Look; in der Datei `look "Name" fade 3 trigger flash in 0.2 return 0.5`): **Umschalten** (Standard) bleibt an; **Flashen** läuft nur, solange Pad oder Knopf gehalten werden, und blendet beim
 Loslassen zum vorherigen Look zurück. Beide Zeiten sind je Look einstellbar: **Rein** (`in`, beim Drücken) und **Zurück**
 (`return`, beim Loslassen), jeweils die Überblendzeit des Looks oder eine eigene Zeit (0 = hart). Ohne eigene Einblendzeit gilt beim
-Drücken die Zeit des Looks (im Live-Fenster ggf. die eigene Überblendzeit); eine Einblendzeit am Look geht vor. Flash hat Vorrang vor
+Drücken die Zeit des Looks (im Live-Fenster ggf. die eigene Überblendzeit); eine Einblendzeit am Look geht vor. Stellst du ein Feld neu auf Flash, tragen Ein- und Zurückblendzeit zunächst **0,1 s** ein (ein kurzer Stoß; beide bleiben je Feld einstellbar, auch zurück auf „Zeit des Looks“). Schon gespeicherte Flash-Felder behalten ihre Zeiten (auch „Zeit des Looks“). Flash hat Vorrang vor
 „Mit GO“. Mehrere gehaltene Flash-Looks stapeln sich, erst das letzte Loslassen kehrt zurück; wer inzwischen umschaltet (Pad, GO,
 Cue), beendet das Flash und der neue Look bleibt stehen. Die Logik steckt im Player (`liveDown`/`liveUp`), damit sie für alle
 Eingänge gleich gilt.

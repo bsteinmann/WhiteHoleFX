@@ -127,6 +127,34 @@ TEST_CASE("livegrid: Fehlermeldungen", "[project][livegrid]") {
     CHECK(project::parseProject(kHead + "livegrid 2 2\n", lib.registry).ok());  // ein leeres Raster ist gültig
 }
 
+TEST_CASE("livegrid: neu auf Flash gestellt gilt 0,1 s, eigene Zeiten bleiben", "[project][livegrid]") {
+    CHECK(project::kDefaultFlashSeconds == 0.1);
+
+    project::LiveCell fresh;
+    fresh.look = "A";
+    fresh.trigger = LookTrigger::Flash;
+    project::fillFlashDefaults(fresh);
+    CHECK(fresh.flashInSeconds == 0.1);
+    CHECK(fresh.returnSeconds == 0.1);
+
+    project::LiveCell own;  // eine schon gesetzte Zeit (auch 0 = sofort) wird nie überschrieben
+    own.look = "A";
+    own.trigger = LookTrigger::Flash;
+    own.flashInSeconds = 0.0;
+    project::fillFlashDefaults(own);
+    CHECK(own.flashInSeconds == 0.0);
+    CHECK(own.returnSeconds == 0.1);  // nur die fehlende Zeit bekommt die Vorgabe
+
+    project::LiveCell both;
+    both.look = "A";
+    both.trigger = LookTrigger::Flash;
+    both.flashInSeconds = 2.5;
+    both.returnSeconds = 1.5;
+    project::fillFlashDefaults(both);
+    CHECK(both.flashInSeconds == 2.5);
+    CHECK(both.returnSeconds == 1.5);
+}
+
 TEST_CASE("livegrid: Hilfsfunktionen", "[project][livegrid]") {
     LiveGrid grid = project::makeEmptyLiveGrid(3, 2);
     CHECK(grid.cellCount() == 6);

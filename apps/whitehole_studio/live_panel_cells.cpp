@@ -100,8 +100,12 @@ bool LivePanel::setLookTrigger(int index, project::LookTrigger trigger, std::opt
         return false;
     }
     project::LiveCell cell = player_.liveGrid().cells[static_cast<std::size_t>(index)];
+    const bool becomesFlash = trigger == project::LookTrigger::Flash && cell.trigger != project::LookTrigger::Flash;
     cell.trigger = trigger;
     cell.returnSeconds = returnSeconds;
+    if (becomesFlash) {
+        project::fillFlashDefaults(cell);  // neu auf Flash: 0,1 s Ein- und Zurückblenden, solange keine eigene Zeit gesetzt ist
+    }
     if (!changeCell(index, cell)) {
         return false;
     }
