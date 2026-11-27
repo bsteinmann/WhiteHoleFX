@@ -258,6 +258,85 @@ Fix-Ideen, Tests). Zuerst Punkt 0 dort (`.pdb` vom Nutzer besorgen, läuft am 20
   - *Fazit:* technisch ein überschaubarer, dem DMX-Output sehr ähnlicher Baustein (Protokoll, Store, zwei/
     drei Nodes). Der Aufwand steckt im Drumherum — Geräteprofile für Pad-Farben und MIDI-Learn —, nicht im
     Kern.
+- **Live-Raster verkleinern: Looks verschwinden** (vom Nutzer am 27.11. gemeldet, **Variante B am 27.11. zur Umsetzung vorgemerkt**,
+  noch nicht angefangen, später in einem Rutsch): `project::resizeLiveGrid` (`libs/wh_project/src/live_grid.cpp`) behält beim
+  Verkleinern nur die Felder, die noch ins neue Raster passen; belegte Felder außerhalb fallen weg (Look bleibt im Projekt,
+  liegt aber in keinem Feld, auch beim erneuten Vergrößern nicht zurück). Gewählt: Looks aus wegfallenden Feldern rücken in die
+  ersten freien Felder des kleineren Rasters nach (`firstFreeLiveCell`); reicht der Platz nicht, fragt `LivePanel::setGrid`
+  (`apps/whitehole_studio/live_panel.cpp`) per Dialog, ob abgebrochen oder der Rest verworfen werden soll (Variante A als
+  Rückfrage). Berührt `Player::setLiveGridSize` (`player_live_grid.cpp`, setzt `clearFlash()`) und braucht Catch2-Tests sowie
+  CHANGELOG. Verworfen: C (Verkleinern bei belegten Feldern verweigern) und D (weggefallene Felder im Projekt merken, ändert das
+  Dateiformat); D bleibt als Idealfall denkbar, falls „kleiner, dann wieder größer“ den Zustand exakt zurückbringen soll.
+- **Flash-Looks: Standardzeit 0,1 s** (vom Nutzer am 27.11. gewünscht, ins Todo aufgenommen, noch nicht angefangen): Ein neu auf „Flash“
+  gestelltes Feld/ein Look soll Ein- und Zurückblendzeit standardmäßig auf 0,1 s haben. Stand heute: ohne Angabe
+  (`flashInSeconds`/`returnSeconds` leer, `LiveCell` in `live_grid.hpp`, Anzeige „Rein/Zurück: Look-Zeit“ in
+  `live_panel_cells.cpp`) gilt die Überblendzeit des Looks bzw. die eigene Zeit des Live-Fensters. **Entschieden (27.11.):** 0,1 s
+  gilt nur als Vorgabe beim *neuen* Umstellen auf Flash; bestehende Projekte und schon gespeicherte Flash-Felder bleiben
+  unverändert; die Zeiten bleiben wie bisher je Feld einstellbar (ob „Look-Zeit“ dabei weiter wählbar bleibt, ist nicht
+  ausdrücklich entschieden, Annahme: ja, um nichts zu entfernen). Berührt `Player::setLookTrigger`/`liveCellDown`,
+  Catch2-Tests (`live_flash_test.cpp`), `docs/`, CHANGELOG.
+- **Shot löst nicht aus, wenn der Trigger schon im ersten Frame anliegt** (vom Nutzer am 27.11. gemeldet, **Lösung A am 27.11. ins
+  Todo aufgenommen**, noch nicht angefangen): Ein One-Shot (`wh.value.shot`, `builtin_shot.cpp`) im per MIDI-Note geflashten Look
+  feuerte nicht, wenn derselbe MIDI-Note-Node als Trigger dient. Vermutete Ursache (nicht am Projekt des Nutzers geprüft): Der Look
+  entsteht erst beim Note-On, der `EdgeDetector` des Shots (`triggerEdge_`, ohne `startsLow`) zählt den ersten Aufruf nie als Flanke,
+  der Trigger ist da aber schon „an“. Gewählt: Der Shot-Trigger startet wie das Envelope-Gate (`gateEdge_{true}` in
+  `builtin_sequence.cpp`) mit „vorher war aus“, ein schon anliegender Trigger löst also einmal aus. Kein neuer Parameter. Offen,
+  vor der Umsetzung prüfen: ob die Vermutung stimmt (Test mit Shot im frisch gestarteten Look), und welche weiteren Nodes mit
+  `EdgeDetector` ohne `startsLow` dasselbe Problem hätten (nur melden, nicht ohne Rückfrage ändern). Risiko: ein beim Laden
+  dauerhaft anliegender Trigger feuert einmal. Verworfen: B (Schalter „Beim Start auslösen“) und C (neuer Node „Look gestartet“).
+  Berührt `builtin_shot.cpp`, Catch2-Tests (Shot), `docs/value-graph.md`, CHANGELOG.
+- **Einstellungen-Dialog: Übernehmen-Button** (vom Nutzer am 27.11. gemeldet, **Variante 1 am 27.11. ins Todo aufgenommen**, noch
+  nicht angefangen): Änderungen im Dialog Einstellungen (Audio, MIDI, DMX, Steuerung; `settings_dialog.cpp`,
+  `MainWindow::applySettings` in `main_window_settings.cpp`) greifen erst nach OK. Folge: Der MIDI-Monitor („Letzte Nachricht“,
+  `midi_settings_page.cpp`) zeigt für einen frisch gewählten Port nichts, bis der Dialog geschlossen und wieder geöffnet wurde.
+  Die Stage Config (Reiter Ausgabe, `output_form.cpp`) übernimmt dagegen schon bei jeder Änderung sofort; dort wurde keine
+  Verzögerung gefunden (offen: ob der Nutzer bei „Outputs“ doch etwas Bestimmtes meinte, z. B. Ziele oder DMX-Ausgangs-Patches).
+  Gewählt: Dritte Schaltfläche **Übernehmen** neben OK und Abbrechen (`QDialogButtonBox::Apply`): wendet die aktuellen Werte an,
+  ohne den Dialog zu schließen; **Abbrechen nach Übernehmen** stellt den Stand wieder her, mit dem der Dialog geöffnet wurde.
+  Optional: Hinweis „Übernommen“ in der Statuszeile. Verworfen: Sofort-Übernahme je Seite (Geräte würden beim Durchklicken
+  ständig geöffnet, Abbrechen verlöre den Sinn) und ein Monitor, der den Port vorübergehend selbst öffnet (zu aufwendig).
+  Qt lässt sich lokal nicht bauen: Rauchtest im Studio-Test (CI), neue `tr()`-Strings mit Übersetzungen en/fr/es/uk
+  (`scripts/i18n.py`), CHANGELOG.
+- **Flash überlagern (Overlay) statt Look ersetzen** (vom Nutzer am 27.11. gewünscht, **Variante C gewählt und am 27.11. ins Todo
+  aufgenommen**, noch nicht angefangen, kein Code geschrieben): Ein Flash blendet den laufenden Look heute aus
+  (`wh.blend.crossfade`, A -> B, `LiveDecks`), ein teilweise durchsichtiger Flash-Look zeigt darunter also Schwarz. Gewünscht:
+  einstellbar je Feld, dass der Flash über den Basis-Look gelegt wird. **Entschieden (27.11.):** nur der *zuletzt gehaltene*
+  Flash ist zu sehen (kein Stapeln); der Basis-Look bleibt in der Anzeige/den LEDs aktiv (grün), der Flash-Look rot wie bisher;
+  Ein- und Zurückblendzeit des Feldes gelten als Deckkraft-Verlauf; Vorgabe bleibt „Ersetzen“, bestehende Projekte unverändert;
+  **kein** Additiv-Modus (nur Ersetzen/Überlagern). Umsetzungsskizze (vor dem Start prüfen): neuer Modus im Crossfade-Node
+  (`builtin_blends.cpp`, `mode` ist ein Laufzeitwert, kein Neuübersetzen): „Overlay B über A“ (A bleibt, B mit Alpha und
+  Deckkraft = `amount`) und „Overlay A über B“ für den Fall, dass das sichtbare Deck B ist; `LiveDecks` bekommt einen
+  Overlay-Zustand (Einblenden/Halten/Ausblenden, `goOverlay`/`releaseOverlay`, `advance` treibt ihn, `arm()` beendet ihn, damit
+  der Basis-Look *nicht* getauscht wird und weiterläuft); `LiveStatus` bekommt `overlay`/`overlayCell`; `Player::flashDown/flashUp`
+  und `clearFlash()` (muss das Overlay beenden, sonst bleibt es hängen) berücksichtigen den Overlay-Zustand; Datenmodell
+  `LiveCell::flashOverlay`, Projektdatei `cell … flash … overlay` (nur zusammen mit `flash`), `Player::setLiveCell`, Auswahl im
+  Live-Fenster (`live_panel_cells.cpp`, Rechtsklick/Einstellungen). Gemischte Stapel (Overlay unter einem Ersetzen-Flash)
+  sind ein Randfall: beim Loslassen des Ersetzen-Flash endet das Overlay darunter. Nur wirksam bei Looks mit Alpha. Berührt
+  `builtin_blends.cpp`, `live_decks.hpp/cpp`, `player_live_flash.cpp`, `live_grid.hpp`, `project_livegrid.cpp`, UI, Catch2-Tests
+  (Mischer auf dem Gerät, `LiveDecks`, Flash, Projektdatei), `docs/`, CHANGELOG, Übersetzungen en/fr/es/uk.
+- **Globale Tempo-Uhr (BPM über Looks hinweg)** (vom Nutzer am 27.11. gewünscht, **Variante A mit B am 27.11. ins Todo aufgenommen**,
+  noch nicht angefangen, kein Code geschrieben): Stand heute lebt der Tempo-Zustand im Kernel des jeweiligen Nodes und geht mit
+  dem Look verloren (`LiveDecks::clear` entfernt dessen Nodes): `wh.value.clock` summiert die Phase selbst auf (`position_` in
+  `builtin_sequence.cpp`, beginnt bei jedem Laden bei 0), `wh.value.tap` hält Tap-Zeiten und gezähltes Tempo im Kernel
+  (`builtin_audio.cpp`, `TapTempoKernel`), `wh.value.beat` hat Puls/Phase aus `BeatClock::lastBeat` (erst ab dem nächsten Schlag
+  stimmig), `wh.value.shot` misst sein Tempo aus den Triggern. Nicht betroffen: das BPM selbst aus Audio (`Analyzer`/`BeatDetector`
+  läuft dauerhaft) sowie DMX/MIDI-Werte (direkt aus `DmxStore`/`MidiStore`). **Entschieden (27.11.):** Variante A: neuer Node
+  „Tempo“ (Master-BPM), der eine gemeinsame Tempo-Uhr liest, die im Programm lebt wie `AudioStore`/`MidiStore` (Muster
+  `BuiltinLibrary`, überlebt Look- und Projektwechsel) und BPM, Beat-Trigger und Phase ausgibt; **dazu Variante B:** Clock, Beat und
+  Shot bekommen die Option „Globales Tempo“ (Vorgabe aus, bestehende Projekte unverändert). Die Phase soll **global
+  synchron** sein (alle Looks teilen denselben Beat) **und** ein gemeinsames BPM liefern (beides). Quellen der Uhr, wählbar in
+  den Einstellungen (Reiter Steuerung): **alle von Anfang an** — Tap (Taste im Live-Fenster, MIDI-Taste, DMX-Kanal), Audio-Beat,
+  MIDI-Clock (Entwurf `docs/entwurf-midi.md`), DMX-Kanal als BPM-Wert, fester Wert. **Entschieden (27.11., zweite Runde):** Beim
+  Quellenwechsel **rastet die Phase ein** (die Uhr setzt sich auf die Phase der neuen Quelle, kein weiches Weiterlaufen); **Tappen
+  zieht die Phase nach** (jeder Tap setzt den Beat bzw. die Phase auf den Tap-Zeitpunkt, nicht nur das Tempo). Das Einrasten gleicht sich **kurz an**, damit Effekte nicht zucken (kein harter
+  Phasensprung; die Angleichzeit ist beim Umsetzen festzulegen, Vorschlag: einige Zehntel Sekunden oder ein Bruchteil eines Beats,
+  muss sich in Tests prüfen lassen). Offen, vor dem Start klären: Dauer/Form der Angleichung,
+  Nicht-Reproduzierbarkeit beim Offline-Rendern (wie bei DMX/MIDI-Nodes dokumentieren). Zeitbezug nur über die
+  Engine-Zeit, nicht über die Systemuhr, damit die Tests genau bleiben. Berührt `wh_nodes` (neuer Node, Optionen an
+  Clock/Beat/Shot), eine neue kleine Bibliothek oder Datei für die Uhr, `Player`/`BuiltinLibrary`, Einstellungen (`AppSettings`,
+  `settings_dialog.cpp`, `live_controls_page.cpp`), Live-Fenster (Tap-Taste), Catch2-Tests, `docs/` (neues Kapitel oder
+  `docs/value-graph.md`), CHANGELOG, Übersetzungen en/fr/es/uk. Groß: in Stufen umsetzen (1 Uhr + Node + Tap/fester Wert,
+  2 Audio/DMX, 3 MIDI-Clock, 4 Optionen an Clock/Beat/Shot). Verworfen: C (Kernel-Zustand je Node-Name über Look-Wechsel retten).
 - „Zonen"-Node, Projektions-/HDMI-Ausgabe, Remote-Web-UI, Headless-Player/Pi-Support, ukrainische
   Muttersprachler-Durchsicht der Übersetzungen, GitHub-Releases ab 0.71.0 und Issue #13 schließen — alle
   diese Punkte brauchen vorher die ausdrückliche Freigabe des Nutzers (siehe Sicherheitsregel oben).

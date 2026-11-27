@@ -1,5 +1,9 @@
 # Änderungen
 
+## Unreleased
+
+- **Windows-Release-Paket enthält `whitehole_benchmark.exe`.** Der Release-Workflow (`release.yml`) kopierte nur `whitehole_cli.exe` ins ZIP; das Benchmark-Programm aus 1.2.0 fehlte deshalb im Release (das CI-Paket aus `ci.yml` hatte es). Jetzt steht es wie `whitehole_cli.exe` neben `whitehole_studio.exe`.
+
 ## 1.2.0
 
 Neue Funktionen seit 1.1.1: **MIDI** (Eingang und Ausgang, Nodes MIDI CC und MIDI Note mit „Lernen“, Akai APC mini im Live-Modus), **Live-Modus** mit frei belegbarem Raster, Flash-Looks, Vorschaubildern, geteilter Vorschau, manueller Überblendung und frei belegbarer Steuerung (MIDI/DMX, Cue-Sprung), ein **Benchmark** (`whitehole_benchmark`, `whitehole_cli --benchmark`). Fehlerbehebungen: Stocken beim Drücken und Laden von Looks, Animationen und Werte-Nodes (Time, LFO, Random) springen beim Verstellen eines Reglers nicht mehr.
