@@ -11,6 +11,7 @@
 // Die Kernel haben Zustand (Phase, Hüllkurvenstufe, Schrittzähler), aber keine Systemuhr: Sie
 // rechnen nur mit dem Zeitschritt des Frames und sind darum in Tests genau nachvollziehbar.
 #include <algorithm>
+#include <optional>
 #include <array>
 #include <cmath>
 #include <string>
@@ -34,8 +35,15 @@ constexpr std::array<double, 7> kClockRatios{0.125, 0.25, 0.5, 1.0, 2.0, 4.0, 8.
 // gibt es höchstens einen, `count` zählt aber alle mit.
 class ClockKernel final : public values::ICpuKernel {
 public:
+    explicit ClockKernel(std::shared_ptr<values::TempoClock> tempo) : tempo_{std::move(tempo)} {}
+
     void evaluate(const KernelContext& context, KernelOutputs& outputs) override {
         const auto& in = context.inputs;
+        if (in.boolean("globalTempo", false) && tempo_) {
+            evaluateGlobal(in, outputs);
+            return;
+        }
+        globalLast_.reset();
         resetEdge_.update(in.boolean("reset", false));
         if (resetEdge_.rose()) {
             position_ = 0.0;
@@ -54,6 +62,25 @@ public:
     }
 
 private:
+    /// "Globales Tempo": Phase und Zähler folgen der gemeinsamen Tempo-Uhr (alle Looks im selben Takt); `bpm` und `reset`
+    /// zählen dann nicht, "Running" aus hält die Ausgänge an.
+    void evaluateGlobal(const values::KernelInputs& in, KernelOutputs& outputs) {
+        const std::size_t index = static_cast<std::size_t>(std::clamp<std::int64_t>(in.integer("ratio", 3), 0, 6));
+        const double units = tempo_->snapshot().beats * kClockRatios[index];
+        const double whole = std::floor(units);
+        bool tick = false;
+        if (in.boolean("running", true)) {
+            tick = globalLast_ && whole > *globalLast_;  // die Uhr kann beim Einrasten kurz zurückgehen: nur neue Einheiten zählen
+            globalLast_ = globalLast_ ? std::max(*globalLast_, whole) : whole;
+            position_ = std::max(units, *globalLast_);
+        }
+        outputs.set("tick", tick);
+        outputs.set("phase", position_ - std::floor(position_));
+        outputs.set("count", static_cast<std::int64_t>(std::floor(position_)));
+    }
+
+    std::shared_ptr<values::TempoClock> tempo_;
+    std::optional<double> globalLast_;
     double position_{0.0};
     EdgeDetector resetEdge_;
 };
@@ -216,7 +243,7 @@ private:
 
 }  // namespace
 
-std::vector<values::CpuNodeDefinition> sequenceNodes() {
+std::vector<values::CpuNodeDefinition> sequenceNodes(std::shared_ptr<values::TempoClock> tempo) {
     using graph::PortType;
     std::vector<values::CpuNodeDefinition> nodes;
 
@@ -227,8 +254,9 @@ std::vector<values::CpuNodeDefinition> sequenceNodes() {
         {number("bpm", "Tempo (BPM)", 120.0, 1.0, 400.0),
          choice("ratio", "Rate", {"1/8 (every 8 beats)", "1/4 (every 4 beats)", "1/2 (every 2 beats)", "1x (every beat)",
                                   "2x", "4x", "8x"}, 3),
-         toggle("running", "Running", true), toggle("reset", "Reset (each switch on restarts)", false)},
-        kernelFactory<ClockKernel>()));
+         toggle("running", "Running", true), toggle("reset", "Reset (each switch on restarts)", false),
+         toggle("globalTempo", "Global tempo (shared tempo clock)", false)},
+        [tempo] { return std::make_unique<ClockKernel>(tempo); }));
 
     nodes.push_back(cpuNode(
         "wh.value.envelope", "Envelope", "Value",

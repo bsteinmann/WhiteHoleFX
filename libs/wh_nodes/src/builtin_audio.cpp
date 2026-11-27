@@ -228,10 +228,22 @@ struct BeatClock {
 
 class AudioBeatKernel final : public values::ICpuKernel {
 public:
-    explicit AudioBeatKernel(std::shared_ptr<AudioStore> store) : store_{std::move(store)} {}
+    AudioBeatKernel(std::shared_ptr<AudioStore> store, std::shared_ptr<values::TempoClock> tempo)
+        : store_{std::move(store)}, tempo_{std::move(tempo)} {}
 
     void evaluate(const KernelContext& context, KernelOutputs& outputs) override {
         const auto& in = context.inputs;
+        if (in.boolean("globalTempo", false) && tempo_) {
+            // "Globales Tempo": Beat, Phase und BPM der gemeinsamen Tempo-Uhr (alle Looks im selben Takt), Puls wie sonst
+            const values::TempoClock::Snapshot s = tempo_->snapshot();
+            const double decay = in.number("decay", 0.25);
+            outputs.set("beat", s.beatNow);
+            outputs.set("pulse", decay > 1e-6 ? std::exp(-s.sinceBeat / decay) : (s.beatNow ? 1.0 : 0.0));
+            outputs.set("phase", s.phase);
+            outputs.set("bpm", s.bpm);
+            outputs.set("present", true);
+            return;
+        }
         const auto frame = freshFrame(*store_);
 
         bool beatNow = false;
@@ -255,6 +267,7 @@ public:
 
 private:
     std::shared_ptr<AudioStore> store_;
+    std::shared_ptr<values::TempoClock> tempo_;
     BeatClock clock_;
     bool initialized_{false};
     std::uint64_t lastCount_{0};
@@ -425,7 +438,7 @@ std::vector<graph::ParameterDescriptor> followParameters(double release) {
 
 }  // namespace
 
-std::vector<values::CpuNodeDefinition> audioNodes(std::shared_ptr<audio::AudioStore> store) {
+std::vector<values::CpuNodeDefinition> audioNodes(std::shared_ptr<audio::AudioStore> store, std::shared_ptr<values::TempoClock> tempo) {
     using graph::PortType;
     if (!store) {
         store = std::make_shared<AudioStore>();  // ohne Quelle: dauerhaft "kein Signal"
@@ -462,8 +475,9 @@ std::vector<values::CpuNodeDefinition> audioNodes(std::shared_ptr<audio::AudioSt
                              valueOutput("phase", "Phase", PortType::Scalar), valueOutput("bpm", "BPM", PortType::Scalar),
                              valueOutput("present", "Signal", PortType::Boolean)},
                             {number("threshold", "Min. strength", 1.0, 1.0, 6.0), number("decay", "Pulse decay (s)", 0.25, 0.0, 5.0),
-                             number("manualBpm", "Fixed tempo (BPM, 0 = detect)", 0.0, 0.0, 300.0)},
-                            [store] { return std::make_unique<AudioBeatKernel>(store); }));
+                             number("manualBpm", "Fixed tempo (BPM, 0 = detect)", 0.0, 0.0, 300.0),
+                             toggle("globalTempo", "Global tempo (shared tempo clock)", false)},
+                            [store, tempo] { return std::make_unique<AudioBeatKernel>(store, tempo); }));
 
     nodes.push_back(cpuNode("wh.value.onset", "Audio Trigger", "Audio",
                             {valueOutput("beat", "Hit", PortType::Trigger), valueOutput("pulse", "Pulse", PortType::Scalar),

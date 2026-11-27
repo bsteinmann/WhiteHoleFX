@@ -12,8 +12,9 @@
 //     neuer Trigger während des Laufs, beginnt alles von vorn.
 //     Liegt der Trigger schon im allerersten Frame an (z. B. ein Look, der erst durch die MIDI-Taste entsteht, die
 //     den Trigger liefert), zählt das als Flanke und löst einmal aus (wie das Gate der Envelope).
-//   - Ein Durchlauf dauert `beats` Schläge. Die Länge eines Schlags kommt aus `bpm`, sonst aus dem Abstand der
-//     letzten Trigger (geglättet), sonst aus `beatLength` (nur bis zum zweiten Trigger).
+//   - Ein Durchlauf dauert `beats` Schläge. Die Länge eines Schlags kommt mit "Globales Tempo" aus der gemeinsamen
+//     Tempo-Uhr, sonst aus `bpm`, sonst aus dem Abstand der letzten Trigger (geglättet), sonst aus `beatLength` (nur bis
+//     zum zweiten Trigger).
 //   - Die Phase wird aufsummiert, nicht aus der Zeit seit dem Trigger berechnet: Ändert sich das Tempo
 //     mitten im Lauf, wird der Rest weich schneller oder langsamer statt zu springen.
 //   - Nach dem letzten Durchlauf bleibt `progress` am Ende stehen; `active` zeigt, ob noch etwas läuft.
@@ -46,6 +47,8 @@ double shape(std::int64_t curve, double p) {
 
 class ShotKernel final : public values::ICpuKernel {
 public:
+    explicit ShotKernel(std::shared_ptr<values::TempoClock> tempo) : tempo_{std::move(tempo)} {}
+
     void evaluate(const KernelContext& context, KernelOutputs& outputs) override {
         const auto& in = context.inputs;
         const double dt = std::max(context.time.delta.count(), 0.0);
@@ -97,8 +100,12 @@ public:
 private:
     static constexpr std::int64_t kMaxRepeats = 16;
 
-    /// Länge eines Schlags in Sekunden: fester Wert `bpm`, sonst gemessen, sonst die Vorgabe.
+    /// Länge eines Schlags in Sekunden: "Globales Tempo" (die gemeinsame Tempo-Uhr), sonst fester Wert `bpm`, sonst gemessen,
+    /// sonst die Vorgabe.
     double beatLength(const values::KernelInputs& in) const {
+        if (in.boolean("globalTempo", false) && tempo_) {
+            return 60.0 / std::max(tempo_->snapshot().bpm, 1.0);
+        }
         const double bpm = in.number("bpm", 0.0);
         if (bpm > 0.0) {
             return 60.0 / bpm;
@@ -122,6 +129,7 @@ private:
         lastTrigger_ = clock_;
     }
 
+    std::shared_ptr<values::TempoClock> tempo_;
     EdgeDetector triggerEdge_{true};  // "vorher war aus": ein beim Start schon anliegender Trigger löst aus
     double clock_{0.0};
     double lastTrigger_{-1.0};
@@ -133,7 +141,7 @@ private:
 
 }  // namespace
 
-std::vector<values::CpuNodeDefinition> shotNodes() {
+std::vector<values::CpuNodeDefinition> shotNodes(std::shared_ptr<values::TempoClock> tempo) {
     using graph::PortType;
     std::vector<values::CpuNodeDefinition> nodes;
     nodes.push_back(cpuNode(
@@ -146,8 +154,9 @@ std::vector<values::CpuNodeDefinition> shotNodes() {
          integer("repeats", "Repeats", 1, 1.0, 16.0), toggle("alternate", "Every other run backwards", false),
          choice("curve", "Curve", {"Linear", "Slow at the end", "Slow at the start", "Smooth"}),
          number("bpm", "Tempo (BPM, 0 = measure from triggers)", 0.0, 0.0, 400.0),
-         number("beatLength", "Beat length until measured (s)", 0.5, 0.05, 5.0)},
-        kernelFactory<ShotKernel>()));
+         number("beatLength", "Beat length until measured (s)", 0.5, 0.05, 5.0),
+         toggle("globalTempo", "Global tempo (shared tempo clock)", false)},
+        [tempo] { return std::make_unique<ShotKernel>(tempo); }));
     return nodes;
 }
 

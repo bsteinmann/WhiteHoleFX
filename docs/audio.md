@@ -55,7 +55,7 @@ Mindestabstand zwischen zwei Treffern: Kick 0,18 s, Snare 0,15 s, Hi-Hat 0,06 s.
 | `wh.value.audioband` | `value` (Scalar), `present` | `from`, `to` (Hz), `gain`, `floor` (Rauschgrenze), `attack`, `release` |
 | `wh.value.audiospectrum` | `spectrum` (AudioSpectrum), `present` | `gain`, `floor`, `attack`, `release` |
 | `wh.value.audiowave` | `wave` (AudioWave), `present` | `span` (Fenster in ms, 2–100), `gain`, `trigger` (steigender Nulldurchgang), `level` (Triggerschwelle), `smooth` |
-| `wh.value.beat` | `beat` (Trigger), `pulse`, `phase`, `bpm` (Scalar), `present` | `threshold` (Mindeststärke), `decay`, `manualBpm` (0 = erkennen) |
+| `wh.value.beat` | `beat` (Trigger), `pulse`, `phase`, `bpm` (Scalar), `present` | `threshold` (Mindeststärke), `decay`, `manualBpm` (0 = erkennen), `globalTempo` (Beat, Phase und BPM aus der gemeinsamen [Tempo-Uhr](tempo.md) statt aus dem Audio) |
 | `wh.value.onset` (Audio Trigger, früher „Kick / Snare / Hat“) | `beat` (Trigger), `pulse`, `strength`, `age` (Sekunden seit dem Treffer), `present` | `band` (Kick, Snare, Hi-Hat, Eigener Bereich), `from`/`to` (Hz, nur bei *Eigener Bereich*), `threshold` (Mindeststärke), `decay` |
 | `wh.generator.hitflash` (Hit Flash) | Field | `level` (0..1), `shape` (Full, Disc, Frame, Bar), `size`, `softness`, `color` |
 | `wh.generator.shockwave` (Shockwave) | Field | `age`, `speed`, `life`, `thickness`, `shape`, `cx`/`cy`/`cz`, `color`, `space` |
