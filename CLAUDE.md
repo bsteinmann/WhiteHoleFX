@@ -258,45 +258,11 @@ Fix-Ideen, Tests). Zuerst Punkt 0 dort (`.pdb` vom Nutzer besorgen, läuft am 20
   - *Fazit:* technisch ein überschaubarer, dem DMX-Output sehr ähnlicher Baustein (Protokoll, Store, zwei/
     drei Nodes). Der Aufwand steckt im Drumherum — Geräteprofile für Pad-Farben und MIDI-Learn —, nicht im
     Kern.
-- **Live-Raster verkleinern: Looks verschwinden** (vom Nutzer am 27.11. gemeldet, **Variante B am 27.11. zur Umsetzung vorgemerkt**,
-  noch nicht angefangen, später in einem Rutsch): `project::resizeLiveGrid` (`libs/wh_project/src/live_grid.cpp`) behält beim
-  Verkleinern nur die Felder, die noch ins neue Raster passen; belegte Felder außerhalb fallen weg (Look bleibt im Projekt,
-  liegt aber in keinem Feld, auch beim erneuten Vergrößern nicht zurück). Gewählt: Looks aus wegfallenden Feldern rücken in die
-  ersten freien Felder des kleineren Rasters nach (`firstFreeLiveCell`); reicht der Platz nicht, fragt `LivePanel::setGrid`
-  (`apps/whitehole_studio/live_panel.cpp`) per Dialog, ob abgebrochen oder der Rest verworfen werden soll (Variante A als
-  Rückfrage). Berührt `Player::setLiveGridSize` (`player_live_grid.cpp`, setzt `clearFlash()`) und braucht Catch2-Tests sowie
-  CHANGELOG. Verworfen: C (Verkleinern bei belegten Feldern verweigern) und D (weggefallene Felder im Projekt merken, ändert das
-  Dateiformat); D bleibt als Idealfall denkbar, falls „kleiner, dann wieder größer“ den Zustand exakt zurückbringen soll.
-- **Flash-Looks: Standardzeit 0,1 s** (vom Nutzer am 27.11. gewünscht, ins Todo aufgenommen, noch nicht angefangen): Ein neu auf „Flash“
-  gestelltes Feld/ein Look soll Ein- und Zurückblendzeit standardmäßig auf 0,1 s haben. Stand heute: ohne Angabe
-  (`flashInSeconds`/`returnSeconds` leer, `LiveCell` in `live_grid.hpp`, Anzeige „Rein/Zurück: Look-Zeit“ in
-  `live_panel_cells.cpp`) gilt die Überblendzeit des Looks bzw. die eigene Zeit des Live-Fensters. **Entschieden (27.11.):** 0,1 s
-  gilt nur als Vorgabe beim *neuen* Umstellen auf Flash; bestehende Projekte und schon gespeicherte Flash-Felder bleiben
-  unverändert; die Zeiten bleiben wie bisher je Feld einstellbar (ob „Look-Zeit“ dabei weiter wählbar bleibt, ist nicht
-  ausdrücklich entschieden, Annahme: ja, um nichts zu entfernen). Berührt `Player::setLookTrigger`/`liveCellDown`,
-  Catch2-Tests (`live_flash_test.cpp`), `docs/`, CHANGELOG.
-- **Shot löst nicht aus, wenn der Trigger schon im ersten Frame anliegt** (vom Nutzer am 27.11. gemeldet, **Lösung A am 27.11. ins
-  Todo aufgenommen**, noch nicht angefangen): Ein One-Shot (`wh.value.shot`, `builtin_shot.cpp`) im per MIDI-Note geflashten Look
-  feuerte nicht, wenn derselbe MIDI-Note-Node als Trigger dient. Vermutete Ursache (nicht am Projekt des Nutzers geprüft): Der Look
-  entsteht erst beim Note-On, der `EdgeDetector` des Shots (`triggerEdge_`, ohne `startsLow`) zählt den ersten Aufruf nie als Flanke,
-  der Trigger ist da aber schon „an“. Gewählt: Der Shot-Trigger startet wie das Envelope-Gate (`gateEdge_{true}` in
-  `builtin_sequence.cpp`) mit „vorher war aus“, ein schon anliegender Trigger löst also einmal aus. Kein neuer Parameter. Offen,
-  vor der Umsetzung prüfen: ob die Vermutung stimmt (Test mit Shot im frisch gestarteten Look), und welche weiteren Nodes mit
-  `EdgeDetector` ohne `startsLow` dasselbe Problem hätten (nur melden, nicht ohne Rückfrage ändern). Risiko: ein beim Laden
-  dauerhaft anliegender Trigger feuert einmal. Verworfen: B (Schalter „Beim Start auslösen“) und C (neuer Node „Look gestartet“).
-  Berührt `builtin_shot.cpp`, Catch2-Tests (Shot), `docs/value-graph.md`, CHANGELOG.
-- **Einstellungen-Dialog: Übernehmen-Button** (vom Nutzer am 27.11. gemeldet, **Variante 1 am 27.11. ins Todo aufgenommen**, noch
-  nicht angefangen): Änderungen im Dialog Einstellungen (Audio, MIDI, DMX, Steuerung; `settings_dialog.cpp`,
-  `MainWindow::applySettings` in `main_window_settings.cpp`) greifen erst nach OK. Folge: Der MIDI-Monitor („Letzte Nachricht“,
-  `midi_settings_page.cpp`) zeigt für einen frisch gewählten Port nichts, bis der Dialog geschlossen und wieder geöffnet wurde.
-  Die Stage Config (Reiter Ausgabe, `output_form.cpp`) übernimmt dagegen schon bei jeder Änderung sofort; dort wurde keine
-  Verzögerung gefunden (offen: ob der Nutzer bei „Outputs“ doch etwas Bestimmtes meinte, z. B. Ziele oder DMX-Ausgangs-Patches).
-  Gewählt: Dritte Schaltfläche **Übernehmen** neben OK und Abbrechen (`QDialogButtonBox::Apply`): wendet die aktuellen Werte an,
-  ohne den Dialog zu schließen; **Abbrechen nach Übernehmen** stellt den Stand wieder her, mit dem der Dialog geöffnet wurde.
-  Optional: Hinweis „Übernommen“ in der Statuszeile. Verworfen: Sofort-Übernahme je Seite (Geräte würden beim Durchklicken
-  ständig geöffnet, Abbrechen verlöre den Sinn) und ein Monitor, der den Port vorübergehend selbst öffnet (zu aufwendig).
-  Qt lässt sich lokal nicht bauen: Rauchtest im Studio-Test (CI), neue `tr()`-Strings mit Übersetzungen en/fr/es/uk
-  (`scripts/i18n.py`), CHANGELOG.
+- **Erledigt am 27.11. (Bugfix-Reihe 1.2.x, Details im CHANGELOG „Unreleased“):** Live-Raster verkleinern (Looks rücken in freie
+  Felder nach, sonst Rückfrage; PR #73), Flash-Standardzeit 0,1 s beim neuen Umstellen auf Flash (PR #72), Shot löst auch bei
+  schon anliegendem Trigger im ersten Frame aus (PR #71; weitere `EdgeDetector` ohne `startsLow` nur gemeldet, nicht geändert:
+  `builtin_color_values.cpp` advanceEdge_, `builtin_sequence.cpp` resetEdge_/advanceEdge_, `builtin_pong.cpp` serve_/beat_) und
+  Einstellungen-Dialog mit Übernehmen-Button (PR #74).
 - **Flash überlagern (Overlay) statt Look ersetzen** (vom Nutzer am 27.11. gewünscht, **Variante C gewählt und am 27.11. ins Todo
   aufgenommen**, noch nicht angefangen, kein Code geschrieben): Ein Flash blendet den laufenden Look heute aus
   (`wh.blend.crossfade`, A -> B, `LiveDecks`), ein teilweise durchsichtiger Flash-Look zeigt darunter also Schwarz. Gewünscht:
