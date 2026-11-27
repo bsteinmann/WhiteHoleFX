@@ -29,6 +29,7 @@
 #include "whitehole/core/result.hpp"
 #include "whitehole/engine/frame_clocks.hpp"
 #include "whitehole/gpu/gpu_device.hpp"
+#include "whitehole/input/dmx_learn.hpp"
 #include "whitehole/mapping/region_edit.hpp"
 #include "whitehole/graph/node_docking.hpp"
 #include "whitehole/graph/node_placement.hpp"
@@ -460,6 +461,9 @@ public:
     /// Quelle und fester Wert der Tempo-Uhr (Programmeinstellung, nicht im Projekt).
     void setTempoSource(values::TempoClock::Source source);
     void setTempoFixedBpm(double bpm);
+    /// DMX-Kanal für die Quelle "DMX": der Wert ist das Tempo in BPM (1..255; 0 = unverändert). Leer = keiner.
+    void setTempoDmx(std::optional<input::DmxAddress> address);
+    [[nodiscard]] const std::optional<input::DmxAddress>& tempoDmx() const noexcept { return tempoDmx_; }
     /// Stand der Tempo-Uhr im zuletzt gerechneten Bild.
     [[nodiscard]] values::TempoClock::Snapshot tempo() const;
 
@@ -627,6 +631,9 @@ private:
     void selectPreview(bool reloaded);
 
     void advanceTempo();  // schiebt die Tempo-Uhr auf liveNow() (player_tempo.cpp)
+    std::optional<input::DmxAddress> tempoDmx_;
+    bool tempoAudioSeen_{false};          // Quelle Audio: der Zähler des Beat-Erkenners ist bekannt
+    std::uint64_t tempoAudioCount_{0};    // zuletzt gesehene Zahl erkannter Schläge
     [[nodiscard]] double liveNow() const {
         return liveClock_ ? liveClock_()
                           : std::chrono::duration<double>(std::chrono::steady_clock::now().time_since_epoch()).count();

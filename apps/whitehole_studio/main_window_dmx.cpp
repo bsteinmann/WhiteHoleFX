@@ -15,6 +15,7 @@
 #include <QThread>
 
 #include <algorithm>
+#include <array>
 #include <cmath>
 #include <cstdint>
 #include <optional>
@@ -64,8 +65,21 @@ void MainWindow::syncDmxUniverses() {
         if (appSettings_.liveDmx && appSettings_.liveDmxProtocol == 1) {
             sacn.insert(static_cast<std::uint32_t>(std::max(0, appSettings_.liveDmxUniverse)));  // der Live-Look-Kanal auch
         }
+        if (appSettings_.tempoSource == 3 && appSettings_.tempoDmxProtocol == 1) {
+            sacn.insert(static_cast<std::uint32_t>(std::max(0, appSettings_.tempoDmxUniverse)));  // der Tempo-Kanal auch
+        }
         dmxReceiver_->setSacnUniverses(sacn);  // tut nichts, solange sich die Menge nicht ändert
     }
+}
+
+void MainWindow::applyTempo() {
+    constexpr std::array<values::TempoClock::Source, 4> kSources{values::TempoClock::Source::Tap, values::TempoClock::Source::Fixed,
+                                                                 values::TempoClock::Source::Audio, values::TempoClock::Source::Dmx};
+    player_->setTempoFixedBpm(appSettings_.tempoFixedBpm);
+    player_->setTempoDmx(input::DmxAddress{appSettings_.tempoDmxProtocol == 1 ? input::DmxProtocol::Sacn : input::DmxProtocol::ArtNet,
+                                           static_cast<std::uint32_t>(std::max(0, appSettings_.tempoDmxUniverse)),
+                                           static_cast<std::uint32_t>(std::clamp(appSettings_.tempoDmxChannel, 1, 512))});
+    player_->setTempoSource(kSources[static_cast<std::size_t>(std::clamp(appSettings_.tempoSource, 0, 3))]);
 }
 
 void MainWindow::applyMasterDmx() {

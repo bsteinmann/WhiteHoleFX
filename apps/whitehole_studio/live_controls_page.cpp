@@ -5,12 +5,15 @@
 #include <QDoubleSpinBox>
 #include <QFormLayout>
 #include <QGridLayout>
+#include <QHBoxLayout>
+#include <QSpinBox>
 #include <QLabel>
 #include <QPushButton>
 #include <QVBoxLayout>
 
 #include <algorithm>
 #include <cstddef>
+#include <initializer_list>
 #include <string>
 #include <utility>
 #include <vector>
@@ -99,17 +102,43 @@ LiveControlsPage::LiveControlsPage(const AppSettings& current, std::shared_ptr<m
     tempoSource_ = new QComboBox{this};
     tempoSource_->addItem(tr("Tap (Taste TAP oder Funktion „Tempo-Tap“)"));
     tempoSource_->addItem(tr("Fester Wert"));
-    tempoSource_->setCurrentIndex(std::clamp(current.tempoSource, 0, 1));
+    tempoSource_->addItem(tr("Audio-Beat (jeder erkannte Schlag ist ein Beat)"));
+    tempoSource_->addItem(tr("DMX-Kanal (Wert = BPM, 0 = unverändert)"));
+    tempoSource_->setCurrentIndex(std::clamp(current.tempoSource, 0, 3));
     tempoSource_->setToolTip(tr("Woher die gemeinsame Tempo-Uhr ihr Tempo nimmt (Node „Tempo“)"));
     tempoBpm_ = new QDoubleSpinBox{this};
     tempoBpm_->setRange(30.0, 300.0);
     tempoBpm_->setDecimals(1);
     tempoBpm_->setSuffix(tr(" BPM"));
     tempoBpm_->setValue(current.tempoFixedBpm);
-    tempoBpm_->setEnabled(current.tempoSource == 1);
-    connect(tempoSource_, &QComboBox::currentIndexChanged, this, [this](int index) { tempoBpm_->setEnabled(index == 1); });
+    tempoDmxProtocol_ = new QComboBox{this};
+    tempoDmxProtocol_->addItem(QStringLiteral("Art-Net"));
+    tempoDmxProtocol_->addItem(QStringLiteral("sACN"));
+    tempoDmxProtocol_->setCurrentIndex(std::clamp(current.tempoDmxProtocol, 0, 1));
+    tempoDmxUniverse_ = new QSpinBox{this};
+    tempoDmxUniverse_->setRange(0, 63999);
+    tempoDmxUniverse_->setValue(current.tempoDmxUniverse);
+    tempoDmxChannel_ = new QSpinBox{this};
+    tempoDmxChannel_->setRange(1, 512);
+    tempoDmxChannel_->setValue(current.tempoDmxChannel);
+    const auto enable = [this](int index) {
+        tempoBpm_->setEnabled(index == 1);
+        for (QWidget* w : std::initializer_list<QWidget*>{tempoDmxProtocol_, tempoDmxUniverse_, tempoDmxChannel_}) {
+            w->setEnabled(index == 3);
+        }
+    };
+    enable(tempoSource_->currentIndex());
+    connect(tempoSource_, &QComboBox::currentIndexChanged, this, enable);
+    auto* dmxRow = new QHBoxLayout;
+    dmxRow->addWidget(tempoDmxProtocol_);
+    dmxRow->addWidget(new QLabel{tr("Universe"), this});
+    dmxRow->addWidget(tempoDmxUniverse_);
+    dmxRow->addWidget(new QLabel{tr("Kanal"), this});
+    dmxRow->addWidget(tempoDmxChannel_);
+    dmxRow->addStretch(1);
     tempo->addRow(tr("Tempo-Uhr:"), tempoSource_);
     tempo->addRow(tr("Fester Wert:"), tempoBpm_);
+    tempo->addRow(tr("Tempo über DMX:"), dmxRow);
     layout->addLayout(tempo);
     layout->addStretch(1);
 }
@@ -117,6 +146,12 @@ LiveControlsPage::LiveControlsPage(const AppSettings& current, std::shared_ptr<m
 int LiveControlsPage::tempoSource() const { return tempoSource_->currentIndex(); }
 
 double LiveControlsPage::tempoFixedBpm() const { return tempoBpm_->value(); }
+
+int LiveControlsPage::tempoDmxProtocol() const { return tempoDmxProtocol_->currentIndex(); }
+
+int LiveControlsPage::tempoDmxUniverse() const { return tempoDmxUniverse_->value(); }
+
+int LiveControlsPage::tempoDmxChannel() const { return tempoDmxChannel_->value(); }
 
 void LiveControlsPage::setMasterDmx(std::optional<input::DmxAddress> address) {
     master_ = address;

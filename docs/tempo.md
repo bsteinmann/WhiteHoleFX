@@ -18,15 +18,23 @@ Der Node hat keinen eigenen Zustand: ein neu geladener Look sieht sofort dasselb
 
 ## Quellen
 
-Einstellungen → **Steuerung**, Abschnitt Tempo-Uhr (Programmeinstellung `tempo/source`, `tempo/fixedBpm`, nicht im Projekt):
+Einstellungen → **Steuerung**, Abschnitt Tempo-Uhr (Programmeinstellung `tempo/source`, `tempo/fixedBpm`, `tempo/dmxProtocol`,
+`tempo/dmxUniverse`, `tempo/dmxChannel`; nicht im Projekt):
 
 - **Tap:** im Takt tippen - Taste **TAP** im Live-Fenster (zeigt das Tempo) oder die Live-Funktion **Tempo-Tap** auf einer
   MIDI-Taste bzw. einem DMX-Kanal (Reiter Steuerung oder „Steuerung belegen“ im Live-Fenster, in der Belegung `tap`). Das Tempo
   ist der Mittelwert der letzten vier Abstände (30 bis 300 BPM); nach mehr als 2 s Pause beginnt eine neue Folge, das Tempo
   bleibt dann. Tappen wirkt auch außerhalb des Live-Modus.
 - **Fester Wert:** ein Tempo in BPM.
+- **Audio-Beat:** jeder Schlag, den der Beat-Erkenner des Audio-Eingangs findet, ist ein Beat (die Phase rastet ein wie bei
+  einem Tap), das Tempo ist dessen Schätzung. Ohne Audio-Signal (länger als 0,5 s) läuft die Uhr mit dem letzten Tempo weiter.
+  Braucht einen laufenden Audio-Eingang (Einstellungen → Audio).
+- **DMX-Kanal:** der Wert eines Kanals (Art-Net oder sACN, Universe, Kanal) ist das Tempo in BPM, auf 30 bis 255 begrenzt;
+  0 lässt das Tempo unverändert, ebenso ein Kanal ohne Signal (länger als 2 s). Nur das Tempo kommt über DMX, die Phase läuft
+  stetig weiter (DMX kennt keinen Beat-Zeitpunkt).
 
-Weitere Quellen (Audio-Beat, DMX-Kanal als BPM, MIDI-Clock) und die Option „Globales Tempo“ an Clock, Beat und Shot folgen.
+Wechselt die Quelle, läuft die Phase stetig weiter; mit dem nächsten Tap oder Audio-Schlag rastet sie ein. MIDI-Clock und die
+Option „Globales Tempo“ an Clock, Beat und Shot folgen.
 
 ## Phase und Einrasten
 
@@ -39,5 +47,6 @@ sofort mit dem Tap (und nicht noch einmal danach); liegt er knapp danach, gibt e
 
 - Zeitbezug ist die Uhr des Players (in Tests vorgegeben), nicht die Projektzeit. Offline-Rendern mit dem Node „Tempo“ ist darum
   wie bei DMX- und MIDI-Nodes nicht reproduzierbar.
-- Code: `values::TempoClock` (`libs/wh_values`), `BuiltinLibrary::tempo`, `Player::tempoTap`/`setTempoSource`/`advanceTempo`
+- Code: `values::TempoClock` (`libs/wh_values`, `externalBeat`/`externalBpm` für Audio und DMX), `BuiltinLibrary::tempo`,
+  `Player::tempoTap`/`setTempoSource`/`setTempoDmx`/`advanceTempo`
   (`player_tempo.cpp`), Node in `builtin_tempo.cpp`.

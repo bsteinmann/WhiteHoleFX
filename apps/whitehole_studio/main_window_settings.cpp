@@ -88,8 +88,7 @@ QString MainWindow::applySettings(const AppSettings& wanted, bool persist) {
     appSettings_ = next;
     applyMasterDmx();
     applyLiveDmx();
-    player_->setTempoFixedBpm(next.tempoFixedBpm);
-    player_->setTempoSource(next.tempoSource == 1 ? values::TempoClock::Source::Fixed : values::TempoClock::Source::Tap);
+    applyTempo();
     syncDmxUniverses();  // sACN: Der Master- und der Live-Look-Kanal brauchen ihre Multicast-Gruppe
     if (!(player_->nodeDefaults() == next.nodeDefaults)) {
         player_->setNodeDefaults(next.nodeDefaults);
@@ -140,8 +139,11 @@ QString MainWindow::exerciseSettings() {
     probe.midiProfile = QStringLiteral("Test-Profil");
     probe.midiProfiles = QStringList{QStringLiteral("Test-Profil|apcmini1|8|-1|-1|56|48|49")};
     probe.liveBindings = QStringList{QStringLiteral("go midi 3 12"), QStringLiteral("crossfade dmx sacn 7 512")};
-    probe.tempoSource = 1;
+    probe.tempoSource = 3;
     probe.tempoFixedBpm = 90.5;
+    probe.tempoDmxProtocol = 1;
+    probe.tempoDmxUniverse = 12;
+    probe.tempoDmxChannel = 300;
     probe.audioSource = QStringLiteral("device:Nicht vorhanden");
     if (!(SettingsDialog{probe, *library_->registry, this}.settings() == probe)) {
         return QStringLiteral("Einstellungen: der Dialog gibt nicht zurück, was man ihm gibt (Gerät)");
@@ -204,6 +206,14 @@ QString MainWindow::exerciseSettings() {
     tick();
     if (std::abs(player_->tempo().bpm - 90.5) > 1e-6) {
         return QStringLiteral("Einstellungen: der feste Wert der Tempo-Uhr kommt nicht an");
+    }
+    tempo.tempoSource = 3;
+    tempo.tempoDmxUniverse = 7;
+    tempo.tempoDmxChannel = 9;
+    (void)applySettings(tempo, false);
+    if (player_->tempo().source != values::TempoClock::Source::Dmx || !player_->tempoDmx() ||
+        player_->tempoDmx()->universe != 7 || player_->tempoDmx()->channel != 9) {
+        return QStringLiteral("Einstellungen: Quelle oder Kanal der Tempo-Uhr (DMX) kommen nicht an");
     }
     if (const QString error = applySettings(before, false); !error.isEmpty() || !(appSettings_ == before)) {
         return QStringLiteral("Einstellungen: der alte Stand lässt sich nicht wiederherstellen: ") + error;
