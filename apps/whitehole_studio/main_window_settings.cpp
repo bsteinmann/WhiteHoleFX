@@ -9,10 +9,12 @@
 #include <QKeySequence>
 #include <QMenu>
 #include <QMessageBox>
+#include <QPushButton>
 #include <QStatusBar>
 #include <QStringList>
 
 #include <memory>
+#include <optional>
 
 #include "main_window.hpp"
 #include "node_defaults_page.hpp"
@@ -41,7 +43,21 @@ void MainWindow::openSettings() {
         midiStore_ = library_->midi;  // damit die Seite MIDI sofort Nachrichten zeigt
     }
     SettingsDialog dialog{appSettings_, *library_->registry, this, midiStore_, library_->dmx};
+    // "Übernehmen" wirkt sofort; "Abbrechen" danach stellt den Stand beim Öffnen wieder her.
+    const AppSettings opened = appSettings_;
+    bool appliedEarly = false;
+    connect(&dialog, &SettingsDialog::applyRequested, this, [this, &appliedEarly](const AppSettings& wanted) {
+        const QString applyProblems = applySettings(wanted, true);
+        appliedEarly = true;
+        updateStatus();
+        statusBar()->showMessage(applyProblems.isEmpty() ? tr("Einstellungen übernommen") : applyProblems,
+                                 applyProblems.isEmpty() ? 3000 : 12000);
+    });
     if (dialog.exec() != QDialog::Accepted) {
+        if (appliedEarly) {
+            applySettings(opened, true);
+            updateStatus();
+        }
         return;
     }
     const QString problems = applySettings(dialog.settings(), true);
@@ -132,6 +148,21 @@ QString MainWindow::exerciseSettings() {
     probe.audioSource = QStringLiteral("default");
     if (!(SettingsDialog{probe, *library_->registry, this}.settings() == probe)) {
         return QStringLiteral("Einstellungen: der Dialog gibt nicht zurück, was man ihm gibt (Standardgerät)");
+    }
+
+    // "Übernehmen" meldet die aktuellen Feldwerte, ohne den Dialog zu schließen.
+    {
+        SettingsDialog applyDialog{probe, *library_->registry, this};
+        std::optional<AppSettings> reported;
+        connect(&applyDialog, &SettingsDialog::applyRequested, this,
+                [&reported](const AppSettings& wanted) { reported = wanted; });
+        if (applyDialog.applyButton() == nullptr) {
+            return QStringLiteral("Einstellungen: es gibt keine Schaltfläche Übernehmen");
+        }
+        applyDialog.applyButton()->click();
+        if (!reported.has_value() || !(*reported == probe) || applyDialog.result() != QDialog::Rejected) {
+            return QStringLiteral("Einstellungen: Übernehmen meldet nicht die Feldwerte oder schließt den Dialog");
+        }
     }
 
     if (const QString error = exerciseNodeDefaults(); !error.isEmpty()) {

@@ -19,6 +19,7 @@
 class QCheckBox;
 class QComboBox;
 class QLineEdit;
+class QPushButton;
 class QRadioButton;
 class QSpinBox;
 
@@ -44,6 +45,12 @@ public:
     [[nodiscard]] NodeDefaultsPage* nodeDefaultsPage() const noexcept { return defaultsPage_; }
     /// Der Reiter "Steuerung" (für den Rauchtest).
     [[nodiscard]] LiveControlsPage* liveControlsPage() const noexcept { return controlsPage_; }
+    /// Die Schaltfläche "Übernehmen" (für den Rauchtest).
+    [[nodiscard]] QPushButton* applyButton() const noexcept { return applyButton_; }
+
+Q_SIGNALS:
+    /// "Übernehmen" wurde gedrückt: die Felder gelten jetzt, der Dialog bleibt offen.
+    void applyRequested(const AppSettings& settings);
 
 private:
     QWidget* buildNetworkPage(const AppSettings& current);
@@ -54,6 +61,7 @@ private:
     NodeDefaultsPage* defaultsPage_{nullptr};
     MidiSettingsPage* midiPage_{nullptr};
     LiveControlsPage* controlsPage_{nullptr};
+    QPushButton* applyButton_{nullptr};
     QComboBox* outputCard_{nullptr};
     QComboBox* inputCard_{nullptr};
     QCheckBox* artnet_{nullptr};

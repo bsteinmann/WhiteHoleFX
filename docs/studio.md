@@ -464,7 +464,7 @@ Strenge Eingänge** den strengen Modus ein; er wird mit dem Projekt gespeichert 
 | Menü | Inhalt |
 | --- | --- |
 | Datei | Neu, Öffnen, Zuletzt geöffnet, Beispiele (in Untergruppen Einstieg, Effekte, Audio, 3D; siehe [Beispielprojekte](examples.md)); Speichern, Speichern unter; Neu laden (F5); Beenden |
-| Bearbeiten | Rückgängig, Wiederholen; Einstellungen … (Strg+Komma) |
+| Bearbeiten | Rückgängig, Wiederholen; Einstellungen … (Strg+Komma; **Übernehmen** wendet die Werte sofort an, der Dialog bleibt offen, **Abbrechen** stellt danach den Stand beim Öffnen wieder her) |
 | Stage Config | Fixtures …; Fixture hinzufügen …; Layout … (F4); Ausgabe …; Testmodus … (alles im selben Fenster) |
 | Ansicht | Docks ein- und ausblenden; Palette farbig; Pegel im Editor; 2D/3D-Umschalter (Strg+1 bis 5); 3D-Darstellung (Aus-LEDs, Leuchten) |
 | Wiedergabe | Start/Stopp, Ausgabe senden; Blackout |
