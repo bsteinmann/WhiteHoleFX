@@ -500,6 +500,35 @@ TEST_CASE("Shot: ein Durchlauf dauert genau die eingestellten Schläge und bleib
     CHECK_FALSE(flag(lab, shot, "done"));
 }
 
+TEST_CASE("Shot: ein beim Start schon anliegender Trigger löst einmal aus") {
+    // Ein per MIDI-Note geflashter Look entsteht erst beim Note-On: Der Trigger liegt im allerersten Frame schon an
+    // und darf trotzdem nicht als bloßer Ausgangszustand verschluckt werden (wie beim Gate der Envelope).
+    Lab lab;
+    const NodeId shot = lab.add("wh.value.shot");
+    lab.feed(shot, "progress");
+    lab.set(shot, "bpm", 120.0);  // ein Schlag = 0,5 s
+    lab.set(shot, "beats", 2.0);  // Durchlauf = 1 s
+    lab.set(shot, "trigger", true);
+    lab.run(0.0, 0.125);
+    CHECK(flag(lab, shot, "active"));
+    CHECK(whole(lab, shot, "count") == 1);
+    for (int frame = 1; frame <= 4; ++frame) {
+        lab.run(0.0, 0.125);  // der Trigger bleibt gehalten, es gibt keine zweite Flanke
+    }
+    CHECK(lab.number(shot, "progress") == Approx(0.5));
+    CHECK(whole(lab, shot, "count") == 1);
+}
+
+TEST_CASE("Shot: ohne Trigger startet nichts, auch nicht im ersten Frame") {
+    Lab lab;
+    const NodeId shot = lab.add("wh.value.shot");
+    lab.feed(shot, "progress");
+    lab.set(shot, "trigger", false);
+    lab.run(0.0, 0.125);
+    CHECK_FALSE(flag(lab, shot, "active"));
+    CHECK(whole(lab, shot, "count") == 0);
+}
+
 TEST_CASE("Shot: mehrere Wiederholungen, abwechselnd rückwärts, Zähler und Wechsel") {
     Lab lab;
     const NodeId shot = lab.add("wh.value.shot");
