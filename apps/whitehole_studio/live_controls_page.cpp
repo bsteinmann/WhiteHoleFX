@@ -1,11 +1,15 @@
 // live_controls_page.cpp: Umsetzung zu live_controls_page.hpp.
 #include "live_controls_page.hpp"
 
+#include <QComboBox>
+#include <QDoubleSpinBox>
+#include <QFormLayout>
 #include <QGridLayout>
 #include <QLabel>
 #include <QPushButton>
 #include <QVBoxLayout>
 
+#include <algorithm>
 #include <cstddef>
 #include <string>
 #include <utility>
@@ -89,8 +93,30 @@ LiveControlsPage::LiveControlsPage(const AppSettings& current, std::shared_ptr<m
                             this};
     note->setWordWrap(true);
     layout->addWidget(note);
+
+    // Gemeinsame Tempo-Uhr (Node "Tempo"): überlebt Look-Wechsel, alle Looks teilen BPM und Beat
+    auto* tempo = new QFormLayout;
+    tempoSource_ = new QComboBox{this};
+    tempoSource_->addItem(tr("Tap (Taste TAP oder Funktion „Tempo-Tap“)"));
+    tempoSource_->addItem(tr("Fester Wert"));
+    tempoSource_->setCurrentIndex(std::clamp(current.tempoSource, 0, 1));
+    tempoSource_->setToolTip(tr("Woher die gemeinsame Tempo-Uhr ihr Tempo nimmt (Node „Tempo“)"));
+    tempoBpm_ = new QDoubleSpinBox{this};
+    tempoBpm_->setRange(30.0, 300.0);
+    tempoBpm_->setDecimals(1);
+    tempoBpm_->setSuffix(tr(" BPM"));
+    tempoBpm_->setValue(current.tempoFixedBpm);
+    tempoBpm_->setEnabled(current.tempoSource == 1);
+    connect(tempoSource_, &QComboBox::currentIndexChanged, this, [this](int index) { tempoBpm_->setEnabled(index == 1); });
+    tempo->addRow(tr("Tempo-Uhr:"), tempoSource_);
+    tempo->addRow(tr("Fester Wert:"), tempoBpm_);
+    layout->addLayout(tempo);
     layout->addStretch(1);
 }
+
+int LiveControlsPage::tempoSource() const { return tempoSource_->currentIndex(); }
+
+double LiveControlsPage::tempoFixedBpm() const { return tempoBpm_->value(); }
 
 void LiveControlsPage::setMasterDmx(std::optional<input::DmxAddress> address) {
     master_ = address;

@@ -501,7 +501,7 @@ nichts versehentlich angehalten oder geändert wird.
 | Zeilen (bei offenen Einstellungen) | Zeilen des Rasters, 1 bis 16 (Standard 4). Spalten × Zeilen ergeben die Felder, alle gleich groß. Beim Verkleinern behalten belegte Felder, die noch hineinpassen, ihre Zeile und Spalte; belegte Felder außerhalb rücken in die ersten freien Felder nach (mit ihren Einstellungen). Hätte ein Look danach keinen Platz mehr, fragt das Programm vorher nach; bestätigst du, wird er aus dem Raster genommen (er bleibt im Projekt und lässt sich wieder auf ein Feld legen). Ältere Projekte bekommen das Raster beim Öffnen aus ihren Looks (zeilenweise). Ein neu gespeicherter Look kommt ins erste freie Feld |
 | Vorschau teilen (bei offenen Einstellungen, Standard an) | Die Vorschau über dem Live-Fenster zeigt links die Ausgabe und rechts den vorgeladenen Look, beide laufend; während einer Überblendung rechts den einblendenden Look, sonst „Kein Look vorgeladen“. Rechenzeit kostet die rechte Hälfte nur, solange ein Look vorgeladen ist oder einblendet (der Shader tastet das verdeckte Deck dann ein zweites Mal ab). Wird gespeichert (Programmeinstellungen); Umschalten baut die Ausgabe einmal neu auf |
 | Haken „Flash“ unter einem Look (oder Rechtsklick auf den Look) | „Umschalten (bleibt an)“ oder „Flashen (nur solange gedrückt)“; für Flash außerdem die Zeit zum Einblenden beim Drücken („Rein“) und zum Zurückblenden beim Loslassen („Zurück“), jeweils mit der Zeit des Looks oder mit eigener Zeit. Steht im Projekt (`trigger flash`, `in`, `return`) und gilt für Knöpfe, MIDI-Pads und alle anderen Eingänge. Ein Flash-Look hat Vorrang vor „Mit GO“; die Tasten 1–9 schalten auch einen Flash-Look nur um (sie kennen kein Loslassen) |
-| Zeile „Steuerung belegen“ (nur bei offenen Einstellungen) | Lernen-Knopf je Funktion (GO, Live beenden, Master, Überblendzeit, manuelle Überblendung) für MIDI oder DMX - dieselbe Belegung wie im Reiter „Steuerung“ der Einstellungen |
+| Zeile „Steuerung belegen“ (nur bei offenen Einstellungen) | Lernen-Knopf je Funktion (GO, Live beenden, Master, Überblendzeit, manuelle Überblendung, Tempo-Tap) für MIDI oder DMX - dieselbe Belegung wie im Reiter „Steuerung“ der Einstellungen |
 | Esc oder „Zurück zum Editor“ | beendet den Live-Modus |
 
 Farben: grün läuft, orange vorgeladen, gelb blendet gerade ein. Ein Balken zeigt den Fortschritt.
@@ -609,10 +609,12 @@ zum Projekt. Die Wahl wird beim Nutzer gespeichert und beim nächsten Start wied
 - **DMX-Eingang:** Art-Net und sACN einzeln einschalten, dazu die Ports (Standard 6454 und 5568).
 - **Audio:** die Quelle für die Audio-Nodes (siehe unten).
 - **MIDI:** Eingangs- und Ausgangsport eines MIDI-Controllers (zum Beispiel Akai APC mini), jeweils „Aus“ oder ein vom System gemeldeter Port; „Ports neu einlesen“ liest die Liste nach dem Anstecken neu. Darunter steht die zuletzt empfangene Nachricht, damit man sieht, ob das Gerät ankommt. Siehe [MIDI](midi.md).
-- **Steuerung:** je Live-Funktion (GO, Live beenden, Master-Helligkeit, Überblendzeit 0–10 s, manuelle Überblendung) eine Zeile mit
+- **Steuerung:** je Live-Funktion (GO, Live beenden, Master-Helligkeit, Überblendzeit 0–10 s, manuelle Überblendung, Tempo-Tap) eine Zeile mit
   MIDI-Belegung („Lernen“, „Profil“ = zurück zur Belegung des MIDI-Profils) und DMX-Kanal („Lernen“, „Aus“). DMX-Lernen nimmt den
   Kanal, der sich nach dem Drücken am stärksten bewegt; DMX-Tasten lösen aus, wenn der Kanal über 50 % steigt. Master über DMX ist
-  dieselbe Einstellung wie auf der Seite DMX-Eingang. Gehört zum Programm, nicht zum Projekt (`midi/liveBindings`).
+  dieselbe Einstellung wie auf der Seite DMX-Eingang. Gehört zum Programm, nicht zum Projekt (`midi/liveBindings`). Darunter die
+  Quelle der gemeinsamen **Tempo-Uhr** (Tap oder fester Wert, siehe [Tempo-Uhr](tempo.md)); im Live-Fenster tippt die Taste
+  **TAP** (zeigt das Tempo).
 
 ## DMX-Eingang
 

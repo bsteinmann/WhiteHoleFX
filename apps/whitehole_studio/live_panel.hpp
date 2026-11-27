@@ -121,6 +121,8 @@ public:
     [[nodiscard]] QCheckBox* flashCheck(int index) const;
     /// Das Feld "Overlay" daneben (nur bei Flash bedienbar); nullptr bei ungültigem Index.
     [[nodiscard]] QCheckBox* overlayCheck(int index) const;
+    /// Die Taste TAP der gemeinsamen Tempo-Uhr (für den Rauchtest).
+    [[nodiscard]] QPushButton* tapButton() const noexcept { return tapButton_; }
 
 Q_SIGNALS:
     void failed(const QString& message);
@@ -163,6 +165,7 @@ private:
     QLabel* nextLabel_{nullptr};
     QProgressBar* progress_{nullptr};
     QPushButton* goButton_{nullptr};
+    QPushButton* tapButton_{nullptr};
     QCheckBox* useGo_{nullptr};
     QCheckBox* customFade_{nullptr};
     QDoubleSpinBox* fade_{nullptr};

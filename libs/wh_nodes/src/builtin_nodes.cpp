@@ -33,7 +33,8 @@ std::vector<compiler::NodeDefinition> builtinNodeDefinitions() {
 
 std::vector<values::CpuNodeDefinition> builtinCpuDefinitions(std::shared_ptr<input::DmxStore> dmx,
                                                                   std::shared_ptr<audio::AudioStore> audio,
-                                                                  std::shared_ptr<midi::MidiStore> midi) {
+                                                                  std::shared_ptr<midi::MidiStore> midi,
+                                                                  std::shared_ptr<values::TempoClock> tempo) {
     std::vector<values::CpuNodeDefinition> all = detail::valueNodes();
     std::vector<values::CpuNodeDefinition> inputs = detail::dmxNodes(std::move(dmx));
     all.insert(all.end(), std::make_move_iterator(inputs.begin()), std::make_move_iterator(inputs.end()));
@@ -43,6 +44,8 @@ std::vector<values::CpuNodeDefinition> builtinCpuDefinitions(std::shared_ptr<inp
     }
     std::vector<values::CpuNodeDefinition> midiInputs = detail::midiNodes(std::move(midi));
     all.insert(all.end(), std::make_move_iterator(midiInputs.begin()), std::make_move_iterator(midiInputs.end()));
+    std::vector<values::CpuNodeDefinition> tempoValues = detail::tempoNodes(std::move(tempo));
+    all.insert(all.end(), std::make_move_iterator(tempoValues.begin()), std::make_move_iterator(tempoValues.end()));
     std::vector<values::CpuNodeDefinition> audioInputs = detail::audioNodes(audio);
     all.insert(all.end(), std::make_move_iterator(audioInputs.begin()), std::make_move_iterator(audioInputs.end()));
     std::vector<values::CpuNodeDefinition> audioWaves = detail::audioWaveNodes(audio);
@@ -52,13 +55,14 @@ std::vector<values::CpuNodeDefinition> builtinCpuDefinitions(std::shared_ptr<inp
 
 Result<void> registerBuiltinNodes(graph::INodeRegistrar& registrar, compiler::SnippetLibrary& snippets,
                                   values::CpuKernelLibrary& kernels, std::shared_ptr<input::DmxStore> dmx,
-                                  std::shared_ptr<audio::AudioStore> audio, std::shared_ptr<midi::MidiStore> midi) {
+                                  std::shared_ptr<audio::AudioStore> audio, std::shared_ptr<midi::MidiStore> midi,
+                                  std::shared_ptr<values::TempoClock> tempo) {
     const std::vector<compiler::NodeDefinition> fieldNodes = builtinNodeDefinitions();
     if (Result<void> registered = compiler::registerDefinitions(fieldNodes, registrar, snippets);
         !registered.ok()) {
         return registered;
     }
-    const std::vector<values::CpuNodeDefinition> cpuNodes = builtinCpuDefinitions(std::move(dmx), std::move(audio), std::move(midi));
+    const std::vector<values::CpuNodeDefinition> cpuNodes = builtinCpuDefinitions(std::move(dmx), std::move(audio), std::move(midi), std::move(tempo));
     return values::registerCpuDefinitions(cpuNodes, registrar, kernels);
 }
 

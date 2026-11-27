@@ -71,7 +71,7 @@ TEST_CASE("Built-ins: alle Nodes werden samt Snippet beziehungsweise Kernel regi
                                             "wh.value.lfo",    "wh.value.random", "wh.value.map",
                                             "wh.value.smooth", "wh.value.colorramp", "wh.value.dmx",
                                             "wh.value.dmxcolor", "wh.value.midicc", "wh.value.midinote", "wh.value.audiolevel", "wh.value.audioband",
-                                            "wh.value.audiospectrum", "wh.value.beat", "wh.value.onset", "wh.value.tap",
+                                            "wh.value.audiospectrum", "wh.value.beat", "wh.value.onset", "wh.value.tap", "wh.value.tempo",
                                             "wh.value.audiowave", "wh.value.math", "wh.value.compare",
                                             "wh.value.clock", "wh.value.envelope", "wh.value.sequencer", "wh.value.shot", "wh.value.pong",
                                             "wh.output.dmx", "wh.output.dmxcolor"};

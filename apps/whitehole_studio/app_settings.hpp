@@ -7,7 +7,7 @@
 //
 // Schlüssel in QSettings (Organisation und Anwendung "WhiteHoleFX"): dmx/artnet, dmx/sacn, audio/source
 // wie bisher, neu dmx/artnetPort, dmx/sacnPort, dmx/masterEnabled, dmx/masterProtocol, dmx/masterUniverse, dmx/masterChannel,
-// dmx/liveEnabled, dmx/liveProtocol, dmx/liveUniverse, dmx/liveSelectChannel, dmx/liveFadeChannel, network/outInterface, network/inInterface, midi/input, midi/output, midi/profile, midi/profiles, midi/liveBindings,
+// dmx/liveEnabled, dmx/liveProtocol, dmx/liveUniverse, dmx/liveSelectChannel, dmx/liveFadeChannel, network/outInterface, network/inInterface, midi/input, midi/output, midi/profile, midi/profiles, midi/liveBindings, tempo/source, tempo/fixedBpm,
 // nodeDefaults/<Typ-ID>/<Parameter> (Wert als Text, siehe encodeParameterValue).
 #pragma once
 
@@ -53,6 +53,9 @@ struct AppSettings {
     bool liveSplitPreview{true};  // Live-Fenster: Vorschau teilen (links Ausgabe, rechts vorgeladener Look)
     /// Belegung der Live-Steuerung (runtime::serializeBindings), Reiter "Steuerung" und Live-Fenster.
     QStringList liveBindings;
+    /// Gemeinsame Tempo-Uhr (values::TempoClock): Quelle 0 = Tap, 1 = fester Wert; der feste Wert in BPM.
+    int tempoSource{0};
+    double tempoFixedBpm{120.0};
     /// "off", "default", "device:<Name>" oder "file:<Pfad>".
     QString audioSource{QStringLiteral("off")};
     /// Eigene Standardwerte für neue Nodes (Seite "Node-Standardwerte").

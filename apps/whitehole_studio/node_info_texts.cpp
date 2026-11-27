@@ -33,6 +33,8 @@ std::span<const NodeInfoEntry> nodeInfoEntries() {
      QT_TR_NOOP("Zeichnet das Audio-Spektrum als Balken, von unten oder von der Mitte aus. „Spectrum“ kommt von „Audio Spectrum“.")},
     {"wh.value.tap",
      QT_TR_NOOP("Tempo per Tippen: Jedes Einschalten von „Tap“ zählt als Schlag. Liefert Beat, Pulse, Phase und BPM, oder ein festes Tempo.")},
+    {"wh.value.tempo",
+     QT_TR_NOOP("Liest die gemeinsame Tempo-Uhr des Programms: Beat, Pulse, Phase, BPM und Zähler. Überlebt Look-Wechsel; Quelle und Tap in Einstellungen → Steuerung bzw. Taste TAP im Live-Fenster.")},
     {"wh.blend.add",
      QT_TR_NOOP("Addiert zwei Bilder: Das Licht summiert sich wie bei zwei Scheinwerfern.")},
     {"wh.blend.blend",

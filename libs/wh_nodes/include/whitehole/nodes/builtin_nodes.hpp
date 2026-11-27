@@ -11,6 +11,7 @@
 #include "whitehole/input/dmx_store.hpp"
 #include "whitehole/midi/midi_store.hpp"
 #include "whitehole/values/cpu_kernel.hpp"
+#include "whitehole/values/tempo_clock.hpp"
 
 namespace whitehole::nodes {
 
@@ -28,15 +29,18 @@ namespace whitehole::nodes {
 /// MIDI-Eingang: wh.value.midicc, wh.value.midinote; sie lesen aus `midi` (null = leerer Speicher, kein Signal).
 /// Audio-Eingang: wh.value.audiolevel, audioband, audiospectrum, beat, tap (Kategorie "Audio"); sie lesen
 /// aus `audio` (null = leerer Speicher, kein Signal). Dazu der Field-Node wh.generator.spectrum.
+/// Tempo: wh.value.tempo liest die gemeinsame Tempo-Uhr `tempo` (null = eine eigene, die nie weiterläuft).
 [[nodiscard]] std::vector<values::CpuNodeDefinition> builtinCpuDefinitions(std::shared_ptr<input::DmxStore> dmx = nullptr,
                                                                            std::shared_ptr<audio::AudioStore> audio = nullptr,
-                                                                           std::shared_ptr<midi::MidiStore> midi = nullptr);
+                                                                           std::shared_ptr<midi::MidiStore> midi = nullptr,
+                                                                           std::shared_ptr<values::TempoClock> tempo = nullptr);
 
 /// Trägt alle eingebauten Nodes samt Snippets und Kerneln ein.
 /// Fehler: AlreadyExists, wenn sie schon registriert sind.
 Result<void> registerBuiltinNodes(graph::INodeRegistrar& registrar, compiler::SnippetLibrary& snippets,
                                   values::CpuKernelLibrary& kernels, std::shared_ptr<input::DmxStore> dmx = nullptr,
                                   std::shared_ptr<audio::AudioStore> audio = nullptr,
-                                  std::shared_ptr<midi::MidiStore> midi = nullptr);
+                                  std::shared_ptr<midi::MidiStore> midi = nullptr,
+                                  std::shared_ptr<values::TempoClock> tempo = nullptr);
 
 }  // namespace whitehole::nodes

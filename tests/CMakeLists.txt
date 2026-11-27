@@ -27,6 +27,7 @@ add_executable(wh_tests
     values/cpu_kernel_test.cpp
     values/value_evaluator_test.cpp
     values/value_store_test.cpp
+    values/tempo_clock_test.cpp
     compiler/field_compiler_test.cpp
     audio/analyzer_test.cpp
     audio/audio_input_test.cpp
@@ -60,6 +61,7 @@ add_executable(wh_tests
     nodes/example_projects_test.cpp
     nodes/text_node_test.cpp
     nodes/sequence_nodes_test.cpp
+    nodes/tempo_node_test.cpp
     nodes/dmx_out_nodes_test.cpp
     nodes/builtin_values_test.cpp
     nodes/color_values_test.cpp
@@ -156,6 +158,7 @@ add_executable(wh_tests
     runtime/live_grid_test.cpp
     runtime/live_cells_test.cpp
     runtime/live_overlay_test.cpp
+    runtime/player_tempo_test.cpp
     runtime/live_manual_fade_test.cpp
     runtime/midi_live_test.cpp
     runtime/player_live_test.cpp

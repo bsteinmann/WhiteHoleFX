@@ -178,6 +178,7 @@ Result<void> Player::step() {
             return restarted;
         }
     }
+    advanceTempo();
     pollMasterDmx();
     pollLiveDmx();
     advanceCues();

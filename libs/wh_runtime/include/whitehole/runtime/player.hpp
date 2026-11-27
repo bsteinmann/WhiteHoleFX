@@ -454,6 +454,15 @@ public:
     Result<void> liveCellTrigger(int cell, std::optional<double> fadeSeconds = std::nullopt);
     /// Look-Index des Feldes oder -1 (leer, unbekannter Look, Feld außerhalb).
     [[nodiscard]] int cellLook(int cell) const;
+    // --- Gemeinsame Tempo-Uhr (player_tempo.cpp, values::TempoClock) ------------------------------------------------
+    /// Ein Tap für die Tempo-Uhr (Taste im Live-Fenster, MIDI-Taste, DMX-Kanal); zählt mit dem nächsten step().
+    void tempoTap();
+    /// Quelle und fester Wert der Tempo-Uhr (Programmeinstellung, nicht im Projekt).
+    void setTempoSource(values::TempoClock::Source source);
+    void setTempoFixedBpm(double bpm);
+    /// Stand der Tempo-Uhr im zuletzt gerechneten Bild.
+    [[nodiscard]] values::TempoClock::Snapshot tempo() const;
+
     /// Gehaltene Flash-Looks, zuletzt gedrückter hinten (für Anzeige und Tests).
     [[nodiscard]] std::vector<int> liveFlashHeld() const {
         std::vector<int> looks;
@@ -617,6 +626,7 @@ private:
     /// Gibt der Session das Deck weiter, das mitgerechnet werden soll (nur bei einem Wechsel oder nach `reloaded`).
     void selectPreview(bool reloaded);
 
+    void advanceTempo();  // schiebt die Tempo-Uhr auf liveNow() (player_tempo.cpp)
     [[nodiscard]] double liveNow() const {
         return liveClock_ ? liveClock_()
                           : std::chrono::duration<double>(std::chrono::steady_clock::now().time_since_epoch()).count();

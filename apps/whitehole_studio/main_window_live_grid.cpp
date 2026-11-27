@@ -6,6 +6,7 @@
 #include <QApplication>
 #include <QCheckBox>
 #include <QMenu>
+#include <QPushButton>
 
 #include <algorithm>
 #include <memory>
@@ -108,6 +109,15 @@ QString MainWindow::exerciseLiveGrid() {
     }
     if (!livePanel_->clearCell(freeCell) || player_->cellLook(freeCell) >= 0 || player_->cellLook(0) != 0) {
         return QStringLiteral("Live: Ein Feld lässt sich nicht leeren");
+    }
+    // TAP: ein Tipp erreicht die Tempo-Uhr, die Taste zeigt das Tempo
+    if (livePanel_->tapButton() == nullptr) {
+        return QStringLiteral("Live: Die Taste TAP fehlt");
+    }
+    livePanel_->tapButton()->click();
+    tick();
+    if (!livePanel_->tapButton()->text().contains(QStringLiteral("BPM"))) {
+        return QStringLiteral("Live: Die Taste TAP zeigt kein Tempo");
     }
     return {};
 }

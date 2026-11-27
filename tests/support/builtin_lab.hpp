@@ -42,7 +42,10 @@ struct Lab {
     std::shared_ptr<midi::MidiStore> midi =
         std::make_shared<midi::MidiStore>([this] { return midiNow; });  // Quelle der MIDI-Nodes
 
-    Lab() { REQUIRE(nodes::registerBuiltinNodes(*registry, snippets, kernels, dmx, audio, midi).ok()); }
+    /// Gemeinsame Tempo-Uhr (wh.value.tempo); Tests schieben sie mit tempo->update(t) selbst weiter.
+    std::shared_ptr<values::TempoClock> tempo = std::make_shared<values::TempoClock>();
+
+    Lab() { REQUIRE(nodes::registerBuiltinNodes(*registry, snippets, kernels, dmx, audio, midi, tempo).ok()); }
 
     NodeId add(std::string_view typeId) { return graph.addNode(typeId, Vec2{}).value(); }
 
