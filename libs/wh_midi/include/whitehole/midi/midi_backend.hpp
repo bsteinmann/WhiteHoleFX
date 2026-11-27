@@ -19,6 +19,7 @@ namespace whitehole::midi {
 
 /// Der Rückruf läuft auf einem Thread des Backends, nicht auf dem Thread, der open() aufrief.
 using MidiHandler = std::function<void(const MidiMessage&)>;
+using MidiRealtimeHandler = std::function<void(MidiRealtime)>;
 
 class IMidiInput {
 public:
@@ -28,6 +29,8 @@ public:
     virtual Result<void> open(const std::string& name, MidiHandler handler) = 0;
     virtual void close() = 0;
     [[nodiscard]] virtual bool isOpen() const = 0;
+    /// Empfänger für MIDI-Clock (vor open() setzen). Standard: ein Eingang ohne Echtzeitmeldungen ignoriert ihn.
+    virtual void setRealtimeHandler(MidiRealtimeHandler handler) { (void)handler; }
 };
 
 class IMidiOutput {

@@ -634,6 +634,10 @@ private:
     std::optional<input::DmxAddress> tempoDmx_;
     bool tempoAudioSeen_{false};          // Quelle Audio: der Zähler des Beat-Erkenners ist bekannt
     std::uint64_t tempoAudioCount_{0};    // zuletzt gesehene Zahl erkannter Schläge
+    bool tempoClockSeen_{false};          // Quelle MIDI-Clock: Stand der Clock ist bekannt
+    std::uint64_t tempoClockStarts_{0};
+    std::uint64_t tempoClockTicks_{0};
+    void advanceMidiClock(values::TempoClock& clock);
     [[nodiscard]] double liveNow() const {
         return liveClock_ ? liveClock_()
                           : std::chrono::duration<double>(std::chrono::steady_clock::now().time_since_epoch()).count();

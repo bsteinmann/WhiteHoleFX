@@ -30,11 +30,11 @@ msgstr ""
 msgid "   |   BLACKOUT"
 msgstr ""
 
-#: main_window_dmx.cpp:213
+#: main_window_dmx.cpp:214
 msgid "   |   DMX-Eingang %1: %2 Pakete"
 msgstr ""
 
-#: main_window_dmx.cpp:203
+#: main_window_dmx.cpp:204
 msgid "   |   DMX-Nodes im Projekt, Eingang aus (Einstellungen)"
 msgstr ""
 
@@ -62,11 +62,11 @@ msgstr ""
 msgid " (Kopie)"
 msgstr ""
 
-#: main_window_dmx.cpp:211
+#: main_window_dmx.cpp:212
 msgid " + sACN"
 msgstr ""
 
-#: live_controls_page.cpp:112
+#: live_controls_page.cpp:113
 msgid " BPM"
 msgstr ""
 
@@ -118,7 +118,7 @@ msgstr ""
 msgid "%1  →  %2"
 msgstr ""
 
-#: main_window_controls.cpp:62 main_window_dmx.cpp:189 main_window_midi_live.cpp:91
+#: main_window_controls.cpp:62 main_window_dmx.cpp:190 main_window_midi_live.cpp:91
 msgid "%1 %"
 msgstr ""
 
@@ -130,7 +130,7 @@ msgstr ""
 msgid "%1 (%2)"
 msgstr ""
 
-#: live_controls_page.cpp:193
+#: live_controls_page.cpp:194
 msgid "%1 (Profil)"
 msgstr ""
 
@@ -1090,7 +1090,7 @@ msgstr ""
 msgid "Der Kanalwert 0 bis 255 setzt den Master auf 0 bis 100 %. Solange Pakete kommen, folgt der Master-Regler dem Pult; bleibt das Signal weg, hält der Master seinen Wert. Der Empfang oben muss für das gewählte Protokoll eingeschaltet sein."
 msgstr ""
 
-#: main_window_dmx.cpp:194
+#: main_window_dmx.cpp:195
 msgid "Der Master kommt gerade vom DMX-Kanal (Einstellungen → DMX-Eingang)"
 msgstr ""
 
@@ -1550,7 +1550,7 @@ msgstr ""
 msgid "Fester Wert"
 msgstr ""
 
-#: live_controls_page.cpp:140
+#: live_controls_page.cpp:141
 msgid "Fester Wert:"
 msgstr ""
 
@@ -1722,7 +1722,7 @@ msgstr ""
 msgid "Gerät:"
 msgstr ""
 
-#: main_window_controls.cpp:46 main_window_dmx.cpp:195
+#: main_window_controls.cpp:46 main_window_dmx.cpp:196
 msgid "Gesamthelligkeit (wirkt auf Vorschau und Ausgabe, nicht im Projekt gespeichert)"
 msgstr ""
 
@@ -1922,7 +1922,7 @@ msgstr ""
 msgid "Kaleidoskop: Spiegelt einen Ausschnitt um einen Mittelpunkt zu einem Muster mit mehreren Segmenten."
 msgstr ""
 
-#: live_controls_page.cpp:136
+#: live_controls_page.cpp:137
 msgid "Kanal"
 msgstr ""
 
@@ -2284,6 +2284,10 @@ msgstr ""
 
 #: main_window_midi.cpp:34
 msgid "MIDI-Ausgang: %1"
+msgstr ""
+
+#: live_controls_page.cpp:107
+msgid "MIDI-Clock (MIDI-Eingang der Seite MIDI)"
 msgstr ""
 
 #: midi_settings_page.cpp:61
@@ -3190,7 +3194,7 @@ msgstr ""
 msgid "Tempo per Tippen: Jedes Einschalten von „Tap“ zählt als Schlag. Liefert Beat, Pulse, Phase und BPM, oder ein festes Tempo."
 msgstr ""
 
-#: live_controls_page.cpp:141
+#: live_controls_page.cpp:142
 msgid "Tempo über DMX:"
 msgstr ""
 
@@ -3198,7 +3202,7 @@ msgstr ""
 msgid "Tempo-Tap"
 msgstr ""
 
-#: live_controls_page.cpp:139
+#: live_controls_page.cpp:140
 msgid "Tempo-Uhr:"
 msgstr ""
 
@@ -3270,7 +3274,7 @@ msgstr ""
 msgid "Ungespeicherte Änderungen"
 msgstr ""
 
-#: add_fixture_dialog.cpp:176 dmx_patch_table.cpp:46 live_controls_page.cpp:134
+#: add_fixture_dialog.cpp:176 dmx_patch_table.cpp:46 live_controls_page.cpp:135
 msgid "Universe"
 msgstr ""
 
@@ -3522,7 +3526,7 @@ msgstr ""
 msgid "Wird geladen …"
 msgstr ""
 
-#: live_controls_page.cpp:108
+#: live_controls_page.cpp:109
 msgid "Woher die gemeinsame Tempo-Uhr ihr Tempo nimmt (Node „Tempo“)"
 msgstr ""
 
@@ -3710,7 +3714,7 @@ msgstr ""
 msgid "an oder aus"
 msgstr ""
 
-#: live_controls_page.cpp:198 live_learn.cpp:31 midi_profile_box.cpp:78
+#: live_controls_page.cpp:199 live_learn.cpp:31 midi_profile_box.cpp:78
 msgid "aus"
 msgstr ""
 

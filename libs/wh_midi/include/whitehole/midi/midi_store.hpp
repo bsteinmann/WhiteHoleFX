@@ -39,6 +39,15 @@ struct LastMessage {
     std::uint64_t sequence{0};  // laufende Nummer der Nachricht (1 = die erste); erlaubt "kam etwas Neues?" ohne Ereignisliste
 };
 
+/// Stand der MIDI-Clock (für die Tempo-Uhr).
+struct MidiClockState {
+    std::uint64_t ticks{0};     // Clock-Meldungen seit dem letzten Start (bzw. seit der ersten); die 1., 25., 49. ... beginnt einen Beat
+    std::uint64_t starts{0};    // Zahl der Start-Meldungen (ändert sie sich, zählt `ticks` neu)
+    bool running{false};        // nach Start/Continue bis Stop; vor dem ersten Start: läuft, sobald Clocks kommen
+    double bpm{0.0};            // aus den Abständen der letzten Clocks; 0, solange es zu wenige gibt
+    double ageSeconds{1e9};     // seit der letzten Clock
+};
+
 struct MidiStats {
     std::uint64_t messages{0};  // angenommene Nachrichten
     std::uint64_t dropped{0};   // aus der Ereignisliste verdrängt, weil niemand sie abholte
@@ -71,6 +80,10 @@ public:
 
     [[nodiscard]] MidiStats stats() const;
 
+    /// MIDI-Clock: übernimmt eine Echtzeitmeldung (Clock, Start, Continue, Stop).
+    void applyRealtime(MidiRealtime event);
+    [[nodiscard]] MidiClockState clock() const;
+
 private:
     struct Slot {
         bool seen{false};
@@ -99,6 +112,9 @@ private:
     std::optional<Stamped> lastCc_;
     std::optional<Stamped> lastNoteOn_;
     MidiStats stats_;
+    MidiClockState clock_;
+    std::deque<std::chrono::steady_clock::time_point> clockTimes_;  // die letzten Clocks, für das Tempo
+    std::optional<std::chrono::steady_clock::time_point> lastClock_;
 };
 
 }  // namespace whitehole::midi

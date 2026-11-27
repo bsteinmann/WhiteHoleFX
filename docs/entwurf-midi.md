@@ -76,7 +76,7 @@ der Uhr von der erreichten Stelle zu Ende (`tests/runtime/live_manual_fade_test.
 
 ## 4. Offen / später
 
-- Pads einzeln umlegen, Seiten für mehr als 32/64 Looks, mk2-Profil (RGB), `wh.output.midinote`, MIDI-Clock als Tempoquelle, Hot-Plug.
+- Pads einzeln umlegen, Seiten für mehr als 32/64 Looks, mk2-Profil (RGB), `wh.output.midinote`, Hot-Plug. (MIDI-Clock als Tempoquelle: erledigt, siehe docs/tempo.md.)
 - Erledigt: Cue-Sprung per MIDI und DMX (Pads/Auswahl-Kanal feuern Cues, solange die Cuelist läuft); APC mini (mk1) auf Windows getestet.
 - Zu prüfen in Stufe 1: ob RtMidi lokal ladbar ist (Netz) oder nur in der CI.
 

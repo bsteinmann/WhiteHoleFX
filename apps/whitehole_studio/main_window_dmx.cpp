@@ -73,13 +73,14 @@ void MainWindow::syncDmxUniverses() {
 }
 
 void MainWindow::applyTempo() {
-    constexpr std::array<values::TempoClock::Source, 4> kSources{values::TempoClock::Source::Tap, values::TempoClock::Source::Fixed,
-                                                                 values::TempoClock::Source::Audio, values::TempoClock::Source::Dmx};
+    constexpr std::array<values::TempoClock::Source, 5> kSources{values::TempoClock::Source::Tap, values::TempoClock::Source::Fixed,
+                                                                 values::TempoClock::Source::Audio, values::TempoClock::Source::Dmx,
+                                                                 values::TempoClock::Source::MidiClock};
     player_->setTempoFixedBpm(appSettings_.tempoFixedBpm);
     player_->setTempoDmx(input::DmxAddress{appSettings_.tempoDmxProtocol == 1 ? input::DmxProtocol::Sacn : input::DmxProtocol::ArtNet,
                                            static_cast<std::uint32_t>(std::max(0, appSettings_.tempoDmxUniverse)),
                                            static_cast<std::uint32_t>(std::clamp(appSettings_.tempoDmxChannel, 1, 512))});
-    player_->setTempoSource(kSources[static_cast<std::size_t>(std::clamp(appSettings_.tempoSource, 0, 3))]);
+    player_->setTempoSource(kSources[static_cast<std::size_t>(std::clamp(appSettings_.tempoSource, 0, 4))]);
 }
 
 void MainWindow::applyMasterDmx() {

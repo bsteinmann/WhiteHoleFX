@@ -33,8 +33,13 @@ Einstellungen → **Steuerung**, Abschnitt Tempo-Uhr (Programmeinstellung `tempo
   0 lässt das Tempo unverändert, ebenso ein Kanal ohne Signal (länger als 2 s). Nur das Tempo kommt über DMX, die Phase läuft
   stetig weiter (DMX kennt keinen Beat-Zeitpunkt).
 
-Wechselt die Quelle, läuft die Phase stetig weiter; mit dem nächsten Tap oder Audio-Schlag rastet sie ein. MIDI-Clock und die
-Option „Globales Tempo“ an Clock, Beat und Shot folgen.
+- **MIDI-Clock:** eine DAW, ein Sequencer oder ein Lichtpult am MIDI-Eingang (Einstellungen → MIDI) gibt den Takt vor: 24
+  Clock-Meldungen je Viertel, das Tempo kommt aus deren Abständen (gemittelt über einen Beat). Die erste Clock nach **Start** und
+  danach jede 24. ist ein Beat (die Phase rastet ein); ohne Start zählt die Uhr ab der ersten empfangenen Clock. **Stop** oder
+  länger als 0,5 s keine Clock: die Uhr läuft mit dem letzten Tempo weiter. Song Position wird nicht ausgewertet.
+
+Wechselt die Quelle, läuft die Phase stetig weiter; mit dem nächsten Tap, Audio-Schlag oder Clock-Beat rastet sie ein. Die
+Option „Globales Tempo“ an Clock, Beat und Shot folgt.
 
 ## Phase und Einrasten
 
@@ -48,5 +53,6 @@ sofort mit dem Tap (und nicht noch einmal danach); liegt er knapp danach, gibt e
 - Zeitbezug ist die Uhr des Players (in Tests vorgegeben), nicht die Projektzeit. Offline-Rendern mit dem Node „Tempo“ ist darum
   wie bei DMX- und MIDI-Nodes nicht reproduzierbar.
 - Code: `values::TempoClock` (`libs/wh_values`, `externalBeat`/`externalBpm` für Audio und DMX), `BuiltinLibrary::tempo`,
-  `Player::tempoTap`/`setTempoSource`/`setTempoDmx`/`advanceTempo`
+  `Player::tempoTap`/`setTempoSource`/`setTempoDmx`/`advanceTempo`/`advanceMidiClock`, MIDI-Clock in
+  `midi::MidiStore::applyRealtime`/`clock()` (`MidiRealtime`, eigener Weg neben Noten und Reglern)
   (`player_tempo.cpp`), Node in `builtin_tempo.cpp`.

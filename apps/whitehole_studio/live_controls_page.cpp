@@ -104,7 +104,8 @@ LiveControlsPage::LiveControlsPage(const AppSettings& current, std::shared_ptr<m
     tempoSource_->addItem(tr("Fester Wert"));
     tempoSource_->addItem(tr("Audio-Beat (jeder erkannte Schlag ist ein Beat)"));
     tempoSource_->addItem(tr("DMX-Kanal (Wert = BPM, 0 = unverändert)"));
-    tempoSource_->setCurrentIndex(std::clamp(current.tempoSource, 0, 3));
+    tempoSource_->addItem(tr("MIDI-Clock (MIDI-Eingang der Seite MIDI)"));
+    tempoSource_->setCurrentIndex(std::clamp(current.tempoSource, 0, 4));
     tempoSource_->setToolTip(tr("Woher die gemeinsame Tempo-Uhr ihr Tempo nimmt (Node „Tempo“)"));
     tempoBpm_ = new QDoubleSpinBox{this};
     tempoBpm_->setRange(30.0, 300.0);
