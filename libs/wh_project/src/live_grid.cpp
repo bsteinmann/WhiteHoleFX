@@ -35,6 +35,15 @@ int firstFreeLiveCell(const LiveGrid& grid) noexcept {
     return -1;
 }
 
+void fillFlashDefaults(LiveCell& cell) noexcept {
+    if (!cell.flashInSeconds) {
+        cell.flashInSeconds = kDefaultFlashSeconds;
+    }
+    if (!cell.returnSeconds) {
+        cell.returnSeconds = kDefaultFlashSeconds;
+    }
+}
+
 void renameLookInLiveGrid(LiveGrid& grid, std::string_view oldName, const std::string& newName) {
     for (LiveCell& cell : grid.cells) {
         if (cell.look == oldName) {

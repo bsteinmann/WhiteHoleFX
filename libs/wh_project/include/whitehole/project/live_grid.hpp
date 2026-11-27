@@ -54,6 +54,14 @@ void resizeLiveGrid(LiveGrid& grid, int columns, int rows);
 /// Erstes leeres Feld (zeilenweise) oder -1.
 [[nodiscard]] int firstFreeLiveCell(const LiveGrid& grid) noexcept;
 
+/// Vorgabe für Ein- und Zurückblendzeit eines Feldes, das neu auf Flash gestellt wird (Wunsch vom 27.11.): ein kurzer Stoß.
+inline constexpr double kDefaultFlashSeconds = 0.1;
+
+/// Trägt für ein Feld, das gerade neu auf Flash gestellt wurde, die Vorgabe `kDefaultFlashSeconds` ein, aber nur dort, wo noch
+/// keine eigene Zeit steht. Gedacht für die Oberfläche beim Umstellen von Umschalten auf Flash; schon gespeicherte
+/// Flash-Felder (auch ohne eigene Zeit, "Look-Zeit") bleiben unverändert, weil sie nie durch diese Funktion laufen.
+void fillFlashDefaults(LiveCell& cell) noexcept;
+
 /// Ein Look wurde umbenannt: alle Felder mit dem alten Namen zeigen auf den neuen.
 void renameLookInLiveGrid(LiveGrid& grid, std::string_view oldName, const std::string& newName);
 
