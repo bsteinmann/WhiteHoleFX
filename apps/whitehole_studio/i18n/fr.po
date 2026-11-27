@@ -30,11 +30,11 @@ msgstr "   |   Sortie désactivée (%1 paquets non envoyés)"
 msgid "   |   BLACKOUT"
 msgstr "   |   BLACKOUT"
 
-#: main_window_dmx.cpp:199
+#: main_window_dmx.cpp:213
 msgid "   |   DMX-Eingang %1: %2 Pakete"
 msgstr "   |   Entrée DMX %1 : %2 paquets"
 
-#: main_window_dmx.cpp:189
+#: main_window_dmx.cpp:203
 msgid "   |   DMX-Nodes im Projekt, Eingang aus (Einstellungen)"
 msgstr "   |   Nœuds DMX dans le projet, entrée désactivée (Réglages)"
 
@@ -62,11 +62,11 @@ msgstr "  · Superposition"
 msgid " (Kopie)"
 msgstr " (copie)"
 
-#: main_window_dmx.cpp:197
+#: main_window_dmx.cpp:211
 msgid " + sACN"
 msgstr " + sACN"
 
-#: live_controls_page.cpp:107
+#: live_controls_page.cpp:112
 msgid " BPM"
 msgstr " BPM"
 
@@ -118,7 +118,7 @@ msgstr "%1  (%2 LED)"
 msgid "%1  →  %2"
 msgstr "%1  →  %2"
 
-#: main_window_controls.cpp:62 main_window_dmx.cpp:175 main_window_midi_live.cpp:91
+#: main_window_controls.cpp:62 main_window_dmx.cpp:189 main_window_midi_live.cpp:91
 msgid "%1 %"
 msgstr "%1 %"
 
@@ -130,7 +130,7 @@ msgstr "%1 (%2 LED)"
 msgid "%1 (%2)"
 msgstr "%1 (%2)"
 
-#: live_controls_page.cpp:158
+#: live_controls_page.cpp:193
 msgid "%1 (Profil)"
 msgstr "%1 (profil)"
 
@@ -438,7 +438,7 @@ msgstr "<b>Matrice 2D</b>"
 msgid "<b>3D-Matrix</b>"
 msgstr "<b>Matrice 3D</b>"
 
-#: live_controls_page.cpp:53
+#: live_controls_page.cpp:56
 msgid "<b>DMX</b>"
 msgstr "<b>DMX</b>"
 
@@ -446,7 +446,7 @@ msgstr "<b>DMX</b>"
 msgid "<b>Fixtures</b>"
 msgstr "<b>Fixtures</b>"
 
-#: live_controls_page.cpp:51
+#: live_controls_page.cpp:54
 msgid "<b>Funktion</b>"
 msgstr "<b>Fonction</b>"
 
@@ -454,7 +454,7 @@ msgstr "<b>Fonction</b>"
 msgid "<b>Kreis</b>"
 msgstr "<b>Cercle</b>"
 
-#: live_controls_page.cpp:52
+#: live_controls_page.cpp:55
 msgid "<b>MIDI</b>"
 msgstr "<b>MIDI</b>"
 
@@ -650,6 +650,10 @@ msgstr "Audio"
 msgid "Audio-Beat"
 msgstr "Beat audio"
 
+#: live_controls_page.cpp:105
+msgid "Audio-Beat (jeder erkannte Schlag ist ein Beat)"
+msgstr "Battement audio (chaque battement détecté est un temps)"
+
 #: main_window_audio.cpp:50
 msgid "Audio-Eingang: %1"
 msgstr "Entrée audio : %1"
@@ -682,7 +686,7 @@ msgstr "Masquer sur la tuile"
 msgid "Auf der Kachel ausblenden (Kabel nach außen vorhanden)"
 msgstr "Masquer sur la tuile (câble vers l'extérieur présent)"
 
-#: live_controls_page.cpp:69
+#: live_controls_page.cpp:72
 msgid "Auf die Belegung des MIDI-Profils zurücksetzen"
 msgstr "Revenir à l’affectation du profil MIDI"
 
@@ -698,7 +702,7 @@ msgstr "Appliquer au contrôleur choisi"
 msgid "Aufnahmegeräte lassen sich nicht auflisten: %1"
 msgstr "Impossible de lister les périphériques de capture : %1"
 
-#: live_controls_page.cpp:81 midi_settings_page.cpp:27 settings_dialog.cpp:210
+#: live_controls_page.cpp:84 midi_settings_page.cpp:27 settings_dialog.cpp:210
 msgid "Aus"
 msgstr "Désactivé"
 
@@ -966,13 +970,17 @@ msgstr "Déclencheur DMX : univers"
 msgid "DMX-Eingang"
 msgstr "Entrée DMX"
 
-#: main_window_dmx.cpp:52
+#: main_window_dmx.cpp:53
 msgid "DMX-Eingang: %1"
 msgstr "Entrée DMX : %1"
 
 #: cue_dialog.cpp:56
 msgid "DMX-Kanal"
 msgstr "Canal DMX"
+
+#: live_controls_page.cpp:106
+msgid "DMX-Kanal (Wert = BPM, 0 = unverändert)"
+msgstr "Canal DMX (valeur = BPM, 0 = inchangé)"
 
 #: dmx_monitor_window.cpp:23
 msgid "DMX-Monitor"
@@ -1082,7 +1090,7 @@ msgstr "Le cue se déclenche quand la valeur du canal monte à ce nombre ou plus
 msgid "Der Kanalwert 0 bis 255 setzt den Master auf 0 bis 100 %. Solange Pakete kommen, folgt der Master-Regler dem Pult; bleibt das Signal weg, hält der Master seinen Wert. Der Empfang oben muss für das gewählte Protokoll eingeschaltet sein."
 msgstr "La valeur du canal de 0 à 255 règle le master de 0 à 100 %. Tant que des paquets arrivent, le curseur master suit la console ; si le signal s’arrête, le master garde sa valeur. La réception ci-dessus doit être activée pour le protocole choisi."
 
-#: main_window_dmx.cpp:180
+#: main_window_dmx.cpp:194
 msgid "Der Master kommt gerade vom DMX-Kanal (Einstellungen → DMX-Eingang)"
 msgstr "Le master vient actuellement du canal DMX (Réglages → Entrée DMX)"
 
@@ -1538,11 +1546,11 @@ msgstr "Réinitialiser la disposition de la &fenêtre"
 msgid "Fensteranordnung zurückgesetzt: Sie gilt ab dem nächsten Start."
 msgstr "Disposition de la fenêtre réinitialisée : elle s'applique au prochain démarrage."
 
-#: live_controls_page.cpp:101
+#: live_controls_page.cpp:104
 msgid "Fester Wert"
 msgstr "Valeur fixe"
 
-#: live_controls_page.cpp:112
+#: live_controls_page.cpp:140
 msgid "Fester Wert:"
 msgstr "Valeur fixe :"
 
@@ -1714,7 +1722,7 @@ msgstr "Jaune"
 msgid "Gerät:"
 msgstr "Périphérique :"
 
-#: main_window_controls.cpp:46 main_window_dmx.cpp:181
+#: main_window_controls.cpp:46 main_window_dmx.cpp:195
 msgid "Gesamthelligkeit (wirkt auf Vorschau und Ausgabe, nicht im Projekt gespeichert)"
 msgstr "Luminosité globale (agit sur l'aperçu et la sortie, non enregistrée dans le projet)"
 
@@ -1914,6 +1922,10 @@ msgstr "Afficher ou masquer le chemin du câble avec flèches, LED de départ et
 msgid "Kaleidoskop: Spiegelt einen Ausschnitt um einen Mittelpunkt zu einem Muster mit mehreren Segmenten."
 msgstr "Kaleidoscope: mirrors a slice around a center into a pattern with several segments."
 
+#: live_controls_page.cpp:136
+msgid "Kanal"
+msgstr "Canal"
+
 #: dmx_monitor_panel.cpp:96 dmx_output_monitor_panel.cpp:98
 msgid "Kanal %1"
 msgstr "Canal %1"
@@ -1982,7 +1994,7 @@ msgstr "Aucun nœud de valeur DMX dans le projet"
 msgid "Keine Treffer."
 msgstr "Aucun résultat."
 
-#: live_controls_page.cpp:82
+#: live_controls_page.cpp:85
 msgid "Keinen DMX-Kanal für diese Funktion"
 msgstr "Aucun canal DMX pour cette fonction"
 
@@ -2310,7 +2322,7 @@ msgstr "Fondu manuel"
 msgid "Master"
 msgstr "Master"
 
-#: live_controls_page.cpp:91
+#: live_controls_page.cpp:94
 msgid "Master über DMX ist dieselbe Einstellung wie auf der Seite DMX-Eingang. DMX-Tasten lösen aus, wenn der Kanal über 50 % steigt."
 msgstr "Le master par DMX est le même réglage que sur la page Entrée DMX. Les touches DMX se déclenchent quand le canal dépasse 50 %."
 
@@ -2742,7 +2754,7 @@ msgstr "Supprimer le preset …"
 msgid "Presets"
 msgstr "Presets"
 
-#: live_controls_page.cpp:68
+#: live_controls_page.cpp:71
 msgid "Profil"
 msgstr "Profil"
 
@@ -3138,7 +3150,7 @@ msgstr "MODE TEST : %1"
 msgid "Taktgeber: Liefert im eingestellten Tempo (BPM) Impulse, Phase und Zähler. Läuft ohne Audio."
 msgstr "Clock: outputs ticks, phase and a counter at the set tempo (BPM). Runs without audio."
 
-#: live_controls_page.cpp:100
+#: live_controls_page.cpp:103
 msgid "Tap (Taste TAP oder Funktion „Tempo-Tap“)"
 msgstr "Tap (bouton TAP ou fonction « Tap tempo »)"
 
@@ -3178,11 +3190,15 @@ msgstr "Vitesse"
 msgid "Tempo per Tippen: Jedes Einschalten von „Tap“ zählt als Schlag. Liefert Beat, Pulse, Phase und BPM, oder ein festes Tempo."
 msgstr "Tempo by tapping: each switch-on of \"Tap\" counts as a beat. Outputs beat, pulse, phase and BPM, or a fixed tempo."
 
+#: live_controls_page.cpp:141
+msgid "Tempo über DMX:"
+msgstr "Tempo par DMX :"
+
 #: live_learn.cpp:17
 msgid "Tempo-Tap"
 msgstr "Tap tempo"
 
-#: live_controls_page.cpp:111
+#: live_controls_page.cpp:139
 msgid "Tempo-Uhr:"
 msgstr "Horloge de tempo :"
 
@@ -3254,7 +3270,7 @@ msgstr "Fin inattendue la dernière fois"
 msgid "Ungespeicherte Änderungen"
 msgstr "Modifications non enregistrées"
 
-#: add_fixture_dialog.cpp:176 dmx_patch_table.cpp:46
+#: add_fixture_dialog.cpp:176 dmx_patch_table.cpp:46 live_controls_page.cpp:134
 msgid "Universe"
 msgstr "Univers"
 
@@ -3426,7 +3442,7 @@ msgstr "Waveform of the audio input (a short time window, optionally aligned to 
 msgid "Wellenringe wie Wassertropfen: Ringe breiten sich von zufälligen Punkten aus (Tropfen pro Sekunde, Tempo, Ringbreite)."
 msgstr "Ripples like water drops: rings spread from random points (drops per second, speed, ring width)."
 
-#: live_controls_page.cpp:44
+#: live_controls_page.cpp:47
 msgid "Wer im Live-Modus GO, Ende, Master und Überblendung steuert. „Lernen“ wartet auf die nächste Taste, den nächsten Regler oder einen DMX-Kanal, der sich bewegt. Ohne eigene Belegung gilt das MIDI-Profil (Seite MIDI). Dieselbe Belegung lässt sich auch im Live-Fenster lernen."
 msgstr "Ce qui commande GO, la fin, le master et le fondu en mode live. « Apprendre » attend la prochaine touche, le prochain contrôleur ou un canal DMX qui bouge. Sans affectation propre, le profil MIDI s’applique (page MIDI). La même affectation peut aussi être apprise dans la fenêtre live."
 
@@ -3506,7 +3522,7 @@ msgstr "Piloté par une connexion dans le graphe."
 msgid "Wird geladen …"
 msgstr "Chargement …"
 
-#: live_controls_page.cpp:103
+#: live_controls_page.cpp:108
 msgid "Woher die gemeinsame Tempo-Uhr ihr Tempo nimmt (Node „Tempo“)"
 msgstr "D’où l’horloge de tempo commune tire son tempo (nœud « Tempo »)"
 
@@ -3694,7 +3710,7 @@ msgstr "Sens de comptage"
 msgid "an oder aus"
 msgstr "activé ou désactivé"
 
-#: live_controls_page.cpp:163 live_learn.cpp:31 midi_profile_box.cpp:78
+#: live_controls_page.cpp:198 live_learn.cpp:31 midi_profile_box.cpp:78
 msgid "aus"
 msgstr "désactivé"
 

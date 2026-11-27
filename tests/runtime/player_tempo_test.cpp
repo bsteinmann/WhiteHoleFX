@@ -4,6 +4,7 @@
 #include <catch2/catch_test_macros.hpp>
 
 #include <memory>
+#include <vector>
 
 #include "fake_gpu_device.hpp"
 #include "recording_sink.hpp"
@@ -118,4 +119,36 @@ TEST_CASE("Player-Tempo: Tap über den Player und über eine MIDI-Belegung", "[r
         rig.run(0.0);
     }
     CHECK(rig.player.tempo().bpm == Approx(150.0));
+}
+
+TEST_CASE("Player-Tempo: Quelle Audio übernimmt Schläge und Tempo des Beat-Erkenners", "[runtime][tempo]") {
+    Rig rig;
+    rig.player.setTempoSource(values::TempoClock::Source::Audio);
+    audio::AudioFrame frame;
+    frame.beat.count = 5;  // erster Blick: alte Schläge werden nicht nachgeholt
+    frame.beat.bpm = 100.0F;
+    rig.library->audio->write(frame);
+    rig.run(0.1);
+    CHECK(rig.player.tempo().bpm == Approx(120.0));
+    frame.beat.count = 6;
+    rig.library->audio->write(frame);
+    rig.run(0.1);
+    CHECK(rig.player.tempo().bpm == Approx(100.0));
+    CHECK(rig.player.tempo().sinceBeat == Approx(0.0));
+}
+
+TEST_CASE("Player-Tempo: Quelle DMX liest das Tempo aus einem Kanal", "[runtime][tempo]") {
+    Rig rig;
+    rig.player.setTempoSource(values::TempoClock::Source::Dmx);
+    rig.player.setTempoDmx(input::DmxAddress{input::DmxProtocol::ArtNet, 3, 2});
+    rig.library->dmx->write(input::DmxProtocol::ArtNet, 3, std::vector<std::uint8_t>{0, 140});
+    rig.run(0.1);
+    CHECK(rig.player.tempo().bpm == Approx(140.0));
+    rig.library->dmx->write(input::DmxProtocol::ArtNet, 3, std::vector<std::uint8_t>{0, 0});  // 0 = unverändert
+    rig.run(0.1);
+    CHECK(rig.player.tempo().bpm == Approx(140.0));
+    rig.player.setTempoDmx(std::nullopt);
+    rig.library->dmx->write(input::DmxProtocol::ArtNet, 3, std::vector<std::uint8_t>{0, 90});
+    rig.run(0.1);
+    CHECK(rig.player.tempo().bpm == Approx(140.0));
 }

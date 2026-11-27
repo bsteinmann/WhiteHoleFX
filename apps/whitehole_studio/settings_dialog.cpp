@@ -314,6 +314,9 @@ AppSettings SettingsDialog::settings() const {
     }
     result.tempoSource = controlsPage_->tempoSource();
     result.tempoFixedBpm = controlsPage_->tempoFixedBpm();
+    result.tempoDmxProtocol = controlsPage_->tempoDmxProtocol();
+    result.tempoDmxUniverse = controlsPage_->tempoDmxUniverse();
+    result.tempoDmxChannel = controlsPage_->tempoDmxChannel();
     result.nodeDefaults = defaultsPage_->defaults();
     return result;
 }

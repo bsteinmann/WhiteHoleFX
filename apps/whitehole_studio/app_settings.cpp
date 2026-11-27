@@ -41,7 +41,10 @@ AppSettings loadAppSettings() {
     result.midiProfile = s.value(QStringLiteral("midi/profile")).toString();
     result.midiProfiles = s.value(QStringLiteral("midi/profiles")).toStringList();
     result.liveBindings = s.value(QStringLiteral("midi/liveBindings")).toStringList();
-    result.tempoSource = std::clamp(s.value(QStringLiteral("tempo/source"), 0).toInt(), 0, 1);
+    result.tempoSource = std::clamp(s.value(QStringLiteral("tempo/source"), 0).toInt(), 0, 3);
+    result.tempoDmxProtocol = std::clamp(s.value(QStringLiteral("tempo/dmxProtocol"), 0).toInt(), 0, 1);
+    result.tempoDmxUniverse = std::clamp(s.value(QStringLiteral("tempo/dmxUniverse"), 0).toInt(), 0, 63999);
+    result.tempoDmxChannel = std::clamp(s.value(QStringLiteral("tempo/dmxChannel"), 1).toInt(), 1, 512);
     result.tempoFixedBpm = std::clamp(s.value(QStringLiteral("tempo/fixedBpm"), 120.0).toDouble(), 30.0, 300.0);
     result.audioSource = s.value(QStringLiteral("audio/source"), result.audioSource).toString();
     // Eigene Standardwerte: eine Gruppe je Node-Typ. Unlesbare Einträge werden übersprungen.
@@ -87,6 +90,9 @@ void saveAppSettings(const AppSettings& settings) {
     s.setValue(QStringLiteral("midi/liveBindings"), settings.liveBindings);
     s.setValue(QStringLiteral("tempo/source"), settings.tempoSource);
     s.setValue(QStringLiteral("tempo/fixedBpm"), settings.tempoFixedBpm);
+    s.setValue(QStringLiteral("tempo/dmxProtocol"), settings.tempoDmxProtocol);
+    s.setValue(QStringLiteral("tempo/dmxUniverse"), settings.tempoDmxUniverse);
+    s.setValue(QStringLiteral("tempo/dmxChannel"), settings.tempoDmxChannel);
     s.setValue(QStringLiteral("audio/source"), settings.audioSource);
     s.remove(QStringLiteral("nodeDefaults"));
     for (const auto& [type, values] : settings.nodeDefaults.all()) {

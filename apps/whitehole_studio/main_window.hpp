@@ -236,6 +236,7 @@ private:
     void syncDmxUniverses();
     /// Master über DMX (main_window_dmx.cpp): gibt die Wahl aus appSettings_ an den Player; der Regler folgt dem Pult.
     void applyMasterDmx();
+    void applyTempo();  // Quelle, fester Wert und DMX-Kanal der gemeinsamen Tempo-Uhr an den Player (main_window_dmx.cpp)
     void followMasterDmx();
     /// Live-Look über DMX (main_window_dmx.cpp, DMX-Fernsteuerung für Live-Modus): gibt die Wahl aus appSettings_
     /// an den Player; der Kanal wählt den Look, solange der Live-Betrieb läuft.

@@ -5,7 +5,7 @@
 // zurücksetzen") und DMX (gelernt oder aus). Dieselbe Belegung schreibt auch das Live-Fenster (runtime::LiveBindings).
 // Master über DMX ist die schon vorhandene Einstellung der Seite "DMX-Eingang"; die Zeile hier zeigt und ändert genau sie
 // (Signal masterDmxChanged, das Einstellungsfenster gleicht beide Seiten ab). Darunter die Quelle der gemeinsamen
-// Tempo-Uhr (Tap oder fester Wert); getappt wird mit der Funktion "Tempo-Tap" oder der Taste TAP im Live-Fenster.
+// Tempo-Uhr (Tap, fester Wert, Audio-Beat oder DMX-Kanal); getappt wird mit der Funktion "Tempo-Tap" oder der Taste TAP im Live-Fenster.
 #pragma once
 
 #include <QWidget>
@@ -22,6 +22,7 @@
 class QComboBox;
 class QDoubleSpinBox;
 class QLabel;
+class QSpinBox;
 
 namespace whitehole::studio {
 
@@ -43,9 +44,13 @@ public:
     void clearDmx(runtime::LiveFunction function);
     [[nodiscard]] QString midiText(runtime::LiveFunction function) const;
     [[nodiscard]] QString dmxText(runtime::LiveFunction function) const;
-    /// Gemeinsame Tempo-Uhr: Quelle (0 = Tap, 1 = fester Wert) und fester Wert in BPM.
+    /// Gemeinsame Tempo-Uhr: Quelle (0 = Tap, 1 = fester Wert, 2 = Audio-Beat, 3 = DMX-Kanal) und fester Wert in BPM.
     [[nodiscard]] int tempoSource() const;
     [[nodiscard]] double tempoFixedBpm() const;
+    /// DMX-Kanal der Quelle "DMX-Kanal" (Protokoll 0 = Art-Net, 1 = sACN).
+    [[nodiscard]] int tempoDmxProtocol() const;
+    [[nodiscard]] int tempoDmxUniverse() const;
+    [[nodiscard]] int tempoDmxChannel() const;
 
 Q_SIGNALS:
     /// Die Zeile Master hat für DMX gelernt bzw. ausgeschaltet.
@@ -61,6 +66,9 @@ private:
     std::array<QLabel*, runtime::kLiveFunctionCount> dmxLabels_{};
     QComboBox* tempoSource_{nullptr};
     QDoubleSpinBox* tempoBpm_{nullptr};
+    QComboBox* tempoDmxProtocol_{nullptr};
+    QSpinBox* tempoDmxUniverse_{nullptr};
+    QSpinBox* tempoDmxChannel_{nullptr};
 };
 
 }  // namespace whitehole::studio

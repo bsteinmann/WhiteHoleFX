@@ -30,11 +30,11 @@ msgstr ""
 msgid "   |   BLACKOUT"
 msgstr ""
 
-#: main_window_dmx.cpp:199
+#: main_window_dmx.cpp:213
 msgid "   |   DMX-Eingang %1: %2 Pakete"
 msgstr ""
 
-#: main_window_dmx.cpp:189
+#: main_window_dmx.cpp:203
 msgid "   |   DMX-Nodes im Projekt, Eingang aus (Einstellungen)"
 msgstr ""
 
@@ -62,11 +62,11 @@ msgstr ""
 msgid " (Kopie)"
 msgstr ""
 
-#: main_window_dmx.cpp:197
+#: main_window_dmx.cpp:211
 msgid " + sACN"
 msgstr ""
 
-#: live_controls_page.cpp:107
+#: live_controls_page.cpp:112
 msgid " BPM"
 msgstr ""
 
@@ -118,7 +118,7 @@ msgstr ""
 msgid "%1  →  %2"
 msgstr ""
 
-#: main_window_controls.cpp:62 main_window_dmx.cpp:175 main_window_midi_live.cpp:91
+#: main_window_controls.cpp:62 main_window_dmx.cpp:189 main_window_midi_live.cpp:91
 msgid "%1 %"
 msgstr ""
 
@@ -130,7 +130,7 @@ msgstr ""
 msgid "%1 (%2)"
 msgstr ""
 
-#: live_controls_page.cpp:158
+#: live_controls_page.cpp:193
 msgid "%1 (Profil)"
 msgstr ""
 
@@ -438,7 +438,7 @@ msgstr ""
 msgid "<b>3D-Matrix</b>"
 msgstr ""
 
-#: live_controls_page.cpp:53
+#: live_controls_page.cpp:56
 msgid "<b>DMX</b>"
 msgstr ""
 
@@ -446,7 +446,7 @@ msgstr ""
 msgid "<b>Fixtures</b>"
 msgstr ""
 
-#: live_controls_page.cpp:51
+#: live_controls_page.cpp:54
 msgid "<b>Funktion</b>"
 msgstr ""
 
@@ -454,7 +454,7 @@ msgstr ""
 msgid "<b>Kreis</b>"
 msgstr ""
 
-#: live_controls_page.cpp:52
+#: live_controls_page.cpp:55
 msgid "<b>MIDI</b>"
 msgstr ""
 
@@ -650,6 +650,10 @@ msgstr ""
 msgid "Audio-Beat"
 msgstr ""
 
+#: live_controls_page.cpp:105
+msgid "Audio-Beat (jeder erkannte Schlag ist ein Beat)"
+msgstr ""
+
 #: main_window_audio.cpp:50
 msgid "Audio-Eingang: %1"
 msgstr ""
@@ -682,7 +686,7 @@ msgstr ""
 msgid "Auf der Kachel ausblenden (Kabel nach außen vorhanden)"
 msgstr ""
 
-#: live_controls_page.cpp:69
+#: live_controls_page.cpp:72
 msgid "Auf die Belegung des MIDI-Profils zurücksetzen"
 msgstr ""
 
@@ -698,7 +702,7 @@ msgstr ""
 msgid "Aufnahmegeräte lassen sich nicht auflisten: %1"
 msgstr ""
 
-#: live_controls_page.cpp:81 midi_settings_page.cpp:27 settings_dialog.cpp:210
+#: live_controls_page.cpp:84 midi_settings_page.cpp:27 settings_dialog.cpp:210
 msgid "Aus"
 msgstr ""
 
@@ -966,12 +970,16 @@ msgstr ""
 msgid "DMX-Eingang"
 msgstr ""
 
-#: main_window_dmx.cpp:52
+#: main_window_dmx.cpp:53
 msgid "DMX-Eingang: %1"
 msgstr ""
 
 #: cue_dialog.cpp:56
 msgid "DMX-Kanal"
+msgstr ""
+
+#: live_controls_page.cpp:106
+msgid "DMX-Kanal (Wert = BPM, 0 = unverändert)"
 msgstr ""
 
 #: dmx_monitor_window.cpp:23
@@ -1082,7 +1090,7 @@ msgstr ""
 msgid "Der Kanalwert 0 bis 255 setzt den Master auf 0 bis 100 %. Solange Pakete kommen, folgt der Master-Regler dem Pult; bleibt das Signal weg, hält der Master seinen Wert. Der Empfang oben muss für das gewählte Protokoll eingeschaltet sein."
 msgstr ""
 
-#: main_window_dmx.cpp:180
+#: main_window_dmx.cpp:194
 msgid "Der Master kommt gerade vom DMX-Kanal (Einstellungen → DMX-Eingang)"
 msgstr ""
 
@@ -1538,11 +1546,11 @@ msgstr ""
 msgid "Fensteranordnung zurückgesetzt: Sie gilt ab dem nächsten Start."
 msgstr ""
 
-#: live_controls_page.cpp:101
+#: live_controls_page.cpp:104
 msgid "Fester Wert"
 msgstr ""
 
-#: live_controls_page.cpp:112
+#: live_controls_page.cpp:140
 msgid "Fester Wert:"
 msgstr ""
 
@@ -1714,7 +1722,7 @@ msgstr ""
 msgid "Gerät:"
 msgstr ""
 
-#: main_window_controls.cpp:46 main_window_dmx.cpp:181
+#: main_window_controls.cpp:46 main_window_dmx.cpp:195
 msgid "Gesamthelligkeit (wirkt auf Vorschau und Ausgabe, nicht im Projekt gespeichert)"
 msgstr ""
 
@@ -1914,6 +1922,10 @@ msgstr ""
 msgid "Kaleidoskop: Spiegelt einen Ausschnitt um einen Mittelpunkt zu einem Muster mit mehreren Segmenten."
 msgstr ""
 
+#: live_controls_page.cpp:136
+msgid "Kanal"
+msgstr ""
+
 #: dmx_monitor_panel.cpp:96 dmx_output_monitor_panel.cpp:98
 msgid "Kanal %1"
 msgstr ""
@@ -1982,7 +1994,7 @@ msgstr ""
 msgid "Keine Treffer."
 msgstr ""
 
-#: live_controls_page.cpp:82
+#: live_controls_page.cpp:85
 msgid "Keinen DMX-Kanal für diese Funktion"
 msgstr ""
 
@@ -2310,7 +2322,7 @@ msgstr ""
 msgid "Master"
 msgstr ""
 
-#: live_controls_page.cpp:91
+#: live_controls_page.cpp:94
 msgid "Master über DMX ist dieselbe Einstellung wie auf der Seite DMX-Eingang. DMX-Tasten lösen aus, wenn der Kanal über 50 % steigt."
 msgstr ""
 
@@ -2742,7 +2754,7 @@ msgstr ""
 msgid "Presets"
 msgstr ""
 
-#: live_controls_page.cpp:68
+#: live_controls_page.cpp:71
 msgid "Profil"
 msgstr ""
 
@@ -3138,7 +3150,7 @@ msgstr ""
 msgid "Taktgeber: Liefert im eingestellten Tempo (BPM) Impulse, Phase und Zähler. Läuft ohne Audio."
 msgstr ""
 
-#: live_controls_page.cpp:100
+#: live_controls_page.cpp:103
 msgid "Tap (Taste TAP oder Funktion „Tempo-Tap“)"
 msgstr ""
 
@@ -3178,11 +3190,15 @@ msgstr ""
 msgid "Tempo per Tippen: Jedes Einschalten von „Tap“ zählt als Schlag. Liefert Beat, Pulse, Phase und BPM, oder ein festes Tempo."
 msgstr ""
 
+#: live_controls_page.cpp:141
+msgid "Tempo über DMX:"
+msgstr ""
+
 #: live_learn.cpp:17
 msgid "Tempo-Tap"
 msgstr ""
 
-#: live_controls_page.cpp:111
+#: live_controls_page.cpp:139
 msgid "Tempo-Uhr:"
 msgstr ""
 
@@ -3254,7 +3270,7 @@ msgstr ""
 msgid "Ungespeicherte Änderungen"
 msgstr ""
 
-#: add_fixture_dialog.cpp:176 dmx_patch_table.cpp:46
+#: add_fixture_dialog.cpp:176 dmx_patch_table.cpp:46 live_controls_page.cpp:134
 msgid "Universe"
 msgstr ""
 
@@ -3426,7 +3442,7 @@ msgstr ""
 msgid "Wellenringe wie Wassertropfen: Ringe breiten sich von zufälligen Punkten aus (Tropfen pro Sekunde, Tempo, Ringbreite)."
 msgstr ""
 
-#: live_controls_page.cpp:44
+#: live_controls_page.cpp:47
 msgid "Wer im Live-Modus GO, Ende, Master und Überblendung steuert. „Lernen“ wartet auf die nächste Taste, den nächsten Regler oder einen DMX-Kanal, der sich bewegt. Ohne eigene Belegung gilt das MIDI-Profil (Seite MIDI). Dieselbe Belegung lässt sich auch im Live-Fenster lernen."
 msgstr ""
 
@@ -3506,7 +3522,7 @@ msgstr ""
 msgid "Wird geladen …"
 msgstr ""
 
-#: live_controls_page.cpp:103
+#: live_controls_page.cpp:108
 msgid "Woher die gemeinsame Tempo-Uhr ihr Tempo nimmt (Node „Tempo“)"
 msgstr ""
 
@@ -3694,7 +3710,7 @@ msgstr ""
 msgid "an oder aus"
 msgstr ""
 
-#: live_controls_page.cpp:163 live_learn.cpp:31 midi_profile_box.cpp:78
+#: live_controls_page.cpp:198 live_learn.cpp:31 midi_profile_box.cpp:78
 msgid "aus"
 msgstr ""
 

@@ -613,7 +613,7 @@ zum Projekt. Die Wahl wird beim Nutzer gespeichert und beim nächsten Start wied
   MIDI-Belegung („Lernen“, „Profil“ = zurück zur Belegung des MIDI-Profils) und DMX-Kanal („Lernen“, „Aus“). DMX-Lernen nimmt den
   Kanal, der sich nach dem Drücken am stärksten bewegt; DMX-Tasten lösen aus, wenn der Kanal über 50 % steigt. Master über DMX ist
   dieselbe Einstellung wie auf der Seite DMX-Eingang. Gehört zum Programm, nicht zum Projekt (`midi/liveBindings`). Darunter die
-  Quelle der gemeinsamen **Tempo-Uhr** (Tap oder fester Wert, siehe [Tempo-Uhr](tempo.md)); im Live-Fenster tippt die Taste
+  Quelle der gemeinsamen **Tempo-Uhr** (Tap, fester Wert, Audio-Beat oder DMX-Kanal, siehe [Tempo-Uhr](tempo.md)); im Live-Fenster tippt die Taste
   **TAP** (zeigt das Tempo).
 
 ## DMX-Eingang

@@ -8,8 +8,9 @@
 // Zeitbezug: Die Uhr hat keine eigene Uhrzeit. Der Player schiebt sie einmal pro Bild mit update(now) weiter (seine Live-Uhr,
 // in Tests vorgegeben), die Rechenkerne lesen danach nur snapshot(). Dadurch sehen alle Nodes eines Bildes denselben Stand.
 //
-// Quellen (Stufe 1): Tap (tap(), z. B. Taste im Live-Fenster, MIDI-Taste, DMX-Kanal) und ein fester Wert. Weitere Quellen
-// (Audio-Beat, DMX-Kanal als BPM, MIDI-Clock) folgen in späteren Stufen.
+// Quellen: Tap (tap(), z. B. Taste im Live-Fenster, MIDI-Taste, DMX-Kanal), ein fester Wert, Audio-Beat (externalBeat(): jeder
+// erkannte Schlag ist ein Beat, das Tempo kommt vom Erkenner) und ein DMX-Kanal als BPM-Wert (externalBpm(), nur Tempo, keine
+// Phase). Die Uhr kennt weder Audio noch DMX: der Player liest beide und meldet sie hier. MIDI-Clock folgt in Stufe 3.
 //
 // Phase: zählt Beats (0, 1, 2, ...). Ändert sich das Tempo, läuft sie stetig weiter. Ein Tap setzt den Beat auf den Zeitpunkt
 // des Taps (die Phase "rastet" auf die nächste ganze Zahl ein); der Sprung wird nicht hart gezeigt, sondern in
@@ -27,7 +28,7 @@ namespace whitehole::values {
 
 class TempoClock {
 public:
-    enum class Source : std::uint8_t { Tap, Fixed };
+    enum class Source : std::uint8_t { Tap, Fixed, Audio, Dmx };
 
     /// Dauer, über die ein Einrasten der Phase angeglichen wird.
     static constexpr double kSettleSeconds = 0.25;
@@ -57,6 +58,12 @@ public:
     /// Ein Tap; wird mit dem nächsten update() zu dessen Zeit verrechnet. Nur bei Quelle Tap wirksam.
     void tap();
 
+    /// Ein Beat von außen (Audio-Erkenner), mit dessen geschätztem Tempo (0 = Tempo unverändert). Wird wie ein Tap mit dem
+    /// nächsten update() verrechnet (die Phase rastet ein), das Tempo kommt aber vom Erkenner. Nur bei Quelle Audio wirksam.
+    void externalBeat(double bpm);
+    /// Ein Tempo von außen (DMX-Kanal); die Phase läuft stetig weiter. Nur bei Quelle Dmx wirksam; 0 oder ungültig = unverändert.
+    void externalBpm(double bpm);
+
     /// Schiebt die Uhr auf die Zeit `now` (Sekunden, monoton) und verrechnet die seit dem letzten Aufruf eingegangenen Taps.
     /// Ein Rückwärtsschritt zählt als Stillstand.
     void update(double now);
@@ -66,6 +73,7 @@ private:
     void reanchor(double now, double bpm);  // ändert das Tempo, die Phase läuft stetig weiter
     void snapTo(double now, double targetBeats);  // setzt die Phase, angeglichen über kSettleSeconds
     void handleTap(double now);
+    void pullBeat(double now);  // rastet die Phase auf die nächste ganze Zahl ein und meldet den Beat (Tap, Audio)
     [[nodiscard]] double targetBeats(double now) const;
     [[nodiscard]] double shownBeats(double now) const;
 
@@ -79,6 +87,8 @@ private:
     double settleStart_{0.0};
     std::optional<double> now_;
     int pendingTaps_{0};
+    int pendingBeats_{0};
+    double pendingBeatBpm_{0.0};
     std::optional<double> lastTap_;
     std::vector<double> intervals_;
     std::int64_t lastBeat_{0};

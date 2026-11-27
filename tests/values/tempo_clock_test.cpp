@@ -118,3 +118,40 @@ TEST_CASE("Tempo-Uhr: fester Wert ändert das Tempo, die Phase läuft stetig wei
     CHECK(clock.snapshot().bpm == Approx(TempoClock::kMaxBpm));
     CHECK(clock.fixedBpm() == Approx(TempoClock::kMaxBpm));
 }
+
+TEST_CASE("Tempo-Uhr: Audio-Beats setzen Beat und Tempo, nur bei Quelle Audio", "[values][tempo]") {
+    TempoClock clock;
+    clock.update(0.0);
+    clock.externalBeat(100.0);  // Quelle Tap: zählt nicht
+    clock.update(0.1);
+    CHECK(clock.snapshot().bpm == Approx(120.0));
+
+    clock.setSource(TempoClock::Source::Audio);
+    clock.update(0.45);
+    clock.externalBeat(100.0);
+    clock.update(0.45);  // kurz vor Beat 1 (bei 120 BPM bei 0,5 s): der Beat kommt mit dem Schlag
+    CHECK(clock.snapshot().beatNow);
+    CHECK(clock.snapshot().beat == 1);
+    CHECK(clock.snapshot().bpm == Approx(100.0));
+    clock.externalBeat(0.0);  // ohne Tempo-Schätzung: das Tempo bleibt
+    clock.externalBeat(0.0);  // zwei Schläge im selben Bild zählen wie einer
+    clock.update(1.05);
+    CHECK(clock.snapshot().beatNow);
+    CHECK(clock.snapshot().beat == 2);
+    CHECK(clock.snapshot().bpm == Approx(100.0));
+}
+
+TEST_CASE("Tempo-Uhr: DMX-BPM ändert nur das Tempo, nur bei Quelle DMX", "[values][tempo]") {
+    TempoClock clock;
+    clock.update(0.0);
+    clock.update(0.25);
+    clock.externalBpm(60.0);  // Quelle Tap: zählt nicht
+    CHECK(clock.snapshot().bpm == Approx(120.0));
+    clock.setSource(TempoClock::Source::Dmx);
+    clock.externalBpm(60.0);
+    CHECK(clock.snapshot().bpm == Approx(60.0));
+    CHECK(clock.snapshot().beats == Approx(0.5));  // die Phase läuft stetig weiter
+    clock.externalBpm(0.0);  // 0 = unverändert
+    clock.externalBpm(1000.0);
+    CHECK(clock.snapshot().bpm == Approx(TempoClock::kMaxBpm));
+}
