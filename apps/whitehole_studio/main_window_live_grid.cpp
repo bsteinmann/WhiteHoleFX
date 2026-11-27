@@ -7,6 +7,7 @@
 
 #include <algorithm>
 #include <memory>
+#include <vector>
 
 #include "live_panel.hpp"
 #include "main_window.hpp"
@@ -29,6 +30,7 @@ QString MainWindow::exerciseLiveGrid() {
     }
     livePanel_->setGrid(columns, rows);
     // Verkleinern per Eingabe: Gingen Looks verloren, fragt das Panel vorher nach (hier mit einer Funktion statt eines Dialogs)
+    const std::vector<project::LiveCell> savedCells = grid.cells;  // der bestätigte Fall verwirft Looks: danach zurücksetzen
     int asked = 0;
     bool answer = false;
     livePanel_->setShrinkConfirm([&](int) {
@@ -48,7 +50,14 @@ QString MainWindow::exerciseLiveGrid() {
             livePanel_->setShrinkConfirm({});
             return QStringLiteral("Live: Raster verkleinern mit Bestätigung klappt nicht");
         }
-        livePanel_->setGrid(columns, rows);  // die Looks bleiben im Projekt; die weggefallenen Felder sind danach leer
+        livePanel_->setGrid(columns, rows);
+        for (std::size_t i = 0; i < savedCells.size(); ++i) {  // Ausgangszustand für die folgenden Prüfungen
+            if (!player_->setLiveCell(static_cast<int>(i), savedCells[i]).ok()) {
+                livePanel_->setShrinkConfirm({});
+                return QStringLiteral("Live: Raster nach dem Verkleinern lässt sich nicht wiederherstellen");
+            }
+        }
+        livePanel_->refresh();
     }
     livePanel_->setShrinkConfirm({});
     // Leeres Feld belegen: derselbe Look liegt dann zweimal, einmal als Flash
